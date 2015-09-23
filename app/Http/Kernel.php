@@ -26,8 +26,13 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.user' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+
+        'auth.admin' => \App\Http\Middleware\AdminAuthenticate::class,
+        'guest.admin' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'auth.wechat' => \App\Http\Middleware\WechatAuthenticate::class,
+        'follow' => \App\Http\Middleware\RedirectIfNotFollow::class,
     ];
 }

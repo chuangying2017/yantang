@@ -3,3 +3,14 @@
 Homestead.yaml
 Homestead.json
 .env
+.idea/
+/public/assets/bower_components
+Envoy.blade.php
+_ide_helper.php
+composer.phar
+composer.lock
+app/config/packages/bugsnag/
+.DS_Store
+/storage
+/public/build/
+bootstrap/cache

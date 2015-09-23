@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'PRC',
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'zh',
 
     /*
     |--------------------------------------------------------------------------
@@ -95,7 +95,7 @@ return [
     |
     */
 
-    'log' => 'single',
+    'log' => 'daily',
 
     /*
     |--------------------------------------------------------------------------
@@ -114,8 +114,7 @@ return [
          * Laravel Framework Service Providers...
          */
         Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
-        Illuminate\Auth\AuthServiceProvider::class,
-        Illuminate\Broadcasting\BroadcastServiceProvider::class,
+	      Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
@@ -131,19 +130,31 @@ return [
         Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Redis\RedisServiceProvider::class,
-        Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
-        /*
-         * Application Service Providers...
-         */
+	      Kbwebs\MultiAuth\AuthServiceProvider::class,
+	      Kbwebs\MultiAuth\PasswordResets\PasswordResetServiceProvider::class,
+
+	    /*
+			 * Application Service Providers...
+			 */
         App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
+//        App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+	      /*
+	       * Custom Service Providers
+	       */
+
+	      App\Library\Wechat\WechatServiceProvider::class,
+				App\Providers\LocalEnvironmentServiceProvider::class,
+				Maatwebsite\Excel\ExcelServiceProvider::class,
+				Illuminate\Html\HtmlServiceProvider::class,
+				Bugsnag\BugsnagLaravel\BugsnagLaravelServiceProvider::class,
 
     ],
 
@@ -194,6 +205,14 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
+				/*
+				* Custom Alias
+				*/
+				'Wechat'  => App\Library\Wechat\Facades\Wechat::class,
+				'Bugsnag' => Bugsnag\BugsnagLaravel\BugsnagFacade::class,
+				'Excel'   => Maatwebsite\Excel\Facades\Excel::class,
+				'Form'		=> Illuminate\Html\FormFacade::class,
+				'HTML'    => Illuminate\Html\HtmlFacade::class,
     ],
 
 ];

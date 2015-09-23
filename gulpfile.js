@@ -12,5 +12,34 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss');
+    mix.sass('app.scss')
+        .copy(
+                'vendor/bower_components/sweetalert/dist/sweetalert.min.js',
+                'public/js/vendor/sweetalert.min.js'
+            )
+        .copy(
+                'vendor/bower_components/sweetalert/dist/sweetalert.css',
+                'public/css/sweetalert.css'
+            )
+        .copy(
+                'vendor/bower_components/jquery/dist/jquery.min.js',
+                'public/js/vendor/jquery.min.js'
+            )
+        .copy(
+                'vendor/bower_components/amazeui/dist/js/amazeui.min.js',
+                'public/js/vendor/amazeui.min.js'
+            )
+        .copy(
+                'vendor/bower_components/amazeui/dist/css/amazeui.min.css',
+                'public/css/amazeui.min.css'
+            )
+        .copy(
+                'vendor/bower_components/jquery-validation/dist/jquery.validate.min.js',
+                'public/js/vendor/jquery.validate.min.js'
+            )
+        .copy(
+                'vendor/bower_components/zepto-full/zepto.min.js',
+                'public/js/vendor/zepto.min.js'
+            )
+        .version('public/css/app.css');    
 });

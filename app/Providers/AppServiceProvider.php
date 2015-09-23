@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+	    require app_path('Files/form.php');
+	    require app_path('Files/helpers.php');
     }
 
     /**
