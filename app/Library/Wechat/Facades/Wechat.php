@@ -7,7 +7,7 @@ class Wechat extends Facade{
 
 	protected static function getFacadeAccessor()
 	{
-		return 'wechat';
+		return 'wechat_main';
 	}
 
 }

@@ -50,11 +50,12 @@ if(App::environment() == 'local' || env('APP_DEBUG')) {
 Route::group(['middleware' => 'auth.wechat'], function(){
 
 	get('/', function(){
-		return view('index');
+		return view('welcome');
 	});
 
 	Route::group(['prefix' => 'api'], function(){
 
+		
 
 	});
 
