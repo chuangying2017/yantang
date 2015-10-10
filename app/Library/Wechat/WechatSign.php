@@ -10,11 +10,13 @@ trait WechatSign {
 
 	protected function setupWechatSignPackage()
 	{
-		$url = Request::fullUrl();
-
-		if($url == route('/'))
+		$base_url = Request::url();
+		$full_url = Request::fullUrl();
+		if($base_url == url('/'))
 		{
-			$url .= '/';
+			$url =  $base_url . '/' . substr($full_url, strlen($base_url));
+		} else {
+			$url = $full_url;
 		}
 
 		$signPackage = app()->make('wechat_subscribe')->getJsSign($url);

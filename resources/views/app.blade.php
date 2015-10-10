@@ -12,7 +12,7 @@
 @yield('content')
 
 <script
-        src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js"
+        src="//cdn.weazm.com/bugsnag-2.min.js"
         data-apikey="{!! env('BUGSNAG_FRONTEND_API_KEY', '') !!}">
 </script>
 

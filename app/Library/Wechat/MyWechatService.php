@@ -149,6 +149,7 @@ class MyWechatService extends WechatService {
 			}
 			$this->access_token = $json['access_token'];
 			 $expire = $json['expires_in'] ? intval($json['expires_in']) : 3600;
+			 $this->removeCache($authname);
 			 $this->setCache($authname,$this->access_token,$expire);
 			return $this->access_token;
 		}
