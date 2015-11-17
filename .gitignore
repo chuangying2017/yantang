@@ -19,3 +19,4 @@ bootstrap/cache
 .phpstorm.meta.php
 _ide_helper_models.php
 tags
+.tags_swap
