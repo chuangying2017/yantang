@@ -14,3 +14,4 @@ app/config/packages/bugsnag/
 /storage
 /public/build/
 bootstrap/cache
+tags
