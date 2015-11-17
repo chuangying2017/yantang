@@ -32,6 +32,7 @@ class CreateProductsTable extends Migration
             $table->text('detail');
             $table->string('status');
             $table->string('open_status');
+            $table->softDeletes();
             $table->timestamp('open_time');
             $table->timestamps();
         });

@@ -16,6 +16,7 @@ class CreateAttributeValuesTable extends Migration
             $table->increments('id');
             $table->integer('attribute_id');
             $table->string('name');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -16,6 +16,7 @@ class CreateProductImageTable extends Migration
             $table->increments('id');
             $table->integer('image_id');
             $table->integer('product_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

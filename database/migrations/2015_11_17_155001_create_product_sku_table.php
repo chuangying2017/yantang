@@ -19,6 +19,7 @@ class CreateProductSkuTable extends Migration
             $table->string('product_sku_no');
             $table->integer('stock')->unsigned();
             $table->integer('price')->unsigned();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -21,6 +21,7 @@ class CreateImagesTable extends Migration
             $table->string('imageinfo');
             $table->string('url');
             $table->string('status');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

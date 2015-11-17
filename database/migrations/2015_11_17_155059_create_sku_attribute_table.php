@@ -17,6 +17,7 @@ class CreateSkuAttributeTable extends Migration
             $table->integer('sku_id');
             $table->integer('value_id');
             $table->integer('category_attribute_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
