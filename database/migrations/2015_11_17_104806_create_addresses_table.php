@@ -22,6 +22,7 @@ class CreateAddressesTable extends Migration
             $table->string('role');
             $table->string('display_name');
             $table->string('detail');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

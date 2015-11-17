@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWalletTable extends Migration
+class CreateProductSkuTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,13 @@ class CreateWalletTable extends Migration
      */
     public function up()
     {
-        Schema::create('wallet', function (Blueprint $table) {
+        Schema::create('product_sku', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('amount')->unsigned();
-            $table->integer('frozen_amount')->unsigned();
-            $table->softDeletes();
+            $table->string('name');
+            $table->integer('product_id');
+            $table->string('product_sku_no');
+            $table->integer('stock')->unsigned();
+            $table->integer('price')->unsigned();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateWalletTable extends Migration
      */
     public function down()
     {
-        Schema::drop('wallet');
+        Schema::drop('product_sku');
     }
 }

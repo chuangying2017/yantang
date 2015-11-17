@@ -17,6 +17,7 @@ class CreateCreditsWalletTable extends Migration
             $table->integer('user_id');
             $table->integer('amount')->unsigned();
             $table->integer('forzen_amount')->unsigned();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

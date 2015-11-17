@@ -25,6 +25,7 @@ class CreateUserWechatInfo extends Migration
             $table->string('country');
             $table->string('headimgurl');
             $table->string('privilge');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

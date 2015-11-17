@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCreditsWalletRecordTable extends Migration
+class CreateImagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,15 @@ class CreateCreditsWalletRecordTable extends Migration
      */
     public function up()
     {
-        Schema::create('credits_wallet_record', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('amount')->unsigned();
-            $table->smallInteger('income')->unsigned();
-            $table->string('type');
+            $table->integer('client_id');
+            $table->string('image_id');
+            $table->string('media_id');
+            $table->string('filename');
+            $table->string('imageinfo');
+            $table->string('url');
             $table->string('status');
-            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateCreditsWalletRecordTable extends Migration
      */
     public function down()
     {
-        Schema::drop('credits_wallet_record');
+        Schema::drop('images');
     }
 }

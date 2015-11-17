@@ -19,6 +19,7 @@ class CreateWalletRecordTable extends Migration
             $table->smallInteger('income')->unsigned();
             $table->string('type');
             $table->string('status');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
