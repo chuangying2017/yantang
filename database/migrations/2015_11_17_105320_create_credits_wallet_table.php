@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdministratorsTable extends Migration
+class CreateCreditsWalletTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,12 @@ class CreateAdministratorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('administrators', function(Blueprint $table) {
+        Schema::create('credits_wallet', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username');
-            $table->string('password', 60);
-            $table->string('email');
-            $table->integer('merchant_id');
-            $table->rememberToken();
+            $table->integer('user_id');
+            $table->integer('amount')->unsigned();
+            $table->integer('forzen_amount')->unsigned();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateAdministratorsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('administrators');
+        Schema::drop('credits_wallet');
     }
 }
