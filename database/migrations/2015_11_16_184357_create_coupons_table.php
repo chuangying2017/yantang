@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdminTable extends Migration
+class CreateCouponsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,16 @@ class CreateAdminTable extends Migration
      */
     public function up()
     {
-        Schema::create('administrators', function(Blueprint $table) {
+        Schema::create('coupons', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username');
-            $table->string('password', 60);
-            $table->string('email');
-            $table->integer('merchant_id');
-            $table->rememberToken();
+            $table->string('name');
+            $table->string('type');
+            $table->decimal('content', 11, 0);
+            $table->string('detail');
+            $table->softDeletes();
             $table->timestamps();
         });
+
     }
 
     /**
@@ -30,6 +31,6 @@ class CreateAdminTable extends Migration
      */
     public function down()
     {
-        Schema::drop('administrators');
+        Schema::drop('coupons');
     }
 }

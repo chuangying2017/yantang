@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdminTable extends Migration
+class CreateOrderReviewTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,15 @@ class CreateAdminTable extends Migration
      */
     public function up()
     {
-        Schema::create('administrators', function(Blueprint $table) {
+        Schema::create('order_review', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username');
-            $table->string('password', 60);
-            $table->string('email');
-            $table->integer('merchant_id');
-            $table->rememberToken();
+            $table->integer('order_id');
+            $table->integer('score');
+            $table->string('content');
+            $table->softDeletes();
             $table->timestamps();
         });
+
     }
 
     /**
@@ -30,6 +30,6 @@ class CreateAdminTable extends Migration
      */
     public function down()
     {
-        Schema::drop('administrators');
+        Schema::drop('order_review');
     }
 }

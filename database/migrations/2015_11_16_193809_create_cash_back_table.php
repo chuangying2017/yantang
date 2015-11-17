@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdminTable extends Migration
+class CreateCashBackTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,14 @@ class CreateAdminTable extends Migration
      */
     public function up()
     {
-        Schema::create('administrators', function(Blueprint $table) {
+        Schema::create('cash_back', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username');
-            $table->string('password', 60);
-            $table->string('email');
-            $table->integer('merchant_id');
-            $table->rememberToken();
+            $table->string('type');
+            $table->decimal('content', 11, 0);
+            $table->softDeletes();
             $table->timestamps();
         });
+
     }
 
     /**
@@ -30,6 +29,6 @@ class CreateAdminTable extends Migration
      */
     public function down()
     {
-        Schema::drop('administrators');
+        Schema::drop('cash_back');
     }
 }
