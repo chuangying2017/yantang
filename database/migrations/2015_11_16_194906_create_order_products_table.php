@@ -18,9 +18,9 @@ class CreateOrderProductsTable extends Migration
             $table->integer('merchant_id');
             $table->integer('product_sku_id');
             $table->integer('quantity');
-            $table->decimal('price', 11, 0);
-            $table->decimal('discount_amount', 11, 0);
-            $table->decimal('pay_amount', 11, 0);
+            $table->unsignedInteger('price');
+            $table->unsignedInteger('discount_amount');
+            $table->unsignedInteger('pay_amount');
             $table->integer('billing_id');
             $table->softDeletes();
             $table->timestamps();

@@ -114,7 +114,7 @@ return [
          * Laravel Framework Service Providers...
          */
         Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
-	      Illuminate\Broadcasting\BroadcastServiceProvider::class,
+        Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
@@ -135,8 +135,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
-	      Kbwebs\MultiAuth\AuthServiceProvider::class,
-	      Kbwebs\MultiAuth\PasswordResets\PasswordResetServiceProvider::class,
+        Kbwebs\MultiAuth\AuthServiceProvider::class,
+        Kbwebs\MultiAuth\PasswordResets\PasswordResetServiceProvider::class,
 
 	    /*
 			 * Application Service Providers...
@@ -146,15 +146,16 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-	      /*
-	       * Custom Service Providers
-	       */
+        /*
+        * Custom Service Providers
+        */
+        App\Library\Wechat\WechatServiceProvider::class,
+        App\Providers\LocalEnvironmentServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Illuminate\Html\HtmlServiceProvider::class,
+        Bugsnag\BugsnagLaravel\BugsnagLaravelServiceProvider::class,
+        Zizaco\Entrust\EntrustServiceProvider::class,
 
-	      App\Library\Wechat\WechatServiceProvider::class,
-				App\Providers\LocalEnvironmentServiceProvider::class,
-				Maatwebsite\Excel\ExcelServiceProvider::class,
-				Illuminate\Html\HtmlServiceProvider::class,
-				Bugsnag\BugsnagLaravel\BugsnagLaravelServiceProvider::class,
 
     ],
 
@@ -205,14 +206,15 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
-				/*
-				* Custom Alias
-				*/
-				'Wechat'  => App\Library\Wechat\Facades\Wechat::class,
-				'Bugsnag' => Bugsnag\BugsnagLaravel\BugsnagFacade::class,
-				'Excel'   => Maatwebsite\Excel\Facades\Excel::class,
-				'Form'		=> Illuminate\Html\FormFacade::class,
-				'HTML'    => Illuminate\Html\HtmlFacade::class,
+        /*
+        * Custom Alias
+        */
+        'Wechat'  => App\Library\Wechat\Facades\Wechat::class,
+        'Bugsnag' => Bugsnag\BugsnagLaravel\BugsnagFacade::class,
+        'Excel'   => Maatwebsite\Excel\Facades\Excel::class,
+        'Form'		=> Illuminate\Html\FormFacade::class,
+        'HTML'    => Illuminate\Html\HtmlFacade::class,
+        'Entrust' => Zizaco\Entrust\EntrustFacade::class,
     ],
 
 ];

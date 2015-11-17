@@ -12,7 +12,9 @@
         "illuminate/html": "5.*",
         "pda/pheanstalk": "~3.0",
         "itbdw/laravel-storage-qiniu": "^1.0",
-        "kbwebs/multiauth": "~1.0"
+        "kbwebs/multiauth": "~1.0",
+        "zizaco/entrust": "dev-laravel-5",
+        "predis/predis": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -21,7 +23,8 @@
         "phpspec/phpspec": "~2.1",
         "laracasts/generators": "^1.1",
         "barryvdh/laravel-ide-helper": "^2.0",
-        "barryvdh/laravel-debugbar": "^2.0"
+        "barryvdh/laravel-debugbar": "^2.0",
+        "doctrine/dbal": "~2.3"
     },
     "autoload": {
         "classmap": [

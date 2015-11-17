@@ -14,3 +14,6 @@ app/config/packages/bugsnag/
 /storage
 /public/build/
 bootstrap/cache
+*.out
+.phpstorm.meta.php
+_ide_helper_models.php

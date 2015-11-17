@@ -15,7 +15,7 @@ class CreateDiscountLimit extends Migration
         Schema::create('discount_limit', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('quantity');
-            $table->decimal('amount_limit', 11, 0);
+            $table->unsignedInteger('amount_limit');
             $table->string('category_limit');
             $table->string('product_limit');
             $table->tinyInteger('multi_use')->default(0);

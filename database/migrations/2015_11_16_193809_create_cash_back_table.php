@@ -15,7 +15,7 @@ class CreateCashBackTable extends Migration
         Schema::create('cash_back', function (Blueprint $table) {
             $table->increments('id');
             $table->string('type');
-            $table->decimal('content', 11, 0);
+            $table->unsignedInteger('content');
             $table->softDeletes();
             $table->timestamps();
         });

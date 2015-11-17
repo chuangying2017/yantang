@@ -16,7 +16,7 @@ class CreateCouponsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('type');
-            $table->decimal('content', 11, 0);
+            $table->unsignedInteger('content');
             $table->string('detail');
             $table->softDeletes();
             $table->timestamps();

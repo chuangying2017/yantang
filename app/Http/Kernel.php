@@ -34,5 +34,9 @@ class Kernel extends HttpKernel
         'guest.admin' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'auth.wechat' => \App\Http\Middleware\WechatAuthenticate::class,
         'follow' => \App\Http\Middleware\RedirectIfNotFollow::class,
+
+        'role' => \Zizaco\Entrust\Middleware\EntrustRole::class,
+        'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
+        'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
     ];
 }

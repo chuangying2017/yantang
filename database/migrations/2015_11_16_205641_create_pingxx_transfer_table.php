@@ -18,7 +18,7 @@ class CreatePingxxTransferTable extends Migration
             $table->string('openid');
             $table->string('transfer_id');
             $table->string('payment_id');
-            $table->decimal('amount', 11, 0);
+            $table->unsignedInteger('amount');
             $table->string('currency')->defualt('cny');
             $table->string('recipient');
             $table->string('transaction_no');

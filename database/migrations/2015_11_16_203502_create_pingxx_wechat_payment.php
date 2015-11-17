@@ -18,7 +18,7 @@ class CreatePingxxWechatPayment extends Migration
             $table->integer('user_id');
             $table->string('charge_id');
             $table->string('transaction_no');
-            $table->decimal('amount', 11, 0);
+            $table->unsignedInteger('amount');
             $table->string('channel');
             $table->string('refund_id');
             $table->string('status');
@@ -26,7 +26,7 @@ class CreatePingxxWechatPayment extends Migration
             $table->string('currency')->default('cny');
             $table->string('error_code');
             $table->string('error_msg');
-            $table->decimal('amount_refunded', 11, 0);
+            $table->unsignedInteger('amount_refunded');
             $table->softDeletes();
             $table->timestamps();
         });

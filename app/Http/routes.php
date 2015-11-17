@@ -11,40 +11,12 @@
 |
 */
 
-
-
-if(App::environment() == 'local' || env('APP_DEBUG')) {
-	
-	Route::get('test', function(){
-
-	});
-
-	Route::get('test/token', function(){
-		return Session::token();
-	});
-
-	Route::get('/test/login/{id}', function($id){
-		Auth::user()->logout();
-		Auth::user()->loginUsingId($id);
-		return $id . 'login';
-	});
-
-	Route::get('/test/logout', function(){
-		Auth::user()->logout();
-	});
-
-}
-
 /*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
+ * Test routes
+ */
+require app_path('Http/routes/test.php');
+
+
 
 
 Route::group(['middleware' => 'auth.wechat'], function(){
@@ -55,7 +27,7 @@ Route::group(['middleware' => 'auth.wechat'], function(){
 
 	Route::group(['prefix' => 'api'], function(){
 
-		
+
 
 	});
 

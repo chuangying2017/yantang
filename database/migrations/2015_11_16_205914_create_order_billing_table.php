@@ -16,7 +16,7 @@ class CreateOrderBillingTable extends Migration
             $table->increments('id');
             $table->integer('order_id');
             $table->integer('user_id');
-            $table->decimal('amount', 11, 0);
+            $table->unsignedInteger('amount');
             $table->string('resource_type');
             $table->integer('resource_id');
             $table->string('status');

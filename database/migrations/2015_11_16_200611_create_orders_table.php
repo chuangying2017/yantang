@@ -16,10 +16,10 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('order_no');
-            $table->decimal('total_amount', 11, 0);
-            $table->decimal('post_fee', 8, 0);
-            $table->decimal('discount_amount', 11, 0);
-            $table->decimal('pay_amount', 11, 0);
+            $table->unsignedInteger('total_amount');
+            $table->unsignedInteger('post_fee');
+            $table->unsignedInteger('discount_amount');
+            $table->unsignedInteger('pay_amount');
             $table->string('memo');
             $table->string('status');
             $table->timestamp('pay_at')->nullAble();
