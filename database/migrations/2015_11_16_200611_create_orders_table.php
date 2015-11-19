@@ -22,10 +22,10 @@ class CreateOrdersTable extends Migration
             $table->unsignedInteger('pay_amount');
             $table->string('memo');
             $table->string('status');
-            $table->timestamp('pay_at')->nullAble();
-            $table->timestamp('deliver_at')->nullAble();
-            $table->timestamp('cancel_at')->nullAble();
-            $table->timestamp('done_at')->nullAble();
+            $table->timestamp('pay_at')->nullable();
+            $table->timestamp('deliver_at')->nullable();
+            $table->timestamp('cancel_at')->nullable();
+            $table->timestamp('done_at')->nullable();
             $table->string('deliver_type')->default('post');
             $table->string('pay_type')->default('cash');
             $table->softDeletes();

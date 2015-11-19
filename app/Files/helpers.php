@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 if ( ! function_exists('current_url_paras')) {
@@ -23,4 +23,13 @@ if ( ! function_exists('qiniu_asset')) {
 	{
 		return env('QINIU_PREFIX_URL') . $path;
 	}
+}
+
+
+if ( ! function_exists('array_to_string')) {
+
+    function array_to_string($value, $glue = ',')
+    {
+        return is_array($value) ? implode($glue, $value) : $value;
+    }
 }
