@@ -11,10 +11,8 @@
 |
 */
 
-/*
- * Test routes
- */
-require app_path('Http/routes/test.php');
+require app_path('Http/Routes/test.php');
+require app_path('Http/Routes/admin.php');
 
 
 
@@ -27,44 +25,10 @@ Route::group(['middleware' => 'auth.wechat'], function(){
 
 	Route::group(['prefix' => 'api'], function(){
 
-
-
 	});
-
-
 });
-
 
 Route::controller('wechat', 'Auth\WechatAuthController');
 
 
-Route::group(['prefix' => 'admin'], function(){
 
-	Route::get('login', [
-		'as' => 'admin.login',
-		'uses' => 'Auth\AdminAuthController@getLogin'
-	]);
-
-	Route::get('logout', [
-		'as' => 'admin.logout',
-		'uses' => 'Auth\AdminAuthController@getLogout'
-	]);
-
-	Route::post('login', [
-		'as' => 'admin.login.store',
-		'uses' => 'Auth\AdminAuthController@postLogin'
-	]);
-
-	Route::group(['middleware' => 'auth.admin'], function(){
-
-		get('/dashboard', [
-			'as' => 'admin.dashboard',
-			'uses' => 'AdminController@index'
-		]);
-
-		resource('account', 'AdminAccountController');
-
-
-	});
-
-});

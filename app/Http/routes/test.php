@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Test routes
+ */
 if(App::environment() == 'local' || env('APP_DEBUG')) {
 
     Route::get('test/{id?}', function($id){

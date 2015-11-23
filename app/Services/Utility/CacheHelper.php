@@ -1,7 +1,7 @@
-<?php namespace App\Http\Traits;
+<?php namespace App\Services\Utility;
 
 
-trait CacheHelpers
+class CacheHelper
 {
 
     /**
@@ -11,7 +11,8 @@ trait CacheHelpers
      * @param int $expired | seconds
      * @return boolean
      */
-    public function setCache($cachename, $value, $expired){
+    static public function setCache($cachename, $value, $expired)
+    {
         $expiresAt = floor($expired / 60);
         Cache::put($cachename, $value, $expiresAt);
     }
@@ -21,7 +22,8 @@ trait CacheHelpers
      * @param string $cachename
      * @return mixed
      */
-    public function getCache($cachename){
+    static public function getCache($cachename)
+    {
         return Cache::get($cachename);
     }
 
@@ -30,7 +32,8 @@ trait CacheHelpers
      * @param string $cachename
      * @return boolean
      */
-    public function removeCache($cachename){
+    static public function removeCache($cachename)
+    {
         return Cache::forget($cachename);
     }
 

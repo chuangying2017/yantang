@@ -1,21 +1,13 @@
-<?php namespace App\Http\Traits;
+<?php namespace App\Services\Utility;
 
 
-trait HttpHelpers
+class HttpHelper
 {
-
-	protected $statusCode = 200;
-
-	protected $errCode = 0;
-
-	protected $message = '';
-
     /**
-     * GET 请求.
-     *
-     * @param string $url
+     * @param $url
+     * @return bool|mixed
      */
-    protected function http_get($url)
+    static public function http_get($url)
     {
         $oCurl = curl_init();
         if (stripos($url, 'https://') !== false) {
@@ -39,12 +31,12 @@ trait HttpHelpers
      * POST 请求.
      *
      * @param string $url
-     * @param array  $param
-     * @param bool   $post_file 是否文件上传
+     * @param array $param
+     * @param bool $post_file 是否文件上传
      *
      * @return string content
      */
-    private function http_post($url, $param, $post_file = false)
+    static public function http_post($url, $param, $post_file = false)
     {
         $oCurl = curl_init();
         if (stripos($url, 'https://') !== false) {
@@ -57,7 +49,7 @@ trait HttpHelpers
         } else {
             $aPOST = array();
             foreach ($param as $key => $val) {
-                $aPOST[] = $key.'='.urlencode($val);
+                $aPOST[] = $key . '=' . urlencode($val);
             }
             $strPOST = implode('&', $aPOST);
         }
