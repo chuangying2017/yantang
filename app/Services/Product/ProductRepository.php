@@ -30,6 +30,7 @@ class ProductRepository
         return array_only($data, $rules);
     }
 
+    //todo@bryant 整合create和Update
     /**
      * product create process
      * @param $data
