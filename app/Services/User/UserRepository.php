@@ -17,23 +17,6 @@ class UserRepository
 
     const CREATE_USER_ERROR = "create user error";
 
-    protected $wallet;
-    protected $creditWallet;
-    protected $addressManager;
-
-    /**
-     * UserRepository constructor.
-     * @param $wallet
-     * @param $creditWallet
-     * @param $addressManager
-     */
-    public function __construct($wallet, $creditWallet, $addressManager)
-    {
-        $this->wallet = $wallet;
-        $this->creditWallet = $creditWallet;
-        $this->addressManager = $addressManager;
-    }
-
     /**
      * create a new user
      * @param $data

@@ -10,12 +10,18 @@ namespace App\Services\User;
 
 
 use App\Models\Address;
+use App\Models\User;
 
 class UserAddressRepository
 {
+    /**
+     * create a new user address
+     * @param $data
+     * @return mixed
+     */
     public static function create($data)
     {
-        Address::create([
+        $address = Address::create([
             'user_id' => $data['user_id'],
             'name' => $data['name'],
             'mobile' => $data['mobile'],
@@ -25,21 +31,40 @@ class UserAddressRepository
             'role' => $data['role'],
             'display_name' => $data['display_name']
         ]);
+
+        return $address;
     }
 
+    /**
+     * update an address
+     * @param $id
+     * @param $data
+     * @return mixed
+     */
     public static function update($id, $data)
     {
-        Address::find($id)->udpate($data);
+        return Address::find($id)->udpate($data);
     }
 
+    /**
+     * get all addresses by user
+     * @param $user_id
+     * @return mixed
+     */
     public static function fetchByUser($user_id)
     {
-        return Address::where('user_id', $user_id)->get();
+        $user = User::findOrFail($user_id);
+        return $user->addresses();
     }
 
+    /**
+     * delete an address
+     * @param $id
+     * @return mixed
+     */
     public static function delete($id)
     {
-        Address::find($id)->delete();
+        return Address::destroy($id);
     }
 
 }

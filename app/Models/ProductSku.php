@@ -13,4 +13,9 @@ class ProductSku extends Model
     {
         return $this->belongsTo('App\Models\Product');
     }
+
+    public function attributeValues()
+    {
+        return $this->belongsToMany('App\Models\ProductSku', 'sku_attribute_value');
+    }
 }

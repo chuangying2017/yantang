@@ -9,6 +9,11 @@ class Category extends Model
     //
     public function attributes()
     {
-        return $this->belongsToMany('App\Models\Attribute', 'category_attribute'));
+        return $this->belongsToMany('App\Models\Attribute', 'category_attribute');
+    }
+
+    public function products()
+    {
+        return $this->hasMany('App\Models\Product');
     }
 }

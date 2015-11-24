@@ -28,6 +28,6 @@ class CreateSkuAttributeTable extends Migration
      */
     public function down()
     {
-        Schema::drop('sku_attribute');
+        Schema::drop('sku_attribute_value');
     }
 }
