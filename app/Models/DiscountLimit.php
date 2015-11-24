@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DiscountLimit extends Model
-{
+class DiscountLimit extends Model {
+
     protected $table = 'discount_limit';
     protected $guarded = ['id'];
 
@@ -13,4 +13,6 @@ class DiscountLimit extends Model
     {
         return $this->morphTo();
     }
+
+
 }

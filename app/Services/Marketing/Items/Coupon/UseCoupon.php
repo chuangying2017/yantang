@@ -1,5 +1,48 @@
 <?php namespace App\Services\Marketing\Items\Coupon;
 
-class UseCoupon  {
+use App\Services\Marketing\MarketingItemUsing;
+use App\Services\Marketing\MarketingProtocol;
+use App\Services\Marketing\MarketingRepository;
+
+class UseCoupon extends MarketingItemUsing {
+
+    public function __construct()
+    {
+        $this->setResourceType(MarketingProtocol::TYPE_OF_COUPON);
+    }
+
+    public function used($ticket_id, $user_id)
+    {
+
+    }
+
+
+    public function usableList($user_id, $order_detail)
+    {
+        #TODO 订单格式
+        $order_detail = [
+            'id'           => 1,
+            'products'     => [
+                [
+                    'product_sku_id' => 1,
+                    'quantity'       => 2,
+                    'price'          => 1000,
+                    'category_id'    => 1
+                ]
+            ],
+            'discount_fee' => 100
+        ];
+
+        $tickets = $this->lists($user_id);
+        foreach ($tickets as $key => $ticket) {
+            $ticket->can_use = $this->filter($ticket, $order_detail);
+            if ( ! $ticket->can_use) {
+                $ticket->reason = $this->getMessage();
+            }
+        }
+
+        return $tickets;
+    }
+
 
 }

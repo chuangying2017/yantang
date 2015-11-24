@@ -3,9 +3,9 @@
 interface MarketingInterface {
 
     //浏览
-    public static function lists($status);
+    public function lists($status, $user_id = null);
 
     //查看详情
-    public static function show($status);
+    public function show($id);
 
 }

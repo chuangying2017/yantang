@@ -15,6 +15,7 @@
  * Test routes
  */
 require app_path('Http/routes/test.php');
+require app_path('Http/routes/marketing.php');
 
 
 
