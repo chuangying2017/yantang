@@ -12,12 +12,10 @@ class CreateGroupProductPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('group_product', function (Blueprint $table) {
-            $table->integer('group_id')->unsigned()->index();
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
-            $table->integer('product_id')->unsigned()->index();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->primary(['group_id', 'product_id']);
+        Schema::create('product_group', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('group_id')->unsigned();
+            $table->integer('product_id')->unsigned();
         });
     }
 
@@ -28,6 +26,6 @@ class CreateGroupProductPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('group_product');
+        Schema::drop('product_group');
     }
 }

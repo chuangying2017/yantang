@@ -12,12 +12,10 @@ class CreateTagUserPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('tag_user', function (Blueprint $table) {
-            $table->integer('tag_id')->unsigned()->index();
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
-            $table->integer('user_id')->unsigned()->index();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->primary(['tag_id', 'user_id']);
+        Schema::create('user_tag', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('tag_id')->unsigned();
+            $table->integer('user_id')->unsigned();
         });
     }
 
@@ -28,6 +26,6 @@ class CreateTagUserPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('tag_user');
+        Schema::drop('user_tag');
     }
 }

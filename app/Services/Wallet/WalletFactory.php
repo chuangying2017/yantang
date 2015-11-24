@@ -6,7 +6,7 @@
  * Time: 6:59 PM
  */
 
-namespace App\Services\User;
+namespace App\Services\Wallet;
 
 use DB;
 use Exception;

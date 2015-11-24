@@ -15,7 +15,8 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('pid');
+            $table->integer('pid'); //parent id
+            $table->string('category_cover'); //分类封面
             $table->softDeletes();
             $table->timestamps();
         });

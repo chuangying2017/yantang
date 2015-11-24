@@ -1,0 +1,20 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AttributeValues extends Model
+{
+    //
+    public function attribute()
+    {
+        return $this->belongsTo('App\Models\Attribute');
+    }
+
+    public function skus()
+    {
+        return $this->belongsTo('App\Models\ProductSku');
+    }
+
+}

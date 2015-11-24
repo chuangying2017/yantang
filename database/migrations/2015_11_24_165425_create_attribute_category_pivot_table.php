@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSkuAttributeTable extends Migration
+class CreateAttributeCategoryPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,10 @@ class CreateSkuAttributeTable extends Migration
      */
     public function up()
     {
-        Schema::create('sku_attribute_value', function (Blueprint $table) {
+        Schema::create('category_attribute', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('sku_id');
-            $table->integer('attribute_value_id');
-            $table->softDeletes();
-            $table->timestamps();
+            $table->integer('attribute_id')->unsigned();
+            $table->integer('category_id')->unsigned();
         });
     }
 
@@ -28,6 +26,6 @@ class CreateSkuAttributeTable extends Migration
      */
     public function down()
     {
-        Schema::drop('sku_attribute');
+        Schema::drop('category_attribute');
     }
 }

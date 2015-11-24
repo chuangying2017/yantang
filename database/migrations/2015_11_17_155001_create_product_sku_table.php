@@ -16,7 +16,7 @@ class CreateProductSkuTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('product_id');
-            $table->string('product_sku_no');
+            $table->string('sku_no')->unique();
             $table->integer('stock')->unsigned();
             $table->integer('price')->unsigned();
             $table->softDeletes();

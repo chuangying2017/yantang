@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSkuAttributeTable extends Migration
+class CreateMemberUserPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,10 @@ class CreateSkuAttributeTable extends Migration
      */
     public function up()
     {
-        Schema::create('sku_attribute_value', function (Blueprint $table) {
+        Schema::create('user_member', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('sku_id');
-            $table->integer('attribute_value_id');
-            $table->softDeletes();
-            $table->timestamps();
+            $table->integer('member_id')->unsigned();
+            $table->integer('user_id')->unsigned();
         });
     }
 
@@ -28,6 +26,6 @@ class CreateSkuAttributeTable extends Migration
      */
     public function down()
     {
-        Schema::drop('sku_attribute');
+        Schema::drop('user_member');
     }
 }
