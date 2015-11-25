@@ -33,3 +33,14 @@ if ( ! function_exists('array_to_string')) {
         return is_array($value) ? implode($glue, $value) : $value;
     }
 }
+
+if ( ! function_exists('to_array')) {
+
+    function to_array($value)
+    {
+        return is_array($value) ? $value : [$value];
+    }
+}
+
+
+

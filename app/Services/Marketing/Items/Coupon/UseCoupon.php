@@ -21,7 +21,6 @@ class UseCoupon extends MarketingItemUsing {
     {
         #TODO 订单格式
         $order_detail = [
-            'id'           => 1,
             'products'     => [
                 [
                     'product_sku_id' => 1,
@@ -30,6 +29,7 @@ class UseCoupon extends MarketingItemUsing {
                     'category_id'    => 1
                 ]
             ],
+            'total_amount' => 10000,
             'discount_fee' => 100
         ];
 
