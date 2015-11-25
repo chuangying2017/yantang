@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTicketsTable extends Migration
-{
+class CreateTicketsTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -16,7 +16,7 @@ class CreateTicketsTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('coupon_id');
-            $table->string('ticket_no');
+            $table->string('ticket_no')->nullable();
             $table->string('status');
             $table->softDeletes();
             $table->timestamps();

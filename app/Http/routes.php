@@ -11,21 +11,23 @@
 |
 */
 
-require app_path('Http/Routes/test.php');
-require app_path('Http/Routes/admin.php');
+
+/*
+ * Test routes
+ */
+require app_path('Http/routes/test.php');
+require app_path('Http/routes/marketing.php');
 
 
+Route::group(['middleware' => 'auth.wechat'], function () {
 
+    get('/', function () {
+        return view('welcome');
+    });
 
-Route::group(['middleware' => 'auth.wechat'], function(){
+    Route::group(['prefix' => 'api'], function () {
 
-	get('/', function(){
-		return view('welcome');
-	});
-
-	Route::group(['prefix' => 'api'], function(){
-
-	});
+    });
 });
 
 Route::controller('wechat', 'Auth\WechatAuthController');

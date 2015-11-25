@@ -21,8 +21,8 @@ class CreateDiscountLimit extends Migration
             $table->tinyInteger('multi_use')->default(0);
             $table->string('resource_type');
             $table->integer('resource_id');
-            $table->timestamp('effect_time')->nullAble();
-            $table->timestamp('expire_time')->nullAble();
+            $table->timestamp('effect_time')->nullable();
+            $table->timestamp('expire_time')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
