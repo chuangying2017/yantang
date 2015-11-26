@@ -12,6 +12,15 @@ abstract class MarketingItemUsing implements MarketingInterface {
     //用户使用优惠
     public abstract function used($id, $user_id);
 
+    //列出用户可用优惠
+    public abstract function usableList($user_id, $order_detail);
+
+
+    //通过优惠id获取优惠额度
+    public abstract function discountFee($ticket_id, $pay_amount);
+
+
+
     //查询优惠是否可用
 
     /**
@@ -22,6 +31,11 @@ abstract class MarketingItemUsing implements MarketingInterface {
      */
     public function filter($resource, $order_detail)
     {
+
+        if(isset($resource['selected']) && $resource['selected']){
+            return true;
+        }
+
         $products = $order_detail['products'];
 
         //检查优惠是否生效
@@ -69,7 +83,7 @@ abstract class MarketingItemUsing implements MarketingInterface {
      * @param $pay_amount
      * @return int|string
      */
-    public function calculateDiscountFee($discount_type, $discount_content, $pay_amount)
+    protected function calculateDiscountFee($discount_type, $discount_content, $pay_amount)
     {
         if ($discount_type == MarketingProtocol::DISCOUNT_TYPE_OF_CASH) {
             return $discount_content > $pay_amount ? $pay_amount : $discount_content;
@@ -223,5 +237,6 @@ abstract class MarketingItemUsing implements MarketingInterface {
     {
         return $this->message;
     }
+
 
 }
