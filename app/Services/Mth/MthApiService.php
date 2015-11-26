@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * 每天惠API
+ */
 namespace App\Services\Mth;
 
 use App\Services\CommonConst;
@@ -9,10 +11,18 @@ use App\Services\Utility\HttpHelper;
 
 class MthApiService
 {
-
+    /**
+     * 基础url
+     */
     const BASE_URL = "topapi/";
+    /**
+     * 获取token url
+     */
     const AUTH_TOKEN_URL = "token";
 
+    /**
+     * 信息状态
+     */
     const ACCOUNT_EXISTED = 'ACCOUNT EXISTED';
     const REGISTER_ERROR = 'REGISTER_ERROR';
 
@@ -109,7 +119,6 @@ class MthApiService
             return false;
         }
     }
-
 
     /**
      * @param $account

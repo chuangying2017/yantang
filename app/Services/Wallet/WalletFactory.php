@@ -42,7 +42,7 @@ abstract class WalletFactory
     public function __construct($id)
     {
         if (!$this->type) throw new \Exception('no wallet type set');
-        $this->user_id = $id;
+        $this->user = User::findOrFail($id);
         $this->modelTable = $this->type;
         $this->recordTable = $this->type . '_record';
     }
@@ -58,7 +58,7 @@ abstract class WalletFactory
         try {
             DB::beginTransaction();
 
-            DB::table($this->modelTable)->decrement('amount', $amount);
+            $this->decrement('amount', $amount);
             $this->addRecord($amount, 0, $type);
 
             DB::commit();
@@ -78,8 +78,8 @@ abstract class WalletFactory
         try {
             DB::beginTransaction();
 
-            DB::table($this->modelTable)->decrement('amount', $amount);
-            DB::table($this->modelTable)->increment('frozen_amount', $amount);
+            $this->decrement('amount', $amount);
+            $this->increment('frozen_amount', $amount);
             $this->addRecord($amount, 0, WALLET_TYPE_FROZEN);
 
             DB::commit();
@@ -99,8 +99,8 @@ abstract class WalletFactory
         try {
             DB::beginTransaction();
 
-            DB::table($this->modelTable)->increment('amount', $amount);
-            DB::table($this->modelTable)->decrement('frozen_amount', $amount);
+            $this->increment('amount', $amount);
+            $this->decrement('frozen_amount', $amount);
             $this->addRecord($amount, 0, WALLET_TYPE_UNFROZEN);
 
             DB::commit();
@@ -121,7 +121,7 @@ abstract class WalletFactory
         try {
             DB::beginTransaction();
 
-            DB::table($this->modelTable)->increment('amount', $amount);
+            $this->increment('amount', $amount);
             $this->addRecord($amount, 1, $type);
 
             DB::commit();
@@ -152,5 +152,23 @@ abstract class WalletFactory
         } catch (Exception $e) {
             throw new Exception('add wallet record error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * @param $column
+     * @param $amount
+     */
+    private function increment($column, $amount)
+    {
+        DB::table($this->modelTable)->where('user_id', $this->user_id)->increment($column, $amount);
+    }
+
+    /**
+     * @param $column
+     * @param $amount
+     */
+    private function decrement($column, $amount)
+    {
+        DB::table($this->modelTable)->where('user_id', $this->user_id)->decrement($column, $amount);
     }
 }

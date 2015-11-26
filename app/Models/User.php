@@ -41,4 +41,14 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->hasMany('App\Models\Address');
     }
+
+    public function wallet()
+    {
+        return $this->hasOne('App\Models\Wallet');
+    }
+
+    public function creditsWallet()
+    {
+        return $this->hasOne('App\Models\CreditsWallet');
+    }
 }

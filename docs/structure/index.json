@@ -1,0 +1,37 @@
+{
+    "nav-bar": [{
+        "name": "首页",
+        "type": "category/page",
+        "url": ""
+    }],
+    "categories": [{
+        "name": "",
+        "children": [{
+            "name": "",
+            "id": "",
+            "url": ""
+        }]
+    }],
+    "banner-sliders": [{
+        "title": "",
+        "url": "",
+        "cover_image": "",
+        "index": ""
+    }],
+    "banner-boxes": [{
+        "title": "",
+        "url": "",
+        "cover_image": "",
+        "index": ""
+    }],
+    "sections": [{
+        "title": "",
+        "style": "",
+        "url": "",
+        "products": [{
+            "title": "",
+            "url": "",
+            "cover_image": "",
+        }]
+    }]
+}

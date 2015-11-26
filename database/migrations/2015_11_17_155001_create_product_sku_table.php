@@ -15,6 +15,7 @@ class CreateProductSkuTable extends Migration
         Schema::create('product_sku', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('cover_image');
             $table->integer('product_id');
             $table->string('sku_no')->unique();
             $table->integer('stock')->unsigned();
