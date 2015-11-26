@@ -154,6 +154,11 @@ class MarketingRepository {
     protected static function queryTicket($ticket_id, $relation = null)
     {
         $key = 'id';
+
+        if ($ticket_id instanceof Ticket) {
+            return $ticket_id;
+        }
+
         if (strlen($ticket_id) == MarketingProtocol::LENGTH_OF_TICKET_NO) {
             $key = 'ticket_no';
         }
@@ -178,14 +183,16 @@ class MarketingRepository {
         return DiscountLimit::where(compact('resource_id', 'resource_type'))->decrement('quantity', $quantity);
     }
 
-    public static function updateTicketStatus($ticket_id, $status)
+    public static function updateTicketsStatus($ticket_id, $status)
     {
-        return DB::table('tickets')->where('id', $ticket_id)->update(['status' => $status]);
+        $ticket_id = to_array($ticket_id);
+
+        return DB::table('tickets')->whereIn('id', $ticket_id)->update(['status' => $status]);
     }
 
-    public static function setTicketExpired($ticket_id)
+    public static function setTicketsExpired($ticket_id)
     {
-        return self::updateTicketStatus($ticket_id, MarketingProtocol::STATUS_OF_EXPIRED);
+        return self::updateTicketsStatus($ticket_id, MarketingProtocol::STATUS_OF_EXPIRED);
     }
 
 

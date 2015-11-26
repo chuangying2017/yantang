@@ -16,25 +16,36 @@ class UseCoupon extends MarketingItemUsing {
 
     }
 
+    public function discountFee($ticket_id, $pay_amount)
+    {
+        $ticket = self::show($ticket_id);
+        $resource = $ticket['resource'];
 
+        return self::calculateDiscountFee($resource['type'], $resource['content'], $pay_amount);
+    }
+
+    /**
+     * $order_detail = [
+     * 'products'     => [
+     * [
+     * 'product_sku_id' => 1,
+     * 'quantity'       => 2,
+     * 'price'          => 1000,
+     * 'category_id'    => 1
+     * ]
+     * ],
+     * 'total_amount' => 10000,
+     * 'discount_fee' => 100
+     * ];
+     * @param $user_id
+     * @param $order_detail
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function usableList($user_id, $order_detail)
     {
-        #TODO 订单格式
-        $order_detail = [
-            'products'     => [
-                [
-                    'product_sku_id' => 1,
-                    'quantity'       => 2,
-                    'price'          => 1000,
-                    'category_id'    => 1
-                ]
-            ],
-            'total_amount' => 10000,
-            'discount_fee' => 100
-        ];
-
-        $tickets = $this->lists($user_id);
+        $tickets = $this->getTickets($user_id, $order_detail);
         foreach ($tickets as $key => $ticket) {
+            $ticket->selected = false;
             $ticket->can_use = $this->filter($ticket, $order_detail);
             if ( ! $ticket->can_use) {
                 $ticket->reason = $this->getMessage();
@@ -42,6 +53,11 @@ class UseCoupon extends MarketingItemUsing {
         }
 
         return $tickets;
+    }
+
+    public function getTickets($user_id, $order_detail)
+    {
+        return array_get($order_detail, 'marketing.coupons', $this->lists($user_id));
     }
 
 
