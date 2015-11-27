@@ -17,6 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->integer('pid'); //parent id
             $table->string('category_cover'); //分类封面
+            $table->string('desc'); //分类描述
             $table->softDeletes();
             $table->timestamps();
         });
