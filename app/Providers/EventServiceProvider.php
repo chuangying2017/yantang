@@ -18,7 +18,8 @@ class EventServiceProvider extends ServiceProvider {
         ],
         'App\Services\Orders\Event\OrderConfirm' => [
             'App\Services\Orders\Listeners\OrderConfirmListener',
-            'App\Services\Cart\Listeners\OrderConfirmListener'
+            'App\Services\Cart\Listeners\OrderConfirmListener',
+            'App\Services\Marketing\Listeners\OrderConfirmListener',
         ],
     ];
 

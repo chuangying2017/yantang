@@ -52,6 +52,7 @@ class OrderRepository {
         DB::table('order_products')->insert($order_products_info);
     }
 
+
     protected static function storeAddress($address, $order_id)
     {
         $address_info = [
@@ -78,7 +79,7 @@ class OrderRepository {
 
     public static function queryFullOrder($order_no)
     {
-
+        return Order::with('products', 'address', 'billings')->where('order_no', $order_no)->first();
     }
 
 
