@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
 {
-    //
+    use SoftDeletes;
 
     public function user()
     {

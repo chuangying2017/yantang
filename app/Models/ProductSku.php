@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductSku extends Model
 {
-    //
+    use SoftDeletes;
+
     protected $table = 'product_sku';
 
     public function product()

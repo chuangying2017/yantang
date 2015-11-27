@@ -16,6 +16,7 @@ class CreateGroupsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('group_cover'); //封面图
+            $table->string('desc'); //封面图
             $table->softDeletes();
             $table->timestamps();
         });
