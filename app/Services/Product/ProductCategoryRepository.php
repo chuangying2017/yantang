@@ -13,17 +13,42 @@ use Exception;
 
 class CategoryRepository
 {
-    public static function create($data)
+    /**
+     * create a new category
+     * @param $name
+     * @param int $pid
+     * @param string $category_cover
+     * @param string $desc
+     * @throws Exception
+     */
+    public static function create($name, $pid = 0, $category_cover = "", $desc = "")
     {
-        $parent = Category::find($data['pid']);
-        if (!$parent) throw new Exception('parent not existed');
-        $category = new Category;
+        if ($pid !== 0) {
+            $parent = Category::find($pid);
+            if (!$parent) throw new Exception('parent not existed');
+        }
+        try {
+            DB::beginTransaction();
 
-        $category->name = $data['name'];
-        $category->pid = $data['pid'];
-        $category->save();
+            $category = new Category;
+
+            $category->name = $name;
+            $category->pid = $pid;
+            $category->category_cover = $category_cover;
+            $category->desc = $desc;
+            $category->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
     }
 
+    /**
+     * update a category
+     * @param $id
+     * @param $data
+     */
     public static function update($id, $data)
     {
         $category = Category::findOrFail($id);
@@ -48,8 +73,9 @@ class CategoryRepository
         return Category::all();
     }
 
-    public static function getByPid($pid)
+    public static function getChildren($pid)
     {
         return Category::where('pid', $pid)->get();
     }
+
 }
