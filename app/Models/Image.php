@@ -9,6 +9,11 @@ class Image extends Model
     //
     public function products()
     {
-        return $this->belongsToMany('App\Models\Product', 'product_image');
+        return $this->morphedByMany('App\Models\Product', 'imageable');
+    }
+
+    public function comments()
+    {
+        return $this->morphedByMany('App\Models\Comment', 'imageable');
     }
 }

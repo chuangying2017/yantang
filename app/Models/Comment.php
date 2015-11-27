@@ -11,4 +11,14 @@ class Comment extends Model
     {
         return $this->belongsTo('App\Models\Product');
     }
+
+    public function images()
+    {
+        return $this->morphedByMany('App\Models\Image', 'imageable');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
 }
