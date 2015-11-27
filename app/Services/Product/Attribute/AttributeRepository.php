@@ -6,7 +6,7 @@
  * Time: 4:04 PM
  */
 
-namespace App\Services\Product;
+namespace App\Services\Product\Attribute;
 
 
 use App\Models\Attribute;

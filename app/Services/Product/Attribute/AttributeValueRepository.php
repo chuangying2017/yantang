@@ -6,11 +6,11 @@
  * Time: 4:04 PM
  */
 
-namespace App\Services\Product;
+namespace App\Services\Product\Attribute;
 
 
-use App\AttributeValues;
 use App\Models\Attribute;
+use App\Models\AttributeValues;
 
 class AttributeValueRepository
 {

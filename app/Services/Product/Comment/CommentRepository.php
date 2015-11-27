@@ -6,12 +6,12 @@
  * Time: 4:03 PM
  */
 
-namespace App\Services\Product;
+namespace App\Services\Product\Comment;
 
 
 use App\Models\Comment;
 
-class ProductCommentsRepository
+class CommentsRepository
 {
     /**
      * create a comment
