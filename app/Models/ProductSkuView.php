@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProductSku extends Model
+class ProductSkuView extends Model
 {
     //
     protected $table = 'product_sku_view';
