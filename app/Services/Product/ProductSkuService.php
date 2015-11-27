@@ -8,8 +8,20 @@
 
 namespace App\Services\Product;
 
+use App\Models\ProductSku;
+
 class ProductSkuService
 {
+    public static function getAttributes($product_sku_id)
+    {
+        $attributes = [];
+        $product_sku = ProductSku::firstOrFail($product_sku_id);
+        $attributeValues = $product_sku->attributeValues()->get();
+        foreach ($attributeValues as $value) {
+            $attribute = Attribute::findOrFail($value->attribute_id);
+        }
+    }
+
     public static function afford($queryArr = array())
     {
 

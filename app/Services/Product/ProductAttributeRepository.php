@@ -17,9 +17,8 @@ class AttributeRepository
     /**
      * create a new attribute
      * @param $name
-     * @param $category_ids
      */
-    public static function create($name, $category_ids)
+    public static function create($name)
     {
         try {
             DB::beginTransaction();
@@ -28,8 +27,6 @@ class AttributeRepository
                 'name' => $name
             ]);
 
-            $attr->categories()->attach($category_ids);
-
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -37,12 +34,23 @@ class AttributeRepository
     }
 
     /**
+     * bind an attribute with categories
+     * @param $id
+     * @param $category_ids
+     * @return mixed
+     */
+    public static function bindCategories($id, $category_ids)
+    {
+        $attr = Attribute::findOrFail($id);
+        return $attr->categoeies()->sync($category_ids);
+    }
+
+    /**
      * update an attribute
      * @param $id
      * @param $name
-     * @param $category_ids
      */
-    public static function update($id, $name, $category_ids)
+    public static function update($id, $name)
     {
         try {
             DB::beginTransaction();
@@ -51,7 +59,9 @@ class AttributeRepository
             $attr->name = $name;
             $attr->save();
 
-            $attr->categories()->sync($category_ids);
+            DB::table('attribute_values')->where('attibute_id', $id)->update([
+                'attribute_name' => $name
+            ]);
 
             DB::commit();
         } catch (Exception $e) {
@@ -90,6 +100,11 @@ class AttributeRepository
         ]);
     }
 
+    /**
+     * get all attributes by category
+     * @param $category_id
+     * @return mixed
+     */
     public static function getAllByCategory($category_id)
     {
         $category = Category::findOrFail($category_id);
