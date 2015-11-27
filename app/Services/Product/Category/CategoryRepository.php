@@ -5,7 +5,7 @@
  * Date: 23/11/2015
  * Time: 4:03 PM
  */
-namespace App\Services\Product;
+namespace App\Services\Product\Category;
 
 
 use App\Models\Category;

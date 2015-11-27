@@ -6,9 +6,7 @@
  * Time: 6:58 PM
  */
 
-namespace App\Services\Wallet;
-
-use App\Services\User\Wallet;
+namespace App\Services\User\Wallet;
 
 class WalletRepository extends WalletFactory
 {

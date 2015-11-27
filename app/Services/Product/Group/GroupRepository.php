@@ -6,12 +6,12 @@
  * Time: 4:04 PM
  */
 
-namespace App\Services\Product;
+namespace App\Services\Product\Group;
 
 
 use App\Models\Group;
 
-class ProductGroupRepository
+class GroupRepository
 {
     /**
      * create a new group
