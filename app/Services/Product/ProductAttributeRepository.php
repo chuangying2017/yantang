@@ -71,7 +71,7 @@ class AttributeRepository
             $attr = Attribute::findOrFail($id);
             $attr->delete();
 
-            $attr->categories()->sync([]);
+            $attr->categories()->detach();
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

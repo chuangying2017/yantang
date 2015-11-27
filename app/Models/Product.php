@@ -23,7 +23,7 @@ class Product extends Model
 
     public function images()
     {
-        return $this->belongsToMany('App\Models\Image', 'product_image');
+        return $this->morphToMany('App\Models\Image', 'imageable');
     }
 
     public function skus()

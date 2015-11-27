@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableComments extends Migration
+class CreateTableImageables extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,11 @@ class CreateTableComments extends Migration
      */
     public function up()
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('imageables', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('message');
-            $table->integer('user_id');
-            $table->integer('order_id');
-            $table->integer('product_id');
-            $table->boolean('status')->default(1);
+            $table->integer('image_id');
+            $table->integer('imageable_id');
+            $table->string('imageable_type');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +30,6 @@ class CreateTableComments extends Migration
     public function down()
     {
         //
-        Schema::drop('comments');
+        Schema::drop('imageables');
     }
 }
