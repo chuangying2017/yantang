@@ -10,39 +10,90 @@ namespace App\Services\Product;
 
 
 use App\Models\Attribute;
+use App\Models\Category;
 
 class AttributeRepository
 {
-    public static function create($data)
+    /**
+     * create a new attribute
+     * @param $name
+     * @param $category_ids
+     */
+    public static function create($name, $category_ids)
     {
-        $attr = new Attribute;
+        try {
+            DB::beginTransaction();
 
-        $attr->name = $data['name'];
-        $attr->type = $data['type'];
-        $attr->save();
+            $attr = Attribute::firstOrCreate([
+                'name' => $name
+            ]);
+
+            $attr->categories()->attach($category_ids);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
     }
 
-    public static function update($id, $data)
+    /**
+     * update an attribute
+     * @param $id
+     * @param $name
+     * @param $category_ids
+     */
+    public static function update($id, $name, $category_ids)
     {
-        $attr = Attribute::findOrFail($id);
-        $attr->name = $data['name'];
-        $attr->type = $data['type'];
-        $attr->save();
+        try {
+            DB::beginTransaction();
+
+            $attr = Attribute::findOrFail($id);
+            $attr->name = $name;
+            $attr->save();
+
+            $attr->categories()->sync($category_ids);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
     }
 
+    /**
+     * delete an attribute
+     * @param $id
+     */
     public static function delete($id)
     {
-        $attr = Attribute::findOrFail($id);
-        $attr->delete();
+        try {
+            DB::beginTransaction();
+
+            $attr = Attribute::findOrFail($id);
+            $attr->delete();
+
+            $attr->categories()->sync([]);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
     }
 
-    public static function getById($id)
+    /**
+     * get an attribute by id
+     * @param $name
+     * @return mixed
+     */
+    public static function firstOrCreate($name)
     {
-        return Attribute::findOrFail($id);
+        return Attribute::firstOrCreate([
+            'name' => $name
+        ]);
     }
 
-    public static function getAll()
+    public static function getAllByCategory($category_id)
     {
-        return Attribute::all();
+        $category = Category::findOrFail($category_id);
+
+        return $category->attributes()->get();
     }
 }
