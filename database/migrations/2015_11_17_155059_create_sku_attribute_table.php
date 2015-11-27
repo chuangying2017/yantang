@@ -14,7 +14,7 @@ class CreateSkuAttributeTable extends Migration
     {
         Schema::create('sku_attribute_value', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('sku_id');
+            $table->integer('product_sku_id');
             $table->integer('attribute_value_id');
             $table->softDeletes();
             $table->timestamps();

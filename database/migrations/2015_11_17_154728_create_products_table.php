@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('product_id')->unique(); // 产品编码
             $table->integer('merchant_id'); //商家id
+            $table->integer('category_id'); //商家id
             $table->string('type'); //商品类型: 虚拟/实物
             $table->integer('stocks')->unsigned(); //商品库存
             $table->string('origin_id'); //商家编码
