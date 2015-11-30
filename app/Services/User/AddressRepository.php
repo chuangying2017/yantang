@@ -12,7 +12,7 @@ namespace App\Services\User;
 use App\Models\Address;
 use App\Models\User;
 
-class UserAddressRepository
+class AddressRepository
 {
     /**
      * create a new user address

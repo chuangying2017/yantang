@@ -16,7 +16,9 @@ class CreateTableComments extends Migration
             $table->increments('id');
             $table->text('message');
             $table->integer('user_id');
+            $table->integer('order_id');
             $table->integer('product_id');
+            $table->boolean('status')->default(1);
             $table->softDeletes();
             $table->timestamps();
         });

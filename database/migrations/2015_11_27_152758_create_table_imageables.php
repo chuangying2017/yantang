@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAttributesTable extends Migration
+class CreateTableImageables extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,11 @@ class CreateAttributesTable extends Migration
      */
     public function up()
     {
-        Schema::create('attributes', function (Blueprint $table) {
+        Schema::create('imageables', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->integer('image_id');
+            $table->integer('imageable_id');
+            $table->string('imageable_type');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -27,6 +29,7 @@ class CreateAttributesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('attributes');
+        //
+        Schema::drop('imageables');
     }
 }

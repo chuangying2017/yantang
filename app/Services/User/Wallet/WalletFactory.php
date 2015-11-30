@@ -6,11 +6,10 @@
  * Time: 6:59 PM
  */
 
-namespace App\Services\Wallet;
+namespace App\Services\User\Wallet;
 
 use DB;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 
 abstract class WalletFactory
 {

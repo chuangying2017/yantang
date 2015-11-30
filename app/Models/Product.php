@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use SoftDeletes;
+
     public function category()
     {
         return $this->belongsTo('App\Models\Category');
@@ -23,7 +25,7 @@ class Product extends Model
 
     public function images()
     {
-        return $this->belongsToMany('App\Models\Image', 'product_image');
+        return $this->morphToMany('App\Models\Image', 'imageable');
     }
 
     public function skus()
