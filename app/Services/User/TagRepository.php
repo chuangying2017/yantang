@@ -9,7 +9,7 @@
 namespace App\Services\User;
 
 
-class UserTagRepository
+class TagRepository
 {
 
 }
