@@ -76,7 +76,7 @@ class CommentsRepository
      * @param $product_id
      * @return mixed
      */
-    public static function getByProductId($product_id)
+    public static function getByProduct($product_id)
     {
         $comments = Comment::with('user.avatar', 'user.username', 'images')->where('product_id', $product_id)->where('status', 1)->get();
         return $comments;
