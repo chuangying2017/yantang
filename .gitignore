@@ -3,7 +3,7 @@
 Homestead.yaml
 Homestead.json
 .env
-.idea/
+/.idea
 /public/assets/bower_components
 Envoy.blade.php
 _ide_helper.php
@@ -14,7 +14,6 @@ app/config/packages/bugsnag/
 /storage
 /public/build/
 bootstrap/cache
-<<<<<<< HEAD
 *.out
 .phpstorm.meta.php
 _ide_helper_models.php

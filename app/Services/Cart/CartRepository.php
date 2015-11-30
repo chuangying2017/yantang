@@ -59,6 +59,7 @@ class CartRepository {
         return 0;
     }
 
+
     public static function increment($cart_id, $quantity)
     {
         self::update($cart_id, $quantity, 'increment');
@@ -79,11 +80,6 @@ class CartRepository {
     public static function all($user_id)
     {
         return Cart::where('user_id', $user_id)->get();
-    }
-
-    public static function lists($user_id)
-    {
-        #todo 查询购物车商品详情
     }
 
 }
