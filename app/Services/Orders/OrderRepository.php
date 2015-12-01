@@ -13,13 +13,14 @@ class OrderRepository {
 
             $order_no = self::generateOrderNo();
             $total_amount = $order_info['total_amount'];
+            $title = $order_info['title'];
             $post_fee = array_get($order_info, 'post_fee', 0);
             $discount_amount = array_get($order_info, 'discount_fee', 0);
             $pay_amount = bcsub(bcadd($total_amount, $post_fee), $discount_amount);
             $memo = array_get($order_info, 'memo', '');
             $status = OrderProtocol::STATUS_OF_UNPAID;
 
-            $order_main_info = compact('order_no', 'total_amount', 'post_fee', 'discount_amount', 'pay_amount', 'memo', 'status');
+            $order_main_info = compact('title', 'order_no', 'total_amount', 'post_fee', 'discount_amount', 'pay_amount', 'memo', 'status');
 
             DB::beginTransaction();
 

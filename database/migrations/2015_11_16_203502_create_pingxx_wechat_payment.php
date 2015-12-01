@@ -12,9 +12,11 @@ class CreatePingxxWechatPayment extends Migration
      */
     public function up()
     {
-        Schema::create('pingxx_wechat_payment', function (Blueprint $table) {
+        Schema::create('pingxx_payments', function (Blueprint $table) {
             $table->increments('id');
             $table->string('payment_id');
+            $table->integer('order_id');
+            $table->integer('billing_id');
             $table->integer('user_id');
             $table->string('charge_id');
             $table->string('transaction_no');

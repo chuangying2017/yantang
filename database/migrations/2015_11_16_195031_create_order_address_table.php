@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrderAddressTable extends Migration
-{
+class CreateOrderAddressTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -17,6 +17,7 @@ class CreateOrderAddressTable extends Migration
             $table->integer('order_id');
             $table->string('name');
             $table->string('mobile');
+            $table->string('telephone')->nullable();
             $table->string('address', 255);
             $table->string('zip');
             $table->softDeletes();

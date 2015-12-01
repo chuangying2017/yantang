@@ -59,7 +59,6 @@ class CartRepository {
         return 0;
     }
 
-
     public static function increment($cart_id, $quantity)
     {
         self::update($cart_id, $quantity, 'increment');

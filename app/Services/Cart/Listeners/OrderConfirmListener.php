@@ -2,6 +2,7 @@
 
 namespace App\Services\Cart\Listeners;
 
+use App\Services\Cart\CartService;
 use App\Services\Marketing\MarketingProtocol;
 use App\Services\Marketing\MarketingRepository;
 use App\Services\Orders\Event\OrderConfirm;
@@ -30,6 +31,9 @@ class OrderConfirmListener {
      */
     public function handle(OrderConfirm $event)
     {
-
+        if ( ! is_null($event->carts)) {
+            $carts = $event->carts;
+            CartService::remove($carts);
+        }
     }
 }

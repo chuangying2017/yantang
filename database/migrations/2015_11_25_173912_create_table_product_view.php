@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableProductDetailView extends Migration
-{
+class CreateTableProductView extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -36,6 +36,7 @@ class CreateTableProductDetailView extends Migration
             group_concat() AS images,
         ");
     }
+
     /**
      * Reverse the migrations.
      *

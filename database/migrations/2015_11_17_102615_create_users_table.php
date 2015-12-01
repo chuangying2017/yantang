@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
-{
+class CreateUsersTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -26,10 +26,10 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->integer('user_grade');
             $table->string('gift_ticket');
-            $table->softDeletes();
             $table->timestamp('birthday');
             $table->timestamp('createtime');
             $table->timestamp('modifiled_time');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

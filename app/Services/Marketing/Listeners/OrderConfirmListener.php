@@ -10,8 +10,8 @@ use App\Services\Orders\Payments\PaymentRepository;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderConfirmListener
-{
+class OrderConfirmListener {
+
     /**
      * Create the event listener.
      *
@@ -25,7 +25,7 @@ class OrderConfirmListener
     /**
      * Handle the event.
      *
-     * @param  OrderConfirm  $event
+     * @param  OrderConfirm $event
      * @return void
      */
     public function handle(OrderConfirm $event)
@@ -36,7 +36,7 @@ class OrderConfirmListener
 
         $ticket_id = [];
         foreach ($tickets as $ticket) {
-            PaymentRepository::storeBilling($order_id, $user_id, $ticket['discount_fee'], OrderProtocol::TYPE_OF_DISCOUNT, OrderProtocol::RESOURCE_OF_TICKET, $ticket['id']);
+            PaymentRepository::storeTicketBilling($order_id, $user_id, $ticket['discount_fee'], $ticket['id']);
             $ticket_id[] = $ticket['id'];
         }
 

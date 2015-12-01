@@ -15,6 +15,7 @@ class OrderConfirm extends Event {
     public $tickets;
     public $address;
     public $user_id;
+    public $carts;
 
     /**
      * Create a new event instance.
@@ -29,6 +30,7 @@ class OrderConfirm extends Event {
         #todo  添加多种优惠
         $this->tickets = $order_info['marketing']['coupons'];
         $this->address = $order_info['address'];
+        $this->carts = isset($order_info['carts']) ? $order_info['carts'] : null;
     }
 
     /**
