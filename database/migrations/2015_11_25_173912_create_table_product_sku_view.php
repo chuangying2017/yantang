@@ -15,6 +15,7 @@ class CreateTableProductSkuView extends Migration
         DB::statement("CREATE VIEW product_sku_view as SELECT
 
             product_sku.id AS id,
+            product_sku.product_id AS product_id,
             product_sku.sku_no AS sku_no,
             product_sku.stock AS stock,
             product_sku.sales AS sales,

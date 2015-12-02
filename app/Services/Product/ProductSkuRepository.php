@@ -9,6 +9,10 @@
 namespace App\Services\Product;
 
 
+/**
+ * Class ProductSkuRepository
+ * @package App\Services\Product
+ */
 class ProductSkuRepository
 {
     /**
@@ -56,7 +60,7 @@ class ProductSkuRepository
             if (isset($sku['id'])) {
                 $remainSkuIds[] = $sku[id];
             } else {
-                $sku = self::createSku($sku, $product);
+                $sku = self::create($sku, $product);
             }
         }
         /**

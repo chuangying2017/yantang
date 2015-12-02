@@ -12,6 +12,10 @@ namespace App\Services\Product;
 use App\Models\Product;
 use DB;
 
+/**
+ * Class ProductRepository
+ * @package App\Services\Product
+ */
 class ProductRepository
 {
     /**
@@ -137,6 +141,9 @@ class ProductRepository
         return $product;
     }
 
+    /**
+     * @param $id
+     */
     public static function delete($id)
     {
         try {

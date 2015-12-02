@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Image extends Model
 {
-    //
+    use SoftDeletes;
+
     public function products()
     {
         return $this->morphedByMany('App\Models\Product', 'imageable');

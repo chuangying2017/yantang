@@ -9,60 +9,112 @@
 namespace App\Services\Product;
 
 use App\Models\ProductSku;
+use App\Models\ProductSkuView;
 
+/**
+ * Class ProductSkuService
+ * @package App\Services\Product
+ */
 class ProductSkuService
 {
+    /**
+     * @param $data
+     * @param $product_id
+     * @return mixed
+     */
     public static function create($data, $product_id)
     {
         return ProductSkuRepository::create($data, $product_id);
     }
 
+    /**
+     * @param $id
+     * @param $data
+     */
     public static function update($id, $data)
     {
         return ProductSkuRepository::update($id, $data);
     }
 
-    public static function getAttributes($product_sku_id)
+    /**
+     * get sku info
+     * @param array|integer $product_sku_ids
+     * @return array
+     */
+    public static function getInfo($product_sku_ids)
     {
-        $attributes = [];
-        $product_sku = ProductSku::firstOrFail($product_sku_id);
-        $attributeValues = $product_sku->attributeValues()->get();
-        foreach ($attributeValues as $value) {
-            $attribute = Attribute::findOrFail($value->attribute_id);
+        $ids = [];
+        if (is_array($product_sku_ids)) {
+            $ids = $product_sku_ids;
+        } else {
+            $ids[] = $product_sku_ids;
         }
+
+        $data = [];
+        foreach ($ids as $id) {
+            $sku = ProductSkuView::findOrFail($id);
+            $data[] = $sku;
+        }
+
+        return $data;
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public static function getByProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        return $product->skuViews()->get();
+    }
+
+    /**
+     * @param $product_sku_id
+     * @param $quantity
+     * @return mixed
+     */
+    public static function stockUp($product_sku_id, $quantity)
+    {
+        $sku = ProductSku::findOrFail($product_sku_id);
+
+        return $sku->increment('stock', $quantity);
+    }
+
+    /**
+     * @param $product_sku_id
+     * @param $quantity
+     * @return mixed
+     */
+    public static function stockDown($product_sku_id, $quantity)
+    {
+        $sku = ProductSku::findOrFail($product_sku_id);
+
+        return $sku->decrement('stock', $quantity);
+    }
+
+    /**
+     * @param array $queryArr
+     * @return array
+     */
     public static function afford($queryArr = array())
     {
+        $data = [];
+        foreach ($queryArr as $query) {
+            $sku = ProductSkuView::findOrFail($query->product_sku_id);
+            $temp = [
+                "product_sku_id" => $query->product_sku_id,
+                'data' => $sku
+            ];
+            if ($sku->stock >= $query->quantity) {
+                $temp['code'] = ProductConst::CODE_SKU_AFFORD_OK;
+            } else {
+                $temp['code'] = ProductConst::CODE_SKU_NOT_AFFORD;
+                $temp['err_msg'] = ProductConst::MSG_SKU_NOT_AFFORD;
+            }
+            $data[] = $temp;
+        }
 
-        return array(
-            array(
-                "code" => "", //ProductConst::CODE_SKU_AFFROD_OK | ProductConst::CODE_SKU_AFFROD_ERR,
-                "err_msg" => "",
-                "product_sku_id" => "",
-                "data" => array(
-                    array(
-                        "category_id" => "",
-                        "merchant_id" => "",
-                        "product_sku_id" => "",
-                        "cover_image" => "",
-                        "title" => "",
-                        "price" => "",
-                        "member_discount" => "",
-                        "stock" => "",
-                        "attributes" => array(
-                            array(
-                                "name" => "",
-                                "value" => ""
-                            ),
-                            array(
-                                "name" => "",
-                                "value" => ""
-                            )
-                        )
-                    )
-                )
-            )
-        );
+        return $data;
     }
 }

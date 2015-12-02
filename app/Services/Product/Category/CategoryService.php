@@ -9,18 +9,36 @@
 namespace App\Services\Product\Category;
 
 
+/**
+ * Class CategoryService
+ * @package App\Services\Product\Category
+ */
 class CategoryService
 {
+    /**
+     * @param $name
+     * @param int $pid
+     * @param string $category_cover
+     * @param string $desc
+     * @throws \Exception
+     */
     public static function create($name, $pid = 0, $category_cover = "", $desc = "")
     {
         return CategoryRepository::create($name, $pid, $category_cover, $desc);
     }
 
+    /**
+     * @param $id
+     * @param $data
+     */
     public static function update($id, $data)
     {
         return CategoryRepository::update($id, $data);
     }
 
+    /**
+     * @param $id
+     */
     public static function delete($id)
     {
         return CategoryRepository::delete($id);
