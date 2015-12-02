@@ -14,16 +14,15 @@ class EventServiceProvider extends ServiceProvider {
      */
     protected $listen = [
         'App\Services\Orders\Event\OrderRequest' => [
-            'App\Services\Orders\Listeners\OrderRequestListener',
+            'App\Services\Orders\Listeners\CacheOrderRequestData',
         ],
         'App\Services\Orders\Event\OrderConfirm' => [
-            'App\Services\Orders\Listeners\OrderConfirmListener',
-            'App\Services\Cart\Listeners\OrderConfirmListener',
-            'App\Services\Marketing\Listeners\OrderConfirmListener',
+            'App\Services\Cart\Listeners\RemovePurchasedItemsFromCart',
+            'App\Services\Marketing\Listeners\GenerateMarketingBillingAndFrozenMarketingItem',
         ],
         'App\Services\Orders\Event\PingxxPaid'   => [
-            'App\Services\Orders\Listeners\PingxxPaidListener',
-            'App\Services\Orders\Listeners\OrderPaidListener',
+            'App\Services\Orders\Listeners\HandlePingxxBilling',
+            'App\Services\Orders\Listeners\HandleOrderPaid',
         ],
     ];
 

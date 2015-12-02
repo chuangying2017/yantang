@@ -2,11 +2,11 @@
 
 namespace App\Services\Orders\Listeners;
 
-use App\Services\Orders\Event\OrderConfirm;
+use App\Services\Orders\Event\PingxxPaid;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderConfirmListener
+class HandleOrderPaid
 {
     /**
      * Create the event listener.
@@ -21,10 +21,10 @@ class OrderConfirmListener
     /**
      * Handle the event.
      *
-     * @param  OrderConfirm  $event
+     * @param  PingxxPaid  $event
      * @return void
      */
-    public function handle(OrderConfirm $event)
+    public function handle(PingxxPaid $event)
     {
         //
     }

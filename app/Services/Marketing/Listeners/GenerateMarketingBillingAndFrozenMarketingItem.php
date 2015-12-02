@@ -5,12 +5,11 @@ namespace App\Services\Marketing\Listeners;
 use App\Services\Marketing\MarketingProtocol;
 use App\Services\Marketing\MarketingRepository;
 use App\Services\Orders\Event\OrderConfirm;
-use App\Services\Orders\OrderProtocol;
-use App\Services\Orders\Payments\PaymentRepository;
+use App\Services\Orders\Payments\BillingRepository;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderConfirmListener {
+class GenerateMarketingBillingAndFrozenMarketingItem {
 
     /**
      * Create the event listener.
@@ -36,7 +35,7 @@ class OrderConfirmListener {
 
         $ticket_id = [];
         foreach ($tickets as $ticket) {
-            PaymentRepository::storeTicketBilling($order_id, $user_id, $ticket['discount_fee'], $ticket['id']);
+            BillingRepository::storeTicketBilling($order_id, $user_id, $ticket['discount_fee'], $ticket['id']);
             $ticket_id[] = $ticket['id'];
         }
 

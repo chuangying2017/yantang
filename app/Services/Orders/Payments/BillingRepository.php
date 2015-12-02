@@ -64,24 +64,7 @@ class BillingRepository {
             );
     }
 
-    public static function storePingxxPayment($user_id, $order_id, $billing_id, $amount, $charge_id, $channel, $payment_id = null)
-    {
-        // 生成payment
-        $payment_id = is_null($payment_id) ? self::getPingxxPaymentId() : $payment_id;
-        $payment_data = [
-            'payment_id' => $payment_id,
-            'amount'     => $amount,
-            'currency'   => OrderProtocol::PAID_PACKAGE_CURRENCY,
-            'channel'    => $channel,
-            'user_id'    => $user_id,
-            'order_id'   => $order_id,
-            'billing_id' => $billing_id,
-            'charge_id'  => $charge_id,
-            'status'     => OrderProtocol::STATUS_OF_UNPAID,
-        ];
 
-        return PingxxPayment::create($payment_data);
-    }
 
     public static function billingPaid($billing_id, $resource_id = null)
     {
@@ -90,40 +73,5 @@ class BillingRepository {
         return OrderBilling::where('id', $billing_id)->update(compact('status', 'resource_id'));
     }
 
-    public static function pingxxPaymentPaid($payment_id, $transaction_no = '')
-    {
-        $status = OrderProtocol::STATUS_OF_PAID;
-
-        return PingxxPayment::where('id', $payment_id)->update(compact('status', 'transaction_no'));
-    }
-
-    public static function pingxxPaymentPaidFail($payment_id, $error_code, $error_msg)
-    {
-        return PingxxPayment::where('id', $payment_id)->update(compact('error_code', 'error_msg'));
-    }
-
-    public static function fetchPingxxPayment($payment_id)
-    {
-        return $payment_id instanceof OrderBilling
-            ? $payment_id
-            : (
-            (strlen($payment_id) == self::PAYMENT_ID_LENGTH)
-                ? OrderBilling::findOrFail($payment_id)
-                : OrderBilling::where('payment_id', $payment_id)->first()
-            );
-    }
-
-    /**
-     * @return string
-     */
-    public static function getPingxxPaymentId()
-    {
-        $payment_id = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
-        while (self::fetchBilling($payment_id)) {
-            $payment_id = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
-        }
-
-        return $payment_id;
-    }
 
 }

@@ -17,7 +17,7 @@ class CheckOut {
         $order = OrderRepository::queryOrderByOrderNo($order_no);
         $main_billing = BillingRepository::storeMainBilling($order['id'], $order['user_id'], $order['pay_amount']);
         $pingxx_data = PingxxService::generatePingppBilling($order, $main_billing, $channel);
-        $pingxx_payment = $pingxx_data['pingxx_payment'];
+        $payment = $pingxx_data['payment'];
         $charge = $pingxx_data['charge'];
 
         return $charge;

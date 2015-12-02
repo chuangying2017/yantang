@@ -7,10 +7,9 @@ use App\Services\Orders\OrderInfoHelpers;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderRequestListener {
-
+class CacheOrderRequestData
+{
     use OrderInfoHelpers;
-
     /**
      * Create the event listener.
      *
@@ -18,13 +17,13 @@ class OrderRequestListener {
      */
     public function __construct()
     {
-
+        //
     }
 
     /**
      * Handle the event.
      *
-     * @param  OrderRequest $event
+     * @param  OrderRequest  $event
      * @return void
      */
     public function handle(OrderRequest $event)
