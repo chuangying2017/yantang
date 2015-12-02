@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->integer('user_grade');
             $table->string('gift_ticket');
+            $table->boolean('is_actived');
             $table->softDeletes();
             $table->timestamp('birthday');
             $table->timestamp('createtime');

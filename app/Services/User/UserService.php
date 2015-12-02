@@ -44,4 +44,13 @@ class UserService
     {
         return User::all();
     }
+
+    public static function block()
+    {
+
+    }
+
+    public static function active()
+    {
+    }
 }
