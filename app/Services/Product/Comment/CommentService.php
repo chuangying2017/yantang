@@ -9,13 +9,24 @@
 namespace App\Services\Product\Comment;
 
 
+/**
+ * Class CommentServce
+ * @package App\Services\Product\Comment
+ */
 class CommentServce
 {
+    /**
+     * @param $data
+     */
     public static function create($data)
     {
         return CommentsRepository::create($data);
     }
 
+    /**
+     * @param $id
+     * @return bool
+     */
     public static function delete($id)
     {
         return CommentsRepository::delete($id);

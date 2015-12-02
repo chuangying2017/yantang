@@ -9,18 +9,32 @@
 namespace App\Services\Product\Attribute;
 
 
+use App\Models\Product;
+use App\Models\ProductSku;
+
 class AttributeService
 {
+    /**
+     * @param $name
+     * @return mixed
+     */
     public static function create($name)
     {
         return AttributeRepository::create($name);
     }
 
+    /**
+     * @param $id
+     * @param $name
+     */
     public static function update($id, $name)
     {
         return AttributeRepository::update($id, $name);
     }
 
+    /**
+     * @param $id
+     */
     public static function delete($id)
     {
         return AttributeRepository::delete($id);
@@ -49,5 +63,20 @@ class AttributeService
         $category = Category::findOrFail($category_id);
 
         return $category->attributes()->get();
+    }
+
+    /**
+     * @param $product_id
+     * @return array
+     */
+    public static function getByProduct($product_id)
+    {
+        $product = Product::findOrFail($product_id);
+        $skus = $product->skus()->get();
+        $attribute_values = [];
+        foreach ($skus as $sku) {
+            $attribute_values = array_merge($attribute_values, ProductSku::find($sku->id)->attributeValues()->get());
+        }
+        return $attribute_values;
     }
 }

@@ -9,13 +9,10 @@ class ProductSkuView extends Model
     //
     protected $table = 'product_sku_view';
 
-    public function product()
+    //todo@bryant
+    public function getAttributesAttribute($value)
     {
-        return $this->belongsTo('App\Models\Product');
+
     }
 
-    public function attributeValues()
-    {
-        return $this->belongsToMany('App\Models\ProductSku', 'sku_attribute_value');
-    }
 }

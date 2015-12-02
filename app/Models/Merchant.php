@@ -6,5 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Merchant extends Model
 {
-    //
+    use SoftDeletes;
+
+    public function images()
+    {
+        return $this->morphToMany('App\Models\Image', 'imageable');
+    }
+
+    public function products()
+    {
+        return $this->hasMany('App\Models\Product');
+    }
 }

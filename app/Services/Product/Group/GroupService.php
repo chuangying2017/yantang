@@ -9,18 +9,33 @@
 namespace App\Services\Product\Group;
 
 
+/**
+ * Class GroupService
+ * @package App\Services\Product\Group
+ */
 class GroupService
 {
+    /**
+     * @param $data
+     */
     public static function create($data)
     {
         return GroupRepository::create($data);
     }
 
+    /**
+     * @param $id
+     * @param $data
+     * @return string
+     */
     public static function update($id, $data)
     {
         return GroupRepository::update($id, $data);
     }
 
+    /**
+     * @param $id
+     */
     public static function delete($id)
     {
         return GroupRepository::delete($id);

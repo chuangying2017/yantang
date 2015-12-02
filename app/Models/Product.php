@@ -32,4 +32,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductSku');
     }
+
+    public function skuViews()
+    {
+        return $this->hasMany('App\Models\productSkuView');
+    }
 }

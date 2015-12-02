@@ -46,16 +46,6 @@ class AddressRepository
         return Address::find($id)->udpate($data);
     }
 
-    /**
-     * get all addresses by user
-     * @param $user_id
-     * @return mixed
-     */
-    public static function fetchByUser($user_id)
-    {
-        $user = User::findOrFail($user_id);
-        return $user->addresses();
-    }
 
     /**
      * delete an address

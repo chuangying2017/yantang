@@ -9,8 +9,17 @@
 namespace App\Services\Product\Attribute;
 
 
+/**
+ * Class AttributeValueService
+ * @package App\Services\Product\Attribute
+ */
 class AttributeValueService
 {
+    /**
+     * @param $attribute_id
+     * @param $value
+     * @param $merchat_id
+     */
     public static function firstOrCreate($attribute_id, $value, $merchat_id)
     {
         return AttributeValueRepository::firstOrCreate($attribute_id, $value, $merchat_id);
