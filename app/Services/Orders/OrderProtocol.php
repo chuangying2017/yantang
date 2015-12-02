@@ -45,7 +45,7 @@ class OrderProtocol {
         $valid_status = [];
         switch ($to_status) {
             case self::STATUS_OF_PAID:
-                $valid_status = [self::STATUS_OF_UNPAID];
+                $valid_status = [self::STATUS_OF_UNPAID, self::STATUS_OF_PAID];
                 break;
             case self::STATUS_OF_DELIVER:
                 $valid_status = [self::STATUS_OF_PAID];

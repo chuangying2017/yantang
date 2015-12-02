@@ -64,10 +64,10 @@ class BillingRepository {
             );
     }
 
-    public static function storePingxxPayment($user_id, $order_id, $billing_id, $amount, $charge_id, $channel)
+    public static function storePingxxPayment($user_id, $order_id, $billing_id, $amount, $charge_id, $channel, $payment_id = null)
     {
         // 生成payment
-        $payment_id = self::getPingxxPaymentId();
+        $payment_id = is_null($payment_id) ? self::getPingxxPaymentId() : $payment_id;
         $payment_data = [
             'payment_id' => $payment_id,
             'amount'     => $amount,
@@ -97,6 +97,11 @@ class BillingRepository {
         return PingxxPayment::where('id', $payment_id)->update(compact('status', 'transaction_no'));
     }
 
+    public static function pingxxPaymentPaidFail($payment_id, $error_code, $error_msg)
+    {
+        return PingxxPayment::where('id', $payment_id)->update(compact('error_code', 'error_msg'));
+    }
+
     public static function fetchPingxxPayment($payment_id)
     {
         return $payment_id instanceof OrderBilling
@@ -111,7 +116,7 @@ class BillingRepository {
     /**
      * @return string
      */
-    protected static function getPingxxPaymentId()
+    public static function getPingxxPaymentId()
     {
         $payment_id = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
         while (self::fetchBilling($payment_id)) {

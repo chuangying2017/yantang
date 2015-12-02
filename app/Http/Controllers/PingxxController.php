@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Services\Orders\OrderProtocol;
+use App\Services\Orders\Payments\BillingManager;
 use App\Services\Orders\Payments\BillingRepository;
+use App\Services\Orders\Supports\PingxxService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -25,16 +27,16 @@ class PingxxController extends Controller {
 
             $data = $request->input('data.object');
 
-            $billing_no = $data['order_no'];
+            $pingxx_payment_id = $data['order_no'];
 
             $type = $request->input('type');
             if ($type == 'charge.succeeded') {
-                $billing = BillingRepository::fetchBilling($billing_no);
-                if ( ! $billing) {
-                    Log::error('Billing not exist. no=' . $billing_no . ' no need to continue');
+                $pingxx_payment = BillingRepository::fetchPingxxPayment($pingxx_payment_id);
+                if ( ! $pingxx_payment) {
+                    Log::error('Pingxx Payment not exist. no=' . $pingxx_payment_id . ' no need to continue');
                     exit("success");
                 }
-                $this->callbackChargeSucceed($data, $billing);
+                $this->callbackChargeSucceed($data, $pingxx_payment);
                 // 更新操作日志
             } else if ($type == 'transfer.succeeded') {
                 #todo 转账成功操作
@@ -53,45 +55,34 @@ class PingxxController extends Controller {
     }
 
 
-    private function callbackFailed($request, $payment)
+    private function callbackFailed($request, $pingxx_payment_id)
     {
-        $payment['error_code'] = $request->input('failure_code');
-        $payment['error_msg'] = $request->input('failure_msg');
-        $payment->save();
+        $error_code = $request->input('failure_code');
+        $error_msg = $request->input('failure_msg');
+
+        PingxxService::pingxxPaymentPaidFail($pingxx_payment_id, $error_code, $error_msg);
 
         return;
     }
 
-    private function callbackChargeSucceed($data, $billing)
+    private function callbackChargeSucceed($data, $pingxx_payment)
     {
 
-        if ($billing['status'] == OrderProtocol::STATUS_OF_PAID) {
+        if ($pingxx_payment['status'] == OrderProtocol::STATUS_OF_PAID) {
             info('charge Succeed! no need to charge again');
 
             return 1;
         }
 
-        $user_id = $billing['user_id'];
-        $order_id = isset($data['extra']['order_id']) ? $data['extra']['order_id'] : 0;
+        $transaction_no = isset($data['transaction_no']) ? $data['transaction_no'] : '';
 
+        PingxxService::pingxxPaymentIsPaid($pingxx_payment['id'], $transaction_no);
 
-        $billing['status'] = OrderProtocol::STATUS_OF_PAID;
-        $billing['transaction_no'] = isset($data['transaction_no']) ? $data['transaction_no'] : '';
-
-
-        if ($order_id) {
-            $order = $this->orders->byId($order_id);
-
-            $pay_result = $this->checkOut->payOrder($order['id']);
-            if ($pay_result) {
-                $this->orders->orderPaid($order, $pay_result['id']);
-
-                $battery_record = $this->machineManager->lentBattery($order['machine_id'], $order_id, $user_id);
-                event(new SendCommandToMachine(app('MachineCommand')->batteryOut($order['machine_id'])));
-
-                return $battery_record;
-            }
-        }
+        event('App\Services\Orders\Event\PingxxPaid', [
+            'order_id'          => isset($data['extra']['order_id']) ? $data['extra']['order_id'] : 0,
+            'billing_id'        => isset($data['extra']['billing_id']) ? $data['extra']['billing_id'] : 0,
+            'pingxx_payment_id' => $pingxx_payment['id'],
+        ]);
 
         exit('success');
     }

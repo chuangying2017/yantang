@@ -1,6 +1,7 @@
 <?php namespace App\Services\Orders\Payments;
 
 use App\Services\Orders\OrderProtocol;
+use Pingpp\Charge;
 
 class BillingManager {
 
@@ -18,5 +19,6 @@ class BillingManager {
         }
 
     }
+
 
 }
