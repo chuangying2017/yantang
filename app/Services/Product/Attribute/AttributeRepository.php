@@ -15,7 +15,7 @@ use App\Models\Category;
 class AttributeRepository
 {
     /**
-     * create a new attribute
+     * return by name or create a new attribute
      * @param $name
      */
     public static function create($name)
@@ -28,21 +28,12 @@ class AttributeRepository
             ]);
 
             DB::commit();
+
+            return $attr;
+
         } catch (Exception $e) {
             DB::rollBack();
         }
-    }
-
-    /**
-     * bind an attribute with categories
-     * @param $id
-     * @param $category_ids
-     * @return mixed
-     */
-    public static function bindCategories($id, $category_ids)
-    {
-        $attr = Attribute::findOrFail($id);
-        return $attr->categoeies()->sync($category_ids);
     }
 
     /**
@@ -79,36 +70,19 @@ class AttributeRepository
             DB::beginTransaction();
 
             $attr = Attribute::findOrFail($id);
-            $attr->delete();
+            $values = $attr->values()->get();
+            foreach ($values as $value) {
+                DB::table('sku_attribute_value')->where('attribute_value_id', $value->id)->delete();
+                AttributeValue::destroy($value->id);
+            }
 
+            $attr->delete();
             $attr->categories()->detach();
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
         }
     }
 
-    /**
-     * get an attribute by id
-     * @param $name
-     * @return mixed
-     */
-    public static function firstOrCreate($name)
-    {
-        return Attribute::firstOrCreate([
-            'name' => $name
-        ]);
-    }
-
-    /**
-     * get all attributes by category
-     * @param $category_id
-     * @return mixed
-     */
-    public static function getAllByCategory($category_id)
-    {
-        $category = Category::findOrFail($category_id);
-
-        return $category->attributes()->get();
-    }
 }

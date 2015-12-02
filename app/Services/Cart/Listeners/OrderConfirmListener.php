@@ -10,12 +10,12 @@ use App\Services\Orders\Payments\PaymentRepository;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderConfirmListener {
+class OrderConfirmListener
+{
 
     /**
      * Create the event listener.
      *
-     * @return void
      */
     public function __construct()
     {

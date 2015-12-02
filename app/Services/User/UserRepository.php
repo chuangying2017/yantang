@@ -73,22 +73,5 @@ class UserRepository
         return User::find($id)->delete();
     }
 
-    /**
-     * get a user by id
-     * @param $id
-     * @return mixed
-     */
-    public static function getById($id)
-    {
-        return User::find($id)->get();
-    }
 
-    /**
-     * get all users
-     * @return mixed
-     */
-    public static function getAll()
-    {
-        return User::all();
-    }
 }

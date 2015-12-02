@@ -39,17 +39,4 @@ class AttributeValueRepository
             DB::rollBack();
         }
     }
-
-    /**
-     * get values under a attribute
-     * @param $attribute_id
-     * @return mixed
-     */
-    public static function getByAttribute($attribute_id)
-    {
-        $attribute = Attribute::findOrFail($attribute_id);
-
-        return $attribute->values()->get();
-    }
-
 }

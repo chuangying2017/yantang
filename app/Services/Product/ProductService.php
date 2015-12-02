@@ -11,15 +11,45 @@ namespace App\Services\Product;
 
 class ProductService
 {
+    const PRODUCT_DOWN = 'down';
+    const PRODUCT_UP = 'up';
+
+    public static function create($data)
+    {
+        return ProductRepository::create($data);
+    }
+
+    public static function update($id, $data)
+    {
+        return ProductRepository::update($id, $data);
+    }
+
+    public static function delete($id)
+    {
+        return ProductRepository::delete($id);
+    }
+
+    public static function up($id)
+    {
+        return ProductRepository::update($id, [
+            'status' => self::PRODUCT_DOWN
+        ]);
+    }
+
+    public static function down($id)
+    {
+        return ProductRepository::update($id, [
+            'status' => self::PRODUCT_DOWN
+        ]);
+    }
+
     /**
      * get an product by id
      * @param $id
      */
     public static function getById($id)
     {
-        $product = Product::find($id);
-        $skus = $product->skus()->get();
-
+        return ProductRepository::getById($id);
     }
 
     /**
@@ -27,6 +57,11 @@ class ProductService
      * @param $category_id
      */
     public static function getByCategory($category_id)
+    {
+
+    }
+
+    public static function getAttributes()
     {
 
     }
