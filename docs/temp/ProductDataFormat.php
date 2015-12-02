@@ -7,12 +7,11 @@
  */
 
 $data = [
-    "category_id" => "",
-    "group_ids" => [],
     "basic_info" => [
-
+        "category_id" => "",
+        "group_ids" => [],
     ],
-    "image_ids" => [],
+    "images" => [],
     "attributes" => [
         [
             "id" => 1,

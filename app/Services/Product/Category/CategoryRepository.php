@@ -67,46 +67,4 @@ class CategoryRepository
         $category->delete();
     }
 
-    /**
-     * get a category by id
-     * @param $id
-     * @return mixed
-     */
-    public static function getById($id)
-    {
-        return Category::findOrFail($id);
-    }
-
-    /**
-     * get all categories
-     * @return mixed
-     */
-    public static function getAll()
-    {
-        return Category::all();
-    }
-
-    /**
-     * get category tree
-     * @return mixed
-     */
-    public static function getTree()
-    {
-        $parents = Category::where('pid', 0)->get();
-        foreach ($parents as $parent) {
-            $parent->children = self::getChildren($parent->id);
-        }
-        return $parents;
-    }
-
-    /**
-     * get children categories by parent id
-     * @param $pid
-     * @return mixed
-     */
-    public static function getChildren($pid)
-    {
-        return Category::where('pid', $pid)->get();
-    }
-
 }

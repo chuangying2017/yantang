@@ -12,6 +12,16 @@ use App\Models\ProductSku;
 
 class ProductSkuService
 {
+    public static function create($data, $product_id)
+    {
+        return ProductSkuRepository::create($data, $product_id);
+    }
+
+    public static function update($id, $data)
+    {
+        return ProductSkuRepository::update($id, $data);
+    }
+
     public static function getAttributes($product_sku_id)
     {
         $attributes = [];

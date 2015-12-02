@@ -5,8 +5,8 @@
 namespace App\Services\Mth;
 
 use App\Services\CommonConst;
-use App\Services\Utility\CacheHelper;
-use App\Services\Utility\HttpHelper;
+use App\Services\Utilities\CacheHelper;
+use App\Services\Utilities\HttpHelper;
 
 
 class MthApiService

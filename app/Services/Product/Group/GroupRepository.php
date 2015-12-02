@@ -65,13 +65,5 @@ class GroupRepository
         }
     }
 
-    /**
-     * get a group info by id
-     * @param $id
-     * @return mixed
-     */
-    public static function getById($id)
-    {
-        return Group::findOrFail($id);
-    }
+
 }

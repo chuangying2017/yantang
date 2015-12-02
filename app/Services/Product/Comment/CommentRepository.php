@@ -58,27 +58,4 @@ class CommentsRepository
             return false;
         }
     }
-
-//todo@bryant: add product sku to comment
-    /**
-     * get a comment by id
-     * @param $id
-     * @return mixed
-     */
-    public static function getById($id)
-    {
-        $comment = Comment::with('user.avatar', 'user.username', 'images')->where('id', $id)->get();
-        return $comment;
-    }
-
-    /**
-     * get comments by product
-     * @param $product_id
-     * @return mixed
-     */
-    public static function getByProduct($product_id)
-    {
-        $comments = Comment::with('user.avatar', 'user.username', 'images')->where('product_id', $product_id)->where('status', 1)->get();
-        return $comments;
-    }
 }

@@ -1,4 +1,4 @@
-<?php namespace App\Services\Utility;
+<?php namespace App\Services\Utilities;
 
 
 class CacheHelper
