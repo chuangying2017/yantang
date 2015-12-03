@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Services\Product\Attribute\AttributeService;
 use App\Services\Product\Category\CategoryService;
 use Illuminate\Http\Request;
 
@@ -30,7 +31,11 @@ class CategoryController extends Controller {
      */
     public function show($id)
     {
+        $category = CategoryService::getTree($id);
 
+        $category->attributes = AttributeService::getByCategory($category['id']);
+
+        return $this->respondData($category);
     }
 
 }

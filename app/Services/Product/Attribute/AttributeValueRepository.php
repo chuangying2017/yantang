@@ -14,6 +14,7 @@ use App\Models\AttributeValues;
 
 class AttributeValueRepository
 {
+
     /**
      * create a new attribute
      * @param $attribute_id

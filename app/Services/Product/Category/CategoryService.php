@@ -15,8 +15,8 @@ use App\Models\Category;
  * Class CategoryService
  * @package App\Services\Product\Category
  */
-class CategoryService
-{
+class CategoryService {
+
     /**
      * @param $name
      * @param int $pid
@@ -71,23 +71,54 @@ class CategoryService
      * get category tree
      * @return mixed
      */
-    public static function getTree()
+    public static function getTree($category_id = null)
     {
-        $parents = Category::where('pid', 0)->get(['id', 'name']);
-        foreach ($parents as $parent) {
-            $parent->children = self::getChildren($parent->id);
+        if (is_null($category_id)) {
+            $parents = Category::roots()->get();
+            foreach ($parents as $key => $parent) {
+                $parents[ $key ] = self::getSingleTree($parent, false);
+            }
+        } else {
+            $parents = self::getSingleTree($category_id);
         }
+
         return $parents;
     }
 
-    /**
-     * get children categories by parent id
-     * @param $pid
-     * @return mixed
-     */
-    public static function getChildren($pid)
+    protected static function getSingleTree($category_id, $mark = true)
     {
-        return Category::where('pid', $pid)->get(['id', 'name']);
+        $node = $category_id instanceof Category ? $category_id : Category::find($category_id);
+
+        $parent = $node->getRoot();
+        $parent = $parent->getDescendantsAndSelf(['id', 'pid', 'name']);
+
+        if ($mark) {
+            $parent = self::markActive($parent, $node);
+        }
+
+        return $parent->toHierarchy()->first();
+    }
+
+    protected static function markActive($parent, $node)
+    {
+        $search_node = $node;
+        while ( ! is_null($search_node->pid)) {
+            foreach ($parent as $key => $value) {
+                if ($value->id == $search_node->id) {
+                    $parent[ $key ]['active'] = true;
+                    foreach ($parent as $search_key => $search_value) {
+                        if ($search_node->pid == $search_value->id) {
+                            $search_node = $search_value;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        $parent->active = true;
+
+        return $parent;
     }
 
 }

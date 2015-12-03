@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCategoriesTable extends Migration
-{
+class CreateCategoriesTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -15,7 +15,7 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('pid'); //parent id
+            $table->integer('pid')->nullable(); //parent id
             $table->string('category_cover'); //分类封面
             $table->string('desc'); //分类描述
             $table->softDeletes();
