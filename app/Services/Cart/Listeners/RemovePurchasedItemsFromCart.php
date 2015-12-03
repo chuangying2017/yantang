@@ -12,7 +12,6 @@ class RemovePurchasedItemsFromCart
     /**
      * Create the event listener.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -22,12 +21,12 @@ class RemovePurchasedItemsFromCart
     /**
      * Handle the event.
      *
-     * @param  OrderConfirm  $event
+     * @param  OrderConfirm $event
      * @return void
      */
     public function handle(OrderConfirm $event)
     {
-        if ( ! is_null($event->carts)) {
+        if (!is_null($event->carts)) {
             $carts = $event->carts;
             CartService::remove($carts);
         }

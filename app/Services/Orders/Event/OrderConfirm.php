@@ -6,7 +6,8 @@ use App\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class OrderConfirm extends Event {
+class OrderConfirm extends Event
+{
 
     use SerializesModels;
 
@@ -20,7 +21,8 @@ class OrderConfirm extends Event {
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param $order_id
+     * @param $order_info
      */
     public function __construct($order_id, $order_info)
     {
