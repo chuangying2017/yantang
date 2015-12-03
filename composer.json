@@ -1,7 +1,10 @@
 {
     "name": "laravel/laravel",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -17,7 +20,7 @@
         "predis/predis": "~1.0",
         "arcanedev/log-viewer": "~3.0",
         "barryvdh/laravel-ide-helper": "^2.1",
-        "pingplusplus/pingpp-php": "dev-master"
+        "pingplusplus/pingpp-php": "dev-master",
         "zgldh/qiniu-laravel-storage": "^0.3.0"
     },
     "require-dev": {
