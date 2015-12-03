@@ -14,11 +14,13 @@ class CreateOrderBillingTable extends Migration
     {
         Schema::create('order_billing', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('billing_no');
             $table->integer('order_id');
             $table->integer('user_id');
             $table->unsignedInteger('amount');
             $table->string('resource_type');
             $table->integer('resource_id');
+            $table->string('type');
             $table->string('status');
             $table->softDeletes();
             $table->timestamps();

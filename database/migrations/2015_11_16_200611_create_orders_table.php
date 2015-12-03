@@ -16,6 +16,7 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('order_no');
+            $table->string('title');
             $table->unsignedInteger('total_amount');
             $table->unsignedInteger('post_fee');
             $table->unsignedInteger('discount_amount');
