@@ -12,8 +12,8 @@ namespace App\Services\Product\Attribute;
 use App\Models\Attribute;
 use App\Models\AttributeValues;
 
-class AttributeValueRepository
-{
+class AttributeValueRepository {
+
     /**
      * create a new attribute
      * @param $attribute_id
@@ -22,21 +22,24 @@ class AttributeValueRepository
      */
     public static function firstOrCreate($attribute_id, $value, $merchant_id)
     {
-        try {
-            DB::beginTransaction();
+//        try {
+//            DB::beginTransaction();
 
-            $attribute = Attribute::findOrFail($attribute_id);
+        $attribute = Attribute::findOrFail($attribute_id);
 
-            $value = AttributeValues::firstOrCreate([
-                'attribute_id' => $attribute_id,
-                'value' => $value,
-                'client_id' => $merchant_id,
-                'attribute_name' => $attribute->name
-            ]);
+        $value = AttributeValues::firstOrCreate([
+            'attribute_id'   => $attribute_id,
+            'value'          => $value,
+            'client_id'      => $merchant_id,
+            'attribute_name' => $attribute->name
+        ]);
 
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-        }
+        return $value;
+
+//
+//            DB::commit();
+//        } catch (Exception $e) {
+//            DB::rollBack();
+//        }
     }
 }

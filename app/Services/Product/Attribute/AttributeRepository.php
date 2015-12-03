@@ -11,6 +11,9 @@ namespace App\Services\Product\Attribute;
 
 use App\Models\Attribute;
 use App\Models\Category;
+use App\Models\AttributeValue;
+use DB;
+use Exception;
 
 class AttributeRepository
 {
@@ -20,20 +23,20 @@ class AttributeRepository
      */
     public static function create($name)
     {
-        try {
-            DB::beginTransaction();
+//        try {
+//            DB::beginTransaction();
 
             $attr = Attribute::firstOrCreate([
                 'name' => $name
             ]);
 
-            DB::commit();
+//            DB::commit();
 
             return $attr;
-
-        } catch (Exception $e) {
-            DB::rollBack();
-        }
+//
+//        } catch (Exception $e) {
+//            DB::rollBack();
+//        }
     }
 
     /**
@@ -50,11 +53,13 @@ class AttributeRepository
             $attr->name = $name;
             $attr->save();
 
+            #todo @bryant 是否有误
             DB::table('attribute_values')->where('attibute_id', $id)->update([
                 'attribute_name' => $name
             ]);
 
             DB::commit();
+            return $attr;
         } catch (Exception $e) {
             DB::rollBack();
         }
@@ -80,6 +85,7 @@ class AttributeRepository
             $attr->categories()->detach();
 
             DB::commit();
+            return 1;
         } catch (Exception $e) {
             DB::rollBack();
         }
