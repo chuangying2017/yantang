@@ -10,6 +10,7 @@ namespace App\Services\Product;
 
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Services\Product\Attribute\AttributeService;
 
 /**

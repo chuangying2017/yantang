@@ -12,6 +12,7 @@ class CreateAddressesTable extends Migration
      */
     public function up()
     {
+        //todo@bryant change role to is_primary
         Schema::create('addresses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
