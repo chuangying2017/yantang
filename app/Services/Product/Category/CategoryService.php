@@ -7,6 +7,7 @@
  */
 
 namespace App\Services\Product\Category;
+use App\Models\Category;
 
 
 /**
@@ -69,7 +70,7 @@ class CategoryService
      */
     public static function getTree()
     {
-        $parents = Category::where('pid', 0)->get();
+        $parents = Category::where('pid', 0)->get(['id', 'name']);
         foreach ($parents as $parent) {
             $parent->children = self::getChildren($parent->id);
         }
@@ -83,7 +84,7 @@ class CategoryService
      */
     public static function getChildren($pid)
     {
-        return Category::where('pid', $pid)->get();
+        return Category::where('pid', $pid)->get(['id', 'name']);
     }
 
 }

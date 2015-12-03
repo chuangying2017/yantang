@@ -12,8 +12,8 @@ use Kbwebs\MultiAuth\PasswordResets\Contracts\CanResetPassword as CanResetPasswo
 
 class User extends Model implements AuthenticatableContract,
     AuthorizableContract,
-    CanResetPasswordContract
-{
+    CanResetPasswordContract {
+
     use Authenticatable, Authorizable, CanResetPassword;
 
     /**
@@ -28,7 +28,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $guarded = ['id'];
 
     /**
      * The attributes excluded from the model's JSON form.

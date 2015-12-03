@@ -9,10 +9,11 @@ namespace App\Services\Product\Category;
 
 
 use App\Models\Category;
+use DB;
 use Exception;
 
-class CategoryRepository
-{
+class CategoryRepository {
+
     /**
      * create a new category
      * @param $name
@@ -25,23 +26,23 @@ class CategoryRepository
     {
         if ($pid !== 0) {
             $parent = Category::find($pid);
-            if (!$parent) throw new Exception('parent not existed');
+            if ( ! $parent) throw new Exception('parent not existed');
         }
-        try {
-            DB::beginTransaction();
+//        try {
+//            DB::beginTransaction();
 
-            $category = new Category;
+        $category = new Category;
+        $category->name = $name;
+        $category->pid = $pid;
+        $category->category_cover = $category_cover;
+        $category->desc = $desc;
+        $category->save();
+        return $category;
 
-            $category->name = $name;
-            $category->pid = $pid;
-            $category->category_cover = $category_cover;
-            $category->desc = $desc;
-            $category->save();
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-        }
+//            DB::commit();
+//        } catch (Exception $e) {
+//            DB::rollBack();
+//        }
     }
 
     /**
@@ -55,6 +56,8 @@ class CategoryRepository
         $category->name = $data['name'];
         $category->pid = $data['pid'];
         $category->save();
+
+        return $category;
     }
 
     /**
@@ -65,6 +68,7 @@ class CategoryRepository
     {
         $category = Category::findOrFail($id);
         $category->delete();
+        return 1;
     }
 
 }

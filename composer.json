@@ -30,7 +30,8 @@
         "phpspec/phpspec": "~2.1",
         "laracasts/generators": "^1.1",
         "barryvdh/laravel-debugbar": "^2.0",
-        "doctrine/dbal": "~2.3"
+        "doctrine/dbal": "~2.3",
+        "laracasts/testdummy": "^2.3"
     },
     "autoload": {
         "classmap": [

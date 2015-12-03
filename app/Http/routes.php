@@ -19,7 +19,7 @@ require app_path('Http/routes/test.php');
 require app_path('Http/routes/marketing.php');
 
 
-Route::group(['middleware' => 'auth.wechat'], function () {
+//Route::group(['middleware' => ''], function () {
 
     get('/', function () {
         return view('welcome');
@@ -27,8 +27,11 @@ Route::group(['middleware' => 'auth.wechat'], function () {
 
     Route::group(['prefix' => 'api'], function () {
 
+        resource('categories', 'Api\CategoryController', ['only' => 'index', 'show']);
+
+
     });
-});
+//});
 
 Route::controller('wechat', 'Auth\WechatAuthController');
 

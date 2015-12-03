@@ -47,7 +47,7 @@ class MthApiService
      */
     protected static function getApiUrl()
     {
-        return CommonConst::MTH_API_URL . BASE_URL;
+        return CommonConst::MTH_API_URL . self::BASE_URL;
     }
 
     /**
@@ -167,6 +167,7 @@ class MthApiService
      */
     protected static function existed($login_account)
     {
+        #TODO @bryant
         return true;
     }
 
@@ -182,7 +183,7 @@ class MthApiService
          * check duplicate
          */
         if (self::existed($account)) {
-            return ACCOUNT_EXISTED;
+            return self::ACCOUNT_EXISTED;
         } else {
 
             /**
@@ -194,7 +195,7 @@ class MthApiService
                  */
                 return self::getUserInfo($account, $password);
             } else {
-                return REGISTER_ERROR;
+                return self::REGISTER_ERROR;
             }
 
         }
