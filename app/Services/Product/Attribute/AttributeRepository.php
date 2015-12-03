@@ -10,13 +10,19 @@ namespace App\Services\Product\Attribute;
 
 
 use App\Models\Attribute;
+use App\Models\AttributeValues;
 use App\Models\Category;
 
+/**
+ * Class AttributeRepository
+ * @package App\Services\Product\Attribute
+ */
 class AttributeRepository
 {
     /**
      * return by name or create a new attribute
      * @param $name
+     * @return static
      */
     public static function create($name)
     {
@@ -73,7 +79,7 @@ class AttributeRepository
             $values = $attr->values()->get();
             foreach ($values as $value) {
                 DB::table('sku_attribute_value')->where('attribute_value_id', $value->id)->delete();
-                AttributeValue::destroy($value->id);
+                AttributeValues::destroy($value->id);
             }
 
             $attr->delete();

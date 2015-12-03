@@ -9,6 +9,14 @@
 namespace App\Services\Product\Attribute;
 
 
+    /**
+     * Class AttributeValueService
+     * @package App\Services\Product\Attribute
+     */
+/**
+ * Class AttributeValueService
+ * @package App\Services\Product\Attribute
+ */
 /**
  * Class AttributeValueService
  * @package App\Services\Product\Attribute
@@ -35,5 +43,24 @@ class AttributeValueService
         $attribute = Attribute::findOrFail($attribute_id);
 
         return $attribute->values()->get();
+    }
+
+    /**
+     * @param $id
+     * @param $data
+     * @return bool
+     */
+    public static function update($id, $data)
+    {
+        return AttributeValueRepository::update($id, $data);
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public static function delete($id)
+    {
+        return AttributeValueRepository::delete($id);
     }
 }

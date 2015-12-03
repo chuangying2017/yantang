@@ -7,6 +7,7 @@
  */
 
 namespace App\Services\Product\Category;
+
 use App\Models\Category;
 
 
@@ -21,6 +22,7 @@ class CategoryService
      * @param int $pid
      * @param string $category_cover
      * @param string $desc
+     * @return Category
      * @throws \Exception
      */
     public static function create($name, $pid = 0, $category_cover = "", $desc = "")
@@ -39,6 +41,7 @@ class CategoryService
 
     /**
      * @param $id
+     * @return int
      */
     public static function delete($id)
     {

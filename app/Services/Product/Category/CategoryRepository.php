@@ -12,7 +12,8 @@ use App\Models\Category;
 use DB;
 use Exception;
 
-class CategoryRepository {
+class CategoryRepository
+{
 
     /**
      * create a new category
@@ -20,16 +21,15 @@ class CategoryRepository {
      * @param int $pid
      * @param string $category_cover
      * @param string $desc
+     * @return Category
      * @throws Exception
      */
     public static function create($name, $pid = 0, $category_cover = "", $desc = "")
     {
         if ($pid !== 0) {
             $parent = Category::find($pid);
-            if ( ! $parent) throw new Exception('parent not existed');
+            if (!$parent) throw new Exception('parent not existed');
         }
-//        try {
-//            DB::beginTransaction();
 
         $category = new Category;
         $category->name = $name;
@@ -39,10 +39,6 @@ class CategoryRepository {
         $category->save();
         return $category;
 
-//            DB::commit();
-//        } catch (Exception $e) {
-//            DB::rollBack();
-//        }
     }
 
     /**
@@ -63,6 +59,7 @@ class CategoryRepository {
     /**
      * delete a category
      * @param $id
+     * @return int
      */
     public static function delete($id)
     {

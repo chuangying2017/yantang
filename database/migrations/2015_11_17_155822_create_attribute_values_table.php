@@ -17,6 +17,7 @@ class CreateAttributeValuesTable extends Migration
             $table->integer('attribute_id');
             $table->string('attribute_name');
             $table->string('value');
+            $table->string('cover_image');
             $table->softDeletes();
             $table->timestamps();
         });

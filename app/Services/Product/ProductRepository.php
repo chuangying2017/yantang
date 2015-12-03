@@ -40,15 +40,6 @@ class ProductRepository
      * product create process
      * @param $data
      * @return bool|string
-     *
-     * data structure
-     * ==============
-     * data =>
-     *   basic_info
-     *   image_ids
-     *   group_ids
-     *   attributes
-     *   skus
      */
     public static function create($data)
     {
@@ -61,7 +52,7 @@ class ProductRepository
              * create skus
              */
             for ($i = 0; $i < count($data['skus']); $i++) {
-                ProductSkuService::createSku($data['skus'][$i], $product->id);
+                ProductSkuService::create($data['skus'][$i], $product->id);
             }
 
             /**
@@ -100,7 +91,7 @@ class ProductRepository
             /**
              * update skus
              */
-            ProductSkuService::updateSkus($data, $product);
+            ProductSkuService::update($data, $product);
             /**
              * link group
              */
@@ -181,7 +172,6 @@ class ProductRepository
             $product->destory();
 
             DB::commit();
-            $product->destroy();
 
         } catch (Exception $e) {
             DB::rollBack();

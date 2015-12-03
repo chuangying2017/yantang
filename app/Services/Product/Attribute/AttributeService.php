@@ -9,9 +9,14 @@
 namespace App\Services\Product\Attribute;
 
 
+use App\Models\Attribute;
 use App\Models\Product;
 use App\Models\ProductSku;
 
+/**
+ * Class AttributeService
+ * @package App\Services\Product\Attribute
+ */
 class AttributeService
 {
     /**
@@ -42,8 +47,8 @@ class AttributeService
 
     /**
      * bind an attribute with categories
-     * @param $id
-     * @param $category_ids
+     * @param integer $id
+     * @param array $category_ids
      * @return mixed
      */
     public static function bindCategories($id, $category_ids)
@@ -78,5 +83,15 @@ class AttributeService
             $attribute_values = array_merge($attribute_values, ProductSku::find($sku->id)->attributeValues()->get());
         }
         return $attribute_values;
+    }
+
+    /**
+     * 通过名字获取attribute
+     * @param $name
+     * @return mixed
+     */
+    public static function findByName($name)
+    {
+        return Attribute::where('name', $name)->first();
     }
 }
