@@ -14,7 +14,7 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('group_cover'); //封面图
             $table->string('desc'); //描述
             $table->softDeletes();

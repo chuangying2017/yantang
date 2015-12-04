@@ -9,6 +9,8 @@ class Group extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['name', 'group_cover', 'desc'];
+
     public function products()
     {
         return $this->belongsToMany('App\Models\Product', 'product_group');
