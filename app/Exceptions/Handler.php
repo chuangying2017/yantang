@@ -1,6 +1,7 @@
 <?php namespace App\Exceptions;
 
 
+use App\Http\Traits\ApiHelpers;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,6 +11,8 @@ use Bugsnag\BugsnagLaravel\BugsnagExceptionHandler as ExceptionHandler;
 
 
 class Handler extends ExceptionHandler {
+
+    use ApiHelpers;
 
     /**
      * A list of the exception types that should not be reported.
@@ -44,7 +47,10 @@ class Handler extends ExceptionHandler {
     public function render($request, Exception $e)
     {
         if ($e instanceof ModelNotFoundException) {
-            $e = new NotFoundHttpException($e->getMessage(), $e);
+//            if($request->isJson()){
+            return $this->respondNotFound();
+//            }
+//            $e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
         //As to preserve the catch all

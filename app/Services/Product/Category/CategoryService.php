@@ -100,7 +100,7 @@ class CategoryService
      */
     protected static function getSingleTree($category_id, $mark = true)
     {
-        $node = $category_id instanceof Category ? $category_id : Category::find($category_id);
+        $node = $category_id instanceof Category ? $category_id : Category::findOrFail($category_id);
 
         $parent = $node->getRoot();
         $parent = $parent->getDescendantsAndSelf(['id', 'pid', 'name']);
