@@ -236,6 +236,7 @@
 @endsection
 
 @section('after-scripts-end')
+
     <script>
         $(function () {
             var deleteLogModal = $('div#delete-log-modal'),
@@ -273,3 +274,4 @@
         });
     </script>
 @stop
+

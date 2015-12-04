@@ -8,7 +8,8 @@
 @endsection
 
 @section('breadcrumbs')
-    <li><a href="{!! route('backend.dashboard') !!}"><i class="fa fa-dashboard"></i> {{ trans('menus.dashboard') }}</a></li>
+    <li><a href="{!! route('backend.dashboard') !!}"><i class="fa fa-dashboard"></i> {{ trans('menus.dashboard') }}</a>
+    </li>
     <li><a href="{!! url('admin/log-viewer') !!}">{{ trans('menus.log-viewer.main') }}</a></li>
     <li class="active"><a href="{!! url('admin/log-viewer/logs') !!}">{{ trans('menus.log-viewer.logs') }}</a></li>
 @endsection
@@ -144,7 +145,8 @@
                                 <a href="{{ route('log-viewer::logs.show', [$date]) }}" class="btn btn-xs btn-info">
                                     <i class="fa fa-search"></i>
                                 </a>
-                                <a href="{{ route('log-viewer::logs.download', [$date]) }}" class="btn btn-xs btn-success">
+                                <a href="{{ route('log-viewer::logs.download', [$date]) }}"
+                                   class="btn btn-xs btn-success">
                                     <i class="fa fa-download"></i>
                                 </a>
                                 <a href="#delete-log-modal" class="btn btn-xs btn-danger" data-log-date="{{ $date }}">
@@ -165,6 +167,7 @@
         </div><!-- /.box-body -->
     </div><!--box box-success-->
 
+
     {{-- DELETE MODAL --}}
     <div id="delete-log-modal" class="modal fade">
         <div class="modal-dialog">
@@ -172,6 +175,7 @@
                 <input type="hidden" name="_method" value="DELETE">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="date" value="">
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -183,8 +187,11 @@
                         <p></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-default pull-left" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-sm btn-danger" data-loading-text="Loading&hellip;">DELETE FILE</button>
+                        <button type="button" class="btn btn-sm btn-default pull-left" data-dismiss="modal">Cancel
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-danger" data-loading-text="Loading&hellip;">DELETE
+                            FILE
+                        </button>
                     </div>
                 </div>
             </form>
@@ -193,33 +200,34 @@
 @endsection
 
 @section('after-scripts-end')
+
     <script>
         $(function () {
             var deleteLogModal = $('div#delete-log-modal'),
-                    deleteLogForm  = $('form#delete-log-form'),
-                    submitBtn      = deleteLogForm.find('button[type=submit]');
+                deleteLogForm = $('form#delete-log-form'),
+                submitBtn = deleteLogForm.find('button[type=submit]');
 
-            $("a[href=#delete-log-modal]").click(function(event) {
+            $("a[href=#delete-log-modal]").click(function (event) {
                 event.preventDefault();
                 var date = $(this).data('log-date');
                 deleteLogForm.find('input[name=date]').val(date);
                 deleteLogModal.find('.modal-body p').html(
-                        'Are you sure you want to <span class="label label-danger">DELETE</span> this log file <span class="label label-primary">' + date + '</span> ?'
+                    'Are you sure you want to <span class="label label-danger">DELETE</span> this log file <span class="label label-primary">' + date + '</span> ?'
                 );
 
                 deleteLogModal.modal('show');
             });
 
-            deleteLogForm.submit(function(event) {
+            deleteLogForm.submit(function (event) {
                 event.preventDefault();
                 submitBtn.button('loading');
 
                 $.ajax({
-                    url:      $(this).attr('action'),
-                    type:     $(this).attr('method'),
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
                     dataType: 'json',
-                    data:     $(this).serialize(),
-                    success: function(data, textStatus, xhr) {
+                    data: $(this).serialize(),
+                    success: function (data, textStatus, xhr) {
                         submitBtn.button('reset');
                         if (data.result === 'success') {
                             deleteLogModal.modal('hide');
@@ -230,7 +238,7 @@
                             console.error(errorThrown);
                         }
                     },
-                    error: function(xhr, textStatus, errorThrown) {
+                    error: function (xhr, textStatus, errorThrown) {
                         alert('AJAX ERROR ! Check the console !')
                         console.error(errorThrown);
                         submitBtn.button('reset');
@@ -240,10 +248,11 @@
                 return false;
             });
 
-            deleteLogModal.on('hidden.bs.modal', function(event) {
+            deleteLogModal.on('hidden.bs.modal', function (event) {
                 deleteLogForm.find('input[name=date]').val('');
                 deleteLogModal.find('.modal-body p').html('');
             });
         });
     </script>
 @stop
+

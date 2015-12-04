@@ -76,4 +76,5 @@ return [
 
 	'prefix' => 'laravel',
 
+
 ];

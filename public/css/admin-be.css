@@ -1,0 +1,52 @@
+html,body{
+  height: 100%;
+}
+.container{
+  width: 100%;
+}
+.wrapper{
+width: 960px;
+margin: 0 auto;
+}
+.none{
+    display: none !important;
+}
+.admin-main{
+  height: 100%;
+}
+.admin-content{
+  overflow-y: scroll;
+}
+.mb{
+  margin-bottom: 20px;
+}
+.burger{
+  cursor: pointer;
+  color: #0E90D2 !important;
+}
+.admin-sidebar.active{
+  width: 65px;
+}
+.admin-sidebar.active .item-title{
+  display: none;
+}
+.am-icon-arrow-circle-right{
+  display: none;
+}
+.admin-sidebar.active .am-icon-arrow-circle-right{
+  display: inline;
+}
+.admin-sidebar.active .am-icon-arrow-circle-left{
+  display: none;
+}
+.be-logo{
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  vertical-align: middle;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.am-ucheck-icons{
+  margin-top: 8px;
+}

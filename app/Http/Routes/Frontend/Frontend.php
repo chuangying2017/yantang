@@ -15,3 +15,11 @@ $router->group(['middleware' => 'auth'], function ()
 	get('profile/edit', 'ProfileController@edit')->name('frontend.profile.edit');
 	patch('profile/update', 'ProfileController@update')->name('frontend.profile.update');
 });
+
+
+$router->group(['prefix' => 'api'], function () {
+
+    resource('categories', 'Api\CategoryController', ['only' => ['index', 'show']]);
+
+
+});

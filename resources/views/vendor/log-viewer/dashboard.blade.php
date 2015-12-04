@@ -137,12 +137,15 @@
         Chart.defaults.global.animationEasing = "easeOutQuart";
 
         $(function() {
+
             var data = {!! $reports !!};
 
             new Chart($('#stats-doughnut-chart')[0].getContext('2d'))
                 .Doughnut(data, {
+
                     animationEasing : "easeOutQuart"
                 });
         });
     </script>
 @stop
+

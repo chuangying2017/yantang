@@ -1,0 +1,66 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Bryant
+ * Date: 2/12/2015
+ * Time: 10:44 AM
+ */
+
+namespace App\Services\Product\Attribute;
+
+
+    /**
+     * Class AttributeValueService
+     * @package App\Services\Product\Attribute
+     */
+/**
+ * Class AttributeValueService
+ * @package App\Services\Product\Attribute
+ */
+/**
+ * Class AttributeValueService
+ * @package App\Services\Product\Attribute
+ */
+class AttributeValueService
+{
+    /**
+     * @param $attribute_id
+     * @param $value
+     * @param $merchat_id
+     */
+    public static function firstOrCreate($attribute_id, $value, $merchat_id)
+    {
+        return AttributeValueRepository::firstOrCreate($attribute_id, $value, $merchat_id);
+    }
+
+    /**
+     * get values under a attribute
+     * @param $attribute_id
+     * @return mixed
+     */
+    public static function getByAttribute($attribute_id)
+    {
+        $attribute = Attribute::findOrFail($attribute_id);
+
+        return $attribute->values()->get();
+    }
+
+    /**
+     * @param $id
+     * @param $data
+     * @return bool
+     */
+    public static function update($id, $data)
+    {
+        return AttributeValueRepository::update($id, $data);
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public static function delete($id)
+    {
+        return AttributeValueRepository::delete($id);
+    }
+}
