@@ -40,6 +40,7 @@ class AttributeService
 
     /**
      * @param $id
+     * @return int
      */
     public static function delete($id)
     {

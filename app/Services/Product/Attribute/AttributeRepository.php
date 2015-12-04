@@ -29,20 +29,11 @@ class AttributeRepository
      */
     public static function create($name)
     {
-//        try {
-//            DB::beginTransaction();
+        $attr = Attribute::firstOrCreate([
+            'name' => $name
+        ]);
 
-            $attr = Attribute::firstOrCreate([
-                'name' => $name
-            ]);
-
-//            DB::commit();
-
-            return $attr;
-//
-//        } catch (Exception $e) {
-//            DB::rollBack();
-//        }
+        return $attr;
     }
 
     /**
@@ -74,6 +65,7 @@ class AttributeRepository
     /**
      * delete an attribute
      * @param $id
+     * @return int
      */
     public static function delete($id)
     {
