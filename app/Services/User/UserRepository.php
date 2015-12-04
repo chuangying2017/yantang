@@ -20,6 +20,7 @@ class UserRepository
     /**
      * create a new user
      * @param $data
+     * @return static
      * @throws \Exception
      */
     public static function create($data)

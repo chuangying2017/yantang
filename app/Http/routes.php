@@ -21,16 +21,16 @@ require app_path('Http/routes/marketing.php');
 
 //Route::group(['middleware' => ''], function () {
 
-    get('/', function () {
-        return view('welcome');
-    });
+get('/', function () {
+    return view('welcome');
+});
 
-    Route::group(['prefix' => 'api'], function () {
+Route::group(['prefix' => 'api'], function () {
 
-        resource('categories', 'Api\CategoryController', ['only' => ['index', 'show']]);
+    resource('categories', 'Api\CategoryController', ['only' => ['index', 'show']]);
 
 
-    });
+});
 //});
 
 Route::controller('wechat', 'Auth\WechatAuthController');

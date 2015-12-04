@@ -15,7 +15,8 @@ use App\Models\Category;
  * Class CategoryService
  * @package App\Services\Product\Category
  */
-class CategoryService {
+class CategoryService
+{
 
     /**
      * @param $name
@@ -25,9 +26,9 @@ class CategoryService {
      * @return Category
      * @throws \Exception
      */
-    public static function create($name, $pid = 0, $category_cover = "", $desc = "")
+    public static function create($name, $category_cover = "", $desc = "", $pid = null)
     {
-        return CategoryRepository::create($name, $pid, $category_cover, $desc);
+        return CategoryRepository::create($name, $category_cover, $desc, $pid);
     }
 
     /**
@@ -67,16 +68,23 @@ class CategoryService {
         return Category::all();
     }
 
+    public static function restore($id)
+    {
+        return CategoryRepository::restore($id);
+    }
+
     /**
      * get category tree
+     * @param null $category_id
      * @return mixed
      */
     public static function getTree($category_id = null)
     {
+        //todo@bryant cant work
         if (is_null($category_id)) {
             $parents = Category::roots()->get();
             foreach ($parents as $key => $parent) {
-                $parents[ $key ] = self::getSingleTree($parent, false);
+                $parents[$key] = self::getSingleTree($parent, false);
             }
         } else {
             $parents = self::getSingleTree($category_id);
@@ -85,6 +93,11 @@ class CategoryService {
         return $parents;
     }
 
+    /**
+     * @param $category_id
+     * @param bool|true $mark
+     * @return mixed
+     */
     protected static function getSingleTree($category_id, $mark = true)
     {
         $node = $category_id instanceof Category ? $category_id : Category::find($category_id);
@@ -99,13 +112,18 @@ class CategoryService {
         return $parent->toHierarchy()->first();
     }
 
+    /**
+     * @param $parent
+     * @param $node
+     * @return mixed
+     */
     protected static function markActive($parent, $node)
     {
         $search_node = $node;
-        while ( ! is_null($search_node->pid)) {
+        while (!is_null($search_node->pid)) {
             foreach ($parent as $key => $value) {
                 if ($value->id == $search_node->id) {
-                    $parent[ $key ]['active'] = true;
+                    $parent[$key]['active'] = true;
                     foreach ($parent as $search_key => $search_value) {
                         if ($search_node->pid == $search_value->id) {
                             $search_node = $search_value;
