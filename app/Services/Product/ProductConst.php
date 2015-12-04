@@ -25,6 +25,9 @@ final class ProductConst
      */
     const MSG_SKU_NOT_AFFORD = "sku not afford";
     const MSG_SKU_AFFORD_OK = "sku afford ok";
+
+
+
 }
 
 

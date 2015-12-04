@@ -59,7 +59,6 @@ class AttributeRepository
             $attr->name = $name;
             $attr->save();
 
-            #todo @bryant 是否有误
             DB::table('attribute_values')->where('attibute_id', $id)->update([
                 'attribute_name' => $name
             ]);

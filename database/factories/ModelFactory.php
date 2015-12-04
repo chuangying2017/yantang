@@ -27,3 +27,18 @@ $factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
         'name' => $faker->colorName,
     ];
 });
+
+$factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
+    return [
+        'product_id'  => $faker->uuid,
+        'merchant_id' => $faker->randomDigitNotNull,
+        'category_id' => mt_rand(1, 15),
+        'type'        => 'entity',
+        'price'       => mt_rand(1000, 20000),
+        'limit'       => 100,
+        'express_fee' => 1000,
+        'title'       => $faker->text(20),
+        'digest'      => $faker->text(100),
+        'status'      => 'pending',
+    ];
+});
