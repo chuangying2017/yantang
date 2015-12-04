@@ -17,6 +17,7 @@ class GroupService
 {
     /**
      * @param $data
+     * @return string|static
      */
     public static function create($data)
     {
@@ -46,7 +47,7 @@ class GroupService
      * @param $id
      * @return mixed
      */
-    public static function getById($id)
+    public static function show($id)
     {
         return Group::findOrFail($id);
     }
