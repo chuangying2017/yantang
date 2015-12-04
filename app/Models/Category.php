@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Baum\Node;
 
-class Category extends Node {
+class Category extends Node
+{
 
     use SoftDeletes;
 
@@ -25,13 +26,13 @@ class Category extends Node {
     // guard attributes from mass-assignment
     protected $guarded = array('id', 'pid', 'lid', 'rid', 'depth');
 
-    public function attributes()
-    {
-        return $this->belongsToMany('App\Models\Attribute', 'category_attribute');
-    }
-
     public function products()
     {
         return $this->hasMany('App\Models\Product');
+    }
+
+    public function brands()
+    {
+        return $this->belongsToMany('App\Models\Brand', 'category_brand');
     }
 }
