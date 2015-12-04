@@ -9,8 +9,11 @@
 namespace App\Services\Product\Brand;
 
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Services\Product\Attribute\AttributeService;
 use App\Services\Product\Attribute\AttributeValueService;
+use Pheanstalk\Exception;
 
 /**
  * Class BrandService
@@ -18,17 +21,11 @@ use App\Services\Product\Attribute\AttributeValueService;
  */
 class BrandService
 {
-    /**
-     *
-     */
-    public static function init()
-    {
-        return BrandRepository::init();
-    }
 
     /**
      * @param $name
      * @param null $cover_image
+     * @return string|static
      */
     public static function create($name, $cover_image = null)
     {
@@ -37,13 +34,21 @@ class BrandService
 
     /**
      * @param $id
-     * @param $name
-     * @param null $cover_image
+     * @return string
+     */
+    public static function show($id)
+    {
+        return BrandRepository::show($id);
+    }
+
+    /**
+     * @param $id
+     * @param $data
      * @return bool
      */
-    public static function update($id, $name, $cover_image = null)
+    public static function update($id, $data)
     {
-        return BrandRepository::update($id, $name, $cover_image);
+        return BrandRepository::update($id, $data);
     }
 
     /**
@@ -61,8 +66,7 @@ class BrandService
      */
     public static function getAll()
     {
-        $brandAttributeId = BrandRepository::getBrandId();
-        return AttributeValueService::getByAttribute($brandAttributeId);
+        return Brand::all();
     }
 
     /**
@@ -70,20 +74,41 @@ class BrandService
      * @param $category_ids
      * @return mixed
      */
-    public static function bindCategory($category_ids)
+    public static function bindCategory($id, $category_ids)
     {
-        $ids = [];
-        if (is_array($category_ids)) {
-            $ids = $category_ids;
-        } else {
-            $ids[] = $category_ids;
+        try {
+            $brand = Brand::find($id);
+            if (!$brand) {
+                throw new Exception('BRAND NOT FOUND');
+            }
+            $ids = [];
+            if (is_array($category_ids)) {
+                $ids = $category_ids;
+            } else {
+                $ids[] = $category_ids;
+            }
+            $brand->categories()->sync($category_ids);
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
-        $brandAttributeId = BrandRepository::getBrandId();
-        return AttributeService::bindCategories($brandAttributeId, $ids);
     }
 
+    /**
+     * 获取某分类下所有品牌
+     * @param $category_id
+     * @return string
+     */
     public static function getByCategory($category_id)
     {
-
+        try {
+            $cat = Category::find($category_id);
+            if (!$cat) {
+                throw new Exception('CATEGORY NOT FOUND');
+            }
+            $brands = $cat->brands()->get();
+            return $brands;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
