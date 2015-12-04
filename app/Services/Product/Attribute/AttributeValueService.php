@@ -17,6 +17,8 @@ namespace App\Services\Product\Attribute;
  * Class AttributeValueService
  * @package App\Services\Product\Attribute
  */
+use App\Models\AttributeValue;
+
 /**
  * Class AttributeValueService
  * @package App\Services\Product\Attribute
@@ -24,35 +26,14 @@ namespace App\Services\Product\Attribute;
 class AttributeValueService
 {
     /**
+     * 创建属性值, 只允许管理员创建默认的
      * @param $attribute_id
      * @param $value
-     * @param $merchat_id
+     * @return string|static
      */
-    public static function firstOrCreate($attribute_id, $value, $merchat_id)
+    public static function findOrNew($attribute_id, $value)
     {
-        return AttributeValueRepository::firstOrCreate($attribute_id, $value, $merchat_id);
-    }
-
-    /**
-     * get values under a attribute
-     * @param $attribute_id
-     * @return mixed
-     */
-    public static function getByAttribute($attribute_id)
-    {
-        $attribute = Attribute::findOrFail($attribute_id);
-
-        return $attribute->values()->get();
-    }
-
-    /**
-     * @param $id
-     * @param $data
-     * @return bool
-     */
-    public static function update($id, $data)
-    {
-        return AttributeValueRepository::update($id, $data);
+        return AttributeValueRepository::create($attribute_id, $value);
     }
 
     /**
@@ -63,4 +44,5 @@ class AttributeValueService
     {
         return AttributeValueRepository::delete($id);
     }
+
 }

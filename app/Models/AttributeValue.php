@@ -9,6 +9,8 @@ class AttributeValue extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['value', 'attribute_id'];
+
     public function attribute()
     {
         return $this->belongsTo('App\Models\Attribute');

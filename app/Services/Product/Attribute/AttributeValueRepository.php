@@ -10,7 +10,8 @@ namespace App\Services\Product\Attribute;
 
 
 use App\Models\Attribute;
-use App\Models\AttributeValues;
+use App\Models\AttributeValue;
+use Pheanstalk\Exception;
 
 class AttributeValueRepository
 {
@@ -19,55 +20,29 @@ class AttributeValueRepository
      * create a new attribute
      * @param $attribute_id
      * @param $value
-     * @param $merchant_id
+     * @return string|static
      */
-    public static function firstOrCreate($attribute_id, $value, $merchant_id, $cover_image = null)
+    public static function create($attribute_id, $value)
     {
         try {
-            DB::beginTransaction();
 
-            $attribute = Attribute::findOrFail($attribute_id);
+            if (!Attribute::find($attribute_id)) {
+                throw new Exception('ATTRIBUTE NOT FOUND');
+            }
 
-            $value = AttributeValues::firstOrCreate([
+            $value = AttributeValue::firstOrCreate([
                 'attribute_id' => $attribute_id,
-                'value' => $value,
-                'client_id' => $merchant_id,
-                'attribute_name' => $attribute->name,
-                'cover_image' => $cover_image
+                'value' => $value
             ]);
 
-            DB::commit();
+            return $value;
         } catch (Exception $e) {
-            DB::rollBack();
+            return $e->getMessage();
         }
     }
 
     /**
-     * 更新一个属性值 （只为brand服务）
-     * @param $id
-     * @param $data
-     * @return bool
-     */
-    public static function update($id, $data)
-    {
-        try {
-            DB::beginTransaction();
-
-            $data = array_only($data, ['value', 'cover_image']);
-
-            AttributeValues::find($id)->udpate($data);
-
-            DB::commit();
-
-            return true;
-
-        } catch (Exception $e) {
-            DB::rollBack();
-        }
-    }
-
-    /**
-     * 删除一个attribute value 只为brand服务
+     * 删除一个attribute value 只为attribute服务
      * @param $id
      * @return bool
      */
@@ -75,11 +50,14 @@ class AttributeValueRepository
     {
         try {
             DB::beginTransaction();
-            $value = AttributeValues::findOrFail($id);
+            $value = AttributeValue::findOrFail($id);
+            /**
+             * detach skus
+             */
             $value->skus()->detach();
             $value->delete();
             DB::commit();
-            return true;
+            return 1;
         } catch (Exception $e) {
             DB::rollBack();
         }

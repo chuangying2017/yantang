@@ -5,7 +5,8 @@
 if (App::environment() == 'local' || env('APP_DEBUG')) {
 
     Route::get('test', function () {
-        return 1;
+        $data = \App\Services\Product\Attribute\AttributeValueService::findOrNew(3, 'haha');
+        return $data;
     });
 
     Route::get('test/token', function () {
