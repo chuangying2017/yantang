@@ -11,6 +11,7 @@ namespace App\Services\Product;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductDataView;
 use App\Services\Product\Attribute\AttributeService;
 
 /**
@@ -19,14 +20,6 @@ use App\Services\Product\Attribute\AttributeService;
  */
 class ProductService
 {
-    /**
-     *
-     */
-    const PRODUCT_DOWN = 'down';
-    /**
-     *
-     */
-    const PRODUCT_UP = 'up';
 
     /**
      * @param $data
@@ -60,7 +53,7 @@ class ProductService
     public static function up($id)
     {
         return ProductRepository::update($id, [
-            'status' => self::PRODUCT_DOWN
+            'status' => ProductConst::VAR_PRODUCT_STATUS_UP
         ]);
     }
 
@@ -70,7 +63,14 @@ class ProductService
     public static function down($id)
     {
         return ProductRepository::update($id, [
-            'status' => self::PRODUCT_DOWN
+            'status' => ProductConst::VAR_PRODUCT_STATUS_DOWN
+        ]);
+    }
+
+    public static function sellOut($id)
+    {
+        return ProductRepository::update($id, [
+            'status' => ProductConst::VAR_PRODUCT_STATUS_SELLOUT
         ]);
     }
 
@@ -79,15 +79,15 @@ class ProductService
      * @param $id
      * @return array
      */
-    public static function getById($id)
+    public static function show($id)
     {
         $data = [];
         $product = Product::findOrFail($id);
+        //todo@bryant add meta data
         $data['basic_info'] = $product;
+        $data['data'] = ProductDataView::find($id);
         $data['images'] = $product->images()->get();
         $data['groups'] = $product->groups()->get();
-        $data['comments'] = $product->comments()->get();
-        $data['attributes'] = AttributeService::getByProduct($id);
         $data['skus'] = ProductSkuService::getByProduct($id);
 
         return $data;

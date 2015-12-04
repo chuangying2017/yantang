@@ -13,6 +13,10 @@ namespace App\Services\Product\Fav;
  * Class FavService
  * @package App\Services\Product\Fav
  */
+/**
+ * Class FavService
+ * @package App\Services\Product\Fav
+ */
 class FavService
 {
     /**
@@ -44,5 +48,22 @@ class FavService
     public static function isFavedByUser($user_id, $product_id)
     {
         return DB::table('user_product_favs')->where('user_id', $user_id)->where('product_id', $product_id)->count() > 0;
+    }
+
+    /**
+     * @param $product_id
+     * @return int|string
+     */
+    public static function deleteByProduct($product_id)
+    {
+        try {
+
+            DB::table('user_product_favs')->where('product_id', $product_id)->delete();
+            return 1;
+
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
     }
 }

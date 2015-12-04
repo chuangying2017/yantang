@@ -10,7 +10,11 @@ namespace App\Services\Product;
 
 
 use App\Models\Product;
+use App\Models\ProductMeta;
 use App\Models\ProductSku;
+use App\Services\Product\Comment\CommentServce;
+use App\Services\Product\Comment\CommentService;
+use App\Services\Product\Fav\FavService;
 use DB;
 use Exception;
 
@@ -25,13 +29,21 @@ class ProductRepository
      * @param $data
      * @return mixed
      */
-    protected static function filterData($data)
+    private static function filterBasicData($data)
     {
         $rules = [
-            'merchant_id', 'type', 'stocks', 'origin_id',
-            'title', 'price', 'limit', 'express_fee',
-            'member_discount', 'with_invoice', 'with_care', 'cover_image',
-            'desc', 'detail', 'status', 'open_status', 'open_time', 'category_id'
+            'brand_id', 'category_id', 'merchant_id', 'title', 'sub_title',
+            'price', 'origin_price', 'limit', 'member_discount', 'digest',
+            'cover_image', 'open_status', 'open_time'
+        ];
+        return array_only($data, $rules);
+    }
+
+    private static function filterMetaData($data)
+    {
+        $rules = [
+            'detail', 'is_virtual', 'origin_id', 'express_fee',
+            'with_invoice', 'with_care'
         ];
         return array_only($data, $rules);
     }
@@ -40,20 +52,45 @@ class ProductRepository
      * product create process
      * @param $data
      * @return bool|string
+     * @structure
+     *  - (array) basic_info
+     *      - (string) product_no: 商品编码, 后端生成
+     *      - *(integer) brand_id
+     *      - *(integer) category_id
+     *      - *(integer) mechant_id
+     *      - *(string) title
+     *      - (string) sub_title
+     *      - *(integer) price
+     *      - (integer) origin_price
+     *      - (integer) limit = 0
+     *      - (integer) member_discount = 0
+     *      - (string) digest
+     *      - (string) cover_image
+     *      - (string) status =
+     *      - *(string) open_status
+     *      - (timestamp) open_time
+     *      - *(text) attributes
+     *      - *(text) detail
+     *      - (bool) is_virtual = 0
+     *      - (string) origin_id
+     *      - (integer) express_fee = 0
+     *      - (bool) with_invoice
+     *      - (bool) with_care
+     *  - *(array) skus
+     *  - (array) image_ids
+     *  - (array) group_ids
      */
     public static function create($data)
     {
         try {
             DB::beginTransaction();
 
-            $product = self::touchProduct($data);
+            $product = self::touchProduct($data['basic_info']);
 
             /**
              * create skus
              */
-            for ($i = 0; $i < count($data['skus']); $i++) {
-                ProductSkuService::create($data['skus'][$i], $product->id);
-            }
+            ProductSkuService::create($data['skus'], $product->id);
 
             /**
              * link group
@@ -91,15 +128,15 @@ class ProductRepository
             /**
              * update skus
              */
-            ProductSkuService::update($data, $product);
+            ProductSkuService::sync($data['skus'], $product);
             /**
              * link group
              */
-            $product->groups()->attach($data['group_ids']);
+            $product->groups()->sync($data['group_ids']);
             /**
              * link image
              */
-            $product->images()->attach($data['image_ids']);
+            $product->images()->sync($data['image_ids']);
 
             DB::commit();
         } catch (Exception $e) {
@@ -111,27 +148,32 @@ class ProductRepository
 
     /**
      * @param $data
+     * @param null $id
      * @return mixed
      */
-    private static function touchProduct($data)
+    private static function touchProduct($data, $id = null)
     {
         /**
          * filter data for security
          */
-        $basic_info = self::filterData($data['basic_info']);
+        $basic_data = self::filterBasicData($data);
+        $meta_data = self::filterMetaData($data);
 
-        if (!isset($basic_info['product_id'])) {
-            /**
-             * unique product id
-             */
-            $basic_info['product_id'] = uniqid('pro_');
+        if (is_null($id)) { //如果id为null, 则为创建, 反之为更新
+            $basic_data['product_no'] = uniqid('pn_');
+            $basic_data['status'] = ProductConst::VAR_PRODUCT_STATUS_UP;
         }
+        /**
+         * 将attributes序列化储存
+         */
+        $meta_data['attributes'] = json_encode($meta_data['attributes']);
         /**
          * create an product object
          */
-        $product = Product::updateOrCreate(['id' => $basic_info['product_id']], $basic_info);
+        $product_basic_obj = Product::updateOrCreate(['id' => $id], $basic_data);
+        ProductMeta::updateOrCreate(['product_id' => $id], $meta_data);
 
-        return $product;
+        return $product_basic_obj;
     }
 
     /**
@@ -141,8 +183,11 @@ class ProductRepository
     {
         try {
             DB::beginTransaction();
-            $product = Product::findOrFail($id);
 
+            $product = Product::find($id);
+            if (!$product) {
+                throw new Exception('PRODUCT NOT FOUND');
+            }
             /**
              * detach group
              */
@@ -154,18 +199,18 @@ class ProductRepository
             /**
              * retrive all skus
              */
-            $skus = DB::table('product_sku')->where('product_id', $id);
-            foreach ($skus as $sku) {
-                $temp = ProductSku::find($sku->id);
-                /**
-                 * detach attribute values
-                 */
-                $temp->attributeValues()->detach();
-                /**
-                 * destroy sku
-                 */
-                $temp->destroy();
-            }
+            ProductSkuService::deleteByProduct($id);
+
+            /**
+             * delete all favs
+             */
+            FavService::deleteByProduct($id);
+
+            /**
+             * delete all comments
+             */
+            CommentService::deleteByProduct($id);
+
             /**
              * destroy product
              */
