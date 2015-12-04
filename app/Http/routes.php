@@ -17,6 +17,13 @@ $router->group(['namespace' => 'Frontend'], function () use ($router) {
 });
 
 /**
+ * Frontend Api
+ */
+$router->group(['namespace' => 'Api'], function () use ($router) {
+    require(__DIR__ . "/Routes/Frontend/Api.php");
+});
+
+/**
  * Backend Routes
  * Namespaces indicate folder structure
  */
@@ -33,3 +40,16 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
         });
     });
 });
+
+
+/**
+ * Backend Api
+ */
+$router->group(['namespace' => 'Api'], function () use ($router) {
+    require(__DIR__ . "/Routes/Backend/Api.php");
+});
+
+
+
+require(__DIR__ . "/Routes/test.php");
+
