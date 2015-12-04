@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableBrands extends Migration
+class CreateTableUserProductFavs extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,10 @@ class CreateTableBrands extends Migration
      */
     public function up()
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('user_product_favs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('cover_image');
+            $table->integer('user_id')->unsigned();
+            $table->integer('product_id')->unsigned();
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ class CreateTableBrands extends Migration
      */
     public function down()
     {
-        Schema::drop('brands');
+        Schema::drop('user_product_favs');
     }
 }

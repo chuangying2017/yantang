@@ -42,6 +42,6 @@ class CreatePingxxWechatPayment extends Migration
      */
     public function down()
     {
-        Schema::drop('pingxx_wechat_payment');
+        Schema::drop('pingxx_payments');
     }
 }

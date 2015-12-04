@@ -12,7 +12,7 @@ class CreateTableMembers extends Migration
      */
     public function up()
     {
-        Schema::create('table_members', function (Blueprint $table) {
+        Schema::create('members', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->integer('role');
@@ -28,6 +28,6 @@ class CreateTableMembers extends Migration
      */
     public function down()
     {
-        Schema::drop('table_members');
+        Schema::drop('members');
     }
 }

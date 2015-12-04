@@ -12,7 +12,7 @@ class CreateTableProductMeta extends Migration
      */
     public function up()
     {
-        Schema::create('table_product_meta', function (Blueprint $table) {
+        Schema::create('product_meta', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id');
             $table->text('attributes');
@@ -33,6 +33,6 @@ class CreateTableProductMeta extends Migration
      */
     public function down()
     {
-        Schema::drop('table_product_meta');
+        Schema::drop('product_meta');
     }
 }
