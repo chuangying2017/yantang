@@ -41,7 +41,6 @@ class CategoryRepository
             if ($pid) {
                 $parent = Category::find($pid);
                 $node->makeChildOf($parent);
-                $node->save();
             }
             return $node;
         } catch (Exception $e) {

@@ -9,6 +9,8 @@ class Attribute extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['name', 'merchant_id'];
+
     public function categories()
     {
         return $this->belongsToMany('App\Models\Category', 'category_attribute');
@@ -16,6 +18,6 @@ class Attribute extends Model
 
     public function values()
     {
-        return $this->hasMany('App\Models\AttributeValues');
+        return $this->hasMany('App\Models\AttributeValue');
     }
 }

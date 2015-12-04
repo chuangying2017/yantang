@@ -10,9 +10,6 @@ namespace App\Services\Product\Attribute;
 
 
 use App\Models\Attribute;
-use App\Models\AttributeValues;
-use App\Models\Category;
-use App\Models\AttributeValue;
 use DB;
 use Exception;
 
@@ -27,10 +24,11 @@ class AttributeRepository
      * @param $name
      * @return static
      */
-    public static function create($name)
+    public static function create($name, $merchant_id = null)
     {
         $attr = Attribute::firstOrCreate([
-            'name' => $name
+            'name' => $name,
+            'merchant_id' => $merchant_id
         ]);
 
         return $attr;
@@ -40,24 +38,18 @@ class AttributeRepository
      * update an attribute
      * @param $id
      * @param $name
+     * @return string
      */
     public static function update($id, $name)
     {
         try {
-            DB::beginTransaction();
 
             $attr = Attribute::findOrFail($id);
             $attr->name = $name;
             $attr->save();
-
-            DB::table('attribute_values')->where('attibute_id', $id)->update([
-                'attribute_name' => $name
-            ]);
-
-            DB::commit();
             return $attr;
         } catch (Exception $e) {
-            DB::rollBack();
+            return $e->getMessage();
         }
     }
 
@@ -73,13 +65,20 @@ class AttributeRepository
 
             $attr = Attribute::findOrFail($id);
             $values = $attr->values()->get();
+            /**
+             * delete attribute vaules
+             */
             foreach ($values as $value) {
-                DB::table('sku_attribute_value')->where('attribute_value_id', $value->id)->delete();
-                AttributeValues::destroy($value->id);
+                AttributeValueService::delete($value->id);
             }
-
-            $attr->delete();
+            /**
+             * detach categories
+             */
             $attr->categories()->detach();
+            /**
+             * self delete
+             */
+            $attr->delete();
 
             DB::commit();
             return 1;
