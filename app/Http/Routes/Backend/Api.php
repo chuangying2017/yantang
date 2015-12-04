@@ -1,9 +1,9 @@
 <?php
 
 
-$router->group(['prefix' => 'api/admin'], function () {
+resource('categories', 'AdminCategoryController');
 
-    resource('categories', 'AdminCategoryController');
-
+Route::group(['prefix' => 'marketing'], function () {
+    resource('coupons', 'AdminMarketingCouponController');
 });
 

@@ -50,6 +50,17 @@ class MarketingProtocol {
         );
     }
 
+    public static function discountType($type = null, $key = false)
+    {
+        return
+            $key
+                ? [self::DISCOUNT_TYPE_OF_CASH, self::DISCOUNT_TYPE_OF_DISCOUNT]
+                : array_get([
+                self::DISCOUNT_TYPE_OF_CASH     => '现金券',
+                self::DISCOUNT_TYPE_OF_DISCOUNT => '打折券',
+            ], $type, null);
+    }
+
     public static function limitToArray($limits, $default = null)
     {
         return is_array($limits) ? $limits : (($limits) ? explode(',', $limits) : $default);
@@ -58,6 +69,7 @@ class MarketingProtocol {
     public static function checkLimit($limits, $value)
     {
         $limits = self::limitToArray($limits);
+
         return is_null($limits) ? true : in_array($value, $limits);
     }
 

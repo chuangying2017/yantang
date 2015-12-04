@@ -1,7 +1,9 @@
 <?php
 
-$router->group(['prefix' => 'api'], function () {
 
-    resource('categories', 'CategoryController', ['only' => ['index', 'show']]);
+resource('categories', 'CategoryController', ['only' => ['index', 'show']]);
 
+
+$router->group(['prefix' => 'marketing'], function () {
+    resource('coupons', 'Marketing\CouponController');
 });

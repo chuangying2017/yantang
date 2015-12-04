@@ -9,6 +9,8 @@ trait ApiHelpers {
 
     protected $message = '';
 
+    protected $errorData = '';
+
     /**
      * @return mixed
      */
@@ -47,6 +49,11 @@ trait ApiHelpers {
         return $this->setStatusCode(403)->setErrCode(403)->setMessage($message)->respondWithError();
     }
 
+    public function respondUnProcessableEntity($data, $message = '请求数据格式错误')
+    {
+        return $this->setStatusCode(422)->setErrCode(422)->setMessage($message)->setErrorData($data)->respondWithError();
+    }
+
     /**
      * @param $data
      * @param array $header
@@ -82,9 +89,11 @@ trait ApiHelpers {
     public function respondWithError()
     {
         return response()->json(array(
-            'errors'  => $this->getErrCode(),
-            'message' => $this->getMessage()
-
+            'error' => [
+                'code'    => $this->getErrCode(),
+                'message' => $this->getMessage(),
+                'errors'  => $this->getErrorData()
+            ]
         ), $this->getStatusCode());
     }
 
@@ -120,6 +129,24 @@ trait ApiHelpers {
     public function setMessage($message)
     {
         $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getErrorData()
+    {
+        return $this->errorData;
+    }
+
+    /**
+     * @param string $errorData
+     */
+    public function setErrorData($errorData)
+    {
+        $this->errorData = $errorData;
 
         return $this;
     }
