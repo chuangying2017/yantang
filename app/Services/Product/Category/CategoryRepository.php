@@ -12,6 +12,10 @@ use App\Models\Category;
 use DB;
 use Exception;
 
+/**
+ * Class CategoryRepository
+ * @package App\Services\Product\Category
+ */
 class CategoryRepository
 {
 
@@ -24,20 +28,25 @@ class CategoryRepository
      * @return Category
      * @throws Exception
      */
-    public static function create($name, $pid = 0, $category_cover = "", $desc = "")
+    public static function create($name, $category_cover = "", $desc = "", $pid = null)
     {
-        if ($pid !== 0) {
-            $parent = Category::find($pid);
-            if (!$parent) throw new Exception('parent not existed');
-        }
+        try {
+            $node = new Category;
+            $node->name = $name;
+            $node->pid = $pid;
+            $node->category_cover = $category_cover;
+            $node->desc = $desc;
+            $node->save();
 
-        $category = new Category;
-        $category->name = $name;
-        $category->pid = $pid;
-        $category->category_cover = $category_cover;
-        $category->desc = $desc;
-        $category->save();
-        return $category;
+            if ($pid) {
+                $parent = Category::find($pid);
+                $node->makeChildOf($parent);
+                $node->save();
+            }
+            return $node;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
 
     }
 
@@ -49,9 +58,8 @@ class CategoryRepository
     public static function update($id, $data)
     {
         $category = Category::findOrFail($id);
-        $category->name = $data['name'];
-        $category->pid = $data['pid'];
-        $category->save();
+        $data = array_only($data, ['name', 'category_cover', 'desc']);
+        $category->update($data);
 
         return $category;
     }
@@ -65,6 +73,16 @@ class CategoryRepository
     {
         $category = Category::findOrFail($id);
         $category->delete();
+        return 1;
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public static function restore($id)
+    {
+        Category::onlyTrashed()->where('id', $id)->restore();
         return 1;
     }
 
