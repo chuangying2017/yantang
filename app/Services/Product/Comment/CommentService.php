@@ -13,10 +13,17 @@ namespace App\Services\Product\Comment;
  * Class CommentServce
  * @package App\Services\Product\Comment
  */
+use App\Models\Comment;
+
+/**
+ * Class CommentServce
+ * @package App\Services\Product\Comment
+ */
 class CommentServce
 {
     /**
      * @param $data
+     * @return static
      */
     public static function create($data)
     {
@@ -32,16 +39,22 @@ class CommentServce
         return CommentsRepository::delete($id);
     }
 
-    //todo@bryant: add product sku to comment
     /**
-     * get a comment by id
      * @param $id
-     * @return mixed
+     * @return int|string
      */
-    public static function getById($id)
+    public static function block($id)
     {
-        $comment = Comment::with('user.avatar', 'user.username', 'images')->where('id', $id)->get();
-        return $comment;
+        return CommentsRepository::update($id, ['status' => 0]);
+    }
+
+    /**
+     * @param $id
+     * @return int|string
+     */
+    public static function unblock($id)
+    {
+        return CommentsRepository::update($id, ['status' => 1]);
     }
 
     /**
