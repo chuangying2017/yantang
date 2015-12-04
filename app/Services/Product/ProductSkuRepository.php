@@ -8,6 +8,9 @@
 
 namespace App\Services\Product;
 
+use App\Models\ProductSku;
+use Exception;
+
 
 /**
  * Class ProductSkuRepository
@@ -24,54 +27,70 @@ class ProductSkuRepository
      */
     public static function create($data, $product_id)
     {
-        $sku = ProductSku::create([
-            'name' => $data['name'],
-            'product_id' => $product_id,
-            'sku_no' => uniqid('psn_'),
-            'stock' => $data['stock'],
-            'price' => $data['price'],
-            'cover_image' => $data['cover_image'],
-        ]);
-        /**
-         * link attributes
-         */
-        $sku->attributeValues()->attach($data['attributes_value_ids']);
-        return $sku;
+        try {
+            $sku = ProductSku::create([
+                'name' => $data['name'],
+                'product_id' => $product_id,
+                'sku_no' => uniqid('psn_'),
+                'stock' => $data['stock'],
+                'price' => $data['price'],
+                'cover_image' => $data['cover_image'],
+            ]);
+            return $sku;
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+    }
+
+
+    /**
+     * @param $id
+     * @param $data
+     * @return string
+     */
+    public static function update($id, $data)
+    {
+
+        try {
+            $sku = ProductSku::find($id);
+            if (!$sku) {
+                throw new Exception('SKU NOT FOUND');
+            }
+            $data = array_only($data, ['name', 'stock', 'price', 'sales', 'cover_image']);
+
+            $sku->update($data);
+
+            return 1;
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
     }
 
     /**
-     * @param $data
-     * @param $product
+     * @param $id
+     * @return int|string
      */
-    public static function update($data, $product)
+    public static function delete($id)
     {
-        /**
-         * 保留的 sku id
-         */
-        $remainSkuIds = [];
-        /**
-         * 数据库中的sku id
-         */
-        $oldSkuIds = $product->skus()->lists('id');
-        /**
-         * 遍历数据中的sku, 如果有id的说明是已存的, 放进remainSkuIds, 如果没有的说明是新的, 加到数据库中
-         */
-        foreach ($data['skus'] as $sku) {
-            if (isset($sku['id'])) {
-                $remainSkuIds[] = $sku[id];
-            } else {
-                $sku = self::create($sku, $product);
+        try {
+            $sku = ProductSku::find($id);
+            if (!$sku) {
+                throw new Exception('PRODUCTSKU NOT FOUND');
             }
-        }
-        /**
-         * 对比保存的id数据和原来的数组, 找出删除的Ids
-         */
-        $detachSkuIds = array_diff($remainSkuIds, $oldSkuIds);
-        /**
-         * 删除不用的sku
-         */
-        foreach ($detachSkuIds as $skuId) {
-            ProductSku::destroy($skuId);
+            /**
+             * detach attribute values
+             */
+            $sku->attributeValues()->detach();
+            /**
+             * destroy sku
+             */
+            $sku->delete();
+            return 1;
+        } catch (Exception $e) {
+
+            return $e->getMessage();
         }
     }
 }

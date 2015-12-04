@@ -13,6 +13,12 @@ class Product extends Model
 
     protected $guarded = ['id'];
 
+    protected $fillable = [
+        'product_no', 'brand_id', 'category_id', 'merchant_id', 'title', 'sub_title',
+        'price', 'origin_price', 'limit', 'member_discount', 'digest',
+        'cover_image', 'status', 'open_status', 'open_time'
+    ];
+
     public function category()
     {
         return $this->belongsTo('App\Models\Category');

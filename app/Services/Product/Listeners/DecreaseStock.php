@@ -19,7 +19,7 @@ class DecreaseStock
      */
     public function __construct()
     {
-        //
+        //todo@bryant 商品扣件库存的Listener
     }
 
     /**
