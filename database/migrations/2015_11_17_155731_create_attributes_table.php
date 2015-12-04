@@ -15,6 +15,7 @@ class CreateAttributesTable extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
+            $table->integer('merchant_id');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -15,9 +15,8 @@ class CreateAttributeValuesTable extends Migration
         Schema::create('attribute_values', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('attribute_id');
-            $table->string('attribute_name');
+            $table->integer('merchant_id');
             $table->string('value');
-            $table->string('cover_image');
             $table->softDeletes();
             $table->timestamps();
         });

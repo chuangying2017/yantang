@@ -16,6 +16,8 @@ class CreateImagesTable extends Migration
             $table->increments('id');
             $table->integer('merchant_id');
             $table->string('media_id');
+            $table->string('filename');
+            $table->string('imageinfo');
             $table->string('url');
             $table->softDeletes();
             $table->timestamps();

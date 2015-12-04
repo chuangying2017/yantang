@@ -20,7 +20,7 @@ class CreateAddressesTable extends Migration
             $table->string('mobile');
             $table->string('province');
             $table->string('city');
-            $table->string('role');
+            $table->boolean('is_primary');
             $table->string('display_name');
             $table->string('detail');
             $table->softDeletes();
