@@ -30,6 +30,8 @@ class CreateUsersTable extends Migration {
             $table->timestamp('birthday');
             $table->timestamp('createtime');
             $table->timestamp('modifiled_time');
+            $table->string('confirmation_code');
+            $table->boolean('confirmed')->default(config('access.users.confirm_email') ? false : true);
             $table->softDeletes();
             $table->timestamps();
         });
