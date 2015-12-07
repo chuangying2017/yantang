@@ -2,6 +2,11 @@
 
 
 resource('categories', 'AdminCategoryController');
+
+post('brands/categories', [
+    'as'   => 'brands.bind.category',
+    'uses' => 'AdminBrandController@bindBrandsToCategory'
+]);
 resource('brands', 'AdminBrandController');
 
 

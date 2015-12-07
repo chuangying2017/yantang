@@ -77,21 +77,19 @@ class BrandService {
      */
     public static function bindCategory($id, $category_ids)
     {
-        try {
-            $brand = Brand::find($id);
-            if ( ! $brand) {
-                throw new Exception('BRAND NOT FOUND');
-            }
-            $ids = [];
-            if (is_array($category_ids)) {
-                $ids = $category_ids;
-            } else {
-                $ids[] = $category_ids;
-            }
-            $brand->categories()->sync($category_ids);
-        } catch (Exception $e) {
-            return $e->getMessage();
+        $brand = Brand::find($id);
+        if ( ! $brand) {
+            throw new Exception('BRAND NOT FOUND');
         }
+        $ids = [];
+        if (is_array($category_ids)) {
+            $ids = $category_ids;
+        } else {
+            $ids = [$category_ids];
+        }
+        $brand->categories()->sync($category_ids);
+
+        return true;
     }
 
     /**
@@ -101,16 +99,14 @@ class BrandService {
      */
     public static function getByCategory($category_id)
     {
-        try {
-            $cat = Category::find($category_id);
-            if ( ! $cat) {
-                throw new Exception('CATEGORY NOT FOUND');
-            }
-            $brands = $cat->brands()->get();
-
-            return $brands;
-        } catch (Exception $e) {
-            return $e->getMessage();
+        $cat = Category::find($category_id);
+        if ( ! $cat) {
+            throw new Exception('CATEGORY NOT FOUND');
         }
+        $brands = $cat->brands()->get();
+
+        return $brands;
     }
+
+
 }

@@ -4,8 +4,8 @@ namespace App\Http\Requests\Backend\Api;
 
 use App\Http\Requests\Request;
 
-class CategoryRequest extends Request
-{
+class CategoryRequest extends Request {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +13,8 @@ class CategoryRequest extends Request
      */
     public function authorize()
     {
-        return false;
+        #todo @troy auth
+        return true;
     }
 
     /**
@@ -23,8 +24,15 @@ class CategoryRequest extends Request
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $rules = [];
+
+        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
+            $rules = [
+                'name' => 'required',
+                'pid'  => 'exists:categories:id'
+            ];
+        }
+
+        return $rules;
     }
 }

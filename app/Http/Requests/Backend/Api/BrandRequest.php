@@ -31,6 +31,13 @@ class BrandRequest extends Request {
             ];
         }
 
+        if ($this->route()->getName() == 'brands.bind.category') {
+            $rules = [
+                'brand_id'    => 'required',
+                'category_id' => 'required'
+            ];
+        }
+
         return $rules;
     }
 }

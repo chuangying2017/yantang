@@ -15,9 +15,18 @@ class AdminBrandController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $brands = BrandService::getAll();
+        try {
+            $category_id = $request->input('category_id') ?: null;
+            if ( ! is_null($category_id)) {
+                $brands = BrandService::getByCategory($category_id);
+            } else {
+                $brands = BrandService::getAll();
+            }
+        } catch (\Exception $e) {
+            return $this->respondException($e);
+        }
 
         return $this->respondData($brands);
     }
@@ -92,4 +101,25 @@ class AdminBrandController extends Controller {
 
         return $this->respondDelete();
     }
+
+    /**
+     * 绑定品牌所属分类
+     * @param Request $request
+     * @param $brand_id
+     * @return mixed
+     */
+    public function bindBrandsToCategory(Request $request)
+    {
+        $brand_id = $request->input('brand_id');
+        $category_ids = $request->input('category_id');
+
+        try {
+            BrandService::bindCategory($brand_id, $category_ids);
+        } catch (\Exception $e) {
+            return $this->respondException($e);
+        }
+
+        return $this->respondOk();
+    }
+
 }
