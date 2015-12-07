@@ -22,6 +22,8 @@ class User extends Model
      */
     protected $table = 'user_clients';
 
+    protected $primaryKey = 'user_id';
+
     /**
      * The attributes that are mass assignable.
      *

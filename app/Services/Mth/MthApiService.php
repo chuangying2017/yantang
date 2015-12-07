@@ -4,7 +4,6 @@
  */
 namespace App\Services\Mth;
 
-use App\Services\CommonConst;
 use App\Services\Utilities\CacheHelper;
 use App\Services\Utilities\HttpHelper;
 
@@ -34,12 +33,12 @@ class MthApiService
     /**
      * @var string appid
      */
-    protected static $appid = CommonConst::MTH_APPID;
+    protected static $appid = MthConst::MTH_APPID;
 
     /**
      * @var string appsecret
      */
-    protected static $appsecret = CommonConst::MTH_APPSECRET;
+    protected static $appsecret = MthConst::MTH_APPSECRET;
 
     /**
      * get api url
@@ -47,7 +46,7 @@ class MthApiService
      */
     protected static function getApiUrl()
     {
-        return CommonConst::MTH_API_URL . self::BASE_URL;
+        return MthConst::MTH_API_URL . self::BASE_URL;
     }
 
     /**
@@ -89,8 +88,10 @@ class MthApiService
         $result = HttpHelper::http_get(self::getApiUrl() . AUTH_TOKEN_URL . "?appid=" . self::$appid . "&secret=" . self::$appsecret);
         if ($result) {
             $data = json_decode($result, true);
-            self::setAccessToken($data);
+            return self::setAccessToken($data);
         }
+
+        throw new MthApiException('GET ACCESS TOKEN ERROR');
     }
 
     /**
@@ -98,6 +99,7 @@ class MthApiService
      * @param $account
      * @param $password
      * @return bool user_token
+     * @throws MthApiException
      */
     protected static function loginGetToken($account, $password)
     {
@@ -113,10 +115,10 @@ class MthApiService
             if ($data['access_token']) {
                 return $data['access_token'];
             } else {
-                return false;
+                throw new MthApiException('NOT FOUNT ACCESS TOKEN');
             }
         } else {
-            return false;
+            throw new MthApiException('LOGIN ERROR');
         }
     }
 
@@ -124,6 +126,7 @@ class MthApiService
      * @param $account
      * @param $password
      * @return array|bool|mixed
+     * @throws MthApiException
      */
     protected static function registerUser($account, $password)
     {
@@ -138,12 +141,15 @@ class MthApiService
             $data = json_decode($result);
             return $data;
         }
+
+        throw new MthApiException('REGISTER USER ERROR');
     }
 
     /**
      * @param $account
      * @param $password
      * @return array|mixed
+     * @throws MthApiException
      */
     protected static function getUserInfo($account, $password)
     {
@@ -158,6 +164,8 @@ class MthApiService
             $data = json_decode($result);
             return $data;
         }
+
+        throw new MthApiException('GET USER INFO ERRROR');
     }
 
     /**
@@ -167,7 +175,7 @@ class MthApiService
      */
     protected static function existed($login_account)
     {
-        #TODO @bryant
+        //todo@bryant
         return true;
     }
 
@@ -183,7 +191,7 @@ class MthApiService
          * check duplicate
          */
         if (self::existed($account)) {
-            return self::ACCOUNT_EXISTED;
+            return self::getUserInfo($account, $password);
         } else {
 
             /**
