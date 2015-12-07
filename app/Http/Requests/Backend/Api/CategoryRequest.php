@@ -26,13 +26,20 @@ class CategoryRequest extends Request {
     {
         $rules = [];
 
-        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
+        if ($this->isMethod('POST') || $this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $rules = [
                 'name' => 'required',
-                'pid'  => 'exists:categories:id'
+                'pid'  => 'sometimes|exists:categories,id'
             ];
         }
 
         return $rules;
+    }
+
+    public function attributes()
+    {
+        return [
+            'pid' => '分类'
+        ];
     }
 }

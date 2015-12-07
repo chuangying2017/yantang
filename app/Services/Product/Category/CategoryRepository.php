@@ -77,9 +77,29 @@ class CategoryRepository {
      */
     public static function restore($id)
     {
-        Category::onlyTrashed()->where('id', $id)->restore();
+        $category = Category::onlyTrashed()->where('id', $id)->firstOrFail();
+
+        if ($category->trashed()) {
+            $category->restore();
+            $pid = $category->pid;
+            if ($pid) {
+                $parent = Category::findOrFail($pid);
+                $category->makeChildOf($parent);
+            }
+        }
 
         return 1;
     }
+
+    /**
+     * get a category by id
+     * @param $id
+     * @return mixed
+     */
+    public static function find($id)
+    {
+        return Category::findOrFail($id);
+    }
+
 
 }
