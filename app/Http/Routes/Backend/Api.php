@@ -1,9 +1,17 @@
 <?php
 
 
-$router->group(['prefix' => 'api/admin'], function () {
+resource('categories', 'AdminCategoryController');
 
-    resource('categories', 'AdminCategoryController');
+post('brands/categories', [
+    'as'   => 'brands.bind.category',
+    'uses' => 'AdminBrandController@bindBrandsToCategory'
+]);
+resource('brands', 'AdminBrandController');
+
+
+Route::group(['prefix' => 'marketing'], function () {
+    resource('coupons', 'AdminMarketingCouponController');
 
 });
 

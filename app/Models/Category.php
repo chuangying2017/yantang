@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Baum\Node;
 
-class Category extends Node
-{
+class Category extends Node {
 
     use SoftDeletes;
 
@@ -33,6 +32,6 @@ class Category extends Node
 
     public function brands()
     {
-        return $this->belongsToMany('App\Models\Brand', 'category_brand');
+        return $this->belongsToMany('App\Models\Brand', 'brand_category');
     }
 }

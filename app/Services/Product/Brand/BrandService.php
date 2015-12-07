@@ -19,8 +19,7 @@ use Pheanstalk\Exception;
  * Class BrandService
  * @package App\Services\Product\Brand
  */
-class BrandService
-{
+class BrandService {
 
     /**
      * @param $name
@@ -44,6 +43,8 @@ class BrandService
     /**
      * @param $id
      * @param $data
+     * - string name | require
+     * - string cover_image
      * @return bool
      */
     public static function update($id, $data)
@@ -66,7 +67,7 @@ class BrandService
      */
     public static function getAll()
     {
-        return Brand::all();
+        return Brand::get(['id', 'name', 'cover_image']);
     }
 
     /**
@@ -76,21 +77,19 @@ class BrandService
      */
     public static function bindCategory($id, $category_ids)
     {
-        try {
-            $brand = Brand::find($id);
-            if (!$brand) {
-                throw new Exception('BRAND NOT FOUND');
-            }
-            $ids = [];
-            if (is_array($category_ids)) {
-                $ids = $category_ids;
-            } else {
-                $ids[] = $category_ids;
-            }
-            $brand->categories()->sync($category_ids);
-        } catch (Exception $e) {
-            return $e->getMessage();
+        $brand = Brand::find($id);
+        if ( ! $brand) {
+            throw new Exception('BRAND NOT FOUND');
         }
+        $ids = [];
+        if (is_array($category_ids)) {
+            $ids = $category_ids;
+        } else {
+            $ids = [$category_ids];
+        }
+        $brand->categories()->sync($category_ids);
+
+        return true;
     }
 
     /**
@@ -100,15 +99,14 @@ class BrandService
      */
     public static function getByCategory($category_id)
     {
-        try {
-            $cat = Category::find($category_id);
-            if (!$cat) {
-                throw new Exception('CATEGORY NOT FOUND');
-            }
-            $brands = $cat->brands()->get();
-            return $brands;
-        } catch (Exception $e) {
-            return $e->getMessage();
+        $cat = Category::find($category_id);
+        if ( ! $cat) {
+            throw new Exception('CATEGORY NOT FOUND');
         }
+        $brands = $cat->brands()->get();
+
+        return $brands;
     }
+
+
 }

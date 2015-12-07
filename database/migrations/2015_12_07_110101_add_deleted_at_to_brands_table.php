@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableBrands extends Migration {
+class AddDeletedAtToBrandsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,11 +12,8 @@ class CreateTableBrands extends Migration {
      */
     public function up()
     {
-        Schema::create('brands', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->string('cover_image')->nullable();
-            $table->timestamps();
+        Schema::table('brands', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +24,8 @@ class CreateTableBrands extends Migration {
      */
     public function down()
     {
-        Schema::drop('brands');
+        Schema::table('brands', function (Blueprint $table) {
+            $table->dropColumn('deleted_at');
+        });
     }
 }

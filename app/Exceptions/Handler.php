@@ -3,6 +3,7 @@
 
 use App\Http\Traits\ApiHelpers;
 use Exception;
+use HttpResponseException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -47,10 +48,10 @@ class Handler extends ExceptionHandler {
     public function render($request, Exception $e)
     {
         if ($e instanceof ModelNotFoundException) {
-//            if($request->isJson()){
-            return $this->respondNotFound();
-//            }
-//            $e = new NotFoundHttpException($e->getMessage(), $e);
+            if ($request->ajax()) {
+                return $this->respondNotFound();
+            }
+            $e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
         //As to preserve the catch all
