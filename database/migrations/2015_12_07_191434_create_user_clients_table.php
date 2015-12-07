@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTagsTable extends Migration
+class CreateUserClientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,13 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('user_clients', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
-            $table->softDeletes();
+            $table->integer('user_id');
+            $table->string('mobile');
+            $table->timestamp('birthday');
+            $table->string('avatar');
+            $table->string('sex');
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ class CreateTagsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('tags');
+        Schema::drop('user_clients');
     }
 }

@@ -15,27 +15,14 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('role');
-            $table->string('user_id')->unique();
-            $table->string('login_account')->unique();
-            $table->string('password');
             $table->string('name');
-            $table->string('user_name')->unique();
-            $table->string('avatar');
-            $table->string('sex');
-            $table->string('mobile')->unique();
-            $table->string('tel');
             $table->string('email')->unique();
-            $table->integer('user_grade');
-            $table->string('gift_ticket');
-            $table->boolean('is_actived');
-            $table->timestamp('birthday');
-            $table->timestamp('createtime');
-            $table->timestamp('modifiled_time');
+            $table->string('password', 60)->nullable();
             $table->string('confirmation_code');
             $table->boolean('confirmed')->default(config('access.users.confirm_email') ? false : true);
-            $table->softDeletes();
+            $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

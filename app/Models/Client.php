@@ -4,24 +4,23 @@ namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Kbwebs\MultiAuth\PasswordResets\CanResetPassword;
 use Kbwebs\MultiAuth\PasswordResets\Contracts\CanResetPassword as CanResetPasswordContract;
 
-class User extends Model implements AuthenticatableContract,
-    AuthorizableContract,
-    CanResetPasswordContract {
+class User extends Model
+{
 
-    use Authenticatable, Authorizable, CanResetPassword;
-
+    use SoftDeletes;
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'user_clients';
 
     /**
      * The attributes that are mass assignable.
@@ -30,12 +29,6 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $guarded = ['id'];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['password', 'remember_token'];
 
     public function addresses()
     {

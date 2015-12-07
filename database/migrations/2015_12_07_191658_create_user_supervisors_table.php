@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTagUserPivotTable extends Migration
+class CreateUserSupervisorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,12 @@ class CreateTagUserPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_tag', function (Blueprint $table) {
+        Schema::create('user_supervisors', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('tag_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_id');
+            $table->string('supervisor_id');
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +28,6 @@ class CreateTagUserPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('user_tag');
+        Schema::drop('user_supervisors');
     }
 }
