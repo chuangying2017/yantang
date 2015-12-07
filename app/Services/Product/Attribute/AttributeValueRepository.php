@@ -11,10 +11,9 @@ namespace App\Services\Product\Attribute;
 
 use App\Models\Attribute;
 use App\Models\AttributeValue;
-use Pheanstalk\Exception;
+use Exception;
 
-class AttributeValueRepository
-{
+class AttributeValueRepository {
 
     /**
      * create a new attribute
@@ -24,21 +23,18 @@ class AttributeValueRepository
      */
     public static function create($attribute_id, $value)
     {
-        try {
 
-            if (!Attribute::find($attribute_id)) {
-                throw new Exception('ATTRIBUTE NOT FOUND');
-            }
-
-            $value = AttributeValue::firstOrCreate([
-                'attribute_id' => $attribute_id,
-                'value' => $value
-            ]);
-
-            return $value;
-        } catch (Exception $e) {
-            return $e->getMessage();
+        if ( ! Attribute::find($attribute_id)) {
+            throw new Exception('属性不存在');
         }
+
+        $value = AttributeValue::firstOrCreate([
+            'attribute_id' => $attribute_id,
+            'value'        => $value
+        ]);
+
+        return $value;
+
     }
 
     /**
@@ -57,9 +53,11 @@ class AttributeValueRepository
             $value->skus()->detach();
             $value->delete();
             DB::commit();
+
             return 1;
         } catch (Exception $e) {
             DB::rollBack();
+            throw $e;
         }
     }
 }

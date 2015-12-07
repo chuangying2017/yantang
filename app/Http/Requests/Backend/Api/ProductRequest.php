@@ -4,7 +4,7 @@ namespace App\Http\Requests\Backend\Api;
 
 use App\Http\Requests\Request;
 
-class BrandRequest extends Request {
+class ProductRequest extends Request {
 
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class BrandRequest extends Request {
      */
     public function authorize()
     {
-        #todo @troy 权限检查
+        #todo @troy auth
         return true;
     }
 
@@ -25,15 +25,10 @@ class BrandRequest extends Request {
     public function rules()
     {
         $rules = [];
+
         if ($this->isMethod('POST') || $this->isMethod('PUT')) {
             $rules = [
-                'name' => 'required'
-            ];
-        }
-
-        if ($this->route()->getName() == 'brand.bind.categories') {
-            $rules = [
-                'category_id' => 'required'
+                'basic_info.brand_id' => 'required'
             ];
         }
 

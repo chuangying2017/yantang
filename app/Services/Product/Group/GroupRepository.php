@@ -12,8 +12,8 @@ namespace App\Services\Product\Group;
 use App\Models\Group;
 use Pheanstalk\Exception;
 
-class GroupRepository
-{
+class GroupRepository {
+
     /**
      * create a new group
      * @param $data
@@ -28,6 +28,7 @@ class GroupRepository
 
             $data = array_only($data, ['name', 'group_cover', 'desc']);
             $group = Group::create($data);
+
             return $group;
 
         } catch (Exception $e) {
@@ -47,11 +48,12 @@ class GroupRepository
         try {
 
             $group = Group::find($id);
-            if (!$group) {
+            if ( ! $group) {
                 throw new Exception('GROUP NOT FOUND');
             }
             $data = array_only($data, ['name', 'group_cover', 'desc']);
             $group->udpate($data);
+
             return 1;
 
         } catch (Exception $e) {
@@ -69,7 +71,7 @@ class GroupRepository
             DB::beginTransaction();
 
             $group = Group::find($id);
-            if (!$group) {
+            if ( ! $group) {
                 throw new Exception('GROUP NOT FOUND');
             }
             $group->delete();
@@ -77,8 +79,11 @@ class GroupRepository
             $group->products()->detach();
 
             DB::commit();
+
+            return true;
         } catch (Exception $e) {
             DB::rollBack();
+            throw $e;
         }
     }
 }

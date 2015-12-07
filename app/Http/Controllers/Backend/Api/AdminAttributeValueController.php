@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Backend\Api;
 
-use App\Http\Requests\Backend\Api\ProductRequest as Request;
+use App\Services\Product\Attribute\AttributeValueService;
+use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class AdminProductController extends Controller {
+class AdminAttributeValueController extends Controller {
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($attribute_id)
     {
 
     }
@@ -34,37 +35,17 @@ class AdminProductController extends Controller {
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
-     * @structure
-     *  - (array) basic_info
-     *      - (string) product_no: 商品编码, 后端生成
-     *      - *(integer) brand_id
-     *      - *(integer) category_id
-     *      - *(integer) mechant_id
-     *      - *(string) title
-     *      - (string) sub_title
-     *      - *(integer) price
-     *      - (integer) origin_price
-     *      - (integer) limit = 0
-     *      - (integer) member_discount = 0
-     *      - (string) digest
-     *      - (string) cover_image
-     *      - (string) status =
-     *      - *(string) open_status
-     *      - (timestamp) open_time
-     *      - *(text) attributes
-     *      - *(text) detail
-     *      - (bool) is_virtual = 0
-     *      - (string) origin_id
-     *      - (integer) express_fee = 0
-     *      - (bool) with_invoice
-     *      - (bool) with_care
-     *  - *(array) skus
-     *  - (array) image_ids
-     *  - (array) group_ids
      */
-    public function store(Request $request)
+    public function store(Request $request, $attribute_id)
     {
+        try {
+            $value = $request->input('value');
+            $attribute_value = AttributeValueService::findOrNew($attribute_id, $value);
+        } catch (\Exception $e) {
+            return $this->respondException($e);
+        }
 
+        return $this->respondCreated($attribute_value);
     }
 
     /**
@@ -107,8 +88,10 @@ class AdminProductController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($attribute_id, $value_id)
     {
-        //
+        AttributeValueService::delete($value_id);
+
+        return $this->respondDelete();
     }
 }

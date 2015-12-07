@@ -7,6 +7,7 @@
  */
 
 namespace App\Services\Product\Group;
+use App\Models\Group;
 
 
 /**

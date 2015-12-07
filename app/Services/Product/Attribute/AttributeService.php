@@ -19,16 +19,20 @@ use App\Models\Attribute;
  * Class AttributeService
  * @package App\Services\Product\Attribute
  */
-class AttributeService
-{
+class AttributeService {
+
     /**
      * 用以管理员创建默认的属性
      * @param $name
      * @return mixed
      */
-    public static function create($name)
+    public static function create($name, $merchant_id = 0)
     {
-        return AttributeRepository::create($name, 0);
+        if ($merchant_id) {
+            return self::merchantCreate($name, $merchant_id);
+        }
+
+        return AttributeRepository::create($name, $merchant_id);
     }
 
     /**
@@ -37,11 +41,10 @@ class AttributeService
      * @param $merchant_id
      * @return static
      */
-    public static function merchantCreate($name, $merchant_id)
+    protected static function merchantCreate($name, $merchant_id)
     {
-        if (!Merchant::find($merchant_id)) {
-            return 'MERCHANT NOT FOUND';
-        }
+        $merchant = Merchant::findOrFail($merchant_id);
+
         return AttributeRepository::create($name, $merchant_id);
     }
 
@@ -73,6 +76,7 @@ class AttributeService
     public static function bindCategories($id, $category_ids)
     {
         $attr = Attribute::findOrFail($id);
+
         return $attr->categories()->sync($category_ids);
     }
 
@@ -82,12 +86,13 @@ class AttributeService
      * @param $category_id
      * @return mixed
      */
-    public static function getByCategory($category_id)
+    public static function getByCategory($category_id, $merchant_id = 0)
     {
         $category = Category::findOrFail($category_id);
 
-        return $category->attributes()->get();
+        return $category->attributes()->whereIn('merchant_id', AttributeRepository::transformMerchantId($merchant_id))->get();
     }
+
 
     /**
      * 通过名字查询属性, 如果有则返回属性, 没有就创建且返回
@@ -107,7 +112,17 @@ class AttributeService
      */
     public static function findByMerchant($merchant_id)
     {
-        return Attribute::where('merchant_id', $merchant_id)->get();
+        return AttributeRepository::lists($merchant_id);
+    }
+
+    /**
+     * 获取商家创建的属性
+     * @param $merchant_id
+     * @return mixed
+     */
+    public static function findAllByMerchant($merchant_id)
+    {
+        return AttributeRepository::lists($merchant_id);
     }
 
     /**
@@ -116,6 +131,6 @@ class AttributeService
      */
     public static function getDefault()
     {
-        return Attribute::where('merchant_id', 0)->get();
+        return AttributeRepository::lists();
     }
 }

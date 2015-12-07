@@ -1,17 +1,32 @@
 <?php
 
+$router->group(['prefix' => 'categories'], function ($router) {
 
-resource('categories', 'AdminCategoryController');
 
-post('brands/categories', [
-    'as'   => 'brands.bind.category',
-    'uses' => 'AdminBrandController@bindBrandsToCategory'
-]);
+    put('brands/{brand_id}', [
+        'as'   => 'brand.bind.categories',
+        'uses' => 'AdminBrandController@bindBrandToCategories'
+    ]);
+
+    put('attributes/{attribute_id}', [
+        'as'   => 'attribute.bind.categories',
+        'uses' => 'AdminAttributeController@bindAttributeToCategories'
+    ]);
+
+    resource('/', 'AdminCategoryController');
+
+});
+
+
+resource('products', 'AdminProductController');
+resource('attributes', 'AdminAttributeController');
+resource('attributes.values', 'AdminAttributeValueController', ['only' => ['store', 'destroy']]);
+
+
 resource('brands', 'AdminBrandController');
 
 
-Route::group(['prefix' => 'marketing'], function () {
+$router->group(['prefix' => 'marketing'], function () {
     resource('coupons', 'AdminMarketingCouponController');
-
 });
 

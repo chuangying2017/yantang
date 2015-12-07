@@ -12,7 +12,6 @@ namespace App\Services\Product;
 use App\Models\Product;
 use App\Models\ProductMeta;
 use App\Models\ProductSku;
-use App\Services\Product\Comment\CommentServce;
 use App\Services\Product\Comment\CommentService;
 use App\Services\Product\Fav\FavService;
 use DB;
@@ -22,8 +21,8 @@ use Exception;
  * Class ProductRepository
  * @package App\Services\Product
  */
-class ProductRepository
-{
+class ProductRepository {
+
     /**
      * filter data for database
      * @param $data
@@ -36,6 +35,7 @@ class ProductRepository
             'price', 'origin_price', 'limit', 'member_discount', 'digest',
             'cover_image', 'open_status', 'open_time'
         ];
+
         return array_only($data, $rules);
     }
 
@@ -45,6 +45,7 @@ class ProductRepository
             'detail', 'is_virtual', 'origin_id', 'express_fee',
             'with_invoice', 'with_care'
         ];
+
         return array_only($data, $rules);
     }
 
@@ -57,7 +58,7 @@ class ProductRepository
      *      - (string) product_no: 商品编码, 后端生成
      *      - *(integer) brand_id
      *      - *(integer) category_id
-     *      - *(integer) mechant_id
+     *      - *(integer) merchant_id
      *      - *(string) title
      *      - (string) sub_title
      *      - *(integer) price
@@ -70,6 +71,8 @@ class ProductRepository
      *      - *(string) open_status
      *      - (timestamp) open_time
      *      - *(text) attributes
+     *             - [name, id, values[[name,id]]
+     *
      *      - *(text) detail
      *      - (bool) is_virtual = 0
      *      - (string) origin_id
@@ -107,7 +110,7 @@ class ProductRepository
 
         } catch (Exception $e) {
             DB::rollBack();
-            return "error: " . $e->getMessage();
+            throw $e;
         }
     }
 
@@ -185,7 +188,7 @@ class ProductRepository
             DB::beginTransaction();
 
             $product = Product::find($id);
-            if (!$product) {
+            if ( ! $product) {
                 throw new Exception('PRODUCT NOT FOUND');
             }
             /**
