@@ -44,6 +44,11 @@ trait ApiHelpers {
         return $this->setStatusCode(400)->setErrCode($errCode)->setMessage($message)->respondWithError();
     }
 
+    public function respondException($e, $errCode = 400)
+    {
+        return $this->setStatusCode(400)->setErrCode($errCode)->setMessage($e->getMessage())->respondWithError();
+    }
+
     public function respondForbidden($message = '没有权限')
     {
         return $this->setStatusCode(403)->setErrCode(403)->setMessage($message)->respondWithError();
@@ -74,6 +79,11 @@ trait ApiHelpers {
     public function respondData($data)
     {
         return $this->setStatusCode(200)->respond(['data' => $data]);
+    }
+
+    public function respondDelete($message = 'success')
+    {
+        return $this->setStatusCode(204)->respond();
     }
 
     public function respondOk($message = 'success')

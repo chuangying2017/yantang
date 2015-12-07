@@ -9,6 +9,8 @@ class Brand extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'brands';
+
     protected $fillable = ['name', 'cover_image'];
 
     public function products()
@@ -18,6 +20,6 @@ class Brand extends Model
 
     public function categories()
     {
-        return $this->belongsToMany('App\Models\Category', 'category_brand');
+        return $this->belongsToMany('App\Models\Category', 'brand_category');
     }
 }
