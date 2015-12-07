@@ -10,5 +10,5 @@ class Supervisor extends Model
     use SoftDeletes;
 
     protected $table = 'user_supervisors';
-
+    protected $primaryKey = 'user_id';
 }
