@@ -28,7 +28,7 @@ return [
     |
     */
 
-//    'model' => App\User::class,
+    'model' => App\Models\Access\User\User::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return [
     |
     */
 
-//    'table' => 'users',
+    'table' => 'users',
 
 
     /*
@@ -60,8 +60,8 @@ return [
     */
 
     'password' => [
-        'email'  => 'emails.password',
-        'table'  => 'password_resets',
+        'email' => 'emails.password',
+        'table' => 'password_resets',
         'expire' => 60,
     ],
 
@@ -74,11 +74,11 @@ return [
     'multi-auth' => [
         'admin' => [
             'driver' => 'eloquent',
-            'model'  => App\Models\Admin::class,
+            'model' => App\Models\Admin::class,
         ],
-        'user'  => [
+        'user' => [
             'driver' => 'eloquent',
-            'model'  => App\Models\User::class,
+            'model' => App\Models\User::class,
         ]
     ],
 
