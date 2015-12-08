@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserClientsTable extends Migration
+class CreateMerchantSupervisorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,11 @@ class CreateUserClientsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_clients', function (Blueprint $table) {
+        Schema::create('supervisors', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->string('mobile');
-            $table->timestamp('birthday');
-            $table->string('avatar');
-            $table->string('sex');
+            $table->string('supervisor_id');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateUserClientsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('user_clients');
+        Schema::drop('supervisors');
     }
 }

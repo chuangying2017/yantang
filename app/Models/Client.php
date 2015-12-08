@@ -2,16 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Kbwebs\MultiAuth\PasswordResets\CanResetPassword;
-use Kbwebs\MultiAuth\PasswordResets\Contracts\CanResetPassword as CanResetPasswordContract;
 
-class User extends Model
+class Client extends Model
 {
 
     use SoftDeletes;
@@ -20,7 +14,9 @@ class User extends Model
      *
      * @var string
      */
-    protected $table = 'user_clients';
+    protected $table = 'clients';
+
+    protected $primaryKey = 'user_id';
 
     /**
      * The attributes that are mass assignable.

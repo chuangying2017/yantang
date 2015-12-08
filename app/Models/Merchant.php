@@ -9,7 +9,7 @@ class Merchant extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'user_merchants';
+    protected $table = 'merchants';
 
     public function images()
     {

@@ -6,19 +6,21 @@
  * Time: 5:01 PM
  */
 
-namespace App\Services\User;
+namespace App\Services\Client;
 
 use App\Library\Wechat\Exceptions\WechatException;
-use App\Models\User;
+use App\Models\Client;
+use App\Repositories\Backend\Role\EloquentRoleRepository;
+use App\Repositories\Frontend\User\EloquentUserRepository;
 use App\Services\Mth\MthApiService;
 
-class UserRepository
+class ClientRepository
 {
 
-    const CREATE_USER_ERROR = "create user error";
+    const CREATE_USER_ERROR = "create client error";
 
     /**
-     * create a new user
+     * create a new client
      * @param $data
      * @return static
      * @throws \Exception
@@ -30,6 +32,17 @@ class UserRepository
          */
         $info = MthApiService::registerGetUser($data['account'], $data['password']);
         if ($info) {
+            $role = (new EloquentRoleRepository)->getDefaultUserRole();
+            $userRepo = new EloquentUserRepository($role);
+
+            $user = $userRepo->create([
+                'name' => '',
+                'email' => '',
+                'password' => ''
+            ]);
+
+            $client = Client::create();
+
             $user = User::create([
                 "user_id" => $info['user_id'],
                 "login_account" => $info['login_account'] || $data['account'],
