@@ -22,8 +22,6 @@ use App\Services\Product\Attribute\AttributeService;
 class ProductService {
 
 
-
-
     /**
      * @param $data
      * @return bool|string
