@@ -98,12 +98,26 @@ class ProductService {
     /**
      * get product list by category id
      * @param $category_id
+     * @param int $page
+     * @param string $order_by
+     * @param string $sort
+     * @return
      */
-    public static function getByCategory($category_id)
+    public static function getByCategory($category_id, $page = 1, $order_by = "id", $sort = 'asc')
     {
         $category = Category::findOrFail($category_id);
+        return $category->products()->where('status', self::PRODUCT_UP)->orderBy($order_by, $sort)->paginate($page);
+    }
 
-        return $category->products()->where('status', self::PRODUCT_UP)->get();
+    /**
+     * @param int $page
+     * @param string $order_by
+     * @param string $sort
+     * @return mixed
+     */
+    public static function getAll($page = 1, $order_by = "id", $sort = 'asc')
+    {
+        return Product::orderBy($order_by, $sort)->paginate($page);
     }
 
 }
