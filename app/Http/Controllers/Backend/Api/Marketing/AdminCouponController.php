@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Api\Marketing;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Api\MarketingCouponRequest as Request;
+use App\Http\Transformers\CouponTransformer;
 use App\Services\Marketing\Items\Coupon\CouponManager;
 use App\Services\Marketing\MarketingProtocol;
 use App\Services\Marketing\MarketingRepository;
@@ -35,7 +36,7 @@ class AdminCouponController extends Controller {
     {
         $coupons = $this->couponManager->lists();
 
-        return $this->respondData($coupons);
+        return $this->response->collection($coupons, new CouponTransformer);
     }
 
     /**
@@ -60,10 +61,10 @@ class AdminCouponController extends Controller {
         try {
             $result = $this->couponManager->create($input);
         } catch (\Exception $e) {
-            return $this->respondLogicError(400, $e->getMessage());
+
         }
 
-        return $this->respondData($result);
+        return $this->response->created();
     }
 
     /**

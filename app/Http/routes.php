@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Switch between the included languages
  */
@@ -14,16 +15,6 @@ $router->group(['namespace' => 'Language'], function () use ($router) {
 $router->group(['namespace' => 'Frontend'], function () use ($router) {
 //    require(__DIR__ . "/Routes/Frontend/Frontend.php");
 //    require(__DIR__ . "/Routes/Frontend/Access.php");
-
-
-    $router->group(['prefix' => 'api'], function () use ($router) {
-        /**
-         * Frontend Api
-         */
-        $router->group(['namespace' => 'Api'], function () use ($router) {
-            require(__DIR__ . "/Routes/Frontend/Api.php");
-        });
-    });
 
 });
 
@@ -44,14 +35,14 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
 //            require(__DIR__ . "/Routes/Backend/Access.php");
 //        });
 
-        $router->group(['namespace' => 'Api', 'prefix' => 'api'], function () use ($router) {
-            require(__DIR__ . "/Routes/Backend/Api.php");
-        });
-
     });
 
 
 });
+
+$api = app('Dingo\Api\Routing\Router');
+require(__DIR__ . "/api.php");
+
 
 require(__DIR__ . "/Routes/test.php");
 

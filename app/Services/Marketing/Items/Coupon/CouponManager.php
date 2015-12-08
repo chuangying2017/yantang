@@ -15,7 +15,6 @@ class CouponManager extends MarketingItemManager implements MarketingInterface {
         try {
             $coupon_data = self::contentFilter($input, MarketingProtocol::TYPE_OF_COUPON);
             $limit_data = self::limitFilter($input);
-
             $result = MarketingRepository::storeCoupon($coupon_data, $limit_data);
 
             return $result;

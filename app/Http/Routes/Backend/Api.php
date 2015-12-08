@@ -1,32 +1,30 @@
 <?php
 
-$router->group(['prefix' => 'categories'], function ($router) {
+$api->group(['prefix' => 'categories'], function ($api) {
 
-
-    put('brands/{brand_id}', [
+    $api->put('brands/{brand_id}', [
         'as'   => 'brand.bind.categories',
         'uses' => 'AdminBrandController@bindBrandToCategories'
     ]);
 
-    put('attributes/{attribute_id}', [
+    $api->put('attributes/{attribute_id}', [
         'as'   => 'attribute.bind.categories',
         'uses' => 'AdminAttributeController@bindAttributeToCategories'
     ]);
 
-    resource('/', 'AdminCategoryController');
-
+    $api->resource('/', 'AdminCategoryController');
 });
 
 
-resource('products', 'AdminProductController');
-resource('attributes', 'AdminAttributeController');
-resource('attributes.values', 'AdminAttributeValueController', ['only' => ['store', 'destroy']]);
+$api->resource('products', 'AdminProductController');
+$api->resource('attributes', 'AdminAttributeController');
+$api->resource('attributes.values', 'AdminAttributeValueController', ['only' => ['store', 'destroy']]);
 
 
-resource('brands', 'AdminBrandController');
+$api->resource('brands', 'AdminBrandController');
 
 
-$router->group(['namespace' => 'Marketing','prefix' => 'marketing'], function () {
-    resource('coupons', 'AdminCouponController');
+$api->group(['namespace' => 'Marketing', 'prefix' => 'marketing'], function ($api) {
+    $api->resource('coupons', 'AdminCouponController');
 });
 
