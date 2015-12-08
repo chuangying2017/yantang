@@ -19,7 +19,9 @@ use App\Services\Product\Attribute\AttributeService;
  * Class ProductService
  * @package App\Services\Product
  */
-class ProductService {
+
+class ProductService
+{
 
 
     /**

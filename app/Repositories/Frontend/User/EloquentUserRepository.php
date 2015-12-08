@@ -11,7 +11,8 @@ use App\Repositories\Backend\Role\RoleRepositoryContract;
  * Class EloquentUserRepository
  * @package App\Repositories\User
  */
-class EloquentUserRepository implements UserContract {
+class EloquentUserRepository implements UserContract
+{
 
     /**
      * @var RoleRepositoryContract
@@ -47,11 +48,11 @@ class EloquentUserRepository implements UserContract {
     public function create($data, $provider = false)
     {
         $user = User::create([
-            'name'              => $data['name'],
-            'email'             => $data['email'],
-            'password'          => $provider ? null : $data['password'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $provider ? null : $data['password'],
             'confirmation_code' => md5(uniqid(mt_rand(), true)),
-            'confirmed'         => config('access.users.confirm_email') ? 0 : 1,
+            'confirmed' => config('access.users.confirm_email') ? 0 : 1,
         ]);
         $user->attachRole($this->role->getDefaultUserRole());
 
@@ -73,14 +74,14 @@ class EloquentUserRepository implements UserContract {
     {
         $user = User::where('email', $data->email)->first();
         $providerData = [
-            'avatar'      => $data->avatar,
-            'provider'    => $provider,
+            'avatar' => $data->avatar,
+            'provider' => $provider,
             'provider_id' => $data->id,
         ];
 
-        if ( ! $user) {
+        if (!$user) {
             $user = $this->create([
-                'name'  => $data->name,
+                'name' => $data->name,
                 'email' => $data->email,
             ], true);
         }
@@ -216,7 +217,6 @@ class EloquentUserRepository implements UserContract {
     {
         //$user can be user instance or id
         if ( ! $user instanceof User)
-
             $user = User::findOrFail($user);
 
         return Mail::send('emails.confirm', ['token' => $user->confirmation_code], function ($message) use ($user) {
