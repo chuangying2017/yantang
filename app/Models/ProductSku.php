@@ -11,6 +11,8 @@ class ProductSku extends Model
 
     protected $table = 'product_sku';
 
+    protected $guarded = ['id'];
+
     public function product()
     {
         return $this->belongsTo('App\Models\Product');

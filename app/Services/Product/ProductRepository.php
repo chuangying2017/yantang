@@ -23,6 +23,13 @@ use Exception;
  */
 class ProductRepository {
 
+
+    public static function lists()
+    {
+
+    }
+
+
     /**
      * filter data for database
      * @param $data
@@ -42,8 +49,7 @@ class ProductRepository {
     private static function filterMetaData($data)
     {
         $rules = [
-            'detail', 'is_virtual', 'origin_id', 'express_fee',
-            'with_invoice', 'with_care'
+            'detail', 'is_virtual', 'origin_id', 'express_fee', 'attributes', 'with_invoice', 'with_care'
         ];
 
         return array_only($data, $rules);
@@ -93,20 +99,20 @@ class ProductRepository {
             /**
              * create skus
              */
-            ProductSkuService::create($data['skus'], $product->id);
-
+            $skus = ProductSkuService::create($data['skus'], $product->id);
+            $product->skus = $skus;
             /**
              * link group
              */
-            $product->groups()->attach($data['group_ids']);
+            $product->groups()->sync(array_get($data, 'group_ids', []));
             /**
              * link image
              */
-            $product->images()->attach($data['image_ids']);
+            $product->images()->sync(array_get($data, 'image_ids', []));
 
             DB::commit();
 
-            return true;
+            return $product;
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -142,8 +148,11 @@ class ProductRepository {
             $product->images()->sync($data['image_ids']);
 
             DB::commit();
+
+            return $product;
         } catch (Exception $e) {
             DB::rollBack();
+            throw $e;
         }
 
     }
@@ -220,9 +229,11 @@ class ProductRepository {
             $product->destory();
 
             DB::commit();
+            return 1;
 
         } catch (Exception $e) {
             DB::rollBack();
+            throw new $e;
         }
     }
 }

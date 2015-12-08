@@ -6,6 +6,7 @@ use App\Http\Requests\Backend\Api\ProductRequest as Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Services\Product\ProductService;
 
 class AdminProductController extends Controller {
 
@@ -52,19 +53,24 @@ class AdminProductController extends Controller {
      *      - *(string) open_status
      *      - (timestamp) open_time
      *      - *(text) attributes
+     *          - [name, id, values[[name,id]]
      *      - *(text) detail
      *      - (bool) is_virtual = 0
      *      - (string) origin_id
      *      - (integer) express_fee = 0
-     *      - (bool) with_invoice
-     *      - (bool) with_care
+     *      - (bool) with_invoice 发票
+     *      - (bool) with_care 保修
      *  - *(array) skus
      *  - (array) image_ids
      *  - (array) group_ids
      */
     public function store(Request $request)
     {
+        $data = $request->all();
 
+        $product = ProductService::create($data);
+
+        return $this->respondCreated($product);
     }
 
     /**
@@ -75,7 +81,9 @@ class AdminProductController extends Controller {
      */
     public function show($id)
     {
-        //
+        $product = ProductService::show($id);
+
+        return $this->respondData($product);
     }
 
     /**
@@ -98,7 +106,11 @@ class AdminProductController extends Controller {
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+
+        $product = ProductService::update($id, $data);
+
+        return $this->respondCreated($product);
     }
 
     /**
@@ -109,6 +121,12 @@ class AdminProductController extends Controller {
      */
     public function destroy($id)
     {
-        //
+        try {
+            ProductService::delete($id);
+        } catch (\Exception $e) {
+            return $this->respondException($e);
+        }
+
+        return $this->respondDelete();
     }
 }

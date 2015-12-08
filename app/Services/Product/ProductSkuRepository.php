@@ -16,8 +16,8 @@ use Exception;
  * Class ProductSkuRepository
  * @package App\Services\Product
  */
-class ProductSkuRepository
-{
+class ProductSkuRepository {
+
     /**
      * @param $data
      * @param $product_id
@@ -27,20 +27,16 @@ class ProductSkuRepository
      */
     public static function create($data, $product_id)
     {
-        try {
-            $sku = ProductSku::create([
-                'name' => $data['name'],
-                'product_id' => $product_id,
-                'sku_no' => uniqid('psn_'),
-                'stock' => $data['stock'],
-                'price' => $data['price'],
-                'cover_image' => $data['cover_image'],
-            ]);
-            return $sku;
-        } catch (Exception $e) {
+        $sku = ProductSku::create([
+            'name'        => $data['name'],
+            'product_id'  => $product_id,
+            'sku_no'      => uniqid('psn_'),
+            'stock'       => $data['stock'],
+            'price'       => $data['price'],
+            'cover_image' => $data['cover_image'],
+        ]);
 
-            return $e->getMessage();
-        }
+        return $sku;
     }
 
 
@@ -52,20 +48,16 @@ class ProductSkuRepository
     public static function update($id, $data)
     {
 
-        try {
-            $sku = ProductSku::find($id);
-            if (!$sku) {
-                throw new Exception('SKU NOT FOUND');
-            }
-            $data = array_only($data, ['name', 'stock', 'price', 'sales', 'cover_image']);
-
-            $sku->update($data);
-
-            return 1;
-        } catch (Exception $e) {
-
-            return $e->getMessage();
+        $sku = ProductSku::find($id);
+        if ( ! $sku) {
+            throw new Exception('SKU NOT FOUND');
         }
+        $data = array_only($data, ['name', 'stock', 'price', 'sales', 'cover_image']);
+
+        $sku->update($data);
+
+        return 1;
+
     }
 
     /**
@@ -74,23 +66,20 @@ class ProductSkuRepository
      */
     public static function delete($id)
     {
-        try {
-            $sku = ProductSku::find($id);
-            if (!$sku) {
-                throw new Exception('PRODUCTSKU NOT FOUND');
-            }
-            /**
-             * detach attribute values
-             */
-            $sku->attributeValues()->detach();
-            /**
-             * destroy sku
-             */
-            $sku->delete();
-            return 1;
-        } catch (Exception $e) {
-
-            return $e->getMessage();
+        $sku = ProductSku::find($id);
+        if ( ! $sku) {
+            throw new Exception('PRODUCTSKU NOT FOUND');
         }
+        /**
+         * detach attribute values
+         */
+        $sku->attributeValues()->detach();
+        /**
+         * destroy sku
+         */
+        $sku->delete();
+
+        return 1;
+
     }
 }
