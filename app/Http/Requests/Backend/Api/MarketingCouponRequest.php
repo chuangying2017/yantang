@@ -32,7 +32,7 @@ class MarketingCouponRequest extends Request {
                 'type'        => 'required|in:' . implode(',', MarketingProtocol::discountType(null, true)),
                 'content'     => 'required|integer|min:1',
                 'detail'      => 'required',
-                'quantity'       => 'required|integer|min:1',
+                'quantity'    => 'required|integer|min:1',
                 'amount'      => 'required|integer|min:1',
                 'multi'       => 'required|boolean',
                 'effect_time' => 'date',
@@ -41,5 +41,11 @@ class MarketingCouponRequest extends Request {
         }
 
         return $rules;
+    }
+
+    public function attributes()
+    {
+        return [
+        ];
     }
 }

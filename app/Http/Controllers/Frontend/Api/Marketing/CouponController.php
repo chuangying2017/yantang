@@ -25,4 +25,5 @@ class CouponController extends MarketingController {
         parent::__construct($distributor, $useCoupon);
     }
 
+
 }

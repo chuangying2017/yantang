@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Api;
+namespace App\Http\Controllers\Backend\Api\Marketing;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Api\MarketingCouponRequest as Request;
 use App\Services\Marketing\Items\Coupon\CouponManager;
+use App\Services\Marketing\MarketingProtocol;
+use App\Services\Marketing\MarketingRepository;
 
 
-class AdminMarketingCouponController extends Controller {
+class AdminCouponController extends Controller {
+
 
     /**
      * @var CouponManager
@@ -30,7 +33,9 @@ class AdminMarketingCouponController extends Controller {
      */
     public function index()
     {
-        return 'coupons lists';
+        $coupons = $this->couponManager->lists();
+
+        return $this->respondData($coupons);
     }
 
     /**
@@ -107,4 +112,5 @@ class AdminMarketingCouponController extends Controller {
     {
         //
     }
+
 }

@@ -26,7 +26,7 @@ resource('attributes.values', 'AdminAttributeValueController', ['only' => ['stor
 resource('brands', 'AdminBrandController');
 
 
-$router->group(['prefix' => 'marketing'], function () {
-    resource('coupons', 'AdminMarketingCouponController');
+$router->group(['namespace' => 'Marketing','prefix' => 'marketing'], function () {
+    resource('coupons', 'AdminCouponController');
 });
 
