@@ -15,8 +15,7 @@ use App\Models\Category;
  * Class CategoryService
  * @package App\Services\Product\Category
  */
-class CategoryService
-{
+class CategoryService {
 
     /**
      * @param $name
@@ -46,18 +45,19 @@ class CategoryService
      */
     public static function delete($id)
     {
-        return CategoryRepository::delete($id);
+        $category = CategoryRepository::find($id);
+        if ($category->isLeaf()) {
+            return CategoryRepository::delete($id);
+        }
+
+        throw new \Exception('分类拥有子分类,不可删除');
     }
 
-    /**
-     * get a category by id
-     * @param $id
-     * @return mixed
-     */
-    public static function getById($id)
+    public static function restore($id)
     {
-        return Category::findOrFail($id);
+
     }
+
 
     /**
      * get all categories
@@ -68,10 +68,6 @@ class CategoryService
         return Category::all();
     }
 
-    public static function restore($id)
-    {
-        return CategoryRepository::restore($id);
-    }
 
     /**
      * get category tree
@@ -83,8 +79,13 @@ class CategoryService
         //todo@bryant cant work
         if (is_null($category_id)) {
             $parents = Category::roots()->get();
+
+            if ( ! count($parents)) {
+                return [];
+            }
+
             foreach ($parents as $key => $parent) {
-                $parents[$key] = self::getSingleTree($parent, false);
+                $parents[ $key ] = self::getSingleTree($parent, false);
             }
         } else {
             $parents = self::getSingleTree($category_id);
@@ -120,10 +121,10 @@ class CategoryService
     protected static function markActive($parent, $node)
     {
         $search_node = $node;
-        while (!is_null($search_node->pid)) {
+        while ( ! is_null($search_node->pid)) {
             foreach ($parent as $key => $value) {
                 if ($value->id == $search_node->id) {
-                    $parent[$key]['active'] = true;
+                    $parent[ $key ]['active'] = true;
                     foreach ($parent as $search_key => $search_value) {
                         if ($search_node->pid == $search_value->id) {
                             $search_node = $search_value;

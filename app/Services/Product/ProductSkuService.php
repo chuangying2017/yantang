@@ -17,8 +17,8 @@ use Exception;
  * Class ProductSkuService
  * @package App\Services\Product
  */
-class ProductSkuService
-{
+class ProductSkuService {
+
     /**
      * @param $data
      * @param $product_id
@@ -26,16 +26,12 @@ class ProductSkuService
      */
     public static function create($data, $product_id)
     {
-        $items = [];
+        $items = is_array($data) ? $data : [$data];
         $skus = [];
-        if (is_array($data)) {
-            $items = $data;
-        } else {
-            $items[] = $data;
-        }
         foreach ($items as $item) {
-            $skus[] = ProductSkuRepository::create($data, $product_id);
+            $skus[] = ProductSkuRepository::create($item, $product_id);
         }
+
         return $skus;
     }
 
@@ -56,18 +52,9 @@ class ProductSkuService
      */
     public static function show($product_sku_ids)
     {
-        $ids = [];
-        if (is_array($product_sku_ids)) {
-            $ids = $product_sku_ids;
-        } else {
-            $ids[] = $product_sku_ids;
-        }
+        $ids = is_array($product_sku_ids) ? $product_sku_ids : [$product_sku_ids];
 
-        $data = [];
-        foreach ($ids as $id) {
-            $sku = ProductSkuView::findOrFail($id);
-            $data[] = $sku;
-        }
+        $data = ProductSkuView::whereIn('id', $ids)->get;
 
         return $data;
     }
@@ -79,6 +66,7 @@ class ProductSkuService
     public static function getByProduct($id)
     {
         $product = Product::findOrFail($id);
+
         return $product->skuViews()->get();
     }
 
@@ -117,7 +105,7 @@ class ProductSkuService
             $sku = ProductSkuView::findOrFail($query->product_sku_id);
             $temp = [
                 "product_sku_id" => $query->product_sku_id,
-                'data' => $sku
+                'data'           => $sku
             ];
             if ($sku->stock >= $query->quantity) {
                 $temp['code'] = ProductConst::CODE_SKU_AFFORD_OK;
@@ -139,13 +127,14 @@ class ProductSkuService
     {
         try {
             $product = Product::find($product_id);
-            if (!$product) {
+            if ( ! $product) {
                 throw new Exception('PRODUCT NOT FOUND');
             }
             $skus = $product->skus();
             foreach ($skus as $sku) {
                 ProductSkuRepository::delete($sku->id);
             }
+
             return 1;
         } catch (Exception $e) {
 

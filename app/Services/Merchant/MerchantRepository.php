@@ -9,6 +9,8 @@
 class MerchantRepository
 {
 
+
+
     public static function create()
     {
 
@@ -22,6 +24,6 @@ class MerchantRepository
     public static function delete()
     {
     }
-    
+
 
 }

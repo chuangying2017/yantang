@@ -108,9 +108,8 @@ class AdminBrandController extends Controller {
      * @param $brand_id
      * @return mixed
      */
-    public function bindBrandsToCategory(Request $request)
+    public function bindBrandToCategories(Request $request, $brand_id)
     {
-        $brand_id = $request->input('brand_id');
         $category_ids = $request->input('category_id');
 
         try {
@@ -121,5 +120,6 @@ class AdminBrandController extends Controller {
 
         return $this->respondOk();
     }
+
 
 }

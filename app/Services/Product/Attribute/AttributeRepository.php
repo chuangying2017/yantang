@@ -17,8 +17,22 @@ use Exception;
  * Class AttributeRepository
  * @package App\Services\Product\Attribute
  */
-class AttributeRepository
-{
+class AttributeRepository {
+
+    public static function lists($merchant_id = 0)
+    {
+        return Attribute::whereIn('merchant_id', self::transformMerchantId($merchant_id))->get(['id', 'name', 'merchant_id']);
+    }
+
+    public static function transformMerchantId($merchant_id = 0)
+    {
+        if ($merchant_id === 0) {
+            return [0];
+        }
+
+        return [$merchant_id, 0];
+    }
+
     /**
      * return by name or create a new attribute
      * @param $name
@@ -27,7 +41,7 @@ class AttributeRepository
     public static function create($name, $merchant_id = null)
     {
         $attr = Attribute::firstOrCreate([
-            'name' => $name,
+            'name'        => $name,
             'merchant_id' => $merchant_id
         ]);
 
@@ -47,6 +61,7 @@ class AttributeRepository
             $attr = Attribute::findOrFail($id);
             $attr->name = $name;
             $attr->save();
+
             return $attr;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -64,13 +79,10 @@ class AttributeRepository
             DB::beginTransaction();
 
             $attr = Attribute::findOrFail($id);
-            $values = $attr->values()->get();
             /**
              * delete attribute vaules
              */
-            foreach ($values as $value) {
-                AttributeValueService::delete($value->id);
-            }
+            $attr->values()->delete();
             /**
              * detach categories
              */
@@ -81,9 +93,11 @@ class AttributeRepository
             $attr->delete();
 
             DB::commit();
+
             return 1;
         } catch (Exception $e) {
             DB::rollBack();
+            throw $e;
         }
     }
 

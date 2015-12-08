@@ -12,6 +12,7 @@ namespace App\Services\Product;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductDataView;
+use App\Models\ProductMeta;
 use App\Services\Product\Attribute\AttributeService;
 
 /**
@@ -20,6 +21,7 @@ use App\Services\Product\Attribute\AttributeService;
  */
 class ProductService
 {
+
 
     /**
      * @param $data
@@ -89,6 +91,7 @@ class ProductService
         $data['images'] = $product->images()->get();
         $data['groups'] = $product->groups()->get();
         $data['skus'] = ProductSkuService::getByProduct($id);
+        $data['meta'] = ProductMeta::where('product_id', $id)->first();
 
         return $data;
     }

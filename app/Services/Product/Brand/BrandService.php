@@ -99,10 +99,7 @@ class BrandService {
      */
     public static function getByCategory($category_id)
     {
-        $cat = Category::find($category_id);
-        if ( ! $cat) {
-            throw new Exception('CATEGORY NOT FOUND');
-        }
+        $cat = Category::findOrFail($category_id);
         $brands = $cat->brands()->get();
 
         return $brands;

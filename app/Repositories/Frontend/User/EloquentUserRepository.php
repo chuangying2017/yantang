@@ -36,6 +36,7 @@ class EloquentUserRepository implements UserContract
     {
         $user = User::find($id);
         if (!is_null($user)) return $user;
+        if (!is_null($user)) return $user;
         throw new GeneralException('That user does not exist.');
     }
 
@@ -55,7 +56,7 @@ class EloquentUserRepository implements UserContract
         ]);
         $user->attachRole($this->role->getDefaultUserRole());
 
-        if (config('access.users.confirm_email') and $provider === false)
+        if (config('access.users.confirm_email') && $provider === false)
             $this->sendConfirmationEmail($user);
         else
             $user->confirmed = 1;
@@ -112,7 +113,6 @@ class EloquentUserRepository implements UserContract
      * @param $provider
      * @param $providerData
      * @param $user
-     * @return mixed|void
      */
     public function checkIfUserNeedsUpdating($provider, $providerData, $user)
     {
@@ -176,6 +176,7 @@ class EloquentUserRepository implements UserContract
         if (Hash::check($input['old_password'], $user->password)) {
             //Passwords are hashed on the model
             $user->password = $input['password'];
+
             return $user->save();
         }
 
@@ -196,6 +197,7 @@ class EloquentUserRepository implements UserContract
 
             if ($user->confirmation_code == $token) {
                 $user->confirmed = 1;
+
                 return $user->save();
             }
 
@@ -212,6 +214,7 @@ class EloquentUserRepository implements UserContract
     public function sendConfirmationEmail($user)
     {
         //$user can be user instance or id
+
         if (!$user instanceof User)
             $user = User::findOrFail($user);
 

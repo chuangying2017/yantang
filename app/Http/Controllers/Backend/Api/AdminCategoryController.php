@@ -49,19 +49,11 @@ class AdminCategoryController extends Controller {
      */
     public function show($id)
     {
-        //
+        $categories = CategoryService::getTree($id);
+
+        return $this->respondData($categories);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -72,7 +64,15 @@ class AdminCategoryController extends Controller {
      */
     public function update(Request $request, $id)
     {
-        //
+        $name = $request->input('name');
+        $category_cover = $request->input('cover', '');
+        $desc = $request->input('desc', '');
+
+        $data = compact('name', 'category_cover', 'desc');
+
+        $category = CategoryService::update($id, $data);
+
+        return $this->respondData($category);
     }
 
     /**
@@ -83,6 +83,12 @@ class AdminCategoryController extends Controller {
      */
     public function destroy($id)
     {
-        //
+        try {
+            CategoryService::delete($id);
+        } catch (\Exception $e) {
+            return $this->respondException($e);
+        }
+
+        return $this->respondDelete();
     }
 }
