@@ -36,12 +36,16 @@ class ClientRepository
             $userRepo = new EloquentUserRepository($role);
 
             $user = $userRepo->create([
-                'name' => '',
+                'name' => $data['account'],
                 'email' => '',
-                'password' => ''
+                'password' => $data['password']
             ]);
 
-            $client = Client::create();
+            $client = Client::create([
+                'user_id' => $user->id,
+                'mobile' => $info['mobile'],
+                'birthday' => $info['mobile'],
+            ]);
 
             $user = User::create([
                 "user_id" => $info['user_id'],
@@ -64,6 +68,7 @@ class ClientRepository
         } else {
             throw new \Exception(CREATE_USER_ERROR);
         }
+
     }
 
     /**
