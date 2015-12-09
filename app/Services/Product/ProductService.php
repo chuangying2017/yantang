@@ -19,9 +19,7 @@ use App\Services\Product\Attribute\AttributeService;
  * Class ProductService
  * @package App\Services\Product
  */
-
-class ProductService
-{
+class ProductService {
 
 
     /**
@@ -86,7 +84,6 @@ class ProductService
     {
         $data = [];
         $product = Product::findOrFail($id);
-        //todo@bryant add meta data
         $data['basic_info'] = $product;
         $data['data'] = ProductDataView::find($id);
         $data['images'] = $product->images()->get();
@@ -108,6 +105,7 @@ class ProductService
     public static function getByCategory($category_id, $page = 1, $order_by = "id", $sort = 'asc')
     {
         $category = Category::findOrFail($category_id);
+
         return $category->products()->where('status', self::PRODUCT_UP)->orderBy($order_by, $sort)->paginate($page);
     }
 
