@@ -13,10 +13,10 @@ class CreateMerchantAdminsTable extends Migration
     public function up()
     {
         Schema::create('merchant_admins', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('user_id')->primaryKey();
             $table->integer('merchant_id');
             $table->string('name');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

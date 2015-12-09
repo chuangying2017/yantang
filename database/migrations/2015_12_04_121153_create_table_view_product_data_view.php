@@ -13,6 +13,7 @@ class CreateTableViewProductDataView extends Migration
     public function up()
     {
         DB::statement('CREATE VIEW product_data_view as SELECT
+            products.id AS id,
             SUM(product_sku.sales) AS salse,
             SUM(product_sku.stock) AS stock,
             COUNT(user_product_favs.product_id) AS favs

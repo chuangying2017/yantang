@@ -42,19 +42,22 @@ class ClientRepository
          */
         $info = MthApiService::registerGetUser($username, $password, $email, $phone = null);
         if ($info) {
-            $role = (new EloquentRoleRepository)->getDefaultUserRole();
-            $userRepo = new EloquentUserRepository($role);
 
+            $userRepo = new EloquentUserRepository(new EloquentRoleRepository);
+
+            //create a user
             $user = $userRepo->create([
                 'name' => $username,
                 'email' => $email,
                 'password' => $password
             ]);
-
-            $client = Client::create([
+            //create a client
+            Client::create([
                 'user_id' => $user->id
             ]);
-            return $client;
+            return [
+                'user_id' => $user->id
+            ];
         } else {
             throw new ClientException(self::CREATE_USER_ERROR);
         }

@@ -13,10 +13,10 @@ class CreateSupervisorsTable extends Migration
     public function up()
     {
         Schema::create('supervisors', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('user_id')->primaryKey();;
             $table->string('supervisor_id');
             $table->string('name');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

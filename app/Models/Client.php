@@ -23,7 +23,7 @@ class Client extends Model
      *
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $guarded = [];
 
 
     public function addresses()
