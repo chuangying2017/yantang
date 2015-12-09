@@ -74,7 +74,7 @@ class ClientService
      * @param $id
      * @return mixed
      */
-    public static function active($id)
+    public static function unblock($id)
     {
         return ClientRepository::update($id, ['status' => 1]);
     }

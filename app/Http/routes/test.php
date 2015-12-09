@@ -6,8 +6,9 @@
 if (App::environment() == 'local' || env('APP_DEBUG')) {
 
     Route::get('test', function () {
-        return 'hah';
-        \App\Services\Client\ClientRepository::create('bryant', 'kobebryant', 'bryant@weazm.com');
+//        return \App\Services\Client\ClientService::create('ken', 'kobebryant', 'bryant@weazm.com');
+        $wallet = new \App\Services\Client\Wallet\WalletRepository(6);
+        return $wallet->unFrozen(50);
     });
 
     Route::get('test/token', function () {

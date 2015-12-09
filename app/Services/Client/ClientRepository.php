@@ -9,6 +9,8 @@
 namespace App\Services\Client;
 
 use App\Models\Client;
+use App\Models\CreditsWallet;
+use App\Models\Wallet;
 use App\Repositories\Backend\Role\EloquentRoleRepository;
 use App\Repositories\Frontend\User\EloquentUserRepository;
 use App\Services\Client\Exceptions\ClientException;
@@ -42,7 +44,6 @@ class ClientRepository
          */
         $info = MthApiService::registerGetUser($username, $password, $email, $phone = null);
         if ($info) {
-
             $userRepo = new EloquentUserRepository(new EloquentRoleRepository);
 
             //create a user
@@ -52,12 +53,14 @@ class ClientRepository
                 'password' => $password
             ]);
             //create a client
-            Client::create([
-                'user_id' => $user->id
-            ]);
-            return [
-                'user_id' => $user->id
-            ];
+            Client::create(['user_id' => $user->id]);
+            //create wallet
+            Wallet::create(['user_id' => $user->id]);
+            //create creditWallet
+            CreditsWallet::create(['user_id' => $user->id]);
+
+            return ['user_id' => $user->id];
+
         } else {
             throw new ClientException(self::CREATE_USER_ERROR);
         }

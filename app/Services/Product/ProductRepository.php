@@ -87,6 +87,7 @@ class ProductRepository
      *      - (bool) with_invoice
      *      - (bool) with_care
      *  - *(array) skus
+     *      - (array) attribute_value_ids
      *  - (array) image_ids
      *  - (array) group_ids
      */
