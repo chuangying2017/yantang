@@ -187,6 +187,9 @@ class MthApiService
      */
     public static function registerGetUser($account, $password)
     {
+        return 1; //for testing
+
+
         /**
          * check duplicate
          */

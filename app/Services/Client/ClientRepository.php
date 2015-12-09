@@ -8,67 +8,75 @@
 
 namespace App\Services\Client;
 
-use App\Library\Wechat\Exceptions\WechatException;
 use App\Models\Client;
 use App\Repositories\Backend\Role\EloquentRoleRepository;
 use App\Repositories\Frontend\User\EloquentUserRepository;
+use App\Services\Client\Exceptions\ClientException;
 use App\Services\Mth\MthApiService;
 
+/**
+ * Class ClientRepository
+ * @package App\Services\Client
+ */
 class ClientRepository
 {
 
+    /**
+     *
+     */
     const CREATE_USER_ERROR = "create client error";
 
     /**
      * create a new client
-     * @param $data
+     * @param $username
+     * @param $password
+     * @param $email
+     * @param $phone
      * @return static
-     * @throws \Exception
+     * @throws ClientException
      */
-    public static function create($data)
+    public static function create($username, $password, $email, $phone)
     {
         /**
          * sync from mth
          */
-        $info = MthApiService::registerGetUser($data['account'], $data['password']);
+        $info = MthApiService::registerGetUser($username, $password, $email, $phone = null);
         if ($info) {
             $role = (new EloquentRoleRepository)->getDefaultUserRole();
             $userRepo = new EloquentUserRepository($role);
 
             $user = $userRepo->create([
-                'name' => $data['account'],
-                'email' => '',
-                'password' => $data['password']
+                'name' => $username,
+                'email' => $email,
+                'password' => $password
             ]);
 
             $client = Client::create([
-                'user_id' => $user->id,
-                'mobile' => $info['mobile'],
-                'birthday' => $info['mobile'],
+                'user_id' => $user->id
             ]);
-
-            $user = User::create([
-                "user_id" => $info['user_id'],
-                "login_account" => $info['login_account'] || $data['account'],
-                "password" => Hash::make($data['password']),
-                "useranme" => $info['useranme'],
-                "name" => $info['name'],
-                "avatar" => $info['avatar'],
-                "sex" => $info['sex'],
-                "tel" => $info['tel'],
-                "email" => $info['email'],
-                "mobile" => $info['mobile'],
-                "user_grade" => $info['user_grade'],
-                "gift_ticket" => $info['gift_ticket'],
-                "birthday" => $info['birthday'],
-                "createtime" => $info['createtime'] || date('Y-m-d H:i:s'),
-            ]);
-
-            return $user;
+            return $client;
         } else {
-            throw new \Exception(CREATE_USER_ERROR);
+            throw new ClientException(self::CREATE_USER_ERROR);
         }
 
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public static function show($id)
+    {
+        $client = Client::findOrFail($id);
+        return $client;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function all()
+    {
+        return Client::where('status', 1)->get();
     }
 
     /**
@@ -79,7 +87,10 @@ class ClientRepository
      */
     public static function update($id, $data)
     {
-        return User::find($id)->update($data);
+        $client = Client::findOrFail($id);
+        $data = array_only($data, ['nickname', 'birthday', 'avatar', 'sex', 'status']);
+        $client->update($data);
+        return 1;
     }
 
     /**
@@ -89,7 +100,7 @@ class ClientRepository
      */
     public static function delete($id)
     {
-        return User::find($id)->delete();
+
     }
 
 

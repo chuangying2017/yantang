@@ -6,11 +6,10 @@
  * Time: 7:02 PM
  */
 
-namespace App\Services\User;
+namespace App\Services\Client;
 
 
 use App\Models\Address;
-use App\Models\User;
 
 class AddressRepository
 {

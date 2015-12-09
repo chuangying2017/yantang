@@ -21,7 +21,8 @@ use Exception;
  * Class ProductRepository
  * @package App\Services\Product
  */
-class ProductRepository {
+class ProductRepository
+{
 
 
     public static function lists()
@@ -124,6 +125,8 @@ class ProductRepository {
      * update a product
      * @param $id
      * @param $data
+     * @return mixed
+     * @throws Exception
      */
     public static function update($id, $data)
     {
@@ -190,6 +193,7 @@ class ProductRepository {
 
     /**
      * @param $id
+     * @return int
      */
     public static function delete($id)
     {
@@ -197,7 +201,7 @@ class ProductRepository {
             DB::beginTransaction();
 
             $product = Product::find($id);
-            if ( ! $product) {
+            if (!$product) {
                 throw new Exception('PRODUCT NOT FOUND');
             }
             /**

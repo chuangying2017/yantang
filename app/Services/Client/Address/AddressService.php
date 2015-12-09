@@ -6,7 +6,9 @@
  * Time: 10:43 AM
  */
 
-namespace App\Services\User;
+namespace App\Services\Client;
+
+use App\Models\Client;
 
 
 /**
@@ -50,7 +52,7 @@ class AddressService
      */
     public static function fetchByUser($user_id)
     {
-        $user = User::findOrFail($user_id);
-        return $user->addresses();
+        $client = Client::findOrFail($user_id);
+        return $client->addresses();
     }
 }

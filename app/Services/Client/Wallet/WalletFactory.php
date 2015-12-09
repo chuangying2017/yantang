@@ -6,8 +6,9 @@
  * Time: 6:59 PM
  */
 
-namespace App\Services\User\Wallet;
+namespace App\Services\Client\Wallet;
 
+use App\Models\Client;
 use DB;
 use Exception;
 
@@ -41,7 +42,8 @@ abstract class WalletFactory
     public function __construct($id)
     {
         if (!$this->type) throw new \Exception('no wallet type set');
-        $this->user = User::findOrFail($id);
+        $this->client = Client::findOrFail($id);
+        $this->user_id = $this->client->user_id;
         $this->modelTable = $this->type;
         $this->recordTable = $this->type . '_record';
     }

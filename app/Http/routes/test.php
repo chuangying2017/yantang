@@ -2,11 +2,12 @@
 /*
  * Test routes
  */
+
 if (App::environment() == 'local' || env('APP_DEBUG')) {
 
     Route::get('test', function () {
-        $data = \App\Services\Product\Attribute\AttributeValueService::findOrNew(3, 'haha');
-        return $data;
+        return 'hah';
+        \App\Services\Client\ClientRepository::create('bryant', 'kobebryant', 'bryant@weazm.com');
     });
 
     Route::get('test/token', function () {

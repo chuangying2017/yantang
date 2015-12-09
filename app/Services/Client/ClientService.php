@@ -6,25 +6,29 @@
  * Time: 10:49 AM
  */
 
-namespace App\Services\User;
+namespace App\Services\Client;
 
 
 use App\Services\Product\Fav\FavService;
+use Qiniu\Http\Client;
 
 /**
  * Class UserService
  * @package App\Services\User
  */
-class UserService
+class ClientService
 {
     /**
-     * @param $data
+     * @param $username
+     * @param $password
+     * @param $email
+     * @param null $phone
      * @return static
-     * @throws \Exception
+     * @throws Exceptions\ClientException
      */
-    public static function create($data)
+    public static function create($username, $password, $email, $phone = null)
     {
-        return UserRepository::create($data);
+        return ClientRepository::create($username, $password, $email, $phone);
     }
 
     /**
@@ -34,26 +38,18 @@ class UserService
      */
     public static function update($id, $data)
     {
-        return UserRepository::update($id, $data);
+        return ClientRepository::update($id, $data);
     }
 
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public static function delete($id)
-    {
-        return UserRepository::delete($id);
-    }
 
     /**
      * get a user by id
      * @param $id
      * @return mixed
      */
-    public static function getById($id)
+    public static function show($id)
     {
-        return User::find($id)->get();
+        return ClientRepository::show($id);
     }
 
     /**
@@ -62,22 +58,25 @@ class UserService
      */
     public static function getAll()
     {
-        return User::all();
+        return ClientRepository::all();
     }
 
     /**
-     *
+     * @param $id
+     * @return mixed
      */
-    public static function block()
+    public static function block($id)
     {
-
+        return ClientRepository::update($id, ['status' => 0]);
     }
 
     /**
-     *
+     * @param $id
+     * @return mixed
      */
-    public static function active()
+    public static function active($id)
     {
+        return ClientRepository::update($id, ['status' => 1]);
     }
 
     /**
