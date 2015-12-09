@@ -15,7 +15,6 @@ class CouponManager extends MarketingItemManager implements MarketingInterface {
         try {
             $coupon_data = self::contentFilter($input, MarketingProtocol::TYPE_OF_COUPON);
             $limit_data = self::limitFilter($input);
-
             $result = MarketingRepository::storeCoupon($coupon_data, $limit_data);
 
             return $result;
@@ -25,9 +24,11 @@ class CouponManager extends MarketingItemManager implements MarketingInterface {
     }
 
 
-    public function lists($status, $user_id = null)
+    public function lists($status = null, $user_id = null)
     {
-        
+        $coupons = MarketingRepository::listsCoupon($status);
+
+        return $coupons;
     }
 
     public function show($coupon_id)

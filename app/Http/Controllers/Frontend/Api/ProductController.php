@@ -1,28 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Api;
+namespace App\Http\Controllers\Frontend\Api;
+
+use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Backend\Api\MarketingCouponRequest as Request;
-use App\Services\Marketing\Items\Coupon\CouponManager;
 
-
-class AdminMarketingCouponController extends Controller {
-
-    /**
-     * @var CouponManager
-     */
-    private $couponManager;
-
-    /**
-     * @param CouponManager $couponManager
-     */
-    public function __construct(CouponManager $couponManager)
-    {
-        $this->couponManager = $couponManager;
-    }
-
+class ProductController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +16,7 @@ class AdminMarketingCouponController extends Controller {
      */
     public function index()
     {
-        return 'coupons lists';
+        //
     }
 
     /**
@@ -46,38 +32,29 @@ class AdminMarketingCouponController extends Controller {
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-        try {
-            $result = $this->couponManager->create($input);
-        } catch (\Exception $e) {
-            return $this->respondLogicError(400, $e->getMessage());
-        }
-
-        return $this->respondData($result);
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $coupon = $this->couponManager->show($id);
-
-        return $this->respondData($coupon);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -88,8 +65,8 @@ class AdminMarketingCouponController extends Controller {
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -100,7 +77,7 @@ class AdminMarketingCouponController extends Controller {
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

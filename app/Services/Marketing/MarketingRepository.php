@@ -29,7 +29,6 @@ class MarketingRepository {
                 return self::queryFullCoupon($coupon['id']);
             });
         } catch (\Exception $e) {
-            Log::error($e);
             throw new CouponValidationException('优惠券');
         }
     }
@@ -56,10 +55,11 @@ class MarketingRepository {
 
     public static function listsCoupon($status = null, $paginate = null, $relation = null)
     {
-        $coupons = Coupon::get();
+        $coupons = Coupon::with('limits')->get();
 
         return $coupons;
     }
+
 
     public static function queryDiscountLimits($resource_id, $resource_type)
     {

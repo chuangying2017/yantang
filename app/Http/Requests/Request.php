@@ -2,7 +2,6 @@
 
 use App\Http\Traits\ApiHelpers;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\JsonResponse;
 
 /**
  * Class Request
@@ -37,6 +36,7 @@ abstract class Request extends FormRequest {
 //            ->withInput($this->except($this->dontFlash))
 //            ->withErrors($errors, $this->errorBag);
     }
+
 
 }
 
