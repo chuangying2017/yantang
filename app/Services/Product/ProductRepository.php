@@ -60,6 +60,7 @@ class ProductRepository
      * product create process
      * @param $data
      * @return bool|string
+     * @throws Exception
      * @structure
      *  - (array) basic_info
      *      - (string) product_no: 商品编码, 后端生成

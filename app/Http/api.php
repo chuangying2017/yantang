@@ -23,10 +23,7 @@ $api->version('v1', function ($api) {
                 $api->group(['namespace' => 'Api'], function () use ($api) {
                     require(__DIR__ . "/Routes/Backend/Api.php");
                 });
-
             });
-
-
         });
     });
 });

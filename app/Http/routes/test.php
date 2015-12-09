@@ -6,9 +6,7 @@
 if (App::environment() == 'local' || env('APP_DEBUG')) {
 
     Route::get('test', function () {
-//        return \App\Services\Client\ClientService::create('ken', 'kobebryant', 'bryant@weazm.com');
-        $wallet = new \App\Services\Client\Wallet\WalletRepository(6);
-        return $wallet->unFrozen(50);
+        return view('frontend.auth.register');
     });
 
     Route::get('test/token', function () {

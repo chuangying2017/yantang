@@ -19,7 +19,6 @@ use App\Services\Product\Attribute\AttributeService;
  * Class ProductService
  * @package App\Services\Product
  */
-
 class ProductService
 {
 
@@ -44,6 +43,7 @@ class ProductService
 
     /**
      * @param $id
+     * @return int
      */
     public static function delete($id)
     {
@@ -52,6 +52,7 @@ class ProductService
 
     /**
      * @param $id
+     * @return mixed
      */
     public static function up($id)
     {
@@ -62,6 +63,7 @@ class ProductService
 
     /**
      * @param $id
+     * @return mixed
      */
     public static function down($id)
     {
