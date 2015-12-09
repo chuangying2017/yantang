@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Backend\Api;
 
 use App\Http\Requests\Backend\Api\ProductRequest as Request;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Services\Product\ProductService;
 

@@ -6,13 +6,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Api\MarketingCouponRequest as Request;
 use App\Http\Transformers\CouponTransformer;
+use App\Services\ApiConst;
 use App\Services\Marketing\Items\Coupon\CouponManager;
 use App\Services\Marketing\MarketingProtocol;
 use App\Services\Marketing\MarketingRepository;
 
 
 class AdminCouponController extends Controller {
-
 
     /**
      * @var CouponManager
@@ -34,9 +34,9 @@ class AdminCouponController extends Controller {
      */
     public function index()
     {
-        $coupons = $this->couponManager->lists();
+        $coupons = $this->couponManager->lists(null, ApiConst::COUPON_PER_PAGE);
 
-        return $this->response->collection($coupons, new CouponTransformer);
+        return $this->response->paginator($coupons, new CouponTransformer);
     }
 
     /**
@@ -59,12 +59,12 @@ class AdminCouponController extends Controller {
     {
         $input = $request->all();
         try {
-            $result = $this->couponManager->create($input);
+            $coupon_id = $this->couponManager->create($input);
         } catch (\Exception $e) {
-
+            $this->response->errorInternal();
         }
 
-        return $this->response->created();
+        return $this->response->created(version('v1')->route('api.admin.marketing.coupons.show', $coupon_id));
     }
 
     /**
@@ -77,7 +77,7 @@ class AdminCouponController extends Controller {
     {
         $coupon = $this->couponManager->show($id);
 
-        return $this->respondData($coupon);
+        return $this->response->item($coupon, new CouponTransformer());
     }
 
     /**

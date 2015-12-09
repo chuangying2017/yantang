@@ -1,7 +1,10 @@
 <?php namespace App\Http\Requests;
 
-use App\Http\Traits\ApiHelpers;
+use Dingo\Api\Exception\StoreResourceFailedException;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exception\HttpResponseException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Class Request
@@ -9,32 +12,21 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 abstract class Request extends FormRequest {
 
-    use ApiHelpers;
 
     public function forbiddenResponse()
     {
-        return $this->respondForbidden();
+        throw new AccessDeniedHttpException();
     }
 
     /**
-     * Get the proper failed validation response for the request.
+     * Handle a failed validation attempt.
      *
-     * @param  array $errors
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param  \Illuminate\Contracts\Validation\Validator $validator
+     * @return mixed
      */
-    public function response(array $errors)
+    protected function failedValidation(Validator $validator)
     {
-        $errors = array_map(function ($error) {
-            return implode(',', $error);
-        }, $errors);
-
-//        if ($this->ajax() || $this->wantsJson()) {
-        return $this->respondUnProcessableEntity($errors);
-//        }
-
-//        return $this->redirector->to($this->getRedirectUrl())
-//            ->withInput($this->except($this->dontFlash))
-//            ->withErrors($errors, $this->errorBag);
+        throw new StoreResourceFailedException('请求数据格式错误', $validator->errors());
     }
 
 

@@ -2,7 +2,7 @@
 
 $api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Http\Controllers', 'middleware' => 'cors'], function ($api) {
-        
+
         /**
          * Frontend Routes
          * Namespaces indicate folder structure
