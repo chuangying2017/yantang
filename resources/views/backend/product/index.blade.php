@@ -16,7 +16,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-3">
-            <a href="compose.html" class="btn btn-primary btn-block margin-bottom">创建商品</a>
+            <a href="{!!route('admin.products.create')!!}" class="btn btn-primary btn-block margin-bottom">创建商品</a>
 
             <div class="box box-solid">
                 <div class="box-header with-border">
@@ -57,28 +57,7 @@
                 <!-- /.box-header -->
                 <div class="box-body no-padding">
                     <div class="mailbox-controls">
-                        <!-- Check all button -->
-                        <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i
-                                class="fa fa-square-o"></i>
-                        </button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                        </div>
-                        <!-- /.btn-group -->
-                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                        <div class="pull-right">
-                            1-50/200
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i>
-                                </button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i>
-                                </button>
-                            </div>
-                            <!-- /.btn-group -->
-                        </div>
-                        <!-- /.pull-right -->
+
                     </div>
                     <div class="table-responsive mailbox-messages">
                         <table class="table table-hover table-striped">
@@ -103,8 +82,18 @@
                                 <td>111</td>
                                 <td>234</td>
                                 <td>2015-11-23 20:46:53</td>
-                                <td></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default btn-sm"><i
+                                                class="fa fa-pencil"></i></button>
+                                        <button type="button" class="btn btn-default btn-sm"><i
+                                                class="fa fa-arrow-circle-down"></i></button>
+                                        <button type="button" class="btn btn-default btn-sm"><i
+                                                class="fa fa-trash-o"></i></button>
+                                    </div>
+                                </td>
                             </tr>
+
                             </tbody>
                         </table>
                         <!-- /.table -->
@@ -113,30 +102,6 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer no-padding">
-                    <div class="mailbox-controls">
-                        <!-- Check all button -->
-                        <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i
-                                class="fa fa-square-o"></i>
-                        </button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                        </div>
-                        <!-- /.btn-group -->
-                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                        <div class="pull-right">
-                            1-50/200
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i>
-                                </button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i>
-                                </button>
-                            </div>
-                            <!-- /.btn-group -->
-                        </div>
-                        <!-- /.pull-right -->
-                    </div>
                 </div>
             </div>
             <!-- /. box -->

@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Backend\Product;
+
 use App\Http\Controllers\Controller;
 
 /**
@@ -12,6 +13,12 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return view('backend.product.index');
+        $products = $this->api->get('api/admin/products');
+        return view('backend.product.index', compact('products'));
+    }
+
+    public function create()
+    {
+        return view('backend.product.create');
     }
 }
