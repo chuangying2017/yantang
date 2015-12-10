@@ -23,7 +23,6 @@
         "bugsnag/bugsnag-laravel": "1.*",
         "maatwebsite/excel": "~2.0.0",
         "pda/pheanstalk": "~3.0",
-        "kbwebs/multiauth": "~1.0",
         "predis/predis": "~1.0",
         "pingplusplus/pingpp-php": "dev-master",
         "zgldh/qiniu-laravel-storage": "^0.3.0",
