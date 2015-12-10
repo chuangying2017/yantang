@@ -11,7 +11,7 @@
 
                 <div class="panel-body">
 
-                    {!! Form::open(['url' => 'admin/auth/login', 'class' => 'form-horizontal', 'role' => 'form']) !!}
+                    {!! Form::open(['url' => 'auth/login', 'class' => 'form-horizontal', 'role' => 'form']) !!}
 
                     <div class="form-group">
                         {!! Form::label('email', trans('validation.attributes.email'), ['class' => 'col-md-4 control-label']) !!}

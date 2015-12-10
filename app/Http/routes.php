@@ -30,7 +30,6 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
          *
          * Note: Administrator has all permissions so you do not have to specify the administrator role everywhere.
          */
-        require(__DIR__ . "/Routes/Backend/Auth.php");
         $router->group(['middleware' => 'access.routeNeedsPermission:view-backend'], function () use ($router) {
             require(__DIR__ . "/Routes/Backend/Dashboard.php");
             require(__DIR__ . "/Routes/Backend/Dashboard.php");
