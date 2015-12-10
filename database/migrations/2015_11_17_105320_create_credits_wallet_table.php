@@ -15,8 +15,8 @@ class CreateCreditsWalletTable extends Migration
         Schema::create('credits_wallet', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->integer('amount')->unsigned();
-            $table->integer('forzen_amount')->unsigned();
+            $table->integer('amount')->unsigned()->default(0);
+            $table->integer('frozen_amount')->unsigned()->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

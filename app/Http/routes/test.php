@@ -6,8 +6,7 @@
 if (App::environment() == 'local' || env('APP_DEBUG')) {
 
     Route::get('test', function () {
-        return 'hah';
-        \App\Services\Client\ClientRepository::create('bryant', 'kobebryant', 'bryant@weazm.com');
+        return view('frontend.auth.register');
     });
 
     Route::get('test/token', function () {

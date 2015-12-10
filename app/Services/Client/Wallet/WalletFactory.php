@@ -14,12 +14,6 @@ use Exception;
 
 abstract class WalletFactory
 {
-    const WALLET_TYPE_FROZEN = 'frozen';
-    const WALLET_TYPE_UNFROZEN = 'unfrozen';
-    const WALLET_TYPE_USE = 'use';
-    const WALLET_TYPE_WITHDRAW = 'withdraw';
-    const WALLET_TYPE_CHARGE = 'charge';
-    const WALLET_TYPE_REFUND = 'refund';
 
     /**
      * wallet type; cash or credit
@@ -41,9 +35,8 @@ abstract class WalletFactory
      */
     public function __construct($id)
     {
-        if (!$this->type) throw new \Exception('no wallet type set');
-        $this->client = Client::findOrFail($id);
-        $this->user_id = $this->client->user_id;
+        if (!$this->type) throw new Exception(WalletConst::WALLET_NOT_SET);
+        $this->user_id = $id;
         $this->modelTable = $this->type;
         $this->recordTable = $this->type . '_record';
     }
@@ -59,13 +52,17 @@ abstract class WalletFactory
         try {
             DB::beginTransaction();
 
-            $this->decrement('amount', $amount);
-            $this->addRecord($amount, 0, $type);
-
+            if ($this->enough('amount', $amount)) {
+                $this->decrement('amount', $amount);
+                $this->addRecord($amount, 0, $type);
+            } else {
+                throw new Exception(WalletConst::WALLET_NOT_ENOUGH);
+            }
             DB::commit();
-            return true;
+            return 1;
         } catch (Exception $e) {
             DB::rollBack();
+            return $e->getMessage();
         }
     }
 
@@ -79,14 +76,19 @@ abstract class WalletFactory
         try {
             DB::beginTransaction();
 
-            $this->decrement('amount', $amount);
-            $this->increment('frozen_amount', $amount);
-            $this->addRecord($amount, 0, WALLET_TYPE_FROZEN);
+            if ($this->enough('amount', $amount)) {
+                $this->decrement('amount', $amount);
+                $this->increment('frozen_amount', $amount);
+                $this->addRecord($amount, 0, WalletConst::WALLET_TYPE_FROZEN);
+            } else {
+                throw new Exception(WalletConst::WALLET_NOT_ENOUGH);
+            }
 
             DB::commit();
-            return true;
+            return 1;
         } catch (Exception $e) {
             DB::rollBack();
+            return $e->getMessage();
         }
     }
 
@@ -100,14 +102,19 @@ abstract class WalletFactory
         try {
             DB::beginTransaction();
 
-            $this->increment('amount', $amount);
-            $this->decrement('frozen_amount', $amount);
-            $this->addRecord($amount, 0, WALLET_TYPE_UNFROZEN);
+            if ($this->enough('frozen_amount', $amount)) {
+                $this->increment('amount', $amount);
+                $this->decrement('frozen_amount', $amount);
+                $this->addRecord($amount, 0, WalletConst::WALLET_TYPE_UNFROZEN);
+            } else {
+                throw new Exception(WalletConst::WALLET_NOT_ENOUGH);
+            }
 
             DB::commit();
-            return true;
+            return 1;
         } catch (Exception $e) {
             DB::rollBack();
+            return $e->getMessage();
         }
     }
 
@@ -126,9 +133,10 @@ abstract class WalletFactory
             $this->addRecord($amount, 1, $type);
 
             DB::commit();
-            return true;
+            return 1;
         } catch (Exception $e) {
             DB::rollBack();
+            return 0;
         }
     }
 
@@ -171,5 +179,15 @@ abstract class WalletFactory
     private function decrement($column, $amount)
     {
         DB::table($this->modelTable)->where('user_id', $this->user_id)->decrement($column, $amount);
+    }
+
+    public function show()
+    {
+        return DB::table($this->modelTable)->where('user_id', $this->user_id)->lists('amount', 'frozen_amount');
+    }
+
+    private function enough($account, $amount)
+    {
+        return DB::table($this->modelTable)->where('user_id', $this->user_id)->lists($account)[0] >= $amount;
     }
 }
