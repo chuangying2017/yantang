@@ -1,14 +1,12 @@
 <?php namespace App\Http\Controllers;
 
+use App\Http\Controllers\Backend\Api\AdminBaseController;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\User;
 use DB;
-use App\CreditCard;
-use App\CreditCardCoupon;
-use App\Exchange;
+
 
 class AdminController extends AdminBaseController {
 

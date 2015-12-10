@@ -39,7 +39,8 @@ class AdminAttributeValueController extends Controller {
     public function store(Request $request, $attribute_id)
     {
         try {
-            $value = $request->input('value');
+            $value = $request->input('value') ?: null;
+
             $attribute_value = AttributeValueService::findOrNew($attribute_id, $value);
         } catch (\Exception $e) {
             return $this->respondException($e);

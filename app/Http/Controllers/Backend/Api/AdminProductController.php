@@ -7,10 +7,8 @@ use App\Http\Requests\Backend\Api\ProductRequest as Request;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\ProductTransformer;
 use App\Services\ApiConst;
-use App\Services\Product\Category\CategoryService;
 use App\Services\Product\ProductConst;
 use App\Services\Product\ProductService;
-use League\Fractal\Manager;
 
 class AdminProductController extends Controller {
 
@@ -103,7 +101,6 @@ class AdminProductController extends Controller {
         $product = ProductService::show($id);
         $product->show_detail = 1;
 
-//        return $product;
 
         return $this->response->item($product, new ProductTransformer());
     }

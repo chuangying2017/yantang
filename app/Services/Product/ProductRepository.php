@@ -12,7 +12,6 @@ namespace App\Services\Product;
 use App\Models\Product;
 use App\Models\ProductMeta;
 use App\Models\ProductSku;
-use App\Services\Product\Category\CategoryService;
 use App\Services\Product\Comment\CommentService;
 use App\Services\Product\Fav\FavService;
 use DB;
@@ -108,13 +107,12 @@ class ProductRepository {
      *      - (bool) with_invoice
      *      - (bool) with_care
      *  - *(array) skus
-     *      - (array) attribute_value_ids
-     * {
-     * "name": "sku-1",
-     * "cover_image": "11231",
-     * "stock": 10,
-     * "price": 10000,
-     *                  "attribute_value_ids": []
+     *      - {
+     * - "name": "sku-1",
+     * - "cover_image": "11231",
+     * - "stock": 10,
+     * - "price": 10000,
+     *  - "attribute_value_ids": []
      * }
      * ],
      *  - (array) image_ids

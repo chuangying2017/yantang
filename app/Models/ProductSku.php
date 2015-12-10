@@ -20,6 +20,6 @@ class ProductSku extends Model
 
     public function attributeValues()
     {
-        return $this->belongsToMany('App\Models\ProductSku', 'sku_attribute_value');
+        return $this->belongsToMany('App\Models\AttributeValue', 'sku_attribute_value');
     }
 }

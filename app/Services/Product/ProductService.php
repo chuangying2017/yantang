@@ -11,9 +11,6 @@ namespace App\Services\Product;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductDataView;
-use App\Models\ProductMeta;
-use App\Services\Product\Attribute\AttributeService;
 use App\Services\Product\Category\CategoryService;
 
 /**
@@ -115,7 +112,7 @@ class ProductService {
     {
         $category = Category::findOrFail($category_id);
 
-        return $category->products()->where('status', self::PRODUCT_UP)->orderBy($order_by, $sort)->paginate($page);
+        return $category->products()->where('status', ProductConst::VAR_PRODUCT_STATUS_UP)->orderBy($order_by, $sort)->paginate($page);
     }
 
     /**
