@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend\Api;
 
+use App\Services\Cart\CartService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -37,7 +38,13 @@ class CartController extends Controller {
      */
     public function store(Request $request)
     {
-        //
+        $product_sku_id = $request->input('product_sku_id');
+        $quantity = $request->input('quantity', 1);
+        $user_id = $this->getUserId();
+
+        $cart = CartService::add($user_id, $product_sku_id, $quantity);
+
+        return $this->response->created();
     }
 
     /**

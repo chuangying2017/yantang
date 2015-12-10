@@ -14,6 +14,7 @@ use App\Services\Marketing\MarketingRepository;
 
 class AdminCouponController extends Controller {
 
+
     /**
      * @var CouponManager
      */

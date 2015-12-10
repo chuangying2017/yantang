@@ -4,24 +4,20 @@ use App\Models\Cart;
 
 class CartRepository {
 
-    /**
-     * 购物车新增时
-     * @param $user_id
-     * @param $product_sku_id
-     * @param $quantity
-     * @return static
-     */
-    public static function add($user_id, $product_sku_id, $quantity)
-    {
-        $cart_item = Cart::where(compact('user_id', 'product_sku_id'))->first();
 
-        return $cart_item
-            ? $cart_item->increment('quantity', $quantity)
-            : self::create($user_id, $product_sku_id, $quantity);
+    public static function create($user_id, $product_sku_id, $quantity = 1)
+    {
+        return Cart::updateOrCreate(
+            [compact('user_id', 'product_sku_id')],
+            [compact('user_id', 'product_sku_id', 'quantity')]
+        );
     }
 
     public static function get($cart_id)
     {
+        if ($cart_id instanceof Cart) {
+            return $cart_id;
+        }
         if (is_array($cart_id)) {
             return Cart::whereIn('id', $cart_id)->get();
         }
@@ -29,7 +25,7 @@ class CartRepository {
         return Cart::find($cart_id);
     }
 
-    public static function query($user_id, $product_sku_id = null)
+    protected static function query($user_id, $product_sku_id = null)
     {
         $query = Cart::where('user_id', $user_id);
         if ( ! is_null($product_sku_id)) {
@@ -39,34 +35,20 @@ class CartRepository {
         return $query->get();
     }
 
-    public static function create($user_id, $product_sku_id, $quantity)
-    {
-        return Cart::create(
-            compact('user_id', 'product_sku_id', 'quantity')
-        );
-    }
 
-    public static function update($cart_id, $quantity, $action = null)
+    public static function update($cart_id, $quantity)
     {
-        if (is_null($action)) {
-            return Cart::where('id', $cart_id)->update(['quantity' => $quantity]);
-        } else if ($action == 'increment') {
-            return Cart::where('id', $cart_id)->increment(['quantity' => $quantity]);
-        } else if ($action == 'decrement') {
-            return Cart::where('id', $cart_id)->decrement(['quantity' => $quantity]);
-        }
-
-        return 0;
+        return Cart::where('id', $cart_id)->update(['quantity' => $quantity]);
     }
 
     public static function increment($cart_id, $quantity)
     {
-        self::update($cart_id, $quantity, 'increment');
+        return Cart::where('id', $cart_id)->increment('quantity', $quantity);
     }
 
     public static function decrement($cart_id, $quantity)
     {
-        self::update($cart_id, $quantity, 'decrement');
+        return Cart::where('id', $cart_id)->decrement('quantity', $quantity);
     }
 
     public static function remove($cart_id)
@@ -78,7 +60,12 @@ class CartRepository {
 
     public static function all($user_id)
     {
-        return Cart::where('user_id', $user_id)->get();
+        return self::query($user_id);
+    }
+
+    public static function exist($user_id, $product_sku_id)
+    {
+        return Cart::where(compact('user_id', 'product_sku_id'))->first();
     }
 
 }
