@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 // use Illuminate\Http\Request;
 
+use App\Http\Controllers\Backend\Api\AdminBaseController;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Client;
+use App\Models\Client;
 
-use App\Http\Requests\Admin\ClientRequest as Request;
+//use App\Http\Requests\Admin\ClientRequest as Request;
 
 
 

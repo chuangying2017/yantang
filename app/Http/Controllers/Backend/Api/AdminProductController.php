@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Backend\Api;
 
 use App\Http\Requests\Backend\Api\ProductRequest as Request;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Transformers\ProductTransformer;
+use App\Services\ApiConst;
+use App\Services\Product\ProductConst;
 use App\Services\Product\ProductService;
 
 class AdminProductController extends Controller {
@@ -15,9 +17,24 @@ class AdminProductController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $category_id = $request->input('cat_id') ?: null;
+        $brand_id = $request->input('brand_id') ?: null;
+        $sort = ApiConst::decodeSort($request->input('sort'));
+        $status = $request->input('status') ?: ProductConst::VAR_PRODUCT_STATUS_UP;
 
+        $products = ProductService::lists(
+            $category_id,
+            $brand_id,
+            ApiConst::PRODUCT_PER_PAGE,
+            $sort['order_by'],
+            $sort['order_type'],
+            $status
+        );
+
+
+        return $this->response->paginator($products, new ProductTransformer());
     }
 
     /**
@@ -82,8 +99,10 @@ class AdminProductController extends Controller {
     public function show($id)
     {
         $product = ProductService::show($id);
+        $product->show_detail = 1;
 
-        return $this->respondData($product);
+
+        return $this->response->item($product, new ProductTransformer());
     }
 
     /**

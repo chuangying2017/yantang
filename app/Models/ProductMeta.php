@@ -11,6 +11,5 @@ class ProductMeta extends Model
 
     protected $table = 'product_meta';
 
-    protected $fillable = ['detail', 'is_virtual', 'origin_id', 'express_fee',
-        'with_invoice', 'with_care'];
+    protected $guarded = ['id'];
 }

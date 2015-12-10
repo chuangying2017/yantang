@@ -102,12 +102,12 @@ class ProductSkuService {
     {
         $data = [];
         foreach ($queryArr as $query) {
-            $sku = ProductSkuView::findOrFail($query->product_sku_id);
+            $sku = ProductSkuView::findOrFail($query['product_sku_id']);
             $temp = [
-                "product_sku_id" => $query->product_sku_id,
+                "product_sku_id" => $query['product_sku_id'],
                 'data'           => $sku
             ];
-            if ($sku->stock >= $query->quantity) {
+            if ($sku->stock >= $query['quantity']) {
                 $temp['code'] = ProductConst::CODE_SKU_AFFORD_OK;
             } else {
                 $temp['code'] = ProductConst::CODE_SKU_NOT_AFFORD;

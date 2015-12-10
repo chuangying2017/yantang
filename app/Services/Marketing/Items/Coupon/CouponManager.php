@@ -24,9 +24,9 @@ class CouponManager extends MarketingItemManager implements MarketingInterface {
     }
 
 
-    public function lists($status = null, $user_id = null)
+    public function lists($status = null, $pagination = null)
     {
-        $coupons = MarketingRepository::listsCoupon($status);
+        $coupons = MarketingRepository::listsCoupon($status, $pagination);
 
         return $coupons;
     }

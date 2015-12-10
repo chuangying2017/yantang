@@ -10,4 +10,7 @@ class ProductDataView extends Model
 
     protected $table = 'product_data_view';
 
+
+
+
 }

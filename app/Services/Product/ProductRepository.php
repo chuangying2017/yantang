@@ -21,13 +21,32 @@ use Exception;
  * Class ProductRepository
  * @package App\Services\Product
  */
-class ProductRepository
-{
+class ProductRepository {
 
 
-    public static function lists()
+    public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP)
     {
+        $query = Product::where('status', $status);
 
+        if ( ! is_null($category_id)) {
+            $query = $query->whereIn('category_id', $category_id);
+        }
+
+        if ( ! is_null($brand_id)) {
+            $query = $query->whereIn($brand_id);
+        }
+
+        if ( ! is_null($orderBy)) {
+            $query = $query->orderBy($orderBy, $orderType);
+        }
+
+        if ( ! is_null($paginate)) {
+            $products = $query->paginate($paginate);
+        } else {
+            $products = $query->get();
+        }
+
+        return $products;
     }
 
 
@@ -88,7 +107,14 @@ class ProductRepository
      *      - (bool) with_invoice
      *      - (bool) with_care
      *  - *(array) skus
-     *      - (array) attribute_value_ids
+     *      - {
+     * - "name": "sku-1",
+     * - "cover_image": "11231",
+     * - "stock": 10,
+     * - "price": 10000,
+     *  - "attribute_value_ids": []
+     * }
+     * ],
      *  - (array) image_ids
      *  - (array) group_ids
      */
@@ -187,8 +213,15 @@ class ProductRepository
         /**
          * create an product object
          */
-        $product_basic_obj = Product::updateOrCreate(['id' => $id], $basic_data);
-        ProductMeta::updateOrCreate(['product_id' => $id], $meta_data);
+        $product_basic_obj = DB::transaction(function () use ($id, $basic_data, $meta_data) {
+            $product_basic_obj = Product::updateOrCreate(['id' => $id], $basic_data);
+            $id = $product_basic_obj->id;
+            $meta_data['product_id'] = $id;
+            logger($meta_data);
+            ProductMeta::updateOrCreate(['product_id' => $id], $meta_data);
+
+            return $product_basic_obj;
+        });
 
         return $product_basic_obj;
     }
@@ -203,7 +236,7 @@ class ProductRepository
             DB::beginTransaction();
 
             $product = Product::find($id);
-            if (!$product) {
+            if ( ! $product) {
                 throw new Exception('PRODUCT NOT FOUND');
             }
             /**
@@ -235,6 +268,7 @@ class ProductRepository
             $product->destory();
 
             DB::commit();
+
             return 1;
 
         } catch (Exception $e) {

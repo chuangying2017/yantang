@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Backend\Api;
 
-use App\Services\Product\Attribute\AttributeRepository;
 use App\Services\Product\Attribute\AttributeService;
 use App\Http\Requests\Backend\Api\AttributeRequest as Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 
 class AdminAttributeController extends AdminBaseController {
@@ -28,7 +26,7 @@ class AdminAttributeController extends AdminBaseController {
         $merchant_id = self::getMerchantIdByUserId($this->auth->id());
 
         $category_id = $request->input('category_id') ?: null;
-        if (is_null($category_id)) {
+        if ( ! is_null($category_id)) {
             $attributes = AttributeService::getByCategory($category_id, $merchant_id);
         } else {
             $attributes = AttributeService::findAllByMerchant($merchant_id);

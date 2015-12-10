@@ -26,7 +26,8 @@ class MarketingRepository {
                 $coupon = self::storeCouponContent($content);
                 $limits = self::storeItemLimits($limits, $coupon['id'], $resource_type);
 
-                return self::queryFullCoupon($coupon['id']);
+                return $coupon->id;
+//                return self::queryFullCoupon($coupon['id']);
             });
         } catch (\Exception $e) {
             throw new CouponValidationException('优惠券');
@@ -55,7 +56,12 @@ class MarketingRepository {
 
     public static function listsCoupon($status = null, $paginate = null, $relation = null)
     {
-        $coupons = Coupon::with('limits')->get();
+        $query = Coupon::with('limits');
+        if ( ! is_null($paginate)) {
+            $coupons = $query->paginate(5);
+        } else {
+            $coupons = $query->get();
+        }
 
         return $coupons;
     }

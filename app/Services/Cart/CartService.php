@@ -10,13 +10,35 @@ class CartService {
 
     public static function add($user_id, $product_sku_id, $quantity)
     {
-        return CartRepository::add($user_id, $product_sku_id, $quantity);
+        $cart_info = [
+            'product_sku_id' => $product_sku_id,
+            'quantity'       => $quantity
+        ];
+
+        $cart = CartRepository::exist($user_id, $product_sku_id);
+
+        if ($cart) {
+            $cart_info['quantity'] += $cart['quantity'];
+        }
+
+        if ($err_msg = self::checkProductCanNotAfford($product_sku_id, $quantity)) {
+            throw new \Exception($err_msg);
+        }
+
+        if ( ! $cart) {
+            $cart = CartRepository::create($user_id, $product_sku_id, $quantity);
+        } else {
+            $cart = CartRepository::increment($cart->id, $quantity);
+        }
+
+        return $cart;
     }
 
-    public static function update($cart_id, $quantity)
+    public static function update($cart_id, $quantity = 1)
     {
-        return CartRepository::update($cart_id, $quantity);
+
     }
+
 
     public static function remove($cart_id)
     {
@@ -28,16 +50,11 @@ class CartService {
         return CartRepository::all($user_id);
     }
 
-    public static function get($cart_id)
-    {
-        return CartRepository::get($cart_id);
-    }
 
     public static function take($cart_id)
     {
         return CartRepository::get($cart_id);
     }
-
 
 
     public static function lists($user_id)
