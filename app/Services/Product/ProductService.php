@@ -14,6 +14,7 @@ use App\Models\Product;
 use App\Models\ProductDataView;
 use App\Models\ProductMeta;
 use App\Services\Product\Attribute\AttributeService;
+use App\Services\Product\Category\CategoryService;
 
 /**
  * Class ProductService
@@ -84,16 +85,22 @@ class ProductService {
      */
     public static function show($id)
     {
-        $data = [];
-        $product = Product::findOrFail($id);
-        $data['basic_info'] = $product;
-        $data['data'] = ProductDataView::find($id);
-        $data['images'] = $product->images()->get();
-        $data['groups'] = $product->groups()->get();
-        $data['skus'] = ProductSkuService::getByProduct($id);
-        $data['meta'] = ProductMeta::where('product_id', $id)->first();
+        $product = Product::with('data', 'images', 'groups', 'skuViews', 'meta')->findOrFail($id);
 
-        return $data;
+        return $product;
+    }
+
+    public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = null)
+    {
+        $orderBy = ProductConst::getSortOption($orderBy);
+        $orderType = ProductConst::getSortType($orderBy);
+        $brand_id = ! is_null($brand_id) ? to_array($brand_id) : null;
+        $status = ProductConst::saleStatus($status, true);
+        $category_ids = CategoryService::getLeavesId($category_id);
+
+        $products = ProductRepository::lists($category_ids, $brand_id, $paginate, $orderBy, $orderType, $status);
+
+        return $products;
     }
 
     /**

@@ -15,7 +15,6 @@ $router->group(['namespace' => 'Language'], function () use ($router) {
 $router->group(['namespace' => 'Frontend'], function () use ($router) {
     require(__DIR__ . "/Routes/Frontend/Frontend.php");
     require(__DIR__ . "/Routes/Frontend/Access.php");
-
 });
 
 
@@ -25,6 +24,7 @@ $router->group(['namespace' => 'Frontend'], function () use ($router) {
  */
 $router->group(['namespace' => 'Backend'], function () use ($router) {
     $router->group(['prefix' => 'admin'], function () use ($router) {
+
         /**
          * These routes need view-backend permission (good if you want to allow more than one group in the backend, then limit the backend features by different roles or permissions)
          *
@@ -34,6 +34,7 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
             require(__DIR__ . "/Routes/Backend/Dashboard.php");
             require(__DIR__ . "/Routes/Backend/Dashboard.php");
         });
+
     });
 });
 

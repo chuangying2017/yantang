@@ -5,19 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Product extends Model
-{
+class Product extends Model {
+
     use SoftDeletes;
 
     protected $table = 'products';
 
     protected $guarded = ['id'];
 
-    protected $fillable = [
-        'product_no', 'brand_id', 'category_id', 'merchant_id', 'title', 'sub_title',
-        'price', 'origin_price', 'limit', 'member_discount', 'digest',
-        'cover_image', 'status', 'open_status', 'open_time'
-    ];
+    public function data()
+    {
+        return $this->hasOne('App\Models\ProductDataView', 'id', 'id');
+    }
+
+    public function meta()
+    {
+        return $this->hasOne('App\Models\ProductMeta', 'product_id', 'id');
+    }
 
     public function category()
     {
@@ -46,6 +50,12 @@ class Product extends Model
 
     public function skuViews()
     {
-        return $this->hasMany('App\Models\productSkuView');
+        return $this->hasMany('App\Models\productSkuView', 'product_id', 'id');
     }
+
+    public function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
 }

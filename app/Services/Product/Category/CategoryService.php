@@ -68,6 +68,24 @@ class CategoryService {
         return Category::all();
     }
 
+    public static function getLeavesId($category_id, $string = false)
+    {
+        try {
+            $category = CategoryRepository::find($category_id);
+
+            $categories = $category->getLeaves(['id'])->toArray();
+
+            $data = [];
+            foreach ($categories as $category) {
+                $data[] = $category['id'];
+            }
+
+            return count($data) ? $data : null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
 
     /**
      * get category tree

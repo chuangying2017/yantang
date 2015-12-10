@@ -52,3 +52,56 @@ if ( ! function_exists('api_route')) {
         return app('Dingo\Api\Routing\UrlGenerator')->version($version)->route($name);
     }
 }
+
+if ( ! function_exists('image_url')) {
+
+    function image_url($name)
+    {
+        return config('filesystems.disks.qiniu.domains.default') . '/' . $name;
+    }
+}
+
+if ( ! function_exists('current_url_paras')) {
+
+    function current_url_paras(Array $except = [])
+    {
+        $query = '';
+        $paras = Request::all();
+        foreach ($paras as $key => $para) {
+            if ( ! in_array($key, $except)) {
+                $query .= '&' . $key . '=' . $para;
+            }
+        }
+
+        return $query;
+    }
+}
+
+if ( ! function_exists('qiniu_asset')) {
+
+    function qiniu_asset($path)
+    {
+        return env('QINIU_PREFIX_URL') . $path;
+    }
+}
+
+
+if ( ! function_exists('array_to_string')) {
+
+    function array_to_string($value, $glue = ',')
+    {
+        return is_array($value) ? implode($glue, $value) : $value;
+    }
+}
+
+if ( ! function_exists('to_array')) {
+
+    function to_array($value)
+    {
+        return is_array($value) ? $value : [$value];
+    }
+}
+
+
+
+
