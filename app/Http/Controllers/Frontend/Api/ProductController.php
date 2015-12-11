@@ -68,7 +68,10 @@ class ProductController extends Controller {
      */
     public function show($id)
     {
-        //
+        $product = ProductService::show($id);
+        $product->show_detail = 1;
+
+        return $this->response->item($product, new ProductTransformer());
     }
 
     /**
