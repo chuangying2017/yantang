@@ -255,7 +255,7 @@ class ProductRepository {
             /**
              * delete all favs
              */
-            FavService::deleteByProduct($id);
+            FavService::deleteCauseProductDeleted($id);
 
             /**
              * delete all comments
