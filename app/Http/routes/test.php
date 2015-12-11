@@ -3,6 +3,8 @@
  * Test routes
  */
 
+use App\Services\Product\ProductConst;
+
 if (App::environment() == 'local' || env('APP_DEBUG')) {
 
     Route::get('test', function () {

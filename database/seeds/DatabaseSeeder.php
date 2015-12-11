@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder {
         $this->call(BrandSeeder::class);
         $this->call(CategoryTableSeeder::class);
         $this->call(AttributeSeeder::class);
+        $this->call(ImageSeeder::class);
+
 
         if (env('DB_DRIVER') == 'mysql')
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
