@@ -6,6 +6,7 @@ use App\Http\Requests\Backend\Api\BrandRequest as Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Transformers\BrandTransformer;
 use App\Services\Product\Brand\BrandService;
 
 class AdminBrandController extends Controller {
@@ -24,11 +25,12 @@ class AdminBrandController extends Controller {
             } else {
                 $brands = BrandService::getAll();
             }
+
+            return $this->response->collection($brands, new BrandTransformer());
         } catch (\Exception $e) {
-            return $this->respondException($e);
+            $this->response->errorInternal($e->getMessage());
         }
 
-        return $this->respondData($brands);
     }
 
     /**
@@ -44,9 +46,9 @@ class AdminBrandController extends Controller {
             $cover_image = $request->input('cover_image') ?: null;
             $brand = BrandService::create($name, $cover_image);
 
-            return $this->respondCreated($brand);
+            return $this->response->created();
         } catch (\Exception $e) {
-            return $this->respondLogicError(400, $e->getMessage());
+            $this->response->errorInternal($e->getMessage());
         }
     }
 
@@ -60,7 +62,7 @@ class AdminBrandController extends Controller {
     {
         $brand = BrandService::show($id);
 
-        return $this->respondData($brand);
+        return $this->response->item($brand, new BrandTransformer());
     }
 
 
@@ -78,9 +80,9 @@ class AdminBrandController extends Controller {
             $cover_image = $request->input('cover_image') ?: null;
             $brand = BrandService::update($id, compact('name', 'cover_image'));
 
-            return $this->respondData($brand);
+            return $this->response->item($brand, new BrandTransformer());
         } catch (\Exception $e) {
-            return $this->respondException($e);
+            $this->response->errorInternal($e->getMessage());
         }
 
     }
@@ -99,7 +101,7 @@ class AdminBrandController extends Controller {
             return $this->respondException($e);
         }
 
-        return $this->respondDelete();
+        return $this->response->noContent();
     }
 
     /**
@@ -115,10 +117,10 @@ class AdminBrandController extends Controller {
         try {
             BrandService::bindCategory($brand_id, $category_ids);
         } catch (\Exception $e) {
-            return $this->respondException($e);
+            $this->response->errorInternal($e->getMessage());
         }
 
-        return $this->respondOk();
+        return $this->response->accepted();
     }
 
 
