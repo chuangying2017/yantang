@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Frontend\Api;
 use App\Http\Transformers\CartTransformer;
 use App\Services\Cart\CartService;
 
-use App\Http\Requests\Frontend\Api\CartRequest as Request;
+use App\Http\Requests\Frontend\CartRequest as Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;

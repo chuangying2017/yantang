@@ -17,7 +17,7 @@ abstract class Controller extends BaseController
     public function getUserId()
     {
         #todo @troy get user from jwt
-        $user_id = 0;
+        $user_id = 1;
         return $user_id;
     }
 

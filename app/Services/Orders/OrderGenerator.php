@@ -1,6 +1,7 @@
 <?php namespace App\Services\Orders;
 
 use App\Services\Cart\CartService;
+use App\Services\Client\AddressService;
 use App\Services\Marketing\MarketingItemDistributor;
 use App\Services\Marketing\MarketingItemUsing;
 use App\Services\Marketing\MarketingProtocol;
@@ -44,26 +45,30 @@ class OrderGenerator {
      *      ]
      * ];
      * @return array
-     *
-     *
-     *
      */
     public function buy($user_id, $order_products_request, $carts = null)
     {
         $products_info = self::checkProductSku($order_products_request['products']);
         $order_info = self::filterOrderProduct($products_info, $order_products_request['products']);
+
         $order_info['user_id'] = $user_id;
         $order_info['uuid'] = Uuid::uuid();
 
+        $this->setMarketUsing(app('App\Services\Marketing\Items\Coupon\UseCoupon'));
         $order_info['marketing']['coupons'] = $this->marketingItemUsing->usableList($user_id, $order_info);
 
         if ( ! is_null($carts)) {
             $order_info['carts'] = $carts;
         }
 
-        event('App\Services\Orders\Event\OrderRequest', $order_info);
+        event(new \App\Services\Orders\Event\OrderRequest($order_info));
 
         return $order_info;
+    }
+
+    public function setMarketUsing($marketingUsing)
+    {
+        $this->marketingItemUsing = $marketingUsing;
     }
 
     public function requestDiscount($resource, $uuid)
@@ -128,12 +133,16 @@ class OrderGenerator {
         ];
         foreach ($products_info as $key => $product_info) {
             if (self::productCanAfford($product_info)) {
-                $order_info['total_amount'] = bcadd($order_info['total_amount'], $product_info['price']);
-                $order_info['products'][ $key ] = $product_info['data'];
+                $product_info = $product_info['data'];
+                $product_info['product_sku_id'] = $product_info['id'];
+                $order_info['total_amount'] = intval(bcadd($order_info['total_amount'], $product_info['price']));
+                $order_info['products'][ $key ] = $product_info;
+
+
                 //加入商品购买数量
                 foreach ($order_request_products as $request_key => $order_request_product) {
                     if ($order_request_product['product_sku_id'] == $product_info['product_sku_id']) {
-                        $order_info['products'][ $key ]['quantity'] = $order_request_product['quantity'];
+                        $order_info['products'][ $key ]['quantity'] = intval($order_request_product['quantity']);
                         unset($order_request_products[ $request_key ]);
                         break;
                     }
@@ -141,6 +150,7 @@ class OrderGenerator {
                 $order_info['title'] = self::getOrderTitle($order_info['title'], $product_info['title'], count($products_info));
             }
         }
+
 
         return $order_info;
     }
@@ -171,17 +181,16 @@ class OrderGenerator {
         $order_info = self::getOrder($uuid);
 
         try {
+            $this->setMarketUsing(app('App\Services\Marketing\Items\Coupon\UseCoupon'));
             $coupons = $this->doubleCheckCoupon($order_info);
 
-            $order_info['address'] = $address;
+            $order_info['address'] = AddressService::orderAddress($address);
 
             //生成订单，锁定
+
             $order_main = OrderRepository::generateOrder($order_info);
 
-            event('App\Services\Orders\Event\OrderConfirm', [
-                'order_id'   => $order_main['id'],
-                'order_info' => $order_info
-            ]);
+            event(new \App\Services\Orders\Event\OrderConfirm($order_main['id'], $order_info));
 
             return $order_main;
 
@@ -221,6 +230,11 @@ class OrderGenerator {
         }
         $order_info['marketing']['coupons'] = $coupons;
         $checked_coupon = $this->marketingItemUsing->usableList($order_info['user_id'], $order_info);
+
+        if ( ! count($checked_coupon)) {
+            return $checked_coupon;
+        }
+
         $use_able_coupon = array_filter($checked_coupon, function ($coupon) {
             return $coupon->can_use;
         });

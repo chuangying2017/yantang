@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Frontend\Api;
+namespace App\Http\Requests\Frontend;
 
 use App\Http\Requests\Request;
 

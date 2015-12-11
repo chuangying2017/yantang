@@ -7,6 +7,8 @@ use DB;
 
 class OrderRepository {
 
+    const ORDER_NO_LENGTH = 28;
+
     public static function generateOrder($order_info)
     {
         return DB::transaction(function () use ($order_info) {
@@ -22,14 +24,11 @@ class OrderRepository {
 
             $order_main_info = compact('title', 'order_no', 'total_amount', 'post_fee', 'discount_amount', 'pay_amount', 'memo', 'status');
 
-            DB::beginTransaction();
-
             $order_main = Order::create($order_main_info);
-            $order_id = $order_main['order_id'];
+            $order_id = $order_main['id'];
+
             self::storeOrderProducts($order_info['products'], $order_id);
             self::storeAddress($order_info['address'], $order_id);
-
-            DB::commit();
 
             return $order_main;
 
@@ -78,18 +77,30 @@ class OrderRepository {
         return Order::find($order_id);
     }
 
-    public static function queryFullOrder($order_no)
+    public static function queryFullOrder($order)
     {
-        return Order::with('products', 'address', 'billings')->where('order_no', $order_no)->first();
+        if ($order instanceof Order) {
+            $order = $order->load('products', 'address', 'billings');
+        }
+
+        return Order::with('products', 'address', 'billings')->where('id', $order)->first();
     }
 
+    public static function lists($user_id = null, $status = null, $paginate = null, $sort_by = null, $sort_type = 'desc')
+    {
+        if (is_null($user_id)) {
+            $query = Order::where('user_id', $user_id);
+        }
+
+
+    }
 
     protected static function generateOrderNo()
     {
-        $order_no = date('YmdHis') . mt_rand(1000000, 9999990);
+        $order_no = mt_rand(1000000, 9999999) . date('YmdHis') . mt_rand(1000000, 9999999);
 
         while (self::queryOrderByOrderNo($order_no)) {
-            $order_no = date('YmdHis') . mt_rand(1000000, 9999990);
+            $order_no = mt_rand(1000000, 9999999) . date('YmdHis') . mt_rand(1000000, 9999999);
         }
 
         return $order_no;

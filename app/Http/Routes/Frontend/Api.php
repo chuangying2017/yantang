@@ -14,3 +14,14 @@ $api->resource('carts', 'CartController', ['only' => ['index', 'store', 'update'
 $api->group(['prefix' => 'marketing'], function ($api) {
     $api->resource('coupons', 'Marketing\CouponController');
 });
+
+
+$api->post('orders/confirm', [
+    'as'   => 'order.preConfirm',
+    'uses' => 'OrderController@preConfirm'
+]);
+
+$api->resource('orders', 'OrderController');
+$api->resource('address', 'AddressController');
+
+

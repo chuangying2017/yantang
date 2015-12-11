@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAddressesTable extends Migration
-{
+class CreateAddressesTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -21,6 +21,7 @@ class CreateAddressesTable extends Migration
             $table->string('province');
             $table->string('city');
             $table->boolean('is_primary');
+            $table->tinyInteger('role')->default(4);
             $table->string('display_name');
             $table->string('detail');
             $table->softDeletes();

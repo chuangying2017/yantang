@@ -1,0 +1,21 @@
+<?php namespace App\Http\Transformers;
+
+use App\Models\Address;
+use League\Fractal\TransformerAbstract;
+
+class AddressTransformer extends TransformerAbstract {
+
+    public function transform(Address $address)
+    {
+        return [
+            'name'         => $address->name,
+            'mobile'       => $address->mobile,
+            'province'     => $address->province,
+            'city'         => $address->city,
+            'detail'       => $address->detail,
+            'tel'          => $address->tel,
+            'display_name' => $address->display_name,
+            'address'      => $address->province . $address->city . $address->detail,
+        ];
+    }
+}

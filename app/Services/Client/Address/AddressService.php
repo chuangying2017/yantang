@@ -15,15 +15,56 @@ use App\Models\Client;
  * Class AddressService
  * @package App\Services\User
  */
-class AddressService
-{
+class AddressService {
+
+    const DEFAULT_ROLE = 3;
+    const PRIMARY_ROLE = 1;
+    const RECENT_USE_ROLE = 2;
+
     /**
      * @param $data
      * @return mixed
      */
     public static function create($data)
     {
-        return AddressRepository::create($data);
+        $address_data = self::encodeAddressInputData($data);
+
+
+        return AddressRepository::create($address_data);
+    }
+
+    protected static function encodeAddressInputData($data)
+    {
+        $address_data['user_id'] = $data['user_id'];
+        $address_data['name'] = $data['name'];
+        $address_data['mobile'] = $data['phone'];
+        $address_data['province'] = $data['province'];
+        $address_data['city'] = $data['city'];
+        $address_data['zip'] = isset($data['zip']) ? $data['zip'] : 0;
+        $address_data['detail'] = (isset($data['district']) ? $data['district'] : '') . $data['detail'];
+        $address_data['role'] = isset($data['role']) ? $data['role'] : self::DEFAULT_ROLE;
+        $address_data['display_name'] = isset($data['display_name'])
+            ? $data['display_name']
+            : $address_data['province'] . $address_data['city'] . $address_data['detail'];
+
+        return $address_data;
+    }
+
+
+    public static function show($address_id)
+    {
+        return AddressRepository::show($address_id);
+    }
+
+    public static function orderAddress($address_id)
+    {
+
+        $address = self::show($address_id);
+
+        $address['address'] = $address['province'] . $address['city'] . $address['detail'];
+        $address['zip'] = $address['zip'] ?: 0;
+
+        return $address;
     }
 
     /**
@@ -33,6 +74,8 @@ class AddressService
      */
     public static function update($id, $data)
     {
+        $data = self::encodeAddressInputData($data);
+
         return AddressRepository::update($id, $data);
     }
 
@@ -53,6 +96,7 @@ class AddressService
     public static function fetchByUser($user_id)
     {
         $client = Client::findOrFail($user_id);
+
         return $client->addresses();
     }
 }

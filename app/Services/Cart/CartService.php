@@ -87,7 +87,9 @@ class CartService {
 
     public static function take($cart_id)
     {
-        return CartRepository::get($cart_id);
+        $carts = CartRepository::get($cart_id);
+
+        return $carts->toArray();
     }
 
 
