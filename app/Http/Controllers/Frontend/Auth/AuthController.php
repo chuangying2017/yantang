@@ -109,7 +109,7 @@ class AuthController extends Controller {
     {
         $this->auth->logout();
 
-        return redirect()->route('home');
+        return $this->response->noContent();
     }
 
     /**
@@ -139,9 +139,9 @@ class AuthController extends Controller {
         try {
             $this->auth->resendConfirmationEmail($user_id);
 
-            return redirect()->route('home')->withFlashSuccess("A new confirmation e-mail has been sent to the address on file.");
+            return $this->response->accepted();
         } catch (GeneralException $e) {
-            return redirect()->back()->withInput()->withFlashDanger($e->getMessage());
+            $this->response->errorInternal($e->getMessage());
         }
     }
 
