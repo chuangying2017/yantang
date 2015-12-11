@@ -16,6 +16,10 @@ class OrderProtocol {
     const STATUS_OF_REFUNDED = 'refunded';
 
 
+    const PAY_ONLINE = 'online';
+    const PAY_CASH = 'cash';
+
+
     const TYPE_OF_DISCOUNT = 'discount';
     const TYPE_OF_MAIN = 'main';
 

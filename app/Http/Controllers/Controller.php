@@ -14,7 +14,7 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers;
 
-    public function getUserId()
+    public function getCurrentAuthUserId()
     {
         #todo @troy get user from jwt
         $user_id = 1;

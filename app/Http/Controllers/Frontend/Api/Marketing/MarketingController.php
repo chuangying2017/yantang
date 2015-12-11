@@ -41,7 +41,7 @@ class MarketingController extends Controller {
      */
     public function index(Request $request)
     {
-        $user_id = $this->getUserId();
+        $user_id = $this->getCurrentAuthUserId();
 
         $status = $request->input('status', MarketingProtocol::STATUS_OF_PENDING);
         $tickets = $this->using->lists($user_id, $status);

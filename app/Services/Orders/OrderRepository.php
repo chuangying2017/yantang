@@ -13,17 +13,7 @@ class OrderRepository {
     {
         return DB::transaction(function () use ($order_info) {
 
-            $order_no = self::generateOrderNo();
-            $total_amount = $order_info['total_amount'];
-            $title = $order_info['title'];
-            $post_fee = array_get($order_info, 'post_fee', 0);
-            $discount_amount = array_get($order_info, 'discount_fee', 0);
-            $pay_amount = bcsub(bcadd($total_amount, $post_fee), $discount_amount);
-            $memo = array_get($order_info, 'memo', '');
-            $status = OrderProtocol::STATUS_OF_UNPAID;
-
-            $order_main_info = compact('title', 'order_no', 'total_amount', 'post_fee', 'discount_amount', 'pay_amount', 'memo', 'status');
-
+            $order_main_info = self::encodeOrderData($order_info);
             $order_main = Order::create($order_main_info);
             $order_id = $order_main['id'];
 
@@ -33,6 +23,24 @@ class OrderRepository {
             return $order_main;
 
         });
+    }
+
+    protected static function encodeOrderData($order_info)
+    {
+        $order_no = self::generateOrderNo();
+        $total_amount = $order_info['total_amount'];
+        $user_id = $order_info['user_id'];
+        $title = $order_info['title'];
+        $post_fee = array_get($order_info, 'post_fee', 0);
+        $discount_amount = array_get($order_info, 'discount_fee', 0);
+        $pay_amount = bcsub(bcadd($total_amount, $post_fee), $discount_amount);
+        $memo = array_get($order_info, 'memo', '');
+        $status = OrderProtocol::STATUS_OF_UNPAID;
+        $pay_type = $order_info['pay_type'];
+
+        $order_main_info = compact('title', 'order_no', 'total_amount', 'post_fee', 'discount_amount', 'pay_amount', 'memo', 'status', 'pay_type', 'user_id');
+
+        return $order_main_info;
     }
 
     protected static function storeOrderProducts($order_products, $order_id)
@@ -69,29 +77,45 @@ class OrderRepository {
 
     public static function queryOrderByOrderNo($order_no)
     {
-        return Order::where('order_no', $order_no)->first();
+        if ($order_no instanceof Order) {
+            $order = $order_no;
+        }
+
+        return Order::where('order_no', $order_no)->firstOrFail();
     }
 
     public static function queryOrderById($order_id)
     {
-        return Order::find($order_id);
+        if ($order_id instanceof Order) {
+            $order = $order_id;
+        }
+
+        return Order::firstOrFail($order_id);
     }
 
     public static function queryFullOrder($order)
     {
         if ($order instanceof Order) {
-            $order = $order->load('products', 'address', 'billings');
+            $order = $order->load('skus', 'address', 'billings');
         }
 
         return Order::with('products', 'address', 'billings')->where('id', $order)->first();
     }
 
-    public static function lists($user_id = null, $status = null, $paginate = null, $sort_by = null, $sort_type = 'desc')
+
+    public static function lists($user_id, $status = null, $paginate = null, $sort_by = null, $sort_type = 'desc', $relation = 'skus')
     {
-        if (is_null($user_id)) {
+        if ( ! is_null($relation)) {
+            $query = Order::with($relation)->where('user_id', $user_id);
+        } else {
             $query = Order::where('user_id', $user_id);
         }
 
+        if ( ! is_null($paginate)) {
+            return $query->paginate($paginate);
+        }
+
+        return $query->get();
 
     }
 

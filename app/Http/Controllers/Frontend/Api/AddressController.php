@@ -18,7 +18,7 @@ class AddressController extends Controller {
      */
     public function index()
     {
-        $user_id = $this->getUserId();
+        $user_id = $this->getCurrentAuthUserId();
 
         $data = AddressService::fetchByUser($user_id);
 
@@ -35,7 +35,7 @@ class AddressController extends Controller {
     {
         try {
             $data = $request->input('data');
-            $data['user_id'] = $this->getUserId();
+            $data['user_id'] = $this->getCurrentAuthUserId();
 
             $address = AddressService::create($data);
         } catch (\Exception $e) {

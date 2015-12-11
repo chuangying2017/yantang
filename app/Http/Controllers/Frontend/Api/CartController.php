@@ -19,7 +19,7 @@ class CartController extends Controller {
      */
     public function index()
     {
-        $user_id = $this->getUserId();
+        $user_id = $this->getCurrentAuthUserId();
         $carts = CartService::lists($user_id);
 
         return $this->response->collection($carts, new CartTransformer());
@@ -36,7 +36,7 @@ class CartController extends Controller {
         try {
             $product_sku_id = $request->input('product_sku_id');
             $quantity = $request->input('quantity', 1);
-            $user_id = $this->getUserId();
+            $user_id = $this->getCurrentAuthUserId();
 
             $cart = CartService::add($user_id, $product_sku_id, $quantity);
 

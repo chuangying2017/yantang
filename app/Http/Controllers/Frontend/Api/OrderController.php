@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Frontend\Api;
 
+use App\Http\Transformers\OrderTransformer;
 use App\Services\Cart\CartService;
 use App\Services\Orders\OrderGenerator;
+use App\Services\Orders\OrderService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -32,13 +34,18 @@ class OrderController extends Controller {
      */
     public function index()
     {
-        //
+        $user_id = $this->getCurrentAuthUserId();
+
+        $orders = OrderService::lists($user_id);
+
+
+        return $this->response->collection($orders, new OrderTransformer());
     }
 
     public function preConfirm(Request $request)
     {
         $carts = $request->input('data');
-        $user_id = $this->getUserId();
+        $user_id = $this->getCurrentAuthUserId();
         $order_products_request = CartService::take($carts);
 
         if ( ! count($order_products_request)) {
@@ -72,6 +79,7 @@ class OrderController extends Controller {
         $address_id = $request->input('address_id');
         $uuid = $request->input('uuid');
         $memo = $request->input('memo', '');
+        $user_id = $this->getCurrentAuthUserId();
 
         $order = $this->orderGenerator->confirm($uuid, $address_id);
 
@@ -86,7 +94,7 @@ class OrderController extends Controller {
      */
     public function show($order_no)
     {
-
+        OrderService::show($order_no);
     }
 
     /**

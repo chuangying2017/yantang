@@ -212,7 +212,7 @@ class OrderGenerator {
         return $products_info;
     }
 
-    public function confirm($uuid, $address)
+    public function confirm($uuid, $address, $pay_type = OrderProtocol::PAY_ONLINE)
     {
         $order_info = self::getOrder($uuid);
 
@@ -223,7 +223,7 @@ class OrderGenerator {
             $order_info['address'] = AddressService::orderAddress($address);
 
             //生成订单，锁定
-
+            $order_info['pay_type'] = $pay_type;
             $order_main = OrderRepository::generateOrder($order_info);
 
             event(new \App\Services\Orders\Event\OrderConfirm($order_main['id'], $order_info));
