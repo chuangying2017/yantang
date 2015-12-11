@@ -79,7 +79,10 @@ class ProductSkuService {
     {
         $sku = ProductSku::findOrFail($product_sku_id);
 
-        return $sku->increment('stock', $quantity);
+        $sku->increment('stock', $quantity);
+        $sku->decrement('sales', $quantity);
+
+        return $quantity;
     }
 
     /**
@@ -91,7 +94,10 @@ class ProductSkuService {
     {
         $sku = ProductSku::findOrFail($product_sku_id);
 
-        return $sku->decrement('stock', $quantity);
+        $sku->decrement('stock', $quantity);
+        $sku->increment('sales', $quantity);
+
+        return $quantity;
     }
 
     /**

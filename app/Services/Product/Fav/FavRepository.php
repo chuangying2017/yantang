@@ -9,16 +9,17 @@
 namespace App\Services\Product\Fav;
 
 
+use App\Models\Access\User\User;
 use App\Models\Product;
-use App\Models\User;
-use Pheanstalk\Exception;
+use App\Models\ProductCollection;
+use \Exception;
 
 /**
  * Class FavRepository
  * @package App\Services\Product\Fav
  */
-class FavRepository
-{
+class FavRepository {
+
     /**
      * @param $user_id
      * @param $product_id
@@ -26,30 +27,33 @@ class FavRepository
      */
     public static function create($user_id, $product_id)
     {
-        try {
-            $user = User::find($user_id);
-            if (!$user) {
-                throw new Exception('USER NOT FOUND');
-            }
-            $product = Product::find($product_id);
-            if (!$product) {
-                throw new Exception('PRODUCT NOT FOUND');
-            }
-            $record = DB::table('user_product_favs')->where('product_id', $product_id)->where('user_id', $user_id)->count();
-            if ($record > 0) {
-                throw new Exception('RECORD EXISTED');
-            }
+        return ProductCollection::updateOrCreate([
+            'product_id' => $product_id,
+            'user_id'    => $user_id
+        ]);
+    }
 
-            DB::table('user_product_favs')->insert([
-                'product_id' => $product_id,
-                'user_id' => $user_id
-            ]);
+    public static function lists($user_id, $paginate = null, $sort_name = 'created_at', $sort_type = 'desc')
+    {
+        $query = ProductCollection::with('product')->where('user_id', $user_id)->orderBy($sort_name, $sort_type);
 
-            return 1;
-        } catch (Exception $e) {
-
-            return $e->getMessage();
+        if ( ! is_null($paginate)) {
+            return $query->paginate($paginate);
         }
+
+        return $query->get();
+    }
+
+
+    /**
+     * @param $user_id
+     * @param $product_id
+     * @return int
+     * @throws Exception
+     */
+    public static function deleteByProduct($product_id)
+    {
+        return ProductCollection::where('product_id', $product_id)->delete();
     }
 
     /**
@@ -58,13 +62,12 @@ class FavRepository
      * @return int
      * @throws Exception
      */
-    public static function delete($user_id, $product_id)
+    public static function delete($user_id, $fav_id)
     {
-        $record = DB::table('user_product_favs')->where('product_id', $product_id)->where('user_id', $user_id)->count();
-        if ($record <= 0) {
-            throw new Exception('RECORD NOT FOUND');
-        }
-        DB::table('user_product_favs')->where('product_id', $product_id)->where('user_id', $user_id)->delete();
-        return 1;
+        $id = to_array($fav_id);
+
+        return ProductCollection::where('user_id', $user_id)->whereIn('id', $id)->delete();
     }
+
+
 }

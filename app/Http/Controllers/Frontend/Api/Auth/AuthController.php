@@ -1,5 +1,6 @@
-<?php namespace App\Http\Controllers\Frontend\Auth;
+<?php namespace App\Http\Controllers\Frontend\Api\Auth;
 
+use Dingo\Api\Facade\API;
 use Illuminate\Http\Request;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
@@ -7,6 +8,8 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Http\Requests\Frontend\Access\LoginRequest;
 use App\Http\Requests\Frontend\Access\RegisterRequest;
 use App\Repositories\Frontend\Auth\AuthenticationContract;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class AuthController
@@ -39,15 +42,17 @@ class AuthController extends Controller {
     public function postRegister(RegisterRequest $request)
     {
         if (config('access.users.confirm_email')) {
-            $this->auth->create($request->all());
 
-            return redirect()->route('home')->withFlashSuccess("Your account was successfully created. We have sent you an e-mail to confirm your account.");
+            $user = $this->auth->create($request->all());
+
+            $token = JWTAuth::fromUser($user);
+
         } else {
             //Use native auth login because do not need to check status when registering
-            auth()->login($this->auth->create($request->all()));
-
-            return redirect()->route('frontend.dashboard');
+            $token = JWTAuth::fromUser($this->auth->create($request->all()));
         }
+
+        return response()->json(compact('token'));
     }
 
     /**
@@ -65,31 +70,18 @@ class AuthController extends Controller {
      */
     public function postLogin(LoginRequest $request)
     {
-        // If the class is using the Throttles Login trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        $throttles = $this->isUsingThrottlesLoginsTrait();
-
-        if ($throttles && $this->hasTooManyLoginAttempts($request))
-            return $this->sendLockoutResponse($request);
-
-        //Don't know why the exception handler is not catching this
         try {
-            $this->auth->login($request);
-
-            if ($throttles)
-                $this->clearLoginAttempts($request);
-
-            return redirect()->intended('/dashboard');
-        } catch (GeneralException $e) {
-            // If the login attempt was unsuccessful we will increment the number of attempts
-            // to login and redirect the user back to the login form. Of course, when this
-            // user surpasses their maximum number of attempts they will get locked out.
-            if ($throttles)
-                $this->incrementLoginAttempts($request);
-
-            return redirect()->back()->withInput()->withFlashDanger($e->getMessage());
+            // attempt to verify the credentials and create a token for the user
+            if ( ! $token = JWTAuth::attempt($request->only('email', 'password'))) {
+                return response()->json(['error' => 'invalid_credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            // something went wrong whilst attempting to encode the token
+            return response()->json(['error' => 'could_not_create_token'], 500);
         }
+
+        // all good so return the token
+        return response()->json(compact('token'));
     }
 
     /**
