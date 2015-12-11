@@ -28,6 +28,7 @@ class ProductRequest extends Request {
         $rules = [];
 
         if ($this->isMethod('POST') || $this->isMethod('PUT')) {
+            return [];
             $rules = [
                 'basic_info.brand_id'    => 'required',
                 'basic_info.merchant_id' => 'required|exists:merchants,id',
