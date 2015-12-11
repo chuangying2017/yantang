@@ -6,6 +6,7 @@
 if (App::environment() == 'local' || env('APP_DEBUG')) {
 
     Route::get('test', function () {
+        return route('account.confirm.resend', 1);
         $json = '
           [
     {

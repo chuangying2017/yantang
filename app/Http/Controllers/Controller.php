@@ -16,14 +16,14 @@ abstract class Controller extends BaseController {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers;
 
 
-    public function getCurrentAuthUserId()
+    protected function getCurrentAuthUserId()
     {
         $user = $this->getCurrentAuthUser();
 
         return $user['id'];
     }
 
-    public function getCurrentAuthUser()
+    protected function getCurrentAuthUser()
     {
         $user = JWTAuth::parseToken()->authenticate();
 
