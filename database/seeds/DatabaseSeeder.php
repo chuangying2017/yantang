@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder {
         $this->call(CategoryTableSeeder::class);
         $this->call(AttributeSeeder::class);
         $this->call(ImageSeeder::class);
+        $this->call(NavSeeder::class);
+
 
 
         if (env('DB_DRIVER') == 'mysql')
