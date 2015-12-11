@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Frontend\Auth;
+<?php namespace App\Http\Controllers\Frontend\Api\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
