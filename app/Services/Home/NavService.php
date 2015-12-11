@@ -9,9 +9,5 @@ class NavService {
         return Nav::get(['id', 'name', 'type', 'url']);
     }
 
-    public static function sections()
-    {
-
-    }
 
 }
