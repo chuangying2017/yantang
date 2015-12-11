@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend\Api;
 
 use App\Services\Home\BannerService;
 use App\Services\Home\NavService;
+use App\Services\Home\SectionService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -41,9 +42,11 @@ class IndexController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function getSections()
     {
-        //
+        $sections = SectionService::lists();
+
+        return Response()->json(['data' => $sections]);
     }
 
     /**

@@ -37,6 +37,11 @@ $api->get('banners', [
     'uses' => 'IndexController@getBanners'
 ]);
 
+$api->get('sections', [
+    'as'   => 'home.sections',
+    'uses' => 'IndexController@getSections'
+]);
+
 
 $api->resource('categories', 'CategoryController', ['only' => ['index', 'show']]);
 $api->resource('brands', 'BrandController', ['only' => ['index']]);
