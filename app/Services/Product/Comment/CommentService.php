@@ -19,8 +19,8 @@ use App\Models\Comment;
  * Class CommentServce
  * @package App\Services\Product\Comment
  */
-class CommentService
-{
+class CommentService {
+
     /**
      * @param $data
      * @return static
@@ -65,6 +65,7 @@ class CommentService
     public static function getByProduct($product_id)
     {
         $comments = Comment::with('user.avatar', 'user.username', 'images')->where('product_id', $product_id)->where('status', 1)->get();
+
         return $comments;
     }
 
@@ -74,15 +75,10 @@ class CommentService
      */
     public static function deleteByProduct($product_id)
     {
-        try {
 
-            Comment::where('product_id', $product_id)->delete();
+        Comment::where('product_id', $product_id)->delete();
 
-            return 1;
+        return 1;
 
-        } catch (Exception $e) {
-
-            return $e->getMessage();
-        }
     }
 }
