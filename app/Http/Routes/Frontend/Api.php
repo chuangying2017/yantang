@@ -27,6 +27,17 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
 });
 
 
+$api->get('nav', [
+    'as'   => 'home.nav',
+    'uses' => 'IndexController@getNav'
+]);
+
+$api->get('banners', [
+    'as'   => 'home.banners',
+    'uses' => 'IndexController@getBanners'
+]);
+
+
 $api->resource('categories', 'CategoryController', ['only' => ['index', 'show']]);
 $api->resource('brands', 'BrandController', ['only' => ['index']]);
 $api->resource('products', 'ProductController', ['only' => ['index', 'show']]);
@@ -46,7 +57,7 @@ $api->group(['middleware' => 'jwt.refresh'], function ($api) {
     });
 
     $api->resource('fav', 'FavController', ['only' => ['index', 'store', 'destroy']]);
-    $api->resource('carts', 'CartController', ['only' => ['index', 'store', 'update', 'destroy']]);
+    $api->resource('cart', 'CartController', ['only' => ['index', 'store', 'update', 'destroy']]);
     $api->post('orders/confirm', [
         'as'   => 'order.preConfirm',
         'uses' => 'OrderController@preConfirm'

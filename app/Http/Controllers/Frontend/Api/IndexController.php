@@ -1,22 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Api;
+namespace App\Http\Controllers\Frontend\Api;
 
+use App\Services\Home\BannerService;
+use App\Services\Home\NavService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class AdminProductGroupController extends Controller
-{
+class IndexController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getNav()
     {
-        //
+        $nav = NavService::nav();
+
+        return Response()->json(['data' => $nav]);
     }
 
     /**
@@ -24,26 +28,28 @@ class AdminProductGroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function getBanners()
     {
-        //
+        $banners = BannerService::lists();
+
+        return Response()->json(['data' => $banners]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -54,7 +60,7 @@ class AdminProductGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -65,8 +71,8 @@ class AdminProductGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -77,7 +83,7 @@ class AdminProductGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
