@@ -38,10 +38,12 @@ class AddressService {
         $address_data['user_id'] = $data['user_id'];
         $address_data['name'] = $data['name'];
         $address_data['mobile'] = $data['phone'];
+        $address_data['tel'] = isset($data['tel']) ? $data['tel'] : '';
         $address_data['province'] = $data['province'];
         $address_data['city'] = $data['city'];
         $address_data['zip'] = isset($data['zip']) ? $data['zip'] : 0;
-        $address_data['detail'] = (isset($data['district']) ? $data['district'] : '') . $data['detail'];
+        $address_data['district'] = isset($data['district']) ? $data['district'] : '';
+        $address_data['detail'] = $data['detail'];
         $address_data['role'] = isset($data['role']) ? $data['role'] : self::DEFAULT_ROLE;
         $address_data['display_name'] = isset($data['display_name'])
             ? $data['display_name']
@@ -62,7 +64,6 @@ class AddressService {
         $address = self::show($address_id);
 
         $address['address'] = $address['province'] . $address['city'] . $address['detail'];
-        $address['zip'] = $address['zip'] ?: 0;
 
         return $address;
     }

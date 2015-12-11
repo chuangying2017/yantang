@@ -67,7 +67,11 @@ class OrderRepository {
             'order_id' => $order_id,
             'name'     => array_get($address, 'name'),
             'mobile'   => array_get($address, 'mobile'),
-            'address'  => array_get($address, 'address'),
+            'province' => array_get($address, 'province'),
+            'city'     => array_get($address, 'city'),
+            'district' => array_get($address, 'district'),
+            'detail'   => array_get($address, 'detail'),
+            'tel'      => array_get($address, 'tel'),
             'zip'      => array_get($address, 'zip'),
         ];
 
@@ -95,11 +99,12 @@ class OrderRepository {
 
     public static function queryFullOrder($order)
     {
+        $relation = ['skus', 'address', 'billings', 'express'];
         if ($order instanceof Order) {
-            $order = $order->load('skus', 'address', 'billings');
+            return $order->load($relation);
         }
 
-        return Order::with('products', 'address', 'billings')->where('id', $order)->first();
+        return Order::with($relation)->where('id', $order)->first();
     }
 
 

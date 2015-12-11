@@ -18,12 +18,15 @@ class CreateAddressesTable extends Migration {
             $table->integer('user_id');
             $table->string('name');
             $table->string('mobile');
+            $table->string('tel');
             $table->string('province');
             $table->string('city');
+            $table->string('district');
+            $table->string('detail');
             $table->boolean('is_primary');
             $table->tinyInteger('role')->default(4);
             $table->string('display_name');
-            $table->string('detail');
+            $table->string('zip');
             $table->softDeletes();
             $table->timestamps();
         });

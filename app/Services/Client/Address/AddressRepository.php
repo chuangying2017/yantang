@@ -25,6 +25,7 @@ class AddressRepository {
             'name'         => $data['name'],
             'mobile'       => $data['mobile'],
             'province'     => $data['province'],
+            'district'     => $data['district'],
             'city'         => $data['city'],
             'detail'       => $data['detail'],
             'role'         => $data['role'],

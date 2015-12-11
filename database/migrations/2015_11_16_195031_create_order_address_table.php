@@ -17,8 +17,11 @@ class CreateOrderAddressTable extends Migration {
             $table->integer('order_id');
             $table->string('name');
             $table->string('mobile');
-            $table->string('telephone')->nullable();
-            $table->string('address', 255);
+            $table->string('tel');
+            $table->string('province');
+            $table->string('city');
+            $table->string('district');
+            $table->string('detail');
             $table->string('zip');
             $table->softDeletes();
             $table->timestamps();

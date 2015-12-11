@@ -94,7 +94,17 @@ class OrderController extends Controller {
      */
     public function show($order_no)
     {
-        OrderService::show($order_no);
+        $user_id = $this->getCurrentAuthUserId();
+        try {
+            $order = OrderService::show($user_id, $order_no);
+            $order->show_full = 1;
+
+
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
+
+        return $this->response->item($order, new OrderTransformer());
     }
 
     /**

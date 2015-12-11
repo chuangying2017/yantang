@@ -12,9 +12,10 @@ class AddressTransformer extends TransformerAbstract {
             'mobile'       => $address->mobile,
             'province'     => $address->province,
             'city'         => $address->city,
+            'district'     => $address->district,
             'detail'       => $address->detail,
             'tel'          => $address->tel,
-            'display_name' => $address->display_name,
+            'display_name' => isset($address->display_name) ? $address->display_name : '',
             'address'      => $address->province . $address->city . $address->detail,
         ];
     }

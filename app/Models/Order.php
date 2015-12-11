@@ -32,4 +32,9 @@ class Order extends Model {
     {
         return $this->hasMany('App\Models\OrderBilling', 'order_id', 'id');
     }
+
+    public function express()
+    {
+        return $this->hasOne('App\Models\OrderDeliver', 'order_id', 'id');
+    }
 }
