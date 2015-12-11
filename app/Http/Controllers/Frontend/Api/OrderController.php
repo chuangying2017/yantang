@@ -39,7 +39,11 @@ class OrderController extends Controller {
     {
         $carts = $request->input('data');
         $user_id = $this->getUserId();
-        $order_products_request['products'] = CartService::take($carts);
+        $order_products_request = CartService::take($carts);
+
+        if ( ! count($order_products_request)) {
+            $this->response->errorBadRequest('购买选项不存在');
+        }
 
         $order_info = $this->orderGenerator->buy($user_id, $order_products_request, $carts);
 
@@ -69,8 +73,9 @@ class OrderController extends Controller {
         $uuid = $request->input('uuid');
         $memo = $request->input('memo', '');
 
-        $this->orderGenerator->confirm($uuid, $address_id);
+        $order = $this->orderGenerator->confirm($uuid, $address_id);
 
+        return $this->response->created(route('api.orders.show', $order['order_no']));
     }
 
     /**
@@ -79,9 +84,9 @@ class OrderController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($order_no)
     {
-        //
+
     }
 
     /**

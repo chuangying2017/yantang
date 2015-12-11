@@ -116,6 +116,7 @@ class MarketingRepository {
 
     public static function showTicket($ticket_id)
     {
+
         return self::queryTicket($ticket_id, ['resource']);
     }
 
@@ -163,6 +164,10 @@ class MarketingRepository {
 
         if ($ticket_id instanceof Ticket) {
             return $ticket_id;
+        }
+
+        if (is_array($ticket_id)) {
+            return Ticket::whereIn('id', $ticket_id)->get();
         }
 
         if (strlen($ticket_id) == MarketingProtocol::LENGTH_OF_TICKET_NO) {

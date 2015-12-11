@@ -45,15 +45,19 @@ class CouponController extends MarketingController {
 
     public function exchange(Request $request)
     {
-        $uuid = $request->input('uuid');
-        $coupon_id = $request->input('coupon_id');
+        try {
+            $uuid = $request->input('uuid');
+            $coupon_id = $request->input('coupon_id');
 
-        $coupon = $this->using->show($coupon_id);
+            $coupon = $this->using->show($coupon_id);
 
-        $this->orderGenerator->setMarketUsing($this->using);
-        $order_info = $this->orderGenerator->requestDiscount($coupon, $uuid);
+            $this->orderGenerator->setMarketUsing($this->using);
+            $order_info = $this->orderGenerator->requestDiscount($coupon, $uuid);
 
-        return $order_info;
+            return $order_info;
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest('优惠券不存在');
+        }
     }
 
 

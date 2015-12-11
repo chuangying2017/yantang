@@ -9,6 +9,7 @@ class CouponTransformer extends TransformerAbstract {
     public function transform(Ticket $ticket)
     {
         $limits = [
+            'id'             => (int)$ticket->id,
             'quota'          => (int)$ticket->quantity_per_user,
             'roles'          => $ticket->roles,
             'level'          => $ticket->level,
@@ -25,7 +26,7 @@ class CouponTransformer extends TransformerAbstract {
 
         return array_merge(
             [
-                'id'         => (int)$coupon->id,
+                'coupon_id'  => (int)$coupon->id,
                 'name'       => $coupon->name,
                 'type'       => $coupon->type,
                 'detail'     => $coupon->detail,

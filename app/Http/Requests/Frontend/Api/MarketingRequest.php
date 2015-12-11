@@ -28,9 +28,16 @@ class MarketingRequest extends Request {
             //
         ];
 
-        if ($this->isMethod('POST')) {
+        if ($this->route()->getName() == 'api.marketing.coupons.store') {
             $rules = [
                 'resource_id' => 'required'
+            ];
+        }
+
+        if ($this->route()->getName() == 'api.marketing.coupons.exchange') {
+            $rules = [
+                'coupon_id' => 'required',
+                'uuid'      => 'required'
             ];
         }
 

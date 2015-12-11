@@ -32,7 +32,7 @@ abstract class MarketingItemUsing implements MarketingInterface {
     public function filter($resource, $order_detail)
     {
 
-        if(isset($resource['selected']) && $resource['selected']){
+        if (isset($resource['selected']) && $resource['selected']) {
             return true;
         }
 
@@ -65,9 +65,9 @@ abstract class MarketingItemUsing implements MarketingInterface {
             return false;
         }
         //检查订单需要支付金额是否达到要求
-        $order_pay_amount = bcsub(array_get($order_detail, 'order_pay_amount', 0), $discount_fee);
-        if ( ! self::amountLimit($resource, $products, $order_pay_amount)) {
-            $this->setMessage(trans('marking.using.amount_limit'));
+        $order_pay_amount = bcsub(array_get($order_detail, 'total_amount', 0), $discount_fee);
+        if ($need_price = self::amountLimit($resource, $products, $order_pay_amount)) {
+            $this->setMessage(trans('marketing.using.amount_limit', ['price' => $need_price]));
 
             return false;
         }
@@ -119,7 +119,7 @@ abstract class MarketingItemUsing implements MarketingInterface {
      */
     protected static function checkEffectTime($limit)
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', strtotime($limit['effect_time'])) > Carbon::now();
+        return is_null($limit['effect_time']) ? 1 : Carbon::createFromFormat('Y-m-d H:i:s', strtotime($limit['effect_time'])) > Carbon::now();
     }
 
     /**
@@ -129,7 +129,7 @@ abstract class MarketingItemUsing implements MarketingInterface {
      */
     protected static function checkExpireTime($limit)
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', strtotime($limit['expired_time'])) < Carbon::now();
+        return is_null($limit['expired_time']) ? 1 : Carbon::createFromFormat('Y-m-d H:i:s', strtotime($limit['expired_time'])) < Carbon::now();
     }
 
     /**
@@ -144,7 +144,7 @@ abstract class MarketingItemUsing implements MarketingInterface {
     {
         $order_pay_amount = self::calPayAmount($limit, $products, $order_pay_amount);
 
-        return (bccomp($limit['amount_limit'], $order_pay_amount) !== -1) ? true : false;
+        return (bcsub($limit['amount_limit'], $order_pay_amount) > 0) ? bcsub($limit['amount_limit'], $order_pay_amount) : false;
     }
 
     /**
