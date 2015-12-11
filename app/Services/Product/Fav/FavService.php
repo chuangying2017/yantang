@@ -8,17 +8,12 @@
 
 namespace App\Services\Product\Fav;
 
+/**
+ * Class FavService
+ * @package App\Services\Product\Fav
+ */
+class FavService {
 
-/**
- * Class FavService
- * @package App\Services\Product\Fav
- */
-/**
- * Class FavService
- * @package App\Services\Product\Fav
- */
-class FavService
-{
     /**
      * @param $user_id
      * @param $product_id
@@ -59,6 +54,7 @@ class FavService
         try {
 
             DB::table('user_product_favs')->where('product_id', $product_id)->delete();
+
             return 1;
 
         } catch (Exception $e) {
