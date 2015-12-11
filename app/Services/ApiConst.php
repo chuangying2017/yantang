@@ -6,6 +6,7 @@ class ApiConst {
      */
     const COUPON_PER_PAGE = 20;
     const PRODUCT_PER_PAGE = 20;
+    const FAV_PRE_PAGE = 20;
 
 
     /**

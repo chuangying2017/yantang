@@ -11,7 +11,7 @@ namespace App\Services\Product\Fav;
 
 use App\Models\Access\User\User;
 use App\Models\Product;
-use DB;
+use App\Models\ProductCollection;
 use \Exception;
 
 /**
@@ -27,17 +27,33 @@ class FavRepository {
      */
     public static function create($user_id, $product_id)
     {
-        $record = DB::table('user_product_favs')->where('product_id', $product_id)->where('user_id', $user_id)->count();
-        if ($record > 0) {
-            throw new Exception('RECORD EXISTED');
-        }
-
-        DB::table('user_product_favs')->insert([
+        return ProductCollection::updateOrCreate([
             'product_id' => $product_id,
             'user_id'    => $user_id
         ]);
+    }
 
-        return 1;
+    public static function lists($user_id, $paginate = null, $sort_name = 'created_at', $sort_type = 'desc')
+    {
+        $query = ProductCollection::with('product')->where('user_id', $user_id)->orderBy($sort_name, $sort_type);
+
+        if ( ! is_null($paginate)) {
+            return $query->paginate($paginate);
+        }
+
+        return $query->get();
+    }
+
+
+    /**
+     * @param $user_id
+     * @param $product_id
+     * @return int
+     * @throws Exception
+     */
+    public static function deleteByProduct($product_id)
+    {
+        return ProductCollection::where('product_id', $product_id)->delete();
     }
 
     /**
@@ -46,14 +62,12 @@ class FavRepository {
      * @return int
      * @throws Exception
      */
-    public static function delete($user_id, $product_id)
+    public static function delete($user_id, $fav_id)
     {
-        $record = DB::table('user_product_favs')->where('product_id', $product_id)->where('user_id', $user_id)->count();
-        if ($record <= 0) {
-            throw new Exception('RECORD NOT FOUND');
-        }
-        DB::table('user_product_favs')->where('product_id', $product_id)->where('user_id', $user_id)->delete();
+        $id = to_array($fav_id);
 
-        return 1;
+        return ProductCollection::where('user_id', $user_id)->whereIn('id', $id)->delete();
     }
+
+
 }
