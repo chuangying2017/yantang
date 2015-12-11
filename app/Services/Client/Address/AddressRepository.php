@@ -37,7 +37,12 @@ class AddressRepository {
 
     public static function show($address_id)
     {
-        return Address::find($address_id);
+        return Address::findOrFail($address_id);
+    }
+
+    public static function lists($user_id)
+    {
+        return Address::where('user_id', $user_id)->get();
     }
 
     /**

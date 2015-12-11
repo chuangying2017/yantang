@@ -212,19 +212,21 @@ class OrderGenerator {
         return $products_info;
     }
 
-    public function confirm($uuid, $address, $pay_type = OrderProtocol::PAY_ONLINE)
+    public function confirm($uuid, $address_id, $pay_type = OrderProtocol::PAY_ONLINE)
     {
         $order_info = self::getOrder($uuid);
+
 
         try {
             $this->setMarketUsing(app('App\Services\Marketing\Items\Coupon\UseCoupon'));
             $coupons = $this->doubleCheckCoupon($order_info);
 
-            $order_info['address'] = AddressService::orderAddress($address);
+            $order_info['address'] = AddressService::orderAddress($address_id);
 
             //生成订单，锁定
             $order_info['pay_type'] = $pay_type;
             $order_main = OrderRepository::generateOrder($order_info);
+
 
             event(new \App\Services\Orders\Event\OrderConfirm($order_main['id'], $order_info));
 

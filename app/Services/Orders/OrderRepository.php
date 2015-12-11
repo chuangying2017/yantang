@@ -71,8 +71,8 @@ class OrderRepository {
             'city'     => array_get($address, 'city'),
             'district' => array_get($address, 'district'),
             'detail'   => array_get($address, 'detail'),
-            'tel'      => array_get($address, 'tel'),
-            'zip'      => array_get($address, 'zip'),
+            'tel'      => array_get($address, 'tel', ''),
+            'zip'      => array_get($address, 'zip', ''),
         ];
 
         DB::table('order_address')->insert($address_info);
@@ -128,7 +128,7 @@ class OrderRepository {
     {
         $order_no = mt_rand(1000000, 9999999) . date('YmdHis') . mt_rand(1000000, 9999999);
 
-        while (self::queryOrderByOrderNo($order_no)) {
+        while (Order::where('order_no', $order_no)->count()) {
             $order_no = mt_rand(1000000, 9999999) . date('YmdHis') . mt_rand(1000000, 9999999);
         }
 

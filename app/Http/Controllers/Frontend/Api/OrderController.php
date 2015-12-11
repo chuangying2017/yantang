@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend\Api;
 
 use App\Http\Transformers\OrderTransformer;
 use App\Services\Cart\CartService;
+use App\Services\Client\AddressService;
 use App\Services\Orders\OrderGenerator;
 use App\Services\Orders\OrderService;
 use Illuminate\Http\Request;
@@ -76,14 +77,19 @@ class OrderController extends Controller {
      */
     public function store(Request $request)
     {
-        $address_id = $request->input('address_id');
-        $uuid = $request->input('uuid');
-        $memo = $request->input('memo', '');
-        $user_id = $this->getCurrentAuthUserId();
+        try {
+            $address_id = $request->input('address_id');
+            $uuid = $request->input('uuid');
+            $memo = $request->input('memo', '');
+            $user_id = $this->getCurrentAuthUserId();
 
-        $order = $this->orderGenerator->confirm($uuid, $address_id);
+            $order = $this->orderGenerator->confirm($uuid, $address_id);
 
-        return $this->response->created(route('api.orders.show', $order['order_no']));
+            return $this->response->created(route('api.orders.show', $order['order_no']));
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
+
     }
 
     /**

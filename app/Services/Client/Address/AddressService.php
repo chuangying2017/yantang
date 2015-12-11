@@ -1,14 +1,4 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Bryant
- * Date: 2/12/2015
- * Time: 10:43 AM
- */
-
-namespace App\Services\Client;
-
-use App\Models\Client;
+<?php namespace App\Services\Client;
 
 
 /**
@@ -28,7 +18,6 @@ class AddressService {
     public static function create($data)
     {
         $address_data = self::encodeAddressInputData($data);
-
 
         return AddressRepository::create($address_data);
     }
@@ -60,12 +49,7 @@ class AddressService {
 
     public static function orderAddress($address_id)
     {
-
-        $address = self::show($address_id);
-
-        $address['address'] = $address['province'] . $address['city'] . $address['detail'];
-
-        return $address;
+        return self::show($address_id);
     }
 
     /**
@@ -96,8 +80,6 @@ class AddressService {
      */
     public static function fetchByUser($user_id)
     {
-        $client = Client::findOrFail($user_id);
-
-        return $client->addresses();
+        return AddressRepository::lists($user_id);
     }
 }
