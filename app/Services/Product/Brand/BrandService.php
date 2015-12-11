@@ -67,7 +67,7 @@ class BrandService {
      */
     public static function getAll()
     {
-        return Brand::get(['id', 'name', 'cover_image']);
+        return Brand::get();
     }
 
     /**
