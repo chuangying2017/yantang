@@ -30,6 +30,11 @@ class Category extends Node {
         return $this->hasMany('App\Models\Product');
     }
 
+    public function attributes()
+    {
+        return $this->belongsToMany('App\Models\Attribute', 'category_attribute');
+    }
+
     public function brands()
     {
         return $this->belongsToMany('App\Models\Brand', 'brand_category');
