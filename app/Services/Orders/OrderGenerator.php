@@ -171,7 +171,6 @@ class OrderGenerator {
             if (self::productCanAfford($product_info)) {
                 $product_info = $product_info['data'];
                 $product_info['product_sku_id'] = $product_info['id'];
-                $order_info['total_amount'] = intval(bcadd($order_info['total_amount'], $product_info['price']));
                 $order_info['products'][ $key ] = $product_info;
 
 
@@ -179,6 +178,7 @@ class OrderGenerator {
                 foreach ($order_request_products as $request_key => $order_request_product) {
                     if ($order_request_product['product_sku_id'] == $product_info['product_sku_id']) {
                         $order_info['products'][ $key ]['quantity'] = intval($order_request_product['quantity']);
+                        $order_info['total_amount'] = intval(bcadd($order_info['total_amount'], bcmul($product_info['price'], intval($order_request_product['quantity']))));
                         unset($order_request_products[ $request_key ]);
                         break;
                     }
