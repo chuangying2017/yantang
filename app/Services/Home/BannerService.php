@@ -34,7 +34,7 @@ class BannerService {
                 [
                     "title"       => "标题1",
                     "url"         => "/",
-                    "cover_image" => "http://7xp47i.com1.z0.glb.clouddn.com/banner-.jpg",
+                    "cover_image" => "http://7xp47i.com1.z0.glb.clouddn.com/banner-1.jpg",
                     "index"       => "1"
                 ],
                 [
