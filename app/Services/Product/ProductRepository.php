@@ -260,7 +260,6 @@ class ProductRepository {
              */
             CommentService::deleteByProduct($id);
 
-
             /**
              * destroy product
              */
