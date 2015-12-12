@@ -33,6 +33,11 @@ class FavRepository {
         ]);
     }
 
+    public static function exits($user_id, $product_id)
+    {
+        return ProductCollection::where('user_id', $user_id)->where('product_id', $product_id)->count();
+    }
+
     public static function lists($user_id, $paginate = null, $sort_name = 'created_at', $sort_type = 'desc')
     {
         $query = ProductCollection::with('product')->where('user_id', $user_id)->orderBy($sort_name, $sort_type);

@@ -41,6 +41,11 @@ class FavService {
         return FavRepository::delete($user_id, $fav_id);
     }
 
+    public static function checkFav($user_id, $product_id)
+    {
+        return FavRepository::exits($user_id, $product_id);
+    }
+
     /**
      * @param $product_id
      * @return int|string
