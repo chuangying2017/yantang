@@ -25,7 +25,6 @@ class CartService {
             $total_quantity += $cart['quantity'];
         }
 
-
         if ($err_msg = self::checkProductCanNotAfford($product_sku_id, $total_quantity)) {
             throw new \Exception($err_msg);
         }
