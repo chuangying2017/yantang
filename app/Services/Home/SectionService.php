@@ -12,13 +12,27 @@ class SectionService {
                 "title"    => "热门推荐",
                 "style"    => "",
                 "url"      => "",
-                "products" => Product::whereIn('id', [1, 2, 3, 5, 7, 10])->get(['title', 'id', 'price', 'cover_image'])
+                "products" => [
+                    ['id' => 1, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid1-1.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 2, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid1-2.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 3, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid1-3.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 4, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid1-4.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 5, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid1-5.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 6, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid1-6.jpg', 'title' => '', 'price' => 1000],
+                ]
             ],
             [
                 "title"    => "限时特惠",
                 "style"    => "",
                 "url"      => "",
-                "products" => Product::whereIn('id', [2, 4, 5, 6, 11, 8])->get(['title', 'id', 'price', 'cover_image'])
+                "products" => [
+                    ['id' => 1, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid2-1.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 2, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid2-2.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 3, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid2-3.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 4, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid2-4.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 5, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid2-5.jpg', 'title' => '', 'price' => 1000],
+                    ['id' => 6, 'cover_image' => 'http://7xp47i.com1.z0.glb.clouddn.com/grid2-6.jpg', 'title' => '', 'price' => 1000],
+                ]
             ],
         ];
 
