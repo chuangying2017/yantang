@@ -235,10 +235,7 @@ class ProductRepository {
         try {
             DB::beginTransaction();
 
-            $product = Product::find($id);
-            if ( ! $product) {
-                throw new Exception('PRODUCT NOT FOUND');
-            }
+            $product = Product::findOrFail($id);
             /**
              * detach group
              */
@@ -250,6 +247,7 @@ class ProductRepository {
             /**
              * retrive all skus
              */
+
             ProductSkuService::deleteByProduct($id);
 
             /**
@@ -262,10 +260,11 @@ class ProductRepository {
              */
             CommentService::deleteByProduct($id);
 
+
             /**
              * destroy product
              */
-            $product->destory();
+            $product->delete();
 
             DB::commit();
 
