@@ -1,10 +1,6 @@
 <?php namespace App\Services\Client;
 
 
-/**
- * Class AddressService
- * @package App\Services\User
- */
 class AddressService {
 
     const DEFAULT_ROLE = 3;

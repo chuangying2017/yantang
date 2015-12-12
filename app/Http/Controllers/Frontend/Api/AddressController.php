@@ -38,11 +38,12 @@ class AddressController extends Controller {
             $data['user_id'] = $this->getCurrentAuthUserId();
 
             $address = AddressService::create($data);
+
+            return $this->response->item($address, new AddressTransformer());
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }
 
-        return $this->response->created();
     }
 
     /**
