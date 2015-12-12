@@ -65,7 +65,7 @@ class CartRepository {
 
     public static function exist($user_id, $product_sku_id)
     {
-        return Cart::where(compact('user_id', 'product_sku_id'))->first();
+        return Cart::where('user_id', $user_id)->where('product_sku_id', $product_sku_id)->first();
     }
 
 }
