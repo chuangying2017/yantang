@@ -58,6 +58,20 @@ class OrderController extends Controller {
         return $order_info;
     }
 
+    public function fetchConfirm(Request $request)
+    {
+        $uuid = $request->input('uuid');
+
+        $order_info = OrderGenerator::getOrder($uuid);
+        $user_id = $this->getCurrentAuthUserId();
+
+        if ($user_id != $order_info['user_id']) {
+            $this->response->errorForbidden();
+        }
+
+        return $order_info;
+    }
+
 
     /**
      * Show the form for creating a new resource.

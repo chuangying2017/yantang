@@ -72,6 +72,7 @@ class CartController extends Controller {
      */
     public function destroy($cart_id)
     {
+
         CartService::remove($cart_id);
 
         return $this->response->noContent();
