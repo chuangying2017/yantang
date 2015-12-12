@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend\Api;
 
+use App\Services\Client\ClientService;
 use App\Services\Home\BannerService;
 use App\Services\Home\NavService;
 use App\Services\Home\SectionService;
@@ -55,9 +56,14 @@ class IndexController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function getUserInfo()
     {
-        //
+        $user_id = $this->getCurrentAuthUserId();
+        $client = ClientService::show($user_id);
+        $client['email'] = $client['user']['email'];
+        $client['phone'] = $client['user']['phone'];
+
+        return Response()->json(['data' => $client]);
     }
 
     /**

@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Client extends Model
-{
+class Client extends Model {
 
     use SoftDeletes;
     /**
@@ -39,5 +38,10 @@ class Client extends Model
     public function creditsWallet()
     {
         return $this->hasOne('App\Models\CreditsWallet');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\Access\User\User', 'user_id', 'id');
     }
 }

@@ -42,6 +42,11 @@ $api->get('sections', [
     'uses' => 'IndexController@getSections'
 ]);
 
+$api->get('user/info', [
+    'as'   => 'client.user.info',
+    'uses' => 'IndexController@getUserInfo'
+]);
+
 
 $api->resource('categories', 'CategoryController', ['only' => ['index', 'show']]);
 $api->resource('brands', 'BrandController', ['only' => ['index']]);
@@ -53,22 +58,22 @@ $api->resource('products', 'ProductController', ['only' => ['index', 'show']]);
  */
 //$api->group(['middleware' => 'jwt.refresh'], function ($api) {
 
-    $api->group(['namespace' => 'Marketing', 'prefix' => 'marketing'], function ($api) {
-        $api->resource('coupons', 'CouponController');
-        $api->post('coupons/exchange', [
-            'as'   => 'api.marketing.coupons.exchange',
-            'uses' => 'CouponController@exchange'
-        ]);
-    });
-
-    $api->resource('fav', 'FavController', ['only' => ['index', 'store', 'destroy']]);
-    $api->resource('cart', 'CartController', ['only' => ['index', 'store', 'update', 'destroy']]);
-    $api->post('orders/confirm', [
-        'as'   => 'order.preConfirm',
-        'uses' => 'OrderController@preConfirm'
+$api->group(['namespace' => 'Marketing', 'prefix' => 'marketing'], function ($api) {
+    $api->resource('coupons', 'CouponController');
+    $api->post('coupons/exchange', [
+        'as'   => 'api.marketing.coupons.exchange',
+        'uses' => 'CouponController@exchange'
     ]);
-    $api->resource('orders', 'OrderController');
-    $api->resource('address', 'AddressController');
+});
+
+$api->resource('fav', 'FavController', ['only' => ['index', 'store', 'destroy']]);
+$api->resource('cart', 'CartController', ['only' => ['index', 'store', 'update', 'destroy']]);
+$api->post('orders/confirm', [
+    'as'   => 'order.preConfirm',
+    'uses' => 'OrderController@preConfirm'
+]);
+$api->resource('orders', 'OrderController');
+$api->resource('address', 'AddressController');
 //});
 
 
