@@ -42,7 +42,7 @@ class CartController extends Controller {
 
             return $this->response->created();
         } catch (\Exception $e) {
-            $this->response->errorInternal();
+            $this->response->errorInternal($e->getMessage());
         }
 
     }

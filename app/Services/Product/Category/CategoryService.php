@@ -73,6 +73,10 @@ class CategoryService {
         try {
             $category = CategoryRepository::find($category_id);
 
+            if ($category->isLeaf()) {
+                return [$category_id];
+            }
+
             $categories = $category->getLeaves(['id'])->toArray();
 
             $data = [];
