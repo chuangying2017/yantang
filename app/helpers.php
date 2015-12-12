@@ -57,7 +57,7 @@ if ( ! function_exists('image_url')) {
 
     function image_url($name)
     {
-        return config('filesystems.disks.qiniu.domains.default') . '/' . $name;
+        return env('QINIU_PREFIX_URL') . '/' . $name;
     }
 }
 
