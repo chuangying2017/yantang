@@ -191,7 +191,7 @@ class OrderGenerator {
         return $order_info;
     }
 
-    protected static function getOrderTitle($title, $title, $count)
+    protected static function getOrderTitle($title, $count)
     {
         if (is_null($title)) {
             if ($count > 1) {

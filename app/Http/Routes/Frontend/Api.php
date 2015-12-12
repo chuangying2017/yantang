@@ -66,7 +66,7 @@ $api->group(['namespace' => 'Marketing', 'prefix' => 'marketing'], function ($ap
     ]);
 });
 
-$api->resource('fav', 'FavController', ['only' => ['index', 'store', 'destroy']]);
+$api->resource('user/favs', 'FavController', ['only' => ['index', 'store', 'destroy']]);
 $api->resource('cart', 'CartController', ['only' => ['index', 'store', 'update', 'destroy']]);
 $api->post('orders/confirm', [
     'as'   => 'order.preConfirm',
