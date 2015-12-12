@@ -191,14 +191,14 @@ class OrderGenerator {
         return $order_info;
     }
 
-    protected static function getOrderTitle($title, $count)
+    protected static function getOrderTitle($title, $product_title, $count)
     {
         if (is_null($title)) {
             if ($count > 1) {
-                return $title . '等' . $count . '件商品';
+                return $product_title . '等' . $count . '件商品';
             }
 
-            return $title;
+            return $product_title;
         }
 
         return $title;
@@ -222,7 +222,6 @@ class OrderGenerator {
     public function confirm($uuid, $address_id, $pay_type = OrderProtocol::PAY_ONLINE)
     {
         $order_info = self::getOrder($uuid);
-
 
         try {
             $this->setMarketUsing(app('App\Services\Marketing\Items\Coupon\UseCoupon'));
