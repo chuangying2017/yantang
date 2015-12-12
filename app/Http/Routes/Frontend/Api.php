@@ -51,7 +51,7 @@ $api->resource('products', 'ProductController', ['only' => ['index', 'show']]);
 /**
  * 需要登录才能查看
  */
-$api->group(['middleware' => 'jwt.refresh'], function ($api) {
+//$api->group(['middleware' => 'jwt.refresh'], function ($api) {
 
     $api->group(['namespace' => 'Marketing', 'prefix' => 'marketing'], function ($api) {
         $api->resource('coupons', 'CouponController');
@@ -69,7 +69,7 @@ $api->group(['middleware' => 'jwt.refresh'], function ($api) {
     ]);
     $api->resource('orders', 'OrderController');
     $api->resource('address', 'AddressController');
-});
+//});
 
 
 
