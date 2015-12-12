@@ -20,8 +20,7 @@ use App\Services\Mth\MthApiService;
  * Class ClientRepository
  * @package App\Services\Client
  */
-class ClientRepository
-{
+class ClientRepository {
 
     /**
      *
@@ -48,8 +47,8 @@ class ClientRepository
 
             //create a user
             $user = $userRepo->create([
-                'name' => $username,
-                'email' => $email,
+                'name'     => $username,
+                'email'    => $email,
                 'password' => $password
             ]);
             //create a client
@@ -71,9 +70,10 @@ class ClientRepository
      * @param $id
      * @return mixed
      */
-    public static function show($id)
+    public static function show($user_id)
     {
-        $client = Client::findOrFail($id);
+        $client = Client::where('user_id', $user_id)->first();
+
         return $client;
     }
 
@@ -96,6 +96,7 @@ class ClientRepository
         $client = Client::findOrFail($id);
         $data = array_only($data, ['nickname', 'birthday', 'avatar', 'sex', 'status']);
         $client->update($data);
+
         return 1;
     }
 

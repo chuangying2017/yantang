@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder {
         $this->call(AttributeSeeder::class);
         $this->call(ImageSeeder::class);
         $this->call(NavSeeder::class);
+        $this->call(ClientSeeder::class);
 
         if (env('DB_DRIVER') == 'mysql')
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
