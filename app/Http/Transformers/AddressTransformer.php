@@ -8,6 +8,7 @@ class AddressTransformer extends TransformerAbstract {
     public function transform(Address $address)
     {
         return [
+            'id'         => $address->id,
             'name'         => $address->name,
             'mobile'       => $address->mobile,
             'province'     => $address->province,
