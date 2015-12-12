@@ -212,6 +212,13 @@ class OrderGenerator {
         return $products_info;
     }
 
+    public function fetchOrder($uuid)
+    {
+        $order_info = self::getOrder($uuid);
+
+        return $order_info;
+    }
+
     public function confirm($uuid, $address_id, $pay_type = OrderProtocol::PAY_ONLINE)
     {
         $order_info = self::getOrder($uuid);
