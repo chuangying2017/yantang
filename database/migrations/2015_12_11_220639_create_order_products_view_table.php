@@ -20,7 +20,7 @@ class CreateOrderProductsViewTable extends Migration {
             `product_sku_view`.`price` as `price`,
             `product_sku_view`.`merchant_id` as `merchant_id`,
             `product_sku_view`.`title` as `title`,
-            `product_sku_view`.`cover_image` as `image`,
+            `product_sku_view`.`cover_image` as `cover_image`,
             `order_products`.`quantity` as `quantity`,
             `order_products`.`order_id` as `order_id`,
             `order_products`.`pay_amount` as `pay_amount`,

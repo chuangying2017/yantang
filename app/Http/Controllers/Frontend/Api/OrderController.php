@@ -99,7 +99,9 @@ class OrderController extends Controller {
 
             $order = $this->orderGenerator->confirm($uuid, $address_id);
 
-            return $this->response->created(route('api.orders.show', $order['order_no']));
+            return $order;
+
+//            return $this->response->created(route('api.orders.show', $order['order_no']));
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }
