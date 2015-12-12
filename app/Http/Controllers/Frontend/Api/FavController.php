@@ -38,7 +38,12 @@ class FavController extends Controller {
 
         $fav = FavService::create($user_id, $product_id);
 
-        return $this->response->created();
+        if($fav) {
+            return $this->response->created();
+        }
+
+        return $this->response->noContent();
+
     }
 
 

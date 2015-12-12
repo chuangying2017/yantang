@@ -27,6 +27,12 @@ class FavRepository {
      */
     public static function create($user_id, $product_id)
     {
+        if ($fav = self::exits($user_id, $product_id)) {
+            self::delete($user_id, $fav['id']);
+
+            return 0;
+        }
+
         return ProductCollection::updateOrCreate([
             'product_id' => $product_id,
             'user_id'    => $user_id
@@ -35,7 +41,7 @@ class FavRepository {
 
     public static function exits($user_id, $product_id)
     {
-        return ProductCollection::where('user_id', $user_id)->where('product_id', $product_id)->count();
+        return ProductCollection::where('user_id', $user_id)->where('product_id', $product_id)->first();
     }
 
     public static function lists($user_id, $paginate = null, $sort_name = 'created_at', $sort_type = 'desc')
