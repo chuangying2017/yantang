@@ -24,6 +24,7 @@ class ProductTransformer extends TransformerAbstract {
             'favs'        => (int)$product->data->favs,
             'stocks'      => (int)$product->data->stock,
             'express_fee' => (int)$product->data->express_fee,
+            'faved'       => (boolean)$product->faved
         ];
 
         return array_merge($base_info, $detail);

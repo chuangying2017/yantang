@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\ProductTransformer;
 use App\Services\ApiConst;
+use App\Services\Product\Fav\FavService;
 use App\Services\Product\ProductConst;
 use App\Services\Product\ProductService;
 
@@ -68,8 +69,10 @@ class ProductController extends Controller {
      */
     public function show($id)
     {
+        $user_id = $this->getCurrentAuthUserId();
         $product = ProductService::show($id);
         $product->show_detail = 1;
+        $product->faved = FavService::checkFav($user_id, $id);
 
         return $this->response->item($product, new ProductTransformer());
     }
