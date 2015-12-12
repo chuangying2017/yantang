@@ -22,9 +22,11 @@ trait ProductsHelper {
     public static function checkProductCanNotAfford($product_sku_id, $quantity)
     {
         try {
-            $result = reset(self::getProductSkuInfo([compact('product_sku_id', 'quantity')]));
-            if ($result['code'] != ProductConst::CODE_SKU_AFFORD_OK) {
-                return $result['err_msg'];
+            $result = (self::getProductSkuInfo([compact('product_sku_id', 'quantity')]));
+            foreach ($result as $product_info) {
+                if ($product_info['code'] != ProductConst::CODE_SKU_AFFORD_OK) {
+                    return $result['err_msg'];
+                }
             }
         } catch (\Exception $e) {
             throw $e;
