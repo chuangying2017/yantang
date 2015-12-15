@@ -15,10 +15,39 @@ abstract class MarketingItemUsing implements MarketingInterface {
     //列出用户可用优惠
     public abstract function usableList($user_id, $order_detail);
 
-
     //通过优惠id获取优惠额度
     public abstract function discountFee($ticket_id, $pay_amount);
 
+    private static function decodeOrderInfo($order_info)
+    {
+        //处理商品信息
+        $skus = [];
+        foreach ($order_info['products'] as $sku) {
+            $skus[ $sku['product_sku_id'] ] = [
+                'product_sku_id' => $sku['product_sku_id'],
+                'quantity'       => $sku['quantity'],
+                'price'          => $sku['price'],
+                'amount'         => bcmul($sku['price'], $sku['quantity'])
+            ];
+        }
+        if ( ! count($skus)) {
+            throw new \Exception('订单数据错误');
+        }
+
+        //处理现有优惠项目
+        $coupons = array_get($order_info, 'marketing.coupons', []);
+        if ( count($coupons)) {
+            #todo
+        }
+
+
+        return [
+            'total_amount' => $order_info['total_amount'],
+            'discount_fee' => array_get($order_info, 'discount_fee', 0),
+            'skus'         => $skus
+        ];
+
+    }
 
 
     //查询优惠是否可用
@@ -31,12 +60,9 @@ abstract class MarketingItemUsing implements MarketingInterface {
      */
     public function filter($resource, $order_detail)
     {
-
         if (isset($resource['selected']) && $resource['selected']) {
             return true;
         }
-
-        $products = $order_detail['products'];
 
         //检查优惠是否生效
         if ( ! self::checkEffectTime($resource)) {
@@ -50,13 +76,12 @@ abstract class MarketingItemUsing implements MarketingInterface {
 
             return false;
         }
-        //检查订单是否存在特定商品，若优惠券有商品限制且不存在该商品则不可使用优惠券
-        $product_limit_pass = self::checkProduct($resource, $products);
-        if ( ! is_null($product_limit_pass) && ! $product_limit_pass) {
-            $this->setMessage(trans('marking.using.product_limit'));
 
-            return false;
-        }
+        $order_detail = self::decodeOrderInfo($order_detail);
+
+        $skus = $order_detail['skus'];
+
+
         //检查优惠是否可以叠加使用
         $discount_fee = array_get($order_detail, 'discount_fee', 0);
         if ( ! self::multiUse($resource, $discount_fee)) {
@@ -64,9 +89,18 @@ abstract class MarketingItemUsing implements MarketingInterface {
 
             return false;
         }
+
+        //检查订单是否存在特定商品，若优惠券有商品限制且不存在该商品则不可使用优惠券
+        $product_limit_pass = self::checkSku($resource, $skus);
+        if ( ! is_null($product_limit_pass) && ! $product_limit_pass) {
+            $this->setMessage(trans('marking.using.product_limit'));
+
+            return false;
+        }
+
         //检查订单需要支付金额是否达到要求
         $order_pay_amount = bcsub(array_get($order_detail, 'total_amount', 0), $discount_fee);
-        if ($need_price = self::amountLimit($resource, $products, $order_pay_amount)) {
+        if ($need_price = self::amountLimit($resource, $skus, $order_pay_amount)) {
             $this->setMessage(trans('marketing.using.amount_limit', ['price' => $need_price]));
 
             return false;
@@ -197,7 +231,7 @@ abstract class MarketingItemUsing implements MarketingInterface {
      * @param $products
      * @return bool
      */
-    protected static function checkProduct($limit, $products)
+    protected static function checkSku($limit, $skus)
     {
         $limit_products = MarketingProtocol::limitToArray($limit['product_limit']);
 
@@ -205,8 +239,9 @@ abstract class MarketingItemUsing implements MarketingInterface {
             return null;
         }
 
-        foreach ($products as $product) {
-            if (in_array($product['product_sku_id'], $limit_products)) {
+        //只需找到符合需求的sku优惠券就可用
+        foreach ($skus as $sku) {
+            if (in_array($sku['product_sku_id'], $limit_products)) {
                 return true;
             }
         }

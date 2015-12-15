@@ -33,7 +33,6 @@ class AdminProductController extends Controller {
             $status
         );
 
-
         return $this->response->paginator($products, new ProductTransformer());
     }
 

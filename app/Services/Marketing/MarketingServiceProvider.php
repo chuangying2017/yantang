@@ -1,8 +1,5 @@
 <?php namespace App\Services\Marketing;
 
-use App\Services\Marketing\Items\Coupon\CouponDistributor;
-use App\Services\Marketing\Items\Coupon\CouponManager;
-use App\Services\Marketing\Items\Coupon\UseCoupon;
 use Illuminate\Support\ServiceProvider;
 
 class MarketingServiceProvider extends ServiceProvider {
@@ -16,15 +13,15 @@ class MarketingServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->app->bind('marketing.distribute.coupon', function ($app) {
-            return new CouponDistributor();
+            return new Items\Coupon\CouponDistributor();
         });
 
         $this->app->bind('marketing.manager.coupon', function ($app) {
-            return new CouponManager();
+            return new Items\Coupon\CouponManager();
         });
 
         $this->app->bind('marketing.using.coupon', function ($app) {
-            return new UseCoupon();
+            return new Items\Coupon\UseCoupon();
         });
     }
 }
