@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Frontend\Api;
 
-use Illuminate\Http\Request;
+use App\Http\Transformers\FavTransformer;
+use App\Services\ApiConst;
+use App\Services\Product\Fav\FavService;
+use App\Http\Requests\Frontend\FavRequest as Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class FavController extends Controller
-{
+class FavController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
@@ -16,72 +19,45 @@ class FavController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $user_id = $this->getCurrentAuthUserId();
+        $data = FavService::lists($user_id, ApiConst::FAV_PRE_PAGE);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->response->paginator($data, new FavTransformer());
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $user_id = $this->getCurrentAuthUserId();
+        $product_id = $request->input('product_id');
+
+        $fav = FavService::create($user_id, $product_id);
+
+        if($fav) {
+            return $this->response->created();
+        }
+
+        return $this->response->noContent();
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $user_id = $this->getCurrentAuthUserId();
+        FavService::delete($user_id, $id);
+
+        return $this->response->noContent();
     }
 }

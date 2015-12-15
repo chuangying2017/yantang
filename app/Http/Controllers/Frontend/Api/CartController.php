@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Frontend\Api;
 
+use App\Http\Transformers\CartTransformer;
 use App\Services\Cart\CartService;
-use Illuminate\Http\Request;
+
+use App\Http\Requests\Frontend\CartRequest as Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -17,17 +19,10 @@ class CartController extends Controller {
      */
     public function index()
     {
-        //
-    }
+        $user_id = $this->getCurrentAuthUserId();
+        $carts = CartService::lists($user_id);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->response->collection($carts, new CartTransformer());
     }
 
     /**
@@ -38,36 +33,20 @@ class CartController extends Controller {
      */
     public function store(Request $request)
     {
-        $product_sku_id = $request->input('product_sku_id');
-        $quantity = $request->input('quantity', 1);
-        $user_id = $this->getUserId();
+        try {
+            $product_sku_id = $request->input('product_sku_id');
+            $quantity = $request->input('quantity', 1);
+            $user_id = $this->getCurrentAuthUserId();
 
-        $cart = CartService::add($user_id, $product_sku_id, $quantity);
+            $cart = CartService::add($user_id, $product_sku_id, $quantity);
 
-        return $this->response->created();
+            return $this->response->created();
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -76,9 +55,13 @@ class CartController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $cart_id)
     {
-        //
+        $quantity = $request->input('quantity') ?: 1;
+
+        $cart = CartService::update($cart_id, $quantity);
+
+        return $this->response->item($cart, new CartTransformer());
     }
 
     /**
@@ -87,8 +70,11 @@ class CartController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($cart_id)
     {
-        //
+
+        CartService::remove($cart_id);
+
+        return $this->response->noContent();
     }
 }

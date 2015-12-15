@@ -3,6 +3,7 @@
 namespace App\Services\Marketing\Traits;
 
 use App\Services\Marketing\MarketingProtocol;
+use Carbon\Carbon;
 
 trait MarketingFilter {
 
@@ -33,7 +34,7 @@ trait MarketingFilter {
         $category_limit = isset($data['category']) ? array_to_string($data['category']) : MarketingProtocol::CATEGORY_NO_LIMIT;
         $product_limit = isset($data['product']) ? array_to_string($data['product']) : MarketingProtocol::PRODUCT_LIMIT;
         $multi_use = array_get($data, 'multi', MarketingProtocol::CAN_NOT_MULTI_USE);
-        $effect_time = array_get($data, 'effect_time', MarketingProtocol::LIMIT_NO_EFFECT_TIME);
+        $effect_time = array_get($data, 'effect_time', Carbon::now());
         $expire_time = array_get($data, 'expire_time', MarketingProtocol::LIMIT_NO_EXPIRE_TIME);
         $roles = array_get($data, 'roles', null);
         $roles = $roles ? implode(',', $roles) : $roles;

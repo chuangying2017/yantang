@@ -8,17 +8,18 @@
 
 namespace App\Services\Product\Fav;
 
+/**
+ * Class FavService
+ * @package App\Services\Product\Fav
+ */
+class FavService {
 
-/**
- * Class FavService
- * @package App\Services\Product\Fav
- */
-/**
- * Class FavService
- * @package App\Services\Product\Fav
- */
-class FavService
-{
+
+    public static function lists($user_id, $paginate = null, $sort_name = 'created_at', $sort_type = 'desc')
+    {
+        return FavRepository::lists($user_id, $paginate, $sort_name, $sort_type);
+    }
+
     /**
      * @param $user_id
      * @param $product_id
@@ -35,35 +36,22 @@ class FavService
      * @return int
      * @throws \Pheanstalk\Exception
      */
-    public static function delete($user_id, $product_id)
+    public static function delete($user_id, $fav_id)
     {
-        return FavRepository::delete($user_id, $product_id);
+        return FavRepository::delete($user_id, $fav_id);
     }
 
-    /**
-     * @param $user_id
-     * @param $product_id
-     * @return bool
-     */
-    public static function isFavedByUser($user_id, $product_id)
+    public static function checkFav($user_id, $product_id)
     {
-        return DB::table('user_product_favs')->where('user_id', $user_id)->where('product_id', $product_id)->count() > 0;
+        return FavRepository::exits($user_id, $product_id);
     }
 
     /**
      * @param $product_id
      * @return int|string
      */
-    public static function deleteByProduct($product_id)
+    public static function deleteCauseProductDeleted($product_id)
     {
-        try {
-
-            DB::table('user_product_favs')->where('product_id', $product_id)->delete();
-            return 1;
-
-        } catch (Exception $e) {
-
-            return $e->getMessage();
-        }
+        return FavRepository::delete(null, $product_id);
     }
 }

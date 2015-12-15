@@ -12,8 +12,7 @@ use App\Repositories\Frontend\Auth\AuthenticationContract;
  * Class AuthController
  * @package App\Http\Controllers\Frontend\Auth
  */
-class AuthController extends Controller
-{
+class AuthController extends Controller {
 
     use ThrottlesLogins;
 
@@ -41,10 +40,12 @@ class AuthController extends Controller
     {
         if (config('access.users.confirm_email')) {
             $this->auth->create($request->all());
+
             return redirect()->route('home')->withFlashSuccess("Your account was successfully created. We have sent you an e-mail to confirm your account.");
         } else {
             //Use native auth login because do not need to check status when registering
             auth()->login($this->auth->create($request->all()));
+
             return redirect()->route('frontend.dashboard');
         }
     }
@@ -64,7 +65,7 @@ class AuthController extends Controller
      */
     public function postLogin(LoginRequest $request)
     {
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // If the class is using the Throttles Login trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
         $throttles = $this->isUsingThrottlesLoginsTrait();
@@ -107,7 +108,8 @@ class AuthController extends Controller
     public function getLogout()
     {
         $this->auth->logout();
-        return redirect()->route('home');
+
+        return $this->response->noContent();
     }
 
     /**
@@ -120,6 +122,7 @@ class AuthController extends Controller
         //Don't know why the exception handler is not catching this
         try {
             $this->auth->confirmAccount($token);
+
             return redirect()->route('frontend.dashboard')->withFlashSuccess("Your account has been successfully confirmed!");
         } catch (GeneralException $e) {
             return redirect()->back()->withInput()->withFlashDanger($e->getMessage());
@@ -135,9 +138,10 @@ class AuthController extends Controller
         //Don't know why the exception handler is not catching this
         try {
             $this->auth->resendConfirmationEmail($user_id);
-            return redirect()->route('home')->withFlashSuccess("A new confirmation e-mail has been sent to the address on file.");
+
+            return $this->response->accepted();
         } catch (GeneralException $e) {
-            return redirect()->back()->withInput()->withFlashDanger($e->getMessage());
+            $this->response->errorInternal($e->getMessage());
         }
     }
 
@@ -199,7 +203,7 @@ class AuthController extends Controller
             $socialite_enable[] = link_to_route('auth.provider', trans('labels.login_with', ['social_media' => 'Google']), 'google');
 
         for ($i = 0; $i < count($socialite_enable); $i++) {
-            $socialite_links .= ($socialite_links != '' ? '&nbsp;|&nbsp;' : '') . $socialite_enable[$i];
+            $socialite_links .= ($socialite_links != '' ? '&nbsp;|&nbsp;' : '') . $socialite_enable[ $i ];
         }
 
         return $socialite_links;

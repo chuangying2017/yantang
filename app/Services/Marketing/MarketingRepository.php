@@ -101,12 +101,12 @@ class MarketingRepository {
         $ticket_no = '';
         if ( ! is_null($need_no)) {
             $ticket_no = StringUtility::generateString(MarketingProtocol::LENGTH_OF_TICKET_NO);
-            while (Ticket::where('ticket_no', $ticket_no)->count()) {
+            while (DB::table('tickets')->where('ticket_no', $ticket_no)->count()) {
                 $ticket_no = StringUtility::generateString(MarketingProtocol::LENGTH_OF_TICKET_NO);
             }
         }
 
-        return Ticket::create(compact('user_id', 'resource_id', 'resource_type', 'ticket_no', 'status'));
+        return DB::table('tickets')->insertGetId(compact('user_id', 'resource_id', 'resource_type', 'ticket_no', 'status'));
     }
 
     public static function findTicket($ticket_id)
@@ -116,6 +116,7 @@ class MarketingRepository {
 
     public static function showTicket($ticket_id)
     {
+
         return self::queryTicket($ticket_id, ['resource']);
     }
 
@@ -163,6 +164,10 @@ class MarketingRepository {
 
         if ($ticket_id instanceof Ticket) {
             return $ticket_id;
+        }
+
+        if (is_array($ticket_id)) {
+            return Ticket::whereIn('id', $ticket_id)->get();
         }
 
         if (strlen($ticket_id) == MarketingProtocol::LENGTH_OF_TICKET_NO) {

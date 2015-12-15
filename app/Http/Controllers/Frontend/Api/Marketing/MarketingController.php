@@ -8,7 +8,7 @@ use Exception;
 use App\Services\Marketing\MarketingItemDistributor;
 use App\Services\Marketing\MarketingItemUsing;
 use App\Services\Marketing\MarketingProtocol;
-use Illuminate\Http\Request;
+use App\Http\Requests\Frontend\Api\MarketingRequest as Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -18,11 +18,11 @@ class MarketingController extends Controller {
     /**
      * @var MarketingItemDistributor
      */
-    private $distributor;
+    protected $distributor;
     /**
      * @var MarketingItemUsing
      */
-    private $using;
+    protected $using;
 
     /**
      * @param MarketingItemDistributor $distributor
@@ -38,17 +38,15 @@ class MarketingController extends Controller {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        #todo 获取用户id
-        $user_id = 1;
+        $user_id = $this->getCurrentAuthUserId();
 
         $status = $request->input('status', MarketingProtocol::STATUS_OF_PENDING);
         $tickets = $this->using->lists($user_id, $status);
 
-        return $this->respondData($tickets);
+        return $tickets;
     }
 
     /**
@@ -61,7 +59,6 @@ class MarketingController extends Controller {
     {
         $resource_id = $request->input('resource_id');
 
-
         #todo 获取用户信息
         $user_info = [
             'id'    => 1,
@@ -69,16 +66,15 @@ class MarketingController extends Controller {
             'level' => 0,
         ];
 
-
         try {
             $this->distributor->send($resource_id, $user_info);
         } catch (MarketingItemDistributeException $e) {
-            return $this->respondLogicError(400, $e->getMessage());
+            $this->response->errorBadRequest($e->getMessage());
         } catch (Exception $e) {
-            return $this->respondLogicError(400, $e->getMessage());
+            $this->response->errorInternal($e->getMessage());
         }
 
-        return $this->respondOk();
+        return $this->response->created();
     }
 
     /**

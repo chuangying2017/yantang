@@ -9,6 +9,10 @@ class Address extends Model
 {
     use SoftDeletes;
 
+    protected $guarded = ['id'];
+
+    protected $table = 'addresses';
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');

@@ -10,5 +10,4 @@ class ProductSkuView extends Model {
     protected $table = 'product_sku_view';
 
 
-
 }

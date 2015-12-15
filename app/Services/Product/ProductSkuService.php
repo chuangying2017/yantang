@@ -79,7 +79,10 @@ class ProductSkuService {
     {
         $sku = ProductSku::findOrFail($product_sku_id);
 
-        return $sku->increment('stock', $quantity);
+        $sku->increment('stock', $quantity);
+        $sku->decrement('sales', $quantity);
+
+        return $quantity;
     }
 
     /**
@@ -91,7 +94,10 @@ class ProductSkuService {
     {
         $sku = ProductSku::findOrFail($product_sku_id);
 
-        return $sku->decrement('stock', $quantity);
+        $sku->decrement('stock', $quantity);
+        $sku->increment('sales', $quantity);
+
+        return $quantity;
     }
 
     /**
@@ -125,21 +131,16 @@ class ProductSkuService {
      */
     public static function deleteByProduct($product_id)
     {
-        try {
-            $product = Product::find($product_id);
-            if ( ! $product) {
-                throw new Exception('PRODUCT NOT FOUND');
-            }
-            $skus = $product->skus();
-            foreach ($skus as $sku) {
-                ProductSkuRepository::delete($sku->id);
-            }
-
-            return 1;
-        } catch (Exception $e) {
-
-            return $e->getMessage();
+        $product = Product::find($product_id);
+        if ( ! $product) {
+            throw new Exception('PRODUCT NOT FOUND');
         }
+        $skus = $product->skus();
+        foreach ($skus as $sku) {
+            ProductSkuRepository::delete($sku->id);
+        }
+
+        return 1;
     }
 
     /**

@@ -8,8 +8,8 @@ class CartRepository {
     public static function create($user_id, $product_sku_id, $quantity = 1)
     {
         return Cart::updateOrCreate(
-            [compact('user_id', 'product_sku_id')],
-            [compact('user_id', 'product_sku_id', 'quantity')]
+            compact('user_id', 'product_sku_id'),
+            compact('user_id', 'product_sku_id', 'quantity')
         );
     }
 
@@ -22,7 +22,7 @@ class CartRepository {
             return Cart::whereIn('id', $cart_id)->get();
         }
 
-        return Cart::find($cart_id);
+        return Cart::findOrFail($cart_id);
     }
 
     protected static function query($user_id, $product_sku_id = null)
@@ -65,7 +65,7 @@ class CartRepository {
 
     public static function exist($user_id, $product_sku_id)
     {
-        return Cart::where(compact('user_id', 'product_sku_id'))->first();
+        return Cart::where('user_id', $user_id)->where('product_sku_id', $product_sku_id)->first();
     }
 
 }

@@ -11,8 +11,8 @@ namespace App\Services\Client;
 
 use App\Models\Address;
 
-class AddressRepository
-{
+class AddressRepository {
+
     /**
      * create a new user address
      * @param $data
@@ -21,17 +21,28 @@ class AddressRepository
     public static function create($data)
     {
         $address = Address::create([
-            'user_id' => $data['user_id'],
-            'name' => $data['name'],
-            'mobile' => $data['mobile'],
-            'province' => $data['province'],
-            'city' => $data['city'],
-            'detail' => $data['detail'],
-            'role' => $data['role'],
+            'user_id'      => $data['user_id'],
+            'name'         => $data['name'],
+            'mobile'       => $data['mobile'],
+            'province'     => $data['province'],
+            'district'     => $data['district'],
+            'city'         => $data['city'],
+            'detail'       => $data['detail'],
+            'role'         => $data['role'],
             'display_name' => $data['display_name']
         ]);
 
         return $address;
+    }
+
+    public static function show($address_id)
+    {
+        return Address::findOrFail($address_id);
+    }
+
+    public static function lists($user_id)
+    {
+        return Address::where('user_id', $user_id)->get();
     }
 
     /**

@@ -9,16 +9,29 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 abstract class Controller extends BaseController
 {
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers;
 
-    public function getUserId()
+
+    protected function getCurrentAuthUserId()
     {
-        #todo @troy get user from jwt
-        $user_id = 0;
-        return $user_id;
+        #todo remove static user
+//        return 6;
+
+        $user = $this->getCurrentAuthUser();
+
+        return $user['id'];
+    }
+
+    protected function getCurrentAuthUser()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        return $user;
     }
 
 }

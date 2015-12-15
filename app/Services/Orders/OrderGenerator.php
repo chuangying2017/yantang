@@ -1,6 +1,7 @@
 <?php namespace App\Services\Orders;
 
 use App\Services\Cart\CartService;
+use App\Services\Client\AddressService;
 use App\Services\Marketing\MarketingItemDistributor;
 use App\Services\Marketing\MarketingItemUsing;
 use App\Services\Marketing\MarketingProtocol;
@@ -36,40 +37,68 @@ class OrderGenerator {
      * @param $order_products_request
      * 格式
      * $order_products_request = [
-     *  'products' => [
      *    [
      *      'product_sku_id' => 1,
      *      'quantity'       => 2,
      *      ]
-     *      ]
      * ];
      * @return array
-     *
-     *
-     *
      */
     public function buy($user_id, $order_products_request, $carts = null)
     {
-        $products_info = self::checkProductSku($order_products_request['products']);
-        $order_info = self::filterOrderProduct($products_info, $order_products_request['products']);
+        $products_info = self::getProductSkuInfo($order_products_request);
+
+        $order_info = self::filterOrderProduct($products_info, $order_products_request);
+
         $order_info['user_id'] = $user_id;
         $order_info['uuid'] = Uuid::uuid();
 
+        $this->setMarketUsing(app('App\Services\Marketing\Items\Coupon\UseCoupon'));
         $order_info['marketing']['coupons'] = $this->marketingItemUsing->usableList($user_id, $order_info);
+
 
         if ( ! is_null($carts)) {
             $order_info['carts'] = $carts;
         }
 
-        event('App\Services\Orders\Event\OrderRequest', $order_info);
+        event(new \App\Services\Orders\Event\OrderRequest($order_info));
 
         return $order_info;
     }
 
-    public function requestDiscount($resource, $uuid)
+    public function setMarketUsing($marketingUsing)
+    {
+        $this->marketingItemUsing = $marketingUsing;
+    }
+
+    public function requestDiscount($resources, $uuid)
     {
         $order_info = self::getOrder($uuid);
 
+        if ( ! count($resources)) {
+            return $order_info;
+        }
+
+        $order_info = self::removeCoupon($order_info);
+
+        if ($resources->count() > 1) {
+            foreach ($resources as $resource) {
+                $order_info = $this->orderCheckCoupon($resource, $order_info);
+            }
+        } else {
+            $order_info = $this->orderCheckCoupon($resources, $order_info);
+        }
+
+
+        $order_info['marketing']['coupons'] = $this->marketingItemUsing->usableList($order_info['user_id'], $order_info);
+
+        event(new \App\Services\Orders\Event\OrderRequest($order_info));
+
+        return $order_info;
+    }
+
+    protected function orderCheckCoupon($resource, $order_info)
+    {
         if ($this->marketingItemUsing->filter($resource, $order_info)) {
             //查看能否使用
             $discount_fee = $this->marketingItemUsing->discountFee($resource, self::orderPayAmount($order_info));
@@ -80,36 +109,48 @@ class OrderGenerator {
             #todo 修改订单优惠额，添加优惠项目
             //标记使用的优惠券
             if ($resource['resource_type'] == MarketingProtocol::TYPE_OF_COUPON) {
-                $order_info['marketing']['coupons'] = self::orderUseCoupon($resource, $order_info);
+                $order_info['marketing']['coupons'] = self::orderUseCoupon($resource, $order_info['marketing']['coupons']);
             }
+
             #todo 多种优惠形式
 
+            return $order_info;
+
         }
+    }
 
-        $order_info['marketing']['coupons'] = $this->marketingItemUsing->usableList($order_info['user_id'], $order_info);
-
-        event('App\Services\Orders\Event\OrderRequest', $order_info);
+    protected static function removeCoupon($order_info)
+    {
+        if (count($order_info['marketing']['coupons'])) {
+            foreach ($order_info['marketing']['coupons'] as $coupon) {
+                if ($coupon['selected']) {
+                    $order_info['discount_fee'] -= $coupon['discount_fee'];
+                    $coupon['selected'] = false;
+                }
+            }
+        }
 
         return $order_info;
     }
 
+
     //标记使用的优惠券
-    protected static function orderUseCoupon($resource, $order_info)
+    protected static function orderUseCoupon($resource, $coupons)
     {
+        $resource['selected'] = true;
         $find = 0;
-        foreach ($order_info['marketing']['coupons'] as $key => $coupon) {
+        foreach ($coupons as $key => $coupon) {
             if ($coupon['id'] == $resource['id']) {
                 $find = 1;
-                $order_info['marketing']['coupons'][ $key ]['selected'] = true;
+                $coupons[ $key ] = $resource;
                 break;
             }
         }
         if ( ! $find) {
-            $resource['selected'] = true;
-            $order_info['marketing']['coupons'][] = $resource;
+            $coupons[] = $resource;
         }
 
-        return $order_info['marketing']['coupons'];
+        return $coupons;
     }
 
     protected static function orderPayAmount($order_info)
@@ -128,12 +169,16 @@ class OrderGenerator {
         ];
         foreach ($products_info as $key => $product_info) {
             if (self::productCanAfford($product_info)) {
-                $order_info['total_amount'] = bcadd($order_info['total_amount'], $product_info['price']);
-                $order_info['products'][ $key ] = $product_info['data'];
+                $product_info = $product_info['data'];
+                $product_info['product_sku_id'] = $product_info['id'];
+                $order_info['products'][ $key ] = $product_info;
+
+
                 //加入商品购买数量
                 foreach ($order_request_products as $request_key => $order_request_product) {
                     if ($order_request_product['product_sku_id'] == $product_info['product_sku_id']) {
-                        $order_info['products'][ $key ]['quantity'] = $order_request_product['quantity'];
+                        $order_info['products'][ $key ]['quantity'] = intval($order_request_product['quantity']);
+                        $order_info['total_amount'] = intval(bcadd($order_info['total_amount'], bcmul($product_info['price'], intval($order_request_product['quantity']))));
                         unset($order_request_products[ $request_key ]);
                         break;
                     }
@@ -142,17 +187,18 @@ class OrderGenerator {
             }
         }
 
+
         return $order_info;
     }
 
-    protected static function getOrderTitle($title, $title, $count)
+    protected static function getOrderTitle($title, $product_title, $count)
     {
         if (is_null($title)) {
             if ($count > 1) {
-                return $title . '等' . $count . '件商品';
+                return $product_title . '等' . $count . '件商品';
             }
 
-            return $title;
+            return $product_title;
         }
 
         return $title;
@@ -166,22 +212,29 @@ class OrderGenerator {
         return $products_info;
     }
 
-    public function confirm($uuid, $address)
+    public function fetchOrder($uuid)
+    {
+        $order_info = self::getOrder($uuid);
+
+        return $order_info;
+    }
+
+    public function confirm($uuid, $address_id, $pay_type = OrderProtocol::PAY_ONLINE)
     {
         $order_info = self::getOrder($uuid);
 
         try {
+            $this->setMarketUsing(app('App\Services\Marketing\Items\Coupon\UseCoupon'));
             $coupons = $this->doubleCheckCoupon($order_info);
 
-            $order_info['address'] = $address;
+            $order_info['address'] = AddressService::orderAddress($address_id);
 
             //生成订单，锁定
+            $order_info['pay_type'] = $pay_type;
             $order_main = OrderRepository::generateOrder($order_info);
 
-            event('App\Services\Orders\Event\OrderConfirm', [
-                'order_id'   => $order_main['id'],
-                'order_info' => $order_info
-            ]);
+
+            event(new \App\Services\Orders\Event\OrderConfirm($order_main['id'], $order_info));
 
             return $order_main;
 
@@ -221,8 +274,13 @@ class OrderGenerator {
         }
         $order_info['marketing']['coupons'] = $coupons;
         $checked_coupon = $this->marketingItemUsing->usableList($order_info['user_id'], $order_info);
-        $use_able_coupon = array_filter($checked_coupon, function ($coupon) {
-            return $coupon->can_use;
+
+        if ( ! count($checked_coupon)) {
+            return $checked_coupon;
+        }
+
+        $use_able_coupon = array_filter($checked_coupon->toArray(), function ($coupon) {
+            return $coupon['can_use'];
         });
         if (count($use_able_coupon) != count($coupons)) {
             $wrong_tickets = array_filter($checked_coupon, function ($coupon) {

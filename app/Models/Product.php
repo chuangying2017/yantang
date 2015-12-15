@@ -50,7 +50,7 @@ class Product extends Model {
 
     public function skuViews()
     {
-        return $this->hasMany('App\Models\productSkuView', 'product_id', 'id');
+        return $this->hasMany('App\Models\ProductSkuView', 'product_id', 'id');
     }
 
     public function scopeStatus($query, $status)

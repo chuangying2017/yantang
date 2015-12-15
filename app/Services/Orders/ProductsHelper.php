@@ -1,10 +1,11 @@
 <?php namespace App\Services\Orders;
 
-use App\Services\Product\ProductSkuService;
-use App\Services\Product\ProductConst;
 
 namespace App\Services\Orders;
 
+
+use App\Services\Product\ProductConst;
+use App\Services\Product\ProductSkuService;
 
 trait ProductsHelper {
 
@@ -20,9 +21,15 @@ trait ProductsHelper {
 
     public static function checkProductCanNotAfford($product_sku_id, $quantity)
     {
-        $result = self::getProductSkuInfo(compact('product_sku_id', 'quantity'));
-        if ($result['code'] != ProductConst::CODE_SKU_AFFORD_OK) {
-            return $result['err_msg'];
+        try {
+            $result = (self::getProductSkuInfo([compact('product_sku_id', 'quantity')]));
+            foreach ($result as $product_info) {
+                if ($product_info['code'] != ProductConst::CODE_SKU_AFFORD_OK) {
+                    return $result['err_msg'];
+                }
+            }
+        } catch (\Exception $e) {
+            throw $e;
         }
 
         return false;

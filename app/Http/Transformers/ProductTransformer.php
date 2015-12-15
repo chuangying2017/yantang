@@ -5,12 +5,12 @@ use League\Fractal\TransformerAbstract;
 
 class ProductTransformer extends TransformerAbstract {
 
-    protected $defaultIncludes = [];
 
     public function transform(Product $product)
     {
         $detail = [];
         if (isset($product->show_detail)) {
+            $this->setDefaultIncludes(['img', 'skus']);
             $detail = $this->transformDetailData($product);
         }
 
@@ -24,6 +24,7 @@ class ProductTransformer extends TransformerAbstract {
             'favs'        => (int)$product->data->favs,
             'stocks'      => (int)$product->data->stock,
             'express_fee' => (int)$product->data->express_fee,
+            'faved'       => (boolean)$product->faved
         ];
 
         return array_merge($base_info, $detail);
@@ -43,10 +44,8 @@ class ProductTransformer extends TransformerAbstract {
         return $this->collection($skus, new ProductSkuTransformer());
     }
 
-
     protected function transformDetailData(Product $product)
     {
-        $this->defaultIncludes = array_merge($this->defaultIncludes, ['img', 'skus']);
 
         return array_merge($this->transformDetail($product), $this->transformMeta($product));
     }

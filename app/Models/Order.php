@@ -18,13 +18,23 @@ class Order extends Model {
         return $this->hasMany('App\Models\OrderProduct', 'order_id', 'id');
     }
 
+    public function skus()
+    {
+        return $this->hasMany('App\Models\OrderProductView', 'order_id', 'id');
+    }
+
     public function address()
     {
-        return $this->hasMany('App\Models\OrderAddress', 'order_id', 'id');
+        return $this->hasOne('App\Models\OrderAddress', 'order_id', 'id');
     }
 
     public function billings()
     {
         return $this->hasMany('App\Models\OrderBilling', 'order_id', 'id');
+    }
+
+    public function express()
+    {
+        return $this->hasOne('App\Models\OrderDeliver', 'order_id', 'id');
     }
 }

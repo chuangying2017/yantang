@@ -49,14 +49,14 @@ final class ProductConst {
     }
 
 
-    public static function openStatus($key = null, $key = false)
+    public static function openStatus($key = null, $find_key = false)
     {
         $data = [
             self::VAR_PRODUCT_OPEN_STATUS_NOW   => '马上开售',
             self::VAR_PRODUCT_OPEN_STATUS_FIXED => '定时开售'
         ];
 
-        if ($key) {
+        if ($find_key) {
             return isset($data[ $key ]) ? $key : self::VAR_PRODUCT_OPEN_STATUS_NOW;
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+$api = app('Dingo\Api\Routing\Router');
+require(__DIR__ . "/api.php");
 
 /**
  * Switch between the included languages
@@ -46,10 +48,6 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
 
     });
 });
-
-
-$api = app('Dingo\Api\Routing\Router');
-require(__DIR__ . "/api.php");
 
 
 require(__DIR__ . "/Routes/test.php");
