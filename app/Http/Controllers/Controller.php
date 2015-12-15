@@ -11,7 +11,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-abstract class Controller extends BaseController {
+abstract class Controller extends BaseController
+{
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers;
 
@@ -19,7 +20,7 @@ abstract class Controller extends BaseController {
     protected function getCurrentAuthUserId()
     {
         #todo remove static user
-        return 6;
+//        return 6;
 
         $user = $this->getCurrentAuthUser();
 
