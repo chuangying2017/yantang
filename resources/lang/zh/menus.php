@@ -67,7 +67,6 @@ return [
             'ru' => 'Russian',
             'sv' => 'Swedish',
             'zh' => '中文',
-            'zh-CN' => '中文',
         ],
     ],
 ];

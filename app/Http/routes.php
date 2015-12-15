@@ -16,7 +16,7 @@ $router->group(['namespace' => 'Language'], function () use ($router) {
  */
 $router->group(['namespace' => 'Frontend'], function () use ($router) {
     require(__DIR__ . "/Routes/Frontend/Frontend.php");
-//    require(__DIR__ . "/Routes/Frontend/Access.php");
+    require(__DIR__ . "/Routes/Frontend/Access.php");
 });
 
 
@@ -33,8 +33,17 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
          * Note: Administrator has all permissions so you do not have to specify the administrator role everywhere.
          */
         $router->group(['middleware' => 'access.routeNeedsPermission:view-backend'], function () use ($router) {
+            require(__DIR__ . "/Routes/Backend/Access.php");
             require(__DIR__ . "/Routes/Backend/Dashboard.php");
-            require(__DIR__ . "/Routes/Backend/Dashboard.php");
+            require(__DIR__ . "/Routes/Backend/Product.php");
+            require(__DIR__ . "/Routes/Backend/Merchant.php");
+            require(__DIR__ . "/Routes/Backend/Marketing.php");
+            require(__DIR__ . "/Routes/Backend/Client.php");
+            require(__DIR__ . "/Routes/Backend/Order.php");
+            require(__DIR__ . "/Routes/Backend/Express.php");
+            require(__DIR__ . "/Routes/Backend/Account.php");
+            require(__DIR__ . "/Routes/Backend/Image.php");
+            require(__DIR__ . "/Routes/Backend/Article.php");
         });
 
     });
