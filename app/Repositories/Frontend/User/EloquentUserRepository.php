@@ -54,7 +54,7 @@ class EloquentUserRepository implements UserContract
             'confirmation_code' => md5(uniqid(mt_rand(), true)),
             'confirmed' => config('access.users.confirm_email') ? 0 : 1,
         ]);
-        $user->attachRole($this->role->getDefaultUserRole());
+        $user->attachRole($this->role->getDefaultUseRole());
 
         if (config('access.users.confirm_email') && $provider === false)
 
