@@ -11,8 +11,7 @@ use App\Repositories\Backend\Role\RoleRepositoryContract;
  * Class EloquentUserRepository
  * @package App\Repositories\User
  */
-class EloquentUserRepository implements UserContract
-{
+class EloquentUserRepository implements UserContract {
 
     /**
      * @var RoleRepositoryContract
@@ -48,11 +47,11 @@ class EloquentUserRepository implements UserContract
     public function create($data, $provider = false)
     {
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $provider ? null : $data['password'],
+            'name'              => $data['name'],
+            'email'             => $data['email'],
+            'password'          => $provider ? null : $data['password'],
             'confirmation_code' => md5(uniqid(mt_rand(), true)),
-            'confirmed' => config('access.users.confirm_email') ? 0 : 1,
+            'confirmed'         => config('access.users.confirm_email') ? 0 : 1,
         ]);
         $user->attachRole($this->role->getDefaultUserRole());
 
@@ -74,14 +73,14 @@ class EloquentUserRepository implements UserContract
     {
         $user = User::where('email', $data->email)->first();
         $providerData = [
-            'avatar' => $data->avatar,
-            'provider' => $provider,
+            'avatar'      => $data->avatar,
+            'provider'    => $provider,
             'provider_id' => $data->id,
         ];
 
-        if (!$user) {
+        if ( ! $user) {
             $user = $this->create([
-                'name' => $data->name,
+                'name'  => $data->name,
                 'email' => $data->email,
             ], true);
         }
@@ -115,21 +114,20 @@ class EloquentUserRepository implements UserContract
      * @param $providerData
      * @param $user
      * @return mixed|void
-
      */
     public function checkIfUserNeedsUpdating($provider, $providerData, $user)
     {
         //Have to first check to see if name and email have to be updated
         $userData = [
             'email' => $providerData->email,
-            'name' => $providerData->name,
+            'name'  => $providerData->name,
         ];
         $dbData = [
             'email' => $user->email,
-            'name' => $user->name,
+            'name'  => $user->name,
         ];
         $differences = array_diff($userData, $dbData);
-        if (!empty($differences)) {
+        if ( ! empty($differences)) {
             $user->email = $providerData->email;
             $user->name = $providerData->name;
             $user->save();
@@ -200,6 +198,7 @@ class EloquentUserRepository implements UserContract
 
             if ($user->confirmation_code == $token) {
                 $user->confirmed = 1;
+
                 return $user->save();
             }
 
@@ -219,7 +218,7 @@ class EloquentUserRepository implements UserContract
         if ( ! $user instanceof User)
             $user = User::findOrFail($user);
 
-        return Mail::send('emails.confirm', ['token' => $user->confirmation_code], function ($message) use ($user) {
+        return Mail::queue('emails.confirm', ['token' => $user->confirmation_code], function ($message) use ($user) {
             $message->to($user->email, $user->name)->subject(app_name() . ': Confirm your account!');
         });
     }

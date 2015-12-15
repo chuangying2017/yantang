@@ -16,8 +16,8 @@ use Qiniu\Http\Client;
  * Class UserService
  * @package App\Services\User
  */
-class ClientService
-{
+class ClientService {
+
     /**
      * @param $username
      * @param $password
@@ -26,9 +26,9 @@ class ClientService
      * @return static
      * @throws Exceptions\ClientException
      */
-    public static function create($username, $password, $email, $phone = null)
+    public static function create($user)
     {
-        return ClientRepository::create($username, $password, $email, $phone);
+        return ClientRepository::create($user);
     }
 
     /**

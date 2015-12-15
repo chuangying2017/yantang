@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Frontend\Api\Auth;
 
+use App\Services\Mth\MthApiService;
 use Dingo\Api\Facade\API;
 use Illuminate\Http\Request;
 use App\Exceptions\GeneralException;
@@ -41,16 +42,18 @@ class AuthController extends Controller {
      */
     public function postRegister(RegisterRequest $request)
     {
-        if (config('access.users.confirm_email')) {
 
-            $user = $this->auth->create($request->all());
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $info = MthApiService::registerGetUser($email, $password);
 
-            $token = JWTAuth::fromUser($user);
-
-        } else {
-            //Use native auth login because do not need to check status when registering
-            $token = JWTAuth::fromUser($this->auth->create($request->all()));
+        if ( ! $info) {
+            $this->response->errorInternal('每天惠api错误');
         }
+
+        $user = $this->auth->create($request->all());
+
+        $token = JWTAuth::fromUser($user);
 
         return response()->json(compact('token'));
     }

@@ -88,6 +88,10 @@ class CartService {
     {
         $carts = CartRepository::get($cart_id);
 
+        if ( ! count($carts)) {
+            throw new \Exception('购物车信息不存在');
+        }
+
         return $carts->toArray();
     }
 
