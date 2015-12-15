@@ -23,6 +23,12 @@ class OrderGenerator {
         $this->marketingItemUsing = $marketingItemUsing;
     }
 
+    /**
+     * 查询购物车信息,
+     * @param $user_id
+     * @param $carts
+     * @return array
+     */
     public function buyCart($user_id, $carts)
     {
         $order_products_request['products'] = CartService::take($carts);

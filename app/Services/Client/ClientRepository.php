@@ -36,34 +36,16 @@ class ClientRepository {
      * @return static
      * @throws ClientException
      */
-    public static function create($username, $password, $email, $phone)
+    public static function create($user)
     {
-        /**
-         * sync from mth
-         */
-        $info = MthApiService::registerGetUser($username, $password, $email, $phone = null);
-        if ($info) {
-            $userRepo = new EloquentUserRepository(new EloquentRoleRepository);
+        //create a client
+        Client::firstOrCreate(['user_id' => $user->id]);
+        //create wallet
+        Wallet::firstOrCreate(['user_id' => $user->id]);
+        //create creditWallet
+        CreditsWallet::firstOrCreate(['user_id' => $user->id]);
 
-            //create a user
-            $user = $userRepo->create([
-                'name'     => $username,
-                'email'    => $email,
-                'password' => $password
-            ]);
-            //create a client
-            Client::create(['user_id' => $user->id]);
-            //create wallet
-            Wallet::create(['user_id' => $user->id]);
-            //create creditWallet
-            CreditsWallet::create(['user_id' => $user->id]);
-
-            return ['user_id' => $user->id];
-
-        } else {
-            throw new ClientException(self::CREATE_USER_ERROR);
-        }
-
+        return ['user_id' => $user->id];
     }
 
     /**

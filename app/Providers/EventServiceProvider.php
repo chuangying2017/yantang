@@ -26,6 +26,9 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Frontend\Auth\UserLoggedOutHandler',
         ],
 
+        'App\Events\Frontend\Auth\UserRegister' => [
+            'App\Listeners\Frontend\Auth\CreateClientForUser',
+        ],
 
         'App\Services\Orders\Event\OrderRequest' => [
             'App\Services\Orders\Listeners\CacheOrderRequestData',
