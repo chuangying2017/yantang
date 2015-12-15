@@ -110,9 +110,10 @@ class ProductSkuService {
         foreach ($queryArr as $query) {
             $sku = ProductSkuView::findOrFail($query['product_sku_id']);
             $temp = [
-                "product_sku_id" => $query['product_sku_id'],
+                'product_sku_id' => $query['product_sku_id'],
                 'data'           => $sku
             ];
+            #TODO @bryant 判断其他边界条件,例如商品是否上架,是否开售,是否限购,etc
             if ($sku->stock >= $query['quantity']) {
                 $temp['code'] = ProductConst::CODE_SKU_AFFORD_OK;
             } else {

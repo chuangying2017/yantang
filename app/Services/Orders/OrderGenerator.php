@@ -50,24 +50,29 @@ class OrderGenerator {
      * ];
      * @return array
      */
-    public function buy($user_id, $order_products_request, $carts = null)
+    protected function buy($user_id, $order_products_request, $carts = null)
     {
-        $products_info = self::getProductSkuInfo($order_products_request);
+        $order_products_info = self::getProductSkuInfo($order_products_request);
 
-        $order_info = self::filterOrderProduct($products_info, $order_products_request);
+        if ( ! $order_products_info['success']) {
+            throw new \Exception($order_products_info['message']);
+        }
+
+        $order_info = self::filterOrderSku($order_products_info['data']);
+        $order_info = self::filterMarketingInfo($user_id, $order_info);
 
         $order_info['user_id'] = $user_id;
         $order_info['uuid'] = Uuid::uuid();
-
-        $this->setMarketUsing(app('App\Services\Marketing\Items\Coupon\UseCoupon'));
-        $order_info['marketing']['coupons'] = $this->marketingItemUsing->usableList($user_id, $order_info);
-
-
-        if ( ! is_null($carts)) {
-            $order_info['carts'] = $carts;
-        }
+        $order_info['carts'] = $carts;
 
         event(new \App\Services\Orders\Event\OrderRequest($order_info));
+
+        return $order_info;
+    }
+
+    private static function filterMarketingInfo($user_id, $order_info)
+    {
+        $order_info['marketing']['coupons'] = app('marketing.using.coupon')->usableList($user_id, $order_info);
 
         return $order_info;
     }
@@ -164,42 +169,32 @@ class OrderGenerator {
         return bcsub($order_info['total_amount'], array_get($order_info, 'discount_fee', 0));
     }
 
-    protected static function filterOrderProduct($products_info, $order_request_products)
+    protected static function filterOrderSku($order_skus_info)
     {
-
         $order_info = [
             'total_amount' => 0,
             'discount_fee' => 0,
             'products'     => [],
             'title'        => null
         ];
-        foreach ($products_info as $key => $product_info) {
-            if (self::productCanAfford($product_info)) {
-                $product_info = $product_info['data'];
-                $product_info['product_sku_id'] = $product_info['id'];
-                $order_info['products'][ $key ] = $product_info;
 
+        foreach ($order_skus_info as $key => $order_sku_info) {
 
-                //加入商品购买数量
-                foreach ($order_request_products as $request_key => $order_request_product) {
-                    if ($order_request_product['product_sku_id'] == $product_info['product_sku_id']) {
-                        $order_info['products'][ $key ]['quantity'] = intval($order_request_product['quantity']);
-                        $order_info['total_amount'] = intval(bcadd($order_info['total_amount'], bcmul($product_info['price'], intval($order_request_product['quantity']))));
-                        unset($order_request_products[ $request_key ]);
-                        break;
-                    }
-                }
-                $order_info['title'] = self::getOrderTitle($order_info['title'], $product_info['title'], count($products_info));
-            }
+            $order_info['products'][ $key ] = $order_sku_info;
+            $order_info['total_amount'] = bcadd(
+                $order_info['total_amount'],
+                bcmul($order_sku_info['price'], $order_sku_info['quantity'])
+            );
+
+            $order_info['title'] = self::getOrderTitle($order_info['title'], $order_sku_info['title'], count($order_skus_info));
         }
-
 
         return $order_info;
     }
 
-    protected static function getOrderTitle($title, $product_title, $count)
+    protected static function getOrderTitle($order_title, $product_title, $count)
     {
-        if (is_null($title)) {
+        if (is_null($order_title)) {
             if ($count > 1) {
                 return $product_title . '等' . $count . '件商品';
             }
@@ -207,7 +202,7 @@ class OrderGenerator {
             return $product_title;
         }
 
-        return $title;
+        return $order_title;
     }
 
 
@@ -253,7 +248,7 @@ class OrderGenerator {
     protected function doubleCheckProduct($products)
     {
         $products_info = self::checkProductSku($products);
-        $order_info = self::filterOrderProduct($products_info, $products);
+        $order_info = self::filterOrderSku($products_info, $products);
         $checked_products = $order_info['products'];
         $afford_products = array_filter($checked_products, function ($product) {
             return $this->productCanAfford($product);
@@ -268,7 +263,8 @@ class OrderGenerator {
         return $products;
     }
 
-    protected function doubleCheckCoupon($order_info)
+    protected
+    function doubleCheckCoupon($order_info)
     {
         $coupons = array_get($order_info, 'marketing.coupons', []);
         if (count($coupons)) {
