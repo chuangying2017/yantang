@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDiscountLimit extends Migration
-{
+class CreateDiscountLimit extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -14,10 +14,12 @@ class CreateDiscountLimit extends Migration
     {
         Schema::create('discount_limit', function (Blueprint $table) {
             $table->increments('id');
+            $table->tinyInteger('enable')->default(1);
             $table->integer('quantity_per_user')->default(1);
             $table->string('roles')->nullable();
             $table->string('level');
             $table->integer('quantity');
+            $table->integer('seed_count')->default(0);
             $table->unsignedInteger('amount_limit');
             $table->string('category_limit');
             $table->string('product_limit');

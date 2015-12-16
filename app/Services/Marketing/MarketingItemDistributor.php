@@ -39,12 +39,17 @@ abstract class MarketingItemDistributor {
     public function filer($resource, $user_info)
     {
         $user_id = array_get($user_info, 'id');
-        $success = 1;
         $user_level = array_get($user_info, 'level', 0);
         $user_role = array_get($user_info, 'role', 0);
 
         $resource_id = $resource['id'];
         $limits = $resource['limits'];
+
+        if ( ! $this->checkEnable($limits['enable'])) {
+            $this->setErrorMessage(trans('marketing.distribute.marketing_item_expired'));
+
+            return 0;
+        }
 
         if ( ! $this->checkEffectTime($limits['expire_time'])) {
             $this->setErrorMessage(trans('marketing.distribute.marketing_item_expired'));
@@ -52,7 +57,7 @@ abstract class MarketingItemDistributor {
             return 0;
         }
 
-        if ( ! $this->checkQuantity($limits['quantity'])) {
+        if ( ! $this->checkQuantity(bcsub($limits['quantity'], $limits['seed_count']))) {
             $this->setErrorMessage(trans('marketing.distribute.stock_out'));
 
             return 0;
@@ -79,7 +84,12 @@ abstract class MarketingItemDistributor {
             return 0;
         }
 
-        return $success;
+        return 1;
+    }
+
+    protected function checkEnable($enable)
+    {
+        return $enable == MarketingProtocol::DISCOUNT_ENABLE ? 1 : 0;
     }
 
     protected function checkQuantity($quantity)

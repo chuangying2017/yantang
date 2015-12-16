@@ -37,18 +37,9 @@ class CouponController extends Controller {
     {
         $coupons = $this->couponManager->lists(null, ApiConst::COUPON_PER_PAGE);
 
-        return $this->response->paginator($coupons, new CouponTransformer);
+        return $this->response->paginator($coupons, new CouponTransformer());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -60,12 +51,12 @@ class CouponController extends Controller {
     {
         $input = $request->all();
         try {
-            $coupon_id = $this->couponManager->create($input);
+            $coupon = $this->couponManager->create($input);
         } catch (\Exception $e) {
             $this->response->errorInternal();
         }
 
-        return $this->response->created(version('v1')->route('api.admin.marketing.coupons.show', $coupon_id));
+        return $this->response->item($coupon, new CouponTransformer())->setStatusCode(201);
     }
 
     /**
@@ -81,16 +72,6 @@ class CouponController extends Controller {
         return $this->response->item($coupon, new CouponTransformer());
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -99,9 +80,13 @@ class CouponController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $coupon_id)
     {
-        //
+        $input = $request->all();
+
+        $coupon = $this->couponManager->update($coupon_id, $input);
+
+        return $this->response->item($coupon, new CouponTransformer());
     }
 
     /**
@@ -112,7 +97,13 @@ class CouponController extends Controller {
      */
     public function destroy($id)
     {
-        //
+        try {
+            $result = $this->couponManager->delete($id);
+        } catch (\Exception $e) {
+            $this->response->errorForbidden($e->getMessage());
+        }
+
+        return $this->response->noContent();
     }
 
 }

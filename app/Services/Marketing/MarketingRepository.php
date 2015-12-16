@@ -26,12 +26,44 @@ class MarketingRepository {
             return DB::transaction(function () use ($content, $limits, $resource_type) {
                 $coupon = self::storeCouponContent($content);
                 $limits = self::storeItemLimits($limits, $coupon['id'], $resource_type);
+                $coupon->limits = $limits;
 
-                return $coupon->id;
-//                return self::queryFullCoupon($coupon['id']);
+                return $coupon;
             });
         } catch (\Exception $e) {
             throw new CouponValidationException('优惠券');
+        }
+    }
+
+    public static function updateCoupon($coupon_id, $content, $limits)
+    {
+        $resource_type = MarketingProtocol::TYPE_OF_COUPON;
+        try {
+            return DB::transaction(function () use ($coupon_id, $content, $limits, $resource_type) {
+                $coupon = self::updateCouponContent($coupon_id, $content);
+                $limits = self::updateItemLimits($limits, $coupon_id, $resource_type);
+
+                return self::queryFullCoupon($coupon_id);
+            });
+        } catch (\Exception $e) {
+            throw new CouponValidationException('优惠券');
+        }
+    }
+
+
+    public static function deleteCoupon($coupon_id)
+    {
+        $resource_type = MarketingProtocol::TYPE_OF_COUPON;
+        try {
+            return DB::transaction(function () use ($coupon_id, $resource_type) {
+
+                Coupon::where('id', $coupon_id)->delete();
+                DiscountLimit::where('resource_id', $coupon_id)->where('resource_type', $resource_type)->delete();
+
+                return 1;
+            });
+        } catch (\Exception $e) {
+            throw new \Exception('删除优惠券出错');
         }
     }
 
@@ -59,7 +91,7 @@ class MarketingRepository {
     {
         $query = Coupon::with('limits');
         if ( ! is_null($paginate)) {
-            $coupons = $query->paginate(5);
+            $coupons = $query->paginate($paginate);
         } else {
             $coupons = $query->get();
         }
@@ -78,17 +110,24 @@ class MarketingRepository {
         return Coupon::create($data);
     }
 
-    /**
-     * @param $data
-     * @param $resource_id
-     * @param $resource_type
-     * @return DiscountLimit instance
-     */
     protected static function storeItemLimits($data, $resource_id, $resource_type)
     {
         return DiscountLimit::create(
             array_merge($data, compact('resource_id', 'resource_type'))
         );
+    }
+
+    protected static function updateCouponContent($coupon_id, $data)
+    {
+        return Coupon::where('id', $coupon_id)->update($data);
+    }
+
+    protected static function updateItemLimits($data, $resource_id, $resource_type)
+    {
+        return DiscountLimit::where(compact('resource_id', 'resource_type'))
+            ->update(
+                array_merge($data)
+            );
     }
 
 
@@ -190,12 +229,12 @@ class MarketingRepository {
 
     public static function incrementDiscountAmountLimit($resource_id, $resource_type, $quantity = 1)
     {
-        return DiscountLimit::where(compact('resource_id', 'resource_type'))->increment('quantity', $quantity);
+        return DiscountLimit::where(compact('resource_id', 'resource_type'))->increment('seed_count', $quantity);
     }
 
     public static function decrementDiscountAmountLimit($resource_id, $resource_type, $quantity = 1)
     {
-        return DiscountLimit::where(compact('resource_id', 'resource_type'))->decrement('quantity', $quantity);
+        return DiscountLimit::where(compact('resource_id', 'resource_type'))->decrement('seed_count', $quantity);
     }
 
     public static function updateTicketsStatus($ticket_id, $status)
@@ -208,6 +247,11 @@ class MarketingRepository {
     public static function setTicketsExpired($ticket_id)
     {
         return self::updateTicketsStatus($ticket_id, MarketingProtocol::STATUS_OF_EXPIRED);
+    }
+
+    public static function existsDiscountTicket($resource_id, $resource_type)
+    {
+        return Ticket::where(compact('resource_id', 'resource_type'))->count();
     }
 
 

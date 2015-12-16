@@ -26,17 +26,19 @@ class MarketingCouponRequest extends Request {
     public function rules()
     {
         $rules = [];
-        if ($this->isMethod('POST')) {
+        if ($this->isMethod('POST') | $this->isMethod('PUT')) {
             $rules = [
-                'name'        => 'required',
-                'type'        => 'required|in:' . implode(',', MarketingProtocol::discountType(null, true)),
-                'content'     => 'required|integer|min:1',
-                'detail'      => 'required',
-                'quantity'    => 'required|integer|min:1',
-                'amount'      => 'required|integer|min:1',
-                'multi'       => 'required|boolean',
-                'effect_time' => 'date',
-                'expire_time' => 'date|after:effect_time'
+                'name'              => 'required',
+                'enable'            => 'sometimes|in:' . MarketingProtocol::DISCOUNT_ENABLE . ',' . MarketingProtocol::DISCOUNT_DISABLE,
+                'quantity_per_user' => 'sometimes|min:1',
+                'type'              => 'required|in:' . implode(',', MarketingProtocol::discountType(null, true)),
+                'content'           => 'required|integer|min:1',
+                'detail'            => 'required',
+                'quantity'          => 'required|integer|min:1',
+                'amount'            => 'required|integer|min:1',
+                'multi'             => 'required|boolean',
+                'effect_time'       => 'date',
+                'expire_time'       => 'date|after:effect_time'
             ];
         }
 
@@ -46,6 +48,7 @@ class MarketingCouponRequest extends Request {
     public function attributes()
     {
         return [
+
         ];
     }
 }

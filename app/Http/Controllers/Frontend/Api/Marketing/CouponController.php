@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Frontend\Api\Marketing;
 
-use App\Http\Transformers\CouponTransformer;
+use App\Http\Transformers\TicketTransformer;
 use App\Services\Marketing\Items\Coupon\CouponDistributor;
 use App\Services\Marketing\Items\Coupon\UseCoupon;
 use App\Services\Orders\OrderGenerator;
@@ -38,8 +38,7 @@ class CouponController extends MarketingController {
     {
         $tickets = parent::index($request);
 
-
-        return $this->response->collection($tickets, new CouponTransformer());
+        return $this->response->collection($tickets, new TicketTransformer());
     }
 
 
