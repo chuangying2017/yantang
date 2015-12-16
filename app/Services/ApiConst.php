@@ -28,7 +28,10 @@ class ApiConst {
             }
         }
 
-        return null;
+        return [
+            'order_by'   => null,
+            'order_type' => null
+        ];
     }
 
 

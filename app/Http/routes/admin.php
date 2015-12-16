@@ -30,7 +30,7 @@ Route::group(['prefix' => 'admin'], function(){
             'uses' => 'AdminController@index'
         ]);
 
-        resource('account', 'AdminAccountController');
+        resource('account', 'AccountController');
 
 
     });

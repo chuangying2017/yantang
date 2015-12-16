@@ -40,7 +40,8 @@ class CartController extends Controller {
 
             $cart = CartService::add($user_id, $product_sku_id, $quantity);
 
-            return $this->response->created();
+
+            return $this->response->item($cart, new CartTransformer())->setStatusCode(201);
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }

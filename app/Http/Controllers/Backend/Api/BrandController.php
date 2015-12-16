@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Transformers\BrandTransformer;
 use App\Services\Product\Brand\BrandService;
 
-class AdminBrandController extends Controller {
+class BrandController extends Controller {
 
     /**
      * Display a listing of the resource.

@@ -6,7 +6,7 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use Auth;
 
-class AdminBaseController extends Controller {
+class BaseController extends Controller {
 
 
 }

@@ -23,7 +23,7 @@ final class ProductConst {
     /**
      *
      */
-    const MSG_SKU_NOT_AFFORD = "sku not afford";
+    const MSG_SKU_NOT_AFFORD = "商品库存不足";
     const MSG_SKU_AFFORD_OK = "sku afford ok";
 
     const VAR_PRODUCT_STATUS_UP = 'up'; //上架, 在售
@@ -68,7 +68,7 @@ final class ProductConst {
     {
         $available = ['sales', 'price'];
 
-        return is_null($order_by) ? null : array_get($available, $order_by, 'price');
+        return is_null($order_by) ? null : array_get($available, $order_by, 'sales');
     }
 
     public static function getSortType($type)

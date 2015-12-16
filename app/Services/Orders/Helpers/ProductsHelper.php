@@ -23,25 +23,22 @@ trait ProductsHelper {
         $data = [];
         foreach ($products_info as $product_info) {
             $key = $product_info['product_sku_id'];
-            $data[ $key ] = [
-                'id'             => $products_info['id'],
-                'product_sku_id' => $products_info['id'],
-                'name'           => $products_info['name'],
-                'category_id'    => $products_info['category_id'],
-                'cover_image'    => $products_info['cover_image'],
-                'sku_no'         => $products_info['sku_no'],
-                'product_id'     => $products_info['product_id'],
-                'price'          => $products_info['price'],
-                'quantity'       => $products_quantity_data[ $key ],
-                'can_buy'        => true,
-                'reason'         => null
-            ];
+            $sku_data = $product_info['data'];
+            $data[ $key ] = array_merge(
+                $sku_data->toArray(),
+                [
+                    'product_sku_id' => $sku_data['id'],
+                    'quantity'       => $products_quantity_data[ $key ],
+                    'can_buy'        => true,
+                    'reason'         => null
+                ]
+            );
 
             if ( ! self::productCanAfford($product_info)) {
                 $product_sku_data['success'] = false;
-                $product_sku_data['message'] = $product_sku_data['message'] . ' ' . $products_info['err_msg'];
+                $product_sku_data['message'] = $product_sku_data['message'] . ' ' . $product_info['err_msg'];
                 $data[ $key ]['can_buy'] = false;
-                $data[ $key ]['reason'] = $products_info['err_msg'];
+                $data[ $key ]['reason'] = $product_info['err_msg'];
             }
         }
 

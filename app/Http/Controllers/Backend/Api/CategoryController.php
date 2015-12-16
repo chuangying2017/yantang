@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Backend\Api\CategoryRequest as Request;
 
-class AdminCategoryController extends Controller {
+class CategoryController extends Controller {
 
     /**
      * Display a listing of the resource.

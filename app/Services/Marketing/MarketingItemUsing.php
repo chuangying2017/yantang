@@ -35,7 +35,6 @@ abstract class MarketingItemUsing implements MarketingInterface {
             throw new \Exception('订单数据错误');
         }
 
-
         return [
             'total_amount'    => $order_info['total_amount'],
             'discount_fee'    => array_get($order_info, 'discount_fee', 0),
@@ -217,7 +216,7 @@ abstract class MarketingItemUsing implements MarketingInterface {
         foreach ($categories as $category_id) {
             $data = array_merge($data, CategoryService::getLeavesId($category_id));
         }
-        
+
         return $data;
     }
 

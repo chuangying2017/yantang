@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 // use Illuminate\Http\Request;
 
-use App\Http\Controllers\Backend\Api\AdminBaseController;
+use App\Http\Controllers\Backend\Api\BaseController;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +14,7 @@ use App\Models\Client;
 
 
 
-class AdminClientController extends AdminBaseController
+class AdminClientController extends BaseController
 {
 
 		public function __construct()
@@ -59,7 +59,7 @@ class AdminClientController extends AdminBaseController
 
         $messages = ['创建成功，请继续创建商家管理员账号'];
 
-	    return redirect()->action('AdminAccountController@create', ['client_id' => $client->id])->with('messages', $messages)->with('type', 'success');
+	    return redirect()->action('AccountController@create', ['client_id' => $client->id])->with('messages', $messages)->with('type', 'success');
     }
 
     /**
@@ -101,7 +101,7 @@ class AdminClientController extends AdminBaseController
         $client->address = $input['address'];
         $client->save();
 
-        return redirect()->action('AdminAccountController@index');
+        return redirect()->action('AccountController@index');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php namespace App\Services\Cart;
 
-use App\Services\Orders\ProductsHelper;
+use App\Services\Orders\Helpers\ProductsHelper;
 
 class CartService {
 
@@ -20,6 +20,7 @@ class CartService {
     {
         $total_quantity = $quantity;
         $cart = CartRepository::exist($user_id, $product_sku_id);
+
 
         if ($cart) {
             $total_quantity += $cart['quantity'];
@@ -96,31 +97,10 @@ class CartService {
     {
         $cart_info = self::all($user_id);
         $products_info = self::getProductSkuInfo($cart_info);
-
+        $skus_info = $products_info['data'];
         foreach ($cart_info as $cart_key => $cart) {
-
-            $flag = 0;
-            foreach ($products_info as $product_key => $product_info) {
-                if ($cart['product_sku_id'] == $product_info['product_sku_id']) {
-                    $flag = self::HAS_FIND_PRODUCT_INFO;
-                    $cart_info[ $cart_key ]['product_sku'] = $product_info['data'];
-
-                    if (self::productCanAfford($product_info)) {
-                        $cart_info[ $cart_key ]['can_buy'] = true;
-                    } else {
-                        $cart_info[ $cart_key ]['can_buy'] = false;
-                        $cart_info[ $cart_key ]['err_msg'] = $product_info['err_msg'];
-                    }
-
-                    unset($products_info[ $product_key ]);
-                    break;
-                }
-            }
-
-            if ($flag != self::HAS_FIND_PRODUCT_INFO) {
-                #todo 失效
-            }
-
+            $cart->product_sku = $skus_info[ $cart['product_sku_id'] ];
+            $cart_info->$cart_key = $cart;
         }
 
         return $cart_info;

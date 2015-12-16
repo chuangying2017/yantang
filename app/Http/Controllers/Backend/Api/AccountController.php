@@ -13,7 +13,7 @@ use App\Models\Admin;
 use Hash;
 
 
-class AdminAccountController extends AdminBaseController {
+class AccountController extends BaseController {
 
 
 	public function __construct()
@@ -59,7 +59,7 @@ class AdminAccountController extends AdminBaseController {
 		$admin->role = 'normal';
 		$admin->save();
 
-		return redirect()->action('AdminAccountController@index');
+		return redirect()->action('AccountController@index');
 	}
 
 

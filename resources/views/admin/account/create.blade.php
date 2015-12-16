@@ -12,8 +12,8 @@
   <div class="am-u-sm-12 am-u-md-8">
 
     @include('partials.show-errors')
-    
-    <form action="{{action('AdminAccountController@store')}}" method="POST"  class="am-form am-form-horizontal">
+
+    <form action="{{action('AccountController@store')}}" method="POST"  class="am-form am-form-horizontal">
 
         {!! csrf_field() !!}
 
