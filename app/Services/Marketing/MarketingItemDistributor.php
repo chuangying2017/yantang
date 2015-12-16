@@ -99,7 +99,7 @@ abstract class MarketingItemDistributor {
 
     protected function userTakingCountLimit($user_id, $resource_id, $quantity_per_user)
     {
-        $count = MarketingRepository::userTicketsCount($user_id, $resource_id, $this->getResourceType());
+        $count = MarketingRepository::userTicketsCount($user_id, $resource_id, $this->getResourceType(), null);
 
         //超出领取数量限制
         if ($quantity_per_user <= $count) {

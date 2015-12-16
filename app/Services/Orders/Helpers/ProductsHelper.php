@@ -1,8 +1,4 @@
-<?php namespace App\Services\Orders;
-
-
-namespace App\Services\Orders;
-
+<?php namespace App\Services\Orders\Helpers;
 
 use App\Services\Product\ProductConst;
 use App\Services\Product\ProductSkuService;
@@ -31,6 +27,7 @@ trait ProductsHelper {
                 'id'             => $products_info['id'],
                 'product_sku_id' => $products_info['id'],
                 'name'           => $products_info['name'],
+                'category_id'    => $products_info['category_id'],
                 'cover_image'    => $products_info['cover_image'],
                 'sku_no'         => $products_info['sku_no'],
                 'product_id'     => $products_info['product_id'],

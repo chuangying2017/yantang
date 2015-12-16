@@ -1,4 +1,4 @@
-<?php namespace App\Services\Orders;
+<?php namespace App\Services\Orders\Helpers;
 
 trait UserHelper {
 

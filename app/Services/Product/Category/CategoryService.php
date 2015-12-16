@@ -84,7 +84,7 @@ class CategoryService {
                 $data[] = $category['id'];
             }
 
-            return count($data) ? $data : null;
+            return count($data) ? ($string ? implode(',', $data) : $data) : null;
         } catch (\Exception $e) {
             return null;
         }

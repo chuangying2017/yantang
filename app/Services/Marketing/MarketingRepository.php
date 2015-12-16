@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use App\Services\Marketing\Exceptions\CouponValidationException;
 use App\Services\Marketing\MarketingProtocol;
 use App\Services\Utility\StringUtility;
+use Carbon\Carbon;
 use DB;
 use Log;
 
@@ -120,42 +121,45 @@ class MarketingRepository {
         return self::queryTicket($ticket_id, ['resource']);
     }
 
-    protected static function queryTickets($user_id, $resource_id, $resource_type, $status = MarketingProtocol::STATUS_OF_PENDING, $relation = null)
+    protected static function queryTickets($user_id, $resource_type, $resource_id, $status = MarketingProtocol::STATUS_OF_PENDING)
     {
-        $paras = [];
+        $query = Ticket::where('user_id', $user_id);
 
-        if ( ! is_null($user_id)) {
-            $paras['user_id'] = $user_id;
-        }
         if ( ! is_null($resource_id)) {
-            $paras['resource_id'] = $resource_id;
+            $query = $query->where('resource_id', $resource_id);
         }
         if ( ! is_null($resource_type)) {
-            $paras['resource_type'] = $resource_type;
+            $query = $query->where('resource_type', $resource_type);
         }
+
         if ( ! is_null($status)) {
-            $paras['status'] = $status;
+            if ($status == MarketingProtocol::STATUS_OF_PENDING) {
+                $query = $query->where(function ($query) {
+                    $query->whereNull('effect_time')->orWhere('effect_time', '=<', Carbon::now());
+                })->where(function ($query) {
+                    $query->whereNull('expire_time')->orWhere('expire_time', '=<', Carbon::now());
+                });
+            }
+
+            $query = $query->where('status', $status);
         }
 
-        if ( ! is_null($relation)) {
-            return Ticket::with($relation)->where($paras)->get();
-        }
-
-        return Ticket::where($paras)->get();
+        return $query->get();
     }
 
-    public static function userTicketsLists($user_id, $status, $resource_type = null, $resource_id = null)
+    public static function userTicketsLists($user_id, $status = MarketingProtocol::STATUS_OF_PENDING, $resource_type = null, $resource_id = null)
     {
         $relation = ['resource'];
 
-        $tickets = self::queryTickets($user_id, $resource_id, $resource_type, $status, $relation);
+        $tickets = self::queryTickets($user_id, $resource_type, $resource_id, $status);
+        $tickets->load($relation);
 
         return $tickets;
     }
 
     public static function userTicketsCount($user_id, $resource_id, $resource_type, $status = MarketingProtocol::STATUS_OF_PENDING)
     {
-        return count(self::queryTickets($user_id, $resource_id, $resource_type, $status));
+        return count(self::queryTickets($user_id, $resource_type, $resource_id, $status));
     }
 
     protected static function queryTicket($ticket_id, $relation = null)
