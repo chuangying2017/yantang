@@ -1,7 +1,9 @@
 <?php namespace App\Services\Orders;
 
 use App\Models\Order;
+use App\Models\OrderAddress;
 use App\Models\OrderProduct;
+use App\Services\Orders\Event\OrderCancel;
 use DB;
 
 
@@ -82,7 +84,7 @@ class OrderRepository {
     public static function queryOrderByOrderNo($order_no)
     {
         if ($order_no instanceof Order) {
-            $order = $order_no;
+            return $order_no;
         }
 
         return Order::where('order_no', $order_no)->firstOrFail();
@@ -134,5 +136,22 @@ class OrderRepository {
 
         return $order_no;
     }
+
+    public static function updateStatus($order_no, $status)
+    {
+        Order::where('order_no', $order_no)->update(['status' => $status]);
+    }
+
+    public static function deleteOrder($order_no)
+    {
+        $order = self::queryOrderByOrderNo($order_no);
+        $order_full = self::queryFullOrder($order);
+
+        self::updateStatus($order['order_no'], OrderProtocol::STATUS_OF_CANCEL);
+        $order->delete();
+
+        event(new OrderCancel($order_full));
+    }
+
 
 }

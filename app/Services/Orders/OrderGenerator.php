@@ -33,7 +33,7 @@ class OrderGenerator {
      */
     public function buyCart($user_id, $carts)
     {
-        $order_products_request = CartService::take($carts);
+        $order_products_request = CartService::take($carts, $user_id);
 
         return $this->buy($user_id, $order_products_request, $carts);
     }
@@ -53,9 +53,9 @@ class OrderGenerator {
      */
     public function buy($user_id, $order_products_request, $carts = null)
     {
-        try
-        {
+        try {
             $order_products_info = self::checkOrderSkus($order_products_request);
+
             $order_info = self::filterOrderSku($order_products_info['data']);
             $order_info = self::filterMarketingInfo($user_id, $order_info);
 
@@ -92,12 +92,10 @@ class OrderGenerator {
 
         $order_info = self::removeDiscount($order_info);
 
-        if ($resources->count() > 1) {
+        if (count($resources) >= 1) {
             foreach ($resources as $resource) {
                 $order_info = $this->orderUseDiscount($resource, $order_info);
             }
-        } else {
-            $order_info = $this->orderUseDiscount($resources, $order_info);
         }
 
         $order_info = self::filterMarketingInfo($order_info['user_id'], $order_info);
@@ -208,6 +206,9 @@ class OrderGenerator {
     {
         $order_info = self::getOrder($uuid);
 
+        if ( ! $order_info) {
+            throw new \Exception('等待时间过长,请重新下单');
+        }
 
         try {
             $this->checkOrderSkus($order_info['products']);

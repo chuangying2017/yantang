@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend\Api;
 use App\Http\Transformers\OrderTransformer;
 use App\Services\Cart\CartService;
 use App\Services\Client\AddressService;
+use App\Services\Orders\Exceptions\WrongStatus;
 use App\Services\Orders\OrderGenerator;
 use App\Services\Orders\OrderService;
 use Illuminate\Http\Request;
@@ -45,20 +46,22 @@ class OrderController extends Controller {
 
     public function preConfirm(Request $request)
     {
-        try{
+        try {
             $carts = $request->input('data');
             $user_id = $this->getCurrentAuthUserId();
-            $order_products_request = CartService::take($carts);
+            $order_products_request = CartService::take($carts, $user_id);
 
             if ( ! count($order_products_request)) {
-                $this->response->errorBadRequest('购买选项不存在');
+                $this->response->errorBadRequest('购物车购买选项不存在');
             }
 
             $order_info = $this->orderGenerator->buy($user_id, $order_products_request, $carts);
 
             return $order_info;
+
         } catch (\Exception $e) {
             return $e->getTrace();
+            $this->response->errorInternal($e->getMessage());
         }
 
     }
@@ -108,6 +111,7 @@ class OrderController extends Controller {
 
             return $this->response->created(route('api.orders.show', $order['order_no']))->setMeta($order);
         } catch (\Exception $e) {
+            return $e->getTrace();
             $this->response->errorInternal($e->getMessage());
         }
 
@@ -132,6 +136,21 @@ class OrderController extends Controller {
         }
 
         return $this->response->item($order, new OrderTransformer());
+    }
+
+
+    public function destroy($order_no)
+    {
+        try {
+            $user_id = $this->getCurrentAuthUserId();
+            OrderService::delete($user_id, $order_no);
+        } catch (WrongStatus $e) {
+            $this->response->errorForbidden($e->getMessage());
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
+
+        return $this->response->noContent();
     }
 
 

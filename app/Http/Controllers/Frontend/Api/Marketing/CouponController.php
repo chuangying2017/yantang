@@ -34,9 +34,9 @@ class CouponController extends MarketingController {
     {
         try {
             $uuid = $request->input('uuid');
-            $coupon_id = $request->input('coupon_id');
+            $ticket_id = $request->input('ticket_id');
 
-            $coupon = $this->using->show($coupon_id);
+            $coupon = $this->using->show(to_array($ticket_id));
 
             $this->orderGenerator->setMarketUsing($this->using);
             $order_info = $this->orderGenerator->requestDiscount($coupon, $uuid);

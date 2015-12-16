@@ -77,7 +77,7 @@ class OrderProtocol {
         }
 
 
-        if (in_array($from_status, $valid_status)) {
+        if ( ! in_array($from_status, $valid_status)) {
             throw new WrongStatus($from_status, $to_status);
         }
 

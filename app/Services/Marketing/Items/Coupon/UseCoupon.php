@@ -43,19 +43,24 @@ class UseCoupon extends MarketingItemUsing {
      */
     public function usableList($user_id, $order_detail)
     {
-        $tickets = $this->getTickets($user_id, $order_detail);
+        try {
+            $tickets = $this->getTickets($user_id, $order_detail);
 
-        $data = [];
-        foreach ($tickets as $key => $ticket) {
-            $ticket->can_use = $this->filter($ticket, $order_detail);
-            if ( ! $ticket->can_use) {
-                $ticket->reason = $this->getMessage();
+            $data = [];
+            foreach ($tickets as $key => $ticket) {
+                $ticket->can_use = $this->filter($ticket, $order_detail);
+                if ( ! $ticket->can_use) {
+                    $ticket->reason = $this->getMessage();
+                }
+
+                $data[ $ticket->id ] = $ticket;
             }
 
-            $data[ $ticket->id ] = $ticket;
+            return $data;
+        } catch(\Exception $e) {
+            throw $e;
         }
 
-        return $data;
     }
 
     public function getTickets($user_id, $order_detail)

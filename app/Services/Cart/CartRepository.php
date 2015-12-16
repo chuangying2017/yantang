@@ -13,16 +13,19 @@ class CartRepository {
         );
     }
 
-    public static function get($cart_id)
+    public static function get($cart_id, $user_id)
     {
         if ($cart_id instanceof Cart) {
             return $cart_id;
         }
+
+        $query = Cart::where('user_id', $user_id);
+
         if (is_array($cart_id)) {
-            return Cart::whereIn('id', $cart_id)->get();
+            return $query->whereIn('id', $cart_id)->get();
         }
 
-        return Cart::findOrFail($cart_id);
+        return $query->findOrFail($cart_id);
     }
 
     protected static function query($user_id, $product_sku_id = null)
@@ -51,11 +54,11 @@ class CartRepository {
         return Cart::where('id', $cart_id)->decrement('quantity', $quantity);
     }
 
-    public static function remove($cart_id)
+    public static function remove($cart_id, $user_id)
     {
         $carts = to_array($cart_id);
 
-        return Cart::whereIn('id', $carts)->delete();
+        return Cart::where('user_id', $user_id)->whereIn('id', $carts)->delete();
     }
 
     public static function all($user_id)

@@ -6,8 +6,7 @@ use App\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class OrderConfirm extends Event
-{
+class OrderConfirm extends Event {
 
     use SerializesModels;
 
@@ -30,7 +29,7 @@ class OrderConfirm extends Event
         $this->user_id = $order_info['user_id'];
         $this->products = $order_info['products'];
         #todo  添加多种优惠
-        $this->tickets = $order_info['marketing']['coupons'];
+        $this->tickets = $order_info['discount_detail']['coupons'];
         $this->address = $order_info['address'];
         $this->carts = isset($order_info['carts']) ? $order_info['carts'] : null;
     }

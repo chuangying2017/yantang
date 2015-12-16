@@ -157,7 +157,6 @@ class MarketingRepository {
 
     public static function showTicket($ticket_id)
     {
-
         return self::queryTicket($ticket_id, ['resource']);
     }
 
