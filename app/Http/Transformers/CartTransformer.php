@@ -12,16 +12,16 @@ class CartTransformer extends TransformerAbstract {
         if (isset($cart->product_sku)) {
             $productSku = $cart->product_sku;
             $detail = [
-                'product_id'  => (int)$productSku->product_id,
-                'sku_no'      => $productSku->sku_no,
-                'stocks'      => (int)$productSku->stock,
-                'sales'       => (int)$productSku->sales,
-                'price'       => (int)$productSku->price,
-                'merchant_id' => (int)$productSku->merchant_id,
-                'title'       => $productSku->title,
-                'category_id' => (int)$productSku->category_id,
-                'cover_image' => $productSku->cover_image,
-                'attributes'  => $productSku->attributes ? json_decode('[' . $productSku->attributes . ']', true) : null
+                'product_id'  => (int)$productSku['product_id'],
+                'sku_no'      => $productSku['sku_no'],
+                'stock'       => (int)$productSku['stock'],
+                'sales'       => (int)$productSku['sales'],
+                'price'       => (int)$productSku['price'],
+                'merchant_id' => (int)$productSku['merchant_id'],
+                'title'       => $productSku['title'],
+                'category_id' => (int)$productSku['category_id'],
+                'cover_image' => $productSku['cover_image'],
+                'attributes'  => $productSku['attributes'] ? json_decode('[' . $productSku['attributes'] . ']', true) : null
             ];
         }
 

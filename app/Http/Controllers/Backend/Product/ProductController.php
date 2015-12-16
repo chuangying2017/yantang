@@ -9,11 +9,12 @@ use App\Http\Controllers\Controller;
  * Date: 10/12/2015
  * Time: 5:57 PM
  */
-class ProductController extends Controller
-{
+class ProductController extends Controller {
+
     public function index()
     {
         $products = $this->api->get('api/admin/products');
+
         return view('backend.product.index', compact('products'));
     }
 

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class AdminProductGroupController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,7 +37,7 @@ class AdminProductGroupController extends Controller
      */
     public function store(Request $request)
     {
-
+        //
     }
 
     /**

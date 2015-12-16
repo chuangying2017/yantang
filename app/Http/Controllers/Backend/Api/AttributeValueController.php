@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class AdminAttributeValueController extends Controller {
+class AttributeValueController extends Controller {
 
     /**
      * Display a listing of the resource.

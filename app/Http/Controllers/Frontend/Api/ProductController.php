@@ -47,10 +47,12 @@ class ProductController extends Controller {
      */
     public function show($id)
     {
-        $user_id = $this->getCurrentAuthUserId();
         $product = ProductService::show($id);
         $product->show_detail = 1;
-        $product->faved = FavService::checkFav($user_id, $id);
+
+        if ($user_id = $this->getCurrentAuthUserId()) {
+            $product->faved = FavService::checkFav($user_id, $id);
+        }
 
         return $this->response->item($product, new ProductTransformer());
     }

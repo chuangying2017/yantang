@@ -10,7 +10,7 @@ use App\Services\ApiConst;
 use App\Services\Product\ProductConst;
 use App\Services\Product\ProductService;
 
-class AdminProductController extends Controller {
+class ProductController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -36,15 +36,6 @@ class AdminProductController extends Controller {
         return $this->response->paginator($products, new ProductTransformer());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.

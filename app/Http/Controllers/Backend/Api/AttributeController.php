@@ -8,7 +8,7 @@ use App\Http\Requests\Backend\Api\AttributeRequest as Request;
 use App\Http\Requests;
 
 
-class AdminAttributeController extends AdminBaseController {
+class AttributeController extends BaseController {
 
     #todo @bryant 实现通过user id 获取 merchant id
     public static function getMerchantIdByUserId($user_id)

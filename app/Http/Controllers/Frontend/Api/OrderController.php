@@ -101,7 +101,7 @@ class OrderController extends Controller {
 
             return $order;
 
-//            return $this->response->created(route('api.orders.show', $order['order_no']));
+            return $this->response->created(route('api.orders.show', $order['order_no']))->setMeta($order);
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }
@@ -129,37 +129,5 @@ class OrderController extends Controller {
         return $this->response->item($order, new OrderTransformer());
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
