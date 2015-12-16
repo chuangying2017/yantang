@@ -9,17 +9,15 @@ use App\Http\Controllers\Controller;
  * Date: 10/12/2015
  * Time: 5:57 PM
  */
-class GroupController extends Controller
-{
+class GroupController extends Controller {
+
     public function index()
     {
-    	return view('backend.setting.pay');
-        // return view('backend.groups.index');
+        return view('backend.groups.index');
     }
 
     public function create()
     {
-    	return view('backend.orders.detail');
-        // return view('backend.groups.create');
+        return view('backend.groups.create');
     }
 }
