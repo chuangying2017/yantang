@@ -16702,10 +16702,28 @@ fieldset[disabled] .btn-vk.active {
   text-align: center;
 }
 
+.cover-images.banner-images img {
+  width: 180px;
+  height: 70px;
+}
+
+.cover-images.banner-images .img-wrapper:before {
+  width: 180px;
+  height: 70px;
+}
+
 .cover-images img {
   margin: 10px 10px 10px 0;
   width: 70px;
   height: 70px;
+}
+
+.groups-select {
+  width: 100%;
+  height: 90px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  list-style-type: none;
 }
 
 .toast-title {
