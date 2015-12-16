@@ -45,15 +45,17 @@ class UseCoupon extends MarketingItemUsing {
     {
         $tickets = $this->getTickets($user_id, $order_detail);
 
+        $data = [];
         foreach ($tickets as $key => $ticket) {
             $ticket->can_use = $this->filter($ticket, $order_detail);
             if ( ! $ticket->can_use) {
                 $ticket->reason = $this->getMessage();
             }
-            $tickets->key = $ticket;
+
+            $data[ $ticket->id ] = $ticket;
         }
 
-        return $tickets;
+        return $data;
     }
 
     public function getTickets($user_id, $order_detail)

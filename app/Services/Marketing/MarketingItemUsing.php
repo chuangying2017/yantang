@@ -1,6 +1,7 @@
 <?php namespace App\Services\Marketing;
 
 use App\Services\Marketing\Traits\MarketingItemResource;
+use App\Services\Product\Category\CategoryService;
 use Carbon\Carbon;
 
 abstract class MarketingItemUsing implements MarketingInterface {
@@ -34,17 +35,12 @@ abstract class MarketingItemUsing implements MarketingInterface {
             throw new \Exception('订单数据错误');
         }
 
-        //处理现有优惠项目
-        $coupons = array_get($order_info, 'marketing.coupons', []);
-        if ( count($coupons)) {
-            #todo
-        }
-
 
         return [
-            'total_amount' => $order_info['total_amount'],
-            'discount_fee' => array_get($order_info, 'discount_fee', 0),
-            'skus'         => $skus
+            'total_amount'    => $order_info['total_amount'],
+            'discount_fee'    => array_get($order_info, 'discount_fee', 0),
+            'skus'            => $skus,
+            'discount_detail' => array_get($order_info, 'discount_detail', []),
         ];
 
     }
@@ -60,9 +56,6 @@ abstract class MarketingItemUsing implements MarketingInterface {
      */
     public function filter($resource, $order_detail)
     {
-        if (isset($resource['selected']) && $resource['selected']) {
-            return true;
-        }
 
         //检查优惠是否生效
         if ( ! self::checkEffectTime($resource)) {
@@ -80,7 +73,6 @@ abstract class MarketingItemUsing implements MarketingInterface {
         $order_detail = self::decodeOrderInfo($order_detail);
 
         $skus = $order_detail['skus'];
-
 
         //检查优惠是否可以叠加使用
         $discount_fee = array_get($order_detail, 'discount_fee', 0);
@@ -221,8 +213,12 @@ abstract class MarketingItemUsing implements MarketingInterface {
      */
     protected static function getFullCategories($categories)
     {
-        # TODO 通过接口获取指定类别的所有分类值
-        return [1, 2, 3];
+        $data = [];
+        foreach ($categories as $category_id) {
+            $data = array_merge($data, CategoryService::getLeavesId($category_id));
+        }
+        
+        return $data;
     }
 
     /**
