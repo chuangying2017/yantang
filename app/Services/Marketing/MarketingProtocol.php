@@ -9,6 +9,8 @@ class MarketingProtocol {
     const DISCOUNT_TYPE_OF_CASH = 'cash';
     const DISCOUNT_TYPE_OF_DISCOUNT = 'discount';
 
+    const DISCOUNT_ENABLE = 1;
+    const DISCOUNT_DISABLE = 0;
 
     const STATUS_OF_PENDING = 'pending';
     const STATUS_OF_FROZEN = 'frozen';

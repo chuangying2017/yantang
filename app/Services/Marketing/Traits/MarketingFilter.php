@@ -36,11 +36,12 @@ trait MarketingFilter {
         $multi_use = array_get($data, 'multi', MarketingProtocol::CAN_NOT_MULTI_USE);
         $effect_time = array_get($data, 'effect_time', Carbon::now());
         $expire_time = array_get($data, 'expire_time', MarketingProtocol::LIMIT_NO_EXPIRE_TIME);
+        $enable = array_get($data, 'enable', MarketingProtocol::DISCOUNT_ENABLE);
         $roles = array_get($data, 'roles', null);
         $roles = $roles ? implode(',', $roles) : $roles;
         $quantity_per_user = array_get($data, 'quantity_per_user', 1);
 
-        return compact('quantity', 'amount_limit', 'category_limit', 'product_limit', 'multi_use', 'effect_time', 'expire_time', 'roles', 'quantity_per_user');
+        return compact('quantity', 'amount_limit', 'category_limit', 'product_limit', 'multi_use', 'effect_time', 'expire_time', 'roles', 'quantity_per_user', 'enable');
     }
 
 }

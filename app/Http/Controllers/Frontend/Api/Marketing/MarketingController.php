@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Frontend\Api\Marketing;
 
+use App\Http\Transformers\TicketTransformer;
+use App\Services\Client\ClientService;
 use App\Services\Marketing\Exceptions\MarketingItemDistributeException;
 use Exception;
 
@@ -46,7 +48,7 @@ class MarketingController extends Controller {
         $status = $request->input('status', MarketingProtocol::STATUS_OF_PENDING);
         $tickets = $this->using->lists($user_id, $status);
 
-        return $tickets;
+        return $this->response->collection($tickets, new TicketTransformer());
     }
 
     /**
@@ -59,33 +61,18 @@ class MarketingController extends Controller {
     {
         $resource_id = $request->input('resource_id');
 
-        #todo 获取用户信息
-        $user_info = [
-            'id'    => 1,
-            'role'  => '',
-            'level' => 0,
-        ];
+        $user_info = ClientService::show($this->getCurrentAuthUserId());
+        $user_info['id'] = $user_info['user_id'];
 
         try {
-            $this->distributor->send($resource_id, $user_info);
+            $ticket = $this->distributor->send($resource_id, $user_info);
         } catch (MarketingItemDistributeException $e) {
             $this->response->errorBadRequest($e->getMessage());
         } catch (Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }
 
-        return $this->response->created();
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return $this->response->item($ticket, new TicketTransformer());
     }
 
 

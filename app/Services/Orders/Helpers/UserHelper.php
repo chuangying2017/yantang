@@ -8,4 +8,5 @@ trait UserHelper {
         return 'openid';
     }
 
+
 }

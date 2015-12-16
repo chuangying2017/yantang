@@ -43,7 +43,6 @@ class CouponDistributor extends MarketingItemDistributor {
         return $this->sendSucceed($coupon_id, $user_id);
     }
 
-
     protected function sendSucceed($coupon_id, $user_id)
     {
         $ticket = MarketingRepository::storeTicket($user_id, $coupon_id, self::RESOURCE_TYPE, true);
