@@ -53,17 +53,23 @@ class OrderGenerator {
      */
     public function buy($user_id, $order_products_request, $carts = null)
     {
-        $order_products_info = self::checkOrderSkus($order_products_request);
-        $order_info = self::filterOrderSku($order_products_info['data']);
-        $order_info = self::filterMarketingInfo($user_id, $order_info);
+        try
+        {
+            $order_products_info = self::checkOrderSkus($order_products_request);
+            $order_info = self::filterOrderSku($order_products_info['data']);
+            $order_info = self::filterMarketingInfo($user_id, $order_info);
 
-        $order_info['user_id'] = $user_id;
-        $order_info['uuid'] = Uuid::uuid();
-        $order_info['carts'] = $carts;
+            $order_info['user_id'] = $user_id;
+            $order_info['uuid'] = Uuid::uuid();
+            $order_info['carts'] = $carts;
 
-        event(new \App\Services\Orders\Event\OrderRequest($order_info));
+            event(new \App\Services\Orders\Event\OrderRequest($order_info));
 
-        return $order_info;
+            return $order_info;
+        } catch (\Exception $e) {
+            throw new $e;
+        }
+
     }
 
     private function filterMarketingInfo($user_id, $order_info)
