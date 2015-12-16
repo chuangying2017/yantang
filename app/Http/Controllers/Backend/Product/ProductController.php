@@ -13,7 +13,11 @@ class ProductController extends Controller {
 
     public function index()
     {
-        $products = $this->api->get('api/admin/products');
+        try {
+            $products = $this->api->get('api/products');
+        } catch (\Exception $e) {
+            return $e;
+        }
 
         return view('backend.product.index', compact('products'));
     }

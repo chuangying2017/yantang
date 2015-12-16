@@ -16639,6 +16639,75 @@ fieldset[disabled] .btn-vk.active {
   border-bottom-left-radius: 0 !important;
 }
 
+@charset "UTF-8";
+
+.dflr-select {
+  display: none;
+}
+
+.dflr-select + label {
+  display: block;
+  margin-bottom: 20px;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.dflr-select:checked + label {
+  border: 1px solid #F59709;
+  color: #F59709;
+}
+
+.box.without-border {
+  border-top: 1px solid #F5F5F5;
+}
+
+.attrValueGroup {
+  margin-bottom: 10px;
+  padding: 10px 0;
+  background: #EFEFEF;
+  border-radius: 5px;
+}
+
+.attrGroup + span {
+  margin-bottom: 10px;
+}
+
+.c-red {
+  color: #dd4b39;
+}
+
+.cover-images .img-wrapper {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.cover-images .img-wrapper:hover:before {
+  display: block;
+}
+
+.cover-images .img-wrapper:before {
+  content: "删除";
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 70px;
+  height: 70px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #FFF;
+  line-height: 70px;
+  text-align: center;
+}
+
+.cover-images img {
+  margin: 10px 10px 10px 0;
+  width: 70px;
+  height: 70px;
+}
+
 .toast-title {
   font-weight: 700;
 }
