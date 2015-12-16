@@ -60,7 +60,7 @@
                                         <button type="button" class="btn btn-default btn-sm"><i
                                                 class="fa fa-trash-o"></i></button>
                                         <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-link"></i></button>
+                                                class="fa fa-link-o"></i></button>
                                     </div>
                                 </td>
                             </tr>
