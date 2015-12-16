@@ -45,17 +45,22 @@ class OrderController extends Controller {
 
     public function preConfirm(Request $request)
     {
-        $carts = $request->input('data');
-        $user_id = $this->getCurrentAuthUserId();
-        $order_products_request = CartService::take($carts);
+        try{
+            $carts = $request->input('data');
+            $user_id = $this->getCurrentAuthUserId();
+            $order_products_request = CartService::take($carts);
 
-        if ( ! count($order_products_request)) {
-            $this->response->errorBadRequest('购买选项不存在');
+            if ( ! count($order_products_request)) {
+                $this->response->errorBadRequest('购买选项不存在');
+            }
+
+            $order_info = $this->orderGenerator->buy($user_id, $order_products_request, $carts);
+
+            return $order_info;
+        } catch (\Exception $e) {
+            return $e->getTrace();
         }
 
-        $order_info = $this->orderGenerator->buy($user_id, $order_products_request, $carts);
-
-        return $order_info;
     }
 
     public function fetchConfirm(Request $request)

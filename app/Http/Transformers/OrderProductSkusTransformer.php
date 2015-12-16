@@ -9,12 +9,12 @@ class OrderProductSkusTransformer extends TransformerAbstract {
     public function transform(OrderProductView $sku)
     {
         return [
-            'id'          => $sku->id,
+            'id'          => (int)$sku->id,
             'title'       => $sku->title,
             'cover_image' => $sku->cover_image,
-            'quantity'    => $sku->quantity,
-            'attributes'  => $sku->attributes ? json_decode('[' . $sku->attributes . ']', true) : null,
-            'price'       => $sku->pay_amount
+            'quantity'    => (int)$sku->quantity,
+            'attributes'  => $sku->getAttribute('attributes') ? json_decode('[' . $sku->getAttribute('attributes') . ']', true) : null,
+            'price'       => (int)$sku->pay_amount
         ];
     }
 }

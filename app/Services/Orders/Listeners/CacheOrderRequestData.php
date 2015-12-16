@@ -3,7 +3,7 @@
 namespace App\Services\Orders\Listeners;
 
 use App\Services\Orders\Event\OrderRequest;
-use App\Services\Orders\OrderInfoHelpers;
+use App\Services\Orders\Helpers\OrderInfoHelpers;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
