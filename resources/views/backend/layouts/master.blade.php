@@ -12,6 +12,7 @@
 
         @yield('before-styles-end')
         {!! HTML::style(elixir('css/backend.css')) !!}
+        {!! HTML::style(asset('css/dlfr-backend.css')) !!}
         @yield('after-styles-end')
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -37,7 +38,7 @@
             </section>
 
             <!-- Main content -->
-            <section class="content">
+            <section class="content clearfix">
               @include('includes.partials.messages')
               @yield('content')
             </section><!-- /.content -->

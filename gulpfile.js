@@ -8,6 +8,9 @@ elixir(function(mix) {
         .copy('vendor/fortawesome/font-awesome/fonts', 'public/build/fonts/font-awesome')
         .copy('vendor/twbs/bootstrap-sass/assets/fonts/bootstrap', 'public/build/fonts/bootstrap')
         .copy('vendor/twbs/bootstrap/dist/js/bootstrap.min.js', 'public/js/vendor')
+        .copy('vendor/bower_components/select2', 'public/js/vendor/select2')
+        .copy('vendor/bower_components/jquery-mask-plugin', 'public/js/vendor/jquery-mask-plugin')
+        .copy('vendor/bower_components/ueditor', 'public/js/vendor/ueditor')
 
         .sass([ // Process front-end stylesheets
                 'frontend/main.scss'
@@ -23,6 +26,7 @@ elixir(function(mix) {
         .sass([ // Process back-end stylesheets
             'backend/main.scss',
             'backend/skin.scss',
+            'backend/dflr.scss',
             'backend/plugin/toastr/toastr.scss'
         ], 'resources/assets/css/backend/main.css')
         .styles([ // Combine pre-processed CSS files

@@ -33,6 +33,7 @@ class AdminProductController extends Controller {
             $status
         );
 
+return $this->api->get('api/products');
 
         return $this->response->paginator($products, new ProductTransformer());
     }
