@@ -38,6 +38,11 @@ class EventServiceProvider extends ServiceProvider {
             'App\Services\Marketing\Listeners\GenerateMarketingBillingAndFrozenMarketingItem',
             'App\Services\Product\Listeners\DecreaseStock',
         ],
+        'App\Services\Orders\Event\OrderCancel'  => [
+            'App\Services\Marketing\Listeners\DeleteMarketingBillingAndUnFrozenMarketingItem',
+            'App\Services\Product\Listeners\IncreaseStock',
+            'App\Services\Orders\Listeners\DeleteOrderPayment',
+        ],
         'App\Services\Orders\Event\PingxxPaid'   => [
             'App\Services\Orders\Listeners\HandlePingxxBilling',
             'App\Services\Orders\Listeners\HandleOrderPaid',

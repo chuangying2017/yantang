@@ -46,7 +46,7 @@ class CartService {
      * @return mixed
      * @throws \Exception
      */
-    public static function update($cart_id, $quantity = 1)
+    public static function update($cart_id, $user_id, $quantity = 1)
     {
         try {
 
@@ -54,7 +54,7 @@ class CartService {
                 return self::remove($cart_id);
             }
 
-            $cart = CartRepository::get($cart_id);
+            $cart = CartRepository::get($cart_id, $user_id);
 
             if ($cart->quantity > $quantity) {
                 CartRepository::update($cart->id, $quantity);
@@ -74,9 +74,9 @@ class CartService {
     }
 
 
-    public static function remove($cart_id)
+    public static function remove($cart_id, $user_id)
     {
-        return CartRepository::remove($cart_id);
+        return CartRepository::remove($cart_id, $user_id);
     }
 
     public static function all($user_id)
@@ -85,9 +85,9 @@ class CartService {
     }
 
 
-    public static function take($cart_id)
+    public static function take($cart_id, $user_id)
     {
-        $carts = CartRepository::get($cart_id);
+        $carts = CartRepository::get($cart_id, $user_id);
 
         return $carts->toArray();
     }
@@ -95,12 +95,18 @@ class CartService {
 
     public static function lists($user_id)
     {
-        $cart_info = self::all($user_id);
-        $products_info = self::getProductSkuInfo($cart_info);
-        $skus_info = $products_info['data'];
-        foreach ($cart_info as $cart_key => $cart) {
-            $cart->product_sku = $skus_info[ $cart['product_sku_id'] ];
-            $cart_info->$cart_key = $cart;
+        try {
+            $cart_info = self::all($user_id);
+            if (count($cart_info)) {
+                $products_info = self::getProductSkuInfo($cart_info);
+                $skus_info = $products_info['data'];
+                foreach ($cart_info as $cart_key => $cart) {
+                    $cart->product_sku = $skus_info[ $cart['product_sku_id'] ];
+                    $cart_info->$cart_key = $cart;
+                }
+            }
+        } catch (\Exception $e) {
+            throw $e;
         }
 
         return $cart_info;

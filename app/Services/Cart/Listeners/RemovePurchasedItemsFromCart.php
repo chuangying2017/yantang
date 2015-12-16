@@ -7,8 +7,8 @@ use App\Services\Orders\Event\OrderConfirm;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class RemovePurchasedItemsFromCart
-{
+class RemovePurchasedItemsFromCart {
+
     /**
      * Create the event listener.
      *
@@ -26,9 +26,9 @@ class RemovePurchasedItemsFromCart
      */
     public function handle(OrderConfirm $event)
     {
-        if (!is_null($event->carts)) {
+        if ( ! is_null($event->carts)) {
             $carts = $event->carts;
-            CartService::remove($carts);
+            CartService::remove($carts, $event->user_id);
         }
     }
 }

@@ -55,46 +55,50 @@ abstract class MarketingItemUsing implements MarketingInterface {
      */
     public function filter($resource, $order_detail)
     {
+        try {
+            //检查优惠是否生效
+            if ( ! self::checkEffectTime($resource)) {
+                $this->setMessage(trans('marketing.using.not_effect'));
 
-        //检查优惠是否生效
-        if ( ! self::checkEffectTime($resource)) {
-            $this->setMessage(trans('marking.using.not_effect'));
+                return false;
+            }
 
-            return false;
-        }
-        //检查优惠是否过期
-        if ( ! self::checkExpireTime($resource)) {
-            $this->setMessage(trans('marking.using.expired'));
+            //检查优惠是否过期
+            if ( ! self::checkExpireTime($resource)) {
+                $this->setMessage(trans('marketing.using.expired'));
 
-            return false;
-        }
+                return false;
+            }
 
-        $order_detail = self::decodeOrderInfo($order_detail);
+            $order_detail = self::decodeOrderInfo($order_detail);
 
-        $skus = $order_detail['skus'];
+            $skus = $order_detail['skus'];
 
-        //检查优惠是否可以叠加使用
-        $discount_fee = array_get($order_detail, 'discount_fee', 0);
-        if ( ! self::multiUse($resource, $discount_fee)) {
-            $this->setMessage(trans('marking.using.multi_use'));
+            //检查优惠是否可以叠加使用
+            $discount_fee = array_get($order_detail, 'discount_fee', 0);
+            if ( ! self::multiUse($resource, $discount_fee)) {
+                $this->setMessage(trans('marketing.using.multi_use'));
 
-            return false;
-        }
+                return false;
+            }
 
-        //检查订单是否存在特定商品，若优惠券有商品限制且不存在该商品则不可使用优惠券
-        $product_limit_pass = self::checkSku($resource, $skus);
-        if ( ! is_null($product_limit_pass) && ! $product_limit_pass) {
-            $this->setMessage(trans('marking.using.product_limit'));
+            //检查订单是否存在特定商品，若优惠券有商品限制且不存在该商品则不可使用优惠券
+            $product_limit_pass = self::checkSku($resource, $skus);
+            if ( ! is_null($product_limit_pass) && ! $product_limit_pass) {
+                $this->setMessage(trans('marketing.using.product_limit'));
 
-            return false;
-        }
+                return false;
+            }
 
-        //检查订单需要支付金额是否达到要求
-        $order_pay_amount = bcsub(array_get($order_detail, 'total_amount', 0), $discount_fee);
-        if ($need_price = self::amountLimit($resource, $skus, $order_pay_amount)) {
-            $this->setMessage(trans('marketing.using.amount_limit', ['price' => $need_price]));
+            //检查订单需要支付金额是否达到要求
+            $order_pay_amount = bcsub(array_get($order_detail, 'total_amount', 0), $discount_fee);
+            if ($need_price = self::amountLimit($resource, $skus, $order_pay_amount)) {
+                $this->setMessage(trans('marketing.using.amount_limit', ['price' => $need_price]));
 
-            return false;
+                return false;
+            }
+        } catch (\Exception $e) {
+            throw $e;
         }
 
         return true;
@@ -144,7 +148,7 @@ abstract class MarketingItemUsing implements MarketingInterface {
      */
     protected static function checkEffectTime($limit)
     {
-        return is_null($limit['effect_time']) ? 1 : Carbon::createFromFormat('Y-m-d H:i:s', strtotime($limit['effect_time'])) > Carbon::now();
+        return is_null($limit['effect_time']) ? 1 : (strtotime($limit['effect_time']) < time());
     }
 
     /**
@@ -154,7 +158,7 @@ abstract class MarketingItemUsing implements MarketingInterface {
      */
     protected static function checkExpireTime($limit)
     {
-        return is_null($limit['expired_time']) ? 1 : Carbon::createFromFormat('Y-m-d H:i:s', strtotime($limit['expired_time'])) < Carbon::now();
+        return is_null($limit['expired_time']) ? 1 : (strtotime($limit['expired_time']) > time());
     }
 
     /**

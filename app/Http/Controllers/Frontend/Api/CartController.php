@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 
 class CartController extends Controller {
 
+
     /**
      * Display a listing of the resource.
      *
@@ -58,9 +59,10 @@ class CartController extends Controller {
      */
     public function update(Request $request, $cart_id)
     {
+        $user_id = $this->getCurrentAuthUserId();
         $quantity = $request->input('quantity') ?: 1;
 
-        $cart = CartService::update($cart_id, $quantity);
+        $cart = CartService::update($cart_id, $user_id, $quantity);
 
         return $this->response->item($cart, new CartTransformer());
     }
@@ -73,8 +75,9 @@ class CartController extends Controller {
      */
     public function destroy($cart_id)
     {
+        $user_id = $this->getCurrentAuthUserId();
 
-        CartService::remove($cart_id);
+        CartService::remove($cart_id, $user_id);
 
         return $this->response->noContent();
     }
