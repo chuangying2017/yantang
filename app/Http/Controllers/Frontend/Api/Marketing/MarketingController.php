@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend\Api\Marketing;
 
+use App\Http\Transformers\CouponTransformer;
 use App\Http\Transformers\TicketTransformer;
 use App\Services\Client\ClientService;
 use App\Services\Marketing\Exceptions\MarketingItemDistributeException;
@@ -43,12 +44,16 @@ class MarketingController extends Controller {
      */
     public function index(Request $request)
     {
-        $user_id = $this->getCurrentAuthUserId();
+        try {
+            $user_id = $this->getCurrentAuthUserId();
+            $status = $request->input('status', MarketingProtocol::STATUS_OF_PENDING);
+            $tickets = $this->using->lists($user_id, $status);
 
-        $status = $request->input('status', MarketingProtocol::STATUS_OF_PENDING);
-        $tickets = $this->using->lists($user_id, $status);
+            return $this->response->collection($tickets, new TicketTransformer());
+        } catch (\Exception $e) {
+            return $e->getTrace();
+        }
 
-        return $this->response->collection($tickets, new TicketTransformer());
     }
 
     /**

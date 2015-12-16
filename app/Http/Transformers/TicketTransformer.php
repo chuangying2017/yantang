@@ -39,8 +39,6 @@ class TicketTransformer extends TransformerAbstract {
             ],
             $limits
         );
-
-
     }
 
     public function includeCoupon(Ticket $ticket)

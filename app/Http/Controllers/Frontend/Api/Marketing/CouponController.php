@@ -30,18 +30,6 @@ class CouponController extends MarketingController {
         $this->orderGenerator = $orderGenerator;
     }
 
-    /**
-     * @param Request $request
-     * @return \Dingo\Api\Http\Response
-     */
-    public function index(Request $request)
-    {
-        $tickets = parent::index($request);
-
-        return $this->response->collection($tickets, new TicketTransformer());
-    }
-
-
     public function exchange(Request $request)
     {
         try {

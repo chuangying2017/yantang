@@ -145,8 +145,9 @@ class MarketingRepository {
                 $ticket_no = StringUtility::generateString(MarketingProtocol::LENGTH_OF_TICKET_NO);
             }
         }
+        $created_at = Carbon::now();
 
-        return DB::table('tickets')->insertGetId(compact('user_id', 'resource_id', 'resource_type', 'ticket_no', 'status'));
+        return DB::table('tickets')->insertGetId(compact('user_id', 'resource_id', 'resource_type', 'ticket_no', 'status', 'created_at'));
     }
 
     public static function findTicket($ticket_id)
@@ -174,9 +175,9 @@ class MarketingRepository {
         if ( ! is_null($status)) {
             if ($status == MarketingProtocol::STATUS_OF_PENDING) {
                 $query = $query->where(function ($query) {
-                    $query->whereNull('effect_time')->orWhere('effect_time', '=<', Carbon::now());
+                    $query->whereNull('effect_time')->orWhere('effect_time', '<=', Carbon::now());
                 })->where(function ($query) {
-                    $query->whereNull('expire_time')->orWhere('expire_time', '=<', Carbon::now());
+                    $query->whereNull('expire_time')->orWhere('expire_time', '>=', Carbon::now());
                 });
             }
 
