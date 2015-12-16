@@ -2,7 +2,7 @@
 
 @section('page-header')
     <h1>
-        商品分组列表
+        商家列表
         <small>{{ trans('strings.backend.dashboard_title') }}</small>
     </h1>
 @endsection
@@ -16,7 +16,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-2">
-            <a href="{!!route('admin.groups.create')!!}" class="btn btn-primary btn-block margin-bottom">创建新的分组</a>
+            <a href="{!!route('admin.groups.create')!!}" class="btn btn-primary btn-block margin-bottom">创建新的商家</a>
             <!-- /. box -->
         </div>
         <!-- /.col -->
@@ -42,16 +42,20 @@
                         <table class="table table-hover table-striped">
                             <thead>
                             <th></th>
-                            <th>分组名称</th>
-                            <th>组内商品数目</th>
+                            <th>商家名称</th>
+                            <th>负责人</th>
+                            <th>联系方式</th>
+                            <th>商品数目</th>
                             <th>创建时间</th>
                             <th>操作</th>
                             </thead>
                             <tbody>
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td>热卖商品</td>
-                                <td>3</td>
+                                <td>东方丽人</td>
+                                <td>Andy</td>
+                                <td>13246665701</td>
+                                <td>100</td>
                                 <td>2015-11-23 20:46:53</td>
                                 <td>
                                     <div class="btn-group">
@@ -60,7 +64,9 @@
                                         <button type="button" class="btn btn-default btn-sm"><i
                                                 class="fa fa-trash-o"></i></button>
                                         <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-link"></i></button>
+                                                class="fa fa-lock"></i> 锁定用户</button>
+                                        <button type="button" class="btn btn-default btn-sm"><i
+                                                class="fa fa-sort-numeric-asc"></i> 重置密码</button>
                                     </div>
                                 </td>
                             </tr>
