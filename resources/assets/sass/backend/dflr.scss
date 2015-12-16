@@ -1,0 +1,77 @@
+.dflr-select{
+	display: none;
+	& + label{
+		display: block;
+		margin-bottom: 20px;
+		padding: 10px;
+		text-align: center;
+		border: 1px solid #ddd;
+		cursor: pointer;
+	}
+	&:checked + label{
+		border: 1px solid #F59709;
+    	color: #F59709;
+	}
+}
+.box.without-border{
+	border-top: 1px solid #F5F5F5;
+}
+.attrValueGroup{
+	margin-bottom: 10px;
+	padding: 10px 0;
+	background: #EFEFEF;
+	border-radius: 5px;
+}
+.attrGroup + span{
+	margin-bottom: 10px;
+}
+.c-red{
+	color: #dd4b39;
+}
+.cover-images{
+	.img-wrapper{
+		display: inline-block;
+		position: relative;
+		cursor: pointer;
+		&:hover{
+			&:before{
+				display: block;
+			}
+		}
+		&:before{
+			content: "删除";
+		    display: none;
+		    position: absolute;
+		    top: 10px;
+		    left: 0;
+		    width: 70px;
+		    height: 70px;
+		    background: rgba(0, 0, 0, 0.8);
+		    color: #FFF;
+		    line-height: 70px;
+		    text-align: center;
+		}
+	}
+	&.banner-images{
+		img{
+			width: 180px;
+			height: 70px;
+		}
+		.img-wrapper:before{
+			width: 180px;
+			height: 70px;
+		}
+	}
+	img{
+		margin: 10px 10px 10px 0;
+		width: 70px;
+		height: 70px;
+	}
+}
+.groups-select{
+	width: 100%;
+	height: 90px;
+	border: 1px solid #ddd;
+	padding: 10px;
+	list-style-type: none;
+}

@@ -14,6 +14,7 @@ composer.phar
 error.log
 Todo.rtf
 /public/assets/bower_components
+/public/js/vendor
 Envoy.blade.php
 _ide_helper.php
 composer.phar
