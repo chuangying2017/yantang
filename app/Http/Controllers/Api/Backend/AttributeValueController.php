@@ -93,6 +93,6 @@ class AttributeValueController extends Controller {
     {
         AttributeValueService::delete($value_id);
 
-        return $this->respondDelete();
+        return $this->response->noContent();
     }
 }
