@@ -34,7 +34,7 @@ class CouponController extends MarketingController {
     {
         try {
             $uuid = $request->input('uuid');
-            $ticket_id = $request->input('ticket_id');
+            $ticket_id = $request->input('ticket_id', []);
 
             $coupon = $this->using->show(to_array($ticket_id));
 

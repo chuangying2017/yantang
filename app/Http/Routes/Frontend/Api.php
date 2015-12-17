@@ -28,22 +28,22 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
 
 
 $api->get('nav', [
-    'as' => 'home.nav',
+    'as'   => 'home.nav',
     'uses' => 'IndexController@getNav'
 ]);
 
 $api->get('banners', [
-    'as' => 'home.banners',
+    'as'   => 'home.banners',
     'uses' => 'IndexController@getBanners'
 ]);
 
 $api->get('sections', [
-    'as' => 'home.sections',
+    'as'   => 'home.sections',
     'uses' => 'IndexController@getSections'
 ]);
 
 $api->get('user/info', [
-    'as' => 'client.user.info',
+    'as'   => 'client.user.info',
     'uses' => 'IndexController@getUserInfo'
 ]);
 
@@ -56,12 +56,12 @@ $api->resource('products', 'ProductController', ['only' => ['index', 'show']]);
 /**
  * 需要登录才能查看
  */
-//$api->group(['middleware' => 'jwt.refresh'], function ($api) {
+$api->group(['middleware' => 'api.auth'], function ($api) {
 
     $api->group(['namespace' => 'Marketing', 'prefix' => 'marketing'], function ($api) {
         $api->resource('coupons', 'CouponController');
         $api->post('coupons/exchange', [
-            'as' => 'api.marketing.coupons.exchange',
+            'as'   => 'api.marketing.coupons.exchange',
             'uses' => 'CouponController@exchange'
         ]);
     });
@@ -70,19 +70,19 @@ $api->resource('products', 'ProductController', ['only' => ['index', 'show']]);
     $api->resource('cart', 'CartController', ['only' => ['index', 'store', 'update', 'destroy']]);
 
     $api->post('orders/confirm', [
-        'as' => 'order.preConfirm',
+        'as'   => 'order.preConfirm',
         'uses' => 'OrderController@preConfirm'
     ]);
 
     $api->post('orders/request', [
-        'as' => 'order.fetchConfirm',
+        'as'   => 'order.fetchConfirm',
         'uses' => 'OrderController@fetchConfirm'
     ]);
 
 
     $api->resource('orders', 'OrderController');
     $api->resource('address', 'AddressController');
-//});
+});
 
 
 
