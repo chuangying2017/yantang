@@ -1,13 +1,25 @@
 <?php namespace App\Services\Orders\Supports;
 
 
+use App\Services\Orders\Helpers\UserHelper;
 use App\Services\Orders\Payments\PaymentInterface;
-use App\Services\Orders\UserHelper;
 use Exception;
 use Pingpp\Charge;
 use Pingpp\Pingpp;
 
 class PingxxService implements PaymentInterface {
+
+    private static $payment_no;
+
+    public static function setPaymentNo($payment_no)
+    {
+        self::$payment_no = $payment_no;
+    }
+
+    public static function getPaymentNo()
+    {
+        return self::$payment_no;
+    }
 
     use UserHelper;
 
@@ -20,23 +32,24 @@ class PingxxService implements PaymentInterface {
      * @param $accountType
      * @return Charge
      */
-    private static function getPaidPackage($order, $pingxx_payment_no, $billing_no, $amount, $user_IP, $channel, $pingxx_account = PingxxProtocol::PINGXX_ACCOUNT)
+    private static function getPaidPackage($order, $pingxx_payment_no, $billing_no, $amount, $user_IP, $channel)
     {
         try {
-            Pingpp::setApiKey(getenv($pingxx_account . '_PINGPP_APIKEY'));
+            Pingpp::setApiKey(env(env('PINGPP_ACCOUNT_TYPE') . '_PINGPP_APIKEY'));
             $order_no = $order['order_no'];
 
-
+            self::setPaymentNo($pingxx_payment_no);
             $charge = Charge::create(
                 [
                     "amount"    => $amount,
+                    "channel"   => $channel,
                     "order_no"  => $pingxx_payment_no,
-                    "currency"  => trans(PingxxProtocol::PAID_PACKAGE_CURRENCY),
+                    "currency"  => PingxxProtocol::PAID_PACKAGE_CURRENCY,
                     "client_ip" => $user_IP,
-                    "app"       => ["id" => getenv($pingxx_account . '_PINGPP_APPID')],
+                    "app"       => ["id" => env(env('PINGPP_APP_NAME') . '_PINGPP_APPID')],
                     "subject"   => $order['title'],
                     "body"      => $order['title'],
-                    "extra"     => self::getExtraData($channel, $order['user_id']),
+                    "extra"     => self::getExtraData($channel),
                     "metadata"  => ["billing_no" => $billing_no, 'order_no' => $order_no, 'order_id' => $order['id']]
                 ]
             );
@@ -48,31 +61,72 @@ class PingxxService implements PaymentInterface {
         }
     }
 
-    protected function getExtraData($channel, $user_id = null)
+    protected function getExtraData($channel)
     {
         switch ($channel) {
-            case PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT:
-                $openid = self::getUserOpenid($user_id);
-                $extra_data = [
-                    "extra" => [
-                        "trade_type" => 'JSAPI',
-                        "open_id"    => $openid,
-                    ]
-                ];
+            case 'alipay_wap':
+                $extra = array(
+                    'success_url' => 'http://www.yourdomain.com/success',
+                    'cancel_url'  => 'http://www.yourdomain.com/cancel'
+                );
                 break;
-            default:
-                $extra_data = [];
+            case 'upmp_wap':
+                $extra = array(
+                    'result_url' => 'http://www.yourdomain.com/result?code='
+                );
+                break;
+            case 'bfb_wap':
+                $extra = array(
+                    'result_url' => 'http://www.yourdomain.com/result?code=',
+                    'bfb_login'  => true
+                );
+                break;
+            case 'upacp_wap':
+                $extra = array(
+                    'result_url' => 'http://www.yourdomain.com/result'
+                );
+                break;
+            case 'wx_pub':
+                $extra = array(
+                    'open_id' => 'Openid'
+                );
+                break;
+            case 'wx_pub_qr':
+                $extra = array(
+                    'product_id' => self::getPaymentNo()
+                );
+                break;
+            case 'yeepay_wap':
+                $extra = array(
+                    'product_category' => '1',
+                    'identity_id'      => 'your identity_id',
+                    'identity_type'    => 1,
+                    'terminal_type'    => 1,
+                    'terminal_id'      => 'your terminal_id',
+                    'user_ua'          => 'your user_ua',
+                    'result_url'       => 'http://www.yourdomain.com/result'
+                );
+                break;
+            case 'jdpay_wap':
+                $extra = array(
+                    'success_url' => 'http://www.yourdomain.com',
+                    'fail_url'    => 'http://www.yourdomain.com',
+                    'token'       => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
+                );
                 break;
         }
 
-        return $extra_data;
+        return $extra;
     }
 
 
-    public static function generatePingppBilling($order, $main_billing, $channel)
+    public static function generatePingppBilling($order, $main_billing, $channel, $agent)
     {
 
         try {
+
+            PingxxProtocol::validChannel($channel, $agent);
+
             $amount = $main_billing['amount'];
 
             if ($amount > 0) {
@@ -85,9 +139,8 @@ class PingxxService implements PaymentInterface {
             }
 
             return 0;
-        } catch (Exception $e) {
-            info($e->getMessage());
-            throw new $e;
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -96,8 +149,6 @@ class PingxxService implements PaymentInterface {
     {
         $payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_id);
         $result = Charge::retrieve($payment->charge_id);
-
-
 
     }
 

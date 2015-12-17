@@ -2,7 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
-class ClientSeeder extends Seeder {
+class ClientSeeder extends Seeder
+{
 
     /**
      * Run the database seeds.
@@ -11,12 +12,12 @@ class ClientSeeder extends Seeder {
      */
     public function run()
     {
-        App\Models\Client::updateOrCreate(['user_id' => 6], [
-            "user_id"  => 6,
-            "nickname" => "用户昵称",
-            "sex"      => "",
+        App\Models\Client::updateOrCreate(['user_id' => 2], [
+            "user_id" => 2,
+            "nickname" => "bryant",
+            "sex" => "",
             "birthday" => "1991-09-02",
-            "avatar"   => "/static/img/cover-img.jpg"
+            "avatar" => "/static/img/cover-img.jpg"
         ]);
     }
 }

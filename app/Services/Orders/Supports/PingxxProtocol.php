@@ -1,4 +1,5 @@
 <?php namespace App\Services\Orders\Supports;
+
 use App\Services\Orders\Exceptions\WrongStatus;
 
 class PingxxProtocol {
@@ -59,5 +60,55 @@ class PingxxProtocol {
         return true;
     }
 
+    public static function validChannel($channel, $agent)
+    {
+        if ( ! $channel || is_null($channel) || is_null(self::agent($agent, $channel))) {
+            throw new \Exception('支付渠道不存在');
+        }
+
+        return $channel;
+    }
+
+    const AGENT_OF_PC = 'pc';
+    const AGENT_OF_MOBILE = 'wap';
+    const AGENT_OF_APP = 'app';
+
+    public static function agent($agent, $channel = null)
+    {
+        $data = [];
+        switch ($agent) {
+            case self::AGENT_OF_PC:
+                $data = [
+                    self::PINGXX_SPECIAL_CHANNEL_ALIPAY_QR => '支付宝扫码支付',
+                    self::PINGXX_SPECIAL_CHANNEL_WECHAT_QR => '微信扫码支付',
+                    self::PINGXX_PC_CHANNEL_ALIPAY         => '支付宝',
+                    self::PINGXX_PC_CHANNEL_UNIONPAY       => '银联'
+                ];
+                break;
+            case self::AGENT_OF_MOBILE:
+                $data = [
+                    self::PINGXX_WAP_CHANNEL_ALIPAY       => '支付宝',
+                    self::PINGXX_WAP_CHANNEL_WECHAT       => '微信支付',
+                    self::PINGXX_WAP_CHANNEL_UNIONPAY_NEW => '银联支付',
+                    self::PINGXX_WAP_CHANNEL_BAIDU        => '百度支付',
+                    self::PINGXX_WAP_CHANNEL_YEEPAY       => '易付宝',
+                    self::PINGXX_WAP_CHANNEL_JINGDONG     => '京东支付',
+                ];
+                break;
+            case self::AGENT_OF_APP:
+                $data = [
+                    self::PINGXX_APP_CHANNEL_ALIPAY       => '支付宝',
+                    self::PINGXX_APP_CHANNEL_WECHAT       => '微信支付',
+                    self::PINGXX_APP_CHANNEL_UNIONPAY_NEW => '银联支付',
+                    self::PINGXX_APP_CHANNEL_BAIDU        => '百度支付',
+                    self::PINGXX_APP_CHANNEL_APPLE_PAY    => 'Apple Pay',
+                ];
+                break;
+            default:
+                break;
+        }
+
+        return is_null($channel) ? $data : (isset($data[ $channel ]) ? $data[ $channel ] : null);
+    }
 
 }
