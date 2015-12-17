@@ -51,16 +51,21 @@
                                 <tr>
                                     <td>{{$category->id}}</td>
                                     <td>{{$category->name}}</td>
-                                    <td>{{$category->name}}</td>
+                                    <td>{{$category->created_at}}</td>
                                     <td>
                                         <div class="btn-group">
                                             <a href="{{url('/admin/categories/' . $category->id)}}"
                                                class="btn btn-default btn-sm"><i
                                                     class="fa fa-pencil"></i></a>
-                                            <a class="btn btn-default btn-sm"><i
-                                                    class="fa fa-trash-o"></i></a>
-                                            <a class="btn btn-default btn-sm"><i
-                                                    class="fa fa-link"></i></a>
+                                            <form style="display: inline-block"
+                                                  action="{{url('/admin/categories/' . $category->id)}}" ,
+                                                  method="post">
+                                                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                                <input type="hidden" name="_method" value="delete">
+                                                <button type="submit" class="btn btn-default btn-sm"><i
+                                                        class="fa fa-trash-o"></i></button>
+                                            </form>
+
                                         </div>
                                     </td>
                                 </tr>

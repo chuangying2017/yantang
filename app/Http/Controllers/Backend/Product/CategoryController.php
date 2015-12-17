@@ -15,7 +15,8 @@ class CategoryController extends Controller
     public function index()
     {
         try {
-            $categories = $this->api->get('api/admin/categories/');
+            $records = $this->api->get('api/admin/categories/');
+            $categories = $records['data'];
             return view('backend.categories.index', compact('categories'));
         } catch (\Exception $e) {
             return $e;
@@ -63,18 +64,31 @@ class CategoryController extends Controller
         dd($categroy);
     }
 
-    public function update(Request $request)
+    public function update($id, Request $request)
     {
         try {
             $data = $request->all();
 
-            $result = $this->api->put('api/admin/categories', [
+            $result = $this->api->put('api/admin/categories/' . $id, [
                 'name' => array_get($data, 'name', ''),
                 'pid' => array_get($data, 'pid', null),
                 'cover_image' => array_get($data, 'cover_image', ''),
                 'desc' => array_get($data, 'desc', '')
             ]);
 
+            if ($result) {
+                return redirect('/admin/categories');
+            }
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $result = $this->api->delete('api/admin/categories/' . $id);
             if ($result) {
                 return redirect('/admin/categories');
             }
