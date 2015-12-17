@@ -3,7 +3,8 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class DatabaseSeeder extends Seeder {
+class DatabaseSeeder extends Seeder
+{
 
     /**
      * Run the database seeds.
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder {
         $this->call(ImageSeeder::class);
         $this->call(NavSeeder::class);
         $this->call(ClientSeeder::class);
+        $this->call(AccessTableSeeder::class);
 
         if (env('DB_DRIVER') == 'mysql')
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
