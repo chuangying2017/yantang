@@ -70,7 +70,7 @@ class CategoryService {
 
     public static function show($category_id)
     {
-        return self::getSingleTree($category_id, false, false);
+        return Category::findOrFail($category_id);
     }
 
     public static function getLeavesId($category_id, $string = false)
