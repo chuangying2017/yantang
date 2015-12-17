@@ -86,11 +86,11 @@ class OrderGenerator {
     {
         $order_info = self::getOrder($uuid);
 
+        $order_info = self::removeDiscount($order_info);
+
         if ( ! count($resources)) {
             return $order_info;
         }
-
-        $order_info = self::removeDiscount($order_info);
 
         if (count($resources) >= 1) {
             foreach ($resources as $resource) {
@@ -222,6 +222,8 @@ class OrderGenerator {
             $order_main = OrderRepository::generateOrder($order_info);
 
             event(new \App\Services\Orders\Event\OrderConfirm($order_main['id'], $order_info));
+
+            $order_info = self::getOrder($uuid, true);
 
             return $order_main;
 

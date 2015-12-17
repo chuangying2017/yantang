@@ -36,7 +36,6 @@ class MarketingRequest extends Request {
 
         if ($this->route()->getName() == 'api.marketing.coupons.exchange') {
             $rules = [
-                'ticket_id' => 'required',
                 'uuid'      => 'required'
             ];
         }

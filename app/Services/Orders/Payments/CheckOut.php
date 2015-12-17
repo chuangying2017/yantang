@@ -1,10 +1,10 @@
 <?php namespace App\Services\Orders\Payments;
 
 use App\Models\Order;
+use App\Services\Orders\Helpers\UserHelper;
 use App\Services\Orders\OrderProtocol;
 use App\Services\Orders\OrderRepository;
 use App\Services\Orders\Supports\PingxxService;
-use App\Services\Orders\UserHelper;
 use Exception;
 
 class CheckOut {

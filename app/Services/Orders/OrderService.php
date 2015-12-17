@@ -30,6 +30,11 @@ class OrderService {
         try {
             $order = self::authOrder($user_id, $order_no);
             OrderProtocol::validStatus($order['status'], OrderProtocol::STATUS_OF_CANCEL);
+
+            if ($order['status'] == OrderProtocol::STATUS_OF_PAID) {
+                #todo @troy Order Refund
+            }
+
             OrderRepository::deleteOrder($order);
         } catch (\Exception $e) {
             throw $e;
