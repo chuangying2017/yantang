@@ -63,6 +63,7 @@ class OrderGenerator {
             $order_info['uuid'] = Uuid::uuid();
             $order_info['carts'] = $carts;
 
+            event(new \App\Services\Orders\Event\OrderInfoChange($order_info));
             event(new \App\Services\Orders\Event\OrderRequest($order_info));
 
             return $order_info;
@@ -100,7 +101,7 @@ class OrderGenerator {
 
         $order_info = self::filterMarketingInfo($order_info['user_id'], $order_info);
 
-        event(new \App\Services\Orders\Event\OrderRequest($order_info));
+        event(new \App\Services\Orders\Event\OrderInfoChange($order_info));
 
         return $order_info;
     }
@@ -144,10 +145,12 @@ class OrderGenerator {
                 if ($coupon['selected']) {
                     $order_info['discount_fee'] -= $coupon['discount_fee'];
                     $coupon['selected'] = false;
+                    unset($order_info['discount_detail']['coupons'][ $coupon['id'] ]);
                 }
             }
         }
-        unset($order_info['discount_detail']['coupons']);
+
+        event(new \App\Services\Orders\Event\OrderInfoChange($order_info));
 
         return $order_info;
     }
@@ -255,7 +258,7 @@ class OrderGenerator {
 
     protected function doubleCheckCoupon($order_info)
     {
-        return $this->requestDiscount($order_info['discount_detail']['coupons'], $order_info['uuid']);
+        return $this->requestDiscount(array_get($order_info, 'discount_detail.coupons', []), $order_info['uuid']);
     }
 
 

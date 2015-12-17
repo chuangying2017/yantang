@@ -18,9 +18,6 @@ abstract class Controller extends BaseController {
 
     protected function getCurrentAuthUserId()
     {
-        #todo remove static user
-        return 2;
-
         if ($user = $this->getCurrentAuthUser()) {
             return $user['id'];
         }

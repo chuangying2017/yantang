@@ -2,14 +2,15 @@
 
 namespace App\Services\Orders\Listeners;
 
-use App\Services\Orders\Event\OrderRequest;
+use App\Services\Orders\Event\OrderInfoChange;
 use App\Services\Orders\Helpers\OrderInfoHelpers;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CacheOrderRequestData
-{
+class CacheOrderRequestData {
+
     use OrderInfoHelpers;
+
     /**
      * Create the event listener.
      *
@@ -23,10 +24,10 @@ class CacheOrderRequestData
     /**
      * Handle the event.
      *
-     * @param  OrderRequest  $event
+     * @param  OrderRequest $event
      * @return void
      */
-    public function handle(OrderRequest $event)
+    public function handle(OrderInfoChange $event)
     {
         $order_info = $event->order_info;
         $this->setOrder($order_info);
