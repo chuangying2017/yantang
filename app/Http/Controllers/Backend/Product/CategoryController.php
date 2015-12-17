@@ -13,7 +13,12 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        return view('backend.categories.index');
+        try {
+            $categories = $this->api->get('api/admin/categories/');
+            return view('backend.categories.index');
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
 
     public function create()
