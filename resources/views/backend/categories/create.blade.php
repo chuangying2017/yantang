@@ -30,7 +30,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label"><span class="c-red">*</span> 类目名称：</label>
                         <div class="col-sm-5">
-                            <input type="text" name="name" class="form-control" required>
+                            <input type="text" name="name" class="form-control" required value="">
                         </div>
                     </div>
                     <div class="form-group">
@@ -40,11 +40,6 @@
                                 <option value="null">无父级分类</option>
                                 @foreach($categories as $category)
                                     <option value="{{$category->id}}">{{$category->name}}</option>
-                                    @if( count($category->children) > 0 )
-                                        @foreach($category->children as $child)
-                                            <option value="{{$child->id}}">{{$child->name}}</option>
-                                        @endforeach
-                                    @endif
                                 @endforeach
                             </select>
                         </div>
