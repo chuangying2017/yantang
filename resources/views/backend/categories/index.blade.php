@@ -41,29 +41,30 @@
                     <div class="table-responsive mailbox-messages">
                         <table class="table table-hover table-striped">
                             <thead>
-                            <th></th>
-                            <th>类目名称</th>
                             <th>类目ID</th>
+                            <th>类目名称</th>
                             <th>创建时间</th>
                             <th>操作</th>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td>彩妆</td>
-                                <td>3</td>
-                                <td>2015-11-23 20:46:53</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-pencil"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-trash-o"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-link"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach($categories as $category)
+                                <tr>
+                                    <td>{{$category->id}}</td>
+                                    <td>{{$category->name}}</td>
+                                    <td>{{$category->name}}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{{url('/admin/categories/' . $category->id)}}"
+                                               class="btn btn-default btn-sm"><i
+                                                    class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-default btn-sm"><i
+                                                    class="fa fa-trash-o"></i></a>
+                                            <a class="btn btn-default btn-sm"><i
+                                                    class="fa fa-link"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
 
                             </tbody>
                         </table>
