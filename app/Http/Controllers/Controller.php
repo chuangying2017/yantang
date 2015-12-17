@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Traits\ApiFormatHelpers;
 use App\Http\Traits\ApiHelpers;
+use App\Services\Orders\Supports\PingxxProtocol;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -19,8 +20,6 @@ abstract class Controller extends BaseController
 
     protected function getCurrentAuthUserId()
     {
-        #todo remove static user
-//        return 2;
 
         if ($user = $this->getCurrentAuthUser()) {
             return $user['id'];
@@ -38,6 +37,11 @@ abstract class Controller extends BaseController
         $user = JWTAuth::parseToken()->authenticate();
 
         return $user;
+    }
+
+    protected function getAgent()
+    {
+        return \Request::input('agent', PingxxProtocol::AGENT_OF_PC);
     }
 
 }

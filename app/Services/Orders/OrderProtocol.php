@@ -27,6 +27,8 @@ class OrderProtocol {
     const RESOURCE_OF_PINGXX = 'App\Models\PingxxPayment';
 
 
+
+
     public static function status($key = null)
     {
         $message = [
@@ -83,6 +85,9 @@ class OrderProtocol {
 
         return true;
     }
+
+
+
 
 
 }
