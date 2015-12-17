@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
  */
 class CategoryController extends Controller
 {
+    //todo@bryant: error handler
     public function index()
     {
         try {

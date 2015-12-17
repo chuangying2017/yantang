@@ -41,29 +41,32 @@
                     <div class="table-responsive mailbox-messages">
                         <table class="table table-hover table-striped">
                             <thead>
-                            <th></th>
                             <th>分组名称</th>
                             <th>组内商品数目</th>
                             <th>创建时间</th>
                             <th>操作</th>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td>热卖商品</td>
-                                <td>3</td>
-                                <td>2015-11-23 20:46:53</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-pencil"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-trash-o"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-link"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach($groups as $group)
+                                <tr>
+                                    <td>{{$group->name}}</td>
+                                    <td>3</td>
+                                    <td>{{$group->created_at}}</td>
+                                    <td>
+                                        <a href="{{url('/admin/groups/' . $group->id)}}"
+                                           class="btn btn-default btn-sm"><i
+                                                class="fa fa-pencil"></i></a>
+                                        <form style="display: inline-block"
+                                              action="{{url('/admin/groups/' . $group->id)}}" ,
+                                              method="post">
+                                            <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                            <input type="hidden" name="_method" value="delete">
+                                            <button type="submit" class="btn btn-default btn-sm"><i
+                                                    class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
 
                             </tbody>
                         </table>
