@@ -58,8 +58,8 @@ class PingxxPaymentRepository {
             ? $payment_id
             : (
             (strlen($payment_id) == self::PAYMENT_ID_LENGTH)
-                ? PingxxPayment::findOrFail($payment_id)
-                : PingxxPayment::where('payment_id', $payment_id)->first()
+                ? PingxxPayment::where('payment_id', $payment_id)->first()
+                : PingxxPayment::findOrFail($payment_id)
             );
     }
 
