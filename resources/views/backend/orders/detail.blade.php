@@ -132,14 +132,13 @@
                     <!-- /.mail-box-messages -->
                 </div>
                 <div class="box-footer clearfix">
-                    <button type="submit" class="btn btn-primary pull-right">马上发货</button>
+                    <button type="submit" class="btn btn-primary pull-right"  data-toggle="modal" data-target=".express-modal">马上发货</button>
                 </div>
                 <!-- /.box-body -->
             </div>
              <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">订单商品</h3>
-                    <!-- /.box-tools -->
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body order-tables">                    
