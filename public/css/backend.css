@@ -16813,6 +16813,31 @@ fieldset[disabled] .btn-vk.active {
   padding: 10px;
 }
 
+.home-setting table {
+  background: #fff;
+}
+
+.home-setting thead tr {
+  background: #ddd;
+}
+
+.home-slider img {
+  width: 150px;
+  height: auto;
+}
+
+.home-banner img {
+  width: 50px;
+  height: auto;
+}
+
+.products-group {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #eee;
+  border-radius: 5px;
+}
+
 .toast-title {
   font-weight: 700;
 }
