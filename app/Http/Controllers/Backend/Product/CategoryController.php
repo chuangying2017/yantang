@@ -26,7 +26,7 @@ class CategoryController extends Controller
     public function create()
     {
         try {
-            $categories = $this->api->get('api/admin/categories/');
+            $categories = $this->api->get('api/admin/categories/')['data'];
             return view('backend.categories.create', compact('categories'));
         } catch (Exception $e) {
             return $e->getMessage();
@@ -61,9 +61,8 @@ class CategoryController extends Controller
     {
 
         $category = $this->api->get('api/admin/categories/' . $id)['data'];
-        dd($category);
         $categories = $this->api->get('api/admin/categories')['data'];
-        return view('backend.categories.create', compact('categories', 'category'));
+        return view('backend.categories.show', compact('categories', 'category'));
     }
 
     public function update($id, Request $request)
@@ -73,7 +72,6 @@ class CategoryController extends Controller
 
             $result = $this->api->put('api/admin/categories/' . $id, [
                 'name' => array_get($data, 'name', ''),
-                'pid' => array_get($data, 'pid', null),
                 'cover_image' => array_get($data, 'cover_image', ''),
                 'desc' => array_get($data, 'desc', '')
             ]);
