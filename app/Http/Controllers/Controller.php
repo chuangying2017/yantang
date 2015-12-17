@@ -40,6 +40,7 @@ abstract class Controller extends BaseController {
 
     protected function getAgent()
     {
+        #todo 判断支付请求来源
         return \Request::input('agent', PingxxProtocol::AGENT_OF_PC);
     }
 

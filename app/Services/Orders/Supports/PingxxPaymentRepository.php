@@ -63,5 +63,10 @@ class PingxxPaymentRepository {
             );
     }
 
+    public static function fetchPingxxPaymentByBilling($billing_id)
+    {
+        return PingxxPayment::where('billing_id', $billing_id)->firstOrFail();
+    }
+
 
 }

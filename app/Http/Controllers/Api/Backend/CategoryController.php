@@ -19,9 +19,9 @@ class CategoryController extends Controller {
     public function index()
     {
         try {
-            $categories = CategoryService::getTree();
+            $categories = CategoryService::getAll();
 
-            return $this->response->array($categories);
+            return $this->response->array(['data' => $categories]);
         } catch (\Exception $e) {
             return $e->getTrace();
         }
@@ -56,7 +56,7 @@ class CategoryController extends Controller {
     {
         $categories = CategoryService::getTree($id);
 
-        return $this->response->array($categories);
+        return $this->response->array(['data' => $categories]);
     }
 
 
@@ -77,7 +77,7 @@ class CategoryController extends Controller {
 
         $category = CategoryService::update($id, $data);
 
-        return $this->response->array($category);
+        return $this->response->array(['data' => $category]);
     }
 
     /**
@@ -94,6 +94,6 @@ class CategoryController extends Controller {
             return $this->respondException($e);
         }
 
-        return $this->respondDelete();
+        return $this->response->noContent();
     }
 }

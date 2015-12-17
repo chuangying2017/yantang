@@ -63,6 +63,7 @@ class PingxxService implements PaymentInterface {
 
     protected function getExtraData($channel)
     {
+        #todo 完善支付渠道
         switch ($channel) {
             case 'alipay_wap':
                 $extra = array(
@@ -114,6 +115,9 @@ class PingxxService implements PaymentInterface {
                     'token'       => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
                 );
                 break;
+            default:
+                $extra = [];
+                break;
         }
 
         return $extra;
@@ -124,11 +128,9 @@ class PingxxService implements PaymentInterface {
     {
 
         try {
-
             PingxxProtocol::validChannel($channel, $agent);
 
             $amount = $main_billing['amount'];
-
             if ($amount > 0) {
                 $user_ip = isset($_SERVER) ? $_SERVER["REMOTE_ADDR"] : env('SERVER_PUBLIC_IP');
                 $pingxx_payment_id = PingxxPaymentRepository::getPingxxPaymentId();
@@ -145,10 +147,18 @@ class PingxxService implements PaymentInterface {
 
     }
 
-    public static function checkPingxxPaymentIsPaid($pingxx_payment_id)
+    public static function checkPingxxPaymentIsPaidByBilling($billing_id)
     {
-        $payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_id);
+        $payment = PingxxPaymentRepository::fetchPingxxPaymentByBilling($billing_id);
+
+        return self::checkPingxxPaymentIsPaid($payment['payment_id']);
+    }
+
+    public static function checkPingxxPaymentIsPaid($pingxx_payment_no)
+    {
+        $payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_no);
         $result = Charge::retrieve($payment->charge_id);
+        dd($result);
 
     }
 
