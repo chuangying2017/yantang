@@ -18,9 +18,14 @@ class CategoryController extends Controller {
      */
     public function index()
     {
-        $categories = CategoryService::getTree();
+        try {
+            $categories = CategoryService::getTree();
 
-        return $this->respondData($categories);
+            return $this->response->array($categories);
+        } catch (\Exception $e) {
+            return $e->getTrace();
+        }
+
     }
 
     /**
@@ -38,7 +43,7 @@ class CategoryController extends Controller {
 
         $data = CategoryService::create($name, $cover, $desc, $pid);
 
-        return $this->respondCreated($data);
+        return $this->setStatusCode(201)->array($data);
     }
 
     /**
@@ -51,7 +56,7 @@ class CategoryController extends Controller {
     {
         $categories = CategoryService::getTree($id);
 
-        return $this->respondData($categories);
+        return $this->response->array($categories);
     }
 
 
@@ -72,7 +77,7 @@ class CategoryController extends Controller {
 
         $category = CategoryService::update($id, $data);
 
-        return $this->respondData($category);
+        return $this->response->array($category);
     }
 
     /**

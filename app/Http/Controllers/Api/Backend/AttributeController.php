@@ -32,7 +32,7 @@ class AttributeController extends BaseController {
             $attributes = AttributeService::findAllByMerchant($merchant_id);
         }
 
-        return $this->respondData($attributes);
+        return $this->response->array($attributes);
     }
 
     /**
@@ -59,7 +59,7 @@ class AttributeController extends BaseController {
 
         $attribute = AttributeService::create($name, $merchant_id);
 
-        return $this->respondCreated($attribute);
+        return $this->setStatusCode(201)->array($attribute);
 
     }
 
@@ -97,7 +97,7 @@ class AttributeController extends BaseController {
         $name = $request->input('name');
         $attribute = AttributeService::update($id, $name);
 
-        return $this->respondData($attribute);
+        return $this->response->array($attribute);
     }
 
     /**
@@ -135,7 +135,7 @@ class AttributeController extends BaseController {
             return $this->respondException($e);
         }
 
-        return $this->respondOk();
+        return $this->response->array([]);
     }
 
 }

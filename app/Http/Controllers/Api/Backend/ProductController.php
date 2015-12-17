@@ -77,7 +77,7 @@ class ProductController extends Controller {
 
         $product = ProductService::create($data);
 
-        return $this->respondCreated($product);
+        return $this->setStatusCode(201)->array($product);
     }
 
     /**
@@ -119,7 +119,7 @@ class ProductController extends Controller {
 
         $product = ProductService::update($id, $data);
 
-        return $this->respondCreated($product);
+        return $this->setStatusCode(201)->array($product);
     }
 
     /**

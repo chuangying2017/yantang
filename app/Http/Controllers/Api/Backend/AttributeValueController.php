@@ -46,7 +46,7 @@ class AttributeValueController extends Controller {
             return $this->respondException($e);
         }
 
-        return $this->respondCreated($attribute_value);
+        return $this->setStatusCode(201)->array($attribute_value);
     }
 
     /**
