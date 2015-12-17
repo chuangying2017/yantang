@@ -82,6 +82,7 @@ $api->group(['middleware' => 'api.auth'], function ($api) {
 
     $api->resource('orders', 'OrderController');
     $api->resource('address', 'AddressController');
+    $api->resource('orders.checkout', 'CheckOutController', ['only' => ['index', 'store', 'update', 'destroy']]);
 });
 
 
