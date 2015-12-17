@@ -1,4 +1,5 @@
 <?php namespace App\Services\Orders\Supports;
+
 use App\Models\PingxxPayment;
 
 class PingxxPaymentRepository {
@@ -11,7 +12,8 @@ class PingxxPaymentRepository {
     public static function getPingxxPaymentId()
     {
         $payment_id = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
-        while (self::fetchPingxxPayment($payment_id)) {
+        #todo payment_no
+        while (PingxxPayment::where('payment_id', $payment_id)->count()) {
             $payment_id = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
         }
 
@@ -52,7 +54,7 @@ class PingxxPaymentRepository {
 
     public static function fetchPingxxPayment($payment_id)
     {
-        return $payment_id instanceof PingxxPayment
+        return ($payment_id instanceof PingxxPayment)
             ? $payment_id
             : (
             (strlen($payment_id) == self::PAYMENT_ID_LENGTH)
@@ -60,7 +62,6 @@ class PingxxPaymentRepository {
                 : PingxxPayment::where('payment_id', $payment_id)->first()
             );
     }
-
 
 
 }

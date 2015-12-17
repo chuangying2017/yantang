@@ -20,7 +20,7 @@ class CategoryController extends Controller {
     {
         $categories = CategoryService::getTree();
 
-        return $this->respondData($categories);
+        return $this->response->array($categories);
     }
 
     /**
@@ -35,7 +35,7 @@ class CategoryController extends Controller {
 
         $category->attributes = AttributeService::getByCategory($category['id']);
 
-        return $this->respondData($category);
+        return $this->response->array($category);
     }
 
 }

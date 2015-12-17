@@ -42,5 +42,18 @@ class OrderService {
 
     }
 
+    public static function orderNeedPay($user_id, $order_no)
+    {
+        $order = self::authOrder($user_id, $order_no);
+
+        //检查订单状态是否需要支付
+        if ($order_no['status'] == OrderProtocol::STATUS_OF_UNPAID) {
+            #todo 检查主订单是否为同步
+            return true;
+        }
+
+        return false;
+    }
+
 
 }
