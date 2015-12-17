@@ -35,7 +35,7 @@ class UserTableSeeder extends Seeder
             [
                 'name' => 'Default User',
                 'email' => 'user@user.com',
-                'password' => bcrypt('1234'),
+                'password' => bcrypt('kobebryant'),
                 'confirmation_code' => md5(uniqid(mt_rand(), true)),
                 'confirmed' => true,
                 'status' => 1,
