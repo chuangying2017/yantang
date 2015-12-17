@@ -13,8 +13,8 @@ $api->group(['prefix' => 'categories'], function ($api) {
         'uses' => 'AttributeController@bindAttributeToCategories'
     ]);
 
-    $api->resource('/', 'CategoryController');
 });
+$api->resource('categories', 'CategoryController');
 
 
 $api->resource('products', 'ProductController');

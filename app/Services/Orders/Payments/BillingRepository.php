@@ -72,7 +72,7 @@ class BillingRepository {
     public static function getBilling($order_id, $billing_type = OrderProtocol::TYPE_OF_MAIN, $billing_resource = OrderProtocol::RESOURCE_OF_PINGXX)
     {
         $query = OrderBilling::where('type', $billing_type)->where('resource_type', $billing_resource)->where('order_id', $order_id);
-        if ($billing_type == OrderProtocol::RESOURCE_OF_PINGXX) {
+        if ($billing_type == OrderProtocol::TYPE_OF_MAIN) {
             return $query->first();
         }
 
