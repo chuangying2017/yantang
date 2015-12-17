@@ -54,7 +54,7 @@ class CategoryController extends Controller {
      */
     public function show($id)
     {
-        $categories = CategoryService::getTree($id);
+        $categories = CategoryService::show($id);
 
         return $this->response->array(['data' => $categories]);
     }
@@ -70,7 +70,7 @@ class CategoryController extends Controller {
     public function update(Request $request, $id)
     {
         $name = $request->input('name');
-        $category_cover = $request->input('cover', '');
+        $category_cover = $request->input('cover_image', '');
         $desc = $request->input('desc', '');
 
         $data = compact('name', 'category_cover', 'desc');

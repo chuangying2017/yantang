@@ -151,7 +151,7 @@ class PingxxService implements PaymentInterface {
     {
         $payment = PingxxPaymentRepository::fetchPingxxPaymentByBilling($billing_id);
 
-        return self::checkPingxxPaymentIsPaid($payment['payment_id']);
+        return self::checkPingxxPaymentIsPaid($payment['id']);
     }
 
     public static function checkPingxxPaymentIsPaid($pingxx_payment_no)
