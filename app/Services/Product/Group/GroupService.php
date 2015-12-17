@@ -7,6 +7,7 @@
  */
 
 namespace App\Services\Product\Group;
+
 use App\Models\Group;
 
 
@@ -14,15 +15,30 @@ use App\Models\Group;
  * Class GroupService
  * @package App\Services\Product\Group
  */
-class GroupService
-{
+class GroupService {
+
+    public static function lists()
+    {
+        try {
+            $groups = GroupRepository::lists();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        return $groups;
+    }
+
     /**
      * @param $data
      * @return string|static
      */
     public static function create($data)
     {
-        return GroupRepository::create($data);
+        try {
+            return GroupRepository::create($data);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     /**
@@ -51,5 +67,12 @@ class GroupService
     public static function show($id)
     {
         return Group::findOrFail($id);
+    }
+
+    public static function bindProducts($group_id, $product_id)
+    {
+        $product_id = to_array($product_id);
+
+        return GroupRepository::bindingProducts($group_id, $product_id);
     }
 }

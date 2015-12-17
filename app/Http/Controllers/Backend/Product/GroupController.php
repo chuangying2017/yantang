@@ -15,6 +15,7 @@ class GroupController extends Controller
     {
 //    	return view('backend.setting.pay');
         return view('backend.groups.index');
+
     }
 
     public function create()

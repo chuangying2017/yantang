@@ -18,12 +18,14 @@ class CheckOutController extends Controller {
             $user_id = $this->getCurrentAuthUserId();
             $order = OrderService::show($user_id, $order_no);
 
-            if ( ! OrderService::orderNeedPay($user_id, $order)) {
+            //若订单已支付则返回订单信息
+            if ( ! Checkout::orderNeedPay($user_id, $order)) {
                 return $this->response->array($order);
             }
 
+            //订单未支付,返回订单数据和支付方式
             $agent = $this->getAgent();
-            $channels = $this->checkOut->channel($agent);
+            $channels = Checkout::channel($agent);
 
             return $this->response->array(compact('channels', 'order'));
         } catch (\Exception $e) {
@@ -41,11 +43,15 @@ class CheckOutController extends Controller {
     {
 
         try {
+
+            $user_id = $this->getCurrentAuthUserId();
+            //若订单已支付则返回订单信息
+            if ( ! Checkout::orderNeedPay($user_id, $order_no)) {
+                throw new \Exception('无需重复支付');
+            }
+
             $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
-
-            #todo 判断支付请求来源
             $agent = $this->getAgent();
-
             $data = Checkout::checkout($order_no, $channel, $agent);
 
             return $data;
@@ -54,48 +60,5 @@ class CheckOutController extends Controller {
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
