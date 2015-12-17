@@ -19,7 +19,7 @@ class GroupController extends Controller {
 
     public function create()
     {
-    	return view('backend.merchant.create');
+    	return view('backend.orders.detail');
         // return view('backend.groups.create');
     }
 }
