@@ -2,7 +2,7 @@
 
 @section('page-header')
     <h1>
-        Laravel 5 Bootstrap
+        创建产品
         <small>{{ trans('strings.backend.dashboard_title') }}</small>
     </h1>
 @endsection

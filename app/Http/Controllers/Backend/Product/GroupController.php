@@ -13,6 +13,13 @@ class GroupController extends Controller
 {
     public function index()
     {
-        return 'group';
+    	return view('backend.orders.index');
+        // return view('backend.groups.index');
+    }
+
+    public function create()
+    {
+    	return view('backend.merchant.create');
+        // return view('backend.groups.create');
     }
 }

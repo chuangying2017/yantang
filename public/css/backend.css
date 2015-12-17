@@ -16702,10 +16702,47 @@ fieldset[disabled] .btn-vk.active {
   text-align: center;
 }
 
+.cover-images.banner-images img {
+  width: 180px;
+  height: 70px;
+}
+
+.cover-images.banner-images .img-wrapper:before {
+  width: 180px;
+  height: 70px;
+}
+
 .cover-images img {
   margin: 10px 10px 10px 0;
   width: 70px;
   height: 70px;
+}
+
+.groups-select {
+  width: 100%;
+  height: 90px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  list-style-type: none;
+}
+
+.order-tables .cover-img {
+  margin-right: 10px;
+  width: 80px;
+  height: auto;
+}
+
+.order-tables .pro-title {
+  vertical-align: top;
+}
+
+.order-tables th {
+  background: #e9e9e9;
+}
+
+.order-tables th.msg {
+  background: #FCEEEE;
+  color: #EA4D4A;
 }
 
 .toast-title {
