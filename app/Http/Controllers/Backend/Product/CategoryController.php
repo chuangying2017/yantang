@@ -59,9 +59,11 @@ class CategoryController extends Controller
 
     public function show($id)
     {
-        $categroy = $this->api->get('api/admin/categories/' . $id);
 
-        dd($categroy);
+        $category = $this->api->get('api/admin/categories/' . $id)['data'];
+        dd($category);
+        $categories = $this->api->get('api/admin/categories')['data'];
+        return view('backend.categories.create', compact('categories', 'category'));
     }
 
     public function update($id, Request $request)
@@ -89,9 +91,9 @@ class CategoryController extends Controller
     {
         try {
             $result = $this->api->delete('api/admin/categories/' . $id);
-            if ($result) {
-                return redirect('/admin/categories');
-            }
+
+            return redirect('/admin/categories');
+
         } catch (Exception $e) {
 
             return $e->getMessage();
