@@ -43,6 +43,7 @@ class CouponController extends MarketingController {
 
             return $order_info;
         } catch (\Exception $e) {
+            return $e->getTrace();
             $this->response->errorBadRequest('优惠券不存在');
         }
     }
