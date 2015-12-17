@@ -37,7 +37,7 @@ class CategoryController extends Controller {
     public function store(Request $request)
     {
         $name = $request->input('name');
-        $cover = $request->input('cover', '');
+        $cover = $request->input('cover_image', '');
         $desc = $request->input('desc', '');
         $pid = $request->input('pid', null);
 

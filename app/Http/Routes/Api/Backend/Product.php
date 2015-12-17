@@ -22,3 +22,10 @@ $api->resource('attributes', 'AttributeController');
 $api->resource('attributes.values', 'AttributeValueController', ['only' => ['store', 'destroy']]);
 
 $api->resource('brands', 'BrandController');
+
+$api->resource('groups', 'GroupController');
+
+$api->put('groups/{group_id}/products', [
+    'as'   => 'groups.bind.products',
+    'uses' => 'GroupController@bindingProducts'
+]);

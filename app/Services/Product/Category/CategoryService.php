@@ -126,7 +126,7 @@ class CategoryService {
         $node = $category_id instanceof Category ? $category_id : Category::findOrFail($category_id);
 
         $parent = $node->getRoot();
-        $parent = $parent->getDescendantsAndSelf(['id', 'pid', 'name', 'category_cover']);
+        $parent = $parent->getDescendantsAndSelf(['id', 'pid', 'name', 'category_cover', 'created_at']);
 
         if ($mark) {
             $parent = self::markActive($parent, $node);
