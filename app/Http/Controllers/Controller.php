@@ -18,6 +18,7 @@ abstract class Controller extends BaseController {
 
     protected function getCurrentAuthUserId()
     {
+        
         if ($user = $this->getCurrentAuthUser()) {
             return $user['id'];
         }
