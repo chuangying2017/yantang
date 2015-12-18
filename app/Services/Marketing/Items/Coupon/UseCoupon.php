@@ -11,11 +11,6 @@ class UseCoupon extends MarketingItemUsing {
         $this->setResourceType(MarketingProtocol::TYPE_OF_COUPON);
     }
 
-    public function used($ticket_id, $user_id)
-    {
-
-    }
-
     public function discountFee($ticket_id, $pay_amount)
     {
         $ticket = self::show($ticket_id);
@@ -57,7 +52,7 @@ class UseCoupon extends MarketingItemUsing {
             }
 
             return $data;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
 

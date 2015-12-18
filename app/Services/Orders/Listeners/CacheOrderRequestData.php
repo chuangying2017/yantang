@@ -30,6 +30,7 @@ class CacheOrderRequestData {
     public function handle(OrderInfoChange $event)
     {
         $order_info = $event->order_info;
+        $order_info['pay_amount'] = (int)bcsub($order_info['total_amount'], array_get($order_info, 'discount_fee', 0));
         $this->setOrder($order_info);
     }
 }

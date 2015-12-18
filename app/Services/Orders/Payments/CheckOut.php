@@ -1,6 +1,7 @@
 <?php namespace App\Services\Orders\Payments;
 
 use App\Models\Order;
+use App\Services\Orders\Event\OrderIsPaid;
 use App\Services\Orders\Helpers\UserHelper;
 use App\Services\Orders\OrderProtocol;
 use App\Services\Orders\OrderRepository;
@@ -32,8 +33,7 @@ class CheckOut {
                 return $charge;
             }
 
-            return 1;
-
+            return false;
         } catch (Exception $e) {
             throw $e;
         }
@@ -59,12 +59,28 @@ class CheckOut {
 
         //检查订单状态是否需要支付
         if ($order['status'] == OrderProtocol::STATUS_OF_UNPAID) {
-            #todo 检查主订单支付信息是否同步
+
+            //订单金额小于0无需支付
+            if ($order['pay_amount'] <= 0) {
+                return false;
+            }
+
             $billing = BillingRepository::getMainBilling($order['id']);
+            //无历史账单则需要支付
+            if ( ! $billing) {
+                return true;
+            }
+
+            if ($billing['status'] == OrderProtocol::STATUS_OF_PAID) {
+                event(new OrderIsPaid($billing['order_id']));
+            }
+
+            //历史账单查询微支付
             $pingxx_is_paid = PingxxService::checkPingxxPaymentIsPaidByBilling($billing['id']);
+            if ( ! $pingxx_is_paid) {
+                return true;
+            }
 
-
-            return true;
         }
 
         return false;

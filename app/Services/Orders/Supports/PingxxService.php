@@ -2,6 +2,7 @@
 
 
 use App\Services\Orders\Helpers\UserHelper;
+use App\Services\Orders\OrderProtocol;
 use App\Services\Orders\Payments\PaymentInterface;
 use Exception;
 use Pingpp\Charge;
@@ -161,10 +162,30 @@ class PingxxService implements PaymentInterface {
 
     public static function checkPingxxPaymentIsPaid($pingxx_payment_no)
     {
-        self::setPingxxKey();
-        $payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_no);
-        $result = Charge::retrieve($payment->charge_id);
-        dd($result);
+        try {
+            self::setPingxxKey();
+            $payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_no);
+
+            if ($payment['status'] == OrderProtocol::STATUS_OF_UNPAID) {
+                $pay_result = Charge::retrieve($payment->charge_id);
+
+                #todo 添加真实环境判断
+                if ($pay_result->paid) {
+                    event(new \App\Services\Orders\Event\PingxxPaid(
+                        $payment['order_id'],
+                        $payment['billing_id'],
+                        $payment['id']
+                    ));
+
+                    return true;
+                }
+            }
+
+
+            return false;
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     public static function handlePingxxChargeEvent($data)
