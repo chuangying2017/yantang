@@ -26,6 +26,10 @@
             <script id="container" name="content" type="text/plain">
                 这里写你的初始化内容
             </script>
+            <hr>
+            <div class="clearfix">
+                <button class="btn btn-primary pull-right">保存文章</button>
+            </div>
         </section>
         <!-- /.col -->
     </div>
