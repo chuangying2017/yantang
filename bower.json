@@ -19,6 +19,6 @@
     "zepto-full": "~1.1.4",
     "select2": "~4.0.1",
     "jquery-mask-plugin": "~1.13.4",
-    "ueditor": "~1.4.3"
+    "vue": "~1.0.12"
   }
 }
