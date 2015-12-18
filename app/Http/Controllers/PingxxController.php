@@ -77,11 +77,11 @@ class PingxxController extends Controller {
 
         PingxxService::pingxxPaymentIsPaid($pingxx_payment['id'], $transaction_no);
 
-        event('App\Services\Orders\Event\PingxxPaid', [
-            'order_id'          => isset($data['extra']['order_id']) ? $data['extra']['order_id'] : 0,
-            'billing_id'        => isset($data['extra']['billing_id']) ? $data['extra']['billing_id'] : 0,
-            'pingxx_payment_id' => $pingxx_payment['id'],
-        ]);
+        event(new \App\Services\Orders\Event\PingxxPaid(
+            isset($data['extra']['order_id']) ? $data['extra']['order_id'] : 0,
+            isset($data['extra']['billing_id']) ? $data['extra']['billing_id'] : 0,
+            $pingxx_payment['id']
+        ));
 
         exit('success');
     }

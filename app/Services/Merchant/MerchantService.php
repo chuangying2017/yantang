@@ -1,4 +1,4 @@
-<?php
+<?php namespace App\Services\Merchant;
 
 /**
  * Created by PhpStorm.
@@ -6,8 +6,13 @@
  * Date: 2/12/2015
  * Time: 5:33 PM
  */
-class MerchantService
-{
+class MerchantService {
+
+    public static function getMerchantIdByUserId($user_id)
+    {
+        #todo @bryant 实现通过user id 获取 merchant id
+        return 1;
+    }
 
     public static function create()
     {

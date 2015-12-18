@@ -29,3 +29,26 @@ $api->put('groups/{group_id}/products', [
     'as'   => 'groups.bind.products',
     'uses' => 'GroupController@bindingProducts'
 ]);
+
+
+$api->group(['prefix' => 'images'], function ($api) {
+    $api->get('/', [
+        'as'   => 'images.index',
+        'uses' => 'ImageController@index'
+    ]);
+
+    $api->delete('/', [
+        'as'   => 'images.delete',
+        'uses' => 'ImageController@delete'
+    ]);
+
+    $api->get('token', [
+        'as'   => 'images.token',
+        'uses' => 'ImageController@token'
+    ]);
+
+    $api->get('/callback', [
+        'as'   => 'qiniu.callback',
+        'uses' => 'ImageController@callback'
+    ]);
+});

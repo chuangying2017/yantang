@@ -88,7 +88,10 @@ class AttributeService {
      */
     public static function getByCategory($category_id, $merchant_id = 0)
     {
-        $category = Category::findOrFail($category_id);
+        $category = Category::find($category_id);
+        if ( ! $category) {
+            return [];
+        }
 
         return $category->attributes()->whereIn('merchant_id', AttributeRepository::transformMerchantId($merchant_id))->get();
     }

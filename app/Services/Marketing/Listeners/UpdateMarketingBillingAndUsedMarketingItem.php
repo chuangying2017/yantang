@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Services\Orders\Listeners;
+namespace App\Services\Marketing\Listeners;
 
 use App\Services\Orders\Event\OrderIsPaid;
-use App\Services\Orders\OrderHandler;
+use App\Services\Orders\Payments\BillingManager;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class HandleOrderPaid {
+class UpdateMarketingBillingAndUsedMarketingItem {
 
     /**
      * Create the event listener.
@@ -29,6 +29,7 @@ class HandleOrderPaid {
     {
         $order_id = $event->order_id;
 
-        OrderHandler::orderIsPaid($order_id);
+        BillingManager::marketingBillingPaid($order_id);
+
     }
 }
