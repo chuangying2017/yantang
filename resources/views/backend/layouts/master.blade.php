@@ -12,6 +12,11 @@
 
     @yield('before-styles-end')
     {!! HTML::style(elixir('css/backend.css')) !!}
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
     @yield('after-styles-end')
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -37,7 +42,7 @@
         </section>
 
         <!-- Main content -->
-        <section class="content clearfix">
+        <section id="app" class="content clearfix">
             @include('includes.partials.messages')
             @yield('content')
         </section><!-- /.content -->
