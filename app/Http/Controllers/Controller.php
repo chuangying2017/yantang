@@ -16,10 +16,8 @@ abstract class Controller extends BaseController {
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers;
 
-
     protected function getCurrentAuthUserId()
     {
-
         if ($user = $this->getCurrentAuthUser()) {
             return $user['id'];
         }
@@ -33,7 +31,11 @@ abstract class Controller extends BaseController {
             return false;
         }
 
-        $user = JWTAuth::parseToken()->authenticate();
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            $this->response->errorUnauthorized('Token Expired');
+        }
 
         return $user;
     }
@@ -43,5 +45,6 @@ abstract class Controller extends BaseController {
         #todo 判断支付请求来源
         return \Request::input('agent', PingxxProtocol::AGENT_OF_PC);
     }
+
 
 }

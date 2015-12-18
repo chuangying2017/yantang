@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers\Api\Backend;
 
+use App\Http\Controllers\Controller;
+use App\Services\Merchant\MerchantService;
 use App\Services\Product\Attribute\AttributeService;
 use App\Http\Requests\Backend\Api\AttributeRequest as Request;
 
 use App\Http\Requests;
 
 
-class AttributeController extends BaseController {
+class AttributeController extends Controller {
 
-    #todo @bryant 实现通过user id 获取 merchant id
-    public static function getMerchantIdByUserId($user_id)
-    {
-        return 0;
-    }
+
 
     /**
      * Display a listing of the resource.
@@ -25,7 +23,7 @@ class AttributeController extends BaseController {
     {
         try {
             $user_id = $this->getCurrentAuthUserId();
-            $merchant_id = self::getMerchantIdByUserId($user_id);
+            $merchant_id = MerchantService::getMerchantIdByUserId($user_id);
 
             $category_id = $request->input('category_id') ?: null;
             if ( ! is_null($category_id)) {
@@ -53,7 +51,7 @@ class AttributeController extends BaseController {
         $name = $request->input('name');
 
         $user_id = $this->getCurrentAuthUserId();
-        $merchant_id = self::getMerchantIdByUserId($user_id);
+        $merchant_id = MerchantService::getMerchantIdByUserId($user_id);
 
         $attribute = AttributeService::create($name, $merchant_id);
 

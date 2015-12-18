@@ -57,7 +57,7 @@ if ( ! function_exists('image_url')) {
 
     function image_url($name)
     {
-        return env('QINIU_PREFIX_URL') . '/' . $name;
+        return env('QINIU_PREFIX_URL')  . $name;
     }
 }
 
