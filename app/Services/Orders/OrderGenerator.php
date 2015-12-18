@@ -152,6 +152,10 @@ class OrderGenerator {
 
         event(new \App\Services\Orders\Event\OrderInfoChange($order_info));
 
+        if ($order_info['pay_amount'] <= 0) {
+            event(new \App\Services\Orders\Event\OrderIsPaid($order_info['id']));
+        }
+
         return $order_info;
     }
 

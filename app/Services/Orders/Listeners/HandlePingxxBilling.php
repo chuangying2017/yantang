@@ -7,8 +7,8 @@ use App\Services\Orders\Payments\BillingManager;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class HandlePingxxBilling
-{
+class HandlePingxxBilling {
+
     /**
      * Create the event listener.
      *
@@ -22,14 +22,17 @@ class HandlePingxxBilling
     /**
      * Handle the event.
      *
-     * @param  PingxxPaid  $event
+     * @param  PingxxPaid $event
      * @return void
      */
     public function handle(PingxxPaid $event)
     {
+        $order_id = $event->order_id;
         $billing_id = $event->billing_id;
         $pingxx_payment_id = $event->pingxx_payment_id;
 
         BillingManager::mainBillingIsPaid($billing_id, $pingxx_payment_id);
+
+        event(new \App\Services\Orders\Event\OrderIsPaid($order_id));
     }
 }

@@ -93,10 +93,10 @@ class OrderRepository {
     public static function queryOrderById($order_id)
     {
         if ($order_id instanceof Order) {
-            $order = $order_id;
+            return $order_id;
         }
 
-        return Order::firstOrFail($order_id);
+        return Order::findOrFail($order_id);
     }
 
     public static function queryFullOrder($order)
@@ -137,9 +137,10 @@ class OrderRepository {
         return $order_no;
     }
 
-    public static function updateStatus($order_no, $status)
+
+    public static function updateStatus($order_id, $status)
     {
-        Order::where('order_no', $order_no)->update(['status' => $status]);
+        Order::where('id', $order_id)->update(['status' => $status]);
     }
 
     public static function deleteOrder($order_no)
@@ -147,7 +148,7 @@ class OrderRepository {
         $order = self::queryOrderByOrderNo($order_no);
         $order_full = self::queryFullOrder($order);
 
-        self::updateStatus($order['order_no'], OrderProtocol::STATUS_OF_CANCEL);
+        self::updateStatus($order['id'], OrderProtocol::STATUS_OF_CANCEL);
         $order->delete();
 
         event(new OrderCancel($order_full));
