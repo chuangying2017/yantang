@@ -1,6 +1,7 @@
 <?php namespace App\Services\Orders\Payments;
 
 use App\Services\Marketing\MarketingItemUsing;
+use App\Services\Marketing\TicketService;
 use App\Services\Orders\OrderProtocol;
 use Pingpp\Charge;
 
@@ -28,6 +29,7 @@ class BillingManager {
 
             return true;
         }
+
         return false;
     }
 
@@ -43,7 +45,7 @@ class BillingManager {
         $tickets_id = [];
         foreach ($billings as $billing) {
             $billings_id = $billing['id'];
-            if ($billings['resource_type'] == OrderProtocol::RESOURCE_OF_TICKET) {
+            if ($billing['resource_type'] == OrderProtocol::RESOURCE_OF_TICKET) {
                 $tickets_id = $billing['resource_id'];
             }
         }
@@ -53,7 +55,7 @@ class BillingManager {
         }
 
         if (count($tickets_id)) {
-            \App\Services\Marketing\TicketService::used($tickets_id);
+            TicketService::used($tickets_id);
         }
     }
 
