@@ -47,6 +47,14 @@
                     <div class="form-group">
                         <label for="proGroup" class="col-sm-2 control-label"><span class="c-red">*</span> 上传封面图：</label>
                         <div class="col-sm-5">
+                            <!--dom结构部分-->
+                            <div id="uploader-demo">
+                                <!--用来存放item-->
+                                <div id="fileList" class="uploader-list"></div>
+                                <div id="filePicker">选择图片</div>
+                                <button id="uploadBtn">upload</button>
+                            </div>
+
                             <input type="file" value="选择图片上传">
                             <div class="cover-images banner-images">
                                 <div class="img-wrapper">
@@ -64,4 +72,24 @@
         </div>
     </div>
     <!-- /.col -->
+    <script>
+
+    </script>
+@endsection
+
+@section('after-scripts-end')
+    <script>
+        app = window.app || {}
+        app.uploader = {
+            token: "",
+            fileNumLimit: 1,
+            error: function (file) {
+            },
+            success: function (file) {
+            },
+            completed: function (file) {
+            }
+        }
+    </script>
+    @include('backend.layouts.upload')
 @endsection
