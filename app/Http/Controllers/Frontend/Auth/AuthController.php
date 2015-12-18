@@ -80,7 +80,7 @@ class AuthController extends Controller {
             if ($throttles)
                 $this->clearLoginAttempts($request);
 
-            return redirect()->intended('/dashboard');
+            return redirect()->route('backend.dashboard');
         } catch (GeneralException $e) {
             // If the login attempt was unsuccessful we will increment the number of attempts
             // to login and redirect the user back to the login form. Of course, when this

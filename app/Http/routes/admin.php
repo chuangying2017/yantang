@@ -26,7 +26,7 @@ Route::group(['prefix' => 'admin'], function(){
     Route::group(['middleware' => 'auth.admin'], function(){
 
         get('/dashboard', [
-            'as' => 'admin.dashboard',
+            'as' => 'backend.dashboard',
             'uses' => 'AdminController@index'
         ]);
 
