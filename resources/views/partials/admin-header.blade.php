@@ -1,7 +1,7 @@
 
 <header class="am-topbar admin-header">
   <div class="am-topbar-brand">
-    <a href="{{route('admin.dashboard')}}">
+    <a href="{{route('backend.dashboard')}}">
         <strong>{{Lang::get('admin.title')}}</strong> <small>{{Lang::get('admin.admin_title')}}</small>
     </a>
   </div>

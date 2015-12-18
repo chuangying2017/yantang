@@ -7,13 +7,6 @@ use Auth;
 class AdminAuthenticate {
 
     /**
-     * The Guard implementation.
-     *
-     * @var Guard
-     */
-    protected $auth;
-
-    /**
      * Create a new filter instance.
      *
      * @param  Guard $auth
@@ -33,11 +26,11 @@ class AdminAuthenticate {
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->guest()) {
+        if (Auth::guest()) {
             if ($request->ajax() || $request->is('api/*')) {
                 return response('Unauthorized.', 401);
             } else {
-                return redirect()->route('admin.login');
+                return redirect()->to('/auth/login');
             }
         }
 

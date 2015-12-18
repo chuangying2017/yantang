@@ -16836,6 +16836,11 @@ fieldset[disabled] .btn-vk.active {
   background: #eee;
   border-radius: 5px;
 }
+
+.thumb-img {
+  width: 50px;
+  height: auto;
+}
 .toast-title {
   font-weight: 700;
 }
