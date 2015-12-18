@@ -27,7 +27,7 @@
                 <li><a href="#settings" data-toggle="tab">3. 编辑商品详情</a></li>
             </ul>
             <div class="tab-content">
-                <div class="active tab-pane" id="activity">
+                <div class="tab-pane" id="activity">
                     <div class="box without-border">
                         <div class="box-body">
                             <div class="row">
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <!-- /.tab-pane -->
-                <div class="tab-pane" id="timeline">
+                <div class="active tab-pane" id="timeline">
                     <div class="box without-border">
                         <div class="box-header with-border">
                             <h3 class="box-title">1. 基本信息</h3>
@@ -81,8 +81,8 @@
                             <form class="form-horizontal">
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"><span class="c-red">*</span> 商品规格：</label>
-                                    <div class="col-sm-5">
-                                        <attribute v-for="attribute in product.attributes"
+                                    <div class="col-sm-5">                                        
+                                            <attribute v-for="attribute in product.attributes"
                                                    :attribute.sync="attribute" :index="$index"></attribute>
                                         <button class="btn btn-primary" type="button" @click="addAttr()">
                                         添加规格项目</button>
