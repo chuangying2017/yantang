@@ -18,7 +18,7 @@ class CheckOutController extends Controller {
             $user_id = $this->getCurrentAuthUserId();
             $order = OrderService::show($user_id, $order_no);
 
-            //若订单已支付则返回订单信息
+            //若订单已支付或者金额为0则返回订单信息
             if ( ! Checkout::orderNeedPay($user_id, $order)) {
                 return $this->response->array($order);
             }
@@ -39,7 +39,7 @@ class CheckOutController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store($order_no, Request $request)
+    public function store(Request $request, $order_no)
     {
 
         try {
@@ -52,9 +52,13 @@ class CheckOutController extends Controller {
 
             $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
             $agent = $this->getAgent();
-            $data = Checkout::checkout($order_no, $channel, $agent);
+            $charge = Checkout::checkout($order_no, $channel, $agent);
 
-            return $data;
+            if ( ! $charge) {
+                throw new \Exception('订单金额无需支付');
+            }
+
+            return $charge;
         } catch (\Exception $e) {
             return $e->getTrace();
         }

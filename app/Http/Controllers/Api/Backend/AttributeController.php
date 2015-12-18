@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers\Api\Backend;
 
+use App\Http\Controllers\Controller;
+use App\Services\Merchant\MerchantService;
 use App\Services\Product\Attribute\AttributeService;
 use App\Http\Requests\Backend\Api\AttributeRequest as Request;
 
 use App\Http\Requests;
 
 
-class AttributeController extends BaseController {
+class AttributeController extends Controller {
 
-    #todo @bryant 实现通过user id 获取 merchant id
-    public static function getMerchantIdByUserId($user_id)
-    {
-        return 0;
-    }
+
 
     /**
      * Display a listing of the resource.
@@ -23,27 +21,24 @@ class AttributeController extends BaseController {
      */
     public function index(Request $request)
     {
-        $merchant_id = self::getMerchantIdByUserId($this->auth->id());
+        try {
+            $user_id = $this->getCurrentAuthUserId();
+            $merchant_id = MerchantService::getMerchantIdByUserId($user_id);
 
-        $category_id = $request->input('category_id') ?: null;
-        if ( ! is_null($category_id)) {
-            $attributes = AttributeService::getByCategory($category_id, $merchant_id);
-        } else {
-            $attributes = AttributeService::findAllByMerchant($merchant_id);
+            $category_id = $request->input('category_id') ?: null;
+            if ( ! is_null($category_id)) {
+                $attributes = AttributeService::getByCategory($category_id, $merchant_id);
+            } else {
+                $attributes = AttributeService::findAllByMerchant($merchant_id);
+            }
+
+            return $this->response->array(['data' => $attributes]);
+        } catch (\Exception $e) {
+            return $e->getTrace();
         }
 
-        return $this->response->array($attributes);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -55,11 +50,12 @@ class AttributeController extends BaseController {
     {
         $name = $request->input('name');
 
-        $merchant_id = self::getMerchantIdByUserId($this->auth->id());
+        $user_id = $this->getCurrentAuthUserId();
+        $merchant_id = MerchantService::getMerchantIdByUserId($user_id);
 
         $attribute = AttributeService::create($name, $merchant_id);
 
-        return $this->setStatusCode(201)->array($attribute);
+        return $this->response->created()->setContent($attribute);
 
     }
 
@@ -97,7 +93,7 @@ class AttributeController extends BaseController {
         $name = $request->input('name');
         $attribute = AttributeService::update($id, $name);
 
-        return $this->response->array($attribute);
+        return $this->response->array(['data' => $attribute]);
     }
 
     /**

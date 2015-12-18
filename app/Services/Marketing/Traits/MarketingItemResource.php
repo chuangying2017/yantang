@@ -11,6 +11,9 @@ namespace App\Services\Marketing\Traits;
 
 trait MarketingItemResource {
 
+
+
+
     protected $resource_type;
 
     /**

@@ -47,7 +47,10 @@ class EventServiceProvider extends ServiceProvider {
         ],
         'App\Services\Orders\Event\PingxxPaid'      => [
             'App\Services\Orders\Listeners\HandlePingxxBilling',
+        ],
+        'App\Services\Orders\Event\OrderIsPaid'     => [
             'App\Services\Orders\Listeners\HandleOrderPaid',
+            'App\Services\Marketing\Listeners\UpdateMarketingBillingAndUsedMarketingItem',
         ],
     ];
 

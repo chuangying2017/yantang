@@ -101,6 +101,7 @@ class OrderGenerator {
 
         $order_info = self::filterMarketingInfo($order_info['user_id'], $order_info);
 
+        $order_info['pay_amount'] = self::orderPayAmount($order_info);
         event(new \App\Services\Orders\Event\OrderInfoChange($order_info));
 
         return $order_info;
@@ -152,13 +153,18 @@ class OrderGenerator {
 
         event(new \App\Services\Orders\Event\OrderInfoChange($order_info));
 
+        if (self::orderPayAmount($order_info) <= 0) {
+
+            event(new \App\Services\Orders\Event\OrderIsPaid($order_info['id']));
+        }
+
         return $order_info;
     }
 
 
     protected static function orderPayAmount($order_info)
     {
-        return bcsub($order_info['total_amount'], array_get($order_info, 'discount_fee', 0));
+        return (int)bcsub($order_info['total_amount'], array_get($order_info, 'discount_fee', 0));
     }
 
     protected static function filterOrderSku($order_skus_info)
@@ -170,16 +176,19 @@ class OrderGenerator {
             'title'        => null
         ];
 
+
         foreach ($order_skus_info as $key => $order_sku_info) {
 
             $order_info['products'][ $key ] = $order_sku_info;
-            $order_info['total_amount'] = bcadd(
+            $order_info['total_amount'] = (int)bcadd(
                 $order_info['total_amount'],
                 bcmul($order_sku_info['price'], $order_sku_info['quantity'])
             );
 
             $order_info['title'] = self::getOrderTitle($order_info['title'], $order_sku_info['title'], count($order_skus_info));
         }
+
+        $order_info['pay_amount'] = self::orderPayAmount($order_info);
 
         return $order_info;
     }

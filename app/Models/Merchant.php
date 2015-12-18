@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Merchant extends Model
-{
-    use SoftDeletes;
+class Merchant extends Model {
 
     protected $table = 'merchants';
 
     public function images()
     {
-        return $this->morphToMany('App\Models\Image', 'imageable');
+        return $this->hasMany('App\Models\Image', 'merchant_id', 'id');
     }
 
     public function products()

@@ -12,15 +12,12 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-abstract class Controller extends BaseController
-{
+abstract class Controller extends BaseController {
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers;
 
-
     protected function getCurrentAuthUserId()
     {
-
         if ($user = $this->getCurrentAuthUser()) {
             return $user['id'];
         }
@@ -30,11 +27,15 @@ abstract class Controller extends BaseController
 
     protected function getCurrentAuthUser()
     {
-        if (!JWTAuth::getToken()) {
+        if ( ! JWTAuth::getToken()) {
             return false;
         }
 
-        $user = JWTAuth::parseToken()->authenticate();
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            $this->response->errorUnauthorized('Token Expired');
+        }
 
         return $user;
     }
@@ -44,5 +45,6 @@ abstract class Controller extends BaseController
         #todo 判断支付请求来源
         return \Request::input('agent', PingxxProtocol::AGENT_OF_PC);
     }
+
 
 }
