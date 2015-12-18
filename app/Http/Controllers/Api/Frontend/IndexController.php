@@ -61,7 +61,6 @@ class IndexController extends Controller
     {
         $user_id = $this->getCurrentAuthUserId();
         $client = ClientService::show($user_id);
-
         $client['email'] = $client['user']['email'];
         $client['phone'] = $client['user']['phone'];
 

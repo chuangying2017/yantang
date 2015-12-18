@@ -26,8 +26,6 @@ class GroupController extends Controller
             return $e->getMessage();
         }
 
-    	return view('backend.setting.home');
-        // return view('backend.groups.index');
     }
 
     /**

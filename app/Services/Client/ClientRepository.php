@@ -54,7 +54,6 @@ class ClientRepository {
      */
     public static function show($user_id)
     {
-
         $client = Client::with('user')->where('user_id', $user_id)->first();
 
         return $client;
