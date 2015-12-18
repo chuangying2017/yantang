@@ -12,7 +12,6 @@ class PingxxPaymentRepository {
     public static function getPingxxPaymentId()
     {
         $payment_id = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
-        #todo payment_no
         while (PingxxPayment::where('payment_id', $payment_id)->count()) {
             $payment_id = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
         }
