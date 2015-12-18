@@ -60,7 +60,7 @@ class ProductRepository {
         $rules = [
             'brand_id', 'category_id', 'merchant_id', 'title', 'sub_title',
             'price', 'origin_price', 'limit', 'member_discount', 'digest',
-            'cover_image', 'open_status', 'open_time'
+            'cover_image', 'open_status', 'open_time', 'stock'
         ];
 
         return array_only($data, $rules);
