@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Backend\Product;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 /**
  * Created by PhpStorm.
@@ -11,13 +12,90 @@ use App\Http\Controllers\Controller;
  */
 class CategoryController extends Controller
 {
+    //todo@bryant: error handler
     public function index()
     {
-        return view('backend.categories.index');
+        try {
+            $records = $this->api->get('api/admin/categories/');
+            $categories = $records['data'];
+            return view('backend.categories.index', compact('categories'));
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
 
     public function create()
     {
-        return view('backend.categories.create');
+        try {
+            $categories = $this->api->get('api/admin/categories/')['data'];
+            return view('backend.categories.create', compact('categories'));
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function store(Request $request)
+    {
+        try {
+
+            $data = $request->all();
+
+            $result = $this->api->post('api/admin/categories', [
+                'name' => array_get($data, 'name', ''),
+                'pid' => array_get($data, 'pid', null),
+                'cover_image' => array_get($data, 'cover_image', ''),
+                'desc' => array_get($data, 'desc', '')
+            ]);
+
+            if ($result) {
+                return redirect('/admin/categories');
+            }
+
+
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+    }
+
+    public function show($id)
+    {
+
+        $category = $this->api->get('api/admin/categories/' . $id)['data'];
+        $categories = $this->api->get('api/admin/categories')['data'];
+        return view('backend.categories.show', compact('categories', 'category'));
+    }
+
+    public function update($id, Request $request)
+    {
+        try {
+            $data = $request->all();
+
+            $result = $this->api->put('api/admin/categories/' . $id, [
+                'name' => array_get($data, 'name', ''),
+                'cover_image' => array_get($data, 'cover_image', ''),
+                'desc' => array_get($data, 'desc', '')
+            ]);
+
+            if ($result) {
+                return redirect('/admin/categories');
+            }
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $result = $this->api->delete('api/admin/categories/' . $id);
+
+            return redirect('/admin/categories');
+
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
     }
 }
