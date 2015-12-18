@@ -10,8 +10,6 @@ abstract class MarketingItemUsing implements MarketingInterface {
 
     protected $message;
 
-    //用户使用优惠
-    public abstract function used($id, $user_id);
 
     //列出用户可用优惠
     public abstract function usableList($user_id, $order_detail);

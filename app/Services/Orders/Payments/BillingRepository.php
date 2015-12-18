@@ -39,7 +39,8 @@ class BillingRepository {
 
     public static function deleteOldBilling($order_id, $type)
     {
-        return OrderBilling::where('order_id', $order_id)->where('type', $type)->where('status', OrderProtocol::STATUS_OF_UNPAID)->delete();
+        OrderBilling::where('order_id', $order_id)->where('type', $type)->update('status', OrderProtocol::STATUS_OF_CANCEL);
+        OrderBilling::where('order_id', $order_id)->where('type', $type)->where('status', OrderProtocol::STATUS_OF_UNPAID)->delete();
     }
 
     protected static function generateBillingNo()
@@ -69,6 +70,11 @@ class BillingRepository {
         return self::getBilling($order_id, OrderProtocol::TYPE_OF_MAIN, OrderProtocol::RESOURCE_OF_PINGXX);
     }
 
+    public static function getMarketingBilling($order_id)
+    {
+        return self::getBilling($order_id, OrderProtocol::TYPE_OF_DISCOUNT, OrderProtocol::RESOURCE_OF_TICKET);
+    }
+
     public static function getBilling($order_id, $billing_type = OrderProtocol::TYPE_OF_MAIN, $billing_resource = OrderProtocol::RESOURCE_OF_PINGXX)
     {
         $query = OrderBilling::where('type', $billing_type)->where('resource_type', $billing_resource)->where('order_id', $order_id);
@@ -84,7 +90,9 @@ class BillingRepository {
     {
         $status = OrderProtocol::STATUS_OF_PAID;
 
-        return OrderBilling::where('id', $billing_id)->update(compact('status', 'resource_id'));
+        $billing_id = to_array($billing_id);
+
+        return OrderBilling::whereIn('id', $billing_id)->update(compact('status', 'resource_id'));
     }
 
 
