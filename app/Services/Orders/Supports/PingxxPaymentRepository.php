@@ -58,9 +58,14 @@ class PingxxPaymentRepository {
             ? $payment_id
             : (
             (strlen($payment_id) == self::PAYMENT_ID_LENGTH)
-                ? PingxxPayment::findOrFail($payment_id)
-                : PingxxPayment::where('payment_id', $payment_id)->first()
+                ? PingxxPayment::where('payment_id', $payment_id)->first()
+                : PingxxPayment::findOrFail($payment_id)
             );
+    }
+
+    public static function fetchPingxxPaymentByBilling($billing_id)
+    {
+        return PingxxPayment::where('billing_id', $billing_id)->firstOrFail();
     }
 
 

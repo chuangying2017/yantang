@@ -9,7 +9,8 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Backend\Api\CategoryRequest as Request;
 
-class CategoryController extends Controller {
+class CategoryController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -19,9 +20,9 @@ class CategoryController extends Controller {
     public function index()
     {
         try {
-            $categories = CategoryService::getTree();
+            $categories = CategoryService::getAll();
 
-            return $this->response->array($categories);
+            return $this->response->array(['data' => $categories]);
         } catch (\Exception $e) {
             return $e->getTrace();
         }
@@ -54,9 +55,9 @@ class CategoryController extends Controller {
      */
     public function show($id)
     {
-        $categories = CategoryService::getTree($id);
+        $categories = CategoryService::show($id);
 
-        return $this->response->array($categories);
+        return $this->response->array(['data' => $categories]);
     }
 
 
@@ -70,14 +71,14 @@ class CategoryController extends Controller {
     public function update(Request $request, $id)
     {
         $name = $request->input('name');
-        $category_cover = $request->input('cover', '');
+        $category_cover = $request->input('cover_image', '');
         $desc = $request->input('desc', '');
 
         $data = compact('name', 'category_cover', 'desc');
 
         $category = CategoryService::update($id, $data);
 
-        return $this->response->array($category);
+        return $this->response->array(['data' => $category]);
     }
 
     /**
@@ -94,6 +95,6 @@ class CategoryController extends Controller {
             return $this->respondException($e);
         }
 
-        return $this->respondDelete();
+        return $this->response->noContent();
     }
 }

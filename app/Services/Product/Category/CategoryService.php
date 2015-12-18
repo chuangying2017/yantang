@@ -68,6 +68,11 @@ class CategoryService {
         return Category::all();
     }
 
+    public static function show($category_id)
+    {
+        return Category::findOrFail($category_id);
+    }
+
     public static function getLeavesId($category_id, $string = false)
     {
         try {
@@ -121,7 +126,7 @@ class CategoryService {
      * @param bool|true $mark
      * @return mixed
      */
-    protected static function getSingleTree($category_id, $mark = true)
+    protected static function getSingleTree($category_id, $mark = true, $decode = true)
     {
         $node = $category_id instanceof Category ? $category_id : Category::findOrFail($category_id);
 
@@ -132,7 +137,11 @@ class CategoryService {
             $parent = self::markActive($parent, $node);
         }
 
-        return $parent->toHierarchy()->first();
+        if ($decode) {
+            return $parent->toHierarchy()->first();
+        }
+
+        return $parent;
     }
 
     /**

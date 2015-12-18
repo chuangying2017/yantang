@@ -64,6 +64,20 @@ class BillingRepository {
             );
     }
 
+    public static function getMainBilling($order_id)
+    {
+        return self::getBilling($order_id, OrderProtocol::TYPE_OF_MAIN, OrderProtocol::RESOURCE_OF_PINGXX);
+    }
+
+    public static function getBilling($order_id, $billing_type = OrderProtocol::TYPE_OF_MAIN, $billing_resource = OrderProtocol::RESOURCE_OF_PINGXX)
+    {
+        $query = OrderBilling::where('type', $billing_type)->where('resource_type', $billing_resource)->where('order_id', $order_id);
+        if ($billing_type == OrderProtocol::TYPE_OF_MAIN) {
+            return $query->first();
+        }
+
+        return $query->get();
+    }
 
 
     public static function billingPaid($billing_id, $resource_id = null)

@@ -10,10 +10,16 @@ use Pingpp\Pingpp;
 class PingxxService implements PaymentInterface {
 
     private static $payment_no;
+    use UserHelper;
 
     public static function setPaymentNo($payment_no)
     {
         self::$payment_no = $payment_no;
+    }
+
+    public static function setPingxxKey()
+    {
+        Pingpp::setApiKey(env(env('PINGPP_ACCOUNT_TYPE') . '_PINGPP_APIKEY'));
     }
 
     public static function getPaymentNo()
@@ -21,7 +27,6 @@ class PingxxService implements PaymentInterface {
         return self::$payment_no;
     }
 
-    use UserHelper;
 
     /**
      * 获取支付创建对象
@@ -35,9 +40,9 @@ class PingxxService implements PaymentInterface {
     private static function getPaidPackage($order, $pingxx_payment_no, $billing_no, $amount, $user_IP, $channel)
     {
         try {
-            Pingpp::setApiKey(env(env('PINGPP_ACCOUNT_TYPE') . '_PINGPP_APIKEY'));
             $order_no = $order['order_no'];
 
+            self::setPingxxKey();
             self::setPaymentNo($pingxx_payment_no);
             $charge = Charge::create(
                 [
@@ -63,6 +68,7 @@ class PingxxService implements PaymentInterface {
 
     protected function getExtraData($channel)
     {
+        #todo 完善支付渠道
         switch ($channel) {
             case 'alipay_wap':
                 $extra = array(
@@ -114,6 +120,9 @@ class PingxxService implements PaymentInterface {
                     'token'       => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
                 );
                 break;
+            default:
+                $extra = [];
+                break;
         }
 
         return $extra;
@@ -124,11 +133,9 @@ class PingxxService implements PaymentInterface {
     {
 
         try {
-
             PingxxProtocol::validChannel($channel, $agent);
 
             $amount = $main_billing['amount'];
-
             if ($amount > 0) {
                 $user_ip = isset($_SERVER) ? $_SERVER["REMOTE_ADDR"] : env('SERVER_PUBLIC_IP');
                 $pingxx_payment_id = PingxxPaymentRepository::getPingxxPaymentId();
@@ -145,11 +152,19 @@ class PingxxService implements PaymentInterface {
 
     }
 
-    public static function checkPingxxPaymentIsPaid($pingxx_payment_id)
+    public static function checkPingxxPaymentIsPaidByBilling($billing_id)
     {
-        $payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_id);
-        $result = Charge::retrieve($payment->charge_id);
+        $payment = PingxxPaymentRepository::fetchPingxxPaymentByBilling($billing_id);
 
+        return self::checkPingxxPaymentIsPaid($payment['id']);
+    }
+
+    public static function checkPingxxPaymentIsPaid($pingxx_payment_no)
+    {
+        self::setPingxxKey();
+        $payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_no);
+        $result = Charge::retrieve($payment->charge_id);
+        dd($result);
     }
 
     public static function handlePingxxChargeEvent($data)

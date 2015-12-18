@@ -25,21 +25,26 @@
                 <h3 class="box-title">1. 基本信息</h3>
             </div>
             <div class="box-body">
-                <form class="form-horizontal" action="{{url('admin/categories')}}" method="post">
+                <form class="form-horizontal" action="{{url('admin/categories/' . $category->id)}}" method="post">
                     <input type="hidden" name="_token" value="{{csrf_token()}}">
+                    <input type="hidden" name="_method" value="PUT">
                     <div class="form-group">
                         <label class="col-sm-2 control-label"><span class="c-red">*</span> 类目名称：</label>
                         <div class="col-sm-5">
-                            <input type="text" name="name" class="form-control" required value="">
+                            <input type="text" name="name" class="form-control" required value="{{$category->name}}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label"><span class="c-red">*</span> 父级分类：</label>
                         <div class="col-sm-5">
-                            <select name="pid" id="" class="form-control" required>
+                            <select name="pid" id="" class="form-control" required disabled="disabled">
                                 <option value="null">无父级分类</option>
-                                @foreach($categories as $category)
-                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                @foreach($categories as $child)
+                                    @if($category->pid == $child->id)
+                                        <option value="{{$child->id}}" selected>{{$child->name}}</option>
+                                    @else
+                                        <option value="{{$child->id}}">{{$child->name}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

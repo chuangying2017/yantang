@@ -115,7 +115,7 @@ class AttributeController extends BaseController {
             return $this->respondException($e);
         }
 
-        return $this->respondDelete();
+        return $this->response->noContent();
     }
 
 
