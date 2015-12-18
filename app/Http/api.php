@@ -22,6 +22,7 @@ $api->version('v1', function ($api) {
         $api->group(['namespace' => 'Backend', 'prefix' => 'admin'], function () use ($api) {
             require(__DIR__ . "/Routes/Api/Backend/Product.php");
             require(__DIR__ . "/Routes/Api/Backend/Marketing.php");
+            require(__DIR__ . "/Routes/Api/Backend/Home.php");
         });
 
     });

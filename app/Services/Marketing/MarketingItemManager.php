@@ -20,7 +20,6 @@ abstract class MarketingItemManager implements MarketingInterface {
     //删除优惠项
     public function delete($id)
     {
-        #todo call repo
         if ( ! MarketingRepository::existsDiscountTicket($id, $this->getResourceType())) {
             if($this->getResourceType() == MarketingProtocol::TYPE_OF_COUPON) {
                 MarketingRepository::deleteCoupon($id);
