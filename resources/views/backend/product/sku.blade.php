@@ -6,9 +6,10 @@
         <th>库存</th>
         </thead>
         <tbody>
-        <tr>
-            <td><input type="text" class="form-control"/></td>
-            <td><input type="text" class="form-control"/></td>
+        <tr v-for="sku in skus">
+            <td v-for="value in sku.attribute_values">[! value.name !]</td>
+            <td><input type="text" class="form-control" v-model="skus[$index]['price']"/></td>
+            <td><input type="text" class="form-control" v-model="skus[$index]['stock']"/></td>
         </tr>
 
         </tbody>
@@ -16,7 +17,6 @@
 </script>
 <script>
     var getCombinations = function (arr, n) {
-        console.log('here')
         if (n == 1) {
             var ret = [];
             for (var i = 0; i < arr.length; i++) {
@@ -43,28 +43,30 @@
     Vue.component('sku', {
         template: '#sku-tpl',
         data: function () {
-            return {
-                skus: []
-            }
+            return {}
         },
         computed: {
-            list: function () {
-
-            }
-        },
-        watch: {
-            attributes: function (newVal, oldVal) {
+            skus: function () {
                 var arr = [];
-                for (var i = 0; i < newVal.length; i++) {
-                    if (newVal[i]['values']) {
-                        arr.push(newVal[i].values);
+                var skusArr = [];
+                for (var i = 0; i < this.attributes.length; i++) {
+                    arr.push(this.attributes[i]['values'])
+                }
+                var possibility = getCombinations(arr, arr.length);
+
+                for (var j = 0; j < possibility.length; j++) {
+                    skusArr[j] = {
+                        stock: 0,
+                        price: 0,
+                        attribute_values: [],
+                        attribute_value_ids: []
+                    }
+                    for (var k = 0; k < possibility[j].length; k++) {
+                        skusArr[j]['attribute_values'].push(possibility[j][k]);
+                        skusArr[j]['attribute_value_ids'].push(possibility[j][k]['id']);
                     }
                 }
-                console.log(arr);
-                if (arr.length > 0) {
-                    var t = getCombinations(arr, arr.length);
-                    console.log(t);
-                }
+                return skusArr;
             }
         },
         created: function () {
