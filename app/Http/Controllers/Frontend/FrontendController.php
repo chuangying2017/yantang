@@ -13,6 +13,7 @@ class FrontendController extends Controller {
 	 */
 	public function index()
 	{
+		return redirect()->route('backend.dashboard');
 		javascript()->put([
 			'test' => 'it works!'
 		]);

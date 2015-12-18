@@ -25,7 +25,7 @@ class AdminAuthController extends Controller {
 	public function getLogin()
 	{
 		if($this->auth->check()){
-			return redirect()->route('admin.dashboard');
+			return redirect()->route('backend.dashboard');
 		}
 		return view('admin.login');
 	}
@@ -43,7 +43,7 @@ class AdminAuthController extends Controller {
 
 		if ($this->auth->attempt(array_only($input, ['username', 'password'])))
 		{
-			return redirect()->route('admin.dashboard');
+			return redirect()->route('backend.dashboard');
 		}
 
 		return redirect()->route('admin.login')->withMessage('账号或密码错误')->withType('danger');

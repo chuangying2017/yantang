@@ -45,8 +45,8 @@
         <section id="app" class="content clearfix">
             @include('includes.partials.messages')
             @yield('content')
-        </section><!-- /.content -->
-    </div><!-- /.content-wrapper -->
+        </section>
+    </div>
 
     @include('backend.includes.footer')
 </div><!-- ./wrapper -->

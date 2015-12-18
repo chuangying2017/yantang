@@ -13,15 +13,15 @@ return [
     |
     */
 
-    'my_information' => 'My Information',
-    'change_password' => 'Change Password',
-    'administration' => 'Administration',
-    'dashboard' => 'Dashboard',
-    'home' => 'Home',
-    'login' => 'Login',
-    'logout' => 'Logout',
+    'my_information' => '我的信息',
+    'change_password' => '更改密码',
+    'administration' => '管理员',
+    'dashboard' => '仪表盘',
+    'home' => '主页',
+    'login' => '登录',
+    'logout' => '登出',
     'macros' => 'Macros',
-    'register' => 'Register',
-    'button' => 'Button',
+    'register' => '注册',
+    'button' => '按钮',
 
 ];
