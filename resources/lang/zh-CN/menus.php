@@ -24,6 +24,7 @@ return [
         'management' => '商品管理',
         'all' => '所有商品',
         'groups' => '商品分组',
+        'brands' => '商品品牌',
         'categories' => '商品分类',
         'attributes' => '商品属性'
     ],

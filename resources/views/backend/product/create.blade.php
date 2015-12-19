@@ -27,12 +27,13 @@
                 <li><a href="#settings" data-toggle="tab">3. 编辑商品详情</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane" id="activity">
+                <div class="active tab-pane" id="activity">
                     <div class="box without-border">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-2" v-for="cat in categories" v-cloak>
                                     <input type="radio" v-model="category" class="dflr-select"
+                                           required
                                            id="select[!cat.id!]"
                                            :value="cat">
                                     <label for="select[!cat.id!]">[! cat.name !]</label>
@@ -40,12 +41,13 @@
                             </div>
                         </div>
                         <div class="box-footer clearfix">
-                            <button type="submit" class="btn btn-primary pull-right">下一步</button>
+                            <a type="submit" class="btn btn-primary pull-right" href="#timeline"
+                               data-toggle="tab">下一步</a>
                         </div>
                     </div>
                 </div>
                 <!-- /.tab-pane -->
-                <div class="active tab-pane" id="timeline">
+                <div class=" tab-pane" id="timeline">
                     <div class="box without-border">
                         <div class="box-header with-border">
                             <h3 class="box-title">1. 基本信息</h3>
@@ -288,7 +290,6 @@
             },
             watch: {
                 category: function (newVal) {
-                    console.log(newVal)
                     this.product.category_id = newVal.id;
                 }
             },

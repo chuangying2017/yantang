@@ -33,32 +33,47 @@
             <li class="header">{{ trans('menus.general') }}</li>
 
             <!-- Optionally, you can add icons to the links -->
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.dashboard') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/dashboard') }}"><a
+                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.dashboard') }}</span></a></li>
 
             <li class="{{ Active::pattern('admin/dashboard') }}">
-                <a href=""><span>{{ trans('menus.product.management') }}</span><i class="fa fa-angle-left pull-right"></i></a>
+                <a href=""><span>{{ trans('menus.product.management') }}</span><i
+                        class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="{!!url('admin/products')!!}"><i class="fa fa-circle-o"></i>{{ trans('menus.product.all') }}</a></li>
-                    <li><a href="{!!url('admin/groups')!!}"><i class="fa fa-circle-o"></i>{{ trans('menus.product.groups') }}</a></li>
-                    <li><a href="{!!url('admin/categories')!!}"><i class="fa fa-circle-o"></i>{{ trans('menus.product.categories') }}</a></li>
-                    <li><a href="{!!url('admin/attributes')!!}"><i class="fa fa-circle-o"></i>{{ trans('menus.product.attributes') }}</a></li>
+                    <li><a href="{!!url('admin/products')!!}"><i
+                                class="fa fa-circle-o"></i>{{ trans('menus.product.all') }}</a></li>
+                    <li><a href="{!!url('admin/groups')!!}"><i
+                                class="fa fa-circle-o"></i>{{ trans('menus.product.groups') }}</a></li>
+                    <li><a href="{!!url('admin/brands')!!}"><i
+                                class="fa fa-circle-o"></i>{{ trans('menus.product.brands') }}</a></li>
+                    <li><a href="{!!url('admin/categories')!!}"><i
+                                class="fa fa-circle-o"></i>{{ trans('menus.product.categories') }}</a></li>
+                    <li><a href="{!!url('admin/attributes')!!}"><i
+                                class="fa fa-circle-o"></i>{{ trans('menus.product.attributes') }}</a></li>
                 </ul>
             </li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.merchant') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/dashboard') }}"><a
+                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.merchant') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.marketing') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/dashboard') }}"><a
+                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.marketing') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.client') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/dashboard') }}"><a
+                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.client') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.order') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/dashboard') }}"><a
+                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.order') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.express') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/dashboard') }}"><a
+                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.express') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.account') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/dashboard') }}"><a
+                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.account') }}</span></a></li>
 
             <li class="{{ Active::pattern('admin/dashboard') }}">
-                <a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.media') }}</span><i class="fa fa-angle-left pull-right"></i></a>
+                <a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.media') }}</span><i
+                        class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a href="forms/general.html"><i class="fa fa-circle-o"></i>{{ trans('menus.image') }}</a></li>
                     <li><a href="forms/general.html"><i class="fa fa-circle-o"></i>{{ trans('menus.article') }}</a></li>
