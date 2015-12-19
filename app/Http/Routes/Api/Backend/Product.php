@@ -30,12 +30,6 @@ $api->put('groups/{group_id}/products', [
 ]);
 $api->resource('groups', 'GroupController');
 
-$api->put('sections/{section_id}/products', [
-    'as'   => 'sections.bind.products',
-    'uses' => 'SectionController@bindingProducts'
-]);
-$api->resource('sections', 'SectionController');
-
 
 $api->group(['prefix' => 'images'], function ($api) {
     $api->get('/', [

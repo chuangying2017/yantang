@@ -58,13 +58,13 @@ class SectionService {
      */
     public static function show($id)
     {
-        return Section::findOrFail($id);
+        return SectionRepository::show($id);
     }
 
-    public static function bindProducts($group_id, $product_id)
+    public static function bindProducts($section_id, $product_data)
     {
-        $product_id = to_array($product_id);
-
-        return SectionRepository::bindingProducts($group_id, $product_id);
+        return SectionRepository::bindingProducts($section_id, $product_data);
     }
+
+
 }
