@@ -30,7 +30,6 @@ class BackendProductTransformer extends TransformerAbstract {
             'express_fee' => (int)$product->data->express_fee,
             'created_at'  => $product->created_at->toDateTimeString(),
             'updated_at'  => $product->updated_at->toDateTimeString(),
-            'groups'      => $product->groups,
         ];
 
         return array_merge($base_info, $detail);
@@ -98,7 +97,7 @@ class BackendProductTransformer extends TransformerAbstract {
             }
         }
 
-        return ['groups' => $group_ids];
+        return ['group_ids' => $group_ids];
     }
 
     protected function transformMeta(Product $product)

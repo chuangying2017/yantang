@@ -34,7 +34,7 @@ class ProductController extends Controller {
             $status
         );
 
-        return $this->response->paginator($products, new ProductTransformer());
+        return $this->response->paginator($products, new BackendProductTransformer());
     }
 
 
