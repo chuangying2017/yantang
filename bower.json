@@ -22,6 +22,8 @@
     "vue": "~1.0.12",
     "simditor": "~2.3.5",
     "ueditor": "~1.4.3",
-    "vue-resource": "~0.1.17"
+    "vue-resource": "~0.1.17",
+    "lodash": "~3.10.1",
+    "underscore": "~1.8.3"
   }
 }
