@@ -23,7 +23,7 @@ class ProductSkuTransformer extends TransformerAbstract {
             'sales'                => (int)$productSku->sales,
             'price'                => (int)$productSku->price,
             'merchant_id'          => (int)$productSku->merchant_id,
-            'title'                => $productSku->title,
+            'name'                => $productSku->title,
             'category_id'          => (int)$productSku->category_id,
             'cover_image'          => $productSku->cover_image,
             'attributes'           => $attributes,

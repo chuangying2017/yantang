@@ -16,9 +16,14 @@ class ProductTransformer extends TransformerAbstract {
 
         $base_info = [
             'id'          => (int)$product->id,
+            'brand_id'    => $product->brand_id,
+            'category_id' => (int)$product->category_id,
+            'merchant_id' => (int)$product->merchant_id,
             'cover_image' => $product->cover_image,
             'product_no'  => $product->product_no,
             'title'       => $product->title,
+            'open_status' => $product->open_status,
+            'open_time'   => $product->open_time,
             'price'       => (int)$product->price,
             'sales'       => (int)$product->data->sales,
             'favs'        => (int)$product->data->favs,
