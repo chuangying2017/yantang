@@ -53,30 +53,32 @@
                 </ul>
             </li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a
-                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.merchant') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/merchants') }}"><a
+                    href="{!! url('admin/merchants') !!}"><span>{{ trans('menus.merchant') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a
-                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.marketing') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/marketing') }}"><a
+                    href="{!! url('admin/marketing') !!}"><span>{{ trans('menus.marketing') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a
-                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.client') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/clients') }}"><a
+                    href="{!! url('admin/clients') !!}"><span>{{ trans('menus.client') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a
-                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.order') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/orders') }}"><a
+                    href="{!! url('admin/orders')  !!}"><span>{{ trans('menus.order') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a
-                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.express') }}</span></a></li>
+            {{--<li class="{{ Active::pattern('admin/dashboard') }}"><a--}}
+            {{--href="url('admin/attributes')"><span>{{ trans('menus.express') }}</span></a></li>--}}
 
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a
-                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.account') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/accounts') }}"><a
+                    href="{!! url('admin/accounts') !!}"><span>{{ trans('menus.account') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}">
-                <a href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.media') }}</span><i
+            <li class="{{ Active::pattern('admin/media') }}">
+                <a href=""><span>{{ trans('menus.media') }}</span><i
                         class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="forms/general.html"><i class="fa fa-circle-o"></i>{{ trans('menus.image') }}</a></li>
-                    <li><a href="forms/general.html"><i class="fa fa-circle-o"></i>{{ trans('menus.article') }}</a></li>
+                    <li><a href="{!! url('admin/images') !!}"><i class="fa fa-circle-o"></i>{{ trans('menus.image') }}
+                        </a></li>
+                    <li><a href="{!! url('admin/articles') !!}"><i
+                                class="fa fa-circle-o"></i>{{ trans('menus.article') }}</a></li>
                 </ul>
             </li>
 

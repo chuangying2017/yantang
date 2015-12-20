@@ -16,7 +16,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-2">
-            <a href="{!!route('admin.groups.create')!!}" class="btn btn-primary btn-block margin-bottom">创建新的商家</a>
+            <a href="{!! url('/admin/merchants/create') !!}" class="btn btn-primary btn-block margin-bottom">创建新的商家</a>
             <!-- /. box -->
         </div>
         <!-- /.col -->
@@ -64,9 +64,11 @@
                                         <button type="button" class="btn btn-default btn-sm"><i
                                                 class="fa fa-trash-o"></i></button>
                                         <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-lock"></i> 锁定用户</button>
+                                                class="fa fa-lock"></i> 锁定用户
+                                        </button>
                                         <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-sort-numeric-asc"></i> 重置密码</button>
+                                                class="fa fa-sort-numeric-asc"></i> 重置密码
+                                        </button>
                                     </div>
                                 </td>
                             </tr>

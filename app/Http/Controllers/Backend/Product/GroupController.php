@@ -17,7 +17,6 @@ class GroupController extends Controller
      */
     public function index()
     {
-   	    return view('backend.media.articles.create');
         try {
             $records = $groups = $this->api->get('api/admin/groups');
             return view('backend.groups.index')->with('groups', $records);
