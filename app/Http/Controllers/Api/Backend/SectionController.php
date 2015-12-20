@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Api\Backend;
 
 use App\Services\Product\Section\SectionService;
-use Illuminate\Http\Request;
-
+use App\Http\Requests\SectionRequest as Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -104,14 +103,15 @@ class SectionController extends Controller {
     public function bindingProducts(Request $request, $section_id)
     {
         try {
-            $products_id = $request->input('products_id');
+            $products_data = $request->input('products');
 
-            SectionService::bindProducts($section_id, $products_id);
+            $result = SectionService::bindProducts($section_id, $products_data);
+
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
 
-        return $this->response->created([]);
+        return $this->response->created()->setContent(['data' => $result]);
     }
 
 }

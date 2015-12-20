@@ -15,7 +15,7 @@ class Section extends Model {
 
     public function products()
     {
-        return $this->belongsToMany('App\Models\Product', 'product_section');
+        return $this->hasMany('App\Models\SectionProduct', 'section_id', 'id');
     }
 
 }

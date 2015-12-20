@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Backend;
 use App\Http\Requests\Backend\Api\ProductRequest as Request;
 
 use App\Http\Controllers\Controller;
+use App\Http\Transformers\BackendProductTransformer;
 use App\Http\Transformers\ProductTransformer;
 use App\Services\ApiConst;
 use App\Services\Product\ProductConst;
@@ -77,7 +78,7 @@ class ProductController extends Controller {
 
         $product = ProductService::create($data);
 
-        return $this->setStatusCode(201)->array($product);
+        return $this->response->created()->setContent(['data' => $product]);
     }
 
     /**
@@ -92,7 +93,7 @@ class ProductController extends Controller {
         $product->show_detail = 1;
 
 
-        return $this->response->item($product, new ProductTransformer());
+        return $this->response->item($product, new BackendProductTransformer());
     }
 
     /**

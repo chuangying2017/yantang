@@ -24,5 +24,10 @@ class OrderHandler {
 
     }
 
+    public static function splitOrderByMerchant($order_id)
+    {
+
+    }
+
 
 }
