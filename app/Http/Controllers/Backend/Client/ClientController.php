@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Backend\Client;
 
 use App\Http\Controllers\Controller;
@@ -12,40 +13,50 @@ use Illuminate\Http\Request;
  */
 class ClientController extends Controller
 {
-    //todo@bryant: error handler
+    /**
+     * @return $this|string
+     */
     public function index()
     {
+        //todo@bryant: wait for api
         try {
-            $orders = $this->api->get('api/admin/orders');
-            return view('backend.orders.index', compact('orders'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-
-    public function create()
-    {
-        try {
-            return view('backend.brands.create');
+//            $records = $this->api->get('api/admin/merchants');
+            $records = [];
+            return view('backend.client.index')->with('groups', $records);
         } catch (Exception $e) {
+
             return $e->getMessage();
         }
+
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function create()
+    {
+//    	return view('backend.orders.detail');
+        return view('backend.merchant.create');
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
     public function store(Request $request)
     {
         try {
-
             $data = $request->all();
 
-            $result = $this->api->post('api/admin/brands', [
-                'name' => array_get($data, 'name', '')
+            $result = $this->api->post('api/admin/groups', [
+                'name' => array_get($data, 'name', ''),
+                'group_cover' => array_get($data, 'group_cover', ''),
+                'desc' => array_get($data, 'desc', '')
             ]);
 
             if ($result) {
-                return redirect('/admin/brands');
+                return redirect('/admin/groups');
             }
-
 
         } catch (Exception $e) {
 
@@ -53,38 +64,51 @@ class ClientController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public function show($id)
     {
+        try {
+            return view('backend.orders.detail');
+        } catch (Exception $e) {
 
-        $brand = $this->api->get('api/admin/brands/' . $id);
-        return view('backend.brands.show', compact('brand'));
+            return $e->getMessage();
+        }
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return string
+     */
     public function update($id, Request $request)
     {
         try {
             $data = $request->all();
 
-            $result = $this->api->put('api/admin/brands/' . $id, [
-                'name' => array_get($data, 'name', '')
+            $this->api->put('api/admin/groups/' . $id, [
+                'name' => array_get($data, 'name', ''),
+                'group_cover' => array_get($data, 'group_cover', ''),
+                'desc' => array_get($data, 'desc', '')
             ]);
-
-            if ($result) {
-                return redirect('/admin/brands');
-            }
+            return redirect('/admin/groups');
         } catch (Exception $e) {
 
             return $e->getMessage();
         }
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public function destroy($id)
     {
         try {
-            $result = $this->api->delete('api/admin/brands/' . $id);
-
-            return redirect('/admin/brands');
-
+            $this->api->delete('api/admin/groups/' . $id);
+            return redirect('/admin/groups');
         } catch (Exception $e) {
 
             return $e->getMessage();

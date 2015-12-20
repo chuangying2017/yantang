@@ -294,19 +294,17 @@
         Vue.config.delimiters = ["[!", "!]"];
 
         var model = {
-            basic_info: {
-                category_id: null,
-                title: "",
-                price: 0,
-                origin_price: 0,
-                limit: 0,
-                cover_image: "",
-                open_status: "now",
-                attributes: [],
-                brand_id: null,
-                detail: "test",
-                express_fee: 0
-            },
+            category_id: null,
+            title: "",
+            price: 0,
+            origin_price: 0,
+            limit: 0,
+            cover_image: "",
+            open_status: "now",
+            attributes: [],
+            brand_id: null,
+            detail: "test",
+            express_fee: 0
             skus: [],
             image_ids: [],
             group_ids: []
