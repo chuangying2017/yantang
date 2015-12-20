@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Backend\Product;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 /**
  * Created by PhpStorm.
@@ -12,6 +13,9 @@ use App\Http\Controllers\Controller;
 class ProductController extends Controller
 {
 
+    /**
+     * @return \Exception|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         try {
@@ -23,13 +27,64 @@ class ProductController extends Controller
 
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
+    {
+        $this->setJs();
+        return view('backend.product.create');
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function edit($id)
+    {
+        $product = $this->api->get('api/admin/products/' . $id);
+        $this->setJs($product);
+        return view('backend.product.create');
+    }
+
+    public function store(Request $request)
+    {
+
+        try {
+            $data = $request->all();
+
+            $result = $this->api->post('api/admin/products', $data);
+
+            if ($result) {
+                return 1;
+            }
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+
+    }
+
+    /**
+     * @param null $product
+     * @throws \Exception
+     */
+    private function setJs($product = null)
     {
         $categories = $this->api->get('api/admin/categories')['data'];
         $groups = $this->api->get('api/admin/groups');
-        javascript()->put([
+        $brands = $this->api->get('api/admin/brands');
+        $qiniu_token = $this->api->get('api/admin/images/token')['data'];
+        $data = [
+            'config' => [
+                'api_url' => url('api/'),
+                'base_url' => url('/')
+            ],
             'categories' => $categories,
             'groups' => $groups,
+            'brands' => $brands,
+            'token' => csrf_token(),
+            'qiniu_token' => $qiniu_token,
             'attributes' => [
                 [
                     "name" => "尺寸",
@@ -52,7 +107,23 @@ class ProductController extends Controller
                     "values" => []
                 ]
             ]
-        ]);
-        return view('backend.product.create');
+        ];
+
+        if ($product) {
+            $data['product'] = $product;
+        }
+        javascript()->put($data);
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $this->api->delete('api/admin/products/' . $id);
+
+            return redirect('admin/products');
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
     }
 }

@@ -56,6 +56,8 @@
 
                 for (var j = 0; j < possibility.length; j++) {
                     skusArr[j] = {
+                        name: "",
+                        cover_image: "",
                         stock: 0,
                         price: 0,
                         attribute_values: [],

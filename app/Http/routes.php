@@ -36,9 +36,9 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
             require(__DIR__ . "/Routes/Backend/Access.php");
             require(__DIR__ . "/Routes/Backend/Dashboard.php");
             require(__DIR__ . "/Routes/Backend/Product.php");
-            require(__DIR__ . "/Routes/Backend/Merchant.php");
-            require(__DIR__ . "/Routes/Backend/Marketing.php");
             require(__DIR__ . "/Routes/Backend/Client.php");
+            require(__DIR__ . "/Routes/Backend/Merchant.php");
+//            require(__DIR__ . "/Routes/Backend/Marketing.php");
             require(__DIR__ . "/Routes/Backend/Order.php");
             require(__DIR__ . "/Routes/Backend/Express.php");
             require(__DIR__ . "/Routes/Backend/Account.php");
