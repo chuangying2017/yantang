@@ -1,3 +1,7 @@
 <?php
 
-get('dashboard', 'DashboardController@index')->name('backend.dashboard');
+$router->group([
+    'namespace' => 'Image'
+], function () use ($router) {
+    resource('images', 'ImageController');
+});

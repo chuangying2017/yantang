@@ -79,17 +79,25 @@
                                              alt=""></td>
                                     <td>{{$product->title}}</td>
                                     <td>{{$product->price}}</td>
-                                    <td>{{$product->stocks}}</td>
+                                    <td>{{$product->stock}}</td>
                                     <td>{{$product->sales}}</td>
                                     <td>{{$product->created_at}}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-default btn-sm"><i
-                                                    class="fa fa-pencil"></i></button>
-                                            <button type="button" class="btn btn-default btn-sm"><i
-                                                    class="fa fa-arrow-circle-down"></i></button>
-                                            <button type="button" class="btn btn-default btn-sm"><i
-                                                    class="fa fa-trash-o"></i></button>
+                                            <a href="{{url('/admin/products/' . $product->id . '/edit')}}"
+                                               class="btn btn-default btn-sm"><i
+                                                    class="fa fa-pencil"></i></a>
+                                            <a href="" class="btn btn-default btn-sm"><i
+                                                    class="fa fa-arrow-circle-down"></i></a>
+                                            <form style="display: inline-block"
+                                                  action="{{url('/admin/products/' . $product->id)}}" ,
+                                                  method="post">
+                                                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                                <input type="hidden" name="_method" value="delete">
+                                                <button type="submit" class="btn btn-default btn-sm"><i
+                                                        class="fa fa-trash-o"></i></button>
+                                            </form>
+
                                         </div>
                                     </td>
                                 </tr>

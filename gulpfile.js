@@ -10,8 +10,8 @@ elixir(function (mix) {
         .copy('vendor/twbs/bootstrap/dist/js/bootstrap.min.js', 'public/js/vendor')
         .copy('vendor/bower_components/select2', 'public/js/vendor/select2')
         .copy('vendor/bower_components/jquery-mask-plugin', 'public/js/vendor/jquery-mask-plugin')
-        .copy('vendor/bower_components/ueditor', 'public/js/vendor/ueditor')
         .copy('vendor/bower_components/vue', 'public/js/vendor/vue')
+        .copy('vendor/bower_components/vue-resource', 'public/js/vendor/vue-resource')
 
         .sass([ // Process front-end stylesheets
             'frontend/main.scss'
