@@ -6,45 +6,67 @@
         <th>库存</th>
         </thead>
         <tbody>
-        <tr v-for="value in attributes[0]['values']">
-            <td>[! value.name !]</td>
-            <td v-for="val2 in attributes[1]['values']">[! val2.name !]</td>
-            <td><input type="text" class="form-control"/></td>
-            <td><input type="text" class="form-control"/></td>
+        <tr v-for="sku in skus">
+            <td v-for="value in sku.attribute_values">[! value.name !]</td>
+            <td><input type="text" class="form-control" v-model="skus[$index]['price']"/></td>
+            <td><input type="text" class="form-control" v-model="skus[$index]['stock']"/></td>
         </tr>
 
         </tbody>
     </table>
 </script>
 <script>
-
-    var getAllPossible = function (arr) {
-        if (arr.length === 0) {
-            return [];
-        }
-        else if (arr.length === 1) {
-            return arr[0];
-        }
-        else {
-            var result = [];
-            var allCasesOfRest = allPossibleCases(arr.slice(1));  // recur with the rest of array
-            for (var c in allCasesOfRest) {
-                for (var i = 0; i < arr[0].length; i++) {
-                    result.push(arr[0][i] + allCasesOfRest[c]);
+    var getCombinations = function (arr, n) {
+        if (n == 1) {
+            var ret = [];
+            for (var i = 0; i < arr.length; i++) {
+                for (var j = 0; j < arr[i].length; j++) {
+                    ret.push([arr[i][j]]);
                 }
             }
-            return result;
+            return ret;
+        }
+        else {
+            var ret = [];
+            for (var i = 0; i < arr.length; i++) {
+                var elem = arr.shift();
+                for (var j = 0; j < elem.length; j++) {
+                    var childperm = getCombinations(arr.slice(), n - 1);
+                    for (var k = 0; k < childperm.length; k++) {
+                        ret.push([elem[j]].concat(childperm[k]));
+                    }
+                }
+            }
+            return ret;
         }
     }
-
     Vue.component('sku', {
         template: '#sku-tpl',
         data: function () {
             return {}
         },
         computed: {
-            list: function () {
-                
+            skus: function () {
+                var arr = [];
+                var skusArr = [];
+                for (var i = 0; i < this.attributes.length; i++) {
+                    arr.push(this.attributes[i]['values'])
+                }
+                var possibility = getCombinations(arr, arr.length);
+
+                for (var j = 0; j < possibility.length; j++) {
+                    skusArr[j] = {
+                        stock: 0,
+                        price: 0,
+                        attribute_values: [],
+                        attribute_value_ids: []
+                    }
+                    for (var k = 0; k < possibility[j].length; k++) {
+                        skusArr[j]['attribute_values'].push(possibility[j][k]);
+                        skusArr[j]['attribute_value_ids'].push(possibility[j][k]['id']);
+                    }
+                }
+                return skusArr;
             }
         },
         created: function () {

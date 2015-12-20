@@ -7,15 +7,19 @@
             </div>
             <div class="col-sm-4">
                 <select class="attrGroup form-control"
-                        v-model="attribute">
+                        v-model="selectedAttr">
                     <option value="[! attr !]" v-for="attr in attributes">
                         [! attr.name !]
                     </option>
                 </select>
             </div>
             <div class="col-sm-4">
-                <label @click="showValueInput = true" style="cursor: pointer;color: #367fa9;" class="control-label" v-show="attribute">+添加属性值</label>
-                <div v-if="showValueInput" class="attr-popup" style="position: absolute;background: #fff; border: 3px solid #367fa9;padding: 10px;width: 300px;left: -100px;top: 40px;border-radius: 5px;box-shadow: 0 0 10px #a6a6a6;z-index: 99999;">
+                <label @click="showValueInput = true" style="cursor: pointer
+                ;
+                    color: #367fa9
+                ;" class="control-label" v-show="attribute">+添加属性值</label>
+                <div v-if="showValueInput" class="attr-popup"
+                     style="position: absolute;background: #fff; border: 3px solid #367fa9;padding: 10px;width: 300px;left: -100px;top: 40px;border-radius: 5px;box-shadow: 0 0 10px #a6a6a6;z-index: 99999;">
                     <form action="" style="margin: 0;">
                         <input type="text" v-model="searchValue">
                         <button @click.prevent="submitValue($index)">确定</button>
@@ -26,11 +30,12 @@
         </div>
         <div class="row attr-val-list">
             <div class="col-sm-12">
-                <div class="btn-wrap" style="margin-top: 10px;padding: 10px; background: #fff;border-radius: 3px;" v-show="attribute['values'].length">
-                    <div class="btn-group" v-for="value in attribute['values']">
-                      <button type="button" class="btn btn-xs btn-primary">[! value.name !]</button>
-                      <button type="button" class="btn btn-xs btn-primary" @click=" removeValue(value)">x
-                      </button>
+                <div class="btn-wrap" style="margin-top: 10px;padding: 10px; background: #fff;border-radius: 3px;"
+                     v-show="values.length">
+                    <div class="btn-group" v-for="value in values">
+                        <button type="button" class="btn btn-xs btn-primary">[! value.name !]</button>
+                        <button type="button" class="btn btn-xs btn-primary" @click=" removeValue(value)">x
+                        </button>
                     </div>
                 </div>
             </div>
@@ -44,15 +49,30 @@
             return {
                 searchValue: "",
                 showValueInput: false,
-                attributes: app.attributes
+                attributes: app.attributes,
+                selectedAttr: {},
+                values: []
             }
         },
         props: ['attribute', 'index'],
+        watch: {
+            selectedAttr: function (newVal) {
+                this.attribute = {
+                    id: newVal.id,
+                    name: newVal.name,
+                    values: []
+                }
+                this.values = []
+            },
+            values: function (newVal) {
+                this.attribute.values = newVal;
+            }
+        },
         methods: {
             submitValue: function () {
                 //1. get from api
                 //2. check duplicate
-                this.attribute['values'].push({
+                this.values.push({
                     id: 1,
                     name: this.searchValue,
                 });
@@ -64,8 +84,7 @@
                 this.searchValue = "";
             },
             removeValue: function (value) {
-                var values = this.attribute['values'];
-                values.$remove(value);
+                this.values.$remove(value);
             },
             removeAttr: function () {
                 this.$dispatch('attrDeleted', this.index);

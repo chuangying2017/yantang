@@ -31,11 +31,11 @@
                     <div class="box without-border">
                         <div class="box-body">
                             <div class="row">
-                                <div class="col-md-2" v-for="category in categories" v-cloak>
-                                    <input type="radio" v-model="product.category" class="dflr-select"
-                                           id="select[!category.id!]"
-                                           :value="category">
-                                    <label for="select[!category.id!]">[! category.name !]</label>
+                                <div class="col-md-2" v-for="cat in categories" v-cloak>
+                                    <input type="radio" v-model="category" class="dflr-select"
+                                           id="select[!cat.id!]"
+                                           :value="cat">
+                                    <label for="select[!cat.id!]">[! cat.name !]</label>
                                 </div>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"><span class="c-red">*</span> 归属类目：</label>
                                     <div class="col-sm-5">
-                                        <label class="control-label">[! product.category.name !]</label>
+                                        <label class="control-label">[! category.name !]</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -63,7 +63,7 @@
                                         选择分组：</label>
                                     <div class="col-sm-5">
                                         <select name="proGroup" id="proGroup" class="form-control"
-                                                v-model="product.groups" multiple>
+                                                v-model="product.group_ids" multiple>
                                             <option selected="true" disabled="disabled">请选择该商品的分组</option>
                                             <option value="[! group.id !]" v-for="group in groups">[! group.name !]
                                             </option>
@@ -81,9 +81,10 @@
                             <form class="form-horizontal">
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"><span class="c-red">*</span> 商品规格：</label>
-                                    <div class="col-sm-5">                                        
-                                            <attribute v-for="attribute in product.attributes"
-                                                   :attribute.sync="attribute" :index="$index"></attribute>
+                                    <div class="col-sm-5">
+                                        <attribute v-for="attribute in product.attributes"
+                                                   :attribute.sync="product.attributes[$index]" :index="$index"
+                                                   track-by="$index"></attribute>
                                         <button class="btn btn-primary" type="button" @click="addAttr()">
                                         添加规格项目</button>
                                     </div>
@@ -99,7 +100,8 @@
                                     <label for="proGroup" class="col-sm-2 control-label"><span class="c-red">*</span>
                                         总库存：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" v-model="stock"
+                                               disabled="disabled">
                                     </div>
                                 </div>
                             </form>
@@ -123,12 +125,12 @@
                                         <div class="input-group">
                                             <span class="input-group-addon">￥</span>
                                             <input type="text" class="form-control" placeholder="当前价（单位：元）"
-                                                   v-model="product.current_price">
+                                                   v-model="product.price">
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="text" class="form-control" placeholder="原价（选填）"
-                                               v-model="product.price">
+                                               v-model="product.origin_price">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -256,11 +258,40 @@
             data: {
                 categories: app.categories,
                 groups: app.groups,
+                category: {},
                 product: {
-                    attributes: []
+                    category_id: null,
+                    title: "",
+                    price: 0,
+                    origin_price: 0,
+                    limit: 0,
+                    cover_image: "",
+                    open_status: "now",
+                    attributes: [],
+                    brand_id: null,
+                    detail: "",
+                    express_fee: 0,
+                    skus: [],
+                    image_ids: [],
+                    group_ids: []
                 }
             },
             components: ['attribute', 'sku'],
+            computed: {
+                stock: function () {
+                    var stocks = 0;
+                    for (var i = 0; i < this.product.skus.length; i++) {
+                        stocks = stocks + parseInt(this.product.skus[i]['stock']);
+                    }
+                    return stocks;
+                }
+            },
+            watch: {
+                category: function (newVal) {
+                    console.log(newVal)
+                    this.product.category_id = newVal.id;
+                }
+            },
             methods: {
                 addAttr: function () {
                     this.product.attributes.push({
@@ -270,7 +301,7 @@
                     });
                 },
                 test: function () {
-                    console.log(this.product.attributes);
+                    this.$log('product')
                 }
             },
             events: {
