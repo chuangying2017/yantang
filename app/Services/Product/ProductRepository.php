@@ -123,12 +123,12 @@ class ProductRepository {
         try {
             DB::beginTransaction();
 
-            $product = self::touchProduct($data['basic_info']);
+            $product = self::touchProduct($data['data']);
 
             /**
              * create skus
              */
-            $skus = ProductSkuService::create($data['skus'], $product->id);
+            $skus = ProductSkuService::create($data['skus']['data'], $product->id);
             $product->skus = $skus;
             /**
              * link group
@@ -164,11 +164,11 @@ class ProductRepository {
             /**
              * filter data for security
              */
-            $product = self::touchProduct($data, $id);
+            $product = self::touchProduct($data['data'], $id);
             /**
              * update skus
              */
-            ProductSkuService::sync($data['skus'], $product);
+            ProductSkuService::sync($data['skus']['data'], $product);
             /**
              * link group
              */
