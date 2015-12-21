@@ -7,8 +7,8 @@
             </div>
             <div class="col-sm-4">
                 <select class="attrGroup form-control"
-                        v-model="selectedAttr">
-                    <option value="[! attr !]" v-for="attr in attributes">
+                        v-model="selectedAttrId">
+                    <option v-bind:value="attr.id" v-for="attr in attributes">
                         [! attr.name !]
                     </option>
                 </select>
@@ -50,19 +50,29 @@
                 searchValue: "",
                 showValueInput: false,
                 attributes: app.attributes,
-                selectedAttr: {},
+                selectedAttrId: null,
                 values: []
             }
         },
         props: ['attribute', 'index'],
+        created: function () {
+            if (this.attribute.id) {
+                this.selectedAttrId = this.attribute.id
+                this.values = this.attribute.values
+            }
+        },
         watch: {
-            selectedAttr: function (newVal) {
-                this.attribute = {
-                    id: newVal.id,
-                    name: newVal.name,
-                    values: []
-                }
-                this.values = []
+            selectedAttrId: function (newVal) {
+                _.map(this.attributes, function (val, key) {
+                    if (newVal == val.id) {
+                        this.attribute = {
+                            id: val.id,
+                            name: val.name,
+                            values: []
+                        }
+                        this.values = []
+                    }
+                })
             },
             values: function (newVal) {
                 this.attribute.values = newVal;
@@ -73,7 +83,8 @@
                 //1. get from api
                 //2. check duplicate
                 var self = this;
-                this.$http.post(app.config.base_url + '/api/admin/attributes/' + this.attribute.id + '/values?_token=' + app.token, {
+                console.log(this.attribute);
+                this.$http.post(app.config.base_url + '/api/admin/attributes/' + this.selectedAttrId + '/values?_token=' + app.token, {
                     value: this.searchValue
                 }, function (data) {
                     var value = data.data

@@ -66,8 +66,7 @@
                                     <div class="col-sm-5">
                                         <select name="brand" class="form-control"
                                                 v-model="product.brand_id">
-                                            <option selected="true" disabled="disabled" value="null">请选择该商品的品牌</option>
-                                            <option value="[! brand.id !]" v-for="brand in brands">[! brand.name !]
+                                            <option v-bind:value="brand.id " v-for="brand in brands">[! brand.name !]
                                             </option>
                                         </select>
                                     </div>
@@ -78,8 +77,7 @@
                                     <div class="col-sm-5">
                                         <select name="proGroup" id="proGroup" class="form-control"
                                                 v-model="product.group_ids" multiple>
-                                            <option selected="true" disabled="disabled" value="">请选择该商品的分组</option>
-                                            <option value="[! group.id !]" v-for="group in groups">[! group.name !]
+                                            <option v-bind:value="group.id" v-for="group in groups">[! group.name !]
                                             </option>
                                         </select>
                                     </div>
@@ -162,7 +160,7 @@
                                         <button @click.prevent="openGallery()">选择图片</button>
 
                                         <div class="cover-images">
-                                            <div class="img-wrapper" v-for="image in product.images" @click="
+                                            <div class="img-wrapper" v-for="image in product.images.data" @click="
                                             removeImg(image)">
                                             <img :src="image.url + '?imageView2/2/w/100'" alt="">
                                         </div>
@@ -300,16 +298,19 @@
             skus: {
                 data: []
             },
-            images: [],
+            images: {
+                data: []
+            },
             image_ids: [],
             group_ids: []
         };
 
-        var product = app.product ? app.product : model
+        var product = app.product ? app.product.data : model
 
         var vm = new Vue({
             el: '#app',
             data: {
+                method: 'post',
                 categories: app.categories,
                 groups: app.groups,
                 brands: app.brands,
@@ -327,7 +328,19 @@
                 }
             },
             created: function () {
+
+                this.$log('product')
                 var self = this;
+
+                if (this.product.id) {
+                    this.method = "put";
+                    _.map(this.categories, function (val, key) {
+                        if (val.id == self.product.category_id) {
+                            self.category = val;
+                        }
+                    })
+                }
+
                 editor.ready(function () {
                     UE.commands['gallery'] = {
                         execCommand: function () {
@@ -357,13 +370,25 @@
                     var data = {
                         data: this.$get('product')
                     }
-                    this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, data, function (data) {
-                        if (data) {
-                            window.location.href = app.config.base_url + '/admin/products';
-                        }
-                    }).error(function (data) {
 
-                    });
+                    if (this.method == 'post') {
+                        this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, data, function (data) {
+                            if (data) {
+                                window.location.href = app.config.base_url + '/admin/products';
+                            }
+                        }).error(function (data) {
+
+                        });
+                    } else {
+                        this.$http.put(app.config.base_url + '/admin/products/' + this.product.id + '?_token=' + app.token, data, function (data) {
+                            if (data) {
+                                window.location.href = app.config.base_url + '/admin/products';
+                            }
+                        }).error(function (data) {
+
+                        });
+                    }
+
                 },
                 openGallery: function (fn) {
                     if (fn) {
@@ -373,7 +398,7 @@
                     }
                 },
                 removeImg: function (image) {
-                    this.product.images.$remove(image)
+                    this.product.images.data.$remove(image)
                     this.product.image_ids.$remove(image.id)
                 },
                 setEditorContent: function (data) {
@@ -390,14 +415,16 @@
                     this.product.attributes.splice(index, 1);
                 },
                 gallerySubmit: function (callback) {
+                    var self = this;
                     if (callback.method) {
                         this[callback.method](callback.data)
                     } else {
                         _.map(callback.data, function (val, key) {
-                            this.product.image_ids.push = val.id
+                            console.log(val)
+                            self.product.image_ids.push(val.id)
                         });
 
-                        this.product.images = _.clone(callback.data)
+                        this.product.images.data = _.clone(callback.data)
                     }
                 }
             }
