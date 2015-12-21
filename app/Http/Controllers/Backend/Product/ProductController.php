@@ -42,8 +42,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = $this->api->get('api/admin/products/' . $id);
-        $this->setJs($product);
+        $product = $this->api->raw()->get('api/admin/products/' . $id);
+        $this->setJs(json_decode($product->content(), true));
         return view('backend.product.create');
     }
 
