@@ -38,16 +38,14 @@ class QiniuController extends Controller {
      */
     public function store(Request $request)
     {
-        $image_id = $request->input('image_id') . '-' . $request->input('hash');
-        $merchant_id = $request->input('merchant_id', 0);
-
-        ImageService::create($image_id, $merchant_id);
+        $media_id = $request->input('media_id');
+        ImageService::create($request->all());
 
         return response()->json(array(
-            'key'     => $image_id,
+            'key'     => $media_id,
             'payload' => [
                 'success' => true,
-                'name'    => $image_id
+                'name'    => $media_id
             ]
         ));
     }

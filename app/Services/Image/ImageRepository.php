@@ -43,13 +43,11 @@ class ImageRepository {
      * @param $media_id
      * @return mixed
      */
-    public static function create($merchant_id, $media_id)
+    public static function create($data)
     {
-        return Image::firstOrCreate([
-            'merchant_id' => $merchant_id,
-            'media_id'    => $media_id,
-            'url'         => getenv("QINIU_DEFAULT_DOMAIN") . $media_id
-        ]);
+        $image_data = array_only($data, ['merchant_id', 'media_id', 'filename', 'image_info']);
+
+        return Image::create($image_data);
     }
 
     /**

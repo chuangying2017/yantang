@@ -21,9 +21,9 @@ class ImageService {
         return ImageRepository::getToken($callback_url, $merchant_id);
     }
 
-    public static function create($media_id, $merchant_id)
+    public static function create($data)
     {
-        return ImageRepository::create($merchant_id, $media_id);
+        return ImageRepository::create($data);
     }
 
     /**
