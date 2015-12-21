@@ -39,7 +39,7 @@ class QiniuController extends Controller {
     public function store(Request $request)
     {
         $data = $request->all();
-        $media_id = $request->input('media_id') . '-' . date('YmdHis');
+        $media_id = $request->input('hash') . '-' . date('YmdHis');
         $data['media_id'] = $media_id;
         ImageService::create($data);
 
