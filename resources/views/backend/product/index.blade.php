@@ -32,7 +32,7 @@
                     <ul class="nav nav-pills nav-stacked">
                         <li><a href="{{url('admin/products')}}"><i class="fa fa-trash-o"></i> 出售中的商品</a></li>
                         <li><a href="{{url('admin/products?status=down')}}"><i class="fa fa-trash-o"></i> 下架的商品</a></li>
-                        <li><a href="{{url('admin/products')}}"><i class="fa fa-trash-o"></i> 已售罄的商品</a></li>
+                        {{--<li><a href="{{url('admin/products')}}"><i class="fa fa-trash-o"></i> 已售罄的商品</a></li>--}}
                     </ul>
                 </div>
                 <!-- /.box-body -->

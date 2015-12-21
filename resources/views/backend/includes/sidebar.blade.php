@@ -56,8 +56,8 @@
             <li class="{{ Active::pattern('admin/merchants') }}"><a
                     href="{!! url('admin/merchants') !!}"><span>{{ trans('menus.merchant') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/marketing') }}"><a
-                    href="{!! url('admin/marketing') !!}"><span>{{ trans('menus.marketing') }}</span></a></li>
+            {{--<li class="{{ Active::pattern('admin/marketing') }}"><a--}}
+            {{--href="{!! url('admin/marketing') !!}"><span>{{ trans('menus.marketing') }}</span></a></li>--}}
 
             <li class="{{ Active::pattern('admin/clients') }}"><a
                     href="{!! url('admin/clients') !!}"><span>{{ trans('menus.client') }}</span></a></li>

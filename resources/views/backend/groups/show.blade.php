@@ -34,18 +34,18 @@
                             <input type="text" name="name" class="form-control" value="{{$group->name}}">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="proGroup" class="col-sm-2 control-label"><span class="c-red">*</span> 上传图片：</label>
-                        <div class="col-sm-5">
-                            <input type="file" value="选择图片上传">
-                            <div class="cover-images banner-images">
-                                <div class="img-wrapper">
-                                    <img src="{{$group->group_cover}}" alt="">
-                                </div>
-                            </div>
-                            <p class="help-block">* 建议上传规格为 900px * 300px 的图片</p>
-                        </div>
-                    </div>
+                    {{--<div class="form-group">--}}
+                    {{--<label for="proGroup" class="col-sm-2 control-label"><span class="c-red">*</span> 上传图片：</label>--}}
+                    {{--<div class="col-sm-5">--}}
+                    {{--<input type="file" value="选择图片上传">--}}
+                    {{--<div class="cover-images banner-images">--}}
+                    {{--<div class="img-wrapper">--}}
+                    {{--<img src="{{$group->group_cover}}" alt="">--}}
+                    {{--</div>--}}
+                    {{--</div>--}}
+                    {{--<p class="help-block">* 建议上传规格为 900px * 300px 的图片</p>--}}
+                    {{--</div>--}}
+                    {{--</div>--}}
                     {{--<div class="form-group">--}}
                     {{--<label class="col-sm-2 control-label"><span class="c-red">*</span> 选择产品：</label>--}}
                     {{--<div class="col-sm-5">--}}

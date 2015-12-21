@@ -2,7 +2,7 @@
 
 @section('page-header')
     <h1>
-        创建分组
+        创建属性
         <small>{{ trans('strings.backend.dashboard_title') }}</small>
     </h1>
 @endsection
@@ -25,22 +25,22 @@
                 <h3 class="box-title">1. 基本信息</h3>
             </div>
             <div class="box-body">
-                <form class="form-horizontal" action="{{url('/admin/groups')}}" method="post">
+                <form class="form-horizontal" action="{{url('/admin/attributes/'. $attribute->id)}}" method="post">
                     <input type="hidden" name="_token" value="{{csrf_token()}}">
+                    <input type="hidden" name="_method" value="put">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label"><span class="c-red">*</span> 分组名称：</label>
+                        <label class="col-sm-2 control-label"><span class="c-red">*</span> 属性名称：</label>
                         <div class="col-sm-5">
-                            <input type="text" name="name" class="form-control">
+                            <input type="text" name="name" class="form-control" value="{{$attribute->name}}">
                         </div>
                     </div>
                     {{--<div class="form-group">--}}
                     {{--<label for="proGroup" class="col-sm-2 control-label"><span class="c-red">*</span> 上传图片：</label>--}}
                     {{--<div class="col-sm-5">--}}
-                    {{--<button @click.prevent="openGallery()">选择图片</button>--}}
-                    {{--<input type="hidden" name="cover_image" :value="cover_image">--}}
+                    {{--<input type="file" value="选择图片上传">--}}
                     {{--<div class="cover-images banner-images">--}}
                     {{--<div class="img-wrapper">--}}
-                    {{--<img :src="cover_image" alt="">--}}
+                    {{--<img src="{{$attribute->group_cover}}" alt="">--}}
                     {{--</div>--}}
                     {{--</div>--}}
                     {{--<p class="help-block">* 建议上传规格为 900px * 300px 的图片</p>--}}
@@ -84,4 +84,3 @@
     </div>
     <!-- /.col -->
 @endsection
-

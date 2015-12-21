@@ -44,6 +44,7 @@
         <!-- Main content -->
         <section id="app" class="content clearfix">
             @include('includes.partials.messages')
+            <vue-gallery></vue-gallery>
             @yield('content')
         </section>
     </div>

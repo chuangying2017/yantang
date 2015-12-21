@@ -19,7 +19,7 @@
 @endsection
 
 @section('content')
-    <vue-gallery></vue-gallery>
+    
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -267,16 +267,6 @@
     @include('backend.product.gallery')
     <script>
         app = window.app || {}
-        app.uploader = {
-            token: "",
-            fileNumLimit: 1,
-            error: function (file) {
-            },
-            success: function (file) {
-            },
-            completed: function (file) {
-            }
-        }
 
         // 执行 JS 主逻辑
         var editor = UE.getEditor('container', {});
@@ -431,7 +421,5 @@
         });
 
         $('.open_status_custom').mask('0000/00/00 00:00:00');
-
-
     </script>
 @endsection
