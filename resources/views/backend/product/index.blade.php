@@ -30,9 +30,9 @@
                 </div>
                 <div class="box-body no-padding">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a href="#"><i class="fa fa-trash-o"></i> 出售中的商品</a></li>
-                        <li><a href="#"><i class="fa fa-trash-o"></i> 下架的商品</a></li>
-                        <li><a href="#"><i class="fa fa-trash-o"></i> 已售罄的商品</a></li>
+                        <li><a href="{{url('admin/products')}}"><i class="fa fa-trash-o"></i> 出售中的商品</a></li>
+                        <li><a href="{{url('admin/products?status=down')}}"><i class="fa fa-trash-o"></i> 下架的商品</a></li>
+                        <li><a href="{{url('admin/products')}}"><i class="fa fa-trash-o"></i> 已售罄的商品</a></li>
                     </ul>
                 </div>
                 <!-- /.box-body -->
@@ -87,9 +87,15 @@
                                             <a href="{{url('/admin/products/' . $product->id . '/edit')}}"
                                                class="btn btn-default btn-sm"><i
                                                     class="fa fa-pencil"></i></a>
-                                            <a href="{{url('/admin/products/' . $product->id . '/operate/down')}}"
-                                               class="btn btn-default btn-sm"><i
-                                                    class="fa fa-arrow-circle-down"></i></a>
+                                            @if($product->status == 'up')
+                                                <a href="{{url('/admin/products/' . $product->id . '/operate/down')}}"
+                                                   class="btn btn-default btn-sm"><i
+                                                        class="fa fa-arrow-circle-down"></i></a>
+                                            @else
+                                                <a href="{{url('/admin/products/' . $product->id . '/operate/up')}}"
+                                                   class="btn btn-default btn-sm"><i
+                                                        class="fa fa-arrow-circle-up"></i></a>
+                                            @endif
                                             <form style="display: inline-block"
                                                   action="{{url('/admin/products/' . $product->id)}}" ,
                                                   method="post">

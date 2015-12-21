@@ -16,10 +16,11 @@ class ProductController extends Controller
     /**
      * @return \Exception|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
+        $status = $request->get('status');
         try {
-            $products = $this->api->get('api/admin/products/');
+            $products = $this->api->get('api/admin/products?status=' . $status);
             return view('backend.product.index', compact('products'));
         } catch (\Exception $e) {
             return $e;
