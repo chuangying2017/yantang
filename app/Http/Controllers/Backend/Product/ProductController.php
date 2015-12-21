@@ -47,6 +47,10 @@ class ProductController extends Controller
         return view('backend.product.create');
     }
 
+    /**
+     * @param Request $request
+     * @return int|string
+     */
     public function store(Request $request)
     {
 
@@ -65,6 +69,11 @@ class ProductController extends Controller
 
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return int|string
+     */
     public function update($id, Request $request)
     {
 
@@ -113,11 +122,34 @@ class ProductController extends Controller
         javascript()->put($data);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     */
     public function destroy($id)
     {
         try {
             $this->api->delete('api/admin/products/' . $id);
 
+            return redirect('admin/products');
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * @param $id
+     * @param $action
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     */
+    public function operate($id, $action)
+    {
+        try {
+            $this->api->put('api/admin/products/operate', [
+                "action" => $action,
+                "products_id" => [$id]
+            ]);
             return redirect('admin/products');
         } catch (Exception $e) {
 

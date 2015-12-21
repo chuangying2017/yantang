@@ -87,7 +87,8 @@
                                             <a href="{{url('/admin/products/' . $product->id . '/edit')}}"
                                                class="btn btn-default btn-sm"><i
                                                     class="fa fa-pencil"></i></a>
-                                            <a href="" class="btn btn-default btn-sm"><i
+                                            <a href="{{url('/admin/products/' . $product->id . '/operate/down')}}"
+                                               class="btn btn-default btn-sm"><i
                                                     class="fa fa-arrow-circle-down"></i></a>
                                             <form style="display: inline-block"
                                                   action="{{url('/admin/products/' . $product->id)}}" ,
