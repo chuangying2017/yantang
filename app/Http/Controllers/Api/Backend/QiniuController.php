@@ -39,9 +39,8 @@ class QiniuController extends Controller {
     public function store(Request $request)
     {
         $data = $request->all();
-        $media_id = $data['media_id'];
-//        $media_id = $request->input('media_id') . '-' . date('YmdHis');
-//        $data['media_id'] = $media_id;
+        $media_id = $request->input('media_id') . '-' . date('YmdHis') . mt_rand(1, 9999);
+        $data['media_id'] = $media_id;
         ImageService::create($data);
 
         return response()->json(array(
