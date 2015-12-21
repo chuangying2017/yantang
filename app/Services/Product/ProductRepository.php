@@ -26,7 +26,7 @@ class ProductRepository {
 
     public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP)
     {
-        $query = Product::with('data')->where('status', $status);
+        $query = Product::with('meta')->where('status', $status);
 
         if ( ! is_null($category_id)) {
             $query = $query->whereIn('category_id', $category_id);

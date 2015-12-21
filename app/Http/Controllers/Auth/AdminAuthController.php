@@ -2,11 +2,13 @@
 
 use Auth;
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Auth\Guard;
 
 
 class AdminAuthController extends Controller {
+
+    private $auth;
 
     /**
      * Create a new authentication controller instance.
@@ -15,14 +17,15 @@ class AdminAuthController extends Controller {
      * @param  \Illuminate\Contracts\Auth\Registrar $registrar
      * @return void
      */
-    public function __construct()
+    public function __construct(Guard $auth)
     {
         $this->middleware('guest.admin', ['except' => 'getLogout']);
+        $this->auth = $auth;
     }
 
     public function getLogin()
     {
-        if (Auth::check()) {
+        if ($this->auth->check()) {
             return redirect()->route('backend.dashboard');
         }
 
@@ -40,7 +43,7 @@ class AdminAuthController extends Controller {
 
         $input = $request->all();
 
-        if (Auth::attempt(array_only($input, ['username', 'password']))) {
+        if ($this->auth->attempt(array_only($input, ['username', 'password']))) {
             return redirect()->route('backend.dashboard');
         }
 
@@ -56,7 +59,7 @@ class AdminAuthController extends Controller {
      */
     public function getLogout()
     {
-        Auth::logout();
+        $this->auth->logout();
 
         return redirect()->route('admin.login');
     }
