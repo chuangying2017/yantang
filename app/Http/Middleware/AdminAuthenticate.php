@@ -7,14 +7,19 @@ use Auth;
 class AdminAuthenticate {
 
     /**
+     * @var Guard
+     */
+    private $auth;
+
+    /**
      * Create a new filter instance.
      *
      * @param  Guard $auth
      * @return void
      */
-    public function __construct()
+    public function __construct(Guard $auth)
     {
-
+        $this->auth = $auth;
     }
 
     /**
@@ -26,7 +31,7 @@ class AdminAuthenticate {
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::guest()) {
+        if ($this->auth->guest()) {
             if ($request->ajax() || $request->is('api/*')) {
                 return response('Unauthorized.', 401);
             } else {

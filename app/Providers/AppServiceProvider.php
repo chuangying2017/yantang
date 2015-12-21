@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
-{
+class AppServiceProvider extends ServiceProvider {
+
     /**
      * Bootstrap any application services.
      *
@@ -13,8 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-	    require app_path('Files/form.php');
-	    require app_path('Files/helpers.php');
+
     }
 
     /**

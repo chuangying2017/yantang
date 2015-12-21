@@ -156,7 +156,8 @@ return [
         */
         App\Library\Wechat\WechatServiceProvider::class,
         App\Providers\LocalEnvironmentServiceProvider::class,
-        \App\Services\Marketing\MarketingServiceProvider::class,
+        App\Services\Marketing\MarketingServiceProvider::class,
+        \App\Providers\ApiServiceProvider::class,
 
         /*
 		 * Third party service providers

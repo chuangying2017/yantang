@@ -16639,8 +16639,6 @@ fieldset[disabled] .btn-vk.active {
   border-bottom-left-radius: 0 !important;
 }
 
-@charset "UTF-8";
-
 .dflr-select {
   display: none;
 }
@@ -16678,18 +16676,55 @@ fieldset[disabled] .btn-vk.active {
   color: #dd4b39;
 }
 
+.cover-images {
+  margin-top: 10px;
+}
+
 .cover-images .img-wrapper {
   display: inline-block;
   position: relative;
   cursor: pointer;
 }
 
-.cover-images .img-wrapper:hover:before {
-  display: block;
+.cover-images .img-wrapper .cover-tag {
+  position: absolute;
+  display: inline-block;
+  top: -5px;
+  left: -10px;
+  padding: 5px 10px;
+  text-align: center;
+  line-height: 18px;
+  background: #40AF25;
+  color: #fff;
+  border-radius: 15px;
+  font-size: 12px;
 }
 
-.cover-images .img-wrapper:before {
-  content: "删除";
+.cover-images .img-wrapper .remove-img {
+  position: absolute;
+  display: none;
+  top: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  line-height: 18px;
+  background: #F33;
+  color: #fff;
+  border-radius: 10px;
+}
+
+.cover-images .img-wrapper:hover .set-cover,
+.cover-images .img-wrapper:hover .cancle-cover {
+  display: inline-block;
+}
+
+.cover-images .img-wrapper:hover .remove-img {
+  display: inline-block;
+}
+
+.cover-images .img-wrapper .set-cover,
+.cover-images .img-wrapper .cancle-cover {
   display: none;
   position: absolute;
   top: 10px;

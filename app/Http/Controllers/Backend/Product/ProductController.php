@@ -21,6 +21,7 @@ class ProductController extends Controller
         $status = $request->get('status');
         try {
             $products = $this->api->get('api/admin/products?status=' . $status);
+
             return view('backend.product.index', compact('products'));
         } catch (\Exception $e) {
             return $e;
@@ -34,6 +35,7 @@ class ProductController extends Controller
     public function create()
     {
         $this->setJs();
+
         return view('backend.product.create');
     }
 
@@ -45,6 +47,7 @@ class ProductController extends Controller
     {
         $product = $this->api->raw()->get('api/admin/products/' . $id);
         $this->setJs(json_decode($product->content(), true));
+
         return view('backend.product.create');
     }
 
@@ -101,7 +104,7 @@ class ProductController extends Controller
     {
         $categories = $this->api->get('api/admin/categories')['data'];
         $groups = $this->api->get('api/admin/groups');
-        $attributes = $this->api->get('api/admin/attributes')['data'];
+        $attributes = $this->api->get('api/admin/attributes');
         $brands = $this->api->get('api/admin/brands');
         $qiniu_token = $this->api->get('api/admin/images/token')['data'];
         $data = [

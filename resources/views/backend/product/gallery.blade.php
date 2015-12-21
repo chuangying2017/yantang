@@ -255,6 +255,14 @@
         z-index: 5;
     }
 
+    .wx-file-upload{
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        opacity: 0;
+        outline: none;
+        cursor: pointer;
+    }
 </style>
 {!! HTML::script('js/webuploader/webuploader.html5only.min.js') !!}
 <script type="x-template" id="vue-gallery-image">
@@ -302,7 +310,7 @@
                             <ul>
 
                                 <li id="wx-picker">
-                                    <input type="file" multiple v-on:change="fileChange">
+                                    <input type="file" multiple v-on:change="fileChange" class="wx-file-upload">
                                     <span class="wx-list-cover"></span>
                                     <span class="wx-list-delete"></span>
                                     <img src="http://weazm-cdn.qiniudn.com/add.png" alt=""/>
