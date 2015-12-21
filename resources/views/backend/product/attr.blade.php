@@ -50,7 +50,7 @@
                 searchValue: "",
                 showValueInput: false,
                 attributes: app.attributes,
-                selectedAttrIndex: 0,
+                selectedAttrId: null,
                 values: []
             }
         },
@@ -83,7 +83,8 @@
                 //1. get from api
                 //2. check duplicate
                 var self = this;
-                this.$http.post(app.config.base_url + '/api/admin/attributes/' + this.attribute.id + '/values?_token=' + app.token, {
+                console.log(this.attribute);
+                this.$http.post(app.config.base_url + '/api/admin/attributes/' + this.selectedAttrId + '/values?_token=' + app.token, {
                     value: this.searchValue
                 }, function (data) {
                     var value = data.data

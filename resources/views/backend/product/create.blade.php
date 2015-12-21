@@ -333,6 +333,7 @@
                 var self = this;
 
                 if (this.product.id) {
+                    this.method = "put";
                     _.map(this.categories, function (val, key) {
                         if (val.id == self.product.category_id) {
                             self.category = val;
@@ -369,15 +370,25 @@
                     var data = {
                         data: this.$get('product')
                     }
-                    this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, data, function (data) {
-                        if (data) {
 
-                            return
-                            window.location.href = app.config.base_url + '/admin/products';
-                        }
-                    }).error(function (data) {
+                    if (this.method == 'post') {
+                        this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, data, function (data) {
+                            if (data) {
+                                window.location.href = app.config.base_url + '/admin/products';
+                            }
+                        }).error(function (data) {
 
-                    });
+                        });
+                    } else {
+                        this.$http.put(app.config.base_url + '/admin/products/' + this.product.id + '?_token=' + app.token, data, function (data) {
+                            if (data) {
+                                window.location.href = app.config.base_url + '/admin/products';
+                            }
+                        }).error(function (data) {
+
+                        });
+                    }
+
                 },
                 openGallery: function (fn) {
                     if (fn) {

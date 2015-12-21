@@ -65,6 +65,24 @@ class ProductController extends Controller
 
     }
 
+    public function update($id, Request $request)
+    {
+
+        try {
+            $data = $request->all();
+
+            $result = $this->api->put('api/admin/products/' . $id, $data);
+
+            if ($result) {
+                return 1;
+            }
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+
+    }
+
     /**
      * @param null $product
      * @throws \Exception
