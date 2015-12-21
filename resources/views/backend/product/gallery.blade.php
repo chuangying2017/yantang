@@ -19,8 +19,8 @@
         font-size: 12px;
         cursor: pointer;
         margin-left: 5px;
-        height: 32px;
-        line-height: 1;
+        /* height: 32px;
+        line-height: 1; */
     }
 
     .wx-btn:focus {
@@ -229,11 +229,12 @@
         height: 50px;
         background: #fff;
         border-top: 1px solid #ddd;
-        line-height: 50px;
+        /* line-height: 50px; */
     }
 
     .wx-modal-panel {
         margin-right: 20px;
+        padding: 8px 0;
     }
 
     input.webuploader-element-invisible {
@@ -282,12 +283,10 @@
                     </section>
                     <footer class="wx-modal-footer">
                         <div class="wx-modal-panel wx-fr">
-                            <button class="wx-btn info" @click.prevent="switch('uploader')">本地上传</button>
-                        </div>
-                        <div class="wx-modal-panel wx-fr">
                             <button ng-disabled="!confirmAble" class="wx-btn success" @click.prevent="submit()">确定
                             </button>
                             <button class="wx-btn danger" @click.prevent="close()">取消</button>
+                            <button class="wx-btn info" @click.prevent="switch('uploader')">本地上传</button>
                         </div>
                     </footer>
                 </div>
@@ -323,11 +322,6 @@
                     </section>
                     <footer class="wx-modal-footer">
                         <div class="wx-modal-panel wx-fr">
-                            <button class="wx-btn info" ng-if="status == 'queue' || status == 'success'"
-                                    @click.prevent="switch('gallery')">返回图库
-                            </button>
-                        </div>
-                        <div class="wx-modal-panel wx-fr">
                             <button class="wx-btn success" v-if="status == 'queue' && files.length > 0"
                                     @click.prevent="startUpload()">开始上传
                             </button>
@@ -337,6 +331,9 @@
                             <button class="wx-btn success" v-if="status == 'stop'" @click.prevent="startUpload()">继续上传
                             </button>
                             <button class="wx-btn danger" v-if="status == 'queue'" @click.prevent="close()">取消</button>
+                            <button class="wx-btn info" ng-if="status == 'queue' || status == 'success'"
+                                    @click.prevent="switch('gallery')">返回图库
+                            </button>
                         </div>
                     </footer>
                 </div>
