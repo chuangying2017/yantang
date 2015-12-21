@@ -16,7 +16,7 @@
     @yield('after-styles-end')
 
         <!-- Fonts -->
-    <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
 
     <!-- Icons-->
     <link rel="apple-touch-icon" href="apple-touch-icon.png">

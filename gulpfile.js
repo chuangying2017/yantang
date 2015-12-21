@@ -12,6 +12,7 @@ elixir(function (mix) {
         .copy('vendor/bower_components/jquery-mask-plugin', 'public/js/vendor/jquery-mask-plugin')
         .copy('vendor/bower_components/vue', 'public/js/vendor/vue')
         .copy('vendor/bower_components/vue-resource', 'public/js/vendor/vue-resource')
+        .copy('vendor/bower_components/underscore', 'public/js/vendor/underscore')
 
         .sass([ // Process front-end stylesheets
             'frontend/main.scss'

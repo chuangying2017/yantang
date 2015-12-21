@@ -14,15 +14,15 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-expanded="false">{{ trans('menus.language-picker.language') }} <span
-                            class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>{!! link_to('lang/en', trans('menus.language-picker.langs.en')) !!}</li>
-                        <li>{!! link_to('lang/zh-CN', trans('menus.language-picker.langs.zh-CN')) !!}</li>
-                    </ul>
-                </li>
+                {{--<li class="dropdown">--}}
+                {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"--}}
+                {{--aria-expanded="false">{{ trans('menus.language-picker.language') }} <span--}}
+                {{--class="caret"></span></a>--}}
+                {{--<ul class="dropdown-menu" role="menu">--}}
+                {{--<li>{!! link_to('lang/en', trans('menus.language-picker.langs.en')) !!}</li>--}}
+                {{--<li>{!! link_to('lang/zh-CN', trans('menus.language-picker.langs.zh-CN')) !!}</li>--}}
+                {{--</ul>--}}
+                {{--</li>--}}
 
                 <!-- Messages: style can be found in dropdown.less-->
                 <li class="dropdown messages-menu">

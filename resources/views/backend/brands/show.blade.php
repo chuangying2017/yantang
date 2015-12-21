@@ -82,5 +82,5 @@
             }
         }
     </script>
-    @include('backend.layouts.upload')
+    @include('backend.product.upload')
 @endsection
