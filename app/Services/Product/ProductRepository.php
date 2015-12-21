@@ -200,6 +200,13 @@ class ProductRepository {
 
     }
 
+    public static function updateStatus($ids, $status)
+    {
+        $ids = to_array($ids);
+
+        return Product::whereIn('id', $ids)->update(['status' => $status]);
+    }
+
 
     /**
      * @param $data

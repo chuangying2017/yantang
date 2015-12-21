@@ -35,9 +35,6 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
         $router->group(['middleware' => 'access.routeNeedsPermission:view-backend'], function () use ($router) {
             require(__DIR__ . "/Routes/Backend/Access.php");
             require(__DIR__ . "/Routes/Backend/Dashboard.php");
-            get('clients', function () {
-                return 1;
-            });
             require(__DIR__ . "/Routes/Backend/Client.php");
             require(__DIR__ . "/Routes/Backend/Product.php");
             require(__DIR__ . "/Routes/Backend/Merchant.php");

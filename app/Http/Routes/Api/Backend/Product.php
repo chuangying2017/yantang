@@ -16,8 +16,13 @@ $api->group(['prefix' => 'categories'], function ($api) {
 });
 $api->resource('categories', 'CategoryController');
 
-
+$api->put('products/operate', [
+    'as'   => 'api.products.operate',
+    'uses' => 'ProductController@operate'
+]);
 $api->resource('products', 'ProductController');
+
+
 $api->resource('attributes', 'AttributeController');
 $api->resource('attributes.values', 'AttributeValueController', ['only' => ['store', 'destroy']]);
 

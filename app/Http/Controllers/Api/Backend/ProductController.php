@@ -11,6 +11,7 @@ use App\Models\Merchant;
 use App\Services\ApiConst;
 use App\Services\Merchant\MerchantService;
 use App\Services\Product\ProductConst;
+use App\Services\Product\ProductRepository;
 use App\Services\Product\ProductService;
 
 class ProductController extends Controller {
@@ -102,15 +103,14 @@ class ProductController extends Controller {
         return $this->response->item($product, new BackendProductTransformer());
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function operate(Request $request)
     {
-        //
+        $status = $request->input('action');
+        $products_id = $request->input('products_id');
+
+        $count = ProductRepository::updateStatus($products_id, $status);
+
+        return $this->response->array(['data' => ['success' => $count]]);
     }
 
     /**
