@@ -49,6 +49,15 @@ class ProductRepository {
         return $products;
     }
 
+    private static function decodePrice($data)
+    {
+        $data['price'] = store_price($data['price']);
+        $data['origin_price'] = store_price($data['origin_price']);
+        $data['express_fee'] = store_price($data['express_fee']);
+
+        return $data;
+    }
+
 
     /**
      * filter data for database
@@ -199,6 +208,7 @@ class ProductRepository {
      */
     private static function touchProduct($data, $id = null)
     {
+        $data = self::decodePrice($data);
         /**
          * filter data for security
          */

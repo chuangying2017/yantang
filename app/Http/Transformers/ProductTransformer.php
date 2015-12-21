@@ -24,7 +24,7 @@ class ProductTransformer extends TransformerAbstract {
             'title'       => $product->title,
             'open_status' => $product->open_status,
             'open_time'   => $product->open_time,
-            'price'       => (int)$product->price,
+            'price'       => (int)display_price($product->price),
             'sales'       => (int)$product->data->sales,
             'favs'        => (int)$product->data->favs,
             'stocks'      => (int)$product->data->stock,
@@ -60,7 +60,7 @@ class ProductTransformer extends TransformerAbstract {
         return [
             'sub_title'    => $product->sub_title,
             'digest'       => $product->digest,
-            'origin_price' => (int)$product->origin_price,
+            'origin_price' => (int)display_price($product->origin_pric),
         ];
     }
 

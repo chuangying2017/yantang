@@ -82,9 +82,9 @@ class ProductController extends Controller {
         $data['merchant_id'] = $merchant_id;
 
         $product = ProductService::create($data);
+        $product->show_detail = 1;
 
-
-        return $this->response->created()->setContent(['data' => $product]);
+        return $this->response->item($product, new BackendProductTransformer())->setStatusCode(201);
     }
 
     /**
@@ -128,7 +128,7 @@ class ProductController extends Controller {
 
         $product = ProductService::update($id, $data);
 
-        return $this->setStatusCode(201)->array($product);
+        return $this->response->item($product, new BackendProductTransformer());
     }
 
     /**

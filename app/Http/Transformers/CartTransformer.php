@@ -16,7 +16,7 @@ class CartTransformer extends TransformerAbstract {
                 'sku_no'      => $productSku['sku_no'],
                 'stock'       => (int)$productSku['stock'],
                 'sales'       => (int)$productSku['sales'],
-                'price'       => (int)$productSku['price'],
+                'price'       => (int)display_price($productSku['price']),
                 'merchant_id' => (int)$productSku['merchant_id'],
                 'title'       => $productSku['title'],
                 'category_id' => (int)$productSku['category_id'],
