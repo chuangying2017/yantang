@@ -28,7 +28,6 @@ class ProductRequest extends Request {
         $rules = [];
 
         if ($this->isMethod('POST') || $this->isMethod('PUT')) {
-            return [];
             $rules = [
                 'basic_info.brand_id'    => 'required',
                 'basic_info.merchant_id' => 'required|exists:merchants,id',
@@ -40,6 +39,13 @@ class ProductRequest extends Request {
                 'skus'                   => 'required|array',
                 'images_ids'             => 'array',
                 'group_ids'              => 'array'
+            ];
+        }
+
+        if ($this->route()->getName() == 'api.products.operate') {
+            $rules = [
+                'action'      => 'required|in:' . ProductConst::VAR_PRODUCT_STATUS_UP . ',' . ProductConst::VAR_PRODUCT_STATUS_DOWN,
+                'products_id' => 'required'
             ];
         }
 

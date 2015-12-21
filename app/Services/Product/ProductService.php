@@ -52,9 +52,7 @@ class ProductService {
      */
     public static function up($id)
     {
-        return ProductRepository::update($id, [
-            'status' => ProductConst::VAR_PRODUCT_STATUS_UP
-        ]);
+        return ProductRepository::updateStatus($id, ProductConst::VAR_PRODUCT_STATUS_UP);
     }
 
     /**
@@ -63,16 +61,12 @@ class ProductService {
      */
     public static function down($id)
     {
-        return ProductRepository::update($id, [
-            'status' => ProductConst::VAR_PRODUCT_STATUS_DOWN
-        ]);
+        return ProductRepository::update($id, ProductConst::VAR_PRODUCT_STATUS_DOWN);
     }
 
     public static function sellOut($id)
     {
-        return ProductRepository::update($id, [
-            'status' => ProductConst::VAR_PRODUCT_STATUS_SELLOUT
-        ]);
+        return ProductRepository::update($id, ProductConst::VAR_PRODUCT_STATUS_SELLOUT);
     }
 
     /**
