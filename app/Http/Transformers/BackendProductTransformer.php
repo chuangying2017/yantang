@@ -27,7 +27,7 @@ class BackendProductTransformer extends TransformerAbstract {
             'stock'       => $product->stock,
             'open_status' => $product->open_status,
             'open_time'   => $product->open_time,
-            'express_fee' => display_price($product->data->express_fee),
+            'express_fee' => display_price($product->meta->express_fee),
             'created_at'  => $product->created_at->toDateTimeString(),
             'updated_at'  => $product->updated_at->toDateTimeString(),
         ];
