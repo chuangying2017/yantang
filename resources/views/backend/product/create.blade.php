@@ -214,7 +214,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-6" v-if="product.open_status == 'fixed'">
                                             <input type="text" class="form-control open_status_custom"
                                                    placeholder="yyyy/mm/dd hh:mm:ss"
                                                    v-model="product.open_time">
@@ -289,7 +289,7 @@
             price: 0,
             origin_price: 0,
             limit: 0,
-            cover_image: "",
+            cover_image: "http://weazm-topgift.qiniudn.com/default-gift.png",
             open_status: "now",
             attributes: [],
             brand_id: null,
