@@ -160,9 +160,12 @@
                                         <button @click.prevent="openGallery()">选择图片</button>
 
                                         <div class="cover-images">
-                                            <div class="img-wrapper" v-for="image in product.images.data" @click="
-                                            removeImg(image)">
-                                            <img :src="image.url + '?imageView2/2/w/100'" alt="">
+                                            <div class="img-wrapper" v-for="image in product.images.data">
+                                                <span class="set-cover">设为封面</span>
+                                                <span class="cancle-cover">取消封面</span>
+                                                <span class="cover-tag">封面</span>
+                                                <span class="remove-img" @click="removeImg(image)">×</span>
+                                                <img :src="image.url + '?imageView2/2/w/100'" alt="">
                                         </div>
                                     </div>
                                     <p class="help-block">* 建议上传规格为 640px * 640px 的图片</p>
