@@ -26,7 +26,7 @@ class ImageRepository {
     public static function getToken($callback_url, $merchant_id)
     {
         $qiniu = Storage::disk('qiniu');
-        $callback_body = 'hash=$(eTag)&media_id=$(eTag)&filename=$(fname)&imageinfo=$(imageInfo)&merchant_id=' . $merchant_id;
+        $callback_body = 'media_id=$(etag)&filename=$(fname)&imageinfo=$(imageInfo)&merchant_id=' . $merchant_id;
         $policy = [
             'callbackUrl'      => $callback_url,
             'callbackBody'     => $callback_body,
