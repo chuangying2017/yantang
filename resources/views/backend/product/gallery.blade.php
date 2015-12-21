@@ -19,8 +19,8 @@
         font-size: 12px;
         cursor: pointer;
         margin-left: 5px;
-        height: 32px;
-        line-height: 1;
+        /* height: 32px;
+        line-height: 1; */
     }
 
     .wx-btn:focus {
@@ -229,11 +229,12 @@
         height: 50px;
         background: #fff;
         border-top: 1px solid #ddd;
-        line-height: 50px;
+        /* line-height: 50px; */
     }
 
     .wx-modal-panel {
         margin-right: 20px;
+        padding: 8px 0;
     }
 
     input.webuploader-element-invisible {
@@ -260,7 +261,7 @@
     <li @click="select($index)" class="wx-list" v-bind:class=" {'selected': selected}" >
     <span class="wx-list-cover"></span>
     <div class="wx-img-wrap">
-        <img src="[! image.url !]?imageView2/2/w/100" alt=""/>
+        <img :src="image.url + '?imageView2/2/w/100'" alt=""/>
     </div>
     </li>
 </script>
@@ -282,12 +283,10 @@
                     </section>
                     <footer class="wx-modal-footer">
                         <div class="wx-modal-panel wx-fr">
-                            <button class="wx-btn info" @click.prevent="switch('uploader')">本地上传</button>
-                        </div>
-                        <div class="wx-modal-panel wx-fr">
                             <button ng-disabled="!confirmAble" class="wx-btn success" @click.prevent="submit()">确定
                             </button>
                             <button class="wx-btn danger" @click.prevent="close()">取消</button>
+                            <button class="wx-btn info" @click.prevent="switch('uploader')">本地上传</button>
                         </div>
                     </footer>
                 </div>
@@ -314,7 +313,7 @@
                                         %</span>
                                     <span class="wx-list-delete" v-if="status == 'queue'"
                                           @click.prevent="removeQueue($index)"></span>
-                                    <span class="wx-img-wrap"><img src="[! item.src !]" alt=""/></span>
+                                    <span class="wx-img-wrap"><img :src="item.src" alt=""/></span>
                                 </li>
                             </ul>
                         </div>
@@ -322,11 +321,6 @@
                         {{--</div>--}}
                     </section>
                     <footer class="wx-modal-footer">
-                        <div class="wx-modal-panel wx-fr">
-                            <button class="wx-btn info" ng-if="status == 'queue' || status == 'success'"
-                                    @click.prevent="switch('gallery')">返回图库
-                            </button>
-                        </div>
                         <div class="wx-modal-panel wx-fr">
                             <button class="wx-btn success" v-if="status == 'queue' && files.length > 0"
                                     @click.prevent="startUpload()">开始上传
@@ -337,6 +331,9 @@
                             <button class="wx-btn success" v-if="status == 'stop'" @click.prevent="startUpload()">继续上传
                             </button>
                             <button class="wx-btn danger" v-if="status == 'queue'" @click.prevent="close()">取消</button>
+                            <button class="wx-btn info" ng-if="status == 'queue' || status == 'success'"
+                                    @click.prevent="switch('gallery')">返回图库
+                            </button>
                         </div>
                     </footer>
                 </div>
@@ -377,6 +374,7 @@
                 status: 'idle',
                 closed: true,
                 location: 'gallery',
+                callbackFn: false,
                 files: [],
                 images: [],
                 uploader: {},
@@ -474,19 +472,27 @@
                 this.selected = []
                 this.files = []
                 this.queues = []
+                this.callbackFn = false
             },
             close: function () {
                 this.reset()
                 this.closed = true
             },
             submit: function () {
-                this.$dispatch('gallerySubmit', this.selected)
+                var data = {
+                    data: this.selected
+                }
+                if (this.callbackFn) {
+                    data.method = this.callbackFn
+                }
+                this.$dispatch('gallerySubmit', data)
                 this.close();
             },
             switch: function (location) {
                 if (location == 'gallery') {
-                    this.get
+                    this.getImages()
                 }
+                this.reset()
                 this.$set('location', location);
             },
             removeQueue: function (index) {
@@ -512,7 +518,10 @@
                 this.selected.$remove(image)
                 this.$log('selected')
             },
-            galleryOpen: function () {
+            galleryOpen: function (fn) {
+                if (fn) {
+                    this.callbackFn = fn
+                }
                 this.closed = false;
                 this.getImages();
             }

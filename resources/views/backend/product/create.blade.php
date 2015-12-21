@@ -19,6 +19,7 @@
 @endsection
 
 @section('content')
+    <vue-gallery></vue-gallery>
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -159,11 +160,11 @@
                                         上传图片：</label>
                                     <div class="col-sm-5">
                                         <button @click.prevent="openGallery()">选择图片</button>
-                                        <vue-gallery></vue-gallery>
+
                                         <div class="cover-images">
-                                            <div class="img-wrapper" v-for="image in product.img" @click="
+                                            <div class="img-wrapper" v-for="image in product.images" @click="
                                             removeImg(image)">
-                                            <img src="[! image.url !]?imageView2/2/w/100" alt="">
+                                            <img :src="image.url + '?imageView2/2/w/100'" alt="">
                                         </div>
                                     </div>
                                     <p class="help-block">* 建议上传规格为 640px * 640px 的图片</p>
@@ -299,11 +300,12 @@
             skus: {
                 data: []
             },
-            img: [],
+            images: [],
+            image_ids: [],
             group_ids: []
         };
 
-        var product = app.product ? _.clone(app.product) : model
+        var product = app.product ? app.product : model
 
         var vm = new Vue({
             el: '#app',
@@ -324,6 +326,20 @@
                     return stocks;
                 }
             },
+            created: function () {
+                var self = this;
+                editor.ready(function () {
+                    UE.commands['gallery'] = {
+                        execCommand: function () {
+                            self.openGallery('setEditorContent');
+                        }
+                    }
+                    editor.setContent(self.$get('product.detail'));
+                    editor.addListener('contentchange', function () {
+                        self.$set('product.detail', editor.getContent());
+                    });
+                });
+            },
             watch: {
                 category: function (newVal) {
                     this.product.category_id = newVal.id;
@@ -338,7 +354,10 @@
                     });
                 },
                 save: function () {
-                    this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, this.$get('product'), function (data) {
+                    var data = {
+                        data: this.$get('product')
+                    }
+                    this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, data, function (data) {
                         if (data) {
                             window.location.href = app.config.base_url + '/admin/products';
                         }
@@ -346,31 +365,46 @@
 
                     });
                 },
-                openGallery: function () {
-                    this.$broadcast('galleryOpen')
+                openGallery: function (fn) {
+                    if (fn) {
+                        this.$broadcast('galleryOpen', fn)
+                    } else {
+                        this.$broadcast('galleryOpen')
+                    }
                 },
                 removeImg: function (image) {
-                    this.product.img.$remove(image)
+                    this.product.images.$remove(image)
+                    this.product.image_ids.$remove(image.id)
+                },
+                setEditorContent: function (data) {
+                    _.map(data, function (val, key) {
+                        editor.execCommand("insertimage", {
+                            src: val.url,
+                            width: '470'
+                        })
+                    })
                 }
             },
             events: {
                 attrDeleted: function (index) {
                     this.product.attributes.splice(index, 1);
                 },
-                gallerySubmit: function (data) {
-                    this.product.img = _.clone(data);
+                gallerySubmit: function (callback) {
+                    if (callback.method) {
+                        this[callback.method](callback.data)
+                    } else {
+                        _.map(callback.data, function (val, key) {
+                            this.product.image_ids.push = val.id
+                        });
+
+                        this.product.images = _.clone(callback.data)
+                    }
                 }
             }
         });
 
         $('.open_status_custom').mask('0000/00/00 00:00:00');
 
-        editor.ready(function () {
-            editor.setContent(vm.$get('product.detail'));
-            editor.addListener('contentchange', function () {
-                console.log('content changed')
-                vm.$set('product.detail', editor.getContent());
-            });
-        });
+
     </script>
 @endsection
