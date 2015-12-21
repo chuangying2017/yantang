@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Traits\ApiFormatHelpers;
 use App\Http\Traits\ApiHelpers;
 use App\Services\Orders\Supports\PingxxProtocol;
+use Auth;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -27,6 +28,10 @@ abstract class Controller extends BaseController {
 
     protected function getCurrentAuthUser()
     {
+        if (Auth::check()) {
+            return Auth::user();
+        }
+
         if ( ! JWTAuth::getToken()) {
             return false;
         }

@@ -4,11 +4,11 @@ $router->group([
     'prefix'     => 'access',
     'namespace'  => 'Access',
     'middleware' => 'access.routeNeedsPermission:view-access-management'
-], function () use ($router) {
+], function ($router) {
     /**
      * User Management
      */
-    $router->group(['namespace' => 'User'], function () use ($router) {
+    $router->group(['namespace' => 'User'], function ($router) {
         resource('users', 'UserController', ['except' => ['show']]);
 
         get('users/deactivated', 'UserController@deactivated')->name('admin.access.users.deactivated');
@@ -19,7 +19,7 @@ $router->group([
         /**
          * Specific User
          */
-        $router->group(['prefix' => 'user/{id}', 'where' => ['id' => '[0-9]+']], function () {
+        $router->group(['prefix' => 'user/{id}', 'where' => ['id' => '[0-9]+']], function ($router) {
             get('delete', 'UserController@delete')->name('admin.access.user.delete-permanently');
             get('restore', 'UserController@restore')->name('admin.access.user.restore');
             get('mark/{status}', 'UserController@mark')->name('admin.access.user.mark')->where(['status' => '[0,1,2]']);
@@ -31,18 +31,18 @@ $router->group([
     /**
      * Role Management
      */
-    $router->group(['namespace' => 'Role'], function () use ($router) {
+    $router->group(['namespace' => 'Role'], function ($router) {
         resource('roles', 'RoleController', ['except' => ['show']]);
     });
 
     /**
      * Permission Management
      */
-    $router->group(['prefix' => 'roles', 'namespace' => 'Permission'], function () use ($router) {
+    $router->group(['prefix' => 'roles', 'namespace' => 'Permission'], function ($router) {
         resource('permission-group', 'PermissionGroupController', ['except' => ['index', 'show']]);
         resource('permissions', 'PermissionController', ['except' => ['show']]);
 
-        $router->group(['prefix' => 'groups'], function () {
+        $router->group(['prefix' => 'groups'], function ($router) {
             post('update-sort', 'PermissionGroupController@updateSort')->name('admin.access.roles.groups.update-sort');
         });
     });
