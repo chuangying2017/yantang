@@ -57,7 +57,7 @@ if ( ! function_exists('image_url')) {
 
     function image_url($name)
     {
-        return env('QINIU_PREFIX_URL')  . $name;
+        return env('QINIU_DEFAULT_DOMAIN') . $name;
     }
 }
 
@@ -101,6 +101,34 @@ if ( ! function_exists('to_array')) {
         return is_array($value) ? $value : [$value];
     }
 }
+
+if ( ! function_exists('display_price')) {
+
+    function display_price($price)
+    {
+        return bcdiv($price, 100, 2);
+    }
+}
+
+if ( ! function_exists('display_discount')) {
+
+    function display_discount($price)
+    {
+        return bcdiv($price, 100, 2) . '折';
+    }
+}
+
+if ( ! function_exists('store_price')) {
+
+    function store_price($price)
+    {
+        return bcmul($price, 100, 0);
+    }
+}
+
+
+
+
 
 
 

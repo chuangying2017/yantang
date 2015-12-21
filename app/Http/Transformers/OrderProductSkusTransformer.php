@@ -14,7 +14,7 @@ class OrderProductSkusTransformer extends TransformerAbstract {
             'cover_image' => $sku->cover_image,
             'quantity'    => (int)$sku->quantity,
             'attributes'  => $sku->getAttribute('attributes') ? json_decode('[' . $sku->getAttribute('attributes') . ']', true) : null,
-            'price'       => (int)$sku->pay_amount
+            'price'       => (int)display_price($sku->pay_amount)
         ];
     }
 }

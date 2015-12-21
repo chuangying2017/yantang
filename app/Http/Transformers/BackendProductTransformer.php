@@ -21,7 +21,7 @@ class BackendProductTransformer extends TransformerAbstract {
             'category_id' => (int)$product->category_id,
             'merchant_id' => (int)$product->merchant_id,
             'title'       => $product->title,
-            'price'       => (int)$product->price,
+            'price'       => (int)display_price($product->price),
             'cover_image' => $product->cover_image,
             'limit'       => $product->limit,
             'stock'       => $product->stock,
@@ -69,7 +69,7 @@ class BackendProductTransformer extends TransformerAbstract {
         return [
             'sub_title'    => $product->sub_title,
             'digest'       => $product->digest,
-            'origin_price' => (int)$product->origin_price,
+            'origin_price' => (int)display_price($product->origin_price),
         ];
     }
 
