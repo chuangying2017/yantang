@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Backend\Image;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 
 /**

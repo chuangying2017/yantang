@@ -52,7 +52,7 @@ $api->group(['prefix' => 'images'], function ($api) {
         'uses' => 'ImageController@token'
     ]);
 
-    $api->get('/callback', [
+    $api->post('/callback', [
         'as'   => 'qiniu.callback',
         'uses' => 'ImageController@callback'
     ]);

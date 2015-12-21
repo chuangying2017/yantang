@@ -23,6 +23,7 @@ $api->version('v1', function ($api) {
             require(__DIR__ . "/Routes/Api/Backend/Product.php");
             require(__DIR__ . "/Routes/Api/Backend/Marketing.php");
             require(__DIR__ . "/Routes/Api/Backend/Home.php");
+            require(__DIR__ . "/Routes/Api/Backend/Merchant.php");
         });
 
     });
