@@ -42,12 +42,5 @@ class Kernel extends HttpKernel {
          */
         'access.routeNeedsRole'       => \App\Http\Middleware\RouteNeedsRole::class,
         'access.routeNeedsPermission' => \App\Http\Middleware\RouteNeedsPermission::class,
-
-
-        'auth.admin'  => \App\Http\Middleware\AdminAuthenticate::class,
-        'guest.admin' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'auth.wechat' => \App\Http\Middleware\WechatAuthenticate::class,
-        'follow'      => \App\Http\Middleware\RedirectIfNotFollow::class,
-
     ];
 }
