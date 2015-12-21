@@ -7,7 +7,9 @@ use App\Http\Requests\Backend\Api\ProductRequest as Request;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\BackendProductTransformer;
 use App\Http\Transformers\ProductTransformer;
+use App\Models\Merchant;
 use App\Services\ApiConst;
+use App\Services\Merchant\MerchantService;
 use App\Services\Product\ProductConst;
 use App\Services\Product\ProductService;
 
@@ -76,7 +78,11 @@ class ProductController extends Controller {
     {
         $data = $request->all();
 
+        $merchant_id = MerchantService::getMerchantIdByUserId($this->getCurrentAuthUserId());
+        $data['merchant_id'] = $merchant_id;
+
         $product = ProductService::create($data);
+
 
         return $this->response->created()->setContent(['data' => $product]);
     }
@@ -117,6 +123,8 @@ class ProductController extends Controller {
     public function update(Request $request, $id)
     {
         $data = $request->all();
+        $merchant_id = MerchantService::getMerchantIdByUserId($this->getCurrentAuthUserId());
+        $data['merchant_id'] = $merchant_id;
 
         $product = ProductService::update($id, $data);
 
