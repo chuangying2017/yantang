@@ -161,9 +161,9 @@
                                         <button @click.prevent="openGallery()">选择图片</button>
                                         <vue-gallery></vue-gallery>
                                         <div class="cover-images">
-                                            <div class="img-wrapper" v-for="image in product.img" @click="
+                                            <div class="img-wrapper" v-for="image in product.images" @click="
                                             removeImg(image)">
-                                            <img src="[! image.url !]?imageView2/2/w/100" alt="">
+                                            <img :src="image.url + '?imageView2/2/w/100'" alt="">
                                         </div>
                                     </div>
                                     <p class="help-block">* 建议上传规格为 640px * 640px 的图片</p>
@@ -299,7 +299,8 @@
             skus: {
                 data: []
             },
-            img: [],
+            images: [],
+            image_ids: [],
             group_ids: []
         };
 
@@ -338,7 +339,10 @@
                     });
                 },
                 save: function () {
-                    this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, this.$get('product'), function (data) {
+                    var data = {
+                        data: this.$get('product')
+                    }
+                    this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, data, function (data) {
                         if (data) {
                             window.location.href = app.config.base_url + '/admin/products';
                         }
@@ -350,7 +354,8 @@
                     this.$broadcast('galleryOpen')
                 },
                 removeImg: function (image) {
-                    this.product.img.$remove(image)
+                    this.product.images.$remove(image)
+                    this.product.image_ids.$remove(image.id)
                 }
             },
             events: {
@@ -358,7 +363,12 @@
                     this.product.attributes.splice(index, 1);
                 },
                 gallerySubmit: function (data) {
-                    this.product.img = _.clone(data);
+                    _.map(data, function (val, key) {
+                        this.product.image_ids.push = val.id
+                    });
+
+                    this.product.images = _.clone(data)
+
                 }
             }
         });

@@ -261,7 +261,7 @@
     <li @click="select($index)" class="wx-list" v-bind:class=" {'selected': selected}" >
     <span class="wx-list-cover"></span>
     <div class="wx-img-wrap">
-        <img src="[! image.url !]?imageView2/2/w/100" alt=""/>
+        <img :src="image.url + '?imageView2/2/w/100'" alt=""/>
     </div>
     </li>
 </script>
@@ -313,7 +313,7 @@
                                         %</span>
                                     <span class="wx-list-delete" v-if="status == 'queue'"
                                           @click.prevent="removeQueue($index)"></span>
-                                    <span class="wx-img-wrap"><img src="[! item.src !]" alt=""/></span>
+                                    <span class="wx-img-wrap"><img :src="item.src" alt=""/></span>
                                 </li>
                             </ul>
                         </div>
@@ -482,8 +482,9 @@
             },
             switch: function (location) {
                 if (location == 'gallery') {
-                    this.get
+                    this.getImages()
                 }
+                this.reset()
                 this.$set('location', location);
             },
             removeQueue: function (index) {

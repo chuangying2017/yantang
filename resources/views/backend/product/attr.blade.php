@@ -72,10 +72,17 @@
             submitValue: function () {
                 //1. get from api
                 //2. check duplicate
-                this.values.push({
-                    id: 1,
-                    name: this.searchValue,
-                });
+                var self = this;
+                this.$http.post(app.config.base_url + '/api/admin/attributes/' + this.attribute.id + '/values?_token=' + app.token, {
+                    value: this.searchValue
+                }, function (data) {
+                    var value = data.data
+                    self.values.push({
+                        id: value.id,
+                        name: value.value,
+                    });
+                })
+
 
                 this.clearSubmitValue();
             },

@@ -73,6 +73,7 @@ class ProductController extends Controller
     {
         $categories = $this->api->get('api/admin/categories')['data'];
         $groups = $this->api->get('api/admin/groups');
+        $attributes = $this->api->get('api/admin/attributes')['data'];
         $brands = $this->api->get('api/admin/brands');
         $qiniu_token = $this->api->get('api/admin/images/token')['data'];
         $data = [
@@ -85,28 +86,7 @@ class ProductController extends Controller
             'brands' => $brands,
             'token' => csrf_token(),
             'qiniu_token' => $qiniu_token,
-            'attributes' => [
-                [
-                    "name" => "尺寸",
-                    "id" => 1,
-                    "values" => []
-                ],
-                [
-                    "name" => "颜色",
-                    "id" => 2,
-                    "values" => []
-                ],
-                [
-                    "name" => "规格",
-                    "id" => 3,
-                    "values" => []
-                ],
-                [
-                    "name" => "产地",
-                    "id" => 4,
-                    "values" => []
-                ]
-            ]
+            'attributes' => $attributes
         ];
 
         if ($product) {
