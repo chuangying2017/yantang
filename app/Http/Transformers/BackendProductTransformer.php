@@ -21,13 +21,13 @@ class BackendProductTransformer extends TransformerAbstract {
             'category_id' => (int)$product->category_id,
             'merchant_id' => (int)$product->merchant_id,
             'title'       => $product->title,
-            'price'       => (int)$product->price,
+            'price'       => display_price($product->price),
             'cover_image' => $product->cover_image,
             'limit'       => $product->limit,
             'stock'       => $product->stock,
             'open_status' => $product->open_status,
             'open_time'   => $product->open_time,
-            'express_fee' => (int)$product->data->express_fee,
+            'express_fee' => display_price($product->meta->express_fee),
             'created_at'  => $product->created_at->toDateTimeString(),
             'updated_at'  => $product->updated_at->toDateTimeString(),
         ];
@@ -69,7 +69,7 @@ class BackendProductTransformer extends TransformerAbstract {
         return [
             'sub_title'    => $product->sub_title,
             'digest'       => $product->digest,
-            'origin_price' => (int)$product->origin_price,
+            'origin_price' => (int)display_price($product->origin_price),
         ];
     }
 

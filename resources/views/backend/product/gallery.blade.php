@@ -382,6 +382,7 @@
                 status: 'idle',
                 closed: true,
                 location: 'gallery',
+                callbackFn: false,
                 files: [],
                 images: [],
                 uploader: {},
@@ -479,13 +480,20 @@
                 this.selected = []
                 this.files = []
                 this.queues = []
+                this.callbackFn = false
             },
             close: function () {
                 this.reset()
                 this.closed = true
             },
             submit: function () {
-                this.$dispatch('gallerySubmit', this.selected)
+                var data = {
+                    data: this.selected
+                }
+                if (this.callbackFn) {
+                    data.method = this.callbackFn
+                }
+                this.$dispatch('gallerySubmit', data)
                 this.close();
             },
             switch: function (location) {
@@ -518,7 +526,10 @@
                 this.selected.$remove(image)
                 this.$log('selected')
             },
-            galleryOpen: function () {
+            galleryOpen: function (fn) {
+                if (fn) {
+                    this.callbackFn = fn
+                }
                 this.closed = false;
                 this.getImages();
             }

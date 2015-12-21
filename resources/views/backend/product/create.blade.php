@@ -19,6 +19,7 @@
 @endsection
 
 @section('content')
+    <vue-gallery></vue-gallery>
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -65,8 +66,7 @@
                                     <div class="col-sm-5">
                                         <select name="brand" class="form-control"
                                                 v-model="product.brand_id">
-                                            <option selected="true" disabled="disabled" value="null">请选择该商品的品牌</option>
-                                            <option value="[! brand.id !]" v-for="brand in brands">[! brand.name !]
+                                            <option v-bind:value="brand.id " v-for="brand in brands">[! brand.name !]
                                             </option>
                                         </select>
                                     </div>
@@ -77,8 +77,7 @@
                                     <div class="col-sm-5">
                                         <select name="proGroup" id="proGroup" class="form-control"
                                                 v-model="product.group_ids" multiple>
-                                            <option selected="true" disabled="disabled" value="">请选择该商品的分组</option>
-                                            <option value="[! group.id !]" v-for="group in groups">[! group.name !]
+                                            <option v-bind:value="group.id" v-for="group in groups">[! group.name !]
                                             </option>
                                         </select>
                                     </div>
@@ -159,9 +158,9 @@
                                         上传图片：</label>
                                     <div class="col-sm-5">
                                         <button @click.prevent="openGallery()">选择图片</button>
-                                        <vue-gallery></vue-gallery>
+
                                         <div class="cover-images">
-                                            <div class="img-wrapper" v-for="image in product.images" @click="
+                                            <div class="img-wrapper" v-for="image in product.images.data" @click="
                                             removeImg(image)">
                                             <img :src="image.url + '?imageView2/2/w/100'" alt="">
                                         </div>
@@ -299,16 +298,19 @@
             skus: {
                 data: []
             },
-            images: [],
+            images: {
+                data: []
+            },
             image_ids: [],
             group_ids: []
         };
 
-        var product = app.product ? _.clone(app.product) : model
+        var product = app.product ? app.product.data : model
 
         var vm = new Vue({
             el: '#app',
             data: {
+                method: 'post',
                 categories: app.categories,
                 groups: app.groups,
                 brands: app.brands,
@@ -324,6 +326,32 @@
                     }
                     return stocks;
                 }
+            },
+            created: function () {
+
+                this.$log('product')
+                var self = this;
+
+                if (this.product.id) {
+                    this.method = "put";
+                    _.map(this.categories, function (val, key) {
+                        if (val.id == self.product.category_id) {
+                            self.category = val;
+                        }
+                    })
+                }
+
+                editor.ready(function () {
+                    UE.commands['gallery'] = {
+                        execCommand: function () {
+                            self.openGallery('setEditorContent');
+                        }
+                    }
+                    editor.setContent(self.$get('product.detail'));
+                    editor.addListener('contentchange', function () {
+                        self.$set('product.detail', editor.getContent());
+                    });
+                });
             },
             watch: {
                 category: function (newVal) {
@@ -342,45 +370,68 @@
                     var data = {
                         data: this.$get('product')
                     }
-                    this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, data, function (data) {
-                        if (data) {
-                            window.location.href = app.config.base_url + '/admin/products';
-                        }
-                    }).error(function (data) {
 
-                    });
+                    if (this.method == 'post') {
+                        this.$http.post(app.config.base_url + '/admin/products?_token=' + app.token, data, function (data) {
+                            if (data) {
+                                window.location.href = app.config.base_url + '/admin/products';
+                            }
+                        }).error(function (data) {
+
+                        });
+                    } else {
+                        this.$http.put(app.config.base_url + '/admin/products/' + this.product.id + '?_token=' + app.token, data, function (data) {
+                            if (data) {
+                                window.location.href = app.config.base_url + '/admin/products';
+                            }
+                        }).error(function (data) {
+
+                        });
+                    }
+
                 },
-                openGallery: function () {
-                    this.$broadcast('galleryOpen')
+                openGallery: function (fn) {
+                    if (fn) {
+                        this.$broadcast('galleryOpen', fn)
+                    } else {
+                        this.$broadcast('galleryOpen')
+                    }
                 },
                 removeImg: function (image) {
-                    this.product.images.$remove(image)
+                    this.product.images.data.$remove(image)
                     this.product.image_ids.$remove(image.id)
+                },
+                setEditorContent: function (data) {
+                    _.map(data, function (val, key) {
+                        editor.execCommand("insertimage", {
+                            src: val.url,
+                            width: '470'
+                        })
+                    })
                 }
             },
             events: {
                 attrDeleted: function (index) {
                     this.product.attributes.splice(index, 1);
                 },
-                gallerySubmit: function (data) {
-                    _.map(data, function (val, key) {
-                        this.product.image_ids.push = val.id
-                    });
+                gallerySubmit: function (callback) {
+                    var self = this;
+                    if (callback.method) {
+                        this[callback.method](callback.data)
+                    } else {
+                        _.map(callback.data, function (val, key) {
+                            console.log(val)
+                            self.product.image_ids.push(val.id)
+                        });
 
-                    this.product.images = _.clone(data)
-
+                        this.product.images.data = _.clone(callback.data)
+                    }
                 }
             }
         });
 
         $('.open_status_custom').mask('0000/00/00 00:00:00');
 
-        editor.ready(function () {
-            editor.setContent(vm.$get('product.detail'));
-            editor.addListener('contentchange', function () {
-                console.log('content changed')
-                vm.$set('product.detail', editor.getContent());
-            });
-        });
+
     </script>
 @endsection

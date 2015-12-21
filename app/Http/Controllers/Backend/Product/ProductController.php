@@ -42,11 +42,15 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = $this->api->get('api/admin/products/' . $id);
-        $this->setJs($product);
+        $product = $this->api->raw()->get('api/admin/products/' . $id);
+        $this->setJs(json_decode($product->content(), true));
         return view('backend.product.create');
     }
 
+    /**
+     * @param Request $request
+     * @return int|string
+     */
     public function store(Request $request)
     {
 
@@ -54,6 +58,29 @@ class ProductController extends Controller
             $data = $request->all();
 
             $result = $this->api->post('api/admin/products', $data);
+
+            if ($result) {
+                return 1;
+            }
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return int|string
+     */
+    public function update($id, Request $request)
+    {
+
+        try {
+            $data = $request->all();
+
+            $result = $this->api->put('api/admin/products/' . $id, $data);
 
             if ($result) {
                 return 1;
@@ -95,11 +122,34 @@ class ProductController extends Controller
         javascript()->put($data);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     */
     public function destroy($id)
     {
         try {
             $this->api->delete('api/admin/products/' . $id);
 
+            return redirect('admin/products');
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * @param $id
+     * @param $action
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     */
+    public function operate($id, $action)
+    {
+        try {
+            $this->api->put('api/admin/products/operate', [
+                "action" => $action,
+                "products_id" => [$id]
+            ]);
             return redirect('admin/products');
         } catch (Exception $e) {
 
