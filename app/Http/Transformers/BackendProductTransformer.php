@@ -45,6 +45,7 @@ class BackendProductTransformer extends TransformerAbstract {
 
     public function includeSkus(Product $product)
     {
+        $product->load('skuViews');
         $skus = $product->skuViews;
 
         return $this->collection($skus, new ProductSkuTransformer());

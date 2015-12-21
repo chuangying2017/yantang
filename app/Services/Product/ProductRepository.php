@@ -26,7 +26,7 @@ class ProductRepository {
 
     public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP)
     {
-        $query = Product::where('status', $status);
+        $query = Product::with('data')->where('status', $status);
 
         if ( ! is_null($category_id)) {
             $query = $query->whereIn('category_id', $category_id);
@@ -123,7 +123,9 @@ class ProductRepository {
         try {
             DB::beginTransaction();
 
-            $product = self::touchProduct($data['data']);
+            $data = $data['data'];
+
+            $product = self::touchProduct($data);
 
             /**
              * create skus
@@ -161,10 +163,11 @@ class ProductRepository {
 
         try {
             DB::beginTransaction();
+            $data = $data['data'];
             /**
              * filter data for security
              */
-            $product = self::touchProduct($data['data'], $id);
+            $product = self::touchProduct($data, $id);
             /**
              * update skus
              */
