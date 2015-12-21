@@ -10,15 +10,17 @@ use Illuminate\Http\Request;
  * Date: 10/12/2015
  * Time: 5:57 PM
  */
-class ProductController extends Controller {
+class ProductController extends Controller
+{
 
     /**
      * @return \Exception|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
+        $status = $request->get('status');
         try {
-            $products = $this->api->get('api/admin/products/');
+            $products = $this->api->get('api/admin/products?status=' . $status);
 
             return view('backend.product.index', compact('products'));
         } catch (\Exception $e) {
@@ -106,16 +108,16 @@ class ProductController extends Controller {
         $brands = $this->api->get('api/admin/brands');
         $qiniu_token = $this->api->get('api/admin/images/token')['data'];
         $data = [
-            'config'      => [
-                'api_url'  => url('api/'),
+            'config' => [
+                'api_url' => url('api/'),
                 'base_url' => url('/')
             ],
-            'categories'  => $categories,
-            'groups'      => $groups,
-            'brands'      => $brands,
-            'token'       => csrf_token(),
+            'categories' => $categories,
+            'groups' => $groups,
+            'brands' => $brands,
+            'token' => csrf_token(),
             'qiniu_token' => $qiniu_token,
-            'attributes'  => $attributes
+            'attributes' => $attributes
         ];
 
         if ($product) {

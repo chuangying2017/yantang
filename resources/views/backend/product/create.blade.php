@@ -19,7 +19,7 @@
 @endsection
 
 @section('content')
-    <vue-gallery></vue-gallery>
+
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -161,96 +161,96 @@
 
                                         <div class="cover-images">
                                             <div class="img-wrapper" v-for="image in product.images.data">
-                                                <span class="set-cover">设为封面</span>
-                                                <span class="cancle-cover">取消封面</span>
-                                                <span class="cover-tag">封面</span>
+                                                <span class="cover-tag"
+                                                      v-if="image.url == product.cover_image">封面</span>
+                                                <span class="set-cover" v-else @click="setCover(image)">设为封面</span>
                                                 <span class="remove-img" @click="removeImg(image)">×</span>
                                                 <img :src="image.url + '?imageView2/2/w/100'" alt="">
-                                        </div>
-                                    </div>
-                                    <p class="help-block">* 建议上传规格为 640px * 640px 的图片</p>
-                                </div>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="box without-border">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">4. 物流&其他</h3>
-                    </div>
-                    <div class="box-body">
-                        <form class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><span class="c-red">*</span> 统一邮费：</label>
-                                <div class="col-sm-3">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">￥</span>
-                                        <input type="text" class="form-control" placeholder="（单位：元）"
-                                               v-model="product.express_fee">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">每人限购：</label>
-                                <span class="c-red">(0表示不限)</span>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" v-model="product.limit">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">开售时间：</label>
-                                <div class="col-sm-5">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="open_status" id="open_status_now" value="now"
-                                                   checked="true" v-model="product.open_status">
-                                            立即开售
-                                        </label>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <div class="radio">
-                                                <label>
-                                                    <input type="radio" name="open_status" id="open_status_custom"
-                                                           value="fixed" v-model="product.open_status">
-                                                    定时开售
-                                                </label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <input type="text" class="form-control open_status_custom"
-                                                   placeholder="yyyy/mm/dd hh:mm:ss"
-                                                   v-model="product.open_time">
+                                        <p class="help-block">* 建议上传规格为 640px * 640px 的图片</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="box without-border">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">4. 物流&其他</h3>
+                        </div>
+                        <div class="box-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"><span class="c-red">*</span> 统一邮费：</label>
+                                    <div class="col-sm-3">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">￥</span>
+                                            <input type="text" class="form-control" placeholder="（单位：元）"
+                                                   v-model="product.express_fee">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">每人限购：</label>
+                                    <span class="c-red">(0表示不限)</span>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" v-model="product.limit">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">开售时间：</label>
+                                    <div class="col-sm-5">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="open_status" id="open_status_now" value="now"
+                                                       checked="true" v-model="product.open_status">
+                                                立即开售
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="open_status" id="open_status_custom"
+                                                               value="fixed" v-model="product.open_status">
+                                                        定时开售
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6" v-if="product.open_status == 'fixed'">
+                                                <input type="text" class="form-control open_status_custom"
+                                                       placeholder="yyyy/mm/dd hh:mm:ss"
+                                                       v-model="product.open_time">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        {{--<div class="box-footer clearfix">--}}
+                        {{--<button type="submit" class="btn btn-primary pull-right" @click="test()">下一步</button>--}}
+                        {{--</div>--}}
                     </div>
-                    {{--<div class="box-footer clearfix">--}}
-                    {{--<button type="submit" class="btn btn-primary pull-right" @click="test()">下一步</button>--}}
-                    {{--</div>--}}
                 </div>
-            </div>
-            <!-- /.tab-pane -->
+                <!-- /.tab-pane -->
 
-            <div class=" tab-pane" id="settings">
-                <div class="row">
-                    <div class="col-md-12">
-                        <script id="container" name="content" type="text/plain" style="height:600px;">
+                <div class=" tab-pane" id="settings">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <script id="container" name="content" type="text/plain" style="height:600px;">
 
-                        </script>
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-footer clearfix">
+                        <button type="submit" class="btn btn-primary pull-right" @click="save()">保存</button>
                     </div>
                 </div>
-                <div class="box-footer clearfix">
-                    <button type="submit" class="btn btn-primary pull-right" @click="save()">保存</button>
-                </div>
+                <!-- /.tab-pane -->
             </div>
-            <!-- /.tab-pane -->
+            <!-- /.tab-content -->
         </div>
-        <!-- /.tab-content -->
-    </div>
-    <!-- /.nav-tabs-custom -->
+        <!-- /.nav-tabs-custom -->
     </div>
     <!-- /.col -->
     @endsection
@@ -270,16 +270,6 @@
     @include('backend.product.gallery')
     <script>
         app = window.app || {}
-        app.uploader = {
-            token: "",
-            fileNumLimit: 1,
-            error: function (file) {
-            },
-            success: function (file) {
-            },
-            completed: function (file) {
-            }
-        }
 
         // 执行 JS 主逻辑
         var editor = UE.getEditor('container', {});
@@ -292,7 +282,7 @@
             price: 0,
             origin_price: 0,
             limit: 0,
-            cover_image: "",
+            cover_image: "http://weazm-topgift.qiniudn.com/default-gift.png",
             open_status: "now",
             attributes: [],
             brand_id: null,
@@ -401,6 +391,9 @@
                     }
                 },
                 removeImg: function (image) {
+                    if (image.url == this.product.cover_image) {
+                        this.product.cover_image = ""
+                    }
                     this.product.images.data.$remove(image)
                     this.product.image_ids.$remove(image.id)
                 },
@@ -411,6 +404,9 @@
                             width: '470'
                         })
                     })
+                },
+                setCover: function (image) {
+                    this.product.cover_image = image.url;
                 }
             },
             events: {
@@ -434,7 +430,5 @@
         });
 
         $('.open_status_custom').mask('0000/00/00 00:00:00');
-
-
     </script>
 @endsection

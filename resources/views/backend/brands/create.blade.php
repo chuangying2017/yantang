@@ -34,26 +34,26 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="proGroup" class="col-sm-2 control-label"><span class="c-red">*</span> 上传封面图：</label>
-                        <div class="col-sm-5">
-                            <!--dom结构部分-->
-                            <div id="uploader-demo">
-                                <!--用来存放item-->
-                                <div id="fileList" class="uploader-list"></div>
-                                <div id="filePicker">选择图片</div>
-                                <button id="uploadBtn">upload</button>
-                            </div>
+                    {{--<div class="form-group">--}}
+                    {{--<label for="proGroup" class="col-sm-2 control-label"><span class="c-red">*</span> 上传封面图：</label>--}}
+                    {{--<div class="col-sm-5">--}}
+                    {{--<!--dom结构部分-->--}}
+                    {{--<div id="uploader-demo">--}}
+                    {{--<!--用来存放item-->--}}
+                    {{--<div id="fileList" class="uploader-list"></div>--}}
+                    {{--<div id="filePicker">选择图片</div>--}}
+                    {{--<button id="uploadBtn">upload</button>--}}
+                    {{--</div>--}}
 
-                            <input type="file" value="选择图片上传">
-                            <div class="cover-images banner-images">
-                                <div class="img-wrapper">
-                                    <img src="http://7xp47i.com1.z0.glb.clouddn.com/grid1-1.jpg" alt="">
-                                </div>
-                            </div>
-                            <p class="help-block">* 建议上传规格为 900px * 300px 的图片</p>
-                        </div>
-                    </div>
+                    {{--<input type="file" value="选择图片上传">--}}
+                    {{--<div class="cover-images banner-images">--}}
+                    {{--<div class="img-wrapper">--}}
+                    {{--<img src="http://7xp47i.com1.z0.glb.clouddn.com/grid1-1.jpg" alt="">--}}
+                    {{--</div>--}}
+                    {{--</div>--}}
+                    {{--<p class="help-block">* 建议上传规格为 900px * 300px 的图片</p>--}}
+                    {{--</div>--}}
+                    {{--</div>--}}
                     <div class="box-footer clearfix">
                         <button type="submit" class="btn btn-primary pull-right">保存</button>
                     </div>
@@ -68,18 +68,5 @@
 @endsection
 
 @section('after-scripts-end')
-    <script>
-        app = window.app || {}
-        app.uploader = {
-            token: "",
-            fileNumLimit: 1,
-            error: function (file) {
-            },
-            success: function (file) {
-            },
-            completed: function (file) {
-            }
-        }
-    </script>
-    @include('backend.product.upload')
+
 @endsection
