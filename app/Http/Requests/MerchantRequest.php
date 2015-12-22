@@ -28,7 +28,7 @@ class MerchantRequest extends Request {
             //
         ];
 
-        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
+        if ($this->isMethod('POST')) {
             $rules = [
                 'name'     => 'required',
                 'phone'    => 'required',

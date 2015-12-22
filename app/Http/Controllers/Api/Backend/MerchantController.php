@@ -31,7 +31,9 @@ class MerchantController extends Controller {
      */
     public function index()
     {
-        //
+        $merchants = MerchantService::lists();
+
+        return $this->response->array(['data' => $merchants]);
     }
 
     /**
@@ -46,7 +48,7 @@ class MerchantController extends Controller {
             $input = $request->all();
 
             $merchant = $this->merchantService->create($input);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 //            return $e->getTrace();
             $this->response->errorInternal($e->getMessage());
         }
@@ -63,18 +65,9 @@ class MerchantController extends Controller {
      */
     public function show($id)
     {
-        //
-    }
+        $merchant = MerchantService::show($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $this->response->array(['data' => $merchant]);
     }
 
     /**
@@ -86,7 +79,16 @@ class MerchantController extends Controller {
      */
     public function update(Request $request, $id)
     {
+        try {
+            $input = $request->all();
 
+            $merchant = $this->merchantService->create($input);
+
+            return $this->response->created()->setContent(['data' => $merchant]);
+        } catch (\Exception $e) {
+//            return $e->getTrace();
+            $this->response->errorInternal($e->getMessage());
+        }
     }
 
     /**
@@ -97,6 +99,12 @@ class MerchantController extends Controller {
      */
     public function destroy($id)
     {
-        //
+        try {
+            $count = MerchantService::delete($id);
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
+
+        return $this->response->noContent()->setContent(['data' => $count]);
     }
 }

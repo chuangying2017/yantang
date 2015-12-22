@@ -29,7 +29,19 @@ class MerchantRepository {
 
     public static function delete($merchant_id)
     {
-        return Merchant::where('id', $merchant_id)->delete();
+        $merchant_id = to_array($merchant_id);
+
+        return Merchant::whereIn('id', $merchant_id)->delete();
+    }
+
+    public static function lists()
+    {
+        return Merchant::get();
+    }
+
+    public static function show($merchant_id)
+    {
+        return Merchant::findOrFail($merchant_id);
     }
 
 

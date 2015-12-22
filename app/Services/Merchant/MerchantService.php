@@ -12,26 +12,15 @@ use App\Services\Administrator\AdministratorService;
  */
 class MerchantService {
 
-    const DEFAULT_MERCHANT_ROLE = 'MerchantAdmin';
-
-    /**
-     * @var EloquentUserRepository
-     */
-    private $userRepository;
-
-    /**
-     * MerchantService constructor.
-     * @param EloquentUserRepository $userRepository
-     */
-    public function __construct(EloquentUserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
 
     public static function getMerchantIdByUserId($user_id)
     {
-        #todo @bryant 实现通过user id 获取 merchant id
-        return 0;
+        $merchant_admin = AdministratorService::userMerchantAdmin($user_id);
+        if ($merchant_admin) {
+            return $merchant_admin['merchant_id'];
+        }
+
+        throw new \Exception('当前用户不是商家管理员');
     }
 
     protected static function filterBaseMerchantData($data)
@@ -44,14 +33,8 @@ class MerchantService {
         try {
             //创建商家
             $merchant = MerchantRepository::create(self::filterBaseMerchantData($data));
-            //创建商家最高权限管理员,默认无需激活
-            $data['status'] = 1;
-            $data['confirmed'] = 1;
-            $roles['assignees_roles'][] = self::getDefaultMerchantRole();
-            $permissions['permission_user'] = [];
-            $user = $this->userRepository->create($data, $roles, $permissions);
 
-            $merchant_admin = AdministratorService::createMerchantAdmin($user['id'], $merchant['id'], array_get($data, 'name'));
+            AdministratorService::createMerchantAdmin($merchant['id'], $data['name'], $data['email'], $data['password']);
 
             return $merchant;
         } catch (\Exception $e) {
@@ -60,47 +43,31 @@ class MerchantService {
 
     }
 
-    public static function update()
+    public static function update($merchant_id, $data)
     {
+        try {
+            $merchant = MerchantRepository::update($merchant_id, self::filterBaseMerchantData($data));
 
+            return $merchant;
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
-    public static function delete()
+    public static function delete($merchant_id)
     {
+        return MerchantRepository::delete($merchant_id);
     }
 
-    public static function active()
+    public static function lists()
     {
+        return MerchantRepository::lists();
     }
 
-    public static function block()
+    public static function show($merchant_id)
     {
+        return MerchantRepository::show($merchant_id);
     }
 
-    public static function createChild()
-    {
-    }
 
-    public static function bindParent()
-    {
-    }
-
-    public static function updatePassword()
-    {
-    }
-
-    public static function sendEmail()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getDefaultMerchantRole()
-    {
-        if (is_numeric(self::DEFAULT_MERCHANT_ROLE))
-            return Role::where('id', (int)self::DEFAULT_MERCHANT_ROLE)->first();
-
-        return Role::where('name', self::DEFAULT_MERCHANT_ROLE)->first();
-    }
 }

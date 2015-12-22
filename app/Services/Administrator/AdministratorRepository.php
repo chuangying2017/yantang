@@ -12,6 +12,11 @@ class AdministratorRepository {
         );
     }
 
+    public static function getByUser($user_id)
+    {
+        return MerchantAdmin::where('user_id', $user_id)->first();
+    }
+
     public static function updateMerchantAdmin($user_id, $merchant_id, $name)
     {
         $admin = MerchantAdmin::where('user_id', $user_id)->firstOrFail();
