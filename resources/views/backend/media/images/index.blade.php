@@ -46,7 +46,7 @@
                             @foreach($images['data'] as $image)
                                 <tr>
                                     <td>
-                                        <img src="{{$image['url']}}?imageView2/1/w/200/h/200" alt=""
+                                        <img src="{{$image['url']}}?imageView2/1/w/50/h/50" alt=""
                                              class="thumb-img">
                                     </td>
                                     <td>{{$image['filename']}}</td>
