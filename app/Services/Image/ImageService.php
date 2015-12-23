@@ -21,9 +21,9 @@ class ImageService {
         return ImageRepository::getToken($callback_url, $merchant_id);
     }
 
-    public static function create($media_id, $merchant_id)
+    public static function create($data)
     {
-        return ImageRepository::create($merchant_id, $media_id);
+        return ImageRepository::create($data);
     }
 
     /**
@@ -38,7 +38,7 @@ class ImageService {
     {
         $merchant = Merchant::findOrFail($merchant_id);
 
-        return $merchant->images()->paginate(ApiConst::IMAGE_PER_PAGE);
+        return $merchant->images()->orderBy('created_at', 'desc')->paginate(ApiConst::IMAGE_PER_PAGE);
     }
 
 

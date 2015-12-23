@@ -9,7 +9,7 @@
 namespace App\Services\Image;
 
 use App\Models\Image;
-use zgldh\QiniuStorage\QiniuStorage as Qiniu;
+use Storage;
 
 
 /**
@@ -25,13 +25,14 @@ class ImageRepository {
      */
     public static function getToken($callback_url, $merchant_id)
     {
-        $qiniu = Qiniu::disk('qiniu');
-        $callback_body = 'media_id=$(eTag)&filename=$(fname)&image_info=$(imageInfo)&merchant_id=$(x:' . $merchant_id . ')';
+        $qiniu = Storage::disk('qiniu');
+        $callback_body = 'media_id=$(etag)&filename=$(fname)&imageinfo=$(imageInfo)&merchant_id=' . $merchant_id;
         $policy = [
             'callbackUrl'      => $callback_url,
             'callbackBody'     => $callback_body,
             'callbackFetchKey' => 1
         ];
+
 
         return $qiniu->uploadToken(null, 36000, $policy);
 
@@ -42,13 +43,11 @@ class ImageRepository {
      * @param $media_id
      * @return mixed
      */
-    public static function create($merchant_id, $media_id)
+    public static function create($data)
     {
-        return Image::firstOrCreate([
-            'merchant_id' => $merchant_id,
-            'media_id'    => $media_id,
-            'url'         => getenv("QINIU_DEFAULT_DOMAIN") . $media_id
-        ]);
+        $image_data = array_only($data, ['merchant_id', 'media_id', 'filename', 'imageinfo']);
+
+        return Image::create($image_data);
     }
 
     /**

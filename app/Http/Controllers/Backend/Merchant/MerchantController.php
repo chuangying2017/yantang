@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Backend\Merchant;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Exception;
 
 /**
  * Created by PhpStorm.

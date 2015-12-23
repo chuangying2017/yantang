@@ -52,8 +52,5 @@ $api->group(['prefix' => 'images'], function ($api) {
         'uses' => 'ImageController@token'
     ]);
 
-    $api->get('/callback', [
-        'as'   => 'qiniu.callback',
-        'uses' => 'ImageController@callback'
-    ]);
+
 });

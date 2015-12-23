@@ -46,28 +46,6 @@ class ImageController extends Controller {
         return $this->response->array(['data' => $token]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function callback(Request $request)
-    {
-        $image_id = $request->input('image_id') . '-' . $request->input('hash');
-        $merchant_id = $request->input('merchant_id', 0);
-
-        ImageService::create($image_id, $merchant_id);
-
-        return response()->json(array(
-            'key'     => $image_id,
-            'payload' => [
-                'success' => true,
-                'name'    => $image_id
-            ]
-        ));
-    }
-
 
     /**
      * Remove the specified resource from storage.
