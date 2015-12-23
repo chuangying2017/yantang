@@ -26,7 +26,7 @@ class ProductRepository {
 
     public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP)
     {
-        $query = Product::with('meta')->where('status', $status);
+        $query = Product::with('meta', 'data')->where('status', $status);
 
         if ( ! is_null($category_id)) {
             $query = $query->whereIn('category_id', $category_id);
@@ -37,7 +37,13 @@ class ProductRepository {
         }
 
         if ( ! is_null($orderBy)) {
-            $query = $query->orderBy($orderBy, $orderType);
+            if (ProductConst::getProductSortOption($orderBy)) {
+                $query = $query->orderBy($orderBy, $orderType);
+            } else if ($orderBy == 'sales') {
+                $query = $query->join('product_data_view', 'product_data_view.id', '=', 'products.id')
+                    ->orderBy('product_data_view.sales', $orderType);
+            }
+
         }
 
         if ( ! is_null($paginate)) {
