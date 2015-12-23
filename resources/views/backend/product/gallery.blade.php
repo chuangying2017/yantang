@@ -255,7 +255,7 @@
         z-index: 5;
     }
 
-    .wx-file-upload{
+    .wx-file-upload {
         position: absolute;
         width: 100px;
         height: 100px;
@@ -402,7 +402,7 @@
                 formData: {
                     token: app.qiniu_token
                 },
-
+                resize: false,
                 // 文件接收服务端。
                 server: 'http://upload.qiniu.com/',
 
