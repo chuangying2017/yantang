@@ -83,8 +83,6 @@ class ProductService {
 
     public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = null)
     {
-        $orderBy = ProductConst::getSortOption($orderBy);
-        $orderType = ProductConst::getSortType($orderBy);
         $brand_id = ! is_null($brand_id) ? to_array($brand_id) : null;
         $status = ProductConst::saleStatus($status, true);
         $category_ids = CategoryService::getLeavesId($category_id);

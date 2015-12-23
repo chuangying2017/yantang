@@ -64,19 +64,14 @@ final class ProductConst {
     }
 
 
-    public static function getSortOption($order_by)
+    public static function getProductSortOption($order_by)
     {
-        $available = ['sales', 'price'];
+        $options = ['created_at', 'price'];
 
-        return is_null($order_by) ? null : array_get($available, $order_by, 'sales');
+        return in_array($order_by, $options) ? $order_by : false;
     }
 
-    public static function getSortType($type)
-    {
-        $available = ['desc', 'asc'];
 
-        return array_get($available, $type, 'desc');
-    }
 
 }
 
