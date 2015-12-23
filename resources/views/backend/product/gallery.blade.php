@@ -403,6 +403,7 @@
                     token: app.qiniu_token
                 },
                 resize: false,
+                compress: false,
                 // 文件接收服务端。
                 server: 'http://upload.qiniu.com/',
 
