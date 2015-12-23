@@ -62,24 +62,26 @@
                     <div class="table-responsive mailbox-messages">
                         <table class="table table-hover table-striped">
                             <thead>
+                            <th>商品ID</th>
                             <th>图片</th>
                             <th>标题</th>
-                            <th>价格</th>
-                            <th>库存</th>
+                            <th>价格（元）</th>
+                            {{--<th>库存</th>--}}
                             <th>销量</th>
                             <th>创建时间</th>
                             <th>操作</th>
                             </thead>
                             <tbody>
 
-                            @foreach($products as $product)
+                            @foreach($products as $index => $product)
                                 <tr>
+                                    <td>{{$product->id}}</td>
                                     <td><img width="50"
                                              src="{{$product->cover_image}}"
                                              alt=""></td>
+                                    {{--                                    <td>{{$product->stock}}</td>--}}
                                     <td>{{$product->title}}</td>
-                                    <td>{{$product->price}}</td>
-                                    <td>{{$product->stock}}</td>
+                                    <td>{{$product->price/100}}</td>
                                     <td>{{$product->sales}}</td>
                                     <td>{{$product->created_at}}</td>
                                     <td>
@@ -118,6 +120,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer no-padding">
+                    {!! $products->render() !!}
                 </div>
             </div>
             <!-- /. box -->

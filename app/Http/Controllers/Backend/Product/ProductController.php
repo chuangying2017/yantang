@@ -19,9 +19,10 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $status = $request->get('status');
+        $page = $request->get('page');
         try {
-            $products = $this->api->get('api/admin/products?status=' . $status);
-
+            $products = $this->api->get('api/admin/products?status=' . $status . '&page=' . $page);
+            $products->setPath('/admin/products');
             return view('backend.product.index', compact('products'));
         } catch (\Exception $e) {
             return $e;
