@@ -89,6 +89,9 @@
                                             <a href="{{url('/admin/products/' . $product->id . '/edit')}}"
                                                class="btn btn-default btn-sm"><i
                                                     class="fa fa-pencil"></i></a>
+                                            <a target="_blank" href="{{env('PREVIEW_URL') . $product->id}}"
+                                               class="btn btn-default btn-sm"><i
+                                                    class="fa fa-eye"></i></a>
                                             @if($product->status == 'up')
                                                 <a href="{{url('/admin/products/' . $product->id . '/operate/down')}}"
                                                    class="btn btn-default btn-sm"><i
