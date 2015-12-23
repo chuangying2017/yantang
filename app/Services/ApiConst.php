@@ -1,5 +1,6 @@
 <?php namespace App\Services;
-class ApiConst {
+class ApiConst
+{
 
     /**
      * Backend
@@ -19,18 +20,19 @@ class ApiConst {
 
     public static function decodeSort($sort = null)
     {
-        if ( ! is_null($sort) && $sort) {
+        if (!is_null($sort) && $sort) {
             $sort = explode(self::SORT_SPLICE, $sort);
             if (count($sort) == 2) {
                 return [
                     'order_by'   => $sort[0],
                     'order_type' => self::getSortType($sort[1])
+
                 ];
             }
         }
 
         return [
-            'order_by'   => null,
+            'order_by' => null,
             'order_type' => null
         ];
     }
