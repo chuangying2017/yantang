@@ -105,6 +105,6 @@ class MerchantController extends Controller {
             $this->response->errorInternal($e->getMessage());
         }
 
-        return $this->response->noContent()->setContent(['data' => $count]);
+        return $this->response->noContent()->setMeta(['data' => $count]);
     }
 }

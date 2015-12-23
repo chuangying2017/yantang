@@ -1,7 +1,6 @@
 <?php namespace App\Services\Merchant;
 
 use App\Models\Access\Role\Role;
-use App\Repositories\Backend\User\EloquentUserRepository;
 use App\Services\Administrator\AdministratorService;
 
 /**
