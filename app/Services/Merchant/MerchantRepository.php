@@ -1,4 +1,6 @@
-<?php
+<?php namespace App\Services\Merchant;
+
+use App\Models\Merchant;
 
 /**
  * Created by PhpStorm.
@@ -6,23 +8,40 @@
  * Date: 2/12/2015
  * Time: 5:30 PM
  */
-class MerchantRepository
-{
+class MerchantRepository {
 
-
-
-    public static function create()
+    public static function create($merchant_data)
     {
-
+        return Merchant::updateOrCreate(
+            ['name' => $merchant_data['name']],
+            $merchant_data
+        );
     }
 
-    public static function update()
+    public static function update($merchant_id, $merchant_data)
     {
+        $merchant = Merchant::findOrFail($merchant_id);
+        $merchant->fill($merchant_data);
+        $merchant->save();
 
+        return $merchant;
     }
 
-    public static function delete()
+    public static function delete($merchant_id)
     {
+        $merchant_id = to_array($merchant_id);
+
+        return Merchant::whereIn('id', $merchant_id)->delete();
+    }
+
+    public static function lists()
+    {
+        return Merchant::get();
+    }
+
+    public static function show($merchant_id)
+    {
+        return Merchant::findOrFail($merchant_id);
     }
 
 

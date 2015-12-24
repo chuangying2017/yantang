@@ -16,19 +16,24 @@ $api->group(['prefix' => 'categories'], function ($api) {
 });
 $api->resource('categories', 'CategoryController');
 
-
+$api->put('products/operate', [
+    'as'   => 'api.products.operate',
+    'uses' => 'ProductController@operate'
+]);
 $api->resource('products', 'ProductController');
+
+
 $api->resource('attributes', 'AttributeController');
 $api->resource('attributes.values', 'AttributeValueController', ['only' => ['store', 'destroy']]);
 
 $api->resource('brands', 'BrandController');
 
-$api->resource('groups', 'GroupController');
 
 $api->put('groups/{group_id}/products', [
     'as'   => 'groups.bind.products',
     'uses' => 'GroupController@bindingProducts'
 ]);
+$api->resource('groups', 'GroupController');
 
 
 $api->group(['prefix' => 'images'], function ($api) {
@@ -47,8 +52,5 @@ $api->group(['prefix' => 'images'], function ($api) {
         'uses' => 'ImageController@token'
     ]);
 
-    $api->get('/callback', [
-        'as'   => 'qiniu.callback',
-        'uses' => 'ImageController@callback'
-    ]);
+
 });

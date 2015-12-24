@@ -12,6 +12,11 @@
 
     @yield('before-styles-end')
     {!! HTML::style(elixir('css/backend.css')) !!}
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
     @yield('after-styles-end')
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -37,18 +42,19 @@
         </section>
 
         <!-- Main content -->
-        <section class="content clearfix">
+        <section id="app" class="content clearfix">
             @include('includes.partials.messages')
+            <vue-gallery></vue-gallery>
             @yield('content')
-        </section><!-- /.content -->
-    </div><!-- /.content-wrapper -->
+        </section>
+    </div>
 
     @include('backend.includes.footer')
 </div><!-- ./wrapper -->
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="{{asset('js/vendor/jquery-1.11.2.min.js')}}"><\/script>')</script>
+<script src="http://libs.useso.com/js/jquery/2.0.0/jquery.min.js"></script>
 {!! HTML::script('js/vendor/bootstrap.min.js') !!}
+{!! HTML::script('js/vendor/underscore/underscore-min.js') !!}
 
 @yield('before-scripts-end')
 {!! HTML::script(elixir('js/backend.js')) !!}

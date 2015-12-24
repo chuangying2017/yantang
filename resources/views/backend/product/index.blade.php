@@ -30,9 +30,9 @@
                 </div>
                 <div class="box-body no-padding">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a href="#"><i class="fa fa-trash-o"></i> 出售中的商品</a></li>
-                        <li><a href="#"><i class="fa fa-trash-o"></i> 下架的商品</a></li>
-                        <li><a href="#"><i class="fa fa-trash-o"></i> 已售罄的商品</a></li>
+                        <li><a href="{{url('admin/products')}}"><i class="fa fa-trash-o"></i> 出售中的商品</a></li>
+                        <li><a href="{{url('admin/products?status=down')}}"><i class="fa fa-trash-o"></i> 下架的商品</a></li>
+                        {{--<li><a href="{{url('admin/products')}}"><i class="fa fa-trash-o"></i> 已售罄的商品</a></li>--}}
                     </ul>
                 </div>
                 <!-- /.box-body -->
@@ -62,37 +62,58 @@
                     <div class="table-responsive mailbox-messages">
                         <table class="table table-hover table-striped">
                             <thead>
-                            <th></th>
+                            <th>商品ID</th>
                             <th>图片</th>
                             <th>标题</th>
-                            <th>价格</th>
-                            <th>库存</th>
+                            <th>价格（元）</th>
+                            {{--<th>库存</th>--}}
                             <th>销量</th>
                             <th>创建时间</th>
                             <th>操作</th>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td><img width="50"
-                                         src="https://img.yzcdn.cn/upload_files/2015/05/14/Fq9Xi4vSuS8D804oC_1CD04sb8uA.png?imageView2/2/w/100/h/100/q/75/format/webp"
-                                         alt=""></td>
-                                <td>this is picture</td>
-                                <td>256</td>
-                                <td>111</td>
-                                <td>234</td>
-                                <td>2015-11-23 20:46:53</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-pencil"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-arrow-circle-down"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i
-                                                class="fa fa-trash-o"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+
+                            @foreach($products as $index => $product)
+                                <tr>
+                                    <td>{{$product->id}}</td>
+                                    <td><img width="50"
+                                             src="{{$product->cover_image}}"
+                                             alt=""></td>
+                                    {{--                                    <td>{{$product->stock}}</td>--}}
+                                    <td>{{$product->title}}</td>
+                                    <td>{{$product->price/100}}</td>
+                                    <td>{{$product->sales}}</td>
+                                    <td>{{$product->created_at}}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{{url('/admin/products/' . $product->id . '/edit')}}"
+                                               class="btn btn-default btn-sm"><i
+                                                    class="fa fa-pencil"></i></a>
+                                            <a target="_blank" href="{{env('PREVIEW_URL') . $product->id}}"
+                                               class="btn btn-default btn-sm"><i
+                                                    class="fa fa-eye"></i></a>
+                                            @if($product->status == 'up')
+                                                <a href="{{url('/admin/products/' . $product->id . '/operate/down')}}"
+                                                   class="btn btn-default btn-sm"><i
+                                                        class="fa fa-arrow-circle-down"></i></a>
+                                            @else
+                                                <a href="{{url('/admin/products/' . $product->id . '/operate/up')}}"
+                                                   class="btn btn-default btn-sm"><i
+                                                        class="fa fa-arrow-circle-up"></i></a>
+                                            @endif
+                                            <form style="display: inline-block"
+                                                  action="{{url('/admin/products/' . $product->id)}}" ,
+                                                  method="post">
+                                                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                                <input type="hidden" name="_method" value="delete">
+                                                <button type="submit" class="btn btn-default btn-sm"><i
+                                                        class="fa fa-trash-o"></i></button>
+                                            </form>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
 
                             </tbody>
                         </table>
@@ -102,6 +123,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer no-padding">
+                    {!! $products->render() !!}
                 </div>
             </div>
             <!-- /. box -->

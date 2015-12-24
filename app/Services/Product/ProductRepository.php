@@ -26,7 +26,7 @@ class ProductRepository {
 
     public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP)
     {
-        $query = Product::where('status', $status);
+        $query = Product::with('meta', 'data')->where('status', $status);
 
         if ( ! is_null($category_id)) {
             $query = $query->whereIn('category_id', $category_id);
@@ -37,7 +37,12 @@ class ProductRepository {
         }
 
         if ( ! is_null($orderBy)) {
-            $query = $query->orderBy($orderBy, $orderType);
+            if (ProductConst::getProductSortOption($orderBy)) {
+                $query = $query->orderBy($orderBy, $orderType);
+            } else if ($orderBy == 'sales' || $orderBy == 'favs' || $orderBy == 'stock') {
+                $query = $query->join('product_data_view', 'product_data_view.id', '=', 'products.id')
+                    ->orderBy('product_data_view.' . $orderBy, $orderType);
+            }
         }
 
         if ( ! is_null($paginate)) {
@@ -47,6 +52,15 @@ class ProductRepository {
         }
 
         return $products;
+    }
+
+    private static function decodePrice($data)
+    {
+        $data['price'] = store_price($data['price']);
+        $data['origin_price'] = store_price($data['origin_price']);
+        $data['express_fee'] = store_price($data['express_fee']);
+
+        return $data;
     }
 
 
@@ -60,7 +74,7 @@ class ProductRepository {
         $rules = [
             'brand_id', 'category_id', 'merchant_id', 'title', 'sub_title',
             'price', 'origin_price', 'limit', 'member_discount', 'digest',
-            'cover_image', 'open_status', 'open_time'
+            'cover_image', 'open_status', 'open_time', 'stock'
         ];
 
         return array_only($data, $rules);
@@ -123,12 +137,14 @@ class ProductRepository {
         try {
             DB::beginTransaction();
 
-            $product = self::touchProduct($data['basic_info']);
+            $data = $data['data'];
+
+            $product = self::touchProduct($data);
 
             /**
              * create skus
              */
-            $skus = ProductSkuService::create($data['skus'], $product->id);
+            $skus = ProductSkuService::create($data['skus']['data'], $product->id);
             $product->skus = $skus;
             /**
              * link group
@@ -161,6 +177,7 @@ class ProductRepository {
 
         try {
             DB::beginTransaction();
+            $data = $data['data'];
             /**
              * filter data for security
              */
@@ -168,7 +185,7 @@ class ProductRepository {
             /**
              * update skus
              */
-            ProductSkuService::sync($data['skus'], $product);
+            ProductSkuService::sync($data['skus']['data'], $product);
             /**
              * link group
              */
@@ -188,6 +205,13 @@ class ProductRepository {
 
     }
 
+    public static function updateStatus($ids, $status)
+    {
+        $ids = to_array($ids);
+
+        return Product::whereIn('id', $ids)->update(['status' => $status]);
+    }
+
 
     /**
      * @param $data
@@ -196,6 +220,7 @@ class ProductRepository {
      */
     private static function touchProduct($data, $id = null)
     {
+        $data = self::decodePrice($data);
         /**
          * filter data for security
          */

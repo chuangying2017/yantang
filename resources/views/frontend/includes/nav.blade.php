@@ -14,7 +14,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>{!! link_to('/', trans('navs.home')) !!}</li>
-                <li>{!! link_to('macros', trans('navs.macros')) !!}</li>
+                <!-- <li>{!! link_to('macros', trans('navs.macros')) !!}</li> -->
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -30,7 +30,7 @@
 
                 @if (Auth::guest())
                     <li>{!! link_to('auth/login', trans('navs.login')) !!}</li>
-                    <li>{!! link_to('auth/register', trans('navs.register')) !!}</li>
+                    <!-- <li>{!! link_to('auth/register', trans('navs.register')) !!}</li> -->
                 @else
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"

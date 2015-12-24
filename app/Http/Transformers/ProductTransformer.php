@@ -16,10 +16,15 @@ class ProductTransformer extends TransformerAbstract {
 
         $base_info = [
             'id'          => (int)$product->id,
+            'brand_id'    => $product->brand_id,
+            'category_id' => (int)$product->category_id,
+            'merchant_id' => (int)$product->merchant_id,
             'cover_image' => $product->cover_image,
             'product_no'  => $product->product_no,
             'title'       => $product->title,
-            'price'       => (int)$product->price,
+            'open_status' => $product->open_status,
+            'open_time'   => $product->open_time,
+            'price'       => display_price($product->price),
             'sales'       => (int)$product->data->sales,
             'favs'        => (int)$product->data->favs,
             'stocks'      => (int)$product->data->stock,
@@ -55,7 +60,7 @@ class ProductTransformer extends TransformerAbstract {
         return [
             'sub_title'    => $product->sub_title,
             'digest'       => $product->digest,
-            'origin_price' => (int)$product->origin_price,
+            'origin_price' => display_price($product->origin_pric),
         ];
     }
 

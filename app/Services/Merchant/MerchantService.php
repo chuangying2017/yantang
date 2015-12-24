@@ -1,5 +1,8 @@
 <?php namespace App\Services\Merchant;
 
+use App\Models\Access\Role\Role;
+use App\Services\Administrator\AdministratorService;
+
 /**
  * Created by PhpStorm.
  * User: Bryant
@@ -8,45 +11,62 @@
  */
 class MerchantService {
 
+
     public static function getMerchantIdByUserId($user_id)
     {
-        #todo @bryant 实现通过user id 获取 merchant id
-        return 1;
+        $merchant_admin = AdministratorService::userMerchantAdmin($user_id);
+        if ($merchant_admin) {
+            return $merchant_admin['merchant_id'];
+        }
+
+        throw new \Exception('当前用户不是商家管理员');
     }
 
-    public static function create()
+    protected static function filterBaseMerchantData($data)
     {
+        return array_only($data, ['name', 'avatar', 'phone', 'director', 'email']);
     }
 
-    public static function update()
+    public function create($data)
     {
+        try {
+            //创建商家
+            $merchant = MerchantRepository::create(self::filterBaseMerchantData($data));
+
+            AdministratorService::createMerchantAdmin($merchant['id'], $data['name'], $data['email'], $data['password']);
+
+            return $merchant;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
     }
 
-    public static function delete()
+    public static function update($merchant_id, $data)
     {
+        try {
+            $merchant = MerchantRepository::update($merchant_id, self::filterBaseMerchantData($data));
+
+            return $merchant;
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
-    public static function active()
+    public static function delete($merchant_id)
     {
+        return MerchantRepository::delete($merchant_id);
     }
 
-    public static function block()
+    public static function lists()
     {
+        return MerchantRepository::lists();
     }
 
-    public static function createChild()
+    public static function show($merchant_id)
     {
+        return MerchantRepository::show($merchant_id);
     }
 
-    public static function bindParent()
-    {
-    }
 
-    public static function updatePassword()
-    {
-    }
-
-    public static function sendEmail()
-    {
-    }
 }

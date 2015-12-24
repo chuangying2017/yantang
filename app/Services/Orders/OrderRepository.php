@@ -154,5 +154,10 @@ class OrderRepository {
         event(new OrderCancel($order_full));
     }
 
+    public static function getOrderSku($order_id)
+    {
+
+    }
+
 
 }

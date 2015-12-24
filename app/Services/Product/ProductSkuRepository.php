@@ -31,7 +31,7 @@ class ProductSkuRepository
             'product_id' => $product_id,
             'sku_no' => uniqid('psn_'),
             'stock' => $data['stock'],
-            'price' => $data['price'],
+            'price' => store_price($data['price']),
             'cover_image' => $data['cover_image'],
         ]);
 
@@ -55,6 +55,8 @@ class ProductSkuRepository
             throw new Exception('SKU NOT FOUND');
         }
         $data = array_only($data, ['name', 'stock', 'price', 'sales', 'cover_image']);
+
+        $data['price'] = store_price($data['price']);
 
         $sku->update($data);
 

@@ -52,9 +52,7 @@ class ProductService {
      */
     public static function up($id)
     {
-        return ProductRepository::update($id, [
-            'status' => ProductConst::VAR_PRODUCT_STATUS_UP
-        ]);
+        return ProductRepository::updateStatus($id, ProductConst::VAR_PRODUCT_STATUS_UP);
     }
 
     /**
@@ -63,16 +61,12 @@ class ProductService {
      */
     public static function down($id)
     {
-        return ProductRepository::update($id, [
-            'status' => ProductConst::VAR_PRODUCT_STATUS_DOWN
-        ]);
+        return ProductRepository::update($id, ProductConst::VAR_PRODUCT_STATUS_DOWN);
     }
 
     public static function sellOut($id)
     {
-        return ProductRepository::update($id, [
-            'status' => ProductConst::VAR_PRODUCT_STATUS_SELLOUT
-        ]);
+        return ProductRepository::update($id, ProductConst::VAR_PRODUCT_STATUS_SELLOUT);
     }
 
     /**
@@ -89,8 +83,6 @@ class ProductService {
 
     public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = null)
     {
-        $orderBy = ProductConst::getSortOption($orderBy);
-        $orderType = ProductConst::getSortType($orderBy);
         $brand_id = ! is_null($brand_id) ? to_array($brand_id) : null;
         $status = ProductConst::saleStatus($status, true);
         $category_ids = CategoryService::getLeavesId($category_id);

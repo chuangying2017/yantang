@@ -28,18 +28,23 @@ class ProductRequest extends Request {
         $rules = [];
 
         if ($this->isMethod('POST') || $this->isMethod('PUT')) {
-            return [];
             $rules = [
-                'basic_info.brand_id'    => 'required',
-                'basic_info.merchant_id' => 'required|exists:merchants,id',
-                'basic_info.title'       => 'required',
-                'basic_info.price'       => 'required|numeric',
-                'basic_info.open_status' => 'required|in:' . implode(',', array_keys(ProductConst::openStatus())),
-                'basic_info.attributes'  => 'required|array',
-                'basic_info.detail'      => 'required',
-                'skus'                   => 'required|array',
-                'images_ids'             => 'array',
-                'group_ids'              => 'array'
+                'data.brand_id'    => 'required',
+                'data.title'       => 'required',
+                'data.price'       => 'required|numeric',
+                'data.open_status' => 'required|in:' . implode(',', array_keys(ProductConst::openStatus())),
+                'data.attributes'  => 'required|array',
+                'data.detail'      => 'required',
+                'data.skus'        => 'required|array',
+                'data.images_ids'  => 'array',
+                'data.group_ids'   => 'array'
+            ];
+        }
+
+        if ($this->route()->getName() == 'api.products.operate') {
+            $rules = [
+                'action'      => 'required|in:' . ProductConst::VAR_PRODUCT_STATUS_UP . ',' . ProductConst::VAR_PRODUCT_STATUS_DOWN,
+                'products_id' => 'required'
             ];
         }
 

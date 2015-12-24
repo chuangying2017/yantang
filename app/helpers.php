@@ -4,7 +4,7 @@
  * Global helpers file with misc functions
  **/
 
-if ( ! function_exists('app_name')) {
+if (!function_exists('app_name')) {
     /**
      * Helper to grab the application name
      *
@@ -16,7 +16,7 @@ if ( ! function_exists('app_name')) {
     }
 }
 
-if ( ! function_exists('access')) {
+if (!function_exists('access')) {
     /**
      * Access (lol) the Access:: facade as a simple function
      */
@@ -26,7 +26,7 @@ if ( ! function_exists('access')) {
     }
 }
 
-if ( ! function_exists('javascript')) {
+if (!function_exists('javascript')) {
     /**
      * Access the javascript helper
      */
@@ -36,7 +36,7 @@ if ( ! function_exists('javascript')) {
     }
 }
 
-if ( ! function_exists('gravatar')) {
+if (!function_exists('gravatar')) {
     /**
      * Access the gravatar helper
      */
@@ -45,7 +45,7 @@ if ( ! function_exists('gravatar')) {
         return app('gravatar');
     }
 }
-if ( ! function_exists('api_route')) {
+if (!function_exists('api_route')) {
 
     function api_route($name, $version = 'v1')
     {
@@ -53,22 +53,22 @@ if ( ! function_exists('api_route')) {
     }
 }
 
-if ( ! function_exists('image_url')) {
+if (!function_exists('image_url')) {
 
     function image_url($name)
     {
-        return env('QINIU_PREFIX_URL')  . $name;
+        return env('QINIU_DEFAULT_DOMAIN') . '/' . $name;
     }
 }
 
-if ( ! function_exists('current_url_paras')) {
+if (!function_exists('current_url_paras')) {
 
     function current_url_paras(Array $except = [])
     {
         $query = '';
         $paras = Request::all();
         foreach ($paras as $key => $para) {
-            if ( ! in_array($key, $except)) {
+            if (!in_array($key, $except)) {
                 $query .= '&' . $key . '=' . $para;
             }
         }
@@ -77,7 +77,7 @@ if ( ! function_exists('current_url_paras')) {
     }
 }
 
-if ( ! function_exists('qiniu_asset')) {
+if (!function_exists('qiniu_asset')) {
 
     function qiniu_asset($path)
     {
@@ -86,7 +86,7 @@ if ( ! function_exists('qiniu_asset')) {
 }
 
 
-if ( ! function_exists('array_to_string')) {
+if (!function_exists('array_to_string')) {
 
     function array_to_string($value, $glue = ',')
     {
@@ -94,13 +94,41 @@ if ( ! function_exists('array_to_string')) {
     }
 }
 
-if ( ! function_exists('to_array')) {
+if (!function_exists('to_array')) {
 
     function to_array($value)
     {
         return is_array($value) ? $value : [$value];
     }
 }
+
+if (!function_exists('display_price')) {
+
+    function display_price($price)
+    {
+        return bcdiv($price, 100, 2);
+    }
+}
+
+if (!function_exists('display_discount')) {
+
+    function display_discount($price)
+    {
+        return bcdiv($price, 100, 2) . '折';
+    }
+}
+
+if (!function_exists('store_price')) {
+
+    function store_price($price)
+    {
+        return bcmul($price, 100, 0);
+    }
+}
+
+
+
+
 
 
 

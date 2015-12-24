@@ -2,6 +2,7 @@
 
 use App\Models\Coupon;
 use App\Models\Ticket;
+use App\Services\Marketing\MarketingProtocol;
 use League\Fractal\TransformerAbstract;
 
 class CouponTransformer extends TransformerAbstract {
@@ -9,6 +10,11 @@ class CouponTransformer extends TransformerAbstract {
 
     public function transform(Coupon $coupon)
     {
+        if ($coupon->type == MarketingProtocol::DISCOUNT_TYPE_OF_CASH) {
+            $content = display_price($coupon->content);
+        } else {
+            $content = display_discount($coupon->content);
+        }
 
         return array_merge(
             [
@@ -16,7 +22,7 @@ class CouponTransformer extends TransformerAbstract {
                 'name'       => $coupon->name,
                 'type'       => $coupon->type,
                 'detail'     => $coupon->detail,
-                'content'    => (int)$coupon->content,
+                'content'    => $content,
                 'created_at' => $coupon->created_at->toDateTimeString()
             ], self::getLimits($coupon));
     }
@@ -31,7 +37,7 @@ class CouponTransformer extends TransformerAbstract {
                 'roles'          => $limits->roles,
                 'level'          => $limits->level,
                 'quantity'       => (int)$limits->quantity,
-                'amount_limit'   => (int)$limits->amount_limit,
+                'amount_limit'   => display_price($limits->amount_limit),
                 'category_limit' => $limits->category_limit,
                 'product_limit'  => $limits->product_limit,
                 'multi_use'      => (boolean)$limits->multi_use,

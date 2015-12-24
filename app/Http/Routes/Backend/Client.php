@@ -1,3 +1,9 @@
 <?php
 
-get('dashboard', 'DashboardController@index')->name('backend.dashboard');
+
+$router->group([
+    'namespace' => 'Client'
+], function () use ($router) {
+
+    resource('clients', 'ClientController');
+});

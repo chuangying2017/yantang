@@ -29,3 +29,4 @@ bootstrap/cache
 _ide_helper_models.php
 tags
 .tags_swap
+public/build/rev-manifest.json

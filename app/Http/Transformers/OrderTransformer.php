@@ -26,9 +26,9 @@ class OrderTransformer extends TransformerAbstract {
 
         $base_info = [
             'order_no'       => $order->order_no,
-            'total_amount'   => (int)$order->total_amount,
-            'discount_fee'   => (int)$order->discount_amount,
-            'pay_amount'   => (int)$order->pay_amount,
+            'total_amount'   => display_price($order->total_amount),
+            'discount_fee'   => display_price($order->discount_amount),
+            'pay_amount'     => display_price($order->pay_amount),
             'user_id'        => (int)$order->user_id,
             'memo'           => $order->memo,
             'created_at'     => $order->created_at->toDateTimeString(),

@@ -9,6 +9,8 @@ class Merchant extends Model {
 
     protected $table = 'merchants';
 
+    protected $guarded = ['id'];
+
     public function images()
     {
         return $this->hasMany('App\Models\Image', 'merchant_id', 'id');
@@ -16,6 +18,6 @@ class Merchant extends Model {
 
     public function products()
     {
-        return $this->hasMany('App\Models\Product');
+        return $this->hasMany('App\Models\Product', 'merchant_id', 'id');
     }
 }
