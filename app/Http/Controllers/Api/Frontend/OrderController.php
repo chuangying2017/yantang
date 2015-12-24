@@ -60,7 +60,6 @@ class OrderController extends Controller {
             return $order_info;
 
         } catch (\Exception $e) {
-            return $e->getTrace();
             $this->response->errorInternal($e->getMessage());
         }
 

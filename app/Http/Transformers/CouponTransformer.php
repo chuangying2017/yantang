@@ -37,7 +37,7 @@ class CouponTransformer extends TransformerAbstract {
                 'roles'          => $limits->roles,
                 'level'          => $limits->level,
                 'quantity'       => (int)$limits->quantity,
-                'amount_limit'   => (int)display_price($limits->amount_limit),
+                'amount_limit'   => display_price($limits->amount_limit),
                 'category_limit' => $limits->category_limit,
                 'product_limit'  => $limits->product_limit,
                 'multi_use'      => (boolean)$limits->multi_use,

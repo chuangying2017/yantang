@@ -69,7 +69,7 @@ class BackendProductTransformer extends TransformerAbstract {
         return [
             'sub_title'    => $product->sub_title,
             'digest'       => $product->digest,
-            'origin_price' => (int)display_price($product->origin_price),
+            'origin_price' => display_price($product->origin_price),
         ];
     }
 
