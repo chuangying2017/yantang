@@ -82,6 +82,15 @@
                 </ul>
             </li>
 
+            <li class="{{ Active::pattern('admin/dashboard') }}">
+                <a href=""><span>商城设置</span><i
+                        class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="{!!url('admin/mall/setting')!!}"><i class="fa fa-circle-o"></i>基础设置</a></li>
+                    <li><a href="{!!url('admin/setting/frontpage')!!}"><i class="fa fa-circle-o"></i>首页设置</a></li>
+                </ul>
+            </li>
+
             @permission('view-access-management')
             <li class="{{ Active::pattern('admin/access/*') }}"><a
                     href="{!!url('admin/access/users')!!}"><span>{{ trans('menus.access_management') }}</span></a></li>
