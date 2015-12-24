@@ -188,9 +188,7 @@
             },
             save: function (index, id) {
                 var data = this.$get('navs')[index];
-                console.log(data);
                 this.$http.put('/admin/setting/frontpage/navs/' + id, _.clone(data), function (data) {
-                    console.log(data)
                 }).error(function (data) {
                     console.error(data)
                 })

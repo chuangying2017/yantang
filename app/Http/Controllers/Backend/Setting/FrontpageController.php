@@ -17,7 +17,7 @@ class FrontpageController extends Controller
     {
         $navs = $this->api->get('api/admin/nav');
         $sliders = $this->api->get('api/admin/banners?type=slider');
-        $grids = $this->api->get('api/admin/banners?type=grids');
+        $grids = $this->api->get('api/admin/banners?type=grid');
         $sections = $this->api->get('api/admin/sections');
         javascript()->put([
             'token' => csrf_token(),
