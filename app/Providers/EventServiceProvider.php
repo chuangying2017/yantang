@@ -38,6 +38,7 @@ class EventServiceProvider extends ServiceProvider {
         'App\Services\Orders\Event\OrderConfirm'    => [
             'App\Services\Cart\Listeners\RemovePurchasedItemsFromCart',
             'App\Services\Marketing\Listeners\GenerateMarketingBillingAndFrozenMarketingItem',
+            'App\Services\Marketing\Listeners\GenerateMainBilling',
             'App\Services\Product\Listeners\DecreaseStock',
         ],
         'App\Services\Orders\Event\OrderCancel'     => [

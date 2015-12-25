@@ -20,7 +20,7 @@ class OrderHandler {
             OrderRepository::updateStatus($order_id, OrderProtocol::STATUS_OF_PAID);
             #todo 拆单
 
-            
+
         }
 
     }

@@ -1,5 +1,7 @@
 <?php namespace App\Services\Orders;
 
+use App\Services\Orders\Exceptions\OrderAuthFail;
+
 class OrderService {
 
     public static function authOrder($user_id, $order_no)
@@ -9,7 +11,7 @@ class OrderService {
             return $order;
         }
 
-        throw new \Exception('非法请求');
+        throw new OrderAuthFail();
     }
 
     public static function show($user_id, $order_no)

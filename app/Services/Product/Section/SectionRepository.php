@@ -108,7 +108,7 @@ class SectionRepository {
             $section->products()->delete();
 
             foreach ($product_data as $product) {
-                $section_data = array_only($product, ['product_id', 'title', 'cover_image', 'price', 'index']);
+                $section_data = array_only($product, ['title', 'cover_image', 'price', 'index', 'url']);
                 $section_data['section_id'] = $section_id;
                 SectionProduct::create($section_data);
             }
@@ -117,8 +117,6 @@ class SectionRepository {
         } catch (Exception $e) {
             throw $e;
         }
-
-        return 1;
     }
 
 }

@@ -16,6 +16,7 @@ class OrderConfirm extends Event {
     public $address;
     public $user_id;
     public $carts;
+    public $pay_amount;
 
     /**
      * Create a new event instance.
@@ -32,6 +33,7 @@ class OrderConfirm extends Event {
         $this->tickets = array_get($order_info, 'discount_detail.coupons', []);
         $this->address = $order_info['address'];
         $this->carts = isset($order_info['carts']) ? $order_info['carts'] : null;
+        $this->pay_amount = $order_info['pay_amount'];
     }
 
     /**

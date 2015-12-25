@@ -26,13 +26,13 @@ class PingxxController extends Controller {
 
             $data = $request->input('data.object');
 
-            $pingxx_payment_id = $data['order_no'];
+            $pingxx_payment_no = $data['order_no'];
 
             $type = $request->input('type');
             if ($type == 'charge.succeeded') {
-                $pingxx_payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_id);
+                $pingxx_payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_no);
                 if ( ! $pingxx_payment) {
-                    Log::error('Pingxx Payment not exist. no=' . $pingxx_payment_id . ' no need to continue');
+                    Log::error('Pingxx Payment not exist. no=' . $pingxx_payment_no . ' no need to continue');
                     exit("success");
                 }
                 $this->callbackChargeSucceed($data, $pingxx_payment);
@@ -54,12 +54,12 @@ class PingxxController extends Controller {
     }
 
 
-    private function callbackFailed($request, $pingxx_payment_id)
+    private function callbackFailed($request, $pingxx_payment_no)
     {
         $error_code = $request->input('failure_code');
         $error_msg = $request->input('failure_msg');
 
-        PingxxService::pingxxPaymentPaidFail($pingxx_payment_id, $error_code, $error_msg);
+        PingxxService::pingxxPaymentPaidFail($pingxx_payment_no, $error_code, $error_msg);
 
         return;
     }
@@ -69,20 +69,10 @@ class PingxxController extends Controller {
 
         if ($pingxx_payment['status'] == OrderProtocol::STATUS_OF_PAID) {
             info('charge Succeed! no need to charge again');
-
             return 1;
         }
 
-        $transaction_no = isset($data['transaction_no']) ? $data['transaction_no'] : '';
-
-        PingxxService::pingxxPaymentIsPaid($pingxx_payment['id'], $transaction_no);
-
-        event(new \App\Services\Orders\Event\PingxxPaid(
-            isset($data['extra']['order_id']) ? $data['extra']['order_id'] : 0,
-            isset($data['extra']['billing_id']) ? $data['extra']['billing_id'] : 0,
-            $pingxx_payment['id']
-        ));
-
+        PingxxService::pingxxPaymentIsPaid($data);
         exit('success');
     }
 
