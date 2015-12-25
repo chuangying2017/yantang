@@ -15,7 +15,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <a href="{!!route('admin.products.create')!!}" class="btn btn-primary btn-block margin-bottom">创建商品</a>
 
             <div class="box box-solid">
@@ -41,7 +41,7 @@
 
         </div>
         <!-- /.col -->
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">商品列表</h3>

@@ -11,7 +11,7 @@
                 <label class="col-sm-2 control-label"><span class="c-red">*</span> 排版：</label>
                 <div class="col-sm-2">
                     <select name="" id="" class="form-control" v-model="section.style">
-                        <option value="jiegou">结构</option>
+                        <option value="jiegou" selected>结构</option>
                         <option value="pingpu">平铺</option>
                     </select>
                 </div>
@@ -24,28 +24,21 @@
                     <thead>
                     <tr>
                         <th width="10%">图片</th>
-                        <th width="30%">外链</th>
+                        <th width="30%">标题</th>
                         <th width="10%">排序</th>
-                        <th width="20%">类型</th>
+                        <th width="20%">链接</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="n in style[section.style]['limit']">
                         <td>
                             <div class="home-banner">
-                                <img src="http://7xp47i.com1.z0.glb.clouddn.com/banner-2.jpg"
-                                     alt="">
+                                <img :src="section.products[n]['cover_image']" alt="">
                             </div>
                         </td>
-                        <td><input type="text" class="form-control"
-                                   value="http://www.google.com/meizhuang"></td>
-                        <td><input type="text" class="form-control" value="1"></td>
-                        <td>
-                            <select name="" id="" class="form-control">
-                                <option value="">类目</option>
-                                <option value="">专题</option>
-                            </select>
-                        </td>
+                        <td><input type="text" class="form-control" v-model="section.products[n]['title']"></td>
+                        <td><input type="number" class="form-control" v-model="section.products[n]['index']"></td>
+                        <td><input type="text" class="form-control" v-model="section.products[n]['url']"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -62,8 +55,8 @@
         <div class="row">
             <div class="col-sm-1"></div>
             <div class="col-sm-10">
-                <button class="btn btn-success btn-md">保存商品组</button>
-                <button class="btn btn-danger btn-md">删除</button>
+                <button class="btn btn-success btn-md" @click.prevent="save()">保存商品组</button>
+                <button class="btn btn-danger btn-md" @click.prevent="delete()">删除</button>
             </div>
             <div class="col-sm-1"></div>
         </div>
@@ -100,7 +93,7 @@
         title: "",
         style: "",
         products: []
-    }
+    };
 
     Vue.component('product-section', {
         template: '#section-tpl',
@@ -117,16 +110,58 @@
                 }
             }
         },
+        computed: {
+            method: function () {
+                return this.$get('section.id') ? 'put' : 'post';
+            }
+        },
+        methods: {
+            save: function () {
+                var data = _.clone(this.$get('section'));
+                return this.$dispatch('save', this.$get('index'), data, this.$get('method'));
+            },
+            delete: function () {
+                return this.$dispatch('delete', this.$get('index'));
+            }
+        }
     });
     Vue.component('product-sections', {
         template: '#sections-tpl',
         props: ['sections'],
-        created: function () {
+        data: function () {
+            return {
+                base_url: '/admin/setting/frontpage/sections/'
+            }
         },
         methods: {
             addSection: function () {
-                console.log(1231)
                 this.sections.push(_.clone(SectionModel));
+            }
+        },
+        events: {
+            save: function (index, data, method) {
+                var url = data.id ? this.$get('base_url') + data.id : this.$get('base_url');
+                var self = this;
+                this.$http[method](url, data, function (data) {
+                    if (method == 'post') {
+                        self.sections[index]['id'] = data.id;
+                    }
+                }).error(function (data) {
+                    console.error(data);
+                });
+            },
+            delete: function (index) {
+                var section = this.sections[index]
+                var self = this;
+                if (section.id) {
+                    this.$http.delete(this.$get('base_url') + section.id, function (data) {
+                        return self.sections.splice(index, 1);
+                    }).error(function (data) {
+                        console.error(data)
+                    });
+                } else {
+                    return this.sections.splice(index, 1);
+                }
             }
         }
     });

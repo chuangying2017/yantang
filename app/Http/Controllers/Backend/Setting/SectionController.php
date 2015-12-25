@@ -11,13 +11,23 @@ use Exception;
  * Date: 10/12/2015
  * Time: 5:57 PM
  */
-class NavController extends Controller
+class SectionController extends Controller
 {
     public function store(Request $request)
     {
         try {
-            $data = $request->all();
-            return $this->api->post('/api/admin/nav', $data);
+            $sectionData = $request->all();
+            $products = $sectionData['products'];
+            unset($sectionData['products']);
+            $section = $this->api->post('/api/admin/sections', $sectionData)['data'];
+            $this->api->put('/api/admin/sections/' . $section['id'] . '/products', [
+                'products' => $products
+            ]);
+
+            return [
+                'id' => $section['id']
+            ];
+
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -26,9 +36,16 @@ class NavController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $data = $request->all();
-            $this->api->put('/api/admin/nav/' . $id, $data);
-            return 1;
+            $sectionData = $request->all();
+            $products = $sectionData['products'];
+            unset($sectionData['products']);
+            $this->api->put('/api/admin/sections/' . $id, $sectionData);
+            $this->api->put('/api/admin/sections/' . $id . '/products', [
+                'products' => $products
+            ]);
+            return [
+                'id' => $id
+            ];
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -37,7 +54,7 @@ class NavController extends Controller
     public function destroy($id)
     {
         try {
-            $this->api->delete('api/admin/nav/' . $id);
+            $this->api->delete('api/admin/sections/' . $id);
 
             return 1;
 

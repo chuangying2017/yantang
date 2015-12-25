@@ -30,8 +30,7 @@ class SectionRequest extends Request {
 
         if ($this->isMethod('PUT') || $this->isMethod('POST')) {
             $rules = [
-                'title' => 'required',
-                'url'   => 'required|active_url',
+                'title' => 'required'
             ];
         }
 
@@ -39,8 +38,7 @@ class SectionRequest extends Request {
             $rules = [];
             foreach ($this->request->get('products') as $key => $product) {
                 $rules[ 'products.' . $key . '.title' ] = 'required';
-                $rules[ 'products.' . $key . '.product_id' ] = 'required|exists:products,id';
-                $rules[ 'products.' . $key . '.cover_image' ] = 'required';
+                $rules[ 'products.' . $key . '.url' ] = 'required';
             }
         }
 
