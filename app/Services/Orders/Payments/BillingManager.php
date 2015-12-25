@@ -3,20 +3,22 @@
 use App\Services\Marketing\MarketingItemUsing;
 
 use App\Services\Marketing\TicketService;
+use App\Services\Orders\Exceptions\WrongStatus;
 use App\Services\Orders\OrderProtocol;
 use Pingpp\Charge;
 
 class BillingManager {
 
-    public static function mainBillingIsPaid($billing_id, $pingxx_payment_id)
+
+    public static function mainBillingIsPaid($order_id, $pingxx_payment_id, $pay_type)
     {
         try {
-            $billing = BillingRepository::fetchBilling($billing_id);
+            $billing = BillingRepository::getMainBilling($order_id);
+            if ($billing['status'] == OrderProtocol::STATUS_OF_UNPAID) {
+                BillingRepository::mainBillingIsPaid($billing['id'], $pingxx_payment_id, $pay_type);
 
-            #todo 账单状态为取消时,标记为重复支付,需要退款
-            OrderProtocol::validStatus($billing['status'], OrderProtocol::STATUS_OF_PAID);
-            BillingRepository::billingPaid($billing_id, $pingxx_payment_id);
-
+                event(new \App\Services\Orders\Event\OrderIsPaid($order_id));
+            }
         } catch (\Exception $e) {
             throw $e;
         }
@@ -25,9 +27,7 @@ class BillingManager {
     public static function checkMainBillingIsPaid($order_id)
     {
         $billing = BillingRepository::getMainBilling($order_id);
-
         if ($billing['status'] == OrderProtocol::STATUS_OF_PAID) {
-
             return true;
         }
 
@@ -38,7 +38,7 @@ class BillingManager {
      * 标记优惠账单已支付
      * @param $order_id
      */
-    public static function marketingBillingPaid($order_id)
+    public static function paidMarketingBilling($order_id)
     {
         $billings = BillingRepository::getMarketingBilling($order_id);
 
@@ -67,7 +67,7 @@ class BillingManager {
 
     public static function storeOrderMainBilling($order_id, $user_id, $pay_amount)
     {
-        return BillingRepository::getMainBilling($order_id) ? : BillingRepository::storeMainBilling($order_id,$user_id, $pay_amount);
+        return BillingRepository::getMainBilling($order_id) ?: BillingRepository::storeMainBilling($order_id, $user_id, $pay_amount);
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Services\Orders\Listeners;
 
 use App\Services\Orders\Event\PingxxPaid;
+use App\Services\Orders\OrderProtocol;
 use App\Services\Orders\Payments\BillingManager;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,11 +29,8 @@ class HandlePingxxBilling {
     public function handle(PingxxPaid $event)
     {
         $order_id = $event->order_id;
-        $billing_id = $event->billing_id;
         $pingxx_payment_id = $event->pingxx_payment_id;
 
-        BillingManager::mainBillingIsPaid($billing_id, $pingxx_payment_id);
-
-        event(new \App\Services\Orders\Event\OrderIsPaid($order_id));
+        BillingManager::mainBillingIsPaid($order_id, $pingxx_payment_id, OrderProtocol::RESOURCE_OF_PINGXX);
     }
 }

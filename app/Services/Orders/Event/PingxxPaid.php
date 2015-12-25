@@ -28,9 +28,8 @@ class PingxxPaid extends Event
      * @param $order_id
      * @param $billing_id
      */
-    public function __construct($order_id, $main_billing_id, $pingxx_payment_id)
+    public function __construct($order_id, $pingxx_payment_id)
     {
-        $this->billing_id = $main_billing_id;
         $this->order_id = $order_id;
         $this->pingxx_payment_id = $pingxx_payment_id;
     }

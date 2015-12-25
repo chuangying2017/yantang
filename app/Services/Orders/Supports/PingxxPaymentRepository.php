@@ -9,20 +9,21 @@ class PingxxPaymentRepository {
     /**
      * @return string
      */
-    public static function getPingxxPaymentId()
+    public static function generatePingxxPaymentNo()
     {
-        $payment_id = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
-        while (PingxxPayment::where('payment_id', $payment_id)->count()) {
-            $payment_id = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
-        }
+        $payment_no = mt_rand(1, 9) . substr(date('Y'), -2) . date('md') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', mt_rand(0, 99));
 
-        return $payment_id;
+        return $payment_no;
     }
 
-    public static function storePingxxPayment($user_id, $order_id, $order_no, $billing_id, $amount, $charge_id, $channel)
+    public static function storePingxxPayment($charge, $user_id, $order_id)
     {
+        $payment_no = $charge->order_no;
+        $charge_id = $charge->id;
+        $channel = $charge->channel;
+        $amount = $charge->amount;
+
         // 生成payment
-        $payment_no = $order_no;
         $payment_data = [
             'payment_no' => $payment_no,
             'amount'     => $amount,
@@ -30,7 +31,6 @@ class PingxxPaymentRepository {
             'channel'    => $channel,
             'user_id'    => $user_id,
             'order_id'   => $order_id,
-            'billing_id' => $billing_id,
             'charge_id'  => $charge_id,
             'status'     => PingxxProtocol::STATUS_OF_UNPAID,
         ];
@@ -39,12 +39,9 @@ class PingxxPaymentRepository {
     }
 
 
-    public static function pingxxPaymentPaid($payment_no, $transaction_no = '')
+    public static function pingxxPaymentPaid($payment_no, $channel, $transaction_no = '')
     {
-        $payment = self::fetchPingxxPayment($payment_no);
-
-        PingxxProtocol::validStatus($payment['status'], PingxxProtocol::STATUS_OF_PAID);
-
+        $payment = PingxxPayment::where('payment_no', $payment_no)->where('channel', $channel)->firstOrFail();
         $payment->status = PingxxProtocol::STATUS_OF_PAID;
         $payment->transaction_no = $transaction_no;
         $payment->save();
@@ -67,6 +64,17 @@ class PingxxPaymentRepository {
     public static function fetchPingxxPaymentByBilling($billing_id)
     {
         return PingxxPayment::where('billing_id', $billing_id)->firstOrFail();
+    }
+
+    public static function getOrderPingxxPayment($order_id, $channel = null)
+    {
+        $query = PingxxPayment::where('order_id', $order_id);
+
+        if ( ! is_null($channel)) {
+            return $query->where('channel', $channel)->first();
+        }
+
+        return $query->get();
     }
 
 
