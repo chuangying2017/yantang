@@ -45,6 +45,7 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
                 require(__DIR__ . "/Routes/Backend/Account.php");
                 require(__DIR__ . "/Routes/Backend/Image.php");
                 require(__DIR__ . "/Routes/Backend/Article.php");
+                require(__DIR__ . "/Routes/Backend/Setting.php");
             });
 
         });

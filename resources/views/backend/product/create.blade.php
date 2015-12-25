@@ -401,7 +401,7 @@
                     _.map(data, function (val, key) {
                         editor.execCommand("insertimage", {
                             src: val.url,
-                            width: '470'
+                            width: '100%'
                         })
                     })
                 },

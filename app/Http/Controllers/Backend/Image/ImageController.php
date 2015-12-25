@@ -2,8 +2,8 @@
 namespace App\Http\Controllers\Backend\Image;
 
 use App\Http\Controllers\Controller;
-use Exception;
 use Illuminate\Http\Request;
+use Exception;
 
 /**
  * Created by PhpStorm.
@@ -13,79 +13,51 @@ use Illuminate\Http\Request;
  */
 class ImageController extends Controller
 {
-    //todo@bryant: error handler
-    public function index()
+    /**
+     * @return $this|string
+     */
+    public function index(Request $request)
     {
+        //todo@bryant: wait for api
         try {
-            $orders = $this->api->get('api/admin/orders');
-            return view('backend.orders.index', compact('orders'));
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-
-    public function create()
-    {
-        try {
-            return view('backend.brands.create');
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-    }
-
-    public function store(Request $request)
-    {
-        try {
-
-            $data = $request->all();
-
-            $result = $this->api->post('api/admin/brands', [
-                'name' => array_get($data, 'name', '')
-            ]);
-
-            if ($result) {
-                return redirect('/admin/brands');
-            }
-
-
+            $page = $request->get('page');
+            $records = $this->api->raw()->get('api/admin/images?page=' . $page);
+            $images = json_decode($records->content(), true);
+            return view('backend.media.images.index')->with('images', $images);
         } catch (Exception $e) {
 
             return $e->getMessage();
         }
+
     }
 
-    public function show($id)
-    {
 
-        $brand = $this->api->get('api/admin/brands/' . $id);
-        return view('backend.brands.show', compact('brand'));
-    }
-
-    public function update($id, Request $request)
-    {
-        try {
-            $data = $request->all();
-
-            $result = $this->api->put('api/admin/brands/' . $id, [
-                'name' => array_get($data, 'name', '')
-            ]);
-
-            if ($result) {
-                return redirect('/admin/brands');
-            }
-        } catch (Exception $e) {
-
-            return $e->getMessage();
-        }
-    }
-
+    /**
+     * @param $id
+     * @return string
+     */
     public function destroy($id)
     {
         try {
-            $result = $this->api->delete('api/admin/brands/' . $id);
+            $data = [
+                'images_id' => [$id]
+            ];
+            $this->api->delete('api/admin/images/', $data);
+            return redirect('/admin/images');
+        } catch (Exception $e) {
 
-            return redirect('/admin/brands');
+            return $e->getMessage();
+        }
+    }
 
+    public function upload()
+    {
+        try {
+            $qiniu_token = $this->api->get('api/admin/images/token')['data'];
+            javascript()->put([
+                "qiniu_token" => $qiniu_token
+            ]);
+            return view('backend.media.images.upload');
         } catch (Exception $e) {
 
             return $e->getMessage();

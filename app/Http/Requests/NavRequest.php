@@ -4,7 +4,8 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class NavRequest extends Request {
+class NavRequest extends Request
+{
 
     /**
      * Determine if the user is authorized to make this request.
@@ -31,7 +32,7 @@ class NavRequest extends Request {
             $rules = [
                 'name' => 'required',
                 'type' => 'required',
-                'url'  => 'required',
+                'url' => 'required',
             ];
         }
 
