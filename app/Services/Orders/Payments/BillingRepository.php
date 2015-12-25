@@ -9,9 +9,9 @@ use DB;
 class BillingRepository {
 
     const BILLING_PREFIX = 'billing_';
-    const PAYMENT_ID_LENGTH = 26;
+    const PAYMENT_ID_LENGTH = 18;
 
-    public static function storeBilling($order_id, $user_id, $amount, $type, $resource_type, $resource_id, $status = OrderProtocol::STATUS_OF_UNPAID)
+    public static function storeBilling($order_id, $user_id, $amount, $type, $resource_type = '', $resource_id = 0, $status = OrderProtocol::STATUS_OF_UNPAID)
     {
 
         if ($amount < 0) {
@@ -29,11 +29,9 @@ class BillingRepository {
         return self::storeBilling($order_id, $user_id, $amount, OrderProtocol::TYPE_OF_DISCOUNT, OrderProtocol::RESOURCE_OF_TICKET, $resource_id);
     }
 
-    public static function storeMainBilling($order_id, $user_id, $amount, $resource_type = OrderProtocol::RESOURCE_OF_PINGXX)
+    public static function storeMainBilling($order_id, $user_id, $amount)
     {
-        self::deleteOldBilling($order_id, OrderProtocol::TYPE_OF_MAIN);
-
-        return self::storeBilling($order_id, $user_id, $amount, OrderProtocol::TYPE_OF_MAIN, $resource_type, 0);
+        return self::storeBilling($order_id, $user_id, $amount, OrderProtocol::TYPE_OF_MAIN);
     }
 
 
@@ -41,17 +39,14 @@ class BillingRepository {
     {
         OrderBilling::where('order_id', $order_id)->where('type', $type)->update('status', OrderProtocol::STATUS_OF_CANCEL);
         OrderBilling::where('order_id', $order_id)->where('type', $type)->where('status', OrderProtocol::STATUS_OF_UNPAID)->delete();
-
     }
 
     protected static function generateBillingNo()
     {
-//        $billing_no = date('YmdHis') . mt_rand(100000, 999999) . mt_rand(100000, 999999);
         $billing_no = uniqid(self::BILLING_PREFIX);
-        while (self::fetchBilling($billing_no)) {
-            $billing_no = uniqid(self::BILLING_PREFIX);
-        }
-
+//        while (self::fetchBilling($billing_no)) {
+//            $billing_no = uniqid(self::BILLING_PREFIX);
+//        }
         return $billing_no;
     }
 
@@ -62,7 +57,7 @@ class BillingRepository {
             : (
             (strpos($billing_no, self::BILLING_PREFIX) === false)
                 ? OrderBilling::findOrFail($billing_no)
-                : OrderBilling::where('billing_no', $billing_no)->first()
+                : OrderBilling::where('billing_no', $billing_no)->firstOrFail()
             );
     }
 
@@ -86,6 +81,7 @@ class BillingRepository {
 
         return $query->get();
     }
+
 
     public static function billingPaid($billing_id, $resource_id = null)
     {

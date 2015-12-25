@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers\Api\Frontend;
 
+use App\Services\Orders\Exceptions\OrderAuthFail;
+use App\Services\Orders\Exceptions\OrderIsPaid;
 use App\Services\Orders\OrderProtocol;
 use App\Services\Orders\OrderService;
 use App\Services\Orders\Payments\CheckOut;
@@ -28,6 +30,8 @@ class CheckOutController extends Controller {
             $channels = Checkout::channel($agent);
 
             return $this->response->array(compact('channels', 'order'));
+        } catch (OrderAuthFail $e) {
+            $this->response->errorForbidden($e->getMessage());
         } catch (\Exception $e) {
             return $e->getTrace();
         }
@@ -43,11 +47,10 @@ class CheckOutController extends Controller {
     {
 
         try {
-
             $user_id = $this->getCurrentAuthUserId();
             //若订单已支付则返回订单信息
             if ( ! Checkout::orderNeedPay($user_id, $order_no)) {
-                throw new \Exception('无需重复支付');
+                throw new OrderIsPaid();
             }
 
             $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
@@ -59,6 +62,10 @@ class CheckOutController extends Controller {
             }
 
             return $charge;
+        } catch (OrderAuthFail $e) {
+            $this->response->errorForbidden($e->getMessage());
+        } catch (OrderIsPaid $e) {
+            $this->response->errorBadRequest($e->getMessage());
         } catch (\Exception $e) {
             return $e->getTrace();
         }

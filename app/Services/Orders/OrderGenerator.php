@@ -35,6 +35,10 @@ class OrderGenerator {
     {
         $order_products_request = CartService::take($carts, $user_id);
 
+        if ( ! count($order_products_request)) {
+            throw new \Exception('购物车购买选项不存在');
+        }
+
         return $this->buy($user_id, $order_products_request, $carts);
     }
 

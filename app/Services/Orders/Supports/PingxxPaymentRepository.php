@@ -19,12 +19,12 @@ class PingxxPaymentRepository {
         return $payment_id;
     }
 
-    public static function storePingxxPayment($user_id, $order_id, $billing_id, $amount, $charge_id, $channel, $payment_id = null)
+    public static function storePingxxPayment($user_id, $order_id, $order_no, $billing_id, $amount, $charge_id, $channel)
     {
         // 生成payment
-        $payment_id = is_null($payment_id) ? self::getPingxxPaymentId() : $payment_id;
+        $payment_no = $order_no;
         $payment_data = [
-            'payment_id' => $payment_id,
+            'payment_no' => $payment_no,
             'amount'     => $amount,
             'currency'   => PingxxProtocol::PAID_PACKAGE_CURRENCY,
             'channel'    => $channel,
@@ -39,11 +39,17 @@ class PingxxPaymentRepository {
     }
 
 
-    public static function pingxxPaymentPaid($payment_id, $transaction_no = '')
+    public static function pingxxPaymentPaid($payment_no, $transaction_no = '')
     {
-        $status = PingxxProtocol::STATUS_OF_PAID;
+        $payment = self::fetchPingxxPayment($payment_no);
 
-        return PingxxPayment::where('id', $payment_id)->update(compact('status', 'transaction_no'));
+        PingxxProtocol::validStatus($payment['status'], PingxxProtocol::STATUS_OF_PAID);
+
+        $payment->status = PingxxProtocol::STATUS_OF_PAID;
+        $payment->transaction_no = $transaction_no;
+        $payment->save();
+
+        return $payment;
     }
 
     public static function pingxxPaymentPaidFail($payment_id, $error_code, $error_msg)
@@ -51,15 +57,11 @@ class PingxxPaymentRepository {
         return PingxxPayment::where('id', $payment_id)->update(compact('error_code', 'error_msg'));
     }
 
-    public static function fetchPingxxPayment($payment_id)
+    public static function fetchPingxxPayment($payment_no)
     {
-        return ($payment_id instanceof PingxxPayment)
-            ? $payment_id
-            : (
-            (strlen($payment_id) == self::PAYMENT_ID_LENGTH)
-                ? PingxxPayment::where('payment_id', $payment_id)->first()
-                : PingxxPayment::findOrFail($payment_id)
-            );
+        return ($payment_no instanceof PingxxPayment)
+            ? $payment_no
+            : PingxxPayment::where('payment_no', $payment_no)->firstOrFail();
     }
 
     public static function fetchPingxxPaymentByBilling($billing_id)

@@ -20,13 +20,14 @@ class CheckOut {
 
             //读取订单信息,生产新的支付订单
             $order = OrderRepository::queryOrderByOrderNo($order_no);
-            $main_billing = BillingRepository::storeMainBilling($order['id'], $order['user_id'], $order['pay_amount']);
-
-            $amount = $main_billing['amount'];
+            $amount = $order['pay_amount'];
+            $main_billing = BillingRepository::storeMainBilling($order['id'], $order['user_id'], $amount);
 
             if ($amount > 0) {
                 //pingxx 生成支付渠道订单,返回支付信息
-                $pingxx_data = PingxxService::generatePingppBilling($order, $main_billing, $channel, $agent);
+
+
+                $pingxx_data = PingxxService::generatePingppBilling($order, $main_billing, $amount, $channel, $agent);
                 $payment = $pingxx_data['payment'];
                 $charge = $pingxx_data['charge'];
 
@@ -55,35 +56,39 @@ class CheckOut {
      */
     public static function orderNeedPay($user_id, $order_no)
     {
-        $order = OrderService::authOrder($user_id, $order_no);
+        try {
+            $order = OrderService::authOrder($user_id, $order_no);
 
-        //检查订单状态是否需要支付
-        if ($order['status'] == OrderProtocol::STATUS_OF_UNPAID) {
+            //检查订单状态是否需要支付
+            if ($order['status'] == OrderProtocol::STATUS_OF_UNPAID) {
 
-            //订单金额小于0无需支付
-            if ($order['pay_amount'] <= 0) {
-                return false;
+                //订单金额小于0无需支付
+                if ($order['pay_amount'] <= 0) {
+                    return false;
+                }
+
+                $billing = BillingRepository::getMainBilling($order['id']);
+                //无历史账单则需要支付
+                if ( ! $billing) {
+                    return true;
+                }
+
+                if ($billing['status'] == OrderProtocol::STATUS_OF_PAID) {
+                    event(new OrderIsPaid($billing['order_id']));
+                }
+
+                //历史账单查询微支付
+                $pingxx_need_paid = PingxxService::checkPingxxPaymentNeedPayOrGetChargeByBilling($billing['id']);
+                if ( $pingxx_need_paid) {
+                    return $pingxx_need_paid;
+                }
             }
 
-            $billing = BillingRepository::getMainBilling($order['id']);
-            //无历史账单则需要支付
-            if ( ! $billing) {
-                return true;
-            }
-
-            if ($billing['status'] == OrderProtocol::STATUS_OF_PAID) {
-                event(new OrderIsPaid($billing['order_id']));
-            }
-
-            //历史账单查询微支付
-            $pingxx_is_paid = PingxxService::checkPingxxPaymentIsPaidByBilling($billing['id']);
-            if ( ! $pingxx_is_paid) {
-                return true;
-            }
-
+            return false;
+        } catch (\Exception $e) {
+            throw $e;
         }
 
-        return false;
     }
 
 

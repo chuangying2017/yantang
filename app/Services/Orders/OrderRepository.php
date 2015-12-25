@@ -9,7 +9,7 @@ use DB;
 
 class OrderRepository {
 
-    const ORDER_NO_LENGTH = 28;
+    const ORDER_NO_LENGTH = 18;
 
     public static function generateOrder($order_info)
     {
@@ -128,12 +128,10 @@ class OrderRepository {
 
     protected static function generateOrderNo()
     {
-        $order_no = mt_rand(1000000, 9999999) . date('YmdHis') . mt_rand(1000000, 9999999);
-
-        while (Order::where('order_no', $order_no)->count()) {
-            $order_no = mt_rand(1000000, 9999999) . date('YmdHis') . mt_rand(1000000, 9999999);
-        }
-
+        $order_no = substr(date('Y'), -2) . date('md') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', mt_rand(0, 99));
+//        while (Order::where('order_no', $order_no)->count()) {
+//            $order_no = substr(date('Y'), -2) . date('md') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', mt_rand(0, 99));
+//        }
         return $order_no;
     }
 

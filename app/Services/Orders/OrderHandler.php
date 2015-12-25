@@ -18,7 +18,8 @@ class OrderHandler {
 
         if ($order['status'] == OrderProtocol::STATUS_OF_UNPAID) {
             OrderRepository::updateStatus($order_id, OrderProtocol::STATUS_OF_PAID);
-            #todo 更新,拆单
+            #todo 拆单
+
 
         }
 

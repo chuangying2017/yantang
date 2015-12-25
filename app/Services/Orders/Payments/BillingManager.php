@@ -34,6 +34,10 @@ class BillingManager {
         return false;
     }
 
+    /**
+     * 标记优惠账单已支付
+     * @param $order_id
+     */
     public static function marketingBillingPaid($order_id)
     {
         $billings = BillingRepository::getMarketingBilling($order_id);
@@ -45,9 +49,9 @@ class BillingManager {
         $billings_id = [];
         $tickets_id = [];
         foreach ($billings as $billing) {
-            $billings_id = $billing['id'];
+            $billings_id[] = $billing['id'];
             if ($billing['resource_type'] == OrderProtocol::RESOURCE_OF_TICKET) {
-                $tickets_id = $billing['resource_id'];
+                $tickets_id[] = $billing['resource_id'];
             }
         }
 
@@ -58,6 +62,12 @@ class BillingManager {
         if (count($tickets_id)) {
             TicketService::used($tickets_id);
         }
+    }
+
+
+    public static function storeOrderMainBilling($order_id, $user_id, $pay_amount)
+    {
+        return BillingRepository::getMainBilling($order_id) ? : BillingRepository::storeMainBilling($order_id,$user_id, $pay_amount);
     }
 
 

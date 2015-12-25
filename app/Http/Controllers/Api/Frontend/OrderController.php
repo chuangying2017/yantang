@@ -49,21 +49,12 @@ class OrderController extends Controller {
         try {
             $carts = $request->input('data');
             $user_id = $this->getCurrentAuthUserId();
-            $order_products_request = CartService::take($carts, $user_id);
-
-            if ( ! count($order_products_request)) {
-                $this->response->errorBadRequest('购物车购买选项不存在');
-            }
-
-            $order_info = $this->orderGenerator->buy($user_id, $order_products_request, $carts);
+            $order_info = $this->orderGenerator->buyCart($user_id, $carts);
 
             return $order_info;
-
         } catch (\Exception $e) {
-            return $e->getTrace();
             $this->response->errorInternal($e->getMessage());
         }
-
     }
 
     public function fetchConfirm(Request $request)
@@ -80,16 +71,6 @@ class OrderController extends Controller {
         return $order_info;
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.

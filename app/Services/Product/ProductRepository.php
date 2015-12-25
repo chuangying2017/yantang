@@ -39,11 +39,10 @@ class ProductRepository {
         if ( ! is_null($orderBy)) {
             if (ProductConst::getProductSortOption($orderBy)) {
                 $query = $query->orderBy($orderBy, $orderType);
-            } else if ($orderBy == 'sales') {
+            } else if ($orderBy == 'sales' || $orderBy == 'favs' || $orderBy == 'stock') {
                 $query = $query->join('product_data_view', 'product_data_view.id', '=', 'products.id')
-                    ->orderBy('product_data_view.sales', $orderType);
+                    ->orderBy('product_data_view.' . $orderBy, $orderType);
             }
-
         }
 
         if ( ! is_null($paginate)) {
