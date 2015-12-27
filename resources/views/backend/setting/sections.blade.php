@@ -34,6 +34,7 @@
                         <td>
                             <div class="home-banner">
                                 <img :src="section.products[n]['cover_image']" alt="">
+                                <vue-images limit="1" :model.sync="section.products[n]['cover_image']"></vue-images>
                             </div>
                         </td>
                         <td><input type="text" class="form-control" v-model="section.products[n]['title']"></td>

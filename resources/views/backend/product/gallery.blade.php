@@ -349,9 +349,11 @@
         </div>
     </div>
 </script>
+<script type="x-template" id="vue-images-tpl">
+    <button class="btn btn-success btn-sm" @click.prevent="gallery()">选择图片</button>
+    <vue-gallery></vue-gallery>
+</script>
 <script>
-    Vue.config.delimiters = ["[!", "!]"];
-
     Vue.component('vue-gallery-image', {
         template: '#vue-gallery-image',
         props: ['image'],
@@ -372,13 +374,13 @@
             }
         }
     });
-
     Vue.component('vue-gallery', {
-
+        replace: false,
         template: '#vue-gallery',
         components: ['vue-gallery-image'],
         data: function () {
             return {
+                limit: 10,
                 status: 'idle',
                 closed: true,
                 location: 'gallery',
@@ -521,19 +523,41 @@
         events: {
             selected: function (image) {
                 this.selected.push(image)
-                this.$log('selected')
             },
             unselect: function (image) {
                 this.selected.$remove(image)
-                this.$log('selected')
             },
-            galleryOpen: function (fn) {
-                if (fn) {
-                    this.callbackFn = fn
+            galleryOpen: function (options) {
+                if (options.fn) {
+                    this.callbackFn = options.fn
+                }
+                if (options.limit) {
+                    this.limit = options.limit
                 }
                 this.closed = false;
                 this.getImages();
             }
         }
     });
+    Vue.component('vue-images', {
+        template: '#vue-images-tpl',
+        props: ['limit', 'model'],
+        components: ['vue-gallery'],
+        methods: {
+            gallery: function () {
+                this.$broadcast('galleryOpen', {
+                    limit: this.limit
+                });
+            }
+        },
+        events: {
+            gallerySubmit: function (cb) {
+                if (this.limit == 1) {
+                    this.model = _.clone(cb.data[0]['url'])
+                } else {
+                    this.model = _.clone(cb)
+                }
+            }
+        }
+    })
 </script>

@@ -2,7 +2,7 @@
     <tr v-if="!editMode">
         <td>
             <div class="home-slider">
-                <img src="http://7xp47i.com1.z0.glb.clouddn.com/hero-slide.jpg" alt=""
+                <img :src="banner.cover_image" alt=""
                      class="home-slider">
             </div>
         </td>
@@ -23,9 +23,9 @@
     <tr v-else>
         <td>
             <div class="home-slider">
-                <img src="http://7xp47i.com1.z0.glb.clouddn.com/hero-slide3.jpg" alt="">
+                <img :src="banner.cover_image" alt="">
+                <vue-images limit="1" :model.sync="banner.cover_image"></vue-images>
             </div>
-            <input type="file">
         </td>
         <td><input type="text" class="form-control" v-model="banner.url"></td>
         <td><input type="text" class="form-control" v-model="banner.title"></td>
@@ -69,9 +69,9 @@
                         <tr v-if="addMode">
                             <td>
                                 <div class="home-slider">
-                                    <img src="http://7xp47i.com1.z0.glb.clouddn.com/hero-slide3.jpg" alt="">
+                                    <img :src="newBanner.cover_image" alt="">
+                                    <vue-images limit="1" :model.sync="newBanner.cover_image"></vue-images>
                                 </div>
-                                <input type="file">
                             </td>
                             <td><input type="text" class="form-control" v-model="newBanner.url">
                             <td><input type="text" class="form-control" v-model="newBanner.title">
@@ -134,6 +134,9 @@
             },
             delete: function () {
                 this.$dispatch('delete', this.index, this.banner.id);
+            },
+            gallery: function () {
+                this.$broadcast('galleryOpen')
             }
         }
     });

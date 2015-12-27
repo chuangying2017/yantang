@@ -20,6 +20,10 @@ class FrontpageController extends Controller
         $grids = $this->api->get('api/admin/banners?type=grid');
         $sections = $this->api->get('api/admin/sections');
         javascript()->put([
+            'config' => [
+                'api_url' => url('api/'),
+                'base_url' => url('/')
+            ],
             'token' => csrf_token(),
             'navs' => $navs['data'],
             'sliders' => $sliders['data'],

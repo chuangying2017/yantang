@@ -157,8 +157,7 @@
                                     <label for="proGroup" class="col-sm-2 control-label"><span class="c-red">*</span>
                                         上传图片：</label>
                                     <div class="col-sm-5">
-                                        <button @click.prevent="openGallery()">选择图片</button>
-
+                                        <vue-images limit="4" :model.sync="product.images"></vue-images>
                                         <div class="cover-images">
                                             <div class="img-wrapper" v-for="image in product.images.data">
                                                 <span class="cover-tag"
@@ -274,8 +273,6 @@
         // 执行 JS 主逻辑
         var editor = UE.getEditor('container', {});
 
-        Vue.config.delimiters = ["[!", "!]"];
-
         var model = {
             category_id: null,
             title: "",
@@ -322,7 +319,6 @@
             },
             created: function () {
 
-                this.$log('product')
                 var self = this;
 
                 if (this.product.id) {
@@ -337,7 +333,7 @@
                 editor.ready(function () {
                     UE.commands['gallery'] = {
                         execCommand: function () {
-                            self.openGallery('setEditorContent');
+                            self.gallery('setEditorContent');
                         }
                     }
                     editor.setContent(self.$get('product.detail'));
@@ -383,9 +379,11 @@
                     }
 
                 },
-                openGallery: function (fn) {
+                gallery: function (fn) {
                     if (fn) {
-                        this.$broadcast('galleryOpen', fn)
+                        this.$broadcast('galleryOpen', {
+                            fn: fn
+                        });
                     } else {
                         this.$broadcast('galleryOpen')
                     }
@@ -419,7 +417,6 @@
                         this[callback.method](callback.data)
                     } else {
                         _.map(callback.data, function (val, key) {
-                            console.log(val)
                             self.product.image_ids.push(val.id)
                         });
 
