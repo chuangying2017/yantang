@@ -150,7 +150,7 @@
                 newBanner: {
                     'title': "",
                     'url': "",
-                    'cover_image': "http://7xp47i.com1.z0.glb.clouddn.com/hero-slide3.jpg",
+                    'cover_image': "http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg?imageView2/1/w/100",
                     'type': this.$get('type'),
                     'index': 1,
                 }
@@ -161,7 +161,7 @@
                 this.$set('newBanner', {
                     'title': "",
                     'url': "",
-                    'cover_image': "http://7xp47i.com1.z0.glb.clouddn.com/hero-slide3.jpg",
+                    'cover_image': "http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg?imageView2/1/w/100",
                     'type': this.$get('type'),
                     'index': 1,
                 });

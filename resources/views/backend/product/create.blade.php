@@ -279,7 +279,7 @@
             price: 0,
             origin_price: 0,
             limit: 0,
-            cover_image: "http://weazm-topgift.qiniudn.com/default-gift.png",
+            cover_image: "http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg?imageView2/1/w/100",
             open_status: "now",
             attributes: [],
             brand_id: null,

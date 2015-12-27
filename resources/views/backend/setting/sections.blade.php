@@ -103,10 +103,10 @@
             return {
                 style: {
                     'jiegou': {
-                        limit: 4
+                        limit: 6
                     },
                     'pingpu': {
-                        limit: 3
+                        limit: 6
                     }
                 }
             }
@@ -147,6 +147,7 @@
                     if (method == 'post') {
                         self.sections[index]['id'] = data.id;
                     }
+                    alert('保存成功!')
                 }).error(function (data) {
                     console.error(data);
                 });
