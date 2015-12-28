@@ -104,7 +104,6 @@ class SectionRepository {
         try {
             $section = Section::findOrFail($section_id);
 
-
             $section->products()->delete();
 
             foreach ($product_data as $product) {

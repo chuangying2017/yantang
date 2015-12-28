@@ -29,7 +29,7 @@ class UpdateMarketingBillingAndUsedMarketingItem {
     {
         $order_id = $event->order_id;
 
-        BillingManager::marketingBillingPaid($order_id);
+        BillingManager::paidMarketingBilling($order_id);
 
     }
 }

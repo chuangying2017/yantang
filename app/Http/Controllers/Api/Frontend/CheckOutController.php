@@ -2,8 +2,8 @@
 
 use App\Services\Orders\Exceptions\OrderAuthFail;
 use App\Services\Orders\Exceptions\OrderIsPaid;
-use App\Services\Orders\OrderProtocol;
 use App\Services\Orders\OrderService;
+use App\Services\Orders\Payments\BillingManager;
 use App\Services\Orders\Payments\CheckOut;
 use App\Services\Orders\Supports\PingxxProtocol;
 use Illuminate\Http\Request;
@@ -54,11 +54,12 @@ class CheckOutController extends Controller {
             }
 
             $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
-            $agent = $this->getAgent();
-            $charge = Checkout::checkout($order_no, $channel, $agent);
+            PingxxProtocol::validChannel($channel);
+
+            $charge = Checkout::checkout($order_no, $channel);
 
             if ( ! $charge) {
-                throw new \Exception('订单金额无需支付');
+                throw new OrderIsPaid();
             }
 
             return $charge;

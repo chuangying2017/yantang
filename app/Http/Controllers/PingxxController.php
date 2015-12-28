@@ -18,7 +18,7 @@ class PingxxController extends Controller {
     {
         try {
 
-            Log::info('Call back Start! input=' . json_encode($request->all()));
+            Log::info('Pingxx Call back Start! input=' . json_encode($request->all()));
 
             if ($request->input('object') != 'event') {
                 throw new Exception();
@@ -27,10 +27,12 @@ class PingxxController extends Controller {
             $data = $request->input('data.object');
 
             $pingxx_payment_no = $data['order_no'];
+            $channel = $data['channel'];
 
             $type = $request->input('type');
             if ($type == 'charge.succeeded') {
-                $pingxx_payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_no);
+                $channel = $data['channel'];
+                $pingxx_payment = PingxxPaymentRepository::getPingxxChannelPayment($pingxx_payment_no, $channel);
                 if ( ! $pingxx_payment) {
                     Log::error('Pingxx Payment not exist. no=' . $pingxx_payment_no . ' no need to continue');
                     exit("success");

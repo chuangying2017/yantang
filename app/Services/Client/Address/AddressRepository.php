@@ -6,7 +6,7 @@
  * Time: 7:02 PM
  */
 
-namespace App\Services\Client;
+namespace App\Services\Client\Address;
 
 
 use App\Models\Address;

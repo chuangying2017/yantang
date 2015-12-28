@@ -63,7 +63,7 @@ class BillingRepository {
 
     public static function getMainBilling($order_id)
     {
-        return self::getBilling($order_id, OrderProtocol::TYPE_OF_MAIN, OrderProtocol::RESOURCE_OF_PINGXX);
+        return self::getBilling($order_id, OrderProtocol::TYPE_OF_MAIN);
     }
 
 
@@ -72,9 +72,14 @@ class BillingRepository {
         return self::getBilling($order_id, OrderProtocol::TYPE_OF_DISCOUNT, OrderProtocol::RESOURCE_OF_TICKET);
     }
 
-    public static function getBilling($order_id, $billing_type = OrderProtocol::TYPE_OF_MAIN, $billing_resource = OrderProtocol::RESOURCE_OF_PINGXX)
+    public static function getBilling($order_id, $billing_type = OrderProtocol::TYPE_OF_MAIN, $billing_resource = null)
     {
-        $query = OrderBilling::where('type', $billing_type)->where('resource_type', $billing_resource)->where('order_id', $order_id);
+        $query = OrderBilling::where('type', $billing_type)->where('order_id', $order_id);
+
+        if ( ! is_null($billing_resource)) {
+            $query = $query->where('resource_type', $billing_resource);
+        }
+
         if ($billing_type == OrderProtocol::TYPE_OF_MAIN) {
             return $query->first();
         }
@@ -93,6 +98,14 @@ class BillingRepository {
         }
 
         return OrderBilling::whereIn('id', $billing_id)->update($update_data);
+    }
+
+    public static function mainBillingIsPaid($billing_id, $resource_id, $resource_type = OrderProtocol::RESOURCE_OF_PINGXX)
+    {
+        $update_data = compact('resource_id', 'resource_type');
+        $update_data['status'] = OrderProtocol::STATUS_OF_PAID;
+
+        return OrderBilling::where('id', $billing_id)->update($update_data);
     }
 
 

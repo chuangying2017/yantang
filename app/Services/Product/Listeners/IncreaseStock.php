@@ -30,13 +30,13 @@ class IncreaseStock {
     {
         $skus = $event->skus;
         if (count($skus)) {
-            $order_products_id = [];
+            $order_product_ids = [];
             foreach ($skus as $sku) {
-                $order_products_id[] = $sku['order_product_id'];
+                $order_product_ids[] = $sku['order_product_id'];
                 ProductSkuService::stockUp($sku['id'], $sku['quantity']);
             }
 
-            OrderProduct::whereIn('id', $order_products_id)->delete();
+            OrderProduct::whereIn('id', $order_product_ids)->delete();
         }
     }
 }

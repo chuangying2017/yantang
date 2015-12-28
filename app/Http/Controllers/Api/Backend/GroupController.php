@@ -105,9 +105,9 @@ class GroupController extends Controller {
     public function bindingProducts(Request $request, $group_id)
     {
         try {
-            $products_id = $request->input('products_id');
+            $product_ids = $request->input('product_ids');
 
-            GroupService::bindProducts($group_id, $products_id);
+            GroupService::bindProducts($group_id, $product_ids);
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }

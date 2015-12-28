@@ -60,7 +60,7 @@ class PingxxProtocol {
         return true;
     }
 
-    public static function validChannel($channel, $agent)
+    public static function validChannel($channel, $agent = null)
     {
         if ( ! $channel || is_null($channel) || is_null(self::agent($agent, $channel))) {
             throw new \Exception('支付渠道不存在');
@@ -75,7 +75,6 @@ class PingxxProtocol {
 
     public static function agent($agent, $channel = null)
     {
-        $data = [];
         switch ($agent) {
             case self::AGENT_OF_PC:
                 $data = [
@@ -105,7 +104,23 @@ class PingxxProtocol {
                 ];
                 break;
             default:
-                break;
+                $data = [
+                    self::PINGXX_SPECIAL_CHANNEL_ALIPAY_QR => '支付宝扫码支付',
+                    self::PINGXX_SPECIAL_CHANNEL_WECHAT_QR => '微信扫码支付',
+                    self::PINGXX_PC_CHANNEL_ALIPAY         => '支付宝',
+                    self::PINGXX_PC_CHANNEL_UNIONPAY       => '银联',
+                    self::PINGXX_WAP_CHANNEL_ALIPAY        => '支付宝',
+                    self::PINGXX_WAP_CHANNEL_WECHAT        => '微信支付',
+                    self::PINGXX_WAP_CHANNEL_UNIONPAY_NEW  => '银联支付',
+                    self::PINGXX_WAP_CHANNEL_BAIDU         => '百度支付',
+                    self::PINGXX_WAP_CHANNEL_YEEPAY        => '易付宝',
+                    self::PINGXX_WAP_CHANNEL_JINGDONG      => '京东支付',
+                    self::PINGXX_APP_CHANNEL_ALIPAY        => '支付宝',
+                    self::PINGXX_APP_CHANNEL_WECHAT        => '微信支付',
+                    self::PINGXX_APP_CHANNEL_UNIONPAY_NEW  => '银联支付',
+                    self::PINGXX_APP_CHANNEL_BAIDU         => '百度支付',
+                    self::PINGXX_APP_CHANNEL_APPLE_PAY     => 'Apple Pay',
+                ];
         }
 
         return is_null($channel) ? $data : (isset($data[ $channel ]) ? $data[ $channel ] : null);

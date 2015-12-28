@@ -38,9 +38,12 @@ class PingxxService implements PaymentInterface {
      * @param $accountType
      * @return Charge
      */
-    private static function getPaidPackage($order_no, $billing_id, $amount, $user_ip, $channel)
+    private static function getPaidPackage($order_no, $amount, $user_ip, $channel)
     {
         try {
+//            $pingxx_payment_no = PingxxPaymentRepository::generatePingxxPaymentNo();
+
+            #todo debug
             $pingxx_payment_no = $order_no;
 
             self::setPingxxKey();
@@ -56,7 +59,7 @@ class PingxxService implements PaymentInterface {
                     "subject"   => '东方丽人订单',
                     "body"      => '订单号:' . $order_no,
                     "extra"     => self::getExtraData($channel),
-                    "metadata"  => ["billing_id" => $billing_id, 'order_no' => $order_no]
+                    "metadata"  => ['order_no' => $order_no]
                 ]
             );
 
@@ -130,18 +133,16 @@ class PingxxService implements PaymentInterface {
     }
 
 
-    public static function generatePingppBilling($order, $main_billing, $amount, $channel, $agent)
+    public static function generatePingppBilling($order, $amount, $channel)
     {
 
         try {
-            PingxxProtocol::validChannel($channel, $agent);
 
             if ($amount > 0) {
                 $user_ip = isset($_SERVER) ? $_SERVER["REMOTE_ADDR"] : env('SERVER_PUBLIC_IP');
                 $order_no = $order['order_no'];
-                $billing_id = $main_billing['id'];
-                $charge = self::getPaidPackage($order_no, $billing_id, $amount, $user_ip, $channel);
-                $payment = PingxxPaymentRepository::storePingxxPayment($order['user_id'], $order['id'], $order_no, $billing_id, $amount, $charge->id, $channel);
+                $charge = self::getPaidPackage($order_no, $amount, $user_ip, $channel);
+                $payment = PingxxPaymentRepository::storePingxxPayment($charge, $order['user_id'], $order['id']);
 
                 return compact('payment', 'charge');
             }
@@ -153,38 +154,32 @@ class PingxxService implements PaymentInterface {
 
     }
 
-    public static function checkPingxxPaymentNeedPayOrGetChargeByBilling($billing_id)
-    {
-        $payment = PingxxPaymentRepository::fetchPingxxPaymentByBilling($billing_id);
-
-        return self::getPingxxChargeIfIsNotPaid($payment['payment_no']);
-    }
-
-    public static function getPingxxChargeIfIsNotPaid($pingxx_payment_no)
+    /**
+     * 若已支付则返回FALSE，否则返回支付charge
+     * @param $pingxx_payment_no
+     * @return bool|Charge
+     * @throws Exception
+     */
+    public static function pingxxNeedPayOrFetchCharge($pingxx_payment_no)
     {
         try {
             $payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_no);
 
-            if ($payment['status'] == OrderProtocol::STATUS_OF_UNPAID) {
-                self::setPingxxKey();
-                $pay_result = Charge::retrieve($payment->charge_id);
+            $pingxx_charge = self::queryPingxxPaymentCharge($payment['charge_id']);
 
-                if ($pay_result->paid) {
+            if ($pingxx_charge->paid) {
 
-                    //若为非测试环境,但账单为测试账单,则标记为未支付
-                    if (env('PINGPP_ACCOUNT_TYPE') != 'TEST' && ! $pay_result->livemode) {
-                        throw new \Exception('支付环境配置错误');
-                    }
-
-                    self::pingxxPaymentIsPaid($pay_result);
-
-                    return false;
+                //若为非测试环境,但账单为测试账单,则标记为未支付
+                if (env('PINGPP_ACCOUNT_TYPE') != 'TEST' && ! $pingxx_charge->livemode) {
+                    throw new \Exception('支付环境配置错误');
                 }
 
-                return $pay_result;
+                self::pingxxPaymentIsPaid($pingxx_charge);
+
+                return false;
             }
 
-            return false;
+            return $pingxx_charge;
         } catch (\Exception $e) {
             throw $e;
         }
@@ -199,12 +194,12 @@ class PingxxService implements PaymentInterface {
     {
         try {
             $pingxx_payment_no = $pingxx_charge_data['order_no'];
+            $channel = $pingxx_charge_data['channel'];
             $transaction_no = isset($pingxx_charge_data['transaction_no']) ? $pingxx_charge_data['transaction_no'] : '';
-            $pingxx_payment = PingxxPaymentRepository::pingxxPaymentPaid($pingxx_payment_no, $transaction_no);
+            $pingxx_payment = PingxxPaymentRepository::pingxxPaymentPaid($pingxx_payment_no, $channel, $transaction_no);
 
             event(new \App\Services\Orders\Event\PingxxPaid(
                 $pingxx_payment['order_id'],
-                $pingxx_payment['billing_id'],
                 $pingxx_payment['id']
             ));
 
@@ -217,9 +212,60 @@ class PingxxService implements PaymentInterface {
 
     public static function pingxxPaymentPaidFail($pingxx_payment_id, $failure_code, $failure_msg)
     {
-
         PingxxPaymentRepository::pingxxPaymentPaidFail($pingxx_payment_id, $failure_code, $failure_msg);
+    }
 
+    /**
+     * 若不存在支付渠道记录则生成,返回支付charge,
+     * @param $order
+     * @param $channel
+     * @return array|int
+     * @throws Exception
+     */
+    public static function getPaidCharge($order, $channel)
+    {
+        $amount = $order['pay_amount'];
+        $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel);
+        if ( ! $pingxx_payment) {
+            return self::generatePingppBilling($order, $amount, $channel);
+        }
+        $charge = self::pingxxNeedPayOrFetchCharge($pingxx_payment);
+        //若渠道已支付则不需要继续处理
+        if ( ! $charge) {
+            return 0;
+        }
+
+        return [
+            'charge'  => $charge,
+            'payment' => $pingxx_payment
+        ];
+    }
+
+    public static function orderIsPaidByPingxx($order_id)
+    {
+        $payments = PingxxPaymentRepository::getOrderPingxxPayment($order_id);
+
+        if (count($payments)) {
+            foreach ($payments as $payment) {
+                //订单已支付
+                if ( ! self::pingxxNeedPayOrFetchCharge($payment)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $payment
+     * @return Charge
+     */
+    public static function queryPingxxPaymentCharge($charge_id)
+    {
+        self::setPingxxKey();
+
+        return Charge::retrieve($charge_id);
     }
 
 

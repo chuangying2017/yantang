@@ -8,10 +8,10 @@ class ProductSkuTransformer extends TransformerAbstract {
     public function transform(ProductSkuView $productSku)
     {
         $attributes = $productSku->attributes ? json_decode('[' . $productSku->attributes . ']', true) : null;
-        $attributes_values_id = [];
+        $attribute_value_ids = [];
         if (count($attributes)) {
             foreach ($attributes as $attribute) {
-                $attributes_values_id[] = array_get($attribute, 'attribute_value_id', null);
+                $attribute_value_ids[] = array_get($attribute, 'attribute_value_id', null);
             }
         }
 
@@ -27,7 +27,7 @@ class ProductSkuTransformer extends TransformerAbstract {
             'category_id'          => (int)$productSku->category_id,
             'cover_image'          => $productSku->cover_image,
             'attributes'           => $attributes,
-            'attributes_values_id' => $attributes_values_id
+            'attribute_value_ids' => $attribute_value_ids
         ];
     }
 
