@@ -29,10 +29,10 @@
 
 @section('after-scripts-end')
     @include('backend.layouts.vue')
+    @include('backend.product.gallery')
     @include('backend.setting.navs')
     @include('backend.setting.banners')
     @include('backend.setting.sections')
-    @include('backend.product.gallery')
     <script>
         app = window.app || {}
 

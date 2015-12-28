@@ -7,4 +7,5 @@
             return request;
         }
     });
+    Vue.config.delimiters = ["[!", "!]"];
 </script>
