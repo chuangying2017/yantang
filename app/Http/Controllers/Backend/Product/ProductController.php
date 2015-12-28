@@ -114,7 +114,8 @@ class ProductController extends Controller
         $data = [
             'config' => [
                 'api_url' => url('api/'),
-                'base_url' => url('/')
+                'base_url' => url('/'),
+                'default_img' => 'http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg?imageView2/1/w/100'
             ],
             'categories' => $categories,
             'groups' => $groups,

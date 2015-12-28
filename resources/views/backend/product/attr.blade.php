@@ -81,18 +81,23 @@
                         id: value.id,
                         name: value.value,
                     });
+                    self.$dispatch('value-change');
+                    self.clearSubmitValue();
                 })
-                this.clearSubmitValue();
+
             },
             clearSubmitValue: function () {
                 this.showValueInput = false;
                 this.searchValue = "";
             },
             removeValue: function (value) {
-                this.values.$remove(value);
+                console.log(value)
+                this.attribute.values.$remove(value);
+                this.$dispatch('value-change');
             },
             removeAttr: function () {
                 this.$dispatch('attrDeleted', this.index);
+                this.$dispatch('value-change');
             }
         }
     });
