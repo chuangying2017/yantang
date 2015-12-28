@@ -106,6 +106,9 @@ class ProductController extends Controller
         $categories = $this->api->get('api/admin/categories')['data'];
         $groups = $this->api->get('api/admin/groups');
         $attributes = $this->api->get('api/admin/attributes');
+        if (isset($attributes['data'])) {
+            $attributes = $attributes['data'];
+        }
         $brands = $this->api->get('api/admin/brands');
         $qiniu_token = $this->api->get('api/admin/images/token')['data'];
         $data = [

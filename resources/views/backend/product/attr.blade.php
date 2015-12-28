@@ -7,7 +7,7 @@
             </div>
             <div class="col-sm-4">
                 <select class="attrGroup form-control"
-                        v-model="selectedAttrId">
+                        v-model="attribute.id">
                     <option v-bind:value="attr.id" v-for="attr in attributes">
                         [! attr.name !]
                     </option>
@@ -31,8 +31,8 @@
         <div class="row attr-val-list">
             <div class="col-sm-12">
                 <div class="btn-wrap" style="margin-top: 10px;padding: 10px; background: #fff;border-radius: 3px;"
-                     v-show="values.length">
-                    <div class="btn-group" v-for="value in values">
+                     v-if="attribute.values.length > 0">
+                    <div class="btn-group" v-for="value in attribute.values">
                         <button type="button" class="btn btn-xs btn-primary">[! value.name !]</button>
                         <button type="button" class="btn btn-xs btn-primary" @click=" removeValue(value)">x
                         </button>
@@ -49,52 +49,39 @@
             return {
                 searchValue: "",
                 showValueInput: false,
-                attributes: app.attributes,
-                selectedAttrId: null,
-                values: []
+                attributes: app.attributes
             }
         },
         props: ['attribute', 'index'],
         created: function () {
-            if (this.attribute.id) {
-                this.selectedAttrId = this.attribute.id
-                this.values = this.attribute.values
-            }
+
         },
         watch: {
-            selectedAttrId: function (newVal) {
+            'attribute.id': function (newVal) {
+                var self = this;
                 _.map(this.attributes, function (val, key) {
-                    if (newVal == val.id) {
-                        this.attribute = {
-                            id: val.id,
+                    if (val.id == newVal) {
+                        self.$set('attribute', {
                             name: val.name,
+                            id: val.id,
                             values: []
-                        }
-                        this.values = []
+                        })
                     }
-                })
-            },
-            values: function (newVal) {
-                this.attribute.values = newVal;
+                });
             }
         },
         methods: {
             submitValue: function () {
-                //1. get from api
-                //2. check duplicate
                 var self = this;
-                console.log(this.attribute);
-                this.$http.post(app.config.base_url + '/api/admin/attributes/' + this.selectedAttrId + '/values?_token=' + app.token, {
+                this.$http.post(app.config.base_url + '/api/admin/attributes/' + this.attribute.id + '/values?_token=' + app.token, {
                     value: this.searchValue
                 }, function (data) {
                     var value = data.data
-                    self.values.push({
+                    self.attribute.values.push({
                         id: value.id,
                         name: value.value,
                     });
                 })
-
-
                 this.clearSubmitValue();
             },
             clearSubmitValue: function () {

@@ -318,7 +318,7 @@
                 }
             },
             created: function () {
-
+                this.$log('product')
                 var self = this;
 
                 if (this.product.id) {
