@@ -106,9 +106,9 @@ class ProductController extends Controller {
     public function operate(Request $request)
     {
         $status = $request->input('action');
-        $products_id = $request->input('products_id');
+        $product_ids = $request->input('product_ids');
 
-        $count = ProductRepository::updateStatus($products_id, $status);
+        $count = ProductRepository::updateStatus($product_ids, $status);
 
         return $this->response->array(['data' => ['success' => $count]]);
     }

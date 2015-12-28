@@ -22,6 +22,7 @@ class CheckOut {
             $order = OrderRepository::queryOrderByOrderNo($order_no);
             $amount = $order['pay_amount'];
 
+            //在线支付
             if ($amount > 0) {
                 //获取渠道的支付charge
                 $pingxx_data = PingxxService::getPaidCharge($order, $channel);
@@ -73,6 +74,7 @@ class CheckOut {
                 //订单账单已支付但订单状态未改变,或者订单金额为0,则触发订单已支付事件
                 if ($billing['status'] == OrderProtocol::STATUS_OF_PAID || $order['pay_amount'] <= 0) {
                     event(new OrderIsPaid($billing['order_id']));
+
                     return false;
                 }
             }

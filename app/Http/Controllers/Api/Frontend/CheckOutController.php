@@ -20,7 +20,6 @@ class CheckOutController extends Controller {
             $user_id = $this->getCurrentAuthUserId();
             $order = OrderService::show($user_id, $order_no);
 
-
             //若订单已支付或者金额为0则返回订单信息
             if ( ! Checkout::orderNeedPay($user_id, $order)) {
                 return $this->response->array($order);

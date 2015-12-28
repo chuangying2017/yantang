@@ -1,7 +1,7 @@
 <?php namespace App\Services\Orders;
 
 use App\Services\Cart\CartService;
-use App\Services\Client\AddressService;
+use App\Services\Client\Address\AddressService;
 use App\Services\Marketing\MarketingItemUsing;
 use App\Services\Marketing\MarketingProtocol;
 use App\Services\Orders\Helpers\MarketingHelper;
@@ -222,6 +222,7 @@ class OrderGenerator {
     {
         $order_info = self::getOrder($uuid);
 
+
         if ( ! $order_info) {
             throw new \Exception('等待时间过长,请重新下单');
         }
@@ -229,7 +230,9 @@ class OrderGenerator {
         try {
             $this->checkOrderSkus($order_info['products']);
 
+
             $order_info = $this->useCoupon()->doubleCheckCoupon($order_info);
+
             $order_info['address'] = AddressService::orderAddress($address_id);
 
             //生成订单，锁定

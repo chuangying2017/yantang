@@ -44,7 +44,7 @@ class ProductRequest extends Request {
         if ($this->route()->getName() == 'api.products.operate') {
             $rules = [
                 'action'      => 'required|in:' . ProductConst::VAR_PRODUCT_STATUS_UP . ',' . ProductConst::VAR_PRODUCT_STATUS_DOWN,
-                'products_id' => 'required'
+                'product_ids' => 'required'
             ];
         }
 

@@ -32,6 +32,8 @@ class PingxxPaymentRepository {
             'user_id'    => $user_id,
             'order_id'   => $order_id,
             'charge_id'  => $charge_id,
+            'livemode'   => $charge->livemode,
+            'app'        => $charge->app,
             'status'     => PingxxProtocol::STATUS_OF_UNPAID,
         ];
 
@@ -41,7 +43,7 @@ class PingxxPaymentRepository {
 
     public static function pingxxPaymentPaid($payment_no, $channel, $transaction_no = '')
     {
-        $payment = PingxxPayment::where('payment_no', $payment_no)->where('channel', $channel)->firstOrFail();
+        $payment = self::getPingxxChannelPayment($payment_no, $channel);
         $payment->status = PingxxProtocol::STATUS_OF_PAID;
         $payment->transaction_no = $transaction_no;
         $payment->save();
@@ -68,13 +70,26 @@ class PingxxPaymentRepository {
 
     public static function getOrderPingxxPayment($order_id, $channel = null)
     {
-        $query = PingxxPayment::where('order_id', $order_id);
+        $live_mode = env('PINGPP_LIVE_MODE', false) && env('PINGPP_ACCOUNT_TYPE') != 'TEST';
+        $query = PingxxPayment::where('order_id', $order_id)->where('livemode', $live_mode);
 
         if ( ! is_null($channel)) {
             return $query->where('channel', $channel)->first();
         }
 
         return $query->get();
+    }
+
+    /**
+     * @param $payment_no
+     * @param $channel
+     * @return mixed
+     */
+    public static function getPingxxChannelPayment($payment_no, $channel)
+    {
+        $payment = PingxxPayment::where('payment_no', $payment_no)->where('channel', $channel)->firstOrFail();
+
+        return $payment;
     }
 
 

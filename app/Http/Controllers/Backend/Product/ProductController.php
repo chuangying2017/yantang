@@ -153,7 +153,7 @@ class ProductController extends Controller
         try {
             $this->api->put('api/admin/products/operate', [
                 "action" => $action,
-                "products_id" => [$id]
+                "product_ids" => [$id]
             ]);
             return redirect('admin/products');
         } catch (Exception $e) {

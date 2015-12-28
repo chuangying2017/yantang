@@ -1,4 +1,4 @@
-<?php namespace App\Services\Client;
+<?php namespace App\Services\Client\Address;
 
 
 class AddressService {
@@ -45,7 +45,7 @@ class AddressService {
 
     public static function orderAddress($address_id)
     {
-        return self::show($address_id);
+        return AddressRepository::show($address_id);
     }
 
     /**
