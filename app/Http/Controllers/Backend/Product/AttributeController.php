@@ -14,7 +14,10 @@ class AttributeController extends Controller
 {
     public function index()
     {
-        $attributes = $this->api->get('api/admin/attributes')['data'];
+        $attributes = $this->api->get('api/admin/attributes');
+        if (isset($attributes['data'])) {
+            $attributes = $attributes['data'];
+        }
         return view('backend.attributes.index', compact('attributes'));
     }
 

@@ -12,12 +12,14 @@ use App\Models\Product;
 use App\Models\ProductSku;
 use App\Models\ProductSkuView;
 use Exception;
+use Log;
 
 /**
  * Class ProductSkuService
  * @package App\Services\Product
  */
-class ProductSkuService {
+class ProductSkuService
+{
 
     /**
      * @param $data
@@ -111,7 +113,7 @@ class ProductSkuService {
             $sku = ProductSkuView::findOrFail($query['product_sku_id']);
             $temp = [
                 'product_sku_id' => $query['product_sku_id'],
-                'data'           => $sku
+                'data' => $sku
             ];
             #TODO @bryant 判断其他边界条件,例如商品是否上架,是否开售,是否限购,etc
             if ($sku->stock >= $query['quantity']) {
@@ -133,10 +135,10 @@ class ProductSkuService {
     public static function deleteByProduct($product_id)
     {
         $product = Product::find($product_id);
-        if ( ! $product) {
+        if (!$product) {
             throw new Exception('PRODUCT NOT FOUND');
         }
-        $skus = $product->skus();
+        $skus = $product->skus()->get();
         foreach ($skus as $sku) {
             ProductSkuRepository::delete($sku->id);
         }
@@ -153,41 +155,28 @@ class ProductSkuService {
     public static function sync($skus, $product)
     {
         try {
-            /**
-             * 保留的 sku id
-             */
-            $remainSkuIds = [];
-            $remainSkus = [];
-            /**
-             * 数据库中的sku id
-             */
+            Log::info('-------start------');
+            Log::info('-------skus------');
+            Log::info($skus);
+            Log::info('-------skus------');
+            Log::info('-------product-id------');
+            Log::info($product['id']);
+            Log::info('-------product-id------');
             $oldSkuIds = $product->skus()->lists('id');
-            /**
-             * 遍历数据中的sku, 如果有id的说明是已存的, 放进remainSkuIds, 如果没有的说明是新的, 加到数据库中
-             */
-            foreach ($skus as $sku) {
-                if (isset($sku['id'])) {
-                    $remainSkuIds[] = $sku['id'];
-                    $remainSkus[] = $sku;
-                } else {
-                    $sku = self::create($sku, $product);
-                }
-            }
-            /**
-             * 对比保存的id数据和原来的数组, 找出删除的Ids
-             */
-            $detachSkuIds = array_diff($remainSkuIds, $oldSkuIds);
+            Log::info('-------oldskusids------');
+            Log::info($oldSkuIds);
+            Log::info('-------oldskusids------');
             /**
              * 删除不用的sku
              */
-            foreach ($detachSkuIds as $skuId) {
+            foreach ($oldSkuIds as $skuId) {
                 self::delete($skuId);
             }
 
-            foreach ($remainSkus as $sku) {
-                ProductSkuRepository::update($sku['id'], $sku);
+            foreach ($skus as $sku) {
+                ProductSkuRepository::create($sku, $product['id']);
             }
-
+            Log::info('-------end------');
             return 1;
         } catch (Exception $e) {
 
@@ -202,6 +191,6 @@ class ProductSkuService {
      */
     public static function delete($id)
     {
-        return ProductSkuService::delete($id);
+        return ProductSkuRepository::delete($id);
     }
 }

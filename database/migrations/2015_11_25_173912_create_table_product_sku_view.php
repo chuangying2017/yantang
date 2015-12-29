@@ -3,7 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableProductSkuView extends Migration {
+class CreateTableProductSkuView extends Migration
+{
 
     /**
      * Run the migrations.
@@ -31,6 +32,7 @@ class CreateTableProductSkuView extends Migration {
                 LEFT JOIN sku_attribute_value ON product_sku.id = sku_attribute_value.product_sku_id
                 LEFT JOIN attribute_values ON sku_attribute_value.attribute_value_id = attribute_values.id
                 LEFT JOIN attributes ON attribute_values.attribute_id = attributes.id
+            WHERE product_sku.deleted_at is null
             GROUP BY product_sku.id
         ");
     }
