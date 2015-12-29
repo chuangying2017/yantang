@@ -28,7 +28,7 @@ class ProductSkuService
      */
     public static function create($data, $product_id)
     {
-        $items = is_array($data) ? $data : [$data];
+        $items = (is_array($data) && !isset($data['name'])) ? $data : [$data];
         $skus = [];
         foreach ($items as $item) {
             $skus[] = ProductSkuRepository::create($item, $product_id);
@@ -155,31 +155,46 @@ class ProductSkuService
     public static function sync($skus, $product)
     {
         try {
-            Log::info('-------start------');
-            Log::info('-------skus------');
-            Log::info($skus);
-            Log::info('-------skus------');
-            Log::info('-------product-id------');
-            Log::info($product['id']);
-            Log::info('-------product-id------');
-            $oldSkuIds = $product->skus()->lists('id');
-            Log::info('-------oldskusids------');
-            Log::info($oldSkuIds);
-            Log::info('-------oldskusids------');
+            /**
+             * 保留的 sku id
+             */
+            $remainSkuIds = [];
+            $remainSkus = [];
+            /**
+             * 数据库中的sku id
+             */
+            $oldSkuIds = $product->skus()->lists('id')->all();
+
+            /**
+             * 遍历数据中的sku, 如果有id的说明是已存的, 放进remainSkuIds, 如果没有的说明是新的, 加到数据库中
+             */
+            foreach ($skus as $sku) {
+                if (isset($sku['id'])) {
+                    $remainSkuIds[] = $sku['id'];
+                    $remainSkus[] = $sku;
+                } else {
+                    self::create($sku, $product['id']);
+                }
+            }
+            $oldSkuIds = array_map('intval', $oldSkuIds);
+
+
+            /**
+             * 对比保存的id数据和原来的数组, 找出删除的Ids
+             */
+            $detachSkuIds = array_diff($oldSkuIds, $remainSkuIds);
             /**
              * 删除不用的sku
              */
-            foreach ($oldSkuIds as $skuId) {
+            foreach ($detachSkuIds as $skuId) {
                 self::delete($skuId);
             }
-
-            foreach ($skus as $sku) {
-                ProductSkuRepository::create($sku, $product['id']);
+            foreach ($remainSkus as $remainSku) {
+                ProductSkuRepository::update($remainSku['id'], $remainSku);
             }
-            Log::info('-------end------');
+
             return 1;
         } catch (Exception $e) {
-
             return $e->getMessage();
         }
 

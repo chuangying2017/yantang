@@ -10,6 +10,7 @@ namespace App\Services\Product;
 
 use App\Models\ProductSku;
 use Exception;
+use Log;
 
 
 /**
@@ -49,7 +50,7 @@ class ProductSkuRepository
      */
     public static function update($id, $data)
     {
-
+        $attribute_value_ids = $data['attribute_value_ids'];
         $sku = ProductSku::find($id);
         if (!$sku) {
             throw new Exception('SKU NOT FOUND');
@@ -60,7 +61,7 @@ class ProductSkuRepository
 
         $sku->update($data);
 
-        $sku->attributeValues()->sync($data['attribute_value_ids']);
+        $sku->attributeValues()->sync($attribute_value_ids);
 
         return 1;
 
