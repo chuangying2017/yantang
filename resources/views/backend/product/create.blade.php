@@ -107,7 +107,7 @@
                                         规格库存：</label>
                                     <div class="col-sm-8">
                                         <sku :skus.sync="product.skus.data"
-                                             :attributes="product.attributes"></sku>
+                                             :attributes="product.attributes" :length="product.skus.data.length"></sku>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -279,7 +279,7 @@
             price: 0,
             origin_price: 0,
             limit: 0,
-            cover_image: "http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg?imageView2/1/w/100",
+            cover_image: app.config.default_img,
             open_status: "now",
             attributes: [],
             brand_id: null,
@@ -318,7 +318,6 @@
                 }
             },
             created: function () {
-
                 var self = this;
 
                 if (this.product.id) {
@@ -345,6 +344,12 @@
             watch: {
                 category: function (newVal) {
                     this.product.category_id = newVal.id;
+                },
+                'product.images': function (newVal) {
+                    var self = this;
+                    _.map(newVal.data, function (val, key) {
+                        self.product.image_ids.push(val.id)
+                    });
                 }
             },
             methods: {
@@ -390,10 +395,10 @@
                 },
                 removeImg: function (image) {
                     if (image.url == this.product.cover_image) {
-                        this.product.cover_image = ""
+                        this.product.cover_image = app.config.default_img
                     }
                     this.product.images.data.$remove(image)
-                    this.product.image_ids.$remove(image.id)
+                    this.product.image_ids.$remove(image.id.toString())
                 },
                 setEditorContent: function (data) {
                     _.map(data, function (val, key) {
@@ -415,13 +420,10 @@
                     var self = this;
                     if (callback.method) {
                         this[callback.method](callback.data)
-                    } else {
-                        _.map(callback.data, function (val, key) {
-                            self.product.image_ids.push(val.id)
-                        });
-
-                        this.product.images.data = _.clone(callback.data)
                     }
+                },
+                'value-change': function () {
+                    this.$broadcast('value-change');
                 }
             }
         });

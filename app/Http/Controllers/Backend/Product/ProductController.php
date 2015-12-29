@@ -106,12 +106,16 @@ class ProductController extends Controller
         $categories = $this->api->get('api/admin/categories')['data'];
         $groups = $this->api->get('api/admin/groups');
         $attributes = $this->api->get('api/admin/attributes');
+        if (isset($attributes['data'])) {
+            $attributes = $attributes['data'];
+        }
         $brands = $this->api->get('api/admin/brands');
         $qiniu_token = $this->api->get('api/admin/images/token')['data'];
         $data = [
             'config' => [
                 'api_url' => url('api/'),
-                'base_url' => url('/')
+                'base_url' => url('/'),
+                'default_img' => 'http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg?imageView2/1/w/100'
             ],
             'categories' => $categories,
             'groups' => $groups,

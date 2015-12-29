@@ -7,7 +7,7 @@
         </thead>
         <tbody>
         <tr v-for="sku in skus">
-            <td v-for="value in sku.attribute_values">[! value.name !]</td>
+            <td v-for="attr in sku.attributes">[! attr.attribute_value_name !]</td>
             <td><input type="text" class="form-control" v-model="skus[$index]['price']"/></td>
             <td><input type="text" class="form-control" v-model="skus[$index]['stock']"/></td>
         </tr>
@@ -45,8 +45,11 @@
         data: function () {
             return {}
         },
-        computed: {
-            skus: function () {
+        created: function () {
+
+        },
+        methods: {
+            render: function () {
                 var arr = [];
                 var skusArr = [];
                 for (var i = 0; i < this.attributes.length; i++) {
@@ -60,19 +63,30 @@
                         cover_image: "",
                         stock: 0,
                         price: 0,
-                        attribute_values: [],
+                        attributes: [],
                         attribute_value_ids: []
                     }
                     for (var k = 0; k < possibility[j].length; k++) {
-                        skusArr[j]['attribute_values'].push(possibility[j][k]);
-                        skusArr[j]['attribute_value_ids'].push(possibility[j][k]['id']);
+                        skusArr[j]['attributes'].push({
+                            attribute_value_name: possibility[j][k]['name']
+                        });
+                        skusArr[j]['attribute_value_ids'].push(parseInt(possibility[j][k]['id']));
                     }
                 }
-                return skusArr;
+
+                this.skus = _.clone(skusArr);
             }
         },
-        created: function () {
+        watch: {
+            'attributes': function () {
+                this.render();
+            }
         },
-        props: ['attributes', 'skus']
+        events: {
+            'value-change': function () {
+                this.render();
+            }
+        },
+        props: ['attributes', 'skus', 'length']
     })
 </script>
