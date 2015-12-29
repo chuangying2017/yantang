@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Frontend;
 
 use App\Http\Transformers\AddressTransformer;
-use App\Services\Client\AddressService;
+use App\Services\Client\Address\AddressService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;

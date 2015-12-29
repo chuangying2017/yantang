@@ -11,8 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class IndexController extends Controller
-{
+class IndexController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -21,9 +20,13 @@ class IndexController extends Controller
      */
     public function getNav()
     {
-        $nav = NavService::nav();
+        try {
+            $nav = NavService::nav();
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
 
-        return Response()->json(['data' => $nav]);
+        return $this->response->array(['data' => $nav]);
     }
 
     /**
@@ -33,9 +36,13 @@ class IndexController extends Controller
      */
     public function getBanners()
     {
-        $banners = BannerService::lists();
+        try {
+            $banners = BannerService::lists();
 
-        return Response()->json(['data' => $banners]);
+            return $this->response->array(['data' => $banners]);
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
     }
 
     /**
@@ -46,9 +53,13 @@ class IndexController extends Controller
      */
     public function getSections()
     {
-        $sections = SectionService::lists();
+        try {
+            $sections = SectionService::lists();
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
 
-        return Response()->json(['data' => $sections]);
+        return $this->response->array(['data' => $sections]);
     }
 
     /**
@@ -59,14 +70,17 @@ class IndexController extends Controller
      */
     public function getUserInfo()
     {
-        $user_id = $this->getCurrentAuthUserId();
-        $client = ClientService::show($user_id);
-        $client['email'] = $client['user']['email'];
-        $client['phone'] = $client['user']['phone'];
+        try {
+            $user_id = $this->getCurrentAuthUserId();
+            $client = ClientService::show($user_id);
+            $client['email'] = $client['user']['email'];
+            $client['phone'] = $client['user']['phone'];
 
-        return Response()->json(['data' => $client]);
+            return $this->response->array(['data' => $client]);
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
     }
-
 
 
 }

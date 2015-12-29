@@ -1,5 +1,6 @@
 <?php namespace App\Services\Orders;
 
+use App\Models\ChildOrder;
 use App\Models\Order;
 use App\Models\OrderAddress;
 use App\Models\OrderProduct;
@@ -152,10 +153,64 @@ class OrderRepository {
         event(new OrderCancel($order_full));
     }
 
-    public static function getOrderSku($order_id)
+    public static function createChildOrder($merchant_order_info, $order_product_ids)
     {
+        $merchant_order_info['order_no'] = '1' . self::generateOrderNo();
+        $merchant_order_info['status'] = array_get($merchant_order_info, 'status', OrderProtocol::STATUS_OF_PAID);
 
+        DB::transaction(function () use ($merchant_order_info, $order_product_ids) {
+            $child_order = ChildOrder::updateOrCreate(
+                ['order_id' => $merchant_order_info['order_id'], 'merchant_id' => $merchant_order_info['merchant_id']],
+                array_only($merchant_order_info, ['order_id', 'order_no', 'merchant_id', 'total_amount', 'pay_amount', 'discount_fee', 'status'])
+            );
+
+            OrderProduct::whereIn('id', $order_product_ids)->update(['child_order_id' => $child_order['id']]);
+        });
     }
 
+
+    public static function orderDeliver($company_id, $post_no, $order_id)
+    {
+        $deliver = OrderDeliver::where('company_id', $company_id)->where('post_no', $post_no)->first();
+        if ( ! $deliver) {
+            $company = DB::table('express_company')->where('id', $company_id)->firstOrFail();
+            $deliver = OrderDeliver::create(
+                [
+                    'order_id'     => $order_id,
+                    'company_id'   => $company->id,
+                    'company_no'   => $company->compnay_id,
+                    'company_name' => $company->company_name,
+                    'post_no'      => $post_no,
+                ]
+            );
+        }
+
+        return $deliver;
+    }
+
+    public static function updateChildOrderAsDeliver($child_order_ids, $deliver_id)
+    {
+        ChildOrder::whereIn('id', to_array($child_order_ids))->update([
+            'deliver_id' => $deliver_id,
+            'status'     => OrderProtocol::STATUS_OF_DELIVER,
+        ]);
+        //商品关联发货信息
+//        OrderProduct::whereIn('child_order_id', $child_order_ids)->update(['deliver_id' => $deliver_id]);
+    }
+
+    public static function updateChildOrderAsDeliverByOrder($order_id, $deliver_id)
+    {
+        ChildOrder::where('order_id', $order_id)->update([
+            'deliver_id' => $deliver_id,
+            'status'     => OrderProtocol::STATUS_OF_DELIVER,
+        ]);
+        //商品关联发货信息
+//        OrderProduct::whereIn('child_order_id', $child_order_ids)->update(['deliver_id' => $deliver_id]);
+    }
+
+    public static function updateOrderAsDeliver($order_id)
+    {
+        Order::where('id', $order_id)->update(['status' => OrderProtocol::STATUS_OF_DELIVER]);
+    }
 
 }

@@ -4,7 +4,6 @@ use League\Fractal\TransformerAbstract;
 
 class CategoryTransformer extends TransformerAbstract{
 
-    #todo @troy
     public function transform(Category $category)
     {
         return [

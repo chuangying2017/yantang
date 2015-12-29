@@ -19,12 +19,10 @@ class GroupController extends Controller {
     {
         try {
             $groups = GroupService::lists();
-
+            return $this->response->array($groups);
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
-
-        return $this->response->array($groups);
     }
 
 
