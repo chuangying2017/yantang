@@ -56,6 +56,9 @@ class OrderRepository {
                 'product_sku_id'  => $order_product['product_sku_id'],
                 'quantity'        => $order_product['quantity'],
                 'price'           => $order_product['price'],
+                'title'           => $order_product['title'],
+                'cover_image'     => $order_product['cover_image'],
+                'attributes'      => $order_product['attributes'],
                 'discount_amount' => array_get($order_product, 'discount_amount', 0),
                 'pay_amount'      => bcsub($order_product['price'], array_get($order_product, 'discount_amount', 0))
             ];
@@ -81,7 +84,6 @@ class OrderRepository {
         DB::table('order_address')->insert($address_info);
     }
 
-
     public static function queryOrderByOrderNo($order_no)
     {
         if ($order_no instanceof Order) {
@@ -102,14 +104,13 @@ class OrderRepository {
 
     public static function queryFullOrder($order)
     {
-        $relation = ['skus', 'address', 'billings', 'express'];
+        $relation = ['children', 'children.skus', 'address', 'billings', 'express'];
         if ($order instanceof Order) {
             return $order->load($relation);
         }
 
         return Order::with($relation)->where('id', $order)->first();
     }
-
 
     public static function lists($user_id, $status = null, $paginate = null, $sort_by = null, $sort_type = 'desc', $relation = 'skus')
     {

@@ -7,10 +7,10 @@ class OrderTransformer extends TransformerAbstract {
 
     public function transform(Order $order)
     {
-        $includes = ['product_skus'];
+        $includes = ['child_orders'];
         $detail = [];
         if (isset($order['show_full'])) {
-            $includes = ['product_skus', 'address'];
+            $includes = ['child_orders', 'address'];
             $detail = [
                 'express' => isset($order->express)
                     ? [
@@ -47,10 +47,10 @@ class OrderTransformer extends TransformerAbstract {
         return $this->item($address, new AddressTransformer());
     }
 
-    public function includeProductSkus(Order $order)
+    public function includeChildOrders(Order $order)
     {
-        $skus = $order->skus;
+        $child_orders = $order->children;
 
-        return $this->collection($skus, new OrderProductSkusTransformer());
+        return $this->collection($child_orders, new ChildOrderTransformer());
     }
 }

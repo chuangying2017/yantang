@@ -18,18 +18,12 @@ class OrderHandler {
 
         if ($order['status'] == OrderProtocol::STATUS_OF_UNPAID) {
             OrderRepository::updateStatus($order_id, OrderProtocol::STATUS_OF_PAID);
-            //拆单
-            self::splitOrderByMerchant($order_id);
         }
 
     }
 
     private static function checkOrderSplit($order)
     {
-        if ($order['status'] !== OrderProtocol::STATUS_OF_PAID) {
-            throw new \Exception('订单未支付,无法拆分');
-        }
-
         if ($order->children()->count()) {
             throw new \Exception('订单已拆分');
         }

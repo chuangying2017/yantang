@@ -1,12 +1,12 @@
 <?php namespace App\Http\Transformers;
 
-use App\Models\OrderProductView;
+use App\Models\OrderProduct;
 use League\Fractal\TransformerAbstract;
 
 class OrderProductSkusTransformer extends TransformerAbstract {
 
 
-    public function transform(OrderProductView $sku)
+    public function transform(OrderProduct $sku)
     {
         return [
             'id'          => (int)$sku->id,

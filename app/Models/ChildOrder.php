@@ -12,7 +12,7 @@ class ChildOrder extends Model {
 
     public function skus()
     {
-        return $this->hasMany('App\Models\OrderProductView', 'child_order_id', 'id');
+        return $this->hasMany('App\Models\OrderProduct', 'child_order_id');
     }
 
     public function address()
