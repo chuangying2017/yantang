@@ -318,7 +318,6 @@
                 }
             },
             created: function () {
-                this.$log('product')
                 var self = this;
 
                 if (this.product.id) {
@@ -395,7 +394,6 @@
                     }
                 },
                 removeImg: function (image) {
-                    console.log(typeof image.id)
                     if (image.url == this.product.cover_image) {
                         this.product.cover_image = app.config.default_img
                     }

@@ -6,7 +6,6 @@
         <th>库存</th>
         </thead>
         <tbody>
-        [! skus | json !]
         <tr v-for="sku in skus">
             <td v-for="attr in sku.attributes">[! attr.attribute_value_name !]</td>
             <td><input type="text" class="form-control" v-model="skus[$index]['price']"/></td>
