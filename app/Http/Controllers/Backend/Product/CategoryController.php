@@ -43,7 +43,7 @@ class CategoryController extends Controller
             $result = $this->api->post('api/admin/categories', [
                 'name' => array_get($data, 'name', ''),
                 'pid' => array_get($data, 'pid', null),
-                'cover_image' => array_get($data, 'cover_image', ''),
+                'category_cover' => array_get($data, 'category_cover', ''),
                 'desc' => array_get($data, 'desc', '')
             ]);
 
@@ -73,7 +73,7 @@ class CategoryController extends Controller
 
             $result = $this->api->put('api/admin/categories/' . $id, [
                 'name' => array_get($data, 'name', ''),
-                'cover_image' => array_get($data, 'cover_image', ''),
+                'category_cover' => array_get($data, 'category_cover', ''),
                 'desc' => array_get($data, 'desc', '')
             ]);
 

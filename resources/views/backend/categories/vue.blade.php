@@ -16,7 +16,7 @@
         components: ['vue-images'],
         data: {
             category: {
-                cover_image: "http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg?imageView2/1/w/100"
+                category_cover: "{{$category->category_cover}}"
             }
         }
     })
