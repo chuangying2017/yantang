@@ -38,7 +38,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $name = $request->input('name');
-        $cover = $request->input('cover_image', '');
+        $cover = $request->input('category_cover', '');
         $desc = $request->input('desc', '');
         $pid = $request->input('pid', null);
 
@@ -71,7 +71,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $name = $request->input('name');
-        $category_cover = $request->input('cover_image', '');
+        $category_cover = $request->input('category_cover', '');
         $desc = $request->input('desc', '');
 
         $data = compact('name', 'category_cover', 'desc');
