@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Order;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Exception;
 
 /**
  * Created by PhpStorm.

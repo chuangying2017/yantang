@@ -4,6 +4,8 @@ use App\Services\Orders\Exceptions\WrongStatus;
 
 class OrderProtocol {
 
+    const CHILD_ORDER_LENGTH = 19;
+    const MAIN_ORDER_LENGTH = 18;
 
     const STATUS_OF_UNPAID = 'unpaid';
     const STATUS_OF_PAID = 'paid';
@@ -51,7 +53,7 @@ class OrderProtocol {
         $valid_status = [];
         switch ($to_status) {
             case self::STATUS_OF_PAID:
-                $valid_status = [self::STATUS_OF_UNPAID, self::STATUS_OF_PAID];
+                $valid_status = [self::STATUS_OF_UNPAID, self::STATUS_OF_PAID, self::STATUS_OF_DELIVER];
                 break;
             case self::STATUS_OF_DELIVER:
                 $valid_status = [self::STATUS_OF_PAID];

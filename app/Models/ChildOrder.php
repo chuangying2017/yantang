@@ -25,4 +25,9 @@ class ChildOrder extends Model {
         return $this->hasOne('App\Models\OrderDeliver', 'child_order_id', 'id');
     }
 
+    public function order()
+    {
+        return $this->belongsTo('App\Models\Order', 'order_id', 'id');
+    }
+
 }

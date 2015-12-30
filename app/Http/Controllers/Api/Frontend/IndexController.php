@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api\Frontend;
 use App\Services\Client\ClientService;
 use App\Services\Home\BannerService;
 use App\Services\Home\NavService;
-use App\Services\Home\SectionService;
+use App\Services\Product\Section\SectionService;
+
 use Illuminate\Http\Request;
 
 use App\Http\Requests;

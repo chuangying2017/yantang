@@ -5,6 +5,7 @@ use App\Models\Order;
 use App\Models\OrderAddress;
 use App\Models\OrderProduct;
 use App\Services\Orders\Event\OrderCancel;
+use App\Services\Orders\Helpers\ExpressHelper;
 use DB;
 
 
@@ -93,6 +94,15 @@ class OrderRepository {
         return Order::where('order_no', $order_no)->firstOrFail();
     }
 
+    public static function queryOrderByChildOrderNo($order_no)
+    {
+        if ($order_no instanceof ChildOrder) {
+            return $order_no;
+        }
+
+        return ChildOrder::where('order_no', $order_no)->firstOrFail();
+    }
+
     public static function queryOrderById($order_id)
     {
         if ($order_id instanceof Order) {
@@ -112,6 +122,8 @@ class OrderRepository {
         return Order::with($relation)->where('id', $order)->first();
     }
 
+    #todo 查询订单
+
     public static function lists($user_id, $status = null, $paginate = null, $sort_by = null, $sort_type = 'desc', $relation = 'skus')
     {
         if ( ! is_null($relation)) {
@@ -125,15 +137,12 @@ class OrderRepository {
         }
 
         return $query->get();
-
     }
+
 
     protected static function generateOrderNo()
     {
         $order_no = substr(date('Y'), -2) . date('md') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', mt_rand(0, 99));
-//        while (Order::where('order_no', $order_no)->count()) {
-//            $order_no = substr(date('Y'), -2) . date('md') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', mt_rand(0, 99));
-//        }
         return $order_no;
     }
 
@@ -141,6 +150,15 @@ class OrderRepository {
     public static function updateStatus($order_id, $status)
     {
         Order::where('id', $order_id)->update(['status' => $status]);
+    }
+
+
+    public static function updateStatusByOrderNo($order_no, $status)
+    {
+        $order = self::queryOrderByOrderNo($order_no);
+        OrderProtocol::validStatus($order['status'], $status);
+
+        return Order::where('order_no', $order_no)->update(['status' => $status]);
     }
 
     public static function deleteOrder($order_no)
@@ -170,28 +188,34 @@ class OrderRepository {
     }
 
 
-    public static function orderDeliver($company_id, $post_no, $order_id)
+    public static function updateOrderDeliver($deliver_id, $company_name, $post_no)
     {
-        $deliver = OrderDeliver::where('company_id', $company_id)->where('post_no', $post_no)->first();
-        if ( ! $deliver) {
-            $company = DB::table('express_company')->where('id', $company_id)->firstOrFail();
-            $deliver = OrderDeliver::create(
-                [
-                    'order_id'     => $order_id,
-                    'company_id'   => $company->id,
-                    'company_no'   => $company->compnay_id,
-                    'company_name' => $company->company_name,
-                    'post_no'      => $post_no,
-                ]
-            );
-        }
-
-        return $deliver;
+        return OrderDeliver::where('id', $deliver_id)->update(
+            [
+                'company_name' => $company_name,
+                'post_no'      => $post_no,
+            ]
+        );
     }
 
-    public static function updateChildOrderAsDeliver($child_order_ids, $deliver_id)
+    public static function createOrderDeliver($company_name, $post_no)
     {
-        ChildOrder::whereIn('id', to_array($child_order_ids))->update([
+        return OrderDeliver::firstOrCreate(
+            [
+                'company_name' => $company_name,
+                'post_no'      => $post_no,
+            ]
+        );
+    }
+
+    public static function deleteOrderDeliver($deliver_id)
+    {
+        return OrderDeliver::where('id', $deliver_id)->delete();
+    }
+
+    public static function updateChildOrderAsDeliver($order_no, $deliver_id)
+    {
+        return ChildOrder::where('order_no', $order_no)->update([
             'deliver_id' => $deliver_id,
             'status'     => OrderProtocol::STATUS_OF_DELIVER,
         ]);
@@ -199,9 +223,9 @@ class OrderRepository {
 //        OrderProduct::whereIn('child_order_id', $child_order_ids)->update(['deliver_id' => $deliver_id]);
     }
 
-    public static function updateChildOrderAsDeliverByOrder($order_id, $deliver_id)
+    public static function updateChildOrderAsDeliverByOrder($order_no, $deliver_id)
     {
-        ChildOrder::where('order_id', $order_id)->update([
+        return ChildOrder::where('order_no', $order_no)->update([
             'deliver_id' => $deliver_id,
             'status'     => OrderProtocol::STATUS_OF_DELIVER,
         ]);
@@ -209,9 +233,26 @@ class OrderRepository {
 //        OrderProduct::whereIn('child_order_id', $child_order_ids)->update(['deliver_id' => $deliver_id]);
     }
 
-    public static function updateOrderAsDeliver($order_id)
+    public static function updateOrderAsDeliver($order_no)
     {
-        Order::where('id', $order_id)->update(['status' => OrderProtocol::STATUS_OF_DELIVER]);
+        return self::updateStatusByOrderNo($order_no, OrderProtocol::STATUS_OF_DELIVER);
+    }
+
+    public static function updateOrderAsUnDeliver($order_no)
+    {
+        return self::updateStatusByOrderNo($order_no, OrderProtocol::STATUS_OF_PAID);
+    }
+
+    public static function expressCompany()
+    {
+        return ExpressHelper::expressCompany();
+    }
+
+    public static function getMainOrderNo($child_order_no)
+    {
+        $child_order = self::queryOrderByChildOrderNo($child_order_no);
+
+        return $child_order->order->order_no;
     }
 
 }

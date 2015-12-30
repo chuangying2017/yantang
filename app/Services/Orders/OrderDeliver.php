@@ -2,24 +2,49 @@
 
 class OrderDeliver {
 
-    public static function deliverChildOrders($child_order_id, $deliver_id)
+    public static function deliver($order_no, $company_name, $post_no)
     {
-        $child_order_ids = to_array($child_order_id);
+        $deliver = OrderRepository::createOrderDeliver($company_name, $post_no);
+        $deliver_id = $deliver['id'];
 
-        OrderRepository::updateChildOrderAsDeliver($child_order_ids, $deliver_id);
-    }
-
-    public static function deliver($company_id, $post_no, $order_id, $child_order_id = null)
-    {
-        $deliver = OrderRepository::orderDeliver($company_id, $post_no, $order_id);
-
-        if (is_null($child_order_id)) {
-            OrderRepository::updateChildOrderAsDeliverByOrder($order_id, $deliver['id']);
+        if (strlen($order_no) == OrderProtocol::MAIN_ORDER_LENGTH) {
+            $count = OrderRepository::updateChildOrderAsDeliverByOrder($order_no, $deliver_id);
         } else {
-            self::deliverChildOrders($child_order_id, $deliver['id']);
+            $count = OrderRepository::updateChildOrderAsDeliver($order_no, $deliver_id);
         }
 
-        OrderRepository::updateOrderAsDeliver($order_id);
+        if ( ! $count) {
+            throw new \Exception('发货订单号:' . $order_no . ' 不存在');
+        }
+
+        return $count;
+//        return OrderRepository::updateOrderAsDeliver($main_no);
+    }
+
+
+    public static function cancelDeliver($order_no)
+    {
+        $deliver_id = 0;
+
+
+        if (strlen($order_no) == OrderProtocol::MAIN_ORDER_LENGTH) {
+            $count = OrderRepository::updateChildOrderAsDeliverByOrder($order_no, $deliver_id);
+        } else {
+            $count = OrderRepository::updateChildOrderAsDeliver($order_no, $deliver_id);
+        }
+
+        if ( ! $count) {
+            throw new \Exception('发货订单号:' . $order_no . ' 不存在');
+        }
+
+        return $count;
+//        return OrderRepository::updateOrderAsUnDeliver($main_no);
+    }
+
+
+    public static function expressCompany()
+    {
+        return OrderRepository::expressCompany();
     }
 
 }
