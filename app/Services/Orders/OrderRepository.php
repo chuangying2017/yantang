@@ -6,6 +6,7 @@ use App\Models\OrderAddress;
 use App\Models\OrderProduct;
 use App\Services\Orders\Event\OrderCancel;
 use App\Services\Orders\Helpers\ExpressHelper;
+use App\Models\OrderDeliver as Deliver;
 use DB;
 
 
@@ -94,7 +95,7 @@ class OrderRepository {
         return Order::where('order_no', $order_no)->firstOrFail();
     }
 
-    public static function queryOrderByChildOrderNo($order_no)
+    public static function queryChildOrderByOrderNo($order_no)
     {
         if ($order_no instanceof ChildOrder) {
             return $order_no;
@@ -114,22 +115,28 @@ class OrderRepository {
 
     public static function queryFullOrder($order)
     {
-        $relation = ['children', 'children.skus', 'address', 'billings', 'express'];
+        $relation = ['children', 'children.skus', 'address', 'billings'];
         if ($order instanceof Order) {
             return $order->load($relation);
         }
 
-        return Order::with($relation)->where('id', $order)->first();
+        return Order::with($relation)->where('order_no', $order)->first();
     }
 
-    #todo 查询订单
-
-    public static function lists($user_id, $status = null, $paginate = null, $sort_by = null, $sort_type = 'desc', $relation = 'skus')
+    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = 'children', $status = null, $paginate = null)
     {
         if ( ! is_null($relation)) {
-            $query = Order::with($relation)->where('user_id', $user_id);
+            $query = Order::with($relation)->orderBy($sort_by, $sort_type);
         } else {
-            $query = Order::where('user_id', $user_id);
+            $query = Order::orderBy($sort_by, $sort_type);
+        }
+
+        if ( ! is_null($user_id)) {
+            $query = $query->where('user_id', $user_id);
+        }
+
+        if ( ! is_null($status)) {
+            $query = $query->where('status', $status);
         }
 
         if ( ! is_null($paginate)) {
@@ -143,6 +150,7 @@ class OrderRepository {
     protected static function generateOrderNo()
     {
         $order_no = substr(date('Y'), -2) . date('md') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', mt_rand(0, 99));
+
         return $order_no;
     }
 
@@ -190,7 +198,7 @@ class OrderRepository {
 
     public static function updateOrderDeliver($deliver_id, $company_name, $post_no)
     {
-        return OrderDeliver::where('id', $deliver_id)->update(
+        return Deliver::where('id', $deliver_id)->update(
             [
                 'company_name' => $company_name,
                 'post_no'      => $post_no,
@@ -200,7 +208,7 @@ class OrderRepository {
 
     public static function createOrderDeliver($company_name, $post_no)
     {
-        return OrderDeliver::firstOrCreate(
+        return Deliver::firstOrCreate(
             [
                 'company_name' => $company_name,
                 'post_no'      => $post_no,
@@ -210,24 +218,30 @@ class OrderRepository {
 
     public static function deleteOrderDeliver($deliver_id)
     {
-        return OrderDeliver::where('id', $deliver_id)->delete();
+        return Deliver::where('id', $deliver_id)->delete();
     }
 
     public static function updateChildOrderAsDeliver($order_no, $deliver_id)
     {
+
+        $status = OrderProtocol::STATUS_OF_DELIVER;
+
         return ChildOrder::where('order_no', $order_no)->update([
             'deliver_id' => $deliver_id,
-            'status'     => OrderProtocol::STATUS_OF_DELIVER,
+            'status'     => $status,
         ]);
         //商品关联发货信息
 //        OrderProduct::whereIn('child_order_id', $child_order_ids)->update(['deliver_id' => $deliver_id]);
     }
 
-    public static function updateChildOrderAsDeliverByOrder($order_no, $deliver_id)
+    public static function updateChildOrderAsDeliverByOrder($order_id, $deliver_id)
     {
-        return ChildOrder::where('order_no', $order_no)->update([
+
+        $status = OrderProtocol::STATUS_OF_DELIVER;
+
+        return ChildOrder::where('order_id', $order_id)->update([
             'deliver_id' => $deliver_id,
-            'status'     => OrderProtocol::STATUS_OF_DELIVER,
+            'status'     => $status,
         ]);
         //商品关联发货信息
 //        OrderProduct::whereIn('child_order_id', $child_order_ids)->update(['deliver_id' => $deliver_id]);
@@ -250,7 +264,7 @@ class OrderRepository {
 
     public static function getMainOrderNo($child_order_no)
     {
-        $child_order = self::queryOrderByChildOrderNo($child_order_no);
+        $child_order = self::queryChildOrderByOrderNo($child_order_no);
 
         return $child_order->order->order_no;
     }

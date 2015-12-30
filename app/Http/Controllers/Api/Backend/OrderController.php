@@ -2,87 +2,53 @@
 
 namespace App\Http\Controllers\Api\Backend;
 
-use App\Services\Orders\OrderService;
+use App\Http\Transformers\OrderTransformer;
+use App\Services\ApiConst;
+use App\Services\Orders\OrderManager;
+use Exception;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class OrderController extends Controller
-{
+class OrderController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        OrderService::lists();
-    }
+        try {
+            $user_id = $request->input('user_id') ?: null;
+            $sort = ApiConst::decodeSort($request->input('sort'));
+            $status = $request->input('status') ?: null;
+            $orders = OrderManager::lists($user_id, $sort['order_by'], $sort['order_type'], 'children', $status, ApiConst::ORDER_PER_PAGE);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+            return $this->response->paginator($orders, new OrderTransformer());
+        } catch (Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($order_no)
     {
-        //
+        try {
+            $order = OrderManager::show($order_no);
+            $order->show_full = 1;
+
+            return $this->response->item($order, new OrderTransformer());
+        } catch (Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

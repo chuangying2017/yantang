@@ -15,7 +15,7 @@ class OrderDeliverController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function company()
     {
         $company = OrderDeliver::expressCompany();
 
@@ -29,12 +29,12 @@ class OrderDeliverController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function deliver(Request $request, $order_no)
     {
         try {
             $company_name = $request->input('name');
             $post_no = $request->input('post_no');
-            $order_no = $request->input('order_no');
+
             $result = OrderDeliver::deliver($order_no, $company_name, $post_no);
 
             return $this->response->created()->setContent(['data' => $result]);
@@ -43,26 +43,6 @@ class OrderDeliverController extends Controller {
         }
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $order_no)
-    {
-        try {
-            $company_name = $request->input('name');
-            $post_no = $request->input('post_no');
-            $result = OrderDeliver::deliver($order_no, $company_name, $post_no);
-
-            return $this->response->created()->setContent(['data' => $result]);
-        } catch (\Exception $e) {
-            $this->response->errorInternal($e->getMessage());
-        }
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -70,7 +50,7 @@ class OrderDeliverController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($order_no)
+    public function cancel($order_no)
     {
         try {
             $result = OrderDeliver::cancelDeliver($order_no);

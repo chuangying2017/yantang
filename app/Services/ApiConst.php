@@ -9,6 +9,7 @@ class ApiConst
     const PRODUCT_PER_PAGE = 20;
     const FAV_PRE_PAGE = 20;
     const IMAGE_PER_PAGE = 20;
+    const ORDER_PER_PAGE = 10;
 
 
     /**
@@ -32,8 +33,8 @@ class ApiConst
         }
 
         return [
-            'order_by' => null,
-            'order_type' => null
+            'order_by' => 'created_at',
+            'order_type' => 'desc'
         ];
     }
 

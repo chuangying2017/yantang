@@ -22,11 +22,10 @@ class OrderService {
         return $order;
     }
 
-    public static function lists($user_id)
+    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = 'children', $status = null, $paginate = null)
     {
-        return OrderRepository::lists($user_id);
+        return OrderRepository::lists($user_id, $sort_by, $sort_type, $relation, $status, $paginate);
     }
-
 
 
     public static function delete($user_id, $order_no)
