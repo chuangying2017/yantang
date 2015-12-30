@@ -543,6 +543,9 @@
         template: '#vue-images-tpl',
         props: ['limit', 'model'],
         components: ['vue-gallery'],
+        created: function () {
+            console.log('vue-images inited')
+        },
         methods: {
             gallery: function () {
                 this.$broadcast('galleryOpen', {
