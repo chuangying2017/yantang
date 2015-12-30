@@ -13,6 +13,11 @@ class Order extends Model {
 
     protected $guarded = ['id'];
 
+    public function children()
+    {
+        return $this->hasMany('App\Models\ChildOrder', 'order_id', 'id');
+    }
+
     public function products()
     {
         return $this->hasMany('App\Models\OrderProduct', 'order_id', 'id');
@@ -33,8 +38,4 @@ class Order extends Model {
         return $this->hasMany('App\Models\OrderBilling', 'order_id', 'id');
     }
 
-    public function express()
-    {
-        return $this->hasOne('App\Models\OrderDeliver', 'order_id', 'id');
-    }
 }

@@ -1,6 +1,5 @@
 <?php namespace App\Services\Product\Section;
 
-use App\Models\Section;
 
 
 /**
@@ -12,12 +11,12 @@ class SectionService {
     public static function lists()
     {
         try {
-            $groups = SectionRepository::lists();
+            $sections = SectionRepository::lists();
         } catch (\Exception $e) {
             throw $e;
         }
 
-        return $groups;
+        return $sections;
     }
 
     /**

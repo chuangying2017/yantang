@@ -1,5 +1,7 @@
 <?php namespace App\Services\Orders\Helpers;
 
+use App\Services\Orders\OrderProtocol;
+use App\Services\Orders\OrderRepository;
 use Cache;
 use Faker\Provider\Uuid;
 

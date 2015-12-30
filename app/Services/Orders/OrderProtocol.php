@@ -4,6 +4,8 @@ use App\Services\Orders\Exceptions\WrongStatus;
 
 class OrderProtocol {
 
+    const CHILD_ORDER_LENGTH = 19;
+    const MAIN_ORDER_LENGTH = 18;
 
     const STATUS_OF_UNPAID = 'unpaid';
     const STATUS_OF_PAID = 'paid';
@@ -27,8 +29,6 @@ class OrderProtocol {
     const RESOURCE_OF_PINGXX = 'App\Models\PingxxPayment';
 
 
-
-
     public static function status($key = null)
     {
         $message = [
@@ -46,12 +46,37 @@ class OrderProtocol {
         return is_null($key) ? $message : $message[ $key ];
     }
 
+    public static function statusIs($need_status, $current_status)
+    {
+        $valid_status = [$need_status];
+        switch ($current_status) {
+            case self::STATUS_OF_PAID:
+                $valid_status = [self::STATUS_OF_PAID, self::STATUS_OF_DELIVER, self::STATUS_OF_DONE];
+                break;
+            case self::STATUS_OF_DELIVER:
+                $valid_status = [self::STATUS_OF_DELIVER, self::STATUS_OF_DONE];
+                break;
+            case self::STATUS_OF_UNPAID:
+                $valid_status = [self::STATUS_OF_UNPAID];
+                break;
+            default:
+                break;
+        }
+
+
+        if ( ! in_array($current_status, $valid_status)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function validStatus($from_status, $to_status)
     {
         $valid_status = [];
         switch ($to_status) {
             case self::STATUS_OF_PAID:
-                $valid_status = [self::STATUS_OF_UNPAID, self::STATUS_OF_PAID];
+                $valid_status = [self::STATUS_OF_UNPAID, self::STATUS_OF_PAID, self::STATUS_OF_DELIVER];
                 break;
             case self::STATUS_OF_DELIVER:
                 $valid_status = [self::STATUS_OF_PAID];
@@ -85,9 +110,6 @@ class OrderProtocol {
 
         return true;
     }
-
-
-
 
 
 }
