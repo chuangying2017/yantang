@@ -79,6 +79,7 @@ class OrderController extends Controller {
         if (isset($order_info['products'])) {
             foreach ($order_info['products'] as $key => $product) {
                 $product['attributes'] = json_decode('[' . $product['attributes'] . ']', true);
+                $product['display_price'] = display_price($product['price']);
                 $order_info['products'][ $key ] = $product;
             }
         }
