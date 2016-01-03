@@ -7,7 +7,7 @@ class HttpHelper
      * @param $url
      * @return bool|mixed
      */
-    static public function http_get($url)
+    public static function http_get($url)
     {
         $oCurl = curl_init();
         if (stripos($url, 'https://') !== false) {

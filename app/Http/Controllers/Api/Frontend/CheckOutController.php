@@ -6,6 +6,7 @@ use App\Services\Orders\OrderService;
 use App\Services\Orders\Payments\BillingManager;
 use App\Services\Orders\Payments\CheckOut;
 use App\Services\Orders\Supports\PingxxProtocol;
+use App\Services\Utilities\HttpHelper;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -48,8 +49,28 @@ class CheckOutController extends Controller {
 
         try {
             $user_id = $this->getCurrentAuthUserId();
+
+
+            #TODO REMOVE TEST PAY
+            $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
+            PingxxProtocol::validChannel($channel);
+
+            $charge = Checkout::checkout($order_no, $channel);
+
+            if ( ! $charge) {
+                throw new OrderIsPaid();
+            }
+
+            $url = 'https://api.pingxx.com/notify/charges/' . $charge->id . '?livemode=false';
+
+            $res = HttpHelper::http_get($url);
+            #TODO END REMOVE TEST PAY
+
             //若订单已支付则返回订单信息
             if ( ! Checkout::orderNeedPay($user_id, $order_no)) {
+                #TODO REMOVE TEST PAY
+                return $this->response->array(['data' => $res]);
+                #TODO END REMOVE TEST PAY
                 throw new OrderIsPaid();
             }
 
@@ -62,7 +83,11 @@ class CheckOutController extends Controller {
                 throw new OrderIsPaid();
             }
 
-            return $charge;
+            $pay_data = [
+                'pay_url' => $charge->credential->$channel,
+            ];
+
+            return $this->response->array(['data' => $pay_data]);
         } catch (OrderAuthFail $e) {
             $this->response->errorForbidden($e->getMessage());
         } catch (OrderIsPaid $e) {
