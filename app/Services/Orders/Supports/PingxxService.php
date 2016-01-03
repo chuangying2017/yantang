@@ -70,7 +70,7 @@ class PingxxService implements PaymentInterface {
         }
     }
 
-    protected function getExtraData($channel)
+    protected static function getExtraData($channel)
     {
         #todo 完善支付渠道
         switch ($channel) {

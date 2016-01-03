@@ -39,4 +39,13 @@ class AgentController extends Controller {
         return $agent;
     }
 
+    public function subDetail(Request $request, $agent_id)
+    {
+        $start_at = $request->input('start_at') ?: null;
+        $end_at = $request->input('end_at') ?: null;
+        $agent = AgentService::getAgent($agent_id, $start_at, $end_at);
+
+        return $agent;
+    }
+
 }
