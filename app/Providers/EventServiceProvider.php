@@ -53,6 +53,7 @@ class EventServiceProvider extends ServiceProvider {
         'App\Services\Orders\Event\OrderIsPaid'     => [
             'App\Services\Orders\Listeners\HandleOrderPaid',
             'App\Services\Marketing\Listeners\UpdateMarketingBillingAndUsedMarketingItem',
+            'App\Services\Agent\Listeners\AgentOrderDeal',
         ],
     ];
 

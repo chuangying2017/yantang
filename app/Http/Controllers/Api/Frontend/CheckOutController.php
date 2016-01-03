@@ -23,6 +23,8 @@ class CheckOutController extends Controller {
 
             //若订单已支付或者金额为0则返回订单信息
             if ( ! Checkout::orderNeedPay($user_id, $order)) {
+                $order = OrderService::show($user_id, $order_no);
+
                 return $this->response->array($order);
             }
 
