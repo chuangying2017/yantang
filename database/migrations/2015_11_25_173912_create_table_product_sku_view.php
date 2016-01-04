@@ -25,7 +25,7 @@ class CreateTableProductSkuView extends Migration
             products.title AS title,
             products.member_discount AS member_discount,
             products.category_id AS category_id,
-            product_sku.cover_image AS cover_image,
+            products.cover_image AS cover_image,
             group_concat(concat('{\"attribute_id\":\"',`attributes`.`id`,'\", \"arrtibute_name\":\"',`attributes`.`name`,'\", \"attribute_value_id\":\"',`attribute_values`.`id`,'\", \"attribute_value_name\":\"',`attribute_values`.`value`,'\"}') separator ',') AS `attributes`
             FROM product_sku
                 LEFT JOIN products ON product_sku.product_id = products.id
