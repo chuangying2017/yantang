@@ -107,7 +107,7 @@ class AgentService {
     {
         $agent_id = $agent['id'];
         $data = [
-            'order_count'  => count($orders),
+            'order_count'  => 0,
             'total_amount' => 0,
             'earn_amount'  => 0
         ];
@@ -116,6 +116,7 @@ class AgentService {
 
         foreach ($orders as $order) {
             if (in_array($order['agent_id'], $staff_id)) {
+                $data['order_count'] = $data['order_count'] + 1;
                 $data['total_amount'] = bcadd($data['total_amount'], $order['amount']);
             }
         }
