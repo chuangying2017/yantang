@@ -68,7 +68,6 @@ class PingxxController extends Controller {
 
     private function callbackChargeSucceed($data, $pingxx_payment)
     {
-
         if ($pingxx_payment['status'] == OrderProtocol::STATUS_OF_PAID) {
             info('charge Succeed! no need to charge again');
             return 1;

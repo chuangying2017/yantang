@@ -26,6 +26,7 @@ $api->version('v1', function ($api) {
             require(__DIR__ . "/Routes/Api/Backend/Home.php");
             require(__DIR__ . "/Routes/Api/Backend/Merchant.php");
             require(__DIR__ . "/Routes/Api/Backend/Order.php");
+            require(__DIR__ . "/Routes/Api/Backend/Agent.php");
         });
 
     });

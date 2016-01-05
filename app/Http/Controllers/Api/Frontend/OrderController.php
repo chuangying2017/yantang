@@ -68,6 +68,22 @@ class OrderController extends Controller {
             $this->response->errorForbidden();
         }
 
+        return self::transformOrder($order_info);
+    }
+
+    public static function transformOrder($order_info)
+    {
+        $order_info['total_amount'] = display_price($order_info['total_amount']);
+        $order_info['pay_amount'] = display_price($order_info['pay_amount']);
+        $order_info['discount_fee'] = display_price($order_info['discount_fee']);
+        if (isset($order_info['products'])) {
+            foreach ($order_info['products'] as $key => $product) {
+                $product['attributes'] = json_decode('[' . $product['attributes'] . ']', true);
+                $product['price'] = display_price($product['price']);
+                $order_info['products'][ $key ] = $product;
+            }
+        }
+
         return $order_info;
     }
 
@@ -88,7 +104,7 @@ class OrderController extends Controller {
 
             $order = $this->orderGenerator->confirm($uuid, $address_id);
 
-            return $order;
+            return self::transformOrder($order);
 
             return $this->response->created(route('api.orders.show', $order['order_no']))->setMeta($order);
         } catch (\Exception $e) {
