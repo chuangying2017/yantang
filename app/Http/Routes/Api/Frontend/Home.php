@@ -15,13 +15,6 @@ $api->get('sections', [
     'uses' => 'IndexController@getSections'
 ]);
 
-$api->get('user/info', [
-    'as'   => 'client.user.info',
-    'uses' => 'IndexController@getUserInfo'
-]);
-
-
-
 
 /**
  * 需要登录才能查看
@@ -29,6 +22,8 @@ $api->get('user/info', [
 $api->group(['middleware' => 'api.auth'], function ($api) {
 
     $api->resource('user/favs', 'FavController', ['only' => ['index', 'store', 'destroy']]);
+
+    $api->resource('user/info', 'ClientController', ['only' => ['index', 'store']]);
 
     $api->resource('address', 'AddressController');
 });
