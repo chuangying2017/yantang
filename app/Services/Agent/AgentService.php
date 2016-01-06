@@ -5,7 +5,8 @@ use App\Models\AgentOrder;
 use App\Services\Orders\OrderRepository;
 use Carbon\Carbon;
 
-class AgentService {
+class AgentService
+{
 
     const STAFF_ID = 5;
     const AGENT_ID = 1;
@@ -19,7 +20,7 @@ class AgentService {
         $agent_order = AgentOrder::firstOrCreate([
             'agent_id' => $agent_id,
             'order_no' => $order['order_no'],
-            'amount'   => $order['pay_amount']
+            'amount' => $order['pay_amount']
         ]);
 
         return $agent_order;
@@ -55,7 +56,7 @@ class AgentService {
         $agent->children = $agent->descendants()->limitDepth(1)->get();
         $agent->earn_data = self::calAgentData($agent, $orders);
         foreach ($agent->children as $key => $child_agent) {
-            $agent->children[ $key ]->earn_data = self::calAgentData($child_agent, $orders);
+            $agent->children[$key]->earn_data = self::calAgentData($child_agent, $orders);
         }
 
         $agent->orders = $orders;
@@ -78,7 +79,7 @@ class AgentService {
     {
         $data = [
             'today_amount' => 0,
-            'week_amount'  => 0,
+            'week_amount' => 0,
             'month_amount' => 0
         ];
         $today = Carbon::today();
@@ -107,15 +108,17 @@ class AgentService {
     {
         $agent_id = $agent['id'];
         $data = [
-            'order_count'  => 0,
+
+            'order_count' => 0,
             'total_amount' => 0,
-            'earn_amount'  => 0
+            'earn_amount' => 0
         ];
 
         $staff_id = self::getLeavesId($agent_id);
 
         foreach ($orders as $order) {
             if (in_array($order['agent_id'], $staff_id)) {
+
                 $data['order_count'] = $data['order_count'] + 1;
                 $data['total_amount'] = bcadd($data['total_amount'], $order['amount']);
             }
@@ -133,10 +136,10 @@ class AgentService {
     {
         $data = [
             'sales' => 20,
-            '1'     => 1,
-            '2'     => 2,
-            '3'     => 1,
-            '4'     => 2
+            '1' => 1,
+            '2' => 2,
+            '3' => 1,
+            '4' => 2
         ];
 
         return array_get($data, $agent_level, 1);

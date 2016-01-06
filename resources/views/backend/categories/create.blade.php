@@ -34,6 +34,14 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label"><span class="c-red">*</span> 类目封面：</label>
+                        <div class="col-sm-5" id="category-image">
+                            <img :src="category.category_cover" width="100" alt=""><br><br>
+                            <input type="hidden" name="category_cover" v-model="category.category_cover">
+                            <vue-images limit="1" :model.sync="category.category_cover"></vue-images>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label"><span class="c-red">*</span> 父级分类：</label>
                         <div class="col-sm-5">
                             <select name="pid" id="" class="form-control" required>
@@ -72,9 +80,11 @@
         </div>
     </div>
     <!-- /.col -->
-    <script>
 
-    </script>
+    @include('backend.categories.vue')
 @endsection
+
+
+
 
 

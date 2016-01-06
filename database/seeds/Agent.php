@@ -2,7 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
-class Agent extends Seeder {
+class Agent extends Seeder
+{
 
     /**
      * Run the database seeds.
@@ -20,6 +21,7 @@ class Agent extends Seeder {
                         ['name' => '学府路店', 'level' => 4, 'children' => [
                             ['name' => 'bryant', 'level' => 'sales'],
                             ['name' => 'troy', 'level' => 'sales']
+
                         ]],
                         ['name' => '科技园店', 'level' => 4],
                     ]],
