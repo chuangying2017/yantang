@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Frontend;
 
-use App\Services\Client\ClientService;
 use App\Services\Home\BannerService;
 use App\Services\Home\NavService;
 use App\Services\Product\Section\SectionService;
@@ -63,25 +62,7 @@ class IndexController extends Controller {
         return $this->response->array(['data' => $sections]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function getUserInfo()
-    {
-        try {
-            $user_id = $this->getCurrentAuthUserId();
-            $client = ClientService::show($user_id);
-            $client['email'] = $client['user']['email'];
-            $client['phone'] = $client['user']['phone'];
 
-            return $this->response->array(['data' => $client]);
-        } catch (\Exception $e) {
-            $this->response->errorBadRequest($e->getMessage());
-        }
-    }
 
 
 }

@@ -73,6 +73,11 @@ class CategoryService {
         return Category::findOrFail($category_id);
     }
 
+    public static function findIdByName($category_name)
+    {
+        return Category::where('name', $category_name)->pluck('id');
+    }
+
     public static function getLeavesId($category_id, $string = false)
     {
         try {

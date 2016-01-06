@@ -85,6 +85,11 @@ class ProductService {
     {
         $brand_id = ! is_null($brand_id) ? to_array($brand_id) : null;
         $status = ProductConst::saleStatus($status, true);
+
+        if ( ! is_numeric($category_id)) {
+            $category_id = CategoryService::findIdByName($category_id);
+        }
+
         $category_ids = CategoryService::getLeavesId($category_id);
 
         $products = ProductRepository::lists($category_ids, $brand_id, $paginate, $orderBy, $orderType, $status);

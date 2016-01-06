@@ -77,9 +77,10 @@ class ClientRepository {
     {
         $client = Client::findOrFail($id);
         $data = array_only($data, ['nickname', 'birthday', 'avatar', 'sex', 'status']);
-        $client->update($data);
+        $client->fill($data);
+        $client->save();
 
-        return 1;
+        return $client;
     }
 
     /**
