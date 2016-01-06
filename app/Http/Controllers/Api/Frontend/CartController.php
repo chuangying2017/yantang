@@ -73,9 +73,11 @@ class CartController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($cart_id)
+    public function destroy(Request $request)
     {
         $user_id = $this->getCurrentAuthUserId();
+
+        $cart_id = to_array($request->input('cart_ids'));
 
         CartService::remove($cart_id, $user_id);
 

@@ -4,7 +4,8 @@
  */
 $api->group(['middleware' => 'api.auth'], function ($api) {
 
-    $api->resource('cart', 'CartController', ['only' => ['index', 'store', 'update', 'destroy']]);
+    $api->delete('cart', 'CartController@destroy');
+    $api->resource('cart', 'CartController', ['only' => ['index', 'store', 'update']]);
 
     $api->post('orders/confirm', [
         'as'   => 'order.preConfirm',
