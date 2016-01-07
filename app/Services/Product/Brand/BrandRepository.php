@@ -21,16 +21,20 @@ class BrandRepository {
      * @param null $cover_image
      * @return string|static
      */
-    public static function create($name, $cover_image = null)
+    public static function create($data)
     {
+        $name = $data['name'];
         if (Brand::where('name', $name)->count()) {
             throw new Exception('BRAND EXISTED');
         }
 
-        $brand = Brand::create([
+        $brand = Brand::updateOrCreate(
+            ['name' => $name],
+            [
             'name'        => $name,
             'cover_image' => $cover_image
-        ]);
+            ]
+        );
 
         return $brand;
     }
