@@ -33,6 +33,16 @@ final class ProductConst {
     const VAR_PRODUCT_OPEN_STATUS_NOW = 'now'; // 立马开售
     const VAR_PRODUCT_OPEN_STATUS_FIXED = 'fixed'; // 固定时间开售
 
+    public static function groups($group_id = null)
+    {
+        $data = [
+            1 => '国际品牌',
+            2 => '国货精品'
+        ];
+
+
+    }
+
     public static function saleStatus($status = null, $key = false)
     {
         $data = [

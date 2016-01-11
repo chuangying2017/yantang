@@ -28,7 +28,6 @@ class BrandRequest extends Request {
         if ($this->isMethod('POST') || $this->isMethod('PUT')) {
             $rules = [
                 'name' => 'required',
-                ''
             ];
         }
 

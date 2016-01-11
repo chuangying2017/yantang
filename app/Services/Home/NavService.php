@@ -6,21 +6,33 @@ class NavService {
 
     public static function nav()
     {
-        $navs = Nav::orderBy('index')->get(['id', 'name', 'type', 'url', 'index']);
+        $navs = Nav::with([
+            'children'          => function ($query) {
+                $query->select(['id', 'name', 'type', 'url', 'index', 'pid'])->orderBy('index');
+            },
+            'children.children' => function ($query) {
+                $query->select(['id', 'name', 'type', 'url', 'index', 'pid'])->orderBy('index');
+            }
+        ])->orderBy('index')->get(['id', 'name', 'type', 'url', 'index', 'pid']);
 
         return $navs;
     }
 
     public static function show($id)
     {
-        return Nav::findOrFail($id);
+        return Nav::with([
+            'children'          => function ($query) {
+                $query->select(['id', 'name', 'type', 'url', 'index', 'pid'])->orderBy('index');
+            },
+            'children.children' => function ($query) {
+                $query->select(['id', 'name', 'type', 'url', 'index', 'pid'])->orderBy('index');
+            }
+        ])->select(['id', 'name', 'type', 'url', 'index', 'pid'])->findOrFail($id);
     }
-
 
     public static function create($data)
     {
-
-        $nav_data = array_only($data, ['name', 'type', 'url', 'index']);
+        $nav_data = array_only($data, ['name', 'type', 'url', 'index', 'pid']);
 
         $nav = Nav::create($nav_data);
 
@@ -29,7 +41,7 @@ class NavService {
 
     public static function update($id, $data)
     {
-        $nav_data = array_only($data, ['name', 'type', 'url', 'index']);
+        $nav_data = array_only($data, ['name', 'type', 'url', 'index', 'pid']);
         $nav = Nav::findOrFail($id);
         $nav->fill($nav_data);
         $nav->save();

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddLogoImageToBrandsTable extends Migration {
+class AddPidToNavsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddLogoImageToBrandsTable extends Migration {
      */
     public function up()
     {
-        Schema::table('brands', function (Blueprint $table) {
-            $table->string('logo')->after('name');
+        Schema::table('navs', function (Blueprint $table) {
+            $table->integer('pid')->after('id');
         });
     }
 
@@ -24,8 +24,8 @@ class AddLogoImageToBrandsTable extends Migration {
      */
     public function down()
     {
-        Schema::table('brands', function (Blueprint $table) {
-            $table->dropColumn('logo');
+        Schema::table('navs', function (Blueprint $table) {
+            $table->dropColumn('pid');
         });
     }
 }
