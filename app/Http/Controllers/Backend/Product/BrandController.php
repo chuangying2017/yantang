@@ -26,7 +26,8 @@ class BrandController extends Controller
     public function create()
     {
         try {
-            return view('backend.brands.create');
+            $brand = (object)["cover_image" => ''];
+            return view('backend.brands.create', compact('brand'));
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -39,7 +40,8 @@ class BrandController extends Controller
             $data = $request->all();
 
             $result = $this->api->post('api/admin/brands', [
-                'name' => array_get($data, 'name', '')
+                'name' => array_get($data, 'name', ''),
+                'cover_image' => array_get($data, 'cover_image', '')
             ]);
 
             if ($result) {
@@ -66,7 +68,8 @@ class BrandController extends Controller
             $data = $request->all();
 
             $result = $this->api->put('api/admin/brands/' . $id, [
-                'name' => array_get($data, 'name', '')
+                'name' => array_get($data, 'name', ''),
+                'cover_image' => array_get($data, 'cover_image', '')
             ]);
 
             if ($result) {

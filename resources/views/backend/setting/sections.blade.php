@@ -11,8 +11,10 @@
                 <label class="col-sm-2 control-label"><span class="c-red">*</span> 排版：</label>
                 <div class="col-sm-2">
                     <select name="" id="" class="form-control" v-model="section.style">
-                        <option value="jiegou" selected>结构</option>
-                        <option value="pingpu">平铺</option>
+                        <option value="rexiaochanpin" selected>热销产品</option>
+                        <option value="xianshizhekou">限时折扣</option>
+                        <option value="zuixindongtai">最新动态</option>
+                        <option value="meiribikan">每日必看</option>
                     </select>
                 </div>
             </div>
@@ -102,11 +104,17 @@
         data: function () {
             return {
                 style: {
-                    'jiegou': {
+                    'rexiaochanpin': {
                         limit: 6
                     },
-                    'pingpu': {
+                    'xianshizhekou': {
                         limit: 6
+                    },
+                    'zuixindongtai': {
+                        limit: 4
+                    },
+                    'meiribikan': {
+                        limit: 8
                     }
                 }
             }

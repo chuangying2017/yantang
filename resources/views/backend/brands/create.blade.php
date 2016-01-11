@@ -33,6 +33,14 @@
                             <input type="text" name="name" class="form-control" required value="">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><span class="c-red">*</span> 品牌LOGO：</label>
+                        <div class="col-sm-5" id="brand-image">
+                            <img :src="brand.cover_image" width="100" alt=""><br><br>
+                            <input type="hidden" name="cover_image" v-model="brand.cover_image">
+                            <vue-images limit="1" :model.sync="brand.cover_image"></vue-images>
+                        </div>
+                    </div>
 
                     {{--<div class="form-group">--}}
                     {{--<label for="proGroup" class="col-sm-2 control-label"><span class="c-red">*</span> 上传封面图：</label>--}}
@@ -65,8 +73,7 @@
     <script>
 
     </script>
+    @include('backend.brands.vue')
 @endsection
 
-@section('after-scripts-end')
 
-@endsection

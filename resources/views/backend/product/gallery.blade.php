@@ -287,6 +287,9 @@
                             <ul>
                                 <vue-gallery-image v-for=" image in images" :image="image"></vue-gallery-image>
                             </ul>
+                            <button @click.prevent="loadMore()" v-if="pagination.current_page < pagination.total_pages">
+                                加载更多
+                            </button>
                         </div>
                     </section>
                     <footer class="wx-modal-footer">
@@ -389,7 +392,8 @@
                 images: [],
                 uploader: {},
                 queues: [],
-                selected: []
+                selected: [],
+                pagination: {}
             }
         },
 
@@ -466,10 +470,20 @@
         },
 
         methods: {
+            loadMore: function () {
+                var self = this;
+                this.$http.get(app.config.api_url + '/admin/images?page=' + this.pagination.current_page + 1, function (images) {
+                    _.map(images.data, function (val) {
+                        self.images.push(val);
+                    });
+                    self.pagination = images.meta.pagination;
+                });
+            },
             getImages: function () {
                 var self = this;
                 this.$http.get(app.config.api_url + '/admin/images', function (data) {
                     self.images = data.data
+                    self.pagination = data.meta.pagination
                 }).error(function (data) {
                     console.error(data)
                 });
