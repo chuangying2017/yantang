@@ -9,6 +9,7 @@ $api->version('v1', function ($api) {
          */
         $api->group(['namespace' => 'Frontend'], function () use ($api) {
             require(__DIR__ . "/Routes/Api/Frontend/Home.php");
+            require(__DIR__ . "/Routes/Api/Frontend/Sms.php");
             require(__DIR__ . "/Routes/Api/Frontend/Access.php");
             require(__DIR__ . "/Routes/Api/Frontend/Marketing.php");
             require(__DIR__ . "/Routes/Api/Frontend/Order.php");

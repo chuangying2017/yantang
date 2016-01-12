@@ -27,7 +27,7 @@ class RegisterRequest extends Request {
 	{
 		return [
 			'name' 		=> 'required|max:255',
-			'email' 	=> 'required|email|max:255|unique:users',
+			'phone' 	=> 'required|zh_mobile|unique:users,phone',
 			'password'  => 'required|confirmed|min:6',
 		];
 	}

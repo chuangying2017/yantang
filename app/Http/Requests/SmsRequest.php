@@ -1,13 +1,11 @@
-<?php namespace App\Http\Requests\Frontend\Access;
+<?php
+
+namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-/**
- * Class LoginRequest
- * @package App\Http\Requests\Frontend\Access
- */
-class LoginRequest extends Request {
-
+class SmsRequest extends Request
+{
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,9 +23,12 @@ class LoginRequest extends Request {
      */
     public function rules()
     {
-        return [
-            'phone'    => 'required|zh_mobile',
-            'password' => 'required',
-        ];
+        $rules = [];
+        if($this->isMethod('POST')) {
+            $rules = [
+                'phone' => 'required|zh_mobile|unique:users,phone'
+            ];
+        }
+        return $rules;
     }
 }

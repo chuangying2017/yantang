@@ -42,5 +42,9 @@ class Kernel extends HttpKernel {
          */
         'access.routeNeedsRole'       => \App\Http\Middleware\RouteNeedsRole::class,
         'access.routeNeedsPermission' => \App\Http\Middleware\RouteNeedsPermission::class,
+
+
+        'register.verify.phone' => \App\Http\Middleware\ValidatorUserRegisterPhone::class,
+
     ];
 }

@@ -177,6 +177,8 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         zgldh\QiniuStorage\QiniuFilesystemServiceProvider::class,
         Baum\Providers\BaumServiceProvider::class,
+        Toplan\PhpSms\PhpSmsServiceProvider::class,
+        Toplan\Sms\SmsManagerServiceProvider::class,
 
     ],
 
@@ -243,6 +245,8 @@ return [
         'APIRoute' => Dingo\Api\Facade\Route::class,
         'API' => Dingo\Api\Facade\API::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'PhpSms' => Toplan\PhpSms\Facades\Sms::class,
+        'SmsManager' => Toplan\Sms\Facades\SmsManager::class,
     ],
 
 ];
