@@ -7,6 +7,14 @@
     </h1>
 @endsection
 
+@section('after-styles-end')
+    <style>
+        .sub-nav{
+            margin-left: 20px;
+        }
+    </style>
+@endsection
+
 @section('breadcrumbs')
     <li><a href="{!!route('backend.dashboard')!!}"><i class="fa fa-dashboard"></i> {{ trans('menus.dashboard') }}</a>
     </li>

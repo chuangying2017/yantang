@@ -31,8 +31,8 @@ class NavRequest extends Request
         if ($this->isMethod('POST') || $this->isMethod('PUT')) {
             $rules = [
                 'name' => 'required',
-                'type' => 'required',
-                'url' => 'required',
+                'pid' => 'required',
+                // 'url' => 'required',
             ];
         }
 

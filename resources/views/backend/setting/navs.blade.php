@@ -9,6 +9,7 @@
             <div class="row">
                 <div class="col-sm-1"></div>
                 <div class="col-sm-10">
+                    [! navs | json !]
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -62,7 +63,6 @@
     </div>
 </script>
 <script type="x-template" id="nav-tpl">
-
     <tr v-if="editMode">
         <td><input type="text" class="form-control" v-model="nav.name" required></td>
         <td><input type="url" class="form-control" v-model="nav.url" required>
@@ -101,11 +101,119 @@
                 <button type="button" @click.prevent="delete()" class="btn btn-default btn-sm"><i
                         class="fa fa-trash-o"></i> 删除
                 </button>
+                <button type="button" @click.prevent="addSubNav()" class="btn btn-default btn-sm"><i
+                        class="fa fa-list-ul"></i> 添加子导航
+                </button>
+            </div>
+        </td>
+    </tr>
+    <tr is="sub-nav" v-for="subNav in nav.children" :sub="subNav"></tr>
+    <tr v-if="subNavEdit">
+        <td colspan="2">
+            <p class="sub-nav"> — <input type="text" class="form-control" style="display: inline-block; width: auto;" v-model="subNavName"></p>
+        </td>
+        <td>
+            <input type="text" class="form-control" v-model="subNavIndex">
+        </td>
+        <td>
+            <select class="form-control">
+                <option value="">标题</option>
+            </select>
+        </td>
+        <td>
+            <div class="btn-group">
+                <button @click.prevent="saveSubNav(nav.id)" type="button" class="btn btn-default btn-sm"><i
+                        class="fa fa-save"></i> 保存
+                </button>
+                <button @click.prevent="cancelSubNav()" type="button" class="btn btn-default btn-sm"><i
+                        class="fa fa-remove"></i> 取消
+                </button>
             </div>
         </td>
     </tr>
 </script>
+
+<script type="x-template" id="sub-nav">
+    <tr v-if="editMode">
+        <td colspan="2" style="background: #F9F9F9;">
+            <p class="sub-nav"> — <input type="text" class="form-control" style="display: inline-block; width: auto;" v-model="sub.name"></p>
+        </td>
+        <td><input type="text" class="form-control" v-model="sub.index"></td>
+        <td>
+            <select class="form-control">
+                <option value="">标题</option>
+            </select>
+        </td>
+        <td>
+            <div class="btn-group">
+                <button @click.prevent="save(sub.id);" type="button" class="btn btn-default btn-sm"><i
+                        class="fa fa-save"></i> 保存
+                </button>
+                <button @click.prevent="deactiveEdit();" type="button" class="btn btn-default btn-sm"><i
+                        class="fa fa-remove"></i> 取消
+                </button>
+            </div>
+        </td>
+    </tr>
+    <tr v-else>
+        <td colspan="2" style="background: #F9F9F9;">
+            <p class="sub-nav"> — [! sub.name !]</p>
+        </td>
+        <td>[! sub.index !]</td>
+        <td>[! sub.type !]</td>
+        <td>
+            <div class="btn-group">
+                <button @click.prevent="activeEdit()" type="button" class="btn btn-default btn-sm"><i
+                        class="fa fa-pencil"></i> 编辑
+                </button>
+                <button @click.prevent="delete(sub, sub.id)" type="button" class="btn btn-default btn-sm"><i
+                        class="fa fa-trash-o"></i> 删除
+                </button>
+            </div>
+        </td>
+    </tr>
+</script>
+
 <script>
+    Vue.component('subNav', {
+        template: '#sub-nav',
+        props: ['sub'],
+        data: function(){
+            return {
+                editMode: false
+            }
+        },
+        methods: {
+            save: function(subId){
+                var self = this;
+                this.$http.put('/admin/setting/frontpage/navs/' + subId, {
+                    name: self.sub.name,
+                    index: self.sub.index,
+                    type: "page",
+                    url: "",
+                    pid: parseInt(self.sub.pid)
+                }, function(data){
+                    self.editMode = false;
+                }).error(function(){
+                    console.error(data)
+                });
+            },
+            delete: function(subnav, subId){
+                this.$http.delete('/admin/setting/frontpage/navs/' + subId, function (data) {
+                    console.log(subnav);
+                    self.$dispatch('remove', subnav);
+                }).error(function (data) {
+                    console.error(data);
+                });
+            },
+            activeEdit: function(){
+                this.editMode = true;
+            },
+            deactiveEdit: function(){
+                this.editMode = false;
+            }
+        }
+    });
 
     Vue.component('oneNav', {
         template: '#nav-tpl',
@@ -113,6 +221,9 @@
         data: function () {
             return {
                 editMode: false,
+                subNavEdit: false,
+                subNavName: "",
+                subNavIndex: 1,
                 cloneModel: _.clone(this.$get('nav'))
             }
         },
@@ -135,6 +246,34 @@
             delete: function () {
                 console.log('ask for delete')
                 this.$dispatch('delete', this.index, this.nav.id);
+            },
+            addSubNav: function () {
+                this.$set('subNavEdit', true);
+            },
+            cancelSubNav: function () {
+                this.$set('subNavEdit', false);
+            },
+            saveSubNav: function (navId) {
+                var self = this;
+                this.$http.post('/admin/setting/frontpage/navs', {
+                    name: self.subNavName,
+                    index: self.subNavIndex,
+                    type: "page",
+                    url: "",
+                    pid: parseInt(navId)
+                }, function (data) {
+                    self.nav.children.push(data);
+                    self.subNavName = "";
+                    self.subNavEdit = false;
+                }).error(function (data) {
+                    console.log(data);
+                });
+            }
+        },
+        events: {
+            remove: function(subNav){
+                console.log('成功');
+                self.nav.children.$remove(subNav);
             }
         }
     });
@@ -150,6 +289,7 @@
                     'url': "",
                     'type': "",
                     'index': 1,
+                    'pid': 0
                 }
             }
         },
@@ -160,6 +300,7 @@
                     'url': "",
                     'type': "",
                     'index': 1,
+                    'pid': 0
                 });
                 this.addMode = false;
             },

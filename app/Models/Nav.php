@@ -12,6 +12,11 @@ class Nav extends Model {
     protected $guarded = ['id'];
     protected $table = 'navs';
 
+    public function scopeParent($query) 
+    {
+    	return $query->where('pid', 0);
+    }
+
     public function children()
     {
         return $this->hasMany('App\Models\Nav', 'pid', 'id');
