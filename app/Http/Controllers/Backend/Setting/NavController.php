@@ -17,6 +17,7 @@ class NavController extends Controller
     {
         try {
             $data = $request->all();
+            $data = array_except($data, '_token');
             return $this->api->post('/api/admin/nav', $data);
         } catch (Exception $e) {
             return $e->getMessage();
@@ -27,8 +28,7 @@ class NavController extends Controller
     {
         try {
             $data = $request->all();
-            $this->api->put('/api/admin/nav/' . $id, $data);
-            return 1;
+            return $this->api->put('/api/admin/nav/' . $id, $data);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -37,12 +37,8 @@ class NavController extends Controller
     public function destroy($id)
     {
         try {
-            $this->api->delete('api/admin/nav/' . $id);
-
-            return 1;
-
+            return $this->api->delete('api/admin/nav/' . $id);
         } catch (Exception $e) {
-
             return $e->getMessage();
         }
     }

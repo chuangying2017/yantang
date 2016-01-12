@@ -13,7 +13,7 @@ class NavService {
             'children.children' => function ($query) {
                 $query->select(['id', 'name', 'type', 'url', 'index', 'pid'])->orderBy('index');
             }
-        ])->orderBy('index')->get(['id', 'name', 'type', 'url', 'index', 'pid']);
+        ])->parent()->orderBy('index')->get(['id', 'name', 'type', 'url', 'index', 'pid']);
 
         return $navs;
     }
