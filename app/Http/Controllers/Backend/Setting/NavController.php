@@ -15,31 +15,24 @@ class NavController extends Controller
 {
     public function store(Request $request)
     {
-        try {
             $data = $request->all();
             $data = array_except($data, '_token');
-            return $this->api->post('/api/admin/nav', $data);
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
+            return $this->api->raw()->post('/api/admin/nav', $data);
+        
     }
 
     public function update($id, Request $request)
     {
-        try {
+       
             $data = $request->all();
-            return $this->api->put('/api/admin/nav/' . $id, $data);
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
+            return $this->api->raw()->put('/api/admin/nav/' . $id, $data);
+        
     }
 
     public function destroy($id)
     {
-        try {
-            return $this->api->delete('api/admin/nav/' . $id);
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
+            return $this->api->raw()->delete('api/admin/nav/' . $id);
+            return 1;
+       
     }
 }

@@ -9,7 +9,6 @@
             <div class="row">
                 <div class="col-sm-1"></div>
                 <div class="col-sm-10">
-                    [! navs | json !]
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -101,7 +100,7 @@
                 <button type="button" @click.prevent="delete()" class="btn btn-default btn-sm"><i
                         class="fa fa-trash-o"></i> 删除
                 </button>
-                <button type="button" @click.prevent="addSubNav()" class="btn btn-default btn-sm"><i
+                <button type="button" @click.prevent="addSubNav()" class="btn btn-default btn-sm" v-if="nav.children.length < 3"><i
                         class="fa fa-list-ul"></i> 添加子导航
                 </button>
             </div>
@@ -199,11 +198,11 @@
                 });
             },
             delete: function(subnav, subId){
+                var self = this;
                 this.$http.delete('/admin/setting/frontpage/navs/' + subId, function (data) {
-                    console.log(subnav);
                     self.$dispatch('remove', subnav);
                 }).error(function (data) {
-                    console.error(data);
+                    // console.error(data);
                 });
             },
             activeEdit: function(){
@@ -262,7 +261,10 @@
                     url: "",
                     pid: parseInt(navId)
                 }, function (data) {
-                    self.nav.children.push(data);
+                    if(!data.nav.children){
+                        data.nav.children = [];
+                    }
+                    self.nav.children.push(data.nav);
                     self.subNavName = "";
                     self.subNavEdit = false;
                 }).error(function (data) {
@@ -272,8 +274,7 @@
         },
         events: {
             remove: function(subNav){
-                console.log('成功');
-                self.nav.children.$remove(subNav);
+                this.nav.children.$remove(subNav);
             }
         }
     });
@@ -311,7 +312,7 @@
                 var self = this;
                 var data = _.clone(this.$get('newNav'));
                 this.$http.post('/admin/setting/frontpage/navs', data, function (data) {
-                    self.navs.push(data);
+                    self.navs.push(data.nav);
                     self.reset();
                 }).error(function (data) {
                     console.error(data);
