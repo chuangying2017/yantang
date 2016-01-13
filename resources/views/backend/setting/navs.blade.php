@@ -135,7 +135,7 @@
 <script type="x-template" id="sub-nav">
     <tr v-if="editMode">
         <td colspan="2" style="background: #F9F9F9;">
-            <p class="sub-nav"> — <input type="text" class="form-control" style="display: inline-block; width: auto;" v-model="sub.name"></p>
+            <p class="sub-nav"> <i class="fa fa-list-ul"></i> <input type="text" class="form-control" style="display: inline-block; width: auto;" v-model="sub.name"></p>
         </td>
         <td><input type="text" class="form-control" v-model="sub.index"></td>
         <td>
@@ -156,7 +156,7 @@
     </tr>
     <tr v-else>
         <td colspan="2" style="background: #F9F9F9;">
-            <p class="sub-nav"> — [! sub.name !]</p>
+            <p class="sub-nav"> <i class="fa fa-list-ul"></i> [! sub.name !]</p>
         </td>
         <td>[! sub.index !]</td>
         <td>[! sub.type !]</td>
