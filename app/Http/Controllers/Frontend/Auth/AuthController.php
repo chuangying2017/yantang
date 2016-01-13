@@ -63,7 +63,7 @@ class AuthController extends Controller {
      * @param LoginRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postLogin(LoginRequest $request)
+    public function postLogin(Request $request)
     {
         // If the class is using the Throttles Login trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and

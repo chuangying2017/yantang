@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Frontend;
 
+use Faker\Provider\Uuid;
 use \SmsManager;
 use App\Http\Requests\SmsRequest as Request;
 use App\Http\Requests;
@@ -15,16 +16,19 @@ class SmsController extends Controller {
     public function __construct()
     {
         $this->phpSms = app('PhpSms');
-        $this->middleware('register.verify.phone', ['only' => 'verifyCode']);
     }
 
     private function parseInput($request)
     {
         $phone = $request->input('phone', null);
-        $uuid = $request->input('uuid', null);
+        $rule = $request->input('phoneRule', null);
+        $token = $request->input('token', null);
+        if ( ! $token) {
+            $token = $request->input('uuid', Uuid::uuid());
+        }
         $seconds = $request->input('seconds', 60);
 
-        return compact('phone', 'uuid', 'seconds');
+        return compact('phone', 'rule', 'token', 'seconds');
     }
 
     public function postVoiceVerify(Request $request)
@@ -45,11 +49,10 @@ class SmsController extends Controller {
             $data = SmsManager::getSentInfo();
             $data['sent'] = true;
             $data['phone'] = $phone;
-            $data['mobile'] = $phone;
             $data['code'] = $code;
             $data['deadline_time'] = time() + (15 * 60);
-            SmsManager::storeSentInfo($uuid, $data);
-            SmsManager::storeCanSendTime($uuid, $seconds);
+            SmsManager::storeSentInfo($token, $data);
+            SmsManager::setResendTime($token, $seconds);
             $verifyResult = SmsManager::genResult(true, 'voice_send_success');
         } else {
             $verifyResult = SmsManager::genResult(false, 'voice_send_failure');
@@ -79,7 +82,6 @@ class SmsController extends Controller {
         } catch (\Exception $e) {
             $content = $template;
         }
-
         $result = $this->phpSms->make($templates)->to($phone)
             ->data(['code' => $code, 'minutes' => $minutes])
             ->content($content)->send();
@@ -87,11 +89,10 @@ class SmsController extends Controller {
             $data = SmsManager::getSentInfo();
             $data['sent'] = true;
             $data['phone'] = $phone;
-            $data['mobile'] = $phone;
             $data['code'] = $code;
             $data['deadline_time'] = time() + ($minutes * 60);
-            SmsManager::storeSentInfo($uuid, $data);
-            SmsManager::storeCanSendTime($uuid, $seconds);
+            SmsManager::storeSentInfo($token, $data);
+            SmsManager::setResendTime($token, $seconds);
             $verifyResult = SmsManager::genResult(true, 'sms_send_success');
         } else {
             $verifyResult = SmsManager::genResult(false, 'sms_send_failure');
@@ -100,21 +101,16 @@ class SmsController extends Controller {
         return response()->json($verifyResult);
     }
 
-    public function verifyCode()
-    {
-        return $this->response->array(['data' => 'success']);
-    }
-
-    public function getInfo(Request $request, $uuid = null)
+    public function getInfo(Request $request, $token = null)
     {
         $html = '<meta charset="UTF-8"/><h2 align="center" style="margin-top: 20px;">Hello, welcome to laravel-sms v2.0</h2>';
         $html .= '<p style="color: #666;"><a href="https://github.com/toplan/laravel-sms" target="_blank">laravel-sms源码</a>托管在GitHub，欢迎你的使用。如有问题和建议，欢迎提供issue。当然你也能为该项目提供开源代码，让laravel-sms支持更多服务商。</p>';
         $html .= '<hr>';
         $html .= '<p>你可以在调试模式(设置config/app.php中的debug为true)下查看到存储在session中的验证码短信相关数据(方便你进行调试)：</p>';
         echo $html;
-        $uuid = $uuid ?: $request->input('uuid', null);
+        $token = $token ?: $request->input('token', null);
         if (config('app.debug')) {
-            $smsData = SmsManager::retrieveDebugInfo($uuid);
+            $smsData = SmsManager::retrieveDebugInfo($token);
             dd($smsData);
         } else {
             echo '<p align="center" style="color: #ff0000;;">现在是非调试模式，无法查看验证码短信数据</p>';
