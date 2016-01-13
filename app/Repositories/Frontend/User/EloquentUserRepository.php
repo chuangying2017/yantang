@@ -47,16 +47,17 @@ class EloquentUserRepository implements UserContract {
     public function create($data, $provider = false)
     {
         $user = User::create([
-            'name'              => $data['name'],
-            'email'             => $data['email'],
+            'name'              => array_get($data, 'name', ''),
+            'email'             => array_get($data, 'email', ''),
+            'phone'             => array_get($data, 'phone'),
             'password'          => $provider ? null : $data['password'],
             'confirmation_code' => md5(uniqid(mt_rand(), true)),
             'confirmed'         => config('access.users.confirm_email') ? 0 : 1,
         ]);
-        $user->attachRole($this->role->getDefaultUseRole());
+
+        $user->attachRole($this->role->getDefaultUserRole());
 
         if (config('access.users.confirm_email') && $provider === false)
-
             $this->sendConfirmationEmail($user);
         else
             $user->confirmed = 1;
