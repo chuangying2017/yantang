@@ -13,7 +13,8 @@ use Laravel\Socialite\Contracts\Factory as Socialite;
  * Class Registrar
  * @package App\Services
  */
-class EloquentAuthenticationRepository implements AuthenticationContract {
+class EloquentAuthenticationRepository implements AuthenticationContract
+{
 
     /**
      * @var Socialite
@@ -61,23 +62,24 @@ class EloquentAuthenticationRepository implements AuthenticationContract {
      */
     public function login($request)
     {
-        if ($this->auth->attempt($request->only('email', 'password'), $request->has('remember'))) {
+        //@change to phone login
+        if ($this->auth->attempt($request->only('phone', 'password'), $request->has('remember'))) {
 
-            if ($this->auth->user()->status == 0) {
-                $this->auth->logout();
-                throw new GeneralException("Your account is currently deactivated.");
-            }
+            // if ($this->auth->user()->status == 0) {
+            //     $this->auth->logout();
+            //     throw new GeneralException("Your account is currently deactivated.");
+            // }
 
-            if ($this->auth->user()->status == 2) {
-                $this->auth->logout();
-                throw new GeneralException("Your account is currently banned.");
-            }
+            // if ($this->auth->user()->status == 2) {
+            //     $this->auth->logout();
+            //     throw new GeneralException("Your account is currently banned.");
+            // }
 
-            if ($this->auth->user()->confirmed == 0) {
-                $user_id = $this->auth->user()->id;
-                $this->auth->logout();
-                throw new GeneralException("Your account is not confirmed. Please click the confirmation link in your e-mail, or " . '<a href="' . route('account.confirm.resend', $user_id) . '">click here</a>' . " to resend the confirmation e-mail.");
-            }
+            // if ($this->auth->user()->confirmed == 0) {
+            //     $user_id = $this->auth->user()->id;
+            //     $this->auth->logout();
+            //     throw new GeneralException("Your account is not confirmed. Please click the confirmation link in your e-mail, or " . '<a href="' . route('account.confirm.resend', $user_id) . '">click here</a>' . " to resend the confirmation e-mail.");
+            // }
 
             event(new UserLoggedIn($this->auth->user()));
 
@@ -108,7 +110,7 @@ class EloquentAuthenticationRepository implements AuthenticationContract {
      */
     public function loginThirdParty($request, $provider)
     {
-        if ( ! $request) return $this->getAuthorizationFirst($provider);
+        if (!$request) return $this->getAuthorizationFirst($provider);
         $user = $this->users->findByUserNameOrCreate($this->getSocialUser($provider), $provider);
 
         /**

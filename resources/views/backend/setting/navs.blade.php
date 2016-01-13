@@ -9,7 +9,6 @@
             <div class="row">
                 <div class="col-sm-1"></div>
                 <div class="col-sm-10">
-                    [! navs | json !]
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -101,7 +100,7 @@
                 <button type="button" @click.prevent="delete()" class="btn btn-default btn-sm"><i
                         class="fa fa-trash-o"></i> 删除
                 </button>
-                <button type="button" @click.prevent="addSubNav()" class="btn btn-default btn-sm"><i
+                <button type="button" @click.prevent="addSubNav()" class="btn btn-default btn-sm" v-if="nav.children.length < 3"><i
                         class="fa fa-list-ul"></i> 添加子导航
                 </button>
             </div>
@@ -136,7 +135,7 @@
 <script type="x-template" id="sub-nav">
     <tr v-if="editMode">
         <td colspan="2" style="background: #F9F9F9;">
-            <p class="sub-nav"> — <input type="text" class="form-control" style="display: inline-block; width: auto;" v-model="sub.name"></p>
+            <p class="sub-nav"> <i class="fa fa-list-ul"></i> <input type="text" class="form-control" style="display: inline-block; width: auto;" v-model="sub.name"></p>
         </td>
         <td><input type="text" class="form-control" v-model="sub.index"></td>
         <td>
@@ -157,7 +156,7 @@
     </tr>
     <tr v-else>
         <td colspan="2" style="background: #F9F9F9;">
-            <p class="sub-nav"> — [! sub.name !]</p>
+            <p class="sub-nav"> <i class="fa fa-list-ul"></i> [! sub.name !]</p>
         </td>
         <td>[! sub.index !]</td>
         <td>[! sub.type !]</td>
@@ -199,11 +198,11 @@
                 });
             },
             delete: function(subnav, subId){
+                var self = this;
                 this.$http.delete('/admin/setting/frontpage/navs/' + subId, function (data) {
-                    console.log(subnav);
                     self.$dispatch('remove', subnav);
                 }).error(function (data) {
-                    console.error(data);
+                    // console.error(data);
                 });
             },
             activeEdit: function(){
@@ -262,7 +261,10 @@
                     url: "",
                     pid: parseInt(navId)
                 }, function (data) {
-                    self.nav.children.push(data);
+                    if(!data.nav.children){
+                        data.nav.children = [];
+                    }
+                    self.nav.children.push(data.nav);
                     self.subNavName = "";
                     self.subNavEdit = false;
                 }).error(function (data) {
@@ -272,8 +274,7 @@
         },
         events: {
             remove: function(subNav){
-                console.log('成功');
-                self.nav.children.$remove(subNav);
+                this.nav.children.$remove(subNav);
             }
         }
     });
@@ -311,7 +312,7 @@
                 var self = this;
                 var data = _.clone(this.$get('newNav'));
                 this.$http.post('/admin/setting/frontpage/navs', data, function (data) {
-                    self.navs.push(data);
+                    self.navs.push(data.nav);
                     self.reset();
                 }).error(function (data) {
                     console.error(data);
