@@ -18,14 +18,14 @@
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
-            <p class="login-box-msg">输入帐号邮箱和密码进行登入</p>
+            <p class="login-box-msg">输入手机帐号和密码进行登入</p>
 
             {!! Form::open(['url' => 'auth/login', 'role' => 'form']) !!}
                 <!-- <form action="auth/login" method="post"> -->
             {!! csrf_field() !!}
             <div class="form-group has-feedback">
-                <input type="email" class="form-control" placeholder="登录邮箱" name="email">
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <input type="phone" class="form-control" placeholder="手机号码" name="phone">
+                <span class="glyphicon glyphicon-phone form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
                 <input type="password" class="form-control" placeholder="登录密码" name="password">
@@ -49,7 +49,7 @@
             {!! Form::close() !!}
                 <!-- /.social-auth-links -->
 
-            <a href="password/email">密码忘记了？</a><br>
+            <a href="password/phone">密码忘记了？</a><br>
 
         </div>
         <!-- /.login-box-body -->

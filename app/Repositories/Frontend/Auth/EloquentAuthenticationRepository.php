@@ -13,7 +13,8 @@ use Laravel\Socialite\Contracts\Factory as Socialite;
  * Class Registrar
  * @package App\Services
  */
-class EloquentAuthenticationRepository implements AuthenticationContract {
+class EloquentAuthenticationRepository implements AuthenticationContract
+{
 
     /**
      * @var Socialite
@@ -61,7 +62,8 @@ class EloquentAuthenticationRepository implements AuthenticationContract {
      */
     public function login($request)
     {
-        if ($this->auth->attempt($request->only('email', 'password'), $request->has('remember'))) {
+        //@change to phone login
+        if ($this->auth->attempt($request->only('phone', 'password'), $request->has('remember'))) {
 
             // if ($this->auth->user()->status == 0) {
             //     $this->auth->logout();
@@ -108,7 +110,7 @@ class EloquentAuthenticationRepository implements AuthenticationContract {
      */
     public function loginThirdParty($request, $provider)
     {
-        if ( ! $request) return $this->getAuthorizationFirst($provider);
+        if (!$request) return $this->getAuthorizationFirst($provider);
         $user = $this->users->findByUserNameOrCreate($this->getSocialUser($provider), $provider);
 
         /**
