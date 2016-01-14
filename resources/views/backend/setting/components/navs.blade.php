@@ -100,7 +100,8 @@
                 <button type="button" @click.prevent="delete()" class="btn btn-default btn-sm"><i
                         class="fa fa-trash-o"></i> 删除
                 </button>
-                <button type="button" @click.prevent="addSubNav()" class="btn btn-default btn-sm" v-show="nav.children.length < 3"><i
+                <button type="button" @click.prevent="addSubNav()" class="btn btn-default btn-sm"
+                        v-show="nav.children.length < 3"><i
                         class="fa fa-list-ul"></i> 添加子导航
                 </button>
             </div>
@@ -109,7 +110,8 @@
     <tr is="sub-nav" v-for="subNav in nav.children" :sub="subNav"></tr>
     <tr v-if="subNavEdit">
         <td colspan="2">
-            <p class="sub-nav"> — <input type="text" class="form-control" style="display: inline-block; width: auto;" v-model="subNavName"></p>
+            <p class="sub-nav"> — <input type="text" class="form-control" style="display: inline-block; width: auto;"
+                                         v-model="subNavName"></p>
         </td>
         <td>
             <input type="text" class="form-control" v-model="subNavIndex">
@@ -135,7 +137,9 @@
 <script type="x-template" id="sub-nav">
     <tr v-if="editMode">
         <td colspan="2" style="background: #F9F9F9;">
-            <p class="sub-nav"> <i class="fa fa-list-ul"></i> <input type="text" class="form-control" style="display: inline-block; width: auto;" v-model="sub.name"></p>
+            <p class="sub-nav"><i class="fa fa-list-ul"></i> <input type="text" class="form-control"
+                                                                    style="display: inline-block; width: auto;"
+                                                                    v-model="sub.name"></p>
         </td>
         <td><input type="text" class="form-control" v-model="sub.index"></td>
         <td>
@@ -156,7 +160,7 @@
     </tr>
     <tr v-else>
         <td colspan="2" style="background: #F9F9F9;">
-            <p class="sub-nav"> <i class="fa fa-list-ul"></i> [! sub.name !]</p>
+            <p class="sub-nav"><i class="fa fa-list-ul"></i> [! sub.name !]</p>
         </td>
         <td>[! sub.index !]</td>
         <td>[! sub.type !]</td>
@@ -177,38 +181,38 @@
     Vue.component('subNav', {
         template: '#sub-nav',
         props: ['sub'],
-        data: function(){
+        data: function () {
             return {
                 editMode: false
             }
         },
         methods: {
-            save: function(subId){
+            save: function (subId) {
                 var self = this;
-                this.$http.put('/admin/setting/frontpage/navs/' + subId, {
+                this.$http.put('/admin/setting/navs/' + subId, {
                     name: self.sub.name,
                     index: self.sub.index,
                     type: "page",
                     url: "",
                     pid: parseInt(self.sub.pid)
-                }, function(data){
+                }, function (data) {
                     self.editMode = false;
-                }).error(function(){
+                }).error(function () {
                     console.error(data)
                 });
             },
-            delete: function(subnav, subId){
+            delete: function (subnav, subId) {
                 var self = this;
-                this.$http.delete('/admin/setting/frontpage/navs/' + subId, function (data) {
+                this.$http.delete('/admin/setting/navs/' + subId, function (data) {
                     self.$dispatch('remove', subnav);
                 }).error(function (data) {
                     // console.error(data);
                 });
             },
-            activeEdit: function(){
+            activeEdit: function () {
                 this.editMode = true;
             },
-            deactiveEdit: function(){
+            deactiveEdit: function () {
                 this.editMode = false;
             }
         }
@@ -254,14 +258,14 @@
             },
             saveSubNav: function (navId) {
                 var self = this;
-                this.$http.post('/admin/setting/frontpage/navs', {
+                this.$http.post('/admin/setting/navs', {
                     name: self.subNavName,
                     index: self.subNavIndex,
                     type: "page",
                     url: "",
                     pid: parseInt(navId)
                 }, function (data) {
-                    if(!data.nav.children){
+                    if (!data.nav.children) {
                         data.nav.children = [];
                     }
                     self.nav.children.push(data.nav);
@@ -273,7 +277,7 @@
             }
         },
         events: {
-            remove: function(subNav){
+            remove: function (subNav) {
                 this.nav.children.$remove(subNav);
             }
         }
@@ -311,8 +315,8 @@
             save: function () {
                 var self = this;
                 var data = _.clone(this.$get('newNav'));
-                this.$http.post('/admin/setting/frontpage/navs', data, function (data) {
-                    if(!data.nav.children){
+                this.$http.post('/admin/setting/navs', data, function (data) {
+                    if (!data.nav.children) {
                         data.nav.children = [];
                     }
                     self.navs.push(data.nav);
@@ -325,7 +329,7 @@
         events: {
             delete: function (index, id) {
                 var self = this;
-                this.$http.delete('/admin/setting/frontpage/navs/' + id, function (data) {
+                this.$http.delete('/admin/setting/navs/' + id, function (data) {
                     self.navs.splice(index, 1)
                 }).error(function (data) {
                     console.error(data)
@@ -333,7 +337,7 @@
             },
             save: function (index, id) {
                 var data = this.$get('navs')[index];
-                this.$http.put('/admin/setting/frontpage/navs/' + id, _.clone(data), function (data) {
+                this.$http.put('/admin/setting/navs/' + id, _.clone(data), function (data) {
                 }).error(function (data) {
                     console.error(data)
                 })

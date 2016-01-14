@@ -45,8 +45,8 @@
 <script type="x-template" id="banners-tpl">
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title" v-if="type == 'slider'">轮播图设置</h3>
-            <h3 class="box-title" v-else>导航图设置（需设置4个）</h3>
+            <h3 class="box-title" v-if="type == 'slider'">轮播图</h3>
+            <h3 class="box-title" v-else>最新动态（需设置4个）</h3>
             <!-- /.box-tools -->
         </div>
         <!-- /.box-header -->
@@ -173,7 +173,7 @@
             save: function () {
                 var self = this;
                 var data = _.clone(this.$get('newBanner'));
-                this.$http.post('/admin/setting/frontpage/banners', data, function (data) {
+                this.$http.post('/admin/setting/banners', data, function (data) {
                     self.banners.push(data.data);
                     self.reset();
                 }).error(function (data) {
@@ -184,7 +184,7 @@
         events: {
             delete: function (index, id) {
                 var self = this;
-                this.$http.delete('/admin/setting/frontpage/banners/' + id, function (data) {
+                this.$http.delete('/admin/setting/banners/' + id, function (data) {
                     self.banners.splice(index, 1)
                 }).error(function (data) {
                     console.error(data)
@@ -192,7 +192,7 @@
             },
             save: function (index, id) {
                 var data = this.$get('banners')[index];
-                this.$http.put('/admin/setting/frontpage/banners/' + id, _.clone(data), function (data) {
+                this.$http.put('/admin/setting/banners/' + id, _.clone(data), function (data) {
                 }).error(function (data) {
                     console.error(data)
                 })

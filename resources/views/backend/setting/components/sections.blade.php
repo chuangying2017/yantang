@@ -11,7 +11,7 @@
                 <label class="col-sm-2 control-label"><span class="c-red">*</span> 排版：</label>
                 <div class="col-sm-2">
                     <select name="" id="" class="form-control" v-model="section.style">
-                        <option value="rexiaochanpin" selected>热销产品</option>
+                        <option value="rexiaochanpin">热销产品</option>
                         <option value="xianshizhekou">限时折扣</option>
                         <option value="zuixindongtai">最新动态</option>
                         <option value="meiribikan">每日必看</option>
@@ -39,9 +39,13 @@
                                 <vue-images limit="1" :model.sync="section.products[n]['cover_image']"></vue-images>
                             </div>
                         </td>
-                        <td><input type="text" class="form-control" v-model="section.products[n]['title']"></td>
-                        <td><input type="number" class="form-control" v-model="section.products[n]['index']"></td>
-                        <td><input type="text" class="form-control" v-model="section.products[n]['url']"></td>
+                        <td><input type="text" class="form-control" v-model="section.products[n]['title']"
+                                   placeholder="必填">
+                        </td>
+                        <td><input type="number" class="form-control" v-model="section.products[n]['index']"
+                                   placeholder="必填"></td>
+                        <td><input type="text" class="form-control" v-model="section.products[n]['url']"
+                                   placeholder="必填"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -139,7 +143,7 @@
         props: ['sections'],
         data: function () {
             return {
-                base_url: '/admin/setting/frontpage/sections/'
+                base_url: '/admin/setting/sections/'
             }
         },
         methods: {
