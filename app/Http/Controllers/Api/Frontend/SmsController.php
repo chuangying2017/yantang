@@ -16,6 +16,7 @@ class SmsController extends Controller {
     public function __construct()
     {
         $this->phpSms = app('PhpSms');
+        $this->middleware('register.verify.phone', ['only' => 'verifyCode']);
     }
 
     private function parseInput($request)
@@ -49,6 +50,7 @@ class SmsController extends Controller {
             $data = SmsManager::getSentInfo();
             $data['sent'] = true;
             $data['phone'] = $phone;
+            $data['mobile'] = $phone;
             $data['code'] = $code;
             $data['deadline_time'] = time() + (15 * 60);
             SmsManager::storeSentInfo($token, $data);
@@ -99,6 +101,11 @@ class SmsController extends Controller {
         }
 
         return response()->json($verifyResult);
+    }
+
+    public function verifyCode()
+    {
+        return $this->response->array(['data' => 'success']);
     }
 
     public function getInfo(Request $request, $token = null)
