@@ -21,22 +21,23 @@ use Exception;
  * Class ProductRepository
  * @package App\Services\Product
  */
-class ProductRepository {
+class ProductRepository
+{
 
 
     public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP)
     {
         $query = Product::with('meta', 'data')->where('status', $status);
 
-        if ( ! is_null($category_id)) {
+        if (!is_null($category_id)) {
             $query = $query->whereIn('category_id', $category_id);
         }
 
-        if ( ! is_null($brand_id)) {
-            $query = $query->whereIn($brand_id);
+        if (!is_null($brand_id)) {
+            $query = $query->whereIn('brand_id', $brand_id);
         }
 
-        if ( ! is_null($orderBy)) {
+        if (!is_null($orderBy)) {
             if (ProductConst::getProductSortOption($orderBy)) {
                 $query = $query->orderBy($orderBy, $orderType);
             } else if ($orderBy == 'sales' || $orderBy == 'favs' || $orderBy == 'stock') {
@@ -45,7 +46,7 @@ class ProductRepository {
             }
         }
 
-        if ( ! is_null($paginate)) {
+        if (!is_null($paginate)) {
             $products = $query->paginate($paginate);
         } else {
             $products = $query->get();
