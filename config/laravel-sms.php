@@ -7,7 +7,7 @@ return [
      * 是否数据库记录日志
      * -----------------------------------
      */
-    'database_enable'  => false,
+    'database_enable'  => true,
 
     /*
      * -----------------------------------
@@ -79,7 +79,7 @@ return [
      * storePrefixKey: 存储key的prefix
      * storage: 存储方式
      */
-    'storage'       => 'Toplan\Sms\SessionStorage',
+    'storage'       => 'App\Services\Utilities\SmsStorage',
 
     'storePrefixKey' => 'laravel_sms_info',
 

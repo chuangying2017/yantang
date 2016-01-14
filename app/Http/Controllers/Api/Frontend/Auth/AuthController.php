@@ -25,7 +25,7 @@ class AuthController extends Controller {
     public function __construct(AuthenticationContract $auth)
     {
         $this->auth = $auth;
-        $this->middleware('register.verify.phone', ['only' => 'postRegister']);
+//        $this->middleware('register.verify.phone', ['only' => 'postRegister']);
     }
 
     /**

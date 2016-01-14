@@ -26,7 +26,7 @@ class CreateSmsTable extends Migration {
                 //content:内容
                 $table->text('content')->default('');
                 //voice_code:语言验证码code
-                $table->string('voice_code')->default('');
+                $table->string('voice_code')->nullable();
                 //发送失败次数
                 $table->mediumInteger('fail_times')->default(0);
                 //最后一次发送失败时间
