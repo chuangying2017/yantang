@@ -13,6 +13,23 @@ use Exception;
  */
 class BannerController extends Controller
 {
+    public function index()
+    {
+        $sliders = $this->api->get('api/admin/banners?type=slider');
+        $grids = $this->api->get('api/admin/banners?type=grid');
+        javascript()->put([
+            'config' => [
+                'api_url' => url('api/'),
+                'base_url' => url('/')
+            ],
+            'token' => csrf_token(),
+            'sliders' => $sliders['data'],
+            'grids' => $grids['data']
+        ]);
+
+        return view('backend.setting.banner');
+    }
+
     public function store(Request $request)
     {
         try {

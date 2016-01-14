@@ -13,6 +13,21 @@ use Exception;
  */
 class SectionController extends Controller
 {
+    public function index()
+    {
+        $sections = $this->api->get('api/admin/sections');
+        javascript()->put([
+            'config' => [
+                'api_url' => url('api/'),
+                'base_url' => url('/')
+            ],
+            'token' => csrf_token(),
+            'sections' => $sections['data']
+        ]);
+
+        return view('backend.setting.section');
+    }
+
     public function store(Request $request)
     {
         try {

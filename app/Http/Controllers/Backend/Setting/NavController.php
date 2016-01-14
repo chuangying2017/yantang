@@ -13,26 +13,41 @@ use Exception;
  */
 class NavController extends Controller
 {
+    public function index()
+    {
+        $navs = $this->api->get('api/admin/nav');
+        javascript()->put([
+            'config' => [
+                'api_url' => url('api/'),
+                'base_url' => url('/')
+            ],
+            'token' => csrf_token(),
+            'navs' => $navs['data']
+        ]);
+
+        return view('backend.setting.nav');
+    }
+
     public function store(Request $request)
     {
-            $data = $request->all();
-            $data = array_except($data, '_token');
-            return $this->api->raw()->post('/api/admin/nav', $data);
-        
+        $data = $request->all();
+        $data = array_except($data, '_token');
+        return $this->api->raw()->post('/api/admin/nav', $data);
+
     }
 
     public function update($id, Request $request)
     {
-       
-            $data = $request->all();
-            return $this->api->raw()->put('/api/admin/nav/' . $id, $data);
-        
+
+        $data = $request->all();
+        return $this->api->raw()->put('/api/admin/nav/' . $id, $data);
+
     }
 
     public function destroy($id)
     {
-            return $this->api->raw()->delete('api/admin/nav/' . $id);
-            return 1;
-       
+        return $this->api->raw()->delete('api/admin/nav/' . $id);
+        return 1;
+
     }
 }

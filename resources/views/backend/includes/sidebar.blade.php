@@ -86,8 +86,10 @@
                 <a href=""><span>商城设置</span><i
                         class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="{!!url('admin/mall/setting')!!}"><i class="fa fa-circle-o"></i>基础设置</a></li>
-                    <li><a href="{!!url('admin/setting/frontpage')!!}"><i class="fa fa-circle-o"></i>首页设置</a></li>
+                    <li><a href="{!!url('admin/setting/basic')!!}"><i class="fa fa-circle-o"></i>基础设置</a></li>
+                    <li><a href="{!!url('admin/setting/navs')!!}"><i class="fa fa-circle-o"></i>导航设置</a></li>
+                    <li><a href="{!!url('admin/setting/banners')!!}"><i class="fa fa-circle-o"></i>轮播设置</a></li>
+                    <li><a href="{!!url('admin/setting/sections')!!}"><i class="fa fa-circle-o"></i>商品组设置</a></li>
                 </ul>
             </li>
 
