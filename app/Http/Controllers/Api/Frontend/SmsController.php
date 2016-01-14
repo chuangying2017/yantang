@@ -91,6 +91,7 @@ class SmsController extends Controller {
             $data = SmsManager::getSentInfo();
             $data['sent'] = true;
             $data['phone'] = $phone;
+            $data['mobile'] = $phone;
             $data['code'] = $code;
             $data['deadline_time'] = time() + ($minutes * 60);
             SmsManager::storeSentInfo($token, $data);
