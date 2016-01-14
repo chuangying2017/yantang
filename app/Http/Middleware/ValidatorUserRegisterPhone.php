@@ -15,10 +15,11 @@ class ValidatorUserRegisterPhone {
      */
     public function handle($request, Closure $next)
     {
+        $token = $request->input('token', null) ?: $request->input('uuid', null);
         //验证手机验证码
         $validator = \Validator::make($request->all(), [
-            'phone' => 'required|confirm_mobile_not_change',
-            'code'  => 'required|verify_code',
+            'phone' => 'required|confirm_mobile_not_change:' . $token,
+            'code'  => 'required|verify_code:' . $token,
         ]);
         if ($validator->fails()) {
             //验证失败后建议清空存储的短信发送信息，防止用户重复试错

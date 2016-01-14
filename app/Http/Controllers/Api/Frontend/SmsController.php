@@ -25,7 +25,7 @@ class SmsController extends Controller {
         $rule = $request->input('phoneRule', null);
         $token = $request->input('token', null);
         if ( ! $token) {
-            $token = $request->input('uuid', Uuid::uuid());
+            $token = $request->input('uuid', null);
         }
         $seconds = $request->input('seconds', 60);
 
