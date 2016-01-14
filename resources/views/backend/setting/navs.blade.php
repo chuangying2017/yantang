@@ -100,7 +100,7 @@
                 <button type="button" @click.prevent="delete()" class="btn btn-default btn-sm"><i
                         class="fa fa-trash-o"></i> 删除
                 </button>
-                <button type="button" @click.prevent="addSubNav()" class="btn btn-default btn-sm" v-if="nav.children.length < 3"><i
+                <button type="button" @click.prevent="addSubNav()" class="btn btn-default btn-sm" v-show="nav.children.length < 3"><i
                         class="fa fa-list-ul"></i> 添加子导航
                 </button>
             </div>
@@ -312,6 +312,9 @@
                 var self = this;
                 var data = _.clone(this.$get('newNav'));
                 this.$http.post('/admin/setting/frontpage/navs', data, function (data) {
+                    if(!data.nav.children){
+                        data.nav.children = [];
+                    }
                     self.navs.push(data.nav);
                     self.reset();
                 }).error(function (data) {
