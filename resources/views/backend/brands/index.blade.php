@@ -57,6 +57,10 @@
                                             <a href="{{url('/admin/brands/' . $brand->id)}}"
                                                class="btn btn-default btn-sm"><i
                                                     class="fa fa-pencil"></i></a>
+                                            <a target="_blank"
+                                               href="{{ env('CLIENT_PC_DOMAIN') . 'products?brand_id=' . $brand->id}}"
+                                               class="btn btn-default btn-sm"><i
+                                                    class="fa fa-eye"></i></a>
                                             <form style="display: inline-block"
                                                   action="{{url('/admin/brands/' . $brand->id)}}" ,
                                                   method="post">
