@@ -8,7 +8,8 @@ use Exception;
 use Pingpp\Charge;
 use Pingpp\Pingpp;
 
-class PingxxService implements PaymentInterface {
+class PingxxService implements PaymentInterface
+{
 
     private static $payment_no;
     use UserHelper;
@@ -51,16 +52,16 @@ class PingxxService implements PaymentInterface {
 
             $charge = Charge::create(
                 [
-                    "amount"    => $amount,
-                    "channel"   => $channel,
-                    "order_no"  => $pingxx_payment_no,
-                    "currency"  => PingxxProtocol::PAID_PACKAGE_CURRENCY,
+                    "amount" => $amount,
+                    "channel" => $channel,
+                    "order_no" => $pingxx_payment_no,
+                    "currency" => PingxxProtocol::PAID_PACKAGE_CURRENCY,
                     "client_ip" => $user_ip,
-                    "app"       => ["id" => env(env('PINGPP_APP_NAME') . '_PINGPP_APPID')],
-                    "subject"   => '东方丽人订单',
-                    "body"      => '订单号:' . $order_no,
-                    "extra"     => self::getExtraData($channel),
-                    "metadata"  => ['order_no' => $order_no]
+                    "app" => ["id" => env(env('PINGPP_APP_NAME') . '_PINGPP_APPID')],
+                    "subject" => '东方丽人订单',
+                    "body" => '订单号:' . $order_no,
+                    "extra" => self::getExtraData($channel),
+                    "metadata" => ['order_no' => $order_no]
                 ]
             );
 
@@ -78,7 +79,7 @@ class PingxxService implements PaymentInterface {
             case 'alipay_wap':
                 $extra = array(
                     'success_url' => 'http://www.yourdomain.com/success',
-                    'cancel_url'  => 'http://www.yourdomain.com/cancel'
+                    'cancel_url' => 'http://www.yourdomain.com/cancel'
                 );
                 break;
             case 'upmp_wap':
@@ -89,10 +90,15 @@ class PingxxService implements PaymentInterface {
             case 'bfb_wap':
                 $extra = array(
                     'result_url' => 'http://www.yourdomain.com/result?code=',
-                    'bfb_login'  => true
+                    'bfb_login' => true
                 );
                 break;
             case 'upacp_wap':
+                $extra = array(
+                    'result_url' => 'http://www.yourdomain.com/result'
+                );
+                break;
+            case 'upacp_pc':
                 $extra = array(
                     'result_url' => 'http://www.yourdomain.com/result'
                 );
@@ -110,19 +116,19 @@ class PingxxService implements PaymentInterface {
             case 'yeepay_wap':
                 $extra = array(
                     'product_category' => '1',
-                    'identity_id'      => 'your identity_id',
-                    'identity_type'    => 1,
-                    'terminal_type'    => 1,
-                    'terminal_id'      => 'your terminal_id',
-                    'user_ua'          => 'your user_ua',
-                    'result_url'       => 'http://www.yourdomain.com/result'
+                    'identity_id' => 'your identity_id',
+                    'identity_type' => 1,
+                    'terminal_type' => 1,
+                    'terminal_id' => 'your terminal_id',
+                    'user_ua' => 'your user_ua',
+                    'result_url' => 'http://www.yourdomain.com/result'
                 );
                 break;
             case 'jdpay_wap':
                 $extra = array(
                     'success_url' => 'http://www.yourdomain.com',
-                    'fail_url'    => 'http://www.yourdomain.com',
-                    'token'       => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
+                    'fail_url' => 'http://www.yourdomain.com',
+                    'token' => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
                 );
                 break;
             case 'alipay_pc_direct':
@@ -176,7 +182,7 @@ class PingxxService implements PaymentInterface {
             if ($pingxx_charge->paid) {
 
                 //若为非测试环境,但账单为测试账单,则标记为未支付
-                if (env('PINGPP_ACCOUNT_TYPE') != 'TEST' && ! $pingxx_charge->livemode) {
+                if (env('PINGPP_ACCOUNT_TYPE') != 'TEST' && !$pingxx_charge->livemode) {
                     throw new \Exception('支付环境配置错误');
                 }
 
@@ -231,20 +237,23 @@ class PingxxService implements PaymentInterface {
     public static function getPaidCharge($order, $channel)
     {
         $amount = $order['pay_amount'];
-        $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel);
-        if ( ! $pingxx_payment) {
-            self::generatePingppBilling($order, $amount, $channel);
-        }
-        $charge = self::pingxxNeedPayOrFetchCharge($pingxx_payment);
-        //若渠道已支付则不需要继续处理
-        if ( ! $charge) {
-            return 0;
-        }
 
-        return [
-            'charge'  => $charge,
-            'payment' => $pingxx_payment
-        ];
+
+        return self::generatePingppBilling($order, $amount, $channel);
+//        $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel);
+//        if (!$pingxx_payment) {
+//            return self::generatePingppBilling($order, $amount, $channel);
+//        }
+//        $charge = self::pingxxNeedPayOrFetchCharge($pingxx_payment);
+//        //若渠道已支付则不需要继续处理
+//        if (!$charge) {
+//            return 0;
+//        }
+//
+//        return [
+//            'charge' => $charge,
+//            'payment' => $pingxx_payment
+//        ];
     }
 
     public static function orderIsPaidByPingxx($order_id)
@@ -254,7 +263,7 @@ class PingxxService implements PaymentInterface {
         if (count($payments)) {
             foreach ($payments as $payment) {
                 //订单已支付
-                if ( ! self::pingxxNeedPayOrFetchCharge($payment)) {
+                if (!self::pingxxNeedPayOrFetchCharge($payment)) {
                     return true;
                 }
             }
