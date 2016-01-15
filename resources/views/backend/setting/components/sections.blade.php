@@ -18,6 +18,12 @@
                     </select>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="c-red">*</span> 排序：</label>
+                <div class="col-sm-2">
+                    <input type="number" class="form-control" v-model="section.index">
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-1"></div>
@@ -105,6 +111,7 @@
     var SectionModel = {
         title: "",
         style: "",
+        index: 1,
         products: []
     };
 
