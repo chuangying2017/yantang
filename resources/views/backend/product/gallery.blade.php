@@ -263,10 +263,12 @@
         outline: none;
         cursor: pointer;
     }
-    .load-wrap{
+
+    .load-wrap {
         padding: 10px 30px;
     }
-    .wx-loadmore{
+
+    .wx-loadmore {
         -webkit-appearance: none;
         width: 100%;
         border: 0 none;
@@ -301,7 +303,8 @@
                                 <vue-gallery-image v-for=" image in images" :image="image"></vue-gallery-image>
                             </ul>
                             <div class="load-wrap">
-                                <button @click.prevent="loadMore()" v-if="pagination.current_page < pagination.total_pages" class="wx-loadmore">
+                                <button @click.prevent="loadMore()"
+                                        v-if="pagination.current_page < pagination.total_pages" class="wx-loadmore">
                                     加载更多
                                 </button>
                             </div>
@@ -484,10 +487,16 @@
 
         },
 
+        computed: {
+            next_page: function () {
+                return (parseInt(this.pagination.current_page) + 1);
+            }
+        },
+
         methods: {
             loadMore: function () {
                 var self = this;
-                this.$http.get(app.config.api_url + '/admin/images?page=' + this.pagination.current_page + 1, function (images) {
+                this.$http.get(app.config.api_url + '/admin/images?page=' + this.next_page, function (images) {
                     _.map(images.data, function (val) {
                         self.images.push(val);
                     });
