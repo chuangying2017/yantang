@@ -76,8 +76,13 @@ class FavRepository {
     public static function delete($user_id, $fav_id)
     {
         $id = to_array($fav_id);
+        $query = ProductCollection::whereIn('id', $id);
 
-        return ProductCollection::where('user_id', $user_id)->whereIn('id', $id)->delete();
+        if ( ! is_null($user_id)) {
+            $query = $query->where('user_id', $user_id);
+        }
+
+        return $query->delete();
     }
 
 
