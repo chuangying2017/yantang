@@ -15,7 +15,7 @@ class CreateClientsTable extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->integer('user_id')->primaryKey();
             $table->string('nickname');
-            $table->timestamp('birthday');
+            $table->timestamp('birthday')->default('2016-1-1 00:00:00');
             $table->string('avatar');
             $table->string('sex');
             $table->boolean('status')->default(1);

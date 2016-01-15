@@ -42,6 +42,15 @@
         .btn-group + .btn-group {
             margin-left: 0px;
         }
+        .img-holder{
+            width: 50px;
+            height: 50px;
+            background: #ddd;
+            color: #A2A2A2;
+            font-size: 12px;
+            text-align: center;
+            line-height: 50px;
+        }
     </style>
 @endsection
 
