@@ -95,7 +95,7 @@ class CheckOutController extends Controller {
             if ( ! $charge) {
                 throw new OrderIsPaid();
             }
-            
+
             return $this->response->array($charge);
         } catch (OrderAuthFail $e) {
             $this->response->errorForbidden($e->getMessage());

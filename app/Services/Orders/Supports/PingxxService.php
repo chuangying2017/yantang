@@ -233,7 +233,7 @@ class PingxxService implements PaymentInterface {
         $amount = $order['pay_amount'];
         $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel);
         if ( ! $pingxx_payment) {
-            return self::generatePingppBilling($order, $amount, $channel);
+            self::generatePingppBilling($order, $amount, $channel);
         }
         $charge = self::pingxxNeedPayOrFetchCharge($pingxx_payment);
         //若渠道已支付则不需要继续处理
