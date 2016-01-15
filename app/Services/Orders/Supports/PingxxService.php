@@ -48,6 +48,7 @@ class PingxxService implements PaymentInterface {
 
             self::setPingxxKey();
             self::setPaymentNo($pingxx_payment_no);
+
             $charge = Charge::create(
                 [
                     "amount"    => $amount,
@@ -122,6 +123,11 @@ class PingxxService implements PaymentInterface {
                     'success_url' => 'http://www.yourdomain.com',
                     'fail_url'    => 'http://www.yourdomain.com',
                     'token'       => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
+                );
+                break;
+            case 'alipay_pc_direct':
+                $extra = array(
+                    'success_url' => route('api.orders.index')
                 );
                 break;
             default:

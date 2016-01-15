@@ -91,15 +91,12 @@ class CheckOutController extends Controller {
 
             $charge = Checkout::checkout($order_no, $channel);
 
+
             if ( ! $charge) {
                 throw new OrderIsPaid();
             }
-
-            $pay_data = [
-                'pay_url' => $charge->credential->$channel,
-            ];
-
-            return $this->response->array(['data' => $pay_data]);
+            
+            return $this->response->array($charge);
         } catch (OrderAuthFail $e) {
             $this->response->errorForbidden($e->getMessage());
         } catch (OrderIsPaid $e) {
