@@ -25,19 +25,29 @@ class CheckOutController extends Controller {
             if ( ! Checkout::orderNeedPay($user_id, $order)) {
                 $order = OrderService::show($user_id, $order_no);
 
-                return $this->response->array($order);
+                return $this->response->array(['order' => self::transformOrder($order)]);
             }
 
             //订单未支付,返回订单数据和支付方式
             $agent = $this->getAgent();
             $channels = Checkout::channel($agent);
 
-            return $this->response->array(compact('channels', 'order'));
+            return $this->response->array(['channels' => $channels, 'order' => self::transformOrder($order)]);
         } catch (OrderAuthFail $e) {
             $this->response->errorForbidden($e->getMessage());
         } catch (\Exception $e) {
             return $e->getTrace();
         }
+    }
+
+    protected static function transformOrder($order)
+    {
+        $order['total_amount'] = display_price(array_get($order, 'total_amount'));
+        $order['discount_fee'] = display_price(array_get($order, 'discount_fee'));
+        $order['pay_amount'] = display_price(array_get($order, 'pay_amount'));
+        $order['post_fee'] = display_price(array_get($order, 'post_fee'));
+
+        return $order;
     }
 
     /**
