@@ -64,24 +64,24 @@ class CheckOutController extends Controller {
 
 
             #TODO REMOVE TEST PAY
-            $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
-            PingxxProtocol::validChannel($channel);
-
-            $charge = Checkout::checkout($order_no, $channel);
-
-            if ( ! $charge) {
-                throw new OrderIsPaid();
-            }
-
-            $url = 'https://api.pingxx.com/notify/charges/' . $charge->id . '?livemode=false';
-
-            $res = HttpHelper::http_get($url);
+//            $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
+//            PingxxProtocol::validChannel($channel);
+//
+//            $charge = Checkout::checkout($order_no, $channel);
+//
+//            if ( ! $charge) {
+//                throw new OrderIsPaid();
+//            }
+//
+//            $url = 'https://api.pingxx.com/notify/charges/' . $charge->id . '?livemode=false';
+//
+//            $res = HttpHelper::http_get($url);
             #TODO END REMOVE TEST PAY
 
             //若订单已支付则返回订单信息
             if ( ! Checkout::orderNeedPay($user_id, $order_no)) {
                 #TODO REMOVE TEST PAY
-                return $this->response->array(['data' => $res]);
+//                return $this->response->array(['data' => $res]);
                 #TODO END REMOVE TEST PAY
                 throw new OrderIsPaid();
             }
