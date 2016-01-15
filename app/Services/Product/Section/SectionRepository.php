@@ -29,7 +29,7 @@ class SectionRepository {
     {
         try {
 
-            $data = array_only($data, ['title', 'style', 'url']);
+            $data = array_only($data, ['title', 'style', 'url', 'index']);
             $section = Section::create($data);
 
             return $section;
@@ -50,7 +50,7 @@ class SectionRepository {
         try {
             $section = Section::findOrFail($id);
 
-            $section->fill(array_only($data, ['title', 'style', 'url']));
+            $section->fill(array_only($data, ['title', 'style', 'url', 'index']));
             $section->save();
 
             return $section;
@@ -62,7 +62,7 @@ class SectionRepository {
     public static function lists()
     {
         try {
-            $sections = Section::with('products')->get();
+            $sections = Section::with('products')->orderBy('index')->get();
         } catch (\Exception $e) {
             throw $e;
         }
@@ -95,7 +95,16 @@ class SectionRepository {
 
     public static function show($id)
     {
-        return Section::with('products')->findOrFail($id);
+        if (is_numeric($id)) {
+            return Section::with('products')->findOrFail($id);
+        }
+
+        return self::byTitle($id);
+    }
+
+    public static function byTitle($title)
+    {
+        return Section::with('products')->where('title', $title)->firstOrFail();
     }
 
 
