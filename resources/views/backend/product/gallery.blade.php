@@ -263,6 +263,19 @@
         outline: none;
         cursor: pointer;
     }
+    .load-wrap{
+        padding: 10px 30px;
+    }
+    .wx-loadmore{
+        -webkit-appearance: none;
+        width: 100%;
+        border: 0 none;
+        border-radius: 3px;
+        padding: 5px 0;
+        background: #EAEAEA;
+        color: #B3B3B3;
+        outline: none;
+    }
 </style>
 {!! HTML::script('js/webuploader/webuploader.html5only.min.js') !!}
 <script type="x-template" id="vue-gallery-image">
@@ -287,9 +300,11 @@
                             <ul>
                                 <vue-gallery-image v-for=" image in images" :image="image"></vue-gallery-image>
                             </ul>
-                            <button @click.prevent="loadMore()" v-if="pagination.current_page < pagination.total_pages">
-                                加载更多
-                            </button>
+                            <div class="load-wrap">
+                                <button @click.prevent="loadMore()" v-if="pagination.current_page < pagination.total_pages" class="wx-loadmore">
+                                    加载更多
+                                </button>
+                            </div>
                         </div>
                     </section>
                     <footer class="wx-modal-footer">

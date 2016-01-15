@@ -26,7 +26,8 @@
                     <thead>
                     <tr>
                         <th width="10%">图片</th>
-                        <th width="30%">标题</th>
+                        <th width="10%">上传/修改</th>
+                        <th width="20%">标题</th>
                         <th width="10%">排序</th>
                         <th width="20%">链接</th>
                     </tr>
@@ -35,9 +36,14 @@
                     <tr v-for="n in style[section.style]['limit']">
                         <td>
                             <div class="home-banner">
+                                <div class="img-holder" v-show="!section.products[n]">
+                                    请上传
+                                </div>
                                 <img :src="section.products[n]['cover_image']" alt="">
-                                <vue-images limit="1" :model.sync="section.products[n]['cover_image']"></vue-images>
                             </div>
+                        </td>
+                        <td>
+                            <vue-images limit="1" :model.sync="section.products[n]['cover_image']"></vue-images>
                         </td>
                         <td><input type="text" class="form-control" v-model="section.products[n]['title']"
                                    placeholder="必填">
