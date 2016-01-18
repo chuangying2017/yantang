@@ -65,11 +65,11 @@ return [
      * codeLength: 验证码长度
      * codeValidTime: 验证码有效时间长度，单位为分钟(minutes)
      */
-    'verifySmsContent' => "【东方丽人】亲爱的用户，您的验证码是%s。有效期为%s分钟，请尽快验证",
+    'verifySmsContent' => "【东方丽人】亲爱的用户，您的验证码是%s。有效期为半小时，请尽快验证",
 
     'codeLength' => 5,
 
-    'codeValidTime' => 5,
+    'codeValidTime' => 30,
 
 
     /*

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
 use App\Services\Orders\OrderProtocol;
 use App\Services\Orders\Supports\PingxxPaymentRepository;

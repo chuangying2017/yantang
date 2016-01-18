@@ -77,7 +77,7 @@ class PingxxService implements PaymentInterface {
         switch ($channel) {
             case 'alipay_wap':
                 $extra = array(
-                    'success_url' => 'http://www.yourdomain.com/success',
+                    'success_url' => env('PAYMENT_SUCCESS_URL'),
                     'cancel_url'  => 'http://www.yourdomain.com/cancel'
                 );
                 break;
@@ -94,7 +94,12 @@ class PingxxService implements PaymentInterface {
                 break;
             case 'upacp_wap':
                 $extra = array(
-                    'result_url' => 'http://www.yourdomain.com/result'
+                    'result_url' => env('PAYMENT_SUCCESS_URL')
+                );
+                break;
+            case 'upacp_pc':
+                $extra = array(
+                    'result_url' => env('PAYMENT_SUCCESS_URL')
                 );
                 break;
             case 'wx_pub':
@@ -115,19 +120,19 @@ class PingxxService implements PaymentInterface {
                     'terminal_type'    => 1,
                     'terminal_id'      => 'your terminal_id',
                     'user_ua'          => 'your user_ua',
-                    'result_url'       => 'http://www.yourdomain.com/result'
+                    'result_url'       => env('PAYMENT_SUCCESS_URL')
                 );
                 break;
             case 'jdpay_wap':
                 $extra = array(
-                    'success_url' => 'http://www.yourdomain.com',
+                    'success_url' => env('PAYMENT_SUCCESS_URL'),
                     'fail_url'    => 'http://www.yourdomain.com',
                     'token'       => 'dsafadsfasdfadsjuyhfnhujkijunhaf'
                 );
                 break;
             case 'alipay_pc_direct':
                 $extra = array(
-                    'success_url' => route('api.orders.index')
+                    'success_url' => env('PAYMENT_SUCCESS_URL'),
                 );
                 break;
             default:
@@ -231,20 +236,23 @@ class PingxxService implements PaymentInterface {
     public static function getPaidCharge($order, $channel)
     {
         $amount = $order['pay_amount'];
-        $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel);
-        if ( ! $pingxx_payment) {
-            return self::generatePingppBilling($order, $amount, $channel);
-        }
-        $charge = self::pingxxNeedPayOrFetchCharge($pingxx_payment);
-        //若渠道已支付则不需要继续处理
-        if ( ! $charge) {
-            return 0;
-        }
 
-        return [
-            'charge'  => $charge,
-            'payment' => $pingxx_payment
-        ];
+
+        return self::generatePingppBilling($order, $amount, $channel);
+//        $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel);
+//        if (!$pingxx_payment) {
+//            return self::generatePingppBilling($order, $amount, $channel);
+//        }
+//        $charge = self::pingxxNeedPayOrFetchCharge($pingxx_payment);
+//        //若渠道已支付则不需要继续处理
+//        if (!$charge) {
+//            return 0;
+//        }
+//
+//        return [
+//            'charge' => $charge,
+//            'payment' => $pingxx_payment
+//        ];
     }
 
     public static function orderIsPaidByPingxx($order_id)

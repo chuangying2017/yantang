@@ -15,6 +15,7 @@ $router->group(['namespace' => 'Language'], function () use ($router) {
  * Namespaces indicate folder structure
  */
 $router->group(['namespace' => 'Frontend'], function () use ($router) {
+    require(__DIR__ . "/Routes/Frontend/Payment.php");
     require(__DIR__ . "/Routes/Frontend/Frontend.php");
     require(__DIR__ . "/Routes/Frontend/Access.php");
 });

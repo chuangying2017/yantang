@@ -26,6 +26,7 @@ class ClientRepository {
      *
      */
     const CREATE_USER_ERROR = "create client error";
+    const DEFAULT_AVATAR = 'http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg';
 
     /**
      * create a new client
@@ -39,7 +40,10 @@ class ClientRepository {
     public static function create($user)
     {
         //create a client
-        Client::firstOrCreate(['user_id' => $user->id]);
+        Client::updateOrCreate(
+            ['user_id' => $user->id],
+            ['user_id' => $user->id, 'nickname' => $user->name, 'avatar' => self::DEFAULT_AVATAR]
+        );
         //create wallet
         Wallet::firstOrCreate(['user_id' => $user->id]);
         //create creditWallet
