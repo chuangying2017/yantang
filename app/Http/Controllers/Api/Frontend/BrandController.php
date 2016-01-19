@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class BrandController extends Controller {
+class BrandController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -22,7 +23,7 @@ class BrandController extends Controller {
         try {
             $category_id = $request->input('category_id') ?: null;
 
-            if ( ! is_null($category_id)) {
+            if (!is_null($category_id)) {
                 $brands = BrandService::getByCategory($category_id);
             } else {
                 $brands = BrandService::getAll();
@@ -44,6 +45,9 @@ class BrandController extends Controller {
     public function show($id)
     {
         //
+        $brand = BrandService::show($id);
+
+        return $this->response->item($brand, new BrandTransformer())
     }
 
     /**
