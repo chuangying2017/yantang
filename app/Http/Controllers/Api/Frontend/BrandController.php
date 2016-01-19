@@ -47,7 +47,7 @@ class BrandController extends Controller
         //
         $brand = BrandService::show($id);
 
-        return $this->response->item($brand, new BrandTransformer())
+        return $this->response->item($brand, new BrandTransformer());
     }
 
     /**
