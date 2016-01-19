@@ -16,7 +16,8 @@ use Exception;
  * Class CategoryRepository
  * @package App\Services\Product\Category
  */
-class CategoryRepository {
+class CategoryRepository
+{
 
     /**
      * create a new category
@@ -29,17 +30,18 @@ class CategoryRepository {
      */
     public static function create($name, $category_cover = "", $desc = "", $pid = null)
     {
-        $node = new Category;
+        $pid = (is_numeric($pid) && $pid) ? $pid : null;
+        $node = new Category();
         $node->name = $name;
         $node->pid = $pid;
         $node->category_cover = $category_cover;
         $node->desc = $desc;
-        $node->save();
 
-        if ($pid) {
+        if (is_numeric($pid) && $pid) {
             $parent = Category::findOrFail($pid);
             $node->makeChildOf($parent);
         }
+        $node->save();
 
         return $node;
     }
