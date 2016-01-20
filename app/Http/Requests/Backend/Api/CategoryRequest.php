@@ -28,9 +28,12 @@ class CategoryRequest extends Request {
 
         if ($this->isMethod('POST') || $this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $rules = [
-                'name' => 'required',
+                'name' => 'required|unique:categories,name',
                 'pid'  => 'sometimes|exists:categories,id'
             ];
+            if(is_null($this->input('pid')) || $this->input('pid') == 0) {
+                $rules['pid'] = '';
+            }
         }
 
         return $rules;

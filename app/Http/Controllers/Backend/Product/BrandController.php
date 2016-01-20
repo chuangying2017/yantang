@@ -39,18 +39,14 @@ class BrandController extends Controller
 
             $data = $request->all();
 
-            $result = $this->api->post('api/admin/brands', [
+            $result = $this->api->raw()->post('api/admin/brands', [
                 'name' => array_get($data, 'name', ''),
                 'cover_image' => array_get($data, 'cover_image', '')
             ]);
-
-            if ($result) {
-                return redirect('/admin/brands');
+            if ($result->getStatusCode() == 201) {
+                return redirect()->to('/admin/brands');
             }
-
-
-        } catch (Exception $e) {
-
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }

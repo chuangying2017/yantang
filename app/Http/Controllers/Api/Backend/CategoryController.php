@@ -44,7 +44,7 @@ class CategoryController extends Controller
 
         $data = CategoryService::create($name, $cover, $desc, $pid);
 
-        return $this->setStatusCode(201)->array($data);
+        return $this->response->created(201)->setContent($data);
     }
 
     /**
