@@ -108,6 +108,7 @@
 </script>
 
 <script>
+    var base_url = "{{url('/admin/setting/sections')}}"
     var SectionModel = {
         title: "",
         style: "",
@@ -154,11 +155,6 @@
     Vue.component('product-sections', {
         template: '#sections-tpl',
         props: ['sections'],
-        data: function () {
-            return {
-                base_url: '/admin/setting/sections/'
-            }
-        },
         methods: {
             addSection: function () {
                 this.sections.push(_.clone(SectionModel));
@@ -166,7 +162,7 @@
         },
         events: {
             save: function (index, data, method) {
-                var url = data.id ? this.$get('base_url') + data.id : this.$get('base_url');
+                var url = data.id ? base_url + '/' + data.id : base_url;
                 var self = this;
                 this.$http[method](url, data, function (data) {
                     if (method == 'post') {
@@ -181,7 +177,7 @@
                 var section = this.sections[index]
                 var self = this;
                 if (section.id) {
-                    this.$http.delete(this.$get('base_url') + section.id, function (data) {
+                    this.$http.delete(base_url + '/' + section.id, function (data) {
                         return self.sections.splice(index, 1);
                     }).error(function (data) {
                         console.error(data)

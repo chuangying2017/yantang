@@ -40,17 +40,16 @@ class CategoryController extends Controller
 
             $data = $request->all();
 
-            $result = $this->api->post('api/admin/categories', [
+            $result = $this->api->raw()->post('api/admin/categories', [
                 'name' => array_get($data, 'name', ''),
-                'pid' => array_get($data, 'pid', null),
+                'pid' => array_get($data, 'pid', 0),
                 'category_cover' => array_get($data, 'category_cover', ''),
                 'desc' => array_get($data, 'desc', '')
             ]);
 
-            if ($result) {
-                return redirect('/admin/categories');
+            if ($result->getStatusCode() == 201) {
+                return redirect()->to('/admin/categories');
             }
-
 
         } catch (Exception $e) {
 

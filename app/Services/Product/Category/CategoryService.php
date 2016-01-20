@@ -145,7 +145,6 @@ class CategoryService {
         if ($mark) {
             $parent = self::markActive($parent, $node);
         }
-
         if ($decode) {
             return $parent->toHierarchy()->first();
         }

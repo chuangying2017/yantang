@@ -10,10 +10,11 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th width="20%">一级</th>
-                            <th width="20%">二级</th>
+                            <th width="15%">一级</th>
+                            <th width="15%">二级</th>
+                            <th width="10%">类型</th>
                             <th width="20%">选择三级导航</th>
-                            <th width="40%">三级菜单（最多15个）</th>
+                            <th width="40%">三级菜单（最多15个，浅色为品牌）</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -35,24 +36,30 @@
         <td>
             [! sub.name !]
         </td>
-        <td is="third-navs" :sub.sync="sub"></td>
+        <td is="third-navs" :sub.sync="sub" :cats="cats" :brands="brands"></td>
     </tr>
 </script>
 
 <script type="x-template" id="thirdNavs">
+    <td>
+        <select class="form-control" v-model="navType">
+            <option value="cat">类目</option>
+            <option value="brand">品牌</option>
+        </select>
+    </td>
     <td style="position: relative;">
-        <input type="text" class="form-control" v-model="selectCat" placeholder="搜索类目并点击添加"
+        <input type="text" class="form-control" v-model="selectType" placeholder="搜索类目并点击添加"
                :disabled="sub.children.length >= 15">
-        <ul class="cat-dropdown" v-show="catsActive">
-            <li v-for="cat in cats | filterBy selectCat | limitBy 5 " @click="addSubNav(cat.name, cat.id, sub.id)">
-            [! cat.name !]
+        <ul class="cat-dropdown" v-show="typesActive">
+            <li v-for="type in types | filterBy selectType | limitBy 5 " @click="addSubNav(type.name, type.id, sub.id)">
+            [! type.name !]
             </li>
         </ul>
     </td>
     <td>
         <div class="btn-group" v-for="thirdNav in sub.children">
-            <button class="btn btn-xs btn-primary">[! thirdNav.name !]</button>
-            <button class="btn btn-xs btn-primary" @click="deleteSubNav(thirdNav.id, thirdNav);">×</button>
+            <button v-bind:class="['btn', 'btn-xs', thirdNav.type == 'brand' ? 'btn-info' : 'btn-primary']">[! thirdNav.name !]</button>
+            <button v-bind:class="['btn', 'btn-xs', thirdNav.type == 'brand' ? 'btn-info' : 'btn-primary']" @click="deleteSubNav(thirdNav.id, thirdNav);">×</button>
         </div>
     </td>
 </script>
@@ -60,26 +67,27 @@
 <script>
     Vue.component('thirdNavs', {
         template: '#thirdNavs',
-        props: ['sub'],
+        props: ['sub', 'cats', 'brands'],
         data: function () {
             return {
-                selectCat: "",
-                cats: []
+                selectType: "",
+                navType: 'cat'
             }
         },
-        created: function () {
-            this.$http.get('/api/admin/categories', function (data) {
-                this.$set('cats', data.data);
-            }).error(function (data) {
-                console.error(data);
-            })
-        },
         computed: {
-            catsActive: function () {
-                if (this.selectCat !== "") {
+            typesActive: function () {
+                if (this.selectType !== "") {
                     return true
                 } else {
                     return false
+                }
+            },
+            types: function(){
+                var self = this;
+                if(self.navType == 'cat'){
+                    return self.cats;
+                }else if(self.navType == 'brand'){
+                    return self.brands;
                 }
             }
         },
@@ -96,11 +104,11 @@
                 this.$http.post('/admin/setting/navs', {
                     name: name,
                     index: 1,
-                    type: 'page',
+                    type: self.navType,
                     url: catId,
                     pid: parseInt(subId)
                 }).then(function (response) {
-                    self.selectCat = "";
+                    self.selectType = "";
                     self.sub.children.push(response.data.nav);
                     self.$log('sub');
                 }, function (response) {
@@ -120,7 +128,25 @@
 
     Vue.component('subNavs', {
         template: '#subNavs',
-        props: ['subs']
+        props: ['subs'],
+        data: function(){
+            return {
+                cats: [],
+                brands: []
+            }
+        },
+        created: function(){
+            this.$http.get('/api/admin/categories', function (data) {
+                this.$set('cats', data.data);
+            }).error(function (data) {
+                console.error(data);
+            });
+            this.$http.get('/api/admin/brands', function (data) {
+                this.$set('brands', data.data);
+            }).error(function (data) {
+                console.error(data);
+            });
+        }
     });
 
     Vue.component('setNav', {

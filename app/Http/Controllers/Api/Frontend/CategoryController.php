@@ -18,8 +18,13 @@ class CategoryController extends Controller {
      */
     public function index(Request $request)
     {
-        $decode = $request->input('expand') ? true : false;
-        $categories = CategoryService::getTree(null, $decode);
+        $decode = $request->input('expand') ? false : true;
+
+        if ($decode) {
+            $categories = CategoryService::getTree(null);
+        } else {
+            $categories = CategoryService::getAll();
+        }
 
         return $this->response->array($categories);
     }
