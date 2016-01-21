@@ -120,16 +120,17 @@
                             <div class="col-sm-5">
                                 <h4>订单信息</h4>
 
-                                <p>订单编号：E0980928316273678</p>
+                                <p>订单编号：{{$order->order_no}}</p>
 
-                                <p>付款方式：微信支付</p>
+                                <p>付款方式：{{$order->pay_type}}</p>
                             </div>
                             <div class="col-sm-7">
                                 <h4>发货信息</h4>
 
-                                <p>买家：肥少年</p>
+                                <p>买家：{{$order->address->name}}</p>
 
-                                <p>配送方式：广东省 深圳市 南山区 留学生创业大厦2201，林威翰，13246665701</p>
+                                <p>
+                                    联系方式：{{$order->address->province}} {{$order->address->city}} {{$order->address->district}} {{$order->address->detail}} {{$order->address->mobile}}</p>
 
                                 <p>买家留言：麻烦请发顺丰快递</p>
                             </div>
@@ -155,64 +156,19 @@
                         <tr>
                             <th width="40%">商品</th>
                             <th width="10%">单价/数量</th>
-                            <th width="10%">售后</th>
-                            <th width="10%">买家</th>
-                            <th width="10%">下单时间</th>
-                            <th width="10%">订单状态</th>
-                            <th width="10%">实付金额</th>
                         </tr>
-                        <tr>
-                            <td width="40%">
-                                <img src="http://7xp47i.com1.z0.glb.clouddn.com/grid1-1.jpg" alt="" class="cover-img">
-                                <a href="" class="pro-title">巴黎欧莱雅爽身护肤霜</a>
-                            </td>
-                            <td width="10%">
-                                249.00/1件
-                            </td>
-                            <td width="10%">
-                                暂无
-                            </td>
-                            <td width="10%">
-                                13246665701<br>
-                                林威翰
-                            </td>
-                            <td width="10%">
-                                2015-09-02<br>
-                                23:23:00
-                            </td>
-                            <td width="10%">
-                                已支付
-                            </td>
-                            <td width="10%">
-                                249.00
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="40%">
-                                <img src="http://7xp47i.com1.z0.glb.clouddn.com/grid1-1.jpg" alt="" class="cover-img">
-                                <a href="" class="pro-title">巴黎欧莱雅爽身护肤霜</a>
-                            </td>
-                            <td width="10%">
-                                249.00/1件
-                            </td>
-                            <td width="10%">
-                                暂无
-                            </td>
-                            <td width="10%">
-                                13246665701<br>
-                                林威翰
-                            </td>
-                            <td width="10%">
-                                2015-09-02<br>
-                                23:23:00
-                            </td>
-                            <td width="10%">
-                                已支付
-                            </td>
-                            <td width="10%">
-                                249.00
-                            </td>
-                        </tr>
+                        @foreach($order->children[0]->skus as $sku)
+                            <tr>
+                                <td width="40%">
+                                    <img src="{{$sku->cover_image}}" alt=""
+                                         class="cover-img">
+                                    <a href="" class="pro-title">{{$sku->title}}</a>
+                                </td>
+                                <td width="10%">
+                                    {{$sku->price / 100}}/{{$sku->quantity}}件
+                                </td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
