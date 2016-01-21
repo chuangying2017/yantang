@@ -24,7 +24,7 @@ use Exception;
 class ProductRepository {
 
 
-    public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP, $keyword = null)
+    public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP, $keyword = null, $new_query = true)
     {
         $query = Product::with('meta', 'data')->where('status', $status);
 
@@ -37,7 +37,11 @@ class ProductRepository {
         }
 
         if ( ! is_null($keyword)) {
-            $query = $query->where('title', 'like', '%' . $keyword . '%');
+            if ($new_query) {
+                $query = $query->orWhere('title', 'like', '%' . $keyword . '%');
+            } else {
+                $query = $query->where('title', 'like', '%' . $keyword . '%');
+            }
         }
 
         if ( ! is_null($orderBy)) {

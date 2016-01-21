@@ -84,13 +84,14 @@ class ProductService {
 
     public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = null, $keyword = null)
     {
+        $keyword_flag = 0;
+
         $status = ProductConst::saleStatus($status, true);
 
         if ( ! is_null($category_id) && ! is_numeric($category_id)) {
             $category_id = CategoryService::findIdByName($category_id);
         }
 
-        $keyword_flag = 0;
 
         if ( ! is_null($keyword)) {
             if (is_null($category_id)) {
@@ -103,11 +104,10 @@ class ProductService {
             }
         }
 
-        $keyword = $keyword_flag ? null : $keyword;
         $brand_id = ! is_null($brand_id) ? to_array($brand_id) : null;
         $category_ids = CategoryService::getLeavesId($category_id);
 
-        $products = ProductRepository::lists($category_ids, $brand_id, $paginate, $orderBy, $orderType, $status, $keyword);
+        $products = ProductRepository::lists($category_ids, $brand_id, $paginate, $orderBy, $orderType, $status, $keyword, $keyword_flag);
 
         return $products;
     }
