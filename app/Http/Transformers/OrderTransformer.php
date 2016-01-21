@@ -7,7 +7,7 @@ class OrderTransformer extends TransformerAbstract {
 
     public function transform(Order $order)
     {
-        $includes = ['child_orders'];
+        $includes = ['child_orders', 'address'];
         $detail = [];
         if (isset($order['show_full'])) {
             $includes = ['child_orders', 'address'];
@@ -25,16 +25,16 @@ class OrderTransformer extends TransformerAbstract {
         $this->setDefaultIncludes($includes);
 
         $base_info = [
-            'order_no'       => $order->order_no,
-            'total_amount'   => display_price($order->total_amount),
-            'discount_fee'   => display_price($order->discount_amount),
-            'pay_amount'     => display_price($order->pay_amount),
-            'user_id'        => (int)$order->user_id,
-            'memo'           => $order->memo,
-            'created_at'     => $order->created_at->toDateTimeString(),
-            'pay_at'         => $order->pay_at,
-            'status'         => $order->status,
-            'payment_method' => $order->pay_type,
+            'order_no'     => $order->order_no,
+            'total_amount' => display_price($order->total_amount),
+            'discount_fee' => display_price($order->discount_amount),
+            'pay_amount'   => display_price($order->pay_amount),
+            'user_id'      => (int)$order->user_id,
+            'memo'         => $order->memo,
+            'created_at'   => $order->created_at->toDateTimeString(),
+            'pay_at'       => $order->pay_at,
+            'status'       => $order->status,
+            'pay_type'     => $order->pay_type,
         ];
 
         return array_merge($base_info, $detail);
