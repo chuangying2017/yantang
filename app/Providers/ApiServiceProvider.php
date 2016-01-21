@@ -3,9 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Tymon\JWTAuth\Test\GetUserFromTokenTest;
 
-class ApiServiceProvider extends ServiceProvider
-{
+class ApiServiceProvider extends ServiceProvider {
+
     /**
      * Bootstrap the application services.
      *
@@ -13,27 +14,8 @@ class ApiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-//        app('Dingo\Api\Auth\Auth')->extend('basic', function ($app) {
-//            return new \Dingo\Api\Auth\Provider\Basic($app['auth'], 'email');
-//        });
-//
-//        app('Dingo\Api\Auth\Auth')->extend('jwt', function ($app) {
-//            return new \Dingo\Api\Auth\Provider\JWT($app['Tymon\JWTAuth\JWTAuth']);
-//        });
-
-//        app('Dingo\Api\Auth\Auth')->extend('oauth', function ($app) {
-//            $provider = new \Dingo\Api\Auth\Provider\OAuth2($app['oauth2-server.authorizer']->getChecker());
-//
-//            $provider->setUserResolver(function ($id) {
-//                // Logic to return a user by their ID.
-//            });
-//
-//            $provider->setClientResolver(function ($id) {
-//                // Logic to return a client by their ID.
-//            });
-//
-//            return $provider;
-//        });
+        $this->app['router']->middleware('jwt.auth', \Tymon\JWTAuth\Middleware\GetUserFromToken::class);
+        $this->app['router']->middleware('jwt.refresh', \Tymon\JWTAuth\Middleware\RefreshToken::class);
     }
 
     /**

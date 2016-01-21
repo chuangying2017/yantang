@@ -30,8 +30,8 @@ class BrandRepository {
         $brand = Brand::updateOrCreate(
             ['name' => $name],
             [
-            'name'        => $name,
-            'cover_image' => $cover_image
+                'name'        => $name,
+                'cover_image' => $cover_image
             ]
         );
 
@@ -42,10 +42,15 @@ class BrandRepository {
      * @param $id
      * @return string
      */
-    public static function show($id)
+    public static function show($id, $exception = true)
     {
-        $brand = Brand::find($id);
-        if ( ! $brand) {
+        if (is_numeric($id)) {
+            $brand = Brand::find($id);
+        } else {
+            $brand = Brand::where('name', $id)->first();
+        }
+
+        if ( ! $brand && $exception) {
             throw new Exception('BRAND NOT FOUND');
         }
 

@@ -161,6 +161,17 @@ class OrderRepository {
     public static function updateStatus($order_id, $status)
     {
         Order::where('id', $order_id)->update(['status' => $status]);
+
+        $need_change_child_order = [
+            OrderProtocol::STATUS_OF_CANCEL,
+            OrderProtocol::STATUS_OF_PAID,
+            OrderProtocol::STATUS_OF_DELIVER,
+        ];
+
+        if (in_array($status, $need_change_child_order)) {
+            ChildOrder::where('order_id', $order_id)->update(['status' => $status]);
+        }
+
     }
 
 

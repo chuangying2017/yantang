@@ -40,6 +40,13 @@ class BrandService {
         return BrandRepository::show($id);
     }
 
+    public static function queryIdByName($name)
+    {
+        $brand = BrandRepository::show($name, false);
+
+        return $brand ? $brand['id'] : null;
+    }
+
     /**
      * @param $id
      * @param $data

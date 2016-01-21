@@ -28,13 +28,6 @@ class AuthController extends Controller {
 //        $this->middleware('register.verify.phone', ['only' => 'postRegister']);
     }
 
-    /**
-     * @return \Illuminate\View\View
-     */
-    public function getRegister()
-    {
-        return view('frontend.auth.register');
-    }
 
     /**
      * @param RegisterRequest $request
@@ -63,8 +56,7 @@ class AuthController extends Controller {
      */
     public function getLogin()
     {
-        return view('frontend.auth.login')
-            ->withSocialiteLinks($this->getSocialLinks());
+        return $this->response->array($this->getSocialLinks());
     }
 
     /**
@@ -107,42 +99,6 @@ class AuthController extends Controller {
         return redirect()->route('home');
     }
 
-    /**
-     * @param $token
-     * @return mixed
-     * @throws \App\Exceptions\GeneralException
-     */
-    public function confirmAccount($token)
-    {
-        //Don't know why the exception handler is not catching this
-        try {
-            $this->auth->confirmAccount($token);
-
-            return redirect()->route('frontend.dashboard')->withFlashSuccess("Your account has been successfully confirmed!");
-        } catch (GeneralException $e) {
-            return redirect()->back()->withInput()->withFlashDanger($e->getMessage());
-        }
-    }
-
-    /**
-     * @param $user_id
-     * @return mixed
-     */
-    public function resendConfirmationEmail($user_id)
-    {
-        //Don't know why the exception handler is not catching this
-        try {
-            $this->auth->resendConfirmationEmail($user_id);
-
-            return redirect()->route('home')->withFlashSuccess("A new confirmation e-mail has been sent to the address on file.");
-        } catch (GeneralException $e) {
-            return redirect()->back()->withInput()->withFlashDanger($e->getMessage());
-        }
-    }
-
-    /**
-     * Helper methods to get laravel's ThrottleLogin class to work with this package
-     */
 
     /**
      * Get the path to the login route.
@@ -154,15 +110,6 @@ class AuthController extends Controller {
         return property_exists($this, 'loginPath') ? $this->loginPath : '/auth/login';
     }
 
-    /**
-     * Get the login username to be used by the controller.
-     *
-     * @return string
-     */
-    public function loginUsername()
-    {
-        return property_exists($this, 'username') ? $this->username : 'email';
-    }
 
     /**
      * Determine if the class is using the ThrottlesLogins trait.
