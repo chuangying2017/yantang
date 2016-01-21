@@ -4,13 +4,6 @@ $api = app('Dingo\Api\Routing\Router');
 require(__DIR__ . "/api.php");
 
 /**
- * Switch between the included languages
- */
-$router->group(['namespace' => 'Language'], function () use ($router) {
-    require(__DIR__ . "/Routes/Language/Lang.php");
-});
-
-/**
  * Frontend Routes
  * Namespaces indicate folder structure
  */
@@ -54,5 +47,8 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
 });
 
 
+/**
+ * 测试路由,当 env => local debug => true 有效
+ */
 require(__DIR__ . "/Routes/test.php");
 

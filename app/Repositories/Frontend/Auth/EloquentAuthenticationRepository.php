@@ -50,6 +50,7 @@ class EloquentAuthenticationRepository implements AuthenticationContract
     public function create(array $data)
     {
         $user = $this->users->create($data);
+
         event(new UserRegister($user));
 
         return $user;
@@ -65,21 +66,21 @@ class EloquentAuthenticationRepository implements AuthenticationContract
         //@change to phone login
         if ($this->auth->attempt($request->only('phone', 'password'), $request->has('remember'))) {
 
-            // if ($this->auth->user()->status == 0) {
-            //     $this->auth->logout();
-            //     throw new GeneralException("Your account is currently deactivated.");
-            // }
+             if ($this->auth->user()->status == 0) {
+                 $this->auth->logout();
+                 throw new GeneralException("Your account is currently deactivated.");
+             }
 
-            // if ($this->auth->user()->status == 2) {
-            //     $this->auth->logout();
-            //     throw new GeneralException("Your account is currently banned.");
-            // }
+             if ($this->auth->user()->status == 2) {
+                 $this->auth->logout();
+                 throw new GeneralException("Your account is currently banned.");
+             }
 
-            // if ($this->auth->user()->confirmed == 0) {
-            //     $user_id = $this->auth->user()->id;
-            //     $this->auth->logout();
-            //     throw new GeneralException("Your account is not confirmed. Please click the confirmation link in your e-mail, or " . '<a href="' . route('account.confirm.resend', $user_id) . '">click here</a>' . " to resend the confirmation e-mail.");
-            // }
+             if ($this->auth->user()->confirmed == 0) {
+                 $user_id = $this->auth->user()->id;
+                 $this->auth->logout();
+                 throw new GeneralException("Your account is not confirmed. Please click the confirmation link in your e-mail, or " . '<a href="' . route('account.confirm.resend', $user_id) . '">click here</a>' . " to resend the confirmation e-mail.");
+             }
 
             event(new UserLoggedIn($this->auth->user()));
 
