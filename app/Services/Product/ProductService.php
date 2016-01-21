@@ -11,6 +11,7 @@ namespace App\Services\Product;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\Product\Brand\BrandService;
 use App\Services\Product\Category\CategoryService;
 
 /**
@@ -81,18 +82,32 @@ class ProductService {
         return $product;
     }
 
-    public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = null)
+    public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = null, $keyword = null)
     {
-        $brand_id = ! is_null($brand_id) ? to_array($brand_id) : null;
+        $keyword_flag = 0;
+
         $status = ProductConst::saleStatus($status, true);
 
-        if ( ! is_numeric($category_id)) {
+        if ( ! is_null($category_id) && ! is_numeric($category_id)) {
             $category_id = CategoryService::findIdByName($category_id);
         }
 
+
+        if ( ! is_null($keyword)) {
+            if (is_null($category_id)) {
+                $category_id = CategoryService::findIdByName($keyword) ?: null;
+                $keyword_flag = ! is_null($category_id) ? 1 : $keyword_flag;
+            };
+            if (is_null($brand_id)) {
+                $brand_id = BrandService::queryIdByName($keyword);
+                $keyword_flag = ! is_null($brand_id) ? 1 : $keyword_flag;
+            }
+        }
+
+        $brand_id = ! is_null($brand_id) ? to_array($brand_id) : null;
         $category_ids = CategoryService::getLeavesId($category_id);
 
-        $products = ProductRepository::lists($category_ids, $brand_id, $paginate, $orderBy, $orderType, $status);
+        $products = ProductRepository::lists($category_ids, $brand_id, $paginate, $orderBy, $orderType, $status, $keyword, $keyword_flag);
 
         return $products;
     }

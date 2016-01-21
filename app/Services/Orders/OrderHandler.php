@@ -16,7 +16,7 @@ class OrderHandler {
             throw new \Exception('订单未支付');
         }
 
-        if ($order['status'] == OrderProtocol::STATUS_OF_UNPAID) {
+        if ($order['status'] == OrderProtocol::STATUS_OF_UNPAID || $order['status'] == OrderProtocol::STATUS_OF_PAID) {
             OrderRepository::updateStatus($order_id, OrderProtocol::STATUS_OF_PAID);
         }
 

@@ -35,9 +35,14 @@ class CategoryController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $category = CategoryService::getTree($id);
+        $single = $request->input('single') ?: 0;
+        if ($single) {
+            $category = CategoryService::show($id);
+        } else {
+            $category = CategoryService::getTree($id);
+        }
 
         $category->attributes = AttributeService::getByCategory($category['id']);
 
