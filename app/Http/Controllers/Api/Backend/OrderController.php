@@ -24,7 +24,7 @@ class OrderController extends Controller {
             $user_id = $request->input('user_id') ?: null;
             $sort = ApiConst::decodeSort($request->input('sort'));
             $status = $request->input('status') ?: null;
-            $orders = OrderManager::lists($user_id, $sort['order_by'], $sort['order_type'], 'children', $status, ApiConst::ORDER_PER_PAGE);
+            $orders = OrderManager::lists($user_id, $sort['order_by'], $sort['order_type'], ['children', 'address'], $status, ApiConst::ORDER_PER_PAGE);
 
             return $this->response->paginator($orders, new OrderTransformer());
         } catch (Exception $e) {

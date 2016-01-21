@@ -123,20 +123,23 @@ class OrderRepository {
         return Order::with($relation)->where('order_no', $order)->first();
     }
 
-    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = 'children', $status = null, $paginate = null)
+    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = null, $status = null, $paginate = null)
     {
+
         if ( ! is_null($relation)) {
             $query = Order::with($relation)->orderBy($sort_by, $sort_type);
         } else {
             $query = Order::orderBy($sort_by, $sort_type);
         }
 
-        if ( ! is_null($user_id)) {
-            $query = $query->where('user_id', $user_id);
+        if ( ! is_null($status)) {
+            $query = $query->whereHas('children', function ($query) use ($status) {
+                $query->where('status', $status);
+            });
         }
 
-        if ( ! is_null($status)) {
-            $query = $query->where('status', $status);
+        if ( ! is_null($user_id)) {
+            $query = $query->where('user_id', $user_id);
         }
 
         if ( ! is_null($paginate)) {

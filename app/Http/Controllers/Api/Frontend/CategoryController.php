@@ -16,9 +16,15 @@ class CategoryController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = CategoryService::getTree();
+        $decode = $request->input('expand') ? false : true;
+
+        if ($decode) {
+            $categories = CategoryService::getTree(null);
+        } else {
+            $categories = CategoryService::getAll();
+        }
 
         return $this->response->array($categories);
     }

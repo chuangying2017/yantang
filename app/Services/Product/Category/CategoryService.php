@@ -106,8 +106,10 @@ class CategoryService {
      * @param null $category_id
      * @return mixed
      */
-    public static function getTree($category_id = null)
+    public static function getTree($category_id = null, $decode = true)
     {
+        $mark = true;
+
         //todo@bryant cant work
         if (is_null($category_id)) {
             $parents = Category::roots()->get();
@@ -116,11 +118,13 @@ class CategoryService {
                 return [];
             }
 
+            $mark = false;
+
             foreach ($parents as $key => $parent) {
-                $parents[ $key ] = self::getSingleTree($parent, false);
+                $parents[ $key ] = self::getSingleTree($parent, $mark, $decode);
             }
         } else {
-            $parents = self::getSingleTree($category_id);
+            $parents = self::getSingleTree($category_id, $mark, $decode);
         }
 
         return $parents;
@@ -141,7 +145,6 @@ class CategoryService {
         if ($mark) {
             $parent = self::markActive($parent, $node);
         }
-
         if ($decode) {
             return $parent->toHierarchy()->first();
         }
