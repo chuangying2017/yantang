@@ -82,7 +82,17 @@ class OrderController extends Controller
     {
         try {
             $order = $this->api->get('api/admin/orders/' . $id);
-            return view('backend.orders.detail', compact('order'));
+            $expressCompanies = $this->api->get('api/admin/deliver/company');
+            javascript()->put([
+                'config' => [
+                    'api_url' => url('api/'),
+                    'base_url' => url('/')
+                ]
+            ]);
+            return view('backend.orders.detail', [
+                'order' => $order,
+                'expressCompanies' => $expressCompanies
+            ]);
         } catch (Exception $e) {
 
             return $e->getMessage();

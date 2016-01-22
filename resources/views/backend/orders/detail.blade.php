@@ -32,43 +32,34 @@
                             <th>
                                 数量
                             </th>
-                            <th>
-                                物流公司
-                            </th>
-                            <th>
-                                快递单号
-                            </th>
                         </tr>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="express-pros">
-                                <a href="" class="pro-title">巴黎欧莱雅爽身护肤霜</a>
-                            </td>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                暂无
-                            </td>
-                            <td>
-                                暂无
-                            </td>
-                        </tr>
+                        @foreach($order->children[0]->skus as $sku)
+                            <tr>
+                                <td>
+                                    <a href="" class="pro-title">{{$sku->title}}</a>
+                                </td>
+                                <td>
+                                    {{$sku->quantity}}
+                                </td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-2"><label for="" class="form-label">收货地址：</label></div>
-                            <div class="col-sm-8">深圳市 南山区 留学生创业大厦1311</div>
+                            <div class="col-sm-2"><label for="" class="form-label">订单号：</label></div>
+                            <div class="col-sm-8">{{$order->order_no}}</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-2"><label for="" class="form-label">物流公司：</label></div>
                             <div class="col-sm-4">
-                                <select name="" id="" class="form-control">
+                                <select name="" id="" class="form-control" v-model="express.name">
                                     <option selected="true" disabled="disabled">请选择一个物流公司</option>
-                                    <option value="">顺丰快递</option>
+                                    @foreach($expressCompanies['data'] as $company)
+                                        <option value="{{$company['name']}}">{{$company['name']}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -77,14 +68,16 @@
                         <div class="row">
                             <div class="col-sm-2"><label for="" class="form-label">物流单号：</label></div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" v-model="express.post_no">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary">确认发货</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" @click="closeExpressBox()">
+                    取消</button>
+                    <button type="button" class="btn btn-primary" @click="ship()" :disabled="
+                    !express.post_no || express.name == 'default'">确认发货</button>
                 </div>
             </div>
         </div>
@@ -100,10 +93,22 @@
                 <!-- /.box-header -->
                 <div class="box-body no-padding">
                     <ul id="progressbar" class="mt10">
-                        <li class="active">买家下单<br>2015-09-02 08:09:10</li>
-                        <li class="active">成功支付<br>2015-09-02 08:09:10</li>
-                        <li>商家发货<br>2015-09-02 08:09:10</li>
-                        <li>结算货款<br>2015-09-02 08:09:10</li>
+                        <li class="active">买家下单<br>{{$order->created_at}}</li>
+                        @if($order->status == 'paid')
+                            <li class="active">成功支付<br>{{$order->pay_at}}</li>
+                        @else
+                            <li class="">成功支付<br></li>
+                        @endif
+                        @if($order->children[0]->status == 'deliver')
+                            <li class="active">商家发货<br>{{$order->deliver_at}}</li>
+                        @else
+                            <li>商家发货<br></li>
+                        @endif
+                        @if($order->children[0]->status == 'done')
+                            <li class="active">结算货款<br>{{$order->done_at}}</li>
+                        @else
+                            <li>结算货款<br></li>
+                        @endif
                     </ul>
                 </div>
                 <!-- /.box-body -->
@@ -132,16 +137,18 @@
                                 <p>
                                     联系方式：{{$order->address->province}} {{$order->address->city}} {{$order->address->district}} {{$order->address->detail}} {{$order->address->mobile}}</p>
 
-                                <p>买家留言：麻烦请发顺丰快递</p>
+                                <p>买家留言：{{$order->memo}}</p>
                             </div>
                         </div>
                     </div>
                     <!-- /.mail-box-messages -->
                 </div>
                 <div class="box-footer clearfix">
-                    <button type="submit" class="btn btn-primary pull-right" data-toggle="modal"
-                            data-target=".express-modal">马上发货
-                    </button>
+                    @if($order->children[0]->status == 'paid')
+                        <button type="submit" class="btn btn-primary pull-right" data-toggle="modal"
+                                data-target=".express-modal">马上发货
+                        </button>
+                    @endif
                 </div>
                 <!-- /.box-body -->
             </div>
@@ -180,4 +187,40 @@
     <!-- /.col -->
     </div>
     <!-- /.row -->
+@endsection
+@section('after-scripts-end')
+    @include('backend.layouts.vue')
+
+    <script>
+
+        new Vue({
+            el: "#app",
+            data: {
+                express: {
+                    name: 'default',
+                    post_no: ''
+                },
+                order_no: "{{$order->order_no}}"
+
+            },
+            methods: {
+                closeExpressBox: function () {
+                    this.express = {
+                        name: "default",
+                        post_no: ""
+                    }
+                },
+                ship: function () {
+                    this.$http.post(app.config.api_url + '/admin/deliver/' + this.order_no, this.$get('express'), function (data) {
+                        if (data.data) {
+                            alert('发货成功!')
+                            window.location.reload();
+                        }
+                    }).error(function (data) {
+                        console.error(data)
+                    })
+                }
+            }
+        });
+    </script>
 @endsection

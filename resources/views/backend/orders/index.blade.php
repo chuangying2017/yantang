@@ -231,7 +231,7 @@
                     <li :class="{active: status == ''}"><a href="?">全部订单</a></li>
                     <li :class="{active: status == 'unpaid'}"><a href="?status=unpaid">待支付</a></li>
                     <li :class="{active: status == 'paid'}"><a href="?status=paid">待发货</a></li>
-                    <li :class="{active: status == 'shipped'}"><a href="?status=shipped">已发货</a></li>
+                    <li :class="{active: status == 'deliver'}"><a href="?status=deliver">已发货</a></li>
                     <li :class="{active: status == 'done'}"><a href="?status=done">已完成</a></li>
                     <li :class="{active: status == 'refund'}"><a href="?status=refund">退款中</a></li>
                     <li :class="{active: status == 'closed'}"><a href="?status=closed">已关闭</a></li>
@@ -252,7 +252,7 @@
                             </tbody>
                         </table>
 
-                        <order v-for="order in orders | filterBy status in 'status'" :order="order"></order>
+                        <order v-for="order in orders | filterBy status in 'children[0].status'" :order="order"></order>
 
                     </div>
                     <!-- /.tab-pane -->

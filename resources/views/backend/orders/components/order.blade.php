@@ -12,15 +12,19 @@
         {{--暂无--}}
         {{--</td>--}}
         <td width="10%">
-            13246665701<br>
-            林威翰
+            [! order.address.mobile !]<br>
+            [! order.address.name !]
         </td>
         <td width="10%">
             [! order.created_at !]
         </td>
         <td width="10%">
-            <span v-if="order.status == 'paid'">已支付</span>
-            <span v-if="order.status == 'unpaid'">待支付</span>
+            <span v-if="order.children[0]['status'] == 'paid'">待发货</span>
+            <span v-if="order.children[0]['status'] == 'unpaid'">待支付</span>
+            <span v-if="order.children[0]['status'] == 'deliver'">已发货</span>
+            <span v-if="order.children[0]['status'] == 'done'">已完成</span>
+            <span v-if="order.children[0]['status'] == 'refund'">退款中</span>
+            <span v-if="order.children[0]['status'] == 'closed'">已关闭</span>
         </td>
         <td width="10%">
             [! sku.pay_amount/100 | currency '￥'!]
@@ -36,7 +40,7 @@
                     <a href="{{url('/admin/orders/')}}/[! order.order_no !]">查看详情</a>
                     {{---<a href="" title="">备注</a>--}}
                     {{---<a href="" title="">加星</a>--}}
-                    <button v-if="order.status == 'paid'" type="button" class="btn btn-xs btn-success"
+                    <button v-if="order.children[0]['status'] == 'paid'" type="button" class="btn btn-xs btn-success"
                             data-toggle="modal"
                             data-target="#express" @click="ship()">发货
                     </button>
@@ -45,10 +49,10 @@
         </tr>
         <tr v-for="sku in order['children'][0]['skus']" is="sku" :sku="sku" :order="order"></tr>
 
-        {{--<tr>--}}
-        {{--<th colspan="7" class="msg">买家留言：请发顺丰谢谢！--}}
-        {{--</th>--}}
-        {{--</tr>--}}
+        <tr v-if="order.memo.lenght > -">
+            <th colspan="7" class="msg">买家留言：[! order.memo !]
+            </th>
+        </tr>
         </tbody>
     </table>
 </script>
@@ -63,6 +67,7 @@
         template: '#order-template',
         props: ['order'],
         ready: function () {
+            this.$log('order')
         },
         methods: {
             ship: function () {
