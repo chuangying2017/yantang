@@ -5,22 +5,15 @@ use League\Fractal\TransformerAbstract;
 
 class OrderTransformer extends TransformerAbstract {
 
+    protected $show_full;
+
     public function transform(Order $order)
     {
+        $this->show_full = isset($order['show_full']) ? 1 : 0;
+
         $includes = ['child_orders', 'address'];
-        $detail = [];
-        if (isset($order['show_full'])) {
+        if ($this->show_full) {
             $includes = ['child_orders', 'address'];
-            $detail = [
-                'express' => isset($order->express)
-                    ? [
-                        'company_id'   => (int)$order->express->company_id,
-                        'company_name' => $order->express->company_name,
-                        'post_no'      => $order->express->post_no,
-                        'deliver_at'   => $order->express->deliver_at,
-                    ]
-                    : null,
-            ];
         }
         $this->setDefaultIncludes($includes);
 
@@ -37,7 +30,7 @@ class OrderTransformer extends TransformerAbstract {
             'pay_type'     => $order->pay_type,
         ];
 
-        return array_merge($base_info, $detail);
+        return array_merge($base_info);
     }
 
     public function includeAddress(Order $order)
@@ -51,6 +44,6 @@ class OrderTransformer extends TransformerAbstract {
     {
         $child_orders = $order->children;
 
-        return $this->collection($child_orders, new ChildOrderTransformer());
+        return $this->collection($child_orders, new ChildOrderTransformer($this->show_full));
     }
 }

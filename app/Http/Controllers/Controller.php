@@ -26,6 +26,10 @@ abstract class Controller extends BaseController {
         return false;
     }
 
+
+
+
+
     protected function getCurrentAuthUser()
     {
         if (Auth::check()) {

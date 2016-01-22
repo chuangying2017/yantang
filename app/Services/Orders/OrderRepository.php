@@ -115,7 +115,7 @@ class OrderRepository {
 
     public static function queryFullOrder($order)
     {
-        $relation = ['children', 'children.skus', 'address', 'billings'];
+        $relation = ['children', 'children.skus', 'children.deliver', 'address', 'billings'];
         if ($order instanceof Order) {
             return $order->load($relation);
         }
@@ -123,7 +123,7 @@ class OrderRepository {
         return Order::with($relation)->where('order_no', $order)->first();
     }
 
-    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = null, $status = null, $paginate = null)
+    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = null, $status = null, $paginate = null, $merchant_id = null)
     {
 
         if ( ! is_null($relation)) {
@@ -135,6 +135,12 @@ class OrderRepository {
         if ( ! is_null($status)) {
             $query = $query->whereHas('children', function ($query) use ($status) {
                 $query->where('status', $status);
+            });
+        }
+
+        if ( ! is_null($merchant_id) && $merchant_id) {
+            $query = $query->whereHas('children', function ($query) use ($merchant_id) {
+                $query->where('merchant_id', $merchant_id);
             });
         }
 
