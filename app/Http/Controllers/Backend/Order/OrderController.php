@@ -17,13 +17,22 @@ class OrderController extends Controller
     /**
      * @return $this|string
      */
-    public function index()
+    public function index(Request $request)
     {
         //todo@bryant: wait for api
+        $page = $request->get('page') ?: '';
+        $status = $request->get('status') ?: '';
         try {
-//            $records = $this->api->get('api/admin/merchants');
-            $records = [];
-            return view('backend.orders.index')->with('groups', $records);
+            $records = $this->api->get('api/admin/orders?page=' . $page . '&status=' . $status);
+            javascript()->put([
+                'config' => [
+                    'api_url' => url('api/'),
+                    'base_url' => url('/')
+                ],
+                'token' => csrf_token(),
+                'pagination' => $records->toArray()
+            ]);
+            return view('backend.orders.index')->with('records', $records);
         } catch (Exception $e) {
 
             return $e->getMessage();
@@ -72,7 +81,18 @@ class OrderController extends Controller
     public function show($id)
     {
         try {
-            return view('backend.orders.detail');
+            $order = $this->api->get('api/admin/orders/' . $id);
+            $expressCompanies = $this->api->get('api/admin/deliver/company');
+            javascript()->put([
+                'config' => [
+                    'api_url' => url('api/'),
+                    'base_url' => url('/')
+                ]
+            ]);
+            return view('backend.orders.detail', [
+                'order' => $order,
+                'expressCompanies' => $expressCompanies
+            ]);
         } catch (Exception $e) {
 
             return $e->getMessage();
