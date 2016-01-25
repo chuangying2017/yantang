@@ -20,9 +20,9 @@ class ChildOrder extends Model {
         return $this->hasOne('App\Models\OrderAddress', 'order_id', 'order_id');
     }
 
-    public function express()
+    public function deliver()
     {
-        return $this->hasOne('App\Models\OrderDeliver', 'child_order_id', 'id');
+        return $this->hasOne('App\Models\OrderDeliver', 'id', 'deliver_id');
     }
 
     public function order()

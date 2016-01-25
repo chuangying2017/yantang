@@ -6,9 +6,19 @@ use League\Fractal\TransformerAbstract;
 
 class ChildOrderTransformer extends TransformerAbstract {
 
+    public function __construct($show_full = 0)
+    {
+        $this->show_full = $show_full;
+    }
+
     public function transform(ChildOrder $order)
     {
         $includes = ['product_skus'];
+
+        if ($this->show_full) {
+            array_push($includes, 'deliver');
+        }
+
         $detail = [];
         $this->setDefaultIncludes($includes);
 
@@ -28,5 +38,16 @@ class ChildOrderTransformer extends TransformerAbstract {
         $skus = $order->skus;
 
         return $this->collection($skus, new OrderProductSkusTransformer());
+    }
+
+    public function includeDeliver(ChildOrder $order)
+    {
+        $deliver = $order->deliver;
+
+        if(!is_null($deliver)) {
+            return $this->item($deliver, new ExpressTransformer());
+        }
+
+        return $deliver;
     }
 }

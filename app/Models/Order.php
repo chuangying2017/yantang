@@ -38,4 +38,6 @@ class Order extends Model {
         return $this->hasMany('App\Models\OrderBilling', 'order_id', 'id');
     }
 
+
+
 }

@@ -27,7 +27,6 @@ class OrderService {
         return OrderRepository::lists($user_id, $sort_by, $sort_type, $relation, $status, $paginate);
     }
 
-
     public static function delete($user_id, $order_no)
     {
         try {
