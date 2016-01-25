@@ -15,7 +15,7 @@ class AddTitleToOrderProductsTable extends Migration {
         Schema::table('order_products', function (Blueprint $table) {
             $table->string('title');
             $table->string('cover_image');
-            $table->string('attributes');
+            $table->text('attributes');
         });
     }
 
