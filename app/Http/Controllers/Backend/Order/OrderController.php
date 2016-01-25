@@ -87,7 +87,8 @@ class OrderController extends Controller
                 'config' => [
                     'api_url' => url('api/'),
                     'base_url' => url('/')
-                ]
+                ],
+                'order' => $order
             ]);
             return view('backend.orders.detail', [
                 'order' => $order,

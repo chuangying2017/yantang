@@ -162,6 +162,7 @@
                         <tbody>
                         <tr>
                             <th width="40%">商品</th>
+                            <th width="20%">属性</th>
                             <th width="10%">单价/数量</th>
                         </tr>
                         @foreach($order->children[0]->skus as $sku)
@@ -170,6 +171,9 @@
                                     <img src="{{$sku->cover_image}}" alt=""
                                          class="cover-img">
                                     <a href="" class="pro-title">{{$sku->title}}</a>
+                                </td>
+                                <td width="20%">
+                                    <span v-for="attr in attrs"> [! attr.arrtibute_name + ': ' + attr.attribute_value_name !]<br></span>
                                 </td>
                                 <td width="10%">
                                     {{$sku->price / 100}}/{{$sku->quantity}}件
@@ -192,7 +196,7 @@
     @include('backend.layouts.vue')
 
     <script>
-
+        Vue.config.delimiters = ['[!', '!]'];
         new Vue({
             el: "#app",
             data: {
@@ -200,8 +204,14 @@
                     name: 'default',
                     post_no: ''
                 },
+                attrs: [],
                 order_no: "{{$order->order_no}}"
 
+            },
+            ready: function () {
+                var attrs = '[' + app.order.children[0]['skus'][0]['attributes'] + ']';
+                this.$set('attrs', JSON.parse(attrs))
+                this.$log('attrs')
             },
             methods: {
                 closeExpressBox: function () {
