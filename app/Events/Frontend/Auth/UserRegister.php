@@ -11,15 +11,20 @@ class UserRegister extends Event
     use SerializesModels;
 
     public $user;
+    /**
+     * @var
+     */
+    public $register_data;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user, $register_data)
     {
         $this->user = $user;
+        $this->register_data = $register_data;
     }
 
     /**

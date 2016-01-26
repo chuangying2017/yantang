@@ -2,6 +2,8 @@
 
 use App\Models\Access\Role\Role;
 use App\Services\Administrator\AdministratorService;
+use App\Services\Orders\OrderRepository;
+use App\Services\Orders\OrderService;
 
 /**
  * Created by PhpStorm.
@@ -66,6 +68,27 @@ class MerchantService {
     public static function show($merchant_id)
     {
         return MerchantRepository::show($merchant_id);
+    }
+
+    public static function sendNotify($order_id)
+    {
+        try {
+
+            $merchant_ids = OrderRepository::queryOrderMerchants($order_id);
+            $merchants = MerchantRepository::show($merchant_ids);
+
+            if (count($merchants)) {
+                foreach ($merchants as $merchant) {
+                    $phone = $merchant['phone'];
+                    $content = \Config::get('laravel-sms.notifyNewOrder');
+                    app('PhpSms')->make()->to($phone)->content($content)->send();
+                }
+            }
+
+        } catch (\Exception $e) {
+            \Log::error('订单提醒信息发送失败,订单ID：' . $order_id);
+        }
+
     }
 
 

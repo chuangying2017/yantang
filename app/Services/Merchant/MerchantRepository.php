@@ -41,6 +41,10 @@ class MerchantRepository {
 
     public static function show($merchant_id)
     {
+        if (is_array($merchant_id)) {
+            return Merchant::whereIn('id', $merchant_id)->get();
+        }
+
         return Merchant::findOrFail($merchant_id);
     }
 

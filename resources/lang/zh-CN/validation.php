@@ -78,7 +78,7 @@ return [
     'url'                       => ':attribute 格式不正确。',
     'zh_mobile'                 => ':attribute 格式错误',
     'verify_code'               => '验证码错误或已过期',
-    'confirm_mobile_not_change' => '手机未验证',
+    'confirm_mobile_not_change' => '该手机未验证',
 
     /*
     |--------------------------------------------------------------------------

@@ -15,7 +15,7 @@ class ValidatorUserRegisterPhone {
      */
     public function handle($request, Closure $next)
     {
-        $token = $request->input('token', null) ?: $request->input('uuid', null);
+        $token = $request->input('phone', null);
         //验证手机验证码
         $validator = \Validator::make($request->all(), [
             'phone' => 'required|confirm_mobile_not_change:' . $token,

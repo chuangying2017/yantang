@@ -28,7 +28,8 @@ class CreateClientForUser {
     public function handle(UserRegister $event)
     {
         $user = $event->user;
+        $register_data = $event->register_data;
 
-        ClientService::create($user);
+        ClientService::create($user, $register_data);
     }
 }
