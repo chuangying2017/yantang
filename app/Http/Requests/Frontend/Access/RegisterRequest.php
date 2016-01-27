@@ -26,7 +26,7 @@ class RegisterRequest extends Request {
     public function rules()
     {
 
-        $token = $this->input('token', null) ?: $this->input('uuid', null);
+        $token = $this->input('phone', null);
 
         //验证手机验证码
 

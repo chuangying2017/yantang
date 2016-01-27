@@ -50,8 +50,9 @@ class AuthController extends Controller {
         $user = $this->auth->create($request->all());
 
         $token = JWTAuth::fromUser($user);
+        $roles = UserInfoTransformer::getRoles($user);
 
-        return response()->json(compact('token'));
+        return response()->json(compact('token', 'roles'));
     }
 
     /**
