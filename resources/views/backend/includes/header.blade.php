@@ -2,7 +2,7 @@
 <header class="main-header">
 
     <!-- Logo -->
-    <a href="{!!route('home')!!}" class="logo"><b>东方丽人后台</b></a>
+    <a href="{!!route('backend.dashboard')!!}" class="logo"><b>东方丽人后台</b></a>
 
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
