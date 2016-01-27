@@ -7,6 +7,7 @@ use App\Models\OrderProduct;
 use App\Services\Orders\Event\OrderCancel;
 use App\Services\Orders\Helpers\ExpressHelper;
 use App\Models\OrderDeliver as Deliver;
+use Carbon\Carbon;
 use DB;
 
 
@@ -176,7 +177,20 @@ class OrderRepository {
 
     public static function updateStatus($order_id, $status)
     {
-        Order::where('id', $order_id)->update(['status' => $status]);
+        $update_data = ['status' => $status];
+        if ($status == OrderProtocol::STATUS_OF_PAID) {
+            $update_data['pay_at'] = Carbon::now();
+        }
+
+        if ($status == OrderProtocol::STATUS_OF_DELIVER) {
+            $update_data['deliver_at'] = Carbon::now();
+        }
+
+        if ($status == OrderProtocol::STATUS_OF_CANCEL) {
+            $update_data['cancel_at'] = Carbon::now();
+        }
+
+        Order::where('id', $order_id)->update($update_data);
 
         $need_change_child_order = [
             OrderProtocol::STATUS_OF_CANCEL,
