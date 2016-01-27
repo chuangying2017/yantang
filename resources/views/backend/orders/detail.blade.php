@@ -122,15 +122,15 @@
                 <div class="box-body no-padding">
                     <div class="order-content">
                         <div class="row">
-                            <div class="col-sm-5">
+                            <div class="col-sm-3">
                                 <h4>订单信息</h4>
 
                                 <p>订单编号：{{$order->order_no}}</p>
 
                                 <p>付款方式：{{$order->pay_type}}</p>
                             </div>
-                            <div class="col-sm-7">
-                                <h4>发货信息</h4>
+                            <div class="col-sm-5">
+                                <h4>收货信息</h4>
 
                                 <p>买家：{{$order->address->name}}</p>
 
@@ -139,6 +139,17 @@
 
                                 <p>买家留言：{{$order->memo}}</p>
                             </div>
+                            @if(isset($order->children[0]->deliver))
+                                <div class="col-sm-4">
+                                    <h4>发货信息</h4>
+
+                                    <p>快递：{{$order->children[0]->deliver->company_name}}</p>
+                                    <p>快递单号：{{$order->children[0]->deliver->post_no}}</p>
+                                    <p><a target="_blank"
+                                          href="http://www.kuaidi100.com/chaxun?com={{$order->children[0]->deliver->company_name}}&nu={{$order->children[0]->deliver->post_no}}"
+                                          class="btn btn-success">跟踪物流</a></p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <!-- /.mail-box-messages -->
