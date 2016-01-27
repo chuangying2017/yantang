@@ -18,7 +18,7 @@
         "hieu-le/active": "~2.0",
         "doctrine/dbal": "~2.5",
         "laracasts/utilities": "~2.1",
-        "arcanedev/log-viewer": "~3.5.0",
+        "arcanedev/log-viewer": "~3.0",
         "creativeorange/gravatar": "~1.0",
         "bugsnag/bugsnag-laravel": "1.*",
         "maatwebsite/excel": "~2.0.0",
