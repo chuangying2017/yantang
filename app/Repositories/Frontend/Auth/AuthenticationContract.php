@@ -28,7 +28,13 @@ interface AuthenticationContract {
 	 * @param $provider
 	 * @return mixed
 	 */
-	public function loginThirdParty($request, $provider);
+    public function loginThirdParty($request, $provider);
+
+
+    public function loginThirdPartyUrl($request, $provider);
+
+
+
 
 	/**
 	 * @param $provider
@@ -53,4 +59,6 @@ interface AuthenticationContract {
 	 * @return mixed
 	 */
 	public function resendConfirmationEmail($user_id);
+
+
 }

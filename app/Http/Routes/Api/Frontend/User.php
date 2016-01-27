@@ -8,6 +8,8 @@ $api->group(['middleware' => 'api.auth'], function ($api) {
 
     $api->resource('user/info', 'ClientController', ['only' => ['index', 'store']]);
 
+    $api->post('user/phone', 'Auth\AuthController@updatePhone');
+
     $api->resource('address', 'AddressController');
 });
 

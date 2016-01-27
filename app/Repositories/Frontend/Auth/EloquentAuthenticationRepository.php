@@ -7,14 +7,15 @@ use Illuminate\Contracts\Auth\Guard;
 use App\Events\Frontend\Auth\UserLoggedIn;
 use App\Events\Frontend\Auth\UserLoggedOut;
 use App\Repositories\Frontend\User\UserContract;
+use Illuminate\Http\Request;
 use Laravel\Socialite\Contracts\Factory as Socialite;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class Registrar
  * @package App\Services
  */
-class EloquentAuthenticationRepository implements AuthenticationContract
-{
+class EloquentAuthenticationRepository implements AuthenticationContract {
 
     /**
      * @var Socialite
@@ -51,8 +52,6 @@ class EloquentAuthenticationRepository implements AuthenticationContract
     {
         $user = $this->users->create($data);
 
-        event(new UserRegister($user));
-
         return $user;
     }
 
@@ -66,28 +65,28 @@ class EloquentAuthenticationRepository implements AuthenticationContract
         //@change to phone login
         if ($this->auth->attempt($request->only('phone', 'password'), $request->has('remember'))) {
 
-             if ($this->auth->user()->status == 0) {
-                 $this->auth->logout();
-                 throw new GeneralException("Your account is currently deactivated.");
-             }
+            if ($this->auth->user()->status == 0) {
+                $this->auth->logout();
+                throw new GeneralException("Your account is currently deactivated.");
+            }
 
-             if ($this->auth->user()->status == 2) {
-                 $this->auth->logout();
-                 throw new GeneralException("Your account is currently banned.");
-             }
+            if ($this->auth->user()->status == 2) {
+                $this->auth->logout();
+                throw new GeneralException("Your account is currently banned.");
+            }
 
-             if ($this->auth->user()->confirmed == 0) {
-                 $user_id = $this->auth->user()->id;
-                 $this->auth->logout();
-                 throw new GeneralException("Your account is not confirmed. Please click the confirmation link in your e-mail, or " . '<a href="' . route('account.confirm.resend', $user_id) . '">click here</a>' . " to resend the confirmation e-mail.");
-             }
+            if ($this->auth->user()->confirmed == 0) {
+                $user_id = $this->auth->user()->id;
+                $this->auth->logout();
+                throw new GeneralException("Your account is not confirmed. Please click the confirmation link in your e-mail, or " . '<a href="' . route('account.confirm.resend', $user_id) . '">click here</a>' . " to resend the confirmation e-mail.");
+            }
 
             event(new UserLoggedIn($this->auth->user()));
 
             return true;
         }
 
-        throw new GeneralException('These credentials do not match our records.');
+        throw new GeneralException(\Lang::get('auth.failed'));
     }
 
     /**
@@ -111,7 +110,6 @@ class EloquentAuthenticationRepository implements AuthenticationContract
      */
     public function loginThirdParty($request, $provider)
     {
-        if (!$request) return $this->getAuthorizationFirst($provider);
         $user = $this->users->findByUserNameOrCreate($this->getSocialUser($provider), $provider);
 
         /**
@@ -120,10 +118,14 @@ class EloquentAuthenticationRepository implements AuthenticationContract
         if ($user->isBannedOrDeactivated())
             throw new GeneralException("Your account has been banned or deactivated.");
 
-        $this->auth->login($user, true);
         event(new UserLoggedIn($user));
 
-        return redirect()->route('frontend.dashboard');
+        return $user;
+    }
+
+    public function loginThirdPartyUrl($request, $provider)
+    {
+        return $this->getAuthorizationFirst($provider);
     }
 
     /**
@@ -132,21 +134,17 @@ class EloquentAuthenticationRepository implements AuthenticationContract
      */
     public function getAuthorizationFirst($provider)
     {
-        if ($provider == "google") {
-            /*
-			 * Only allows google to grab email address
-			 * Default scopes array also has: 'https://www.googleapis.com/auth/plus.login'
-			 * https://medium.com/@njovin/fixing-laravel-socialite-s-google-permissions-2b0ef8c18205
-			 */
+        if ($provider == "weixin") {
             $scopes = [
-                'https://www.googleapis.com/auth/plus.me',
-                'https://www.googleapis.com/auth/plus.profile.emails.read',
+                'snsapi_userinfo'
             ];
-
-            return $this->socialite->driver($provider)->scopes($scopes)->redirect();
         }
 
-        return $this->socialite->driver($provider)->redirect();
+        if (isset($scopes)) {
+            return $this->socialite->driver($provider)->scopes($scopes)->redirect()->getTargetUrl();
+        }
+
+        return $this->socialite->driver($provider)->redirect()->getTargetUrl();
     }
 
     /**

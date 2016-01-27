@@ -26,9 +26,12 @@ abstract class Request extends FormRequest {
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new StoreResourceFailedException('请求数据格式错误', $validator->errors());
+        if ($this->ajax() || $this->isJson()) {
+            throw new StoreResourceFailedException('请求数据格式错误', $validator->errors());
+        } else {
+            parent::failedValidation($validator);
+        }
     }
-
 
 }
 

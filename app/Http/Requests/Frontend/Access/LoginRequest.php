@@ -30,4 +30,11 @@ class LoginRequest extends Request {
             'password' => 'required',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'password' => '密码'
+        ];
+    }
 }

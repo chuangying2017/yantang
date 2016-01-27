@@ -27,6 +27,7 @@ $api->resource('attributes', 'AttributeController');
 $api->resource('attributes.values', 'AttributeValueController', ['only' => ['store', 'destroy']]);
 
 $api->resource('brands', 'BrandController');
+$api->resource('channels', 'ChannelController');
 
 
 $api->put('groups/{group_id}/products', [

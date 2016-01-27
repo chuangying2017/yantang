@@ -26,9 +26,9 @@ class ClientService {
      * @return static
      * @throws Exceptions\ClientException
      */
-    public static function create($user)
+    public static function create($user, $extra_data = null)
     {
-        return ClientRepository::create($user);
+        return ClientRepository::create($user, $extra_data);
     }
 
     /**

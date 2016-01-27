@@ -1,8 +1,11 @@
 <?php namespace App\Http\Controllers\Api\Frontend\Auth;
 
+use App\Http\Requests\ThirdPartyRequest;
+use App\Http\Requests\UpdatePhoneRequest;
+use App\Http\Transformers\UserInfoTransformer;
+use App\Services\Auth\AccountService;
 use App\Services\Mth\MthApiService;
 use Illuminate\Http\Request;
-use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Http\Requests\Frontend\Access\LoginRequest;
@@ -25,7 +28,7 @@ class AuthController extends Controller {
     public function __construct(AuthenticationContract $auth)
     {
         $this->auth = $auth;
-//        $this->middleware('register.verify.phone', ['only' => 'postRegister']);
+        $this->middleware('register.verify.phone', ['only' => ['postRegister', 'updatePhone']]);
     }
 
 
@@ -56,7 +59,11 @@ class AuthController extends Controller {
      */
     public function getLogin()
     {
-        return $this->response->array($this->getSocialLinks());
+        if (\Auth::check()) {
+            return redirect()->route('backend.dashboard');
+        }
+
+        return view('frontend.auth.login');
     }
 
     /**
@@ -65,18 +72,27 @@ class AuthController extends Controller {
      */
     public function postLogin(LoginRequest $request)
     {
+        $throttles = $this->isUsingThrottlesLoginsTrait();
+
+        if ($throttles && $this->hasTooManyLoginAttempts($request))
+            return $this->sendLockoutResponse($request);
+
+
         try {
             // attempt to verify the credentials and create a token for the user
             if ( ! $token = JWTAuth::attempt($request->only('phone', 'password'))) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
+            $user = JWTAuth::toUser($token);
+            $roles = UserInfoTransformer::getRoles($user);
+
+            // all good so return the token
+            return response()->json(['data' => compact('token', 'roles')]);
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
-        // all good so return the token
-        return response()->json(compact('token'));
     }
 
     /**
@@ -84,9 +100,26 @@ class AuthController extends Controller {
      * @param $provider
      * @return mixed
      */
-    public function loginThirdParty(Request $request, $provider)
+    public function loginThirdParty(ThirdPartyRequest $request, $provider)
     {
-        return $this->auth->loginThirdParty($request->all(), $provider);
+        try {
+            $user = $this->auth->loginThirdParty($request->all(), $provider);
+
+            $token = JWTAuth::fromUser($user);
+
+            $roles = UserInfoTransformer::getRoles($user);
+
+            return $this->response->array(['data' => compact('token', 'roles')]);
+        } catch (\Exception $e) {
+            $this->response->errorInternal('无效请求');
+        }
+    }
+
+    public function loginThirdPartyUrl(Request $request, $provider)
+    {
+        $url = $this->auth->loginThirdPartyUrl($request->all(), $provider);
+
+        return $this->response->array(['data' => compact('url')]);
     }
 
     /**
@@ -123,31 +156,25 @@ class AuthController extends Controller {
         );
     }
 
-    /**
-     * Generates social login links based on what is enabled
-     * @return string
-     */
-    protected function getSocialLinks()
+    protected function loginUsername()
     {
-        $socialite_enable = [];
-        $socialite_links = '';
+        return 'phone';
+    }
 
-        if (getenv('GITHUB_CLIENT_ID') != '')
-            $socialite_enable[] = link_to_route('auth.provider', trans('labels.login_with', ['social_media' => 'Github']), 'github');
 
-        if (getenv('FACEBOOK_CLIENT_ID') != '')
-            $socialite_enable[] = link_to_route('auth.provider', trans('labels.login_with', ['social_media' => 'Facebook']), 'facebook');
+    public function updatePhone(UpdatePhoneRequest $request)
+    {
+        try {
+            $user = $this->getCurrentAuthUser();
+            $phone = $request->input('phone');
 
-        if (getenv('TWITTER_CLIENT_ID') != '')
-            $socialite_enable[] = link_to_route('auth.provider', trans('labels.login_with', ['social_media' => 'Twitter']), 'twitter');
+            $user = AccountService::updatePhone($user, $phone);
 
-        if (getenv('GOOGLE_CLIENT_ID') != '')
-            $socialite_enable[] = link_to_route('auth.provider', trans('labels.login_with', ['social_media' => 'Google']), 'google');
-
-        for ($i = 0; $i < count($socialite_enable); $i++) {
-            $socialite_links .= ($socialite_links != '' ? '&nbsp;|&nbsp;' : '') . $socialite_enable[ $i ];
+            return $this->response->item($user, new UserInfoTransformer());
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
         }
 
-        return $socialite_links;
     }
+
 }

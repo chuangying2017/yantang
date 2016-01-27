@@ -55,8 +55,7 @@ class AuthController extends Controller {
      */
     public function getLogin()
     {
-        return view('frontend.auth.login')
-            ->withSocialiteLinks($this->getSocialLinks());
+        return view('frontend.auth.login');
     }
 
     /**
@@ -166,14 +165,9 @@ class AuthController extends Controller {
      */
     public function loginUsername()
     {
-        return property_exists($this, 'username') ? $this->username : 'email';
+        return 'phone';
     }
 
-    /**
-     * Determine if the class is using the ThrottlesLogins trait.
-     *
-     * @return bool
-     */
     protected function isUsingThrottlesLoginsTrait()
     {
         return in_array(
@@ -181,31 +175,5 @@ class AuthController extends Controller {
         );
     }
 
-    /**
-     * Generates social login links based on what is enabled
-     * @return string
-     */
-    protected function getSocialLinks()
-    {
-        $socialite_enable = [];
-        $socialite_links = '';
 
-        if (getenv('GITHUB_CLIENT_ID') != '')
-            $socialite_enable[] = link_to_route('auth.provider', trans('labels.login_with', ['social_media' => 'Github']), 'github');
-
-        if (getenv('FACEBOOK_CLIENT_ID') != '')
-            $socialite_enable[] = link_to_route('auth.provider', trans('labels.login_with', ['social_media' => 'Facebook']), 'facebook');
-
-        if (getenv('TWITTER_CLIENT_ID') != '')
-            $socialite_enable[] = link_to_route('auth.provider', trans('labels.login_with', ['social_media' => 'Twitter']), 'twitter');
-
-        if (getenv('GOOGLE_CLIENT_ID') != '')
-            $socialite_enable[] = link_to_route('auth.provider', trans('labels.login_with', ['social_media' => 'Google']), 'google');
-
-        for ($i = 0; $i < count($socialite_enable); $i++) {
-            $socialite_links .= ($socialite_links != '' ? '&nbsp;|&nbsp;' : '') . $socialite_enable[ $i ];
-        }
-
-        return $socialite_links;
-    }
 }

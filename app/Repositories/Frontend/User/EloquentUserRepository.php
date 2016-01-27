@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Frontend\User;
 
+use App\Events\Frontend\Auth\UserRegister;
 use App\Models\Access\User\User;
 use App\Models\Access\User\UserProvider;
 use App\Exceptions\GeneralException;
@@ -49,7 +50,7 @@ class EloquentUserRepository implements UserContract {
         $user = User::create([
             'name'              => array_get($data, 'name', ''),
             'email'             => array_get($data, 'email', ''),
-            'phone'             => array_get($data, 'phone'),
+            'phone'             => $provider ? null : array_get($data, 'phone'),
             'password'          => $provider ? null : $data['password'],
             'confirmation_code' => md5(uniqid(mt_rand(), true)),
             'confirmed'         => config('access.users.confirm_email') ? 0 : 1,
@@ -60,7 +61,9 @@ class EloquentUserRepository implements UserContract {
 //        if (config('access.users.confirm_email') && $provider === false)
 //            $this->sendConfirmationEmail($user);
 //        else
-        $user->confirmed = 1;
+        $user->confirmed = $user['phone'] ? 1 : 0;
+
+        event(new UserRegister($user, $data));
 
         return $user;
     }
@@ -72,19 +75,37 @@ class EloquentUserRepository implements UserContract {
      */
     public function findByUserNameOrCreate($data, $provider)
     {
-        $user = User::where('email', $data->email)->first();
+        $user = get_current_auth_user();
+        if ( ! $user) {
+            /**
+             * 通过provider查找用户是否存在
+             * 不存在创建用户
+             * 用户更新电话号码后选择绑定到已有用户,先查询是否存在使用该手机的用户,没有则绑定激活临时用户,有则绑定已注册用户
+             */
+            $user_provider = UserProvider::with('user')->where('provider_id', $data->id)->where('provider', $provider)->first();
+
+            if ( ! $user_provider && ($provider == 'weixin' || $provider == 'weixinweb')) {
+                // 微信,微信开放平台使用union id 查询绑定相同用户
+                $user_provider = UserProvider::with('user')->where('union_id', $data->union_id)->first();
+            }
+
+            if ( ! $user_provider) {
+                $user = $this->create([
+                    'name'   => $data->name ?: (property_exists($data, 'nickname') ? $data->nickname : uniqid($provider . '_')),
+                    'email'  => $data->email ?: '',
+                    'avatar' => $data->avatar
+                ], true);
+            } else {
+                $user = $user_provider->user;
+            }
+        }
+
         $providerData = [
             'avatar'      => $data->avatar,
+            'nickname'    => (property_exists($data, 'nickname') ? $data->nickname : $data->name),
             'provider'    => $provider,
             'provider_id' => $data->id,
         ];
-
-        if ( ! $user) {
-            $user = $this->create([
-                'name'  => $data->name,
-                'email' => $data->email,
-            ], true);
-        }
 
         if ($this->hasProvider($user, $provider))
             $this->checkIfUserNeedsUpdating($provider, $data, $user);
@@ -94,6 +115,7 @@ class EloquentUserRepository implements UserContract {
 
         return $user;
     }
+
 
     /**
      * @param $user
@@ -222,5 +244,19 @@ class EloquentUserRepository implements UserContract {
         return Mail::queue('emails.confirm', ['token' => $user->confirmation_code], function ($message) use ($user) {
             $message->to($user->email, $user->name)->subject(app_name() . ': Confirm your account!');
         });
+    }
+
+    public static function findUserByPhone($phone)
+    {
+        return User::where('phone', $phone)->first();
+    }
+
+    public static function updatePhone($user_id, $phone)
+    {
+        $user = User::findOrFail($user_id);
+        $user->phone = $phone;
+        $user->confirmed = 1;
+        $user->save();
+        return $user;
     }
 }

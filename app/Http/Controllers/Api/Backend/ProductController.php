@@ -28,6 +28,7 @@ class ProductController extends Controller {
         $sort = ApiConst::decodeSort($request->input('sort'));
         $status = $request->input('status') ?: ProductConst::VAR_PRODUCT_STATUS_UP;
         $keyword = $request->input('keyword') ? : null;
+        $channel_id = $request->input('channel_id') ? : null;
 
         $products = ProductService::lists(
             $category_id,
@@ -36,7 +37,8 @@ class ProductController extends Controller {
             $sort['order_by'],
             $sort['order_type'],
             $status,
-            $keyword
+            $keyword,
+            $channel_id
         );
 
         return $this->response->paginator($products, new BackendProductTransformer());

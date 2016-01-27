@@ -71,6 +71,7 @@ return [
 
     'codeValidTime' => 30,
 
+    'notifyNewOrder' => '你有新的订单，请到后台查看',
 
     /*
      * -----------------------------------
@@ -79,7 +80,7 @@ return [
      * storePrefixKey: 存储key的prefix
      * storage: 存储方式
      */
-    'storage'       => 'App\Services\Utilities\SmsStorage',
+    'storage'        => 'App\Services\Utilities\SmsStorage',
 
     'storePrefixKey' => 'laravel_sms_info',
 

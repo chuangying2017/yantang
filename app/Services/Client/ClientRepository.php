@@ -37,12 +37,12 @@ class ClientRepository {
      * @return static
      * @throws ClientException
      */
-    public static function create($user)
+    public static function create($user, $extra_data = null)
     {
         //create a client
         Client::updateOrCreate(
             ['user_id' => $user->id],
-            ['user_id' => $user->id, 'nickname' => $user->name, 'avatar' => self::DEFAULT_AVATAR]
+            ['user_id' => $user->id, 'nickname' => $user->name, 'avatar' => array_get($extra_data, 'avatar', self::DEFAULT_AVATAR)]
         );
         //create wallet
         Wallet::firstOrCreate(['user_id' => $user->id]);

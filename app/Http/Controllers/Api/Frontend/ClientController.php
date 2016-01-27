@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Frontend;
 
+use App\Http\Transformers\UserInfoTransformer;
 use App\Services\Client\ClientService;
 use Illuminate\Http\Request;
 
@@ -19,12 +20,10 @@ class ClientController extends Controller {
     public function index()
     {
         try {
-            $user_id = $this->getCurrentAuthUserId();
-            $client = ClientService::show($user_id);
-            $client['email'] = $client['user']['email'];
-            $client['phone'] = $client['user']['phone'];
+            $user = $this->getCurrentAuthUser();
+            $user->load('roles', 'client');
 
-            return $this->response->array(['data' => $client]);
+            return $this->response->item($user, new UserInfoTransformer());
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
@@ -39,12 +38,13 @@ class ClientController extends Controller {
     {
         try {
             $user_id = $this->getCurrentAuthUserId();
-            $data = $request->all();
-            $client = ClientService::update($user_id, $data);
-            $client['email'] = $client['user']['email'];
-            $client['phone'] = $client['user']['phone'];
+            $client = ClientService::update($user_id, $request->all());
 
-            return $this->response->array(['data' => $client]);
+            $user = $this->getCurrentAuthUser();
+            $user->load('roles', 'client');
+
+            return $this->response->item($user, new UserInfoTransformer());
+
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }

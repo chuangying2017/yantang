@@ -1,5 +1,6 @@
 <?php namespace App\Models\Access\User;
 
+use App\Models\Client;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Access\User\Traits\UserAccess;
@@ -16,54 +17,61 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-	use Authenticatable,
-		CanResetPassword,
-		SoftDeletes,
-		UserAccess,
-		UserRelationship,
-		UserAttribute;
+    use Authenticatable,
+        CanResetPassword,
+        SoftDeletes,
+        UserAccess,
+        UserRelationship,
+        UserAttribute;
 
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'users';
-
-	/**
-	 * The attributes that are not mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $guarded = ['id'];
-
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = ['password', 'remember_token'];
-
-	/**
-	 * For soft deletes
-	 *
-	 * @var array
-	 */
-	protected $dates = ['deleted_at'];
-
-	/**
-	 * @return mixed
-	 */
-	public function canChangeEmail() {
-		return config('access.users.change_email');
-	}
-
-	/**
-	 * @return bool
+    /**
+     * The database table used by the model.
+     *
+     * @var string
      */
-	public function isBannedOrDeactivated()
-	{
-		$blockedStatuses = [0, 2];
-		return in_array($this->status, $blockedStatuses);
-	}
+    protected $table = 'users';
+
+    /**
+     * The attributes that are not mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = ['id'];
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = ['password', 'remember_token'];
+
+    /**
+     * For soft deletes
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
+    /**
+     * @return mixed
+     */
+    public function canChangeEmail()
+    {
+        return config('access.users.change_email');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBannedOrDeactivated()
+    {
+        $blockedStatuses = [0, 2];
+
+        return in_array($this->status, $blockedStatuses);
+    }
+
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'user_id', 'id');
+    }
 }

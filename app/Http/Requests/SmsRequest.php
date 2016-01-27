@@ -3,9 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
-class SmsRequest extends Request
-{
+class SmsRequest extends Request {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,12 +24,17 @@ class SmsRequest extends Request
      */
     public function rules()
     {
+
         $rules = [];
-        if($this->isMethod('POST')) {
+        if ($this->isMethod('POST')) {
             $rules = [
-                'phone' => 'required|zh_mobile|unique:users,phone'
+                'phone' => 'required|zh_mobile'
             ];
+            if ( ! get_current_auth_user()) {
+                $rules['phone'] .= '|unique:users,phone';
+            }
         }
+
         return $rules;
     }
 }

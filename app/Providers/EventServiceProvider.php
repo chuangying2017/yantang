@@ -16,13 +16,20 @@ class EventServiceProvider extends ServiceProvider {
      * @var array
      */
     protected $listen = [
+
+        'SocialiteProviders\Manager\SocialiteWasCalled' => [
+            // add your listeners (aka providers) here
+            'App\Services\Socialite\Weixin\WeixinExtendSocialite'
+        ],
+
+
         /**
          * Frontend Events
          */
-        'App\Events\Frontend\Auth\UserLoggedIn'  => [
+        'App\Events\Frontend\Auth\UserLoggedIn'         => [
             'App\Listeners\Frontend\Auth\UserLoggedInHandler',
         ],
-        'App\Events\Frontend\Auth\UserLoggedOut' => [
+        'App\Events\Frontend\Auth\UserLoggedOut'        => [
             'App\Listeners\Frontend\Auth\UserLoggedOutHandler',
         ],
 
@@ -54,6 +61,7 @@ class EventServiceProvider extends ServiceProvider {
             'App\Services\Orders\Listeners\HandleOrderPaid',
             'App\Services\Marketing\Listeners\UpdateMarketingBillingAndUsedMarketingItem',
             'App\Services\Agent\Listeners\AgentOrderDeal',
+            'App\Services\Merchant\Listeners\SendOrderInfoToMerchant',
         ],
     ];
 

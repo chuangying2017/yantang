@@ -2,6 +2,7 @@
 
 
 use App\Http\Traits\ApiHelpers;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use Exception;
 use HttpResponseException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -23,6 +24,7 @@ class Handler extends ExceptionHandler {
     protected $dontReport = [
         HttpException::class,
         ModelNotFoundException::class,
+        StoreResourceFailedException::class
     ];
 
     /**

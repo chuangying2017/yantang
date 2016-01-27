@@ -27,9 +27,6 @@ abstract class Controller extends BaseController {
     }
 
 
-
-
-
     protected function getCurrentAuthUser()
     {
         if (Auth::check()) {
@@ -42,11 +39,12 @@ abstract class Controller extends BaseController {
 
         try {
             $user = JWTAuth::parseToken()->authenticate();
+
+            return $user;
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             $this->response->errorUnauthorized('Token Expired');
         }
 
-        return $user;
     }
 
     protected function getAgent()

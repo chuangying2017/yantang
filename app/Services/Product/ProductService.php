@@ -12,6 +12,7 @@ namespace App\Services\Product;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\Product\Brand\BrandService;
+use App\Services\Product\Brand\ChannelService;
 use App\Services\Product\Category\CategoryService;
 
 /**
@@ -82,7 +83,7 @@ class ProductService {
         return $product;
     }
 
-    public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = null, $keyword = null)
+    public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = null, $keyword = null, $channel_id = null)
     {
         $keyword_flag = 0;
 
@@ -105,6 +106,11 @@ class ProductService {
         }
 
         $brand_id = ! is_null($brand_id) ? to_array($brand_id) : null;
+        if ( ! is_null($channel_id)) {
+            $channel_brand_ids = ChannelService::getBrandsId($channel_id);
+            $brand_id = is_null($brand_id) ? $channel_brand_ids : array_merge($brand_id, $channel_brand_ids);
+        }
+
         $category_ids = CategoryService::getLeavesId($category_id);
 
         $products = ProductRepository::lists($category_ids, $brand_id, $paginate, $orderBy, $orderType, $status, $keyword, $keyword_flag);

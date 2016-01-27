@@ -322,4 +322,9 @@ class EloquentUserRepository implements UserContract {
 
         return $user;
     }
+
+    public function findUserByPhone($phone)
+    {
+        return User::where('phone', $phone)->first();
+    }
 }

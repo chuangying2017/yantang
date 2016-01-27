@@ -6,6 +6,10 @@ class SmsStorage {
 
     public function set($key, $value)
     {
+        if (Cache::has($key)) {
+            Cache::forget($key);
+        }
+
         Cache::put($key, $value, 30);
     }
 
@@ -16,6 +20,7 @@ class SmsStorage {
 
     public function forget($key)
     {
+        logger('forget' . $key);
         Cache::forget($key);
     }
 

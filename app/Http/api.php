@@ -1,5 +1,7 @@
 <?php
 
+
+
 $api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => 'cors'], function ($api) {
 

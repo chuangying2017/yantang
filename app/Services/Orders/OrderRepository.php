@@ -104,6 +104,16 @@ class OrderRepository {
         return ChildOrder::where('order_no', $order_no)->firstOrFail();
     }
 
+    public static function queryChildOrderOfMainOrderById($order_id)
+    {
+        return ChildOrder::where('order_id', $order_id)->get();
+    }
+
+    public static function queryOrderMerchants($order_id)
+    {
+        return ChildOrder::where('order_id', $order_id)->select('merchant_id')->dinstict()->get()->toArray();
+    }
+
     public static function queryOrderById($order_id)
     {
         if ($order_id instanceof Order) {
