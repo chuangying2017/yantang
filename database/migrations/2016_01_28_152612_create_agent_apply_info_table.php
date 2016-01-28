@@ -26,10 +26,11 @@ class CreateAgentApplyInfoTable extends Migration {
         Schema::create('agent_apply_info', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
+            $table->string('parent_agent_id');
+            $table->string('apply_agent_id')->nullable();
             $table->string('status')->default('pending');
             $table->string('bank_no');
             $table->string('bank_detail');
-            $table->string('parent_agent_id');
             $table->string('agent_role');
             $table->string('name');
             $table->string('director_name');
