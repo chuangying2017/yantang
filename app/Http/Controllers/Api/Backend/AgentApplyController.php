@@ -35,11 +35,7 @@ class AgentApplyController extends Controller {
 
     public function agents($agent_id = null)
     {
-        if (is_null($agent_id)) {
-            $agents = AgentService::getAgentsRoot();
-        } else {
-            $agents = AgentService::getAgentTree($agent_id);
-        }
+        $agents = AgentService::getAgentTree($agent_id);
 
         return $this->response->array(['data' => $agents]);
     }

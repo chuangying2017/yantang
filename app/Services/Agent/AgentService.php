@@ -238,6 +238,9 @@ class AgentService {
     {
         $apply = self::userApply($user_id);
 
+        #TODO 申请的agent不存在
+        #todo 门店的parent为叶子
+
         //用户已经通过不需要再提交
         if ($apply) {
             if ($apply['status'] != AgentProtocol::APPLY_STATUS_OF_APPROVE) {
@@ -255,35 +258,61 @@ class AgentService {
 
     public static function approveApply($apply_id)
     {
-        $apply = $apply_id;
+
+        #todo 检查是否有通过权限
+
+        $apply = AgentApplyRepository::byId($apply_id);
 
         if ($apply['status'] == AgentProtocol::APPLY_STATUS_OF_APPROVE) {
             return false;
         }
 
-//        $agent = AgentRepository::byId($agent_id);
-//
-//        if ( ! $agent->isRoot()) {
-//            throw new \Exception('指定代理非省级代理');
-//        }
-//
-//        if ($agent['mark']) {
-//            throw new \Exception('指定省级代理已存在');
-//        }
-//
+        $apply_agent_id = $apply['apply_agent_id'];
+        if ( ! $apply_agent_id || is_null($apply_agent_id)) {
+            #todo 通过门店
+        }
 
+        $agent = AgentRepository::byId($apply_agent_id);
+
+
+        if ($agent['mark']) {
+            throw new \Exception('指定代理已存在');
+        }
+
+        self::approveNormalAgent($agent, $apply['user_id']);
         AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_APPROVE);
+
     }
 
-    public static function getAgentTree($agent_id)
+    public static function approveNormalAgent($agent, $user_id)
     {
-        return AgentRepository::getAgentTree($agent_id);
+        $agent = AgentRepository::setRealAgent($agent, $user_id);
+        if ($agent['level'] !== AgentProtocol::AGENT_LEVEL_OF_REGION) {
+
+            $children = $agent->getDescendants();
+            $child_agent_ids = [];
+            if (count($children)) {
+                foreach ($children as $child) {
+                    if ( ! $child['mark']) {
+                        array_push($child_agent_ids, $child['id']);
+                    }
+                }
+            }
+            if (count($child_agent_ids)) {
+                AgentRepository::setTempAgent($child_agent_ids, $user_id);
+            }
+        }
+
+        return $agent;
     }
 
-    public static function getAgentsRoot()
+    public static function getAgentTree($agent_id = null, $depth = 1)
     {
-        return AgentRepository::getAgentsRoot();
-    }
+        if (is_null($agent_id)) {
+            return AgentRepository::getAgentsRoot();
+        }
 
+        return AgentRepository::getAgentTree($agent_id, $depth);
+    }
 
 }

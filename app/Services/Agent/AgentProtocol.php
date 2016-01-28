@@ -9,6 +9,9 @@ class AgentProtocol {
     const APPLY_STATUS_OF_REJECT = 'reject';
     const APPLY_STATUS_OF_APPROVE = 'approve';
 
+    const MARK_REAL_AGENT = 1;
+    const MARK_TEMP_AGENT = 0;
+
 
     const AGENT_RATE_BASE = 10000;
 

@@ -47,6 +47,9 @@ class AgentApplyRepository {
 
     public static function byId($apply_id)
     {
+        if($apply_id instanceof AgentInfo) {
+            return $apply_id;
+        }
         return AgentInfo::findOrFail($apply_id);
     }
 
