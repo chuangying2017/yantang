@@ -4,6 +4,7 @@ use App\Services\Cart\CartService;
 use App\Services\Client\Address\AddressService;
 use App\Services\Marketing\MarketingItemUsing;
 use App\Services\Marketing\MarketingProtocol;
+use App\Services\Orders\Event\OrderIsPaid;
 use App\Services\Orders\Helpers\MarketingHelper;
 use App\Services\Orders\Helpers\OrderInfoHelpers;
 use App\Services\Orders\Helpers\ProductsHelper;
@@ -157,10 +158,6 @@ class OrderGenerator {
 
         event(new \App\Services\Orders\Event\OrderInfoChange($order_info));
 
-        if (self::orderPayAmount($order_info) <= 0) {
-
-            event(new \App\Services\Orders\Event\OrderIsPaid($order_info['id']));
-        }
 
         return $order_info;
     }
@@ -243,6 +240,10 @@ class OrderGenerator {
             event(new \App\Services\Orders\Event\OrderConfirm($order_main['id'], $order_info));
 
             $order_info = self::getOrder($uuid, true);
+
+            if (self::orderPayAmount($order_info) <= 0) {
+                event(new OrderIsPaid($order_info['id']));
+            }
 
             return $order_main;
 

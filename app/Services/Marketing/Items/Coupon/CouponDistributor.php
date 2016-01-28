@@ -13,11 +13,14 @@ class CouponDistributor extends MarketingItemDistributor {
     protected function auth($coupon_id, $user_info)
     {
         try {
+            if ($this->isAuth()) {
+                return 1;
+            }
             $user_id = array_get($user_info, 'id');
 
             $this->setResourceType(self::RESOURCE_TYPE);
             $coupon = MarketingRepository::queryFullCoupon($coupon_id);
-            $can_take = $this->filer($coupon, $user_info);
+            $can_take = $this->filter($coupon, $user_info);
             if ( ! $can_take) {
                 return 0;
             }
@@ -31,10 +34,13 @@ class CouponDistributor extends MarketingItemDistributor {
         return 1;
     }
 
-    public function send($coupon_id, $user_info)
+    public function send($coupon_id, $user_info, $need_auth = true)
     {
         $user_id = array_get($user_info, 'id');
-        $this->auth($coupon_id, $user_info);
+
+        if ( ! $need_auth) {
+            $this->isAuth(self::MARKETING_ITEM_CAN_DISTRIBUTE_TO_USER);
+        }
 
         if ( ! $this->isAuth()) {
             throw new MarketingItemDistributeException($this->getErrorMessage());

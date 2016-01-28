@@ -2,11 +2,12 @@
 
 use App\Models\Agent;
 use App\Models\AgentOrder;
+use App\Services\Agent\Event\NewAgentOrder;
+use App\Services\Client\ClientService;
 use App\Services\Orders\OrderRepository;
 use Carbon\Carbon;
 
-class AgentService
-{
+class AgentService {
 
     const STAFF_ID = 5;
     const AGENT_ID = 1;
@@ -15,15 +16,41 @@ class AgentService
     public static function orderDeal($order_id)
     {
         $order = OrderRepository::queryOrderById($order_id);
-        $agent_id = self::getAgentByUser($order['user_id']);
+        $agent = self::getAgentByUser($order['user_id']);
 
-        $agent_order = AgentOrder::firstOrCreate([
-            'agent_id' => $agent_id,
-            'order_no' => $order['order_no'],
-            'amount' => $order['pay_amount']
-        ]);
+        if ($agent) {
+            $agent_order = AgentRepository::storeAgentOrders($agent, $order);
 
-        return $agent_order;
+            event(new NewAgentOrder($agent_order));
+
+            return $agent_order;
+        }
+
+        return false;
+    }
+
+    public static function awardAgent($agent_order)
+    {
+        $award_agents = self::getParentAgents($agent_order['agent_id']);
+
+        $award_orders = [];
+        foreach ($award_agents as $key => $award_agent) {
+            $rate = self::getEarnRate($award_agent['level']);
+            $award_orders[ $key ] = [
+                'agent_order_id' => $agent_order['id'],
+                'agent_id'       => $award_agent['id'],
+                'agent_level'    => $award_agent['level'],
+                'order_no'       => $agent_order['order_no'],
+                'status'         => AgentProtocol::AGENT_ORDER_STATUS_OF_OK,
+                'amount'         => $agent_order['amount'],
+                'rate'           => $rate,
+                'award_amount'   => bcdiv((bcmul($agent_order['amount'], $rate)), AgentProtocol::AGENT_RATE_BASE, 0),
+            ];
+        }
+
+        if (count($award_orders)) {
+            AgentRepository::storeAgentOrderDetail($award_orders);
+        }
     }
 
     public static function getLeavesId($agent_id, $string = false)
@@ -56,7 +83,7 @@ class AgentService
         $agent->children = $agent->descendants()->limitDepth(1)->get();
         $agent->earn_data = self::calAgentData($agent, $orders);
         foreach ($agent->children as $key => $child_agent) {
-            $agent->children[$key]->earn_data = self::calAgentData($child_agent, $orders);
+            $agent->children[ $key ]->earn_data = self::calAgentData($child_agent, $orders);
         }
 
         $agent->orders = $orders;
@@ -79,7 +106,7 @@ class AgentService
     {
         $data = [
             'today_amount' => 0,
-            'week_amount' => 0,
+            'week_amount'  => 0,
             'month_amount' => 0
         ];
         $today = Carbon::today();
@@ -109,9 +136,9 @@ class AgentService
         $agent_id = $agent['id'];
         $data = [
 
-            'order_count' => 0,
+            'order_count'  => 0,
             'total_amount' => 0,
-            'earn_amount' => 0
+            'earn_amount'  => 0
         ];
 
         $staff_id = self::getLeavesId($agent_id);
@@ -134,22 +161,26 @@ class AgentService
 
     protected static function getEarnRate($agent_level)
     {
-        $data = [
-            'sales' => 20,
-            '1' => 1,
-            '2' => 2,
-            '3' => 1,
-            '4' => 2
-        ];
+        $data = AgentRepository::rate();
 
-        return array_get($data, $agent_level, 1);
+        return array_get($data, $agent_level, 0);
     }
 
+    /**
+     * 查询用户是否有推荐人
+     * @param $user_id
+     */
     public static function getAgentByUser($user_id)
     {
-        #todo order agent id
-        return self::STAFF_ID;
+        $client = ClientService::show($user_id);
+
+        if ($promotion_id = $client['promotion_id']) {
+            return PromotionRepository::getAgentByPromotion($promotion_id);
+        }
+
+        return false;
     }
+
 
     public static function getAgentOrders($agent_id, $start_at = null, $end_at = null)
     {
@@ -159,5 +190,80 @@ class AgentService
 
         return AgentOrder::whereIn('agent_id', $staff_ids)->whereBetween('created_at', [$start_at, $end_at])->get();
     }
+
+    public static function getPromotionId($code)
+    {
+        if ( ! is_null($code) && $code) {
+            $promotion = PromotionRepository::getByCode($code);
+            if ($promotion) {
+                return $promotion['id'];
+            }
+        }
+
+        return 0;
+    }
+
+    public static function getClientPromotion($user_id)
+    {
+        return PromotionRepository::getByAgent($user_id);
+    }
+
+    public static function getAgentPromotion($agent_id)
+    {
+        return PromotionRepository::getByAgent($agent_id);
+    }
+
+    public static function getParentAgents($agent_id)
+    {
+        $agent = AgentRepository::byId($agent_id);
+
+        return $agent->ancestorsAndSelf()->get();
+    }
+
+
+    /**********************************************************************************************************
+     *
+     *
+     * Agent Apply
+     *
+     *
+     **********************************************************************************************************/
+
+    public static function userApply($user_id)
+    {
+        return AgentApplyRepository::byUser($user_id);
+    }
+
+    public static function newApply($user_id, $data)
+    {
+        $apply = self::userApply($user_id);
+
+        //用户已经通过不需要再提交
+        if ($apply) {
+            if ($apply['status'] != AgentProtocol::APPLY_STATUS_OF_APPROVE) {
+                throw new \Exception('用户已经是代理商,无需再次提交');
+            }
+        }
+
+        return AgentApplyRepository::storeApplyInfo($user_id, $data);
+    }
+
+    public static function agentCheckApplyList($agent_id, $status = AgentProtocol::APPLY_STATUS_OF_PENDING)
+    {
+        return AgentApplyRepository::byAgent($agent_id, $status);
+    }
+
+    public static function approveApply($apply_id)
+    {
+        $apply = $apply_id;
+
+        if ($apply['status'] == AgentProtocol::APPLY_STATUS_OF_APPROVE) {
+            return false;
+        }
+
+
+        AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_APPROVE);
+    }
+
 
 }

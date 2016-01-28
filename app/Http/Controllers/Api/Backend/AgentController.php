@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api\Backend;
 
+use App\Http\Requests\ApplyAgentRequest;
 use App\Services\Agent\AgentService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class AgentController extends Controller
-{
+class AgentController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -53,11 +53,13 @@ class AgentController extends Controller
     {
         if (isset($agent->orders)) {
             foreach ($agent->orders as $key => $order) {
-                $agent->orders[$key]['amount'] = display_price($order['amount']);
+                $agent->orders[ $key ]['amount'] = display_price($order['amount']);
             }
         }
 
         return $agent;
     }
+
+
 
 }

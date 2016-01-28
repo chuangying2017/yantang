@@ -1,7 +1,6 @@
 <?php
 
 
-
 $api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => 'cors'], function ($api) {
 
@@ -49,9 +48,11 @@ $api->version('v1', function ($api) {
             //订单
             require(__DIR__ . "/Routes/Api/Backend/Order.php");
 
-            //九级分销
-            require(__DIR__ . "/Routes/Api/Backend/Agent.php");
+
         });
+
+        //九级分销
+        require(__DIR__ . "/Routes/Api/Backend/Agent.php");
 
     });
 });

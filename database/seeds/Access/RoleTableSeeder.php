@@ -4,8 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon as Carbon;
 
-class RoleTableSeeder extends Seeder
-{
+class RoleTableSeeder extends Seeder {
 
     public function run()
     {
@@ -39,14 +38,25 @@ class RoleTableSeeder extends Seeder
         $user->updated_at = Carbon::now();
         $user->save();
 
-        //id = 2
+        //id = 3
         $role_model = config('access.role');
         $user = new $role_model;
         $user->name = 'MerchantAdmin';
-        $user->sort = 2;
+        $user->sort = 3;
         $user->created_at = Carbon::now();
         $user->updated_at = Carbon::now();
         $user->save();
+
+
+        //id = 3
+        $role_model = config('access.role');
+        $user = new $role_model;
+        $user->name = 'Agent';
+        $user->sort = 4;
+        $user->created_at = Carbon::now();
+        $user->updated_at = Carbon::now();
+        $user->save();
+
 
         if (env('DB_DRIVER') == 'mysql')
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');

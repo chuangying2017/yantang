@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Frontend;
 
 use App\Http\Transformers\UserInfoTransformer;
+use App\Services\Agent\AgentService;
 use App\Services\Client\ClientService;
 use Illuminate\Http\Request;
 
@@ -48,6 +49,14 @@ class ClientController extends Controller {
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
+    }
+
+    public function promotion()
+    {
+        $user_id = $this->getCurrentAuthUserId();
+        $promotion = AgentService::getClientPromotion($user_id);
+
+        return $this->response->array(['data' => ['code' => $promotion['code']]]);
     }
 
 

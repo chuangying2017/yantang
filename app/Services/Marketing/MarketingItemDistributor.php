@@ -36,7 +36,7 @@ abstract class MarketingItemDistributor {
     protected abstract function sendSucceed($id, $user_id);
 
     //规则验证
-    public function filer($resource, $user_info)
+    public function filter($resource, $user_info)
     {
         $user_id = array_get($user_info, 'id');
         $user_level = array_get($user_info, 'level', 0);

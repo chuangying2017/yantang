@@ -44,4 +44,14 @@ class Client extends Model {
     {
         return $this->belongsTo('App\Models\Access\User\User', 'user_id', 'id');
     }
+
+    public function promotions()
+    {
+        return $this->morphToMany(Promotion::class, 'agent');
+    }
+
+    public function promotion()
+    {
+        return $this->hasOne(Promotion::class, 'promotion_id', 'id');
+    }
 }

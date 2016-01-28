@@ -5,8 +5,8 @@ namespace App\Models;
 use Baum\Node;
 use Illuminate\Database\Eloquent\Model;
 
-class Agent extends Node
-{
+class Agent extends Node {
+
     protected $table = 'agents';
 
     // 'parent_id' column name
@@ -24,6 +24,10 @@ class Agent extends Node
     // guard attributes from mass-assignment
     protected $guarded = array('id', 'pid', 'lid', 'rid', 'depth');
 
+    public function promotions()
+    {
+        return $this->morphToMany(Promotion::class, 'agent');
+    }
 
 
 }

@@ -13,6 +13,7 @@ use App\Models\CreditsWallet;
 use App\Models\Wallet;
 use App\Repositories\Backend\Role\EloquentRoleRepository;
 use App\Repositories\Frontend\User\EloquentUserRepository;
+use App\Services\Agent\AgentService;
 use App\Services\Client\Exceptions\ClientException;
 use App\Services\Mth\MthApiService;
 
@@ -42,7 +43,12 @@ class ClientRepository {
         //create a client
         Client::updateOrCreate(
             ['user_id' => $user->id],
-            ['user_id' => $user->id, 'nickname' => $user->name, 'avatar' => array_get($extra_data, 'avatar', self::DEFAULT_AVATAR)]
+            [
+                'user_id'      => $user->id,
+                'nickname'     => $user->name,
+                'avatar'       => array_get($extra_data, 'avatar', self::DEFAULT_AVATAR),
+                'promotion_id' => AgentService::getPromotionId(array_get($extra_data, 'promotion_code', null)),
+            ]
         );
         //create wallet
         Wallet::firstOrCreate(['user_id' => $user->id]);
@@ -56,9 +62,9 @@ class ClientRepository {
      * @param $id
      * @return mixed
      */
-    public static function show($user_id)
+    public static function show($user_id, $relation = ['user'])
     {
-        $client = Client::with('user')->where('user_id', $user_id)->first();
+        $client = Client::with($relation)->where('user_id', $user_id)->first();
 
         return $client;
     }

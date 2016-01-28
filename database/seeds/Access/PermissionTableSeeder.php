@@ -300,6 +300,21 @@ class PermissionTableSeeder extends Seeder {
 		$deletePermissions->updated_at = Carbon::now();
 		$deletePermissions->save();
 
+
+        /**
+         * Agent Permission
+         */
+        $permission_model = config('access.permission');
+        $access_agent = new $permission_model;
+        $access_agent->name = 'access-agent-backend';
+        $access_agent->display_name = '查看代理商后台';
+        $access_agent->system = true;
+        $access_agent->group_id = 4;
+        $access_agent->sort = 1;
+        $access_agent->created_at = Carbon::now();
+        $access_agent->updated_at = Carbon::now();
+        $access_agent->save();
+
 		if(env('DB_DRIVER') == 'mysql')
 			DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 	}

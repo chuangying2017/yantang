@@ -3,6 +3,7 @@
 use App\Services\Marketing\MarketingItemUsing;
 
 use App\Services\Marketing\TicketService;
+use App\Services\Orders\Event\OrderIsPaid;
 use App\Services\Orders\Exceptions\WrongStatus;
 use App\Services\Orders\OrderProtocol;
 use Pingpp\Charge;
@@ -17,7 +18,7 @@ class BillingManager {
             if ($billing['status'] == OrderProtocol::STATUS_OF_UNPAID) {
                 BillingRepository::mainBillingIsPaid($billing['id'], $pingxx_payment_id, $pay_type);
 
-                event(new \App\Services\Orders\Event\OrderIsPaid($order_id));
+                event(new OrderIsPaid($order_id));
             }
         } catch (\Exception $e) {
             throw $e;
