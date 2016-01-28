@@ -261,8 +261,28 @@ class AgentService {
             return false;
         }
 
+//        $agent = AgentRepository::byId($agent_id);
+//
+//        if ( ! $agent->isRoot()) {
+//            throw new \Exception('指定代理非省级代理');
+//        }
+//
+//        if ($agent['mark']) {
+//            throw new \Exception('指定省级代理已存在');
+//        }
+//
 
         AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_APPROVE);
+    }
+
+    public static function getAgentTree($agent_id)
+    {
+        return AgentRepository::getAgentTree($agent_id);
+    }
+
+    public static function getAgentsRoot()
+    {
+        return AgentRepository::getAgentsRoot();
     }
 
 

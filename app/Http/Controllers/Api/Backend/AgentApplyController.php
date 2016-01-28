@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Toplan\PhpSms\Agent;
 
 class AgentApplyController extends Controller {
 
@@ -30,6 +31,17 @@ class AgentApplyController extends Controller {
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }
+    }
+
+    public function agents($agent_id = null)
+    {
+        if (is_null($agent_id)) {
+            $agents = AgentService::getAgentsRoot();
+        } else {
+            $agents = AgentService::getAgentTree($agent_id);
+        }
+
+        return $this->response->array(['data' => $agents]);
     }
 
 }

@@ -11,7 +11,6 @@ class AgentApplyRepository {
             'parent_agent_id',
             'bank_no',
             'bank_detail',
-            'agent_role',
             'name',
             'director_name',
             'phone',
@@ -38,7 +37,7 @@ class AgentApplyRepository {
 
     public static function byAgent($agent_id, $status = AgentProtocol::APPLY_STATUS_OF_PENDING, $paginate = 20)
     {
-        $query = AgentInfo::where('parent_agent_id', $agent_id);
+        $query = AgentInfo::where('parent_agent_id', $agent_id)->where('status', $status);
         if ( ! is_null($paginate)) {
             return $query->paginate($paginate);
         }

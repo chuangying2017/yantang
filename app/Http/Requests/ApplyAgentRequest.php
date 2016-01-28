@@ -4,8 +4,8 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class ApplyAgentRequest extends Request
-{
+class ApplyAgentRequest extends Request {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +13,7 @@ class ApplyAgentRequest extends Request
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class ApplyAgentRequest extends Request
     public function rules()
     {
         return [
-            //
+
         ];
     }
 }

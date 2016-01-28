@@ -27,7 +27,7 @@ class AgentRepository {
             return $agent_id;
         }
 
-        return Agent::find($agent_id);
+        return Agent::findOrFail($agent_id);
     }
 
 
@@ -53,6 +53,24 @@ class AgentRepository {
         }
 
         return 1;
+    }
+
+    public static function getAgentsRoot()
+    {
+        return Agent::roots()->get(['id', 'name', 'no', 'level', 'mark']);
+    }
+
+    public static function getAgentTree($agent_id)
+    {
+        $agent = self::byId($agent_id);
+
+
+//        return Cache::rememberForever('agent_tree_' . $agent_id, function ($agent) {
+//            return $agent->descendantsAndSelf()->get(['id', 'name', 'no', 'level', 'mark']);
+//        });
+        $agents = $agent->getDescendantsAndSelf(['id', 'name', 'no', 'level', 'mark', 'pid'])->toHierarchy();
+
+        return $agents[$agent_id];
     }
 
 

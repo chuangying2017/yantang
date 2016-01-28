@@ -9,6 +9,14 @@ $api->group(['namespace' => 'Backend', 'prefix' => 'admin/agents'], function ($a
     });
 
 
-    $api->resource('apply', 'AgentApplyController');
+});
 
+
+$api->group(['namespace' => 'Backend', 'prefix' => 'apply/agents'], function ($api) {
+
+    $api->get('lists/{agent_id?}', [
+        'as'   => 'apply.agents.tree',
+        'uses' => 'AgentApplyController@agents'
+    ]);
+    $api->resource('/', 'AgentApplyController');
 });
