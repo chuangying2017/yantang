@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Access\User\User;
 use Baum\Node;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,6 +28,11 @@ class Agent extends Node {
     public function promotions()
     {
         return $this->morphToMany(Promotion::class, 'agent');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id', 'user_id');
     }
 
 

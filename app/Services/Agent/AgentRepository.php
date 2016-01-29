@@ -9,6 +9,7 @@ use Cache;
 
 class AgentRepository {
 
+
     public static function rate()
     {
         return Cache::rememberForever('agent_rates', function () {
@@ -28,6 +29,24 @@ class AgentRepository {
         }
 
         return Agent::findOrFail($agent_id);
+    }
+
+    public static function byUser($user_id, $all = false)
+    {
+        if ($all) {
+            return Agent::where('user_id', $user_id)->orderBy('level')->get();
+        }
+
+        return Agent::where('user_id', $user_id)->orderBy('level')->first();
+    }
+
+    public static function getAgentIdByUser($user_id, $all = false)
+    {
+        if ($all) {
+            return Agent::where('user_id', $user_id)->orderBy('level')->lists('id')->toArray();
+        }
+
+        return Agent::where('user_id', $user_id)->orderBy('level')->pluck('id');
     }
 
     public static function setRealAgent($agent_id, $user_id)
@@ -92,7 +111,7 @@ class AgentRepository {
 
     public static function getAgentsRoot()
     {
-        return Agent::roots()->get(['id', 'name', 'no', 'level', 'mark']);
+        return Agent::roots()->where('id', '!=', AgentProtocol::SYSTEM_AGENT_ID)->get(['id', 'name', 'no', 'level', 'mark']);
     }
 
     public static function getAgentUpTree($agent_id, $depth = null)

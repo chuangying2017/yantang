@@ -4,6 +4,31 @@ use App\Models\AgentInfo;
 
 class AgentApplyRepository {
 
+    public static function lists($parent_id = null, $level = null, $status = AgentProtocol::APPLY_STATUS_OF_PENDING, $paginate = 20)
+    {
+        $query = AgentInfo::with('agent');
+
+        if ( ! is_null($parent_id)) {
+            $parent_id = to_array($parent_id);
+            $query = $query->whereIn('parent_agent_id', $parent_id);
+        }
+
+        if ( ! is_null($level)) {
+            $query = $query->where('agent_role', $level);
+        }
+
+        if ( ! is_null($status)) {
+            $query = $query->where('status', $status);
+        }
+
+        if ( ! is_null($paginate)) {
+            return $query->paginate($paginate);
+        }
+
+        return $query->get();
+    }
+
+
     public static function storeApplyInfo($user_id, $data)
     {
 
@@ -29,17 +54,18 @@ class AgentApplyRepository {
             ['user_id' => $user_id],
             $apply_info
         );
-
     }
 
-    public static function byUser($user_id)
+    public static function byUser($user_id, $detail = false)
     {
         $agent_info = AgentInfo::where('user_id', $user_id)->first();
 
-        if ($agent_info->apply_agent_id) {
-            $agent_info->agents = AgentRepository::getAgentUpTree($agent_info['apply_agent_id']);
-        } else {
-            $agent_info->agents = AgentRepository::getAgentUpTree($agent_info['parent_agent_id']);
+        if ($detail) {
+            if ($agent_info->apply_agent_id) {
+                $agent_info->agents = AgentRepository::getAgentUpTree($agent_info['apply_agent_id']);
+            } else {
+                $agent_info->agents = AgentRepository::getAgentUpTree($agent_info['parent_agent_id']);
+            }
         }
 
         return $agent_info;
@@ -55,18 +81,32 @@ class AgentApplyRepository {
         return $query->get();
     }
 
-    public static function byId($apply_id)
+    public static function byId($apply_id, $detail = false)
     {
         if ($apply_id instanceof AgentInfo) {
-            return $apply_id;
+            $agent_info = $apply_id;
+        } else {
+            $agent_info = AgentInfo::findOrFail($apply_id);
         }
 
-        return AgentInfo::findOrFail($apply_id);
+        if ($detail) {
+            if ($agent_info->apply_agent_id) {
+                $agent_info->agents = AgentRepository::getAgentUpTree($agent_info['apply_agent_id']);
+            } else {
+                $agent_info->agents = AgentRepository::getAgentUpTree($agent_info['parent_agent_id']);
+            }
+        }
+
+        return $agent_info;
     }
 
     public static function updateStatus($apply_id, $status)
     {
-        return AgentInfo::where('id', $apply_id)->update(['status' => $status]);
+        $apply = self::byId($apply_id);
+        $apply['status'] = $status;
+        $apply->save();
+
+        return $apply;
     }
 
 

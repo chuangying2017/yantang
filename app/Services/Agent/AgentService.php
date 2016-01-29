@@ -1,22 +1,38 @@
 <?php namespace App\Services\Agent;
 
+use App\Models\Access\Role\Role;
+use App\Models\Access\User\User;
 use App\Models\Agent;
 use App\Models\AgentOrder;
 use App\Services\Agent\Event\NewAgentOrder;
 use App\Services\Client\ClientService;
 use App\Services\Orders\OrderRepository;
 use Carbon\Carbon;
+use Illuminate\Auth\Access\UnauthorizedException;
 
 class AgentService {
 
-    const STAFF_ID = 5;
-    const AGENT_ID = 1;
+
+    public static function byId($agent_id)
+    {
+        return AgentRepository::byId($agent_id);
+    }
+
+    public static function getAgentByUser($user_id, $all = false)
+    {
+        $agent = AgentRepository::byUser($user_id, $all);
+        if (($agent && $all) || count($agent)) {
+            return $agent;
+        }
+
+        throw new \Exception('非代理商,请先申请');
+    }
 
 
     public static function orderDeal($order_id)
     {
         $order = OrderRepository::queryOrderById($order_id);
-        $agent = self::getAgentByUser($order['user_id']);
+        $agent = self::getPromotionAgentByUser($order['user_id']);
 
         if ($agent) {
             $agent_order = AgentRepository::storeAgentOrders($agent, $order);
@@ -75,90 +91,6 @@ class AgentService {
         }
     }
 
-    public static function getAgent($agent_id, $start_at = null, $end_at = null)
-    {
-        $agent = Agent::find($agent_id);
-        $orders = self::getAgentOrders($agent_id, $start_at, $end_at);
-
-        $agent->children = $agent->descendants()->limitDepth(1)->get();
-        $agent->earn_data = self::calAgentData($agent, $orders);
-        foreach ($agent->children as $key => $child_agent) {
-            $agent->children[ $key ]->earn_data = self::calAgentData($child_agent, $orders);
-        }
-
-        $agent->orders = $orders;
-
-        return $agent;
-    }
-
-    public static function getAgentEarn($agent_id)
-    {
-        $agent = Agent::find($agent_id);
-        $start_at = Carbon::today()->startOfMonth();
-        $end_at = Carbon::now();
-        $orders = self::getAgentOrders($agent_id, $start_at, $end_at);
-        $agent->earn_data = self::splitOrderAmount($orders, $agent);
-
-        return $agent;
-    }
-
-    protected static function splitOrderAmount($orders, $agent)
-    {
-        $data = [
-            'today_amount' => 0,
-            'week_amount'  => 0,
-            'month_amount' => 0
-        ];
-        $today = Carbon::today();
-        $monday = Carbon::today()->startOfWeek();
-        foreach ($orders as $order) {
-            if ($order['created_at'] > $today) {
-                $data['today_amount'] = bcadd($data['today_amount'], $order['amount']);
-                $data['week_amount'] = bcadd($data['week_amount'], $order['amount']);
-                $data['month_amount'] = bcadd($data['month_amount'], $order['amount']);
-            } else if ($order['created_at'] > $monday) {
-                $data['week_amount'] = bcadd($data['week_amount'], $order['amount']);
-                $data['month_amount'] = bcadd($data['month_amount'], $order['amount']);
-            } else {
-                $data['month_amount'] = bcadd($data['month_amount'], $order['amount']);
-            }
-        }
-
-        $data['today_amount'] = display_price(bcdiv(bcmul($data['today_amount'], self::getEarnRate($agent['level'])), 100));
-        $data['week_amount'] = display_price(bcdiv(bcmul($data['week_amount'], self::getEarnRate($agent['level'])), 100));
-        $data['month_amount'] = display_price(bcdiv(bcmul($data['month_amount'], self::getEarnRate($agent['level'])), 100));
-
-        return $data;
-    }
-
-    protected static function calAgentData($agent, $orders)
-    {
-        $agent_id = $agent['id'];
-        $data = [
-
-            'order_count'  => 0,
-            'total_amount' => 0,
-            'earn_amount'  => 0
-        ];
-
-        $staff_id = self::getLeavesId($agent_id);
-
-        foreach ($orders as $order) {
-            if (in_array($order['agent_id'], $staff_id)) {
-
-                $data['order_count'] = $data['order_count'] + 1;
-                $data['total_amount'] = bcadd($data['total_amount'], $order['amount']);
-            }
-        }
-
-        $data['earn_amount'] = bcdiv(bcmul($data['total_amount'], self::getEarnRate($agent['level'])), 100);
-
-        $data['earn_amount'] = display_price($data['earn_amount']);
-        $data['total_amount'] = display_price($data['total_amount']);
-
-        return $data;
-    }
-
     protected static function getEarnRate($agent_level)
     {
         $data = AgentRepository::rate();
@@ -170,7 +102,7 @@ class AgentService {
      * 查询用户是否有推荐人
      * @param $user_id
      */
-    public static function getAgentByUser($user_id)
+    public static function getPromotionAgentByUser($user_id)
     {
         $client = ClientService::show($user_id);
 
@@ -229,9 +161,54 @@ class AgentService {
      *
      **********************************************************************************************************/
 
-    public static function userApply($user_id)
+
+    public static function needCheckAgentApply($agent_id, $level)
     {
-        return AgentApplyRepository::byUser($user_id);
+        $agent = self::byId($agent_id);
+
+        return AgentApplyRepository::lists($agent['id'], AgentProtocol::lowerLevel($agent['level']));
+    }
+
+    public static function needCheckAgentApplyByUser($user_id)
+    {
+        $agent_ids = AgentRepository::getAgentIdByUser($user_id, true);
+
+        if (in_array(AgentProtocol::SYSTEM_AGENT_ID, $agent_ids)) {
+            return AgentApplyRepository::lists();
+        }
+
+        return AgentApplyRepository::lists($agent_ids);
+    }
+
+    public static function getApplyById($apply_id, $user_id)
+    {
+        if ($apply = self::authAgentApply($apply_id, $user_id)) {
+            return AgentApplyRepository::byId($apply_id, true);
+        }
+
+        throw new UnauthorizedException('权限不足,无法通过代理商申请');
+    }
+
+    public static function authAgentApply($apply_id, $handle_user_id)
+    {
+        $apply = AgentApplyRepository::byId($apply_id);
+
+        $handle_agent = self::getAgentByUser($handle_user_id);
+
+        //普通代理
+        $parent_agent = AgentRepository::byId($apply['parent_agent_id']);
+
+        //检查是否有通过权限
+        if ($handle_agent->isSelfOrAncestorOf($parent_agent)) {
+            return $apply;
+        }
+
+        return false;
+    }
+
+    public static function userApply($user_id, $detail = false)
+    {
+        return AgentApplyRepository::byUser($user_id, $detail);
     }
 
     public static function newApply($user_id, $data)
@@ -276,7 +253,6 @@ class AgentService {
 
     public static function approveApply($apply_id, $handle_user_id)
     {
-        #todo 检查是否有通过权限
 
         $apply = AgentApplyRepository::byId($apply_id);
 
@@ -288,9 +264,8 @@ class AgentService {
             throw new \Exception('通过操作不合法');
         }
 
-
         if ($apply['status'] == AgentProtocol::APPLY_STATUS_OF_APPROVE) {
-            return false;
+            throw new \Exception('已通过,无需重复操作');
         }
 
 
@@ -302,14 +277,35 @@ class AgentService {
         //普通代理
         $agent = AgentRepository::byId($apply_agent_id);
 
+
+        //检查是否有通过权限
+        if ( ! self::isSystemAgent($handle_agent) && ! $handle_agent->isAncestorOf($agent)) {
+            throw new \Exception('权限不足,无法通过代理商申请');
+        }
+
         if ($agent['mark']) {
             throw new \Exception('指定代理已存在');
         }
 
         $agent = self::approveNormalAgent($agent, $apply['user_id']);
         AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_APPROVE);
+        self::attachAgentRoleToUser($apply['user_id']);
 
         return $agent;
+    }
+
+    public static function isSystemAgent($agent_id)
+    {
+        $agent = AgentRepository::byId($agent_id);
+
+        return $agent['id'] == AgentProtocol::SYSTEM_AGENT_ID;
+    }
+
+    public static function rejectApply($apply_id, $user_id)
+    {
+        $apply = self::authAgentApply($apply_id, $user_id);
+
+        return AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_REJECT);
     }
 
     public static function approveNormalAgent($agent, $user_id)
@@ -331,6 +327,7 @@ class AgentService {
             }
         }
 
+
         return $agent;
     }
 
@@ -349,6 +346,14 @@ class AgentService {
         }
 
         return AgentRepository::getAgentTree($agent_id, $depth);
+    }
+
+    public static function attachAgentRoleToUser($user_id)
+    {
+        $user = User::findOrFail($user_id);
+        if ( ! $user->hasRole(AgentProtocol::AGENT_ROLE_NAME)) {
+            $user->attachRole(Role::whereName(AgentProtocol::AGENT_ROLE_NAME)->first());
+        }
     }
 
 }

@@ -18,48 +18,12 @@ class AgentController extends Controller {
      */
     public function index()
     {
-        $agent_id = AgentService::AGENT_ID;
-        $agent = AgentService::getAgentEarn($agent_id);
+        $user_id = $this->getCurrentAuthUserId();
+
+        $agent = AgentService::getAgentByUser($user_id);
 
         return $this->response->array(['data' => $agent]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function detail(Request $request)
-    {
-        $start_at = $request->input('start_at') ?: null;
-        $end_at = $request->input('end_at') ?: null;
-        $agent_id = AgentService::AGENT_ID;
-        $agent = AgentService::getAgent($agent_id, $start_at, $end_at);
-
-        return $this->response->array(['data' => self::transformAgent($agent)]);
-    }
-
-    public function subDetail(Request $request, $agent_id)
-    {
-        $start_at = $request->input('start_at') ?: null;
-        $end_at = $request->input('end_at') ?: null;
-        $agent = AgentService::getAgent($agent_id, $start_at, $end_at);
-
-        return $this->response->array(['data' => self::transformAgent($agent)]);
-    }
-
-    protected static function transformAgent($agent)
-    {
-        if (isset($agent->orders)) {
-            foreach ($agent->orders as $key => $order) {
-                $agent->orders[ $key ]['amount'] = display_price($order['amount']);
-            }
-        }
-
-        return $agent;
-    }
-
-
-
+    
 }

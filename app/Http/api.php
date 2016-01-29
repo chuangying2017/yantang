@@ -28,7 +28,11 @@ $api->version('v1', function ($api) {
             require(__DIR__ . "/Routes/Api/Frontend/Marketing.php");
             //用户订单
             require(__DIR__ . "/Routes/Api/Frontend/Order.php");
+
+            //九级分销
+            require(__DIR__ . "/Routes/Api/Frontend/Agent.php");
         });
+
 
         /**
          * Backend Routes 管理后台路由
@@ -48,11 +52,9 @@ $api->version('v1', function ($api) {
             //订单
             require(__DIR__ . "/Routes/Api/Backend/Order.php");
 
-
+            //九级分销
+            require(__DIR__ . "/Routes/Api/Backend/Agent.php");
         });
-
-        //九级分销
-        require(__DIR__ . "/Routes/Api/Backend/Agent.php");
 
     });
 });

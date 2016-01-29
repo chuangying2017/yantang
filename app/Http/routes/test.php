@@ -66,10 +66,10 @@ if (App::environment() == 'local' || env('APP_DEBUG')) {
     });
 
     Route::get('/test/login/{id}', function ($id) {
-        Auth::user()->logout();
-        Auth::user()->loginUsingId($id);
+        Auth::logout();
+        Auth::loginUsingId($id);
 
-        return $id . ' login ' . (Auth::user()->check() ? ' success' : ' fail');
+        return $id . ' login ' . (Auth::check() ? ' success' : ' fail');
     });
 
     Route::get('/test/logout', function () {

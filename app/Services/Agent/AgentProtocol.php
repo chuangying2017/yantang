@@ -5,6 +5,10 @@ use App\Models\Client;
 
 class AgentProtocol {
 
+    const AGENT_ROLE_NAME = 'Agent';
+    const SYSTEM_AGENT_ID = 0;
+
+
     const APPLY_STATUS_OF_PENDING = 'pending';
     const APPLY_STATUS_OF_REJECT = 'reject';
     const APPLY_STATUS_OF_APPROVE = 'approve';
