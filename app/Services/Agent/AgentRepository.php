@@ -40,12 +40,35 @@ class AgentRepository {
         return $agent;
     }
 
-    public static function setTempAgent($agent_ids, $user_id)
+
+    public static function createStoreAgent($parent_agent, $apply_info)
+    {
+        $agent = Agent::create([
+            'user_id' => $apply_info['user_id'],
+            'mark'    => 1,
+            'level'   => AgentProtocol::AGENT_LEVEL_OF_STORE,
+            'name'    => $apply_info['name'],
+            'no'      => self::genStoreNo($parent_agent)
+        ]);
+
+        $agent->makeChildOf($parent_agent);
+
+        return $agent;
+    }
+
+    protected static function genStoreNo($parent_agent)
+    {
+        return $parent_agent['no'] . sprintf("%04d", $parent_agent->leaves()->count() + 1);
+    }
+
+    public
+    static function setTempAgent($agent_ids, $user_id)
     {
         return Agent::whereIn('id', $agent_ids)->update(['user_id' => $user_id, 'mark' => AgentProtocol::MARK_TEMP_AGENT]);
     }
 
-    public static function storeAgentOrders($agent, $order)
+    public
+    static function storeAgentOrders($agent, $order)
     {
         return AgentOrder::firstOrCreate([
             'agent_id'   => $agent['id'],
@@ -55,7 +78,8 @@ class AgentRepository {
         ]);
     }
 
-    public static function storeAgentOrderDetail($orders)
+    public
+    static function storeAgentOrderDetail($orders)
     {
         if (count($orders)) {
             foreach ($orders as $order) {
@@ -69,12 +93,14 @@ class AgentRepository {
         return 1;
     }
 
-    public static function getAgentsRoot()
+    public
+    static function getAgentsRoot()
     {
         return Agent::roots()->get(['id', 'name', 'no', 'level', 'mark']);
     }
 
-    public static function getAgentTree($agent_id, $depth = 1)
+    public
+    static function getAgentTree($agent_id, $depth = 1)
     {
         $agent = self::byId($agent_id);
 

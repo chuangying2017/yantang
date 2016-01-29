@@ -32,8 +32,13 @@ class ChannelController extends Controller {
      */
     public function show($id)
     {
-        $channel = ChannelService::show($id);
+        try {
+            $channel = ChannelService::show($id);
 
-        return $this->response->item($channel, new ChannelTransformer());
+            return $this->response->item($channel, new ChannelTransformer());
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
+
     }
 }

@@ -14,10 +14,16 @@ class AgentApplyController extends Controller {
 
     public function index()
     {
-        $user_id = $this->getCurrentAuthUserId();
-        $apply = AgentService::userApply($user_id);
+        try {
+            $user_id = $this->getCurrentAuthUserId();
 
-        return $this->response->apply(['data' => $apply]);
+            $apply = AgentService::userApply($user_id);
+
+            return $this->response->array(['data' => $apply]);
+        } catch (\Exception $e) {
+            return $e->getTrace();
+        }
+
     }
 
     //申请成为代理商
@@ -25,10 +31,11 @@ class AgentApplyController extends Controller {
     {
         try {
             $user_id = $this->getCurrentAuthUserId();
-            $apply = AgentService::newApply($user_id, $request->all());
+            $apply = AgentService::newApply($user_id, $request->get('data'));
 
             return $this->response->array(['data' => $apply]);
         } catch (\Exception $e) {
+//            return $e->getTrace();
             $this->response->errorInternal($e->getMessage());
         }
     }

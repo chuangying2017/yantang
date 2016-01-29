@@ -9,7 +9,9 @@ class AgentApplyRepository {
 
         $apply_info = array_only($data, [
             'parent_agent_id',
+            'apply_agent_id',
             'bank_no',
+            'agent_role',
             'bank_detail',
             'name',
             'director_name',
@@ -32,7 +34,11 @@ class AgentApplyRepository {
 
     public static function byUser($user_id)
     {
-        return AgentInfo::where('user_id', $user_id)->frist();
+        $relation = ['parentAgent', 'agent'];
+
+        return AgentInfo::with(['parentAgent' => function ($query) {
+            $query->getAncestorsAndSelf(['id', 'name', 'no', 'pid', 'level'])->toHierarchy();
+        }, 'agent'])->where('user_id', $user_id)->first();
     }
 
     public static function byAgent($agent_id, $status = AgentProtocol::APPLY_STATUS_OF_PENDING, $paginate = 20)
@@ -47,9 +53,10 @@ class AgentApplyRepository {
 
     public static function byId($apply_id)
     {
-        if($apply_id instanceof AgentInfo) {
+        if ($apply_id instanceof AgentInfo) {
             return $apply_id;
         }
+
         return AgentInfo::findOrFail($apply_id);
     }
 

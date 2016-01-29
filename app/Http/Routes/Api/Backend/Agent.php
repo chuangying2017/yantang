@@ -12,7 +12,7 @@ $api->group(['namespace' => 'Backend', 'prefix' => 'admin/agents'], function ($a
 });
 
 
-$api->group(['namespace' => 'Backend', 'prefix' => 'apply/agents'], function ($api) {
+$api->group(['namespace' => 'Backend', 'prefix' => 'apply/agents', 'middleware' => 'api.auth'], function ($api) {
 
     $api->get('lists/{agent_id?}', [
         'as'   => 'apply.agents.tree',

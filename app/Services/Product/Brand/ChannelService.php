@@ -58,7 +58,11 @@ class ChannelService {
 
     public static function show($id)
     {
-        $channel = Channel::with('brands')->findOrFail($id);
+        if (is_numeric($id)) {
+            $channel = Channel::with('brands')->find($id);
+        } else {
+            $channel = Channel::with('brands')->where('name', $id)->first();
+        }
 
         return $channel;
     }
