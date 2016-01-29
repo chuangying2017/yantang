@@ -34,11 +34,15 @@ class AgentApplyRepository {
 
     public static function byUser($user_id)
     {
-        $relation = ['parentAgent', 'agent'];
+        $agent_info = AgentInfo::where('user_id', $user_id)->first();
 
-        return AgentInfo::with(['parentAgent' => function ($query) {
-            $query->getAncestorsAndSelf(['id', 'name', 'no', 'pid', 'level'])->toHierarchy();
-        }, 'agent'])->where('user_id', $user_id)->first();
+        if ($agent_info->apply_agent_id) {
+            $agent_info->agents = AgentRepository::getAgentUpTree($agent_info['apply_agent_id']);
+        } else {
+            $agent_info->agents = AgentRepository::getAgentUpTree($agent_info['parent_agent_id']);
+        }
+
+        return $agent_info;
     }
 
     public static function byAgent($agent_id, $status = AgentProtocol::APPLY_STATUS_OF_PENDING, $paginate = 20)
