@@ -25,5 +25,14 @@ class AgentController extends Controller {
         return $this->response->array(['data' => $agent]);
     }
 
-    
+    public function show(Request $request, $agent_id)
+    {
+        $agents = AgentService::getAgentTree($agent_id);
+
+        return $this->response->array($agents);
+    }
+
+
+
+
 }

@@ -64,10 +64,19 @@ class EventServiceProvider extends ServiceProvider {
             'App\Services\Merchant\Listeners\SendOrderInfoToMerchant',
         ],
 
+
+
+        /**
+         * 九级分销
+         */
         'App\Services\Agent\Event\NewAgentOrder' => [
             'App\Services\Agent\Listeners\AwardClientAgent',
             'App\Services\Agent\Listeners\AwardAgent',
         ],
+
+        'App\Services\Agent\Event\NewAgent' => [
+            'App\Services\Agent\Listeners\CreateNewAgent',
+        ]
     ];
 
     /**

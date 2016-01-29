@@ -31,6 +31,15 @@ class AgentRepository {
         return Agent::findOrFail($agent_id);
     }
 
+    public static function byNo($agent_no)
+    {
+        if ($agent_no instanceof Agent) {
+            return $agent_no;
+        }
+
+        return Agent::where('no', $agent_no)->firstOrFail();
+    }
+
     public static function byUser($user_id, $all = false)
     {
         if ($all) {

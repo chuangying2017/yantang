@@ -4,6 +4,7 @@ use App\Models\Access\Role\Role;
 use App\Models\Access\User\User;
 use App\Models\Agent;
 use App\Models\AgentOrder;
+use App\Services\Agent\Event\NewAgent;
 use App\Services\Agent\Event\NewAgentOrder;
 use App\Services\Client\ClientService;
 use App\Services\Orders\OrderRepository;
@@ -215,9 +216,16 @@ class AgentService {
     {
         $apply = self::userApply($user_id);
 
-        $parent_agent_id = $data['parent_agent_id'];
+        $parent_agent_id = array_get($data, 'parent_agent_id', null);
+        if (is_null($parent_agent_id)) {
+            $parent_agent = AgentRepository::byNo(array_get($data, 'parent_agent_no'));
+            $parent_agent_id = $parent_agent['id'];
+        } else {
+            $parent_agent = AgentRepository::byId($parent_agent_id);
+        }
+
         $apply_agent_id = $data['apply_agent_id'];
-        $parent_agent = AgentRepository::byId($parent_agent_id);
+
 
         if ( ! $apply_agent_id || is_null($apply_agent_id)) {
             $data['apply_agent_id'] = null;
@@ -271,27 +279,46 @@ class AgentService {
 
         //门店代理
         if ( ! $apply_agent_id || is_null($apply_agent_id)) {
-            return self::approveStoreAgent($apply);
+            $agent = self::approveStoreAgent($apply);
+        } else {
+            //普通代理
+            $agent = AgentRepository::byId($apply_agent_id);
+
+
+            //检查是否有通过权限
+            if ( ! self::isSystemAgent($handle_agent) && ! $handle_agent->isAncestorOf($agent)) {
+                throw new \Exception('权限不足,无法通过代理商申请');
+            }
+
+            if ($agent['mark']) {
+                throw new \Exception('指定代理已存在');
+            }
+
+            $agent = self::approveNormalAgent($agent, $apply['user_id']);
+            AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_APPROVE);
+            self::attachAgentRoleToUser($apply['user_id']);
+
         }
 
-        //普通代理
-        $agent = AgentRepository::byId($apply_agent_id);
-
-
-        //检查是否有通过权限
-        if ( ! self::isSystemAgent($handle_agent) && ! $handle_agent->isAncestorOf($agent)) {
-            throw new \Exception('权限不足,无法通过代理商申请');
-        }
-
-        if ($agent['mark']) {
-            throw new \Exception('指定代理已存在');
-        }
-
-        $agent = self::approveNormalAgent($agent, $apply['user_id']);
-        AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_APPROVE);
-        self::attachAgentRoleToUser($apply['user_id']);
+        event(new NewAgent($agent));
 
         return $agent;
+    }
+
+    public static function getPromotionCode($agent_id)
+    {
+        $agent = self::byId($agent_id);
+
+        if (self::isStore($agent)) {
+            return PromotionRepository::getByAgent($agent_id);
+        }
+
+        return false;
+    }
+
+    public static function isStore($agent)
+    {
+        return $agent['level'] == AgentProtocol::AGENT_LEVEL_OF_STORE;
     }
 
     public static function isSystemAgent($agent_id)
@@ -354,6 +381,11 @@ class AgentService {
         if ( ! $user->hasRole(AgentProtocol::AGENT_ROLE_NAME)) {
             $user->attachRole(Role::whereName(AgentProtocol::AGENT_ROLE_NAME)->first());
         }
+    }
+
+    public static function byNo($agent_no)
+    {
+        return AgentRepository::byNo($agent_no);
     }
 
 }

@@ -27,7 +27,7 @@ class PromotionRepository {
         return Promotion::where('agent_id', $agent_id)->where('agent_type', $agent_type)->first();
     }
 
-    protected static function firstOrCreate($agent_id, $agent_type)
+    public static function firstOrCreate($agent_id, $agent_type)
     {
         return self::_query($agent_id, $agent_type) ?: self::_create($agent_id, $agent_type);
     }
@@ -65,8 +65,6 @@ class PromotionRepository {
 
         return false;
     }
-
-
 
 
 }
