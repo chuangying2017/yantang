@@ -238,12 +238,30 @@ class AgentService {
     {
         $apply = self::userApply($user_id);
 
-        #TODO 申请的agent不存在
-        #todo 门店的parent为叶子
+        $parent_agent_id = $data['parent_agent_id'];
+        $apply_agent_id = $data['apply_agent_id'];
+        $parent_agent = AgentRepository::byId($parent_agent_id);
+
+        if ( ! $apply_agent_id || is_null($apply_agent_id)) {
+            $data['apply_agent_id'] = null;
+            if ( ! $parent_agent['level'] !== AgentProtocol::AGENT_LEVEL_OF_REGION) {
+                throw new \Exception('申请的门店需要选择正确的区域');
+            }
+            $data['agent_role'] = AgentProtocol::AGENT_LEVEL_OF_STORE;
+
+        } else {
+            $apply_agent = AgentRepository::byId($apply_agent_id);
+
+            if ($parent_agent['level'] != AgentProtocol::upperLevel($apply_agent['level'])) {
+                throw new \Exception('请选择正确的上级代理');
+            }
+
+            $data['agent_role'] = $apply_agent['level'];
+        }
 
         //用户已经通过不需要再提交
         if ($apply) {
-            if ($apply['status'] != AgentProtocol::APPLY_STATUS_OF_APPROVE) {
+            if ($apply['status'] == AgentProtocol::APPLY_STATUS_OF_APPROVE) {
                 throw new \Exception('用户已经是代理商,无需再次提交');
             }
         }
@@ -256,32 +274,42 @@ class AgentService {
         return AgentApplyRepository::byAgent($agent_id, $status);
     }
 
-    public static function approveApply($apply_id)
+    public static function approveApply($apply_id, $handle_user_id)
     {
-
         #todo 检查是否有通过权限
 
         $apply = AgentApplyRepository::byId($apply_id);
+
+        $apply_agent_id = $apply['apply_agent_id'];
+
+        $handle_agent = self::getAgentByUser($handle_user_id);
+
+        if ( ! $handle_agent) {
+            throw new \Exception('通过操作不合法');
+        }
+
 
         if ($apply['status'] == AgentProtocol::APPLY_STATUS_OF_APPROVE) {
             return false;
         }
 
-        $apply_agent_id = $apply['apply_agent_id'];
+
+        //门店代理
         if ( ! $apply_agent_id || is_null($apply_agent_id)) {
-            #todo 通过门店
+            return self::approveStoreAgent($apply);
         }
 
+        //普通代理
         $agent = AgentRepository::byId($apply_agent_id);
-
 
         if ($agent['mark']) {
             throw new \Exception('指定代理已存在');
         }
 
-        self::approveNormalAgent($agent, $apply['user_id']);
+        $agent = self::approveNormalAgent($agent, $apply['user_id']);
         AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_APPROVE);
 
+        return $agent;
     }
 
     public static function approveNormalAgent($agent, $user_id)
@@ -304,6 +332,14 @@ class AgentService {
         }
 
         return $agent;
+    }
+
+    public static function approveStoreAgent($apply_info)
+    {
+        $parent_id = $apply_info['parent_agent_id'];
+        $parent_agent = AgentRepository::byId($parent_id);
+
+        return AgentRepository::createStoreAgent($parent_agent, $apply_info);
     }
 
     public static function getAgentTree($agent_id = null, $depth = 1)
