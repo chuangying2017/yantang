@@ -118,6 +118,22 @@ if ( ! function_exists('display_discount')) {
     }
 }
 
+if ( ! function_exists('display_percentage')) {
+
+    function display_percentage($percentage)
+    {
+        return bcdiv($percentage, 100, 2);
+    }
+}
+
+if ( ! function_exists('store_percentage')) {
+
+    function store_percentage($percentage)
+    {
+        return bcmul($percentage, 100, 0);
+    }
+}
+
 if ( ! function_exists('store_price')) {
 
     function store_price($price)

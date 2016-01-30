@@ -1,6 +1,7 @@
 <?php namespace App\Http\Middleware;
 
 use Closure;
+use Dingo\Api\Facade\API;
 
 /**
  * Class RouteNeedsRole
@@ -8,16 +9,18 @@ use Closure;
  */
 class RouteNeedsRole {
 
-	/**
-	 * @param $request
-	 * @param callable $next
-	 * @param $role
-	 * @return mixed
+    /**
+     * @param $request
+     * @param callable $next
+     * @param $role
+     * @return mixed
      */
-	public function handle($request, Closure $next, $role)
-	{
-		if (! access()->hasRole($role))
-			return redirect('/')->withFlashDanger("You do not have access to do that.");
-		return $next($request);
-	}
+    public function handle($request, Closure $next, $role)
+    {
+        if ( ! access()->hasRole($role)) {
+            API::response()->errorForbidden('没有权限');
+        }
+
+        return $next($request);
+    }
 }

@@ -1,6 +1,7 @@
 <?php namespace App\Providers;
 
 
+use App\Models\AgentRate;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -65,11 +66,10 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
 
-
         /**
          * 九级分销
          */
-        'App\Services\Agent\Event\NewAgentOrder' => [
+        'App\Services\Agent\Event\NewAgentOrder'    => [
             'App\Services\Agent\Listeners\AwardClientAgent',
             'App\Services\Agent\Listeners\AwardAgent',
         ],
@@ -88,6 +88,7 @@ class EventServiceProvider extends ServiceProvider {
     public function boot(DispatcherContract $events)
     {
         parent::boot($events);
+
 
         //
     }

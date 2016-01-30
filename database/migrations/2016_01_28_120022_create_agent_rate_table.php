@@ -16,6 +16,7 @@ class CreateAgentRateTable extends Migration {
             $table->increments('id');
             $table->string('level');
             $table->integer('rate');
+            $table->string('name');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Middleware;
 
 use Closure;
+use Dingo\Api\Facade\API;
 
 /**
  * Class RouteNeedsRole
@@ -16,8 +17,9 @@ class RouteNeedsPermission {
      */
     public function handle($request, Closure $next, $permission)
     {
-        if ( ! access()->can($permission))
-            return redirect('/')->withFlashDanger("权限不足");
+        if ( ! access()->can($permission)) {
+            API::response()->errorForbidden('没有权限');
+        }
 
         return $next($request);
     }

@@ -4,6 +4,7 @@ use App\Models\Access\Role\Role;
 use App\Models\Access\User\User;
 use App\Models\Agent;
 use App\Models\AgentOrder;
+use App\Models\AgentOrderDetail;
 use App\Services\Agent\Event\NewAgent;
 use App\Services\Agent\Event\NewAgentOrder;
 use App\Services\Client\ClientService;
@@ -386,6 +387,47 @@ class AgentService {
     public static function byNo($agent_no)
     {
         return AgentRepository::byNo($agent_no);
+    }
+
+    public static function getOrders($agent_id, $start_at = null, $end_at = null)
+    {
+        $orders = AgentRepository::getAgentOrders($agent_id, $start_at, $end_at);
+
+        return $orders;
+    }
+
+    public static function getEarnData($agent_id)
+    {
+        $month_first_day = Carbon::today()->startOfMonth();
+        $week_first_day = Carbon::today()->startOfWeek();
+        $today = Carbon::today();
+        $now = Carbon::now();
+        $orders = self::getOrders($agent_id, $month_first_day, $now);
+
+        $data = [
+            "today_amount" => 0,
+            "week_amount"  => 0,
+            "month_amount" => 0
+        ];
+
+        if ( ! count($orders)) {
+            return $data;
+        }
+
+        foreach ($orders as $order) {
+
+            if ($order['created_at'] >= $today) {
+                $data['today_amount'] += $order['award_amount'];
+            }
+            if ($order['created_at'] >= $week_first_day) {
+                $data['week_amount'] += $order['award_amount'];
+            }
+            if ($order['created_at'] >= $month_first_day) {
+                $data['month_amount'] += $order['award_amount'];
+            }
+        }
+
+        return $data;
     }
 
 }
