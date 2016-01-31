@@ -7,6 +7,7 @@ $router->group([
     get('products/{id}/operate/{action}', 'ProductController@operate');
     resource('groups', 'GroupController');
     resource('brands', 'BrandController');
+    resource('channels', 'ChannelController');
     resource('categories', 'CategoryController');
     resource('attributes', 'AttributeController');
 });
