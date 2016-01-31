@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Frontend;
 
 use App\Http\Requests\ApplyAgentRequest;
 use App\Services\Agent\AgentService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -19,8 +20,10 @@ class AgentApplyController extends Controller {
             $apply = AgentService::userApply($user_id, true);
 
             return $this->response->array(['data' => $apply]);
+        } catch(ModelNotFoundException $e ){
+            $this->response->errorNotFound();
         } catch (\Exception $e) {
-            return $e->getTrace();
+            $this->response->errorInternal($e->getMessage());
         }
     }
 

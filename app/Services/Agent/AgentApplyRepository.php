@@ -58,7 +58,7 @@ class AgentApplyRepository {
 
     public static function byUser($user_id, $detail = false)
     {
-        $agent_info = AgentInfo::where('user_id', $user_id)->first();
+        $agent_info = AgentInfo::where('user_id', $user_id)->firstOrFail();
 
         if ($detail) {
             if ($agent_info->apply_agent_id) {
