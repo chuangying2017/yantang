@@ -16,5 +16,10 @@ $api->group(['middleware' => 'api.auth'], function ($api) {
     $api->post('user/phone', 'Auth\AuthController@updatePhone');
 
     $api->resource('address', 'AddressController');
+
+    $api->get('images/token', [
+        'as'   => 'images.token',
+        'uses' => 'ImageController@token'
+    ]);
 });
 
