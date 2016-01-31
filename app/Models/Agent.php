@@ -35,5 +35,10 @@ class Agent extends Node {
         return $this->belongsTo(User::class, 'id', 'user_id');
     }
 
+    public function info()
+    {
+        return $this->hasOne(AgentInfo::class, 'user_id', 'user_id');
+    }
+
 
 }

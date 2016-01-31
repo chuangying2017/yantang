@@ -23,6 +23,9 @@ class AgentService {
     public static function getAgentByUser($user_id, $all = false)
     {
         $agent = AgentRepository::byUser($user_id, $all);
+
+        $agent->load('info');
+
         if (($agent && $all) || count($agent)) {
             return $agent;
         }
@@ -212,6 +215,7 @@ class AgentService {
     {
         return AgentApplyRepository::byUser($user_id, $detail);
     }
+
 
     public static function newApply($user_id, $data)
     {
