@@ -146,11 +146,12 @@ if ( ! function_exists('get_current_auth_user')) {
 
     function get_current_auth_user()
     {
-        if (Auth::check()) {
-            return Auth::user();
-        }
 
         if ( ! \Tymon\JWTAuth\Facades\JWTAuth::getToken()) {
+            if (Auth::check()) {
+                return Auth::user();
+            }
+
             return false;
         }
 
