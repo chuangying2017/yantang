@@ -7,6 +7,7 @@ use App\Models\OrderProduct;
 use App\Services\Orders\Event\OrderCancel;
 use App\Services\Orders\Helpers\ExpressHelper;
 use App\Models\OrderDeliver as Deliver;
+use App\Services\Orders\Supports\PingxxPaymentRepository;
 use Carbon\Carbon;
 use DB;
 
@@ -128,10 +129,14 @@ class OrderRepository {
     {
         $relation = ['children', 'children.skus', 'children.deliver', 'address', 'billings'];
         if ($order instanceof Order) {
-            return $order->load($relation);
+            $order = $order->load($relation);
+        } else {
+            $order = Order::with($relation)->where('order_no', $order)->first();
         }
 
-        return Order::with($relation)->where('order_no', $order)->first();
+        $order->payment = PingxxPaymentRepository::getOrderPaidPayment($order['id']);
+
+        return $order;
     }
 
     public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = null, $status = null, $paginate = null, $merchant_id = null)

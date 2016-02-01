@@ -8,6 +8,9 @@ class PingxxProtocol {
      * Pingxx
      */
 
+    const LIVE_MODE = 1;
+    const TEST_MODE = 0;
+
     const STATUS_OF_UNPAID = 'unpaid';
     const STATUS_OF_PAID = 'paid';
 

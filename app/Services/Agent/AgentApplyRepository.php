@@ -100,10 +100,11 @@ class AgentApplyRepository {
         return $agent_info;
     }
 
-    public static function updateStatus($apply_id, $status)
+    public static function updateStatus($apply_id, $status, $memo = '')
     {
         $apply = self::byId($apply_id);
         $apply['status'] = $status;
+        $apply['memo'] = $memo;
         $apply->save();
 
         return $apply;

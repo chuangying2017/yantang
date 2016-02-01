@@ -16,6 +16,11 @@ class PingxxPaymentRepository {
         return $payment_no;
     }
 
+    public static function getOrderPaidPayment($order_id)
+    {
+        return PingxxPayment::where('order_id', $order_id)->where('status', OrderProtocol::STATUS_OF_PAID)->where('livemode', PingxxProtocol::LIVE_MODE)->first();
+    }
+
     public static function storePingxxPayment($charge, $user_id, $order_id)
     {
         $payment_no = $charge->order_no;

@@ -39,11 +39,12 @@ class AgentApplyController extends Controller {
         try {
             $user_id = $this->getCurrentAuthUserId();
             $action = $request->input('action', AgentProtocol::APPLY_STATUS_OF_APPROVE);
+            $memo = $request->input('memo', '其他');
 
             if ($action == AgentProtocol::APPLY_STATUS_OF_APPROVE) {
                 $agent = AgentService::approveApply($apply_id, $user_id);
             } else if ($action == AgentProtocol::APPLY_STATUS_OF_REJECT) {
-                $agent = AgentService::rejectApply($apply_id, $user_id);
+                $agent = AgentService::rejectApply($apply_id, $user_id, $memo);
             }
 
             return $this->response->array(['data' => $agent]);

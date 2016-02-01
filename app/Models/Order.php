@@ -38,6 +38,12 @@ class Order extends Model {
         return $this->hasMany('App\Models\OrderBilling', 'order_id', 'id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(PingxxPayment::class, 'order_id', 'id');
+    }
+
+
 
 
 }

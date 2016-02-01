@@ -29,7 +29,7 @@ class BillingManager {
     {
         $billing = BillingRepository::getMainBilling($order_id);
         if ($billing['status'] == OrderProtocol::STATUS_OF_PAID) {
-            return true;
+            return $billing;
         }
 
         return false;
