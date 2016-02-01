@@ -28,7 +28,8 @@ class Access
 	 */
 	public function user()
 	{
-		return auth()->user();
+        return get_current_auth_user();
+//		return auth()->user();
 	}
 
 	/**
@@ -37,7 +38,8 @@ class Access
 	 */
 	public function id()
 	{
-		return auth()->id();
+        return $this->user()->id;
+//		return auth()->id();
 	}
 
 	/**
