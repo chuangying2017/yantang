@@ -29,11 +29,12 @@ abstract class Controller extends BaseController {
 
     protected function getCurrentAuthUser()
     {
-        if (Auth::check()) {
-            return Auth::user();
-        }
-
         if ( ! JWTAuth::getToken()) {
+
+            if (Auth::check()) {
+                return Auth::user();
+            }
+
             return false;
         }
 
