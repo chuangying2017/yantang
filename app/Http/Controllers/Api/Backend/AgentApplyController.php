@@ -30,7 +30,7 @@ class AgentApplyController extends Controller {
 
             return $this->response->array(['data' => $apply]);
         } catch (\Exception $e) {
-            $this->response->error($e->getMessage(), $e->getCode());
+            throw $e;
         }
     }
 

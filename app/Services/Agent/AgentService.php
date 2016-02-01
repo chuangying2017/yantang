@@ -205,7 +205,7 @@ class AgentService {
         $parent_agent = AgentRepository::byId($apply['parent_agent_id']);
 
         //检查是否有通过权限
-        if ($handle_agent->isSelfOrAncestorOf($parent_agent)) {
+        if ($handle_agent->isSelfOrAncestorOf($parent_agent) || self::isSystemAgent($handle_agent)) {
             return $apply;
         }
 
