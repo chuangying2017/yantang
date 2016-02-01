@@ -11,6 +11,7 @@ use App\Services\Client\ClientService;
 use App\Services\Orders\OrderRepository;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\UnauthorizedException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AgentService {
 
@@ -219,44 +220,51 @@ class AgentService {
 
     public static function newApply($user_id, $data)
     {
-        $apply = self::userApply($user_id);
 
-        $parent_agent_id = array_get($data, 'parent_agent_id', null);
-        if (is_null($parent_agent_id)) {
-            $parent_agent = AgentRepository::byNo(array_get($data, 'parent_agent_no'));
-            $parent_agent_id = $parent_agent['id'];
-        } else {
-            $parent_agent = AgentRepository::byId($parent_agent_id);
-        }
+        try {
+            $apply = self::userApply($user_id);
 
-        $apply_agent_id = $data['apply_agent_id'];
-
-
-        if ( ! $apply_agent_id || is_null($apply_agent_id)) {
-            $data['apply_agent_id'] = null;
-            if ( ! $parent_agent['level'] !== AgentProtocol::AGENT_LEVEL_OF_REGION) {
-                throw new \Exception('申请的门店需要选择正确的区域');
-            }
-            $data['agent_role'] = AgentProtocol::AGENT_LEVEL_OF_STORE;
-
-        } else {
-            $apply_agent = AgentRepository::byId($apply_agent_id);
-
-            if ($parent_agent['level'] != AgentProtocol::upperLevel($apply_agent['level'])) {
-                throw new \Exception('请选择正确的上级代理');
+            //用户已经通过不需要再提交
+            if ($apply) {
+                if ($apply['status'] == AgentProtocol::APPLY_STATUS_OF_APPROVE) {
+                    throw new \Exception('用户已经是代理商,无需再次提交');
+                }
             }
 
-            $data['agent_role'] = $apply_agent['level'];
-        }
-
-        //用户已经通过不需要再提交
-        if ($apply) {
-            if ($apply['status'] == AgentProtocol::APPLY_STATUS_OF_APPROVE) {
-                throw new \Exception('用户已经是代理商,无需再次提交');
+            return $apply;
+        } catch (ModelNotFoundException $e) {
+            $parent_agent_id = array_get($data, 'parent_agent_id', null);
+            if (is_null($parent_agent_id)) {
+                $parent_agent = AgentRepository::byNo(array_get($data, 'parent_agent_no'));
+                $parent_agent_id = $parent_agent['id'];
+            } else {
+                $parent_agent = AgentRepository::byId($parent_agent_id);
             }
-        }
 
-        return AgentApplyRepository::storeApplyInfo($user_id, $data);
+            $apply_agent_id = $data['apply_agent_id'];
+
+
+            if ( ! $apply_agent_id || is_null($apply_agent_id)) {
+                $data['apply_agent_id'] = null;
+                if ( ! $parent_agent['level'] !== AgentProtocol::AGENT_LEVEL_OF_REGION) {
+                    throw new \Exception('申请的门店需要选择正确的区域');
+                }
+                $data['agent_role'] = AgentProtocol::AGENT_LEVEL_OF_STORE;
+
+            } else {
+                $apply_agent = AgentRepository::byId($apply_agent_id);
+
+                if ($parent_agent['level'] != AgentProtocol::upperLevel($apply_agent['level'])) {
+                    throw new \Exception('请选择正确的上级代理');
+                }
+
+                $data['agent_role'] = $apply_agent['level'];
+            }
+
+            return AgentApplyRepository::storeApplyInfo($user_id, $data);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     public static function agentCheckApplyList($agent_id, $status = AgentProtocol::APPLY_STATUS_OF_PENDING)

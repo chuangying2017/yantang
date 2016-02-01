@@ -36,6 +36,7 @@ class AgentApplyController extends Controller {
 
             return $this->response->array(['data' => $apply]);
         } catch (\Exception $e) {
+            return $e->getTrace();
             $this->response->errorInternal($e->getMessage());
         }
     }
