@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
  */
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->setJs();
+    }
+
     //todo@bryant: error handler
     public function index()
     {
@@ -96,5 +101,21 @@ class CategoryController extends Controller
 
             return $e->getMessage();
         }
+    }
+
+    private function setJs()
+    {
+
+        $qiniu_token = $this->api->get('api/admin/images/token')['data'];
+        $data = [
+            'config' => [
+                'api_url' => url('api/'),
+                'base_url' => url('/'),
+                'default_img' => 'http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg?imageView2/1/w/100'
+            ],
+            'token' => csrf_token(),
+            'qiniu_token' => $qiniu_token
+        ];
+        javascript()->put($data);
     }
 }
