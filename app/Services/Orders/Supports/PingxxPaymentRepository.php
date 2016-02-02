@@ -1,6 +1,7 @@
 <?php namespace App\Services\Orders\Supports;
 
 use App\Models\PingxxPayment;
+use App\Services\Orders\OrderProtocol;
 
 class PingxxPaymentRepository {
 

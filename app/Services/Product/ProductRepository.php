@@ -163,6 +163,10 @@ class ProductRepository {
              */
             $product->images()->sync(array_get($data, 'image_ids', []));
 
+            $product->brand()->increment('product_count', 1);
+
+            $product->category()->increment('product_count', 1);
+
             DB::commit();
 
             return $product;
@@ -250,7 +254,7 @@ class ProductRepository {
             $product_basic_obj = Product::updateOrCreate(['id' => $id], $basic_data);
             $id = $product_basic_obj->id;
             $meta_data['product_id'] = $id;
-            logger($meta_data);
+
             ProductMeta::updateOrCreate(['product_id' => $id], $meta_data);
 
             return $product_basic_obj;

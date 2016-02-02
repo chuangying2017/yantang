@@ -28,6 +28,11 @@ class Product extends Model {
         return $this->belongsTo('App\Models\Category');
     }
 
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
     public function comments()
     {
         return $this->hasMany('App\Models\Comment');
