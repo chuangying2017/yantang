@@ -11,6 +11,7 @@ class BrandTransformer extends TransformerAbstract {
             'id'          => (int)$brand->id,
             'name'        => $brand->name,
             'cover_image' => $brand->cover_image,
+            'product_count' => $brand->product_count,
         ];
     }
 }
