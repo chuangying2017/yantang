@@ -53,8 +53,6 @@ if (App::environment() == 'local' || env('APP_DEBUG')) {
             \App\Models\Agent::buildTree($data);
 
 //            info($data);
-
-            die();
         });
 
         return 1;
