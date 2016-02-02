@@ -43,6 +43,7 @@
                             <thead>
                             <th>类目ID</th>
                             <th>类目名称</th>
+                            <th>商品数量</th>
                             <th>创建时间</th>
                             <th>操作</th>
                             </thead>
@@ -51,6 +52,7 @@
                                 <tr>
                                     <td>{{$category->id}}</td>
                                     <td>{{$category->name}}</td>
+                                    <td>{{$category->product_count}}</td>
                                     <td>{{$category->created_at}}</td>
                                     <td>
                                         <div class="btn-group">
