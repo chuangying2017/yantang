@@ -43,6 +43,7 @@
                             <thead>
                             <th>品牌ID</th>
                             <th>品牌名称</th>
+                            <th>商品数量</th>
                             <th>创建时间</th>
                             <th>操作</th>
                             </thead>
@@ -51,6 +52,7 @@
                                 <tr>
                                     <td>{{$brand->id}}</td>
                                     <td>{{$brand->name}}</td>
+                                    <td>{{$brand->product_count}}</td>
                                     <td>{{$brand->created_at}}</td>
                                     <td>
                                         <div class="btn-group">
