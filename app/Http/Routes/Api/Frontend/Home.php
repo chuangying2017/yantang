@@ -15,6 +15,15 @@ $api->get('sections', [
     'uses' => 'IndexController@getSections'
 ]);
 
+$api->get('sections/{section_id}', [
+    'as'   => 'home.section.show',
+    'uses' => 'IndexController@getSection'
+]);
+
+
+
+
+
 
 
 

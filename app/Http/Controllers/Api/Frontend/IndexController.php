@@ -62,7 +62,16 @@ class IndexController extends Controller {
         return $this->response->array(['data' => $sections]);
     }
 
+    public function getSection($section_id)
+    {
+        try {
+            $section = SectionService::show($section_id);
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
 
+        return $this->response->array(['data' => $section]);
+    }
 
 
 }
