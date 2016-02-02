@@ -420,7 +420,7 @@
             var self = this;
 
             this.getImages();
-
+            console.log(app)
             this.uploader = WebUploader.create({
 
                 formData: {
