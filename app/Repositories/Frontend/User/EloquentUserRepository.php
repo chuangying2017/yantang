@@ -105,6 +105,7 @@ class EloquentUserRepository implements UserContract {
             'nickname'    => (property_exists($data, 'nickname') ? $data->nickname : $data->name),
             'provider'    => $provider,
             'provider_id' => $data->id,
+            'union_id'    => (property_exists($data, 'union_id') ? $data->union_id : '')
         ];
 
         if ($this->hasProvider($user, $provider))
@@ -257,6 +258,7 @@ class EloquentUserRepository implements UserContract {
         $user->phone = $phone;
         $user->confirmed = 1;
         $user->save();
+
         return $user;
     }
 }
