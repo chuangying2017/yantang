@@ -17,7 +17,7 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
      * These reoutes require the user NOT be logged in
      */
     $api->get('auth/login/{provider}', 'AuthController@loginThirdPartyUrl')->name('auth.provider.url');
-    $api->post('auth/login/{provider}', 'AuthController@loginThirdParty')->name('auth.provider');
+    $api->get('auth/login/{provider}', 'AuthController@loginThirdParty')->name('auth.provider');
     $api->get('account/confirm/{token}', 'AuthController@confirmAccount')->name('account.confirm');
     $api->get('account/confirm/resend/{user_id}', 'AuthController@resendConfirmationEmail')->name('account.confirm.resend');
 
