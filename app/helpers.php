@@ -167,6 +167,47 @@ if ( ! function_exists('get_current_auth_user')) {
     }
 }
 
+if ( ! function_exists('get_current_auth_user_id')) {
+
+    function get_current_auth_user_id()
+    {
+
+        if ( ! \Tymon\JWTAuth\Facades\JWTAuth::getToken()) {
+            if (Auth::check()) {
+                return Auth::id();
+            }
+
+            return false;
+        }
+
+        try {
+            $user = \Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
+
+            return $user['id'];
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}
+
+
+if ( ! function_exists('get_current_auth_user_openid')) {
+
+    function get_current_auth_user_openid()
+    {
+        if ($user_id = get_current_auth_user_id()) {
+            $openid = \App\Models\Access\User\UserProvider::where('provider', 'weixin')->where('user_id', $user_id)->pluck('provider_id');
+            if(! $openid) {
+                throw new \Exception('用户需要微信授权');
+            }
+
+            return $openid;
+        }
+    }
+}
+
 
 
 

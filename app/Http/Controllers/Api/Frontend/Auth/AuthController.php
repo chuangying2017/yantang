@@ -112,6 +112,7 @@ class AuthController extends Controller {
 
             return $this->response->array(['data' => compact('token', 'roles')]);
         } catch (\Exception $e) {
+            return $e->getTrace();
             $this->response->errorInternal('无效请求');
         }
     }
@@ -120,6 +121,7 @@ class AuthController extends Controller {
     {
         $url = $this->auth->loginThirdPartyUrl($request->all(), $provider);
 
+//        return redirect()->to($url);
         return $this->response->array(['data' => compact('url')]);
     }
 

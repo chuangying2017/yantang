@@ -14,7 +14,7 @@ class AddNicknameToUserProvidersTable extends Migration {
     {
         Schema::table('user_providers', function (Blueprint $table) {
             $table->string('nickname')->after('id');
-            $table->string('union_id')->after('id');
+            $table->string('union_id')->nullable()->after('id');
         });
     }
 

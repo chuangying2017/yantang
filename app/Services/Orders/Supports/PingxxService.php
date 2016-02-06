@@ -104,7 +104,7 @@ class PingxxService implements PaymentInterface {
                 break;
             case 'wx_pub':
                 $extra = array(
-                    'open_id' => 'Openid'
+                    'open_id' => get_current_auth_user_openid()
                 );
                 break;
             case 'wx_pub_qr':

@@ -42,7 +42,7 @@ class ClientController extends Controller {
             $client = ClientService::update($user_id, $request->all());
 
             $user = $this->getCurrentAuthUser();
-            $user->load('roles', 'client');
+            $user->load('roles', 'client', 'providers');
 
             return $this->response->item($user, new UserInfoTransformer());
 
