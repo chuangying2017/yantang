@@ -84,9 +84,9 @@ class EloquentUserRepository implements UserContract {
              */
             $user_provider = UserProvider::with('user')->where('provider_id', $data->id)->where('provider', $provider)->first();
 
-            if ( ! $user_provider && ($provider == 'weixin' || $provider == 'weixinweb')) {
+            if ( ! $user_provider && ($provider == 'weixin' || $provider == 'weixinweb') && ! is_null($data->union_id)) {
                 // 微信,微信开放平台使用union id 查询绑定相同用户
-                $user_provider = UserProvider::with('user')->where('union_id', $data->union_id)->first();
+                $user_provider = UserProvider::with('user')->whereNotNull('union_id')->where('union_id', $data->union_id)->first();
             }
 
             if ( ! $user_provider) {
