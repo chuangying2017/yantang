@@ -121,7 +121,6 @@ class AuthController extends Controller {
         $url = $this->auth->loginThirdPartyUrl($request->all(), $provider);
 
 //        return redirect()->to($url);
-
         return $this->response->array(['data' => compact('url')]);
     }
 

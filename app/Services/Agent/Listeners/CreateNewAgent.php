@@ -2,7 +2,7 @@
 
 namespace App\Services\Agent\Listeners;
 
-use App\Service\Agent\Event\NewAgent;
+use App\Services\Agent\Event\NewAgent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

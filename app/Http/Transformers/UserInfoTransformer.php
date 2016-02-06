@@ -13,8 +13,10 @@ class UserInfoTransformer extends TransformerAbstract {
             'phone'  => $user['phone'],
             'status' => $user['status'],
             'roles'  => $this->getRoles($user),
+            'providers' => $this->getProviderInfo($user)
         ];
         $client_info = $this->getClientInfo($user);
+
 
         return array_merge($base_info, $client_info);
     }
@@ -36,6 +38,28 @@ class UserInfoTransformer extends TransformerAbstract {
         }
 
         return $clint_info;
+    }
+
+    protected function getProviderInfo(User $user)
+    {
+        $providers = $user->providers;
+
+        $data = [];
+
+        if ( ! is_null($providers) && count($providers)) {
+            foreach ($providers as $provider) {
+                $data[ $provider['provider'] ] = [
+                    'provider'    => $provider['provider'],
+                    'provider_id' => $provider['provider_id'],
+                ];
+                if ($provider['provider'] == 'weixin' || $provider['provider'] == 'weixin_web') {
+                    $data[ $provider['provider'] ]['openid'] = $provider['provider_id'];
+                    $data[ $provider['provider'] ]['unionid'] = $provider['union_id'];
+                }
+            }
+        }
+
+        return $data;
     }
 
     public static function getRoles(User $user)

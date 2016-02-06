@@ -27,9 +27,12 @@ class AgentService {
 
         $agent->load('info');
 
+        $agent->promotion_code = self::getAgentPromotionCode($agent['id']);
+
         if (($agent && $all) || count($agent)) {
             return $agent;
         }
+
 
         throw new \Exception('非代理商,请先申请');
     }
@@ -54,6 +57,7 @@ class AgentService {
     public static function awardAgent($agent_order)
     {
         $award_agents = self::getParentAgents($agent_order['agent_id']);
+        $award_agents[] = self::getSystemAgent();
 
         $award_orders = [];
         foreach ($award_agents as $key => $award_agent) {
@@ -73,6 +77,11 @@ class AgentService {
         if (count($award_orders)) {
             AgentRepository::storeAgentOrderDetail($award_orders);
         }
+    }
+
+    public static function getSystemAgent()
+    {
+        return AgentService::byId(AgentProtocol::SYSTEM_AGENT_ID);
     }
 
     public static function getLeavesId($agent_id, $string = false)
@@ -143,12 +152,19 @@ class AgentService {
 
     public static function getClientPromotion($user_id)
     {
-        return PromotionRepository::getByAgent($user_id);
+        return PromotionRepository::getByClient($user_id);
     }
 
     public static function getAgentPromotion($agent_id)
     {
         return PromotionRepository::getByAgent($agent_id);
+    }
+
+    public static function getAgentPromotionCode($agent_id)
+    {
+        $promotion = self::getAgentPromotion($agent_id);
+
+        return $promotion['code'];
     }
 
     public static function getParentAgents($agent_id)
@@ -400,9 +416,9 @@ class AgentService {
         return AgentRepository::byNo($agent_no);
     }
 
-    public static function getOrders($agent_id, $start_at = null, $end_at = null)
+    public static function getOrders($agent_id, $start_at = null, $end_at = null, $status = null)
     {
-        $orders = AgentRepository::getAgentOrders($agent_id, $start_at, $end_at);
+        $orders = AgentRepository::getAgentOrders($agent_id, $start_at, $end_at, $status);
 
         return $orders;
     }

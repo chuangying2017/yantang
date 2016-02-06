@@ -58,13 +58,18 @@ class AgentRateController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $rate = $request->input('rate');
+        try {
+            AgentRepository::updateRates($request->input('data'));
 
-        $rate = AgentRepository::updateRate($id, $rate);
+            $rates = AgentRepository::listsRate();
 
-        return $this->response->item($rate, new AgentRateTransformer());
+            return $this->response->collection($rates, new AgentRateTransformer());
+        } catch (\Exception $e ){
+            $this->response->errorBadRequest($e->getMessage());
+        }
+
     }
 
 }

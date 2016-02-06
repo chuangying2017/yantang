@@ -30,6 +30,13 @@ class AgentRepository {
         return $agent;
     }
 
+    public static function updateRates($data)
+    {
+        foreach ($data as $rate_data) {
+            self::updateRate($rate_data['id'], $rate_data['rate']);
+        }
+    }
+
     public static function storeRate($level, $rate, $name)
     {
         $rate_data = AgentRate::updateOrCreate(['level' => $level], ['level' => $level, 'rate' => $rate, 'name' => $name]);
@@ -149,15 +156,17 @@ class AgentRepository {
     {
         $agent_ids = to_array($agent_id);
 
-        $start_at = is_null($start_at) ?: Carbon::createFromDate(2016, 1, 1);
-        $end_at = is_null($end_at) ?: Carbon::now();
+        $start_at = ! is_null($start_at) ? $start_at : Carbon::createFromDate(2016, 1, 1);
+        $end_at = ! is_null($end_at) ? $end_at : Carbon::now();
+        $status = ! is_null($status) ? $status : AgentProtocol::AGENT_ORDER_STATUS_OF_OK;
+
 
         return AgentOrderDetail::whereIn('agent_id', $agent_ids)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status)->paginate($paginate);
     }
 
-    public static function getAgentOrders($agent_id, $start_at, $end_at)
+    public static function getAgentOrders($agent_id, $start_at, $end_at, $status = null)
     {
-        return self::listsAgentOrderDetail(self::getStoreIds($agent_id), $start_at, $end_at);
+        return self::listsAgentOrderDetail(($agent_id), $start_at, $end_at, $status);
     }
 
     public static function getStoreIds($agent_id)
