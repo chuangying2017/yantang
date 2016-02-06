@@ -161,7 +161,7 @@ class AgentRepository {
         $status = ! is_null($status) ? $status : AgentProtocol::AGENT_ORDER_STATUS_OF_OK;
 
 
-        return AgentOrderDetail::whereIn('agent_id', $agent_ids)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status)->paginate($paginate);
+        return AgentOrderDetail::with('order', 'order.agent')->whereIn('agent_id', $agent_ids)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status)->paginate($paginate);
     }
 
     public static function getAgentOrders($agent_id, $start_at, $end_at, $status = null)

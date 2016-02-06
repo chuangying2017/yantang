@@ -10,5 +10,9 @@ class AgentOrder extends Model
 
     protected $guarded = ['id'];
 
+    public function agent()
+    {
+        return $this->belongsTo(Agent::class);
+    }
 
 }
