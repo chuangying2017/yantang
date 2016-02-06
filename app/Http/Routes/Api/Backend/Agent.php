@@ -1,7 +1,7 @@
 <?php
 
 //$api->group(['prefix' => 'agents'], function ($api) {
-$api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:Agent']], function ($api) {
+$api->group(['middleware' => ['api.auth', 'access.routeNeedsPermission:access-agent-backend']], function ($api) {
 
     $api->resource('agents/apply', 'AgentApplyController', ['only' => ['index', 'show', 'update']]);
 
