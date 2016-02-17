@@ -2,6 +2,7 @@
 
 use Closure;
 use Dingo\Api\Facade\API;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Class RouteNeedsRole
@@ -18,7 +19,7 @@ class RouteNeedsPermission {
     public function handle($request, Closure $next, $permission)
     {
         if ( ! access()->can($permission)) {
-            API::response()->errorForbidden('没有权限');
+            return new RedirectResponse('http://e-grace.com.cn/');
         }
 
         return $next($request);
