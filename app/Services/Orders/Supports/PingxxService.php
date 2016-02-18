@@ -144,27 +144,6 @@ class PingxxService implements PaymentInterface {
     }
 
 
-    public static function generatePingppBilling($order, $amount, $channel)
-    {
-
-        try {
-
-            if ($amount > 0) {
-                $user_ip = isset($_SERVER) ? $_SERVER["REMOTE_ADDR"] : env('SERVER_PUBLIC_IP');
-                $order_no = $order['order_no'];
-                $charge = self::getPaidPackage($order_no, $amount, $user_ip, $channel);
-                $payment = PingxxPaymentRepository::storePingxxPayment($charge, $order['user_id'], $order['id']);
-
-                return compact('payment', 'charge');
-            }
-
-            return 0;
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
-    }
-
     /**
      * 若已支付则返回FALSE，否则返回支付charge
      * @param $pingxx_payment_no
@@ -237,22 +216,41 @@ class PingxxService implements PaymentInterface {
     {
         $amount = $order['pay_amount'];
 
+        $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel);
+        if ( ! $pingxx_payment) {
+            return self::generatePingppBilling($order, $amount, $channel);
+        }
+        $charge = self::pingxxNeedPayOrFetchCharge($pingxx_payment);
+        //若渠道已支付则不需要继续处理
+        if ( ! $charge) {
+            return 0;
+        }
 
-        return self::generatePingppBilling($order, $amount, $channel);
-//        $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel);
-//        if (!$pingxx_payment) {
-//            return self::generatePingppBilling($order, $amount, $channel);
-//        }
-//        $charge = self::pingxxNeedPayOrFetchCharge($pingxx_payment);
-//        //若渠道已支付则不需要继续处理
-//        if (!$charge) {
-//            return 0;
-//        }
-//
-//        return [
-//            'charge' => $charge,
-//            'payment' => $pingxx_payment
-//        ];
+        return [
+            'charge'  => $charge,
+            'payment' => $pingxx_payment
+        ];
+    }
+
+
+    public static function generatePingppBilling($order, $amount, $channel)
+    {
+        try {
+
+            if ($amount > 0) {
+                $user_ip = isset($_SERVER) ? $_SERVER["REMOTE_ADDR"] : env('SERVER_PUBLIC_IP');
+                $order_no = $order['order_no'];
+                $charge = self::getPaidPackage($order_no, $amount, $user_ip, $channel);
+                $payment = PingxxPaymentRepository::storePingxxPayment($charge, $order['user_id'], $order['id']);
+
+                return compact('payment', 'charge');
+            }
+
+            return 0;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
     }
 
     public static function orderIsPaidByPingxx($order_id)

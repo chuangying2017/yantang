@@ -43,7 +43,7 @@ class PingxxPaymentRepository {
             'status'     => PingxxProtocol::STATUS_OF_UNPAID,
         ];
 
-        return PingxxPayment::create($payment_data);
+        return PingxxPayment::where('payment_no', $payment_no)->where('charge_id', $charge_id)->first() ?: PingxxPayment::create($payment_data);
     }
 
 
@@ -76,7 +76,7 @@ class PingxxPaymentRepository {
 
     public static function getOrderPingxxPayment($order_id, $channel = null)
     {
-        $live_mode = env('PINGPP_LIVE_MODE', false) && env('PINGPP_ACCOUNT_TYPE') != 'TEST';
+        $live_mode = env('PINGPP_LIVE_MODE', false) && env('PINGPP_ACCOUNT_TYPE') != 'TEST' ? 1 : 0;
         $query = PingxxPayment::where('order_id', $order_id)->where('livemode', $live_mode);
 
         if ( ! is_null($channel)) {
