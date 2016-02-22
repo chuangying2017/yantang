@@ -8,13 +8,14 @@ class UserInfoTransformer extends TransformerAbstract {
     public function transform(User $user)
     {
         $base_info = [
-            'name'   => $user['name'],
-            'email'  => $user['email'],
-            'phone'  => $user['phone'],
-            'status' => $user['status'],
-            'roles'  => $this->getRoles($user),
+            'name'      => $user['name'],
+            'email'     => $user['email'],
+            'phone'     => $user['phone'],
+            'status'    => $user['status'],
+            'roles'     => $this->getRoles($user),
             'providers' => $this->getProviderInfo($user)
         ];
+
         $client_info = $this->getClientInfo($user);
 
 
@@ -42,24 +43,28 @@ class UserInfoTransformer extends TransformerAbstract {
 
     protected function getProviderInfo(User $user)
     {
+
         $providers = $user->providers;
 
         $data = [];
 
         if ( ! is_null($providers) && count($providers)) {
             foreach ($providers as $provider) {
-                $data[ $provider['provider'] ] = [
+                $provider_name = $provider['provider'];
+                $provider_data = [
                     'provider'    => $provider['provider'],
                     'provider_id' => $provider['provider_id'],
                 ];
-                if ($provider['provider'] == 'weixin' || $provider['provider'] == 'weixin_web') {
-                    $data[ $provider['provider'] ]['openid'] = $provider['provider_id'];
-                    $data[ $provider['provider'] ]['unionid'] = $provider['union_id'];
+                if ($provider_name == 'weixin' || $provider_name == 'weixin_web') {
+                    $provider_data['openid'] = $provider['provider_id'];
+                    $provider_data['unionid'] = $provider['union_id'];
                 }
+
+                array_set($data, $provider_name, $provider_data);
             }
         }
 
-        return $data;
+        return count($data) ? $data : json_decode('{}');
     }
 
     public static function getRoles(User $user)
