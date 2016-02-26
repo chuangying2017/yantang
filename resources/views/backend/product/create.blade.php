@@ -134,6 +134,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label"><span class="c-red">*</span>
+                                        商品标签：</label>
+                                    <span class="c-red">(用于搜索,多个标签用逗号隔开. 如: 小黑瓶,黑瓶)</span>
+                                    <div class="col-sm-5">
+                                        <textarea class="form-control" v-model="product.tags"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-sm-2 control-label"><span class="c-red">*</span> 商品价格：</label>
                                     <div class="col-sm-3">
                                         <div class="input-group">
@@ -276,6 +284,7 @@
         var model = {
             category_id: null,
             title: "",
+            tags: "",
             price: 0,
             origin_price: 0,
             limit: 0,
