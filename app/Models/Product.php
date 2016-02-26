@@ -63,4 +63,9 @@ class Product extends Model {
         return $query->where('status', $status);
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'product_tags');
+    }
+
 }

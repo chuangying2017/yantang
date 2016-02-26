@@ -23,7 +23,6 @@ class OrderController extends Controller {
     public function index(Request $request)
     {
         try {
-
             $user_id = $this->getCurrentAuthUserId();
             $merchant_id = MerchantService::getMerchantIdByUserId($user_id);
 

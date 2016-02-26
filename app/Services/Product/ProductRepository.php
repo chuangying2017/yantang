@@ -14,6 +14,7 @@ use App\Models\ProductMeta;
 use App\Models\ProductSku;
 use App\Services\Product\Comment\CommentService;
 use App\Services\Product\Fav\FavService;
+use App\Services\Product\Tags\ProductTagService;
 use DB;
 use Exception;
 
@@ -38,9 +39,13 @@ class ProductRepository {
 
         if ( ! is_null($keyword)) {
             if ($new_query) {
-                $query = $query->orWhere('title', 'like', '%' . $keyword . '%');
+                $query = $query->orWhere('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
+                    return $query->where('tags', 'like', '%' . $keyword . '%');
+                });
             } else {
-                $query = $query->where('title', 'like', '%' . $keyword . '%');
+                $query = $query->where('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
+                    return $query->where('tags', 'like', '%' . $keyword . '%');
+                });
             }
         }
 
@@ -91,7 +96,7 @@ class ProductRepository {
     private static function filterMetaData($data)
     {
         $rules = [
-            'detail', 'is_virtual', 'origin_id', 'express_fee', 'attributes', 'with_invoice', 'with_care'
+            'detail', 'is_virtual', 'origin_id', 'express_fee', 'attributes', 'with_invoice', 'with_care', 'tags'
         ];
 
         return array_only($data, $rules);
@@ -163,9 +168,11 @@ class ProductRepository {
              */
             $product->images()->sync(array_get($data, 'image_ids', []));
 
+
             $product->brand()->increment('product_count', 1);
 
             $product->category()->increment('product_count', 1);
+
 
             DB::commit();
 
@@ -206,6 +213,7 @@ class ProductRepository {
              * link image
              */
             $product->images()->sync($data['image_ids']);
+
 
             DB::commit();
 
@@ -281,11 +289,15 @@ class ProductRepository {
              * detach images
              */
             $product->images()->detach();
+            //解除标签绑定
+            $product->tags()->detach();
+
             /**
              * retrive all skus
              */
 
             ProductSkuService::deleteByProduct($id);
+
 
             /**
              * delete all favs

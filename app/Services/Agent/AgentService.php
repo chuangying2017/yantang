@@ -396,7 +396,7 @@ class AgentService {
 
     public static function getAgentTree($agent_id = null, $depth = 1)
     {
-        if (is_null($agent_id)) {
+        if (is_null($agent_id) || $agent_id == AgentProtocol::SYSTEM_AGENT_ID) {
             return AgentRepository::getAgentsRoot();
         }
 

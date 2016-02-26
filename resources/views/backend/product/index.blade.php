@@ -48,8 +48,11 @@
 
                     <div class="box-tools pull-right">
                         <div class="has-feedback">
-                            <input type="text" class="form-control input-sm" placeholder="Search Mail">
-                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                            <form action="">
+                                <input name="keyword" type="text" class="form-control input-sm"
+                                       placeholder="关键词" value="{{$keyword}}">
+                                <span type="submit" class="glyphicon glyphicon-search form-control-feedback"></span>
+                            </form>
                         </div>
                     </div>
                     <!-- /.box-tools -->
@@ -123,7 +126,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer no-padding">
-                    {!! $products->render() !!}
+                    {!! $products->appends(['keyword' => $keyword])->render() !!}
                 </div>
             </div>
             <!-- /. box -->

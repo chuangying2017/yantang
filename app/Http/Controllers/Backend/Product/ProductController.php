@@ -20,10 +20,11 @@ class ProductController extends Controller
     {
         $status = $request->get('status');
         $page = $request->get('page');
+        $keyword = $request->input('keyword') ? : null;
         try {
-            $products = $this->api->get('api/admin/products?sort=created_at,desc&status=' . $status . '&page=' . $page);
+            $products = $this->api->get('api/admin/products?sort=created_at,desc&status=' . $status . '&page=' . $page . '&keyword=' . $keyword);
             $products->setPath('/admin/products');
-            return view('backend.product.index', compact('products'));
+            return view('backend.product.index', compact('products', 'keyword'));
         } catch (\Exception $e) {
             return $e;
         }

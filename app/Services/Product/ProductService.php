@@ -144,4 +144,9 @@ class ProductService {
         return Product::orderBy($order_by, $sort)->paginate($page);
     }
 
+    public static function byId($id)
+    {
+        return Product::findOrFail($id);
+    }
+
 }
