@@ -14,6 +14,7 @@ use App\Models\ProductMeta;
 use App\Models\ProductSku;
 use App\Services\Product\Comment\CommentService;
 use App\Services\Product\Fav\FavService;
+use App\Services\Product\Tags\ProductTagService;
 use DB;
 use Exception;
 
@@ -162,10 +163,13 @@ class ProductRepository {
              * link image
              */
             $product->images()->sync(array_get($data, 'image_ids', []));
+            //绑定标签
+            $product->tags()->sync(array_get($data, 'tag_ids', []));
 
             $product->brand()->increment('product_count', 1);
 
             $product->category()->increment('product_count', 1);
+
 
             DB::commit();
 
@@ -206,6 +210,9 @@ class ProductRepository {
              * link image
              */
             $product->images()->sync($data['image_ids']);
+
+            //绑定标签
+            $product->tags()->sync(array_get($data, 'tag_ids', []));
 
             DB::commit();
 
@@ -281,11 +288,15 @@ class ProductRepository {
              * detach images
              */
             $product->images()->detach();
+            //解除标签绑定
+            $product->tags()->detach();
+
             /**
              * retrive all skus
              */
 
             ProductSkuService::deleteByProduct($id);
+
 
             /**
              * delete all favs
