@@ -36,7 +36,7 @@
             <li class="{{ Active::pattern('admin/dashboard') }}"><a
                     href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.dashboard') }}</span></a></li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}">
+            <li class="active">
                 <a href=""><span>{{ trans('menus.product.management') }}</span><i
                         class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
@@ -44,7 +44,7 @@
                                 class="fa fa-circle-o"></i>{{ trans('menus.product.all') }}</a></li>
                     <li><a href="{!!url('admin/groups')!!}"><i
                                 class="fa fa-circle-o"></i>{{ trans('menus.product.groups') }}</a></li>
-                    <li>
+                    <li class="active">
                         <a href="{!!url('admin/brands')!!}"><i
                                 class="fa fa-circle-o"></i>品牌管理<i
                                 class="fa fa-angle-left pull-right"></i></a>

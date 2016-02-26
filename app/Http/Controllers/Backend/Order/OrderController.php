@@ -22,8 +22,10 @@ class OrderController extends Controller
         //todo@bryant: wait for api
         $page = $request->get('page') ?: '';
         $status = $request->get('status') ?: '';
+        $keyword = $request->get('keyword') ?: '';
         try {
-            $records = $this->api->get('api/admin/orders?page=' . $page . '&status=' . $status);
+            $records = $this->api->get('api/admin/orders?page=' . $page . '&status=' . $status . '&keyword=' . $keyword);
+            dd($records);
             javascript()->put([
                 'config' => [
                     'api_url' => url('api/'),
