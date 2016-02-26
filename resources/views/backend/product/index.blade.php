@@ -48,8 +48,11 @@
 
                     <div class="box-tools pull-right">
                         <div class="has-feedback">
-                            <input type="text" class="form-control input-sm" placeholder="Search Mail">
-                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                            <form action="">
+                                <input name="keyword" type="text" class="form-control input-sm"
+                                       placeholder="关键词">
+                                <span type="submit" class="glyphicon glyphicon-search form-control-feedback"></span>
+                            </form>
                         </div>
                     </div>
                     <!-- /.box-tools -->
