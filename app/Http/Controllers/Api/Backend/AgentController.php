@@ -44,6 +44,13 @@ class AgentController extends Controller {
         return $this->response->array(['data' => self::transformer($data)]);
     }
 
+    public function info($agent_id)
+    {
+        $agent = AgentService::getAgentById($agent_id);
+
+        return $this->response->array(['data' => $agent]);
+    }
+
     public function orders(Request $request)
     {
         $user_id = $this->getCurrentAuthUserId();

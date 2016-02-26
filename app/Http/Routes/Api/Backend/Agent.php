@@ -11,7 +11,7 @@ $api->group(['middleware' => ['api.auth', 'access.routeNeedsPermission:access-ag
 
     $api->put('agents/rates', 'AgentRateController@update')->name('agents.rate.update');
     $api->resource('agents/rates', 'AgentRateController', ['only' => ['index', 'show', 'store']]);
-
+    $api->get('agents/{agent_id}/info', ['as' => 'agent.show.info', 'uses' => 'AgentController@info']);
     $api->resource('agents', 'AgentController', ['only' => ['index', 'show']]);
 
 });
