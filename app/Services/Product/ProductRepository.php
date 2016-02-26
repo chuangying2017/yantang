@@ -39,9 +39,13 @@ class ProductRepository {
 
         if ( ! is_null($keyword)) {
             if ($new_query) {
-                $query = $query->orWhere('title', 'like', '%' . $keyword . '%');
+                $query = $query->orWhere('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
+                    return $query->where('tags', 'like', '%' . $keyword . '%');
+                });
             } else {
-                $query = $query->where('title', 'like', '%' . $keyword . '%');
+                $query = $query->where('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
+                    return $query->where('tags', 'like', '%' . $keyword . '%');
+                });
             }
         }
 
@@ -92,7 +96,7 @@ class ProductRepository {
     private static function filterMetaData($data)
     {
         $rules = [
-            'detail', 'is_virtual', 'origin_id', 'express_fee', 'attributes', 'with_invoice', 'with_care'
+            'detail', 'is_virtual', 'origin_id', 'express_fee', 'attributes', 'with_invoice', 'with_care', 'tags'
         ];
 
         return array_only($data, $rules);
@@ -163,8 +167,7 @@ class ProductRepository {
              * link image
              */
             $product->images()->sync(array_get($data, 'image_ids', []));
-            //绑定标签
-            $product->tags()->sync(array_get($data, 'tag_ids', []));
+
 
             $product->brand()->increment('product_count', 1);
 
@@ -211,8 +214,6 @@ class ProductRepository {
              */
             $product->images()->sync($data['image_ids']);
 
-            //绑定标签
-            $product->tags()->sync(array_get($data, 'tag_ids', []));
 
             DB::commit();
 

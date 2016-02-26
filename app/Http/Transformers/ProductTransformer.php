@@ -69,7 +69,7 @@ class ProductTransformer extends TransformerAbstract {
         return isset($product->meta) ?
             [
                 'attributes' => json_decode($product->meta->attributes, true),
-                'detail'     => $product->meta->detail,
+                'detail'     => $product->meta->detail
             ] :
             [
                 'attributes' => null,

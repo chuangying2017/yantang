@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductTagsTable extends Migration {
-
+class AddTagsToProductMetaTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,9 +12,8 @@ class CreateProductTagsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('product_tags', function (Blueprint $table) {
-            $table->integer('product_id');
-            $table->integer('tag_id');
+        Schema::table('product_meta', function (Blueprint $table) {
+            $table->text('tags');
         });
     }
 
@@ -25,6 +24,8 @@ class CreateProductTagsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('product_tags');
+        Schema::table('product_meta', function (Blueprint $table) {
+            $table->dropColumn('tags');
+        });
     }
 }

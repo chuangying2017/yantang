@@ -107,10 +107,12 @@ class BackendProductTransformer extends TransformerAbstract {
             [
                 'attributes' => json_decode($product->meta->attributes, true),
                 'detail'     => $product->meta->detail,
+                'tags'       => $product->meta->tags
             ] :
             [
                 'attributes' => null,
-                'detail'     => null
+                'detail'     => null,
+                'tags'       => ''
             ];
     }
 

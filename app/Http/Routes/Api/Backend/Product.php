@@ -22,8 +22,6 @@ $api->put('products/operate', [
 ]);
 $api->resource('products', 'ProductController');
 
-$api->resource('tags', 'TagController');
-
 $api->resource('attributes', 'AttributeController');
 $api->resource('attributes.values', 'AttributeValueController', ['only' => ['store', 'destroy']]);
 
