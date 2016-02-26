@@ -226,6 +226,15 @@
             {{--</div>--}}
             {{--</div>--}}
             {{--</div>--}}
+            <div class="box-tools pull-right" style="margin:10px;">
+                <div class="has-feedback">
+                    <form action="?">
+                        <input name="keyword" type="text" class="form-control input-sm"
+                               placeholder="关键词" value="">
+                        <span type="submit" class="glyphicon glyphicon-search form-control-feedback"></span>
+                    </form>
+                </div>
+            </div>
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li :class="{active: status == ''}"><a href="?">全部订单</a></li>

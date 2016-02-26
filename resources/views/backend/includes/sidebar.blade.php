@@ -16,16 +16,16 @@
         </div>
 
         <!-- search form (Optional) -->
-        <form action="#" method="get" class="sidebar-form">
-            <div class="input-group">
-                <input type="text" name="q" class="form-control"
-                       placeholder="{{ trans('strings.search_placeholder') }}"/>
-                  <span class="input-group-btn">
-                    <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i
-                            class="fa fa-search"></i></button>
-                  </span>
-            </div>
-        </form>
+        {{--<form action="#" method="get" class="sidebar-form">--}}
+        {{--<div class="input-group">--}}
+        {{--<input type="text" name="q" class="form-control"--}}
+        {{--placeholder="{{ trans('strings.search_placeholder') }}"/>--}}
+        {{--<span class="input-group-btn">--}}
+        {{--<button type='submit' name='search' id='search-btn' class="btn btn-flat"><i--}}
+        {{--class="fa fa-search"></i></button>--}}
+        {{--</span>--}}
+        {{--</div>--}}
+        {{--</form>--}}
         <!-- /.search form -->
 
         <!-- Sidebar Menu -->
@@ -66,8 +66,8 @@
             {{--<li class="{{ Active::pattern('admin/marketing') }}"><a--}}
             {{--href="{!! url('admin/marketing') !!}"><span>{{ trans('menus.marketing') }}</span></a></li>--}}
 
-            <li class="{{ Active::pattern('admin/clients') }}"><a
-                    href="{!! url('admin/clients') !!}"><span>{{ trans('menus.client') }}</span></a></li>
+            {{--<li class="{{ Active::pattern('admin/clients') }}"><a--}}
+            {{--href="{!! url('admin/clients') !!}"><span>{{ trans('menus.client') }}</span></a></li>--}}
 
             <li class="{{ Active::pattern('admin/orders') }}"><a
                     href="{!! url('admin/orders')  !!}"><span>{{ trans('menus.order') }}</span></a></li>
