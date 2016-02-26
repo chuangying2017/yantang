@@ -24,7 +24,7 @@ class ProductController extends Controller
         try {
             $products = $this->api->get('api/admin/products?sort=created_at,desc&status=' . $status . '&page=' . $page . '&keyword=' . $keyword);
             $products->setPath('/admin/products');
-            return view('backend.product.index', compact('products'));
+            return view('backend.product.index', compact('products', 'keyword'));
         } catch (\Exception $e) {
             return $e;
         }
