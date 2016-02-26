@@ -37,6 +37,19 @@ class AgentService {
         throw new \Exception('非代理商,请先申请');
     }
 
+    public static function getAgentById($agent_id)
+    {
+        $agent = self::byId($agent_id);
+
+        $agent->load('info');
+
+        $agent->promotion_code = self::getAgentPromotionCode($agent['id']);
+
+        $agent->earn_data = self::getEarnData($agent_id);
+
+        return $agent;
+    }
+
 
     public static function orderDeal($order_id)
     {

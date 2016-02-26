@@ -139,7 +139,7 @@ class OrderRepository {
         return $order;
     }
 
-    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = null, $status = null, $paginate = null, $merchant_id = null)
+    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = null, $status = null, $paginate = null, $merchant_id = null, $keyword = null, $start_at = null, $end_at = null)
     {
 
         if ( ! is_null($relation)) {
@@ -162,6 +162,22 @@ class OrderRepository {
 
         if ( ! is_null($user_id)) {
             $query = $query->where('user_id', $user_id);
+        }
+
+        if ( ! is_null($keyword)) {
+            $query = $query->where(function ($query) use ($keyword) {
+                $query->whereHas('children', function ($query) use ($keyword) {
+                    $query->where('order_no', $keyword);
+                })->orWhereHas('address', function ($query) use ($keyword) {
+                    $query->where('name', $keyword)->orWhere('mobile', $keyword);
+                })->orWhere('title', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        if ( ! is_null($start_at) || ! is_null($end_at)) {
+            $start_at = is_null($start_at) ? Carbon::createFromDate(2016, 1, 1) : Carbon::createFromTimestamp(strtotime($start_at));
+            $end_at = is_null($end_at) ? Carbon::now() : Carbon::createFromTimestamp(strtotime($end_at));
+            $query = $query->whereBetween('created_at', [$start_at, $end_at]);
         }
 
         if ( ! is_null($paginate)) {
