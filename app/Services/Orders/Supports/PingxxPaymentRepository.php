@@ -31,16 +31,17 @@ class PingxxPaymentRepository {
 
         // 生成payment
         $payment_data = [
-            'payment_no' => $payment_no,
-            'amount'     => $amount,
-            'currency'   => PingxxProtocol::PAID_PACKAGE_CURRENCY,
-            'channel'    => $channel,
-            'user_id'    => $user_id,
-            'order_id'   => $order_id,
-            'charge_id'  => $charge_id,
-            'livemode'   => $charge->livemode,
-            'app'        => $charge->app,
-            'status'     => PingxxProtocol::STATUS_OF_UNPAID,
+            'payment_no'  => $payment_no,
+            'amount'      => $amount,
+            'currency'    => PingxxProtocol::PAID_PACKAGE_CURRENCY,
+            'channel'     => $channel,
+            'user_id'     => $user_id,
+            'order_id'    => $order_id,
+            'charge_id'   => $charge_id,
+            'livemode'    => $charge->livemode,
+            'app'         => $charge->app,
+            'time_expire' => $charge->time_expire,
+            'status'      => PingxxProtocol::STATUS_OF_UNPAID,
         ];
 
         return PingxxPayment::where('payment_no', $payment_no)->where('charge_id', $charge_id)->first() ?: PingxxPayment::create($payment_data);
@@ -74,13 +75,17 @@ class PingxxPaymentRepository {
         return PingxxPayment::where('billing_id', $billing_id)->firstOrFail();
     }
 
-    public static function getOrderPingxxPayment($order_id, $channel = null)
+    public static function getOrderPingxxPayment($order_id, $channel = null, $valid = false)
     {
         $live_mode = env('PINGPP_LIVE_MODE', false) && env('PINGPP_ACCOUNT_TYPE') != 'TEST' ? 1 : 0;
         $query = PingxxPayment::where('order_id', $order_id)->where('livemode', $live_mode);
 
+        if ($valid) {
+            $query = $query->where('time_expire', '>=', time());
+        }
+
         if ( ! is_null($channel)) {
-            return $query->where('channel', $channel)->first();
+            return $query->where('channel', $channel)->orderBy('created_at', 'desc')->first();
         }
 
         return $query->get();

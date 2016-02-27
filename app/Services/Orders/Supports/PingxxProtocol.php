@@ -73,7 +73,7 @@ class PingxxProtocol {
     }
 
     const AGENT_OF_PC = 'pc';
-    const AGENT_OF_MOBILE = 'wap';
+    const AGENT_OF_MOBILE = 'mobile';
     const AGENT_OF_APP = 'app';
 
     public static function agent($agent, $channel = null)

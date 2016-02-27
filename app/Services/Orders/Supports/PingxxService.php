@@ -11,6 +11,7 @@ use Pingpp\Pingpp;
 class PingxxService implements PaymentInterface {
 
     private static $payment_no;
+    private static $order_no;
     use UserHelper;
 
     public static function setPaymentNo($payment_no)
@@ -41,13 +42,11 @@ class PingxxService implements PaymentInterface {
     private static function getPaidPackage($order_no, $amount, $user_ip, $channel)
     {
         try {
-//            $pingxx_payment_no = PingxxPaymentRepository::generatePingxxPaymentNo();
-
-            #todo debug
-            $pingxx_payment_no = $order_no;
+            $pingxx_payment_no = PingxxPaymentRepository::generatePingxxPaymentNo();
 
             self::setPingxxKey();
             self::setPaymentNo($pingxx_payment_no);
+            self::setOrderNo($order_no);
 
             $charge = Charge::create(
                 [
@@ -109,7 +108,7 @@ class PingxxService implements PaymentInterface {
                 break;
             case 'wx_pub_qr':
                 $extra = array(
-                    'product_id' => self::getPaymentNo()
+                    'product_id' => self::getOrderNo()
                 );
                 break;
             case 'yeepay_wap':
@@ -155,31 +154,39 @@ class PingxxService implements PaymentInterface {
         try {
             $payment = PingxxPaymentRepository::fetchPingxxPayment($pingxx_payment_no);
 
-            $pingxx_charge = self::queryPingxxPaymentCharge($payment['charge_id']);
+            //当前pingxx账单未支付时,主动查询确认是否已支付但未收到通知
+            if (self::checkIsUnPaid($payment)) {
 
-            if ($pingxx_charge->paid) {
+                $pingxx_charge = self::queryPingxxPaymentCharge($payment['charge_id']);
 
-                //若为非测试环境,但账单为测试账单,则标记为未支付
-                if (env('PINGPP_ACCOUNT_TYPE') != 'TEST' && ! $pingxx_charge->livemode) {
-                    throw new \Exception('支付环境配置错误');
+                if ($pingxx_charge->paid) {
+
+                    //若当前为正式环境,但账单为测试账单,则标记为未支付
+                    if (env('PINGPP_ACCOUNT_TYPE') != 'TEST' && ! $pingxx_charge->livemode) {
+                        throw new \Exception('支付环境配置错误');
+                    }
+
+                    self::pingxxPaymentIsPaid($pingxx_charge);
+
+                    return false;
                 }
 
-                self::pingxxPaymentIsPaid($pingxx_charge);
-
-                return false;
+                return $pingxx_charge;
             }
 
-            return $pingxx_charge;
+            return false;
         } catch (\Exception $e) {
             throw $e;
         }
     }
 
-    public static function handlePingxxChargeEvent($data)
-    {
 
-    }
-
+    /**
+     * 支付成功后记录相关信息,出发pingxx支付事件
+     * @param $pingxx_charge_data
+     * @return mixed
+     * @throws Exception
+     */
     public static function pingxxPaymentIsPaid($pingxx_charge_data)
     {
         try {
@@ -206,7 +213,7 @@ class PingxxService implements PaymentInterface {
     }
 
     /**
-     * 若不存在支付渠道记录则生成,返回支付charge,
+     * 若不存在 *有效* 支付渠道记录则生成,返回支付charge,
      * @param $order
      * @param $channel
      * @return array|int
@@ -216,10 +223,14 @@ class PingxxService implements PaymentInterface {
     {
         $amount = $order['pay_amount'];
 
-        $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel);
+        //查询之前的指定支付渠道的有效申请记录
+        $need_to_check_valid = true;
+        $pingxx_payment = PingxxPaymentRepository::getOrderPingxxPayment($order['id'], $channel, $need_to_check_valid);
         if ( ! $pingxx_payment) {
+            //若不存在则生成并返回结果
             return self::generatePingppBilling($order, $amount, $channel);
         }
+
         $charge = self::pingxxNeedPayOrFetchCharge($pingxx_payment);
         //若渠道已支付则不需要继续处理
         if ( ! $charge) {
@@ -233,6 +244,24 @@ class PingxxService implements PaymentInterface {
     }
 
 
+    //检查支付渠道信息是否有效
+    protected static function checkChargeIsValid($charge)
+    {
+        if ($charge->time_expire < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 生成pingxx支付账单,获取charge并存储
+     * @param $order
+     * @param $amount
+     * @param $channel
+     * @return array|int
+     * @throws Exception
+     */
     public static function generatePingppBilling($order, $amount, $channel)
     {
         try {
@@ -278,6 +307,36 @@ class PingxxService implements PaymentInterface {
         self::setPingxxKey();
 
         return Charge::retrieve($charge_id);
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getOrderNo()
+    {
+        return self::$order_no;
+    }
+
+    /**
+     * @param mixed $order_no
+     */
+    public static function setOrderNo($order_no)
+    {
+        self::$order_no = $order_no;
+    }
+
+    public static function checkIsPaid($payment)
+    {
+        $payment = PingxxPaymentRepository::fetchPingxxPayment($payment);
+
+        return $payment['status'] == PingxxProtocol::STATUS_OF_PAID;
+    }
+
+    public static function checkIsUnPaid($payment)
+    {
+        $payment = PingxxPaymentRepository::fetchPingxxPayment($payment);
+
+        return $payment['status'] == PingxxProtocol::STATUS_OF_UNPAID;
     }
 
 
