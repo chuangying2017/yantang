@@ -104,10 +104,10 @@
                         @else
                             <li>商家发货<br></li>
                         @endif
-                        @if($order->children[0]->status == 'done')
-                            <li class="active">结算货款<br>{{$order->done_at}}</li>
+                        @if($order->children[0]->status == 'deliver')
+                            <li class="active">交易完成<br>{{$order->deliver_at}}</li>
                         @else
-                            <li>结算货款<br></li>
+                            <li>交易完成<br></li>
                         @endif
                     </ul>
                 </div>

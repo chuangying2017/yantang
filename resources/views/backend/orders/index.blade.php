@@ -226,13 +226,22 @@
             {{--</div>--}}
             {{--</div>--}}
             {{--</div>--}}
+            <div class="box-tools pull-right" style="margin:10px;">
+                <div class="has-feedback">
+                    <form action="?">
+                        <input name="keyword" type="text" class="form-control input-sm"
+                               placeholder="关键词" value="">
+                        <span type="submit" class="glyphicon glyphicon-search form-control-feedback"></span>
+                    </form>
+                </div>
+            </div>
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li :class="{active: status == ''}"><a href="?">全部订单</a></li>
                     <li :class="{active: status == 'unpaid'}"><a href="?status=unpaid">待支付</a></li>
                     <li :class="{active: status == 'paid'}"><a href="?status=paid">待发货</a></li>
-                    <li :class="{active: status == 'deliver'}"><a href="?status=deliver">已发货</a></li>
-                    <li :class="{active: status == 'done'}"><a href="?status=done">已完成</a></li>
+                    {{--<li :class="{active: status == 'deliver'}"><a href="?status=deliver">已发货</a></li>--}}
+                    <li :class="{active: status == 'deliver'}"><a href="?status=deliver">已完成</a></li>
                     <li :class="{active: status == 'refund'}"><a href="?status=refund">退款中</a></li>
                     <li :class="{active: status == 'closed'}"><a href="?status=closed">已关闭</a></li>
                 </ul>
