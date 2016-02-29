@@ -45,7 +45,7 @@
                                 <div class="img-holder" v-show="!section.products[n]">
                                     请上传
                                 </div>
-                                <img :src="section.products[n]['cover_image']" alt="">
+                                <img :src="section.products[n]['cover_image'] + '?imageView2/2/w/50'" alt="">
                             </div>
                         </td>
                         <td>

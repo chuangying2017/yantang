@@ -80,7 +80,7 @@
                                 <tr>
                                     <td>{{$product->id}}</td>
                                     <td><img width="50"
-                                             src="{{$product->cover_image}}"
+                                             src="{{$product->cover_image}}?imageView2/2/w/50"
                                              alt=""></td>
                                     {{--                                    <td>{{$product->stock}}</td>--}}
                                     <td>{{$product->title}}</td>

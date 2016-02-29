@@ -2,7 +2,7 @@
     <tr v-if="!editMode">
         <td>
             <div class="home-slider">
-                <img :src="banner.cover_image" alt=""
+                <img :src="banner.cover_image + '?imageView2/2/w/150/h/50'" alt=""
                      class="home-slider">
             </div>
         </td>

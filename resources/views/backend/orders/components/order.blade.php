@@ -1,7 +1,7 @@
 <script type="x-template" id="order-sku-template">
     <tr>
         <td width="40%">
-            <img :src="sku.cover_image" alt=""
+            <img :src="sku.cover_image + '?imageView2/2/w/80'" alt=""
                  class="cover-img">
             <a href="" class="pro-title">[! sku.title !]</a>
         </td>

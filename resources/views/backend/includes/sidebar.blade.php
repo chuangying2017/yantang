@@ -26,27 +26,28 @@
         {{--</span>--}}
         {{--</div>--}}
         {{--</form>--}}
-        <!-- /.search form -->
+            <!-- /.search form -->
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <li class="header">{{ trans('menus.general') }}</li>
 
             <!-- Optionally, you can add icons to the links -->
-            <li class="{{ Active::pattern('admin/dashboard') }}"><a
-                    href="{!!route('backend.dashboard')!!}"><span>{{ trans('menus.dashboard') }}</span></a></li>
+            <li class="{{ Active::pattern('admin/dashboard') }}">
+                <a href="{!!route('backend.dashboard')!!}"><i
+                        class="fa fa-dashboard"></i><span>{{ trans('menus.dashboard') }}</span></a></li>
 
             <li class="active">
-                <a href=""><span>{{ trans('menus.product.management') }}</span><i
+                <a href=""><i class="fa fa-shopping-cart"></i><span>{{ trans('menus.product.management') }}</span><i
                         class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a href="{!!url('admin/products')!!}"><i
-                                class="fa fa-circle-o"></i>{{ trans('menus.product.all') }}</a></li>
+                                class="fa  fa-minus"></i>{{ trans('menus.product.all') }}</a></li>
                     <li><a href="{!!url('admin/groups')!!}"><i
-                                class="fa fa-circle-o"></i>{{ trans('menus.product.groups') }}</a></li>
+                                class="fa  fa-minus"></i>{{ trans('menus.product.groups') }}</a></li>
                     <li class="active">
                         <a href="{!!url('admin/brands')!!}"><i
-                                class="fa fa-circle-o"></i>品牌管理<i
+                                class="fa  fa-minus"></i>品牌管理<i
                                 class="fa fa-angle-left pull-right"></i></a>
                         <ul class="treeview-menu">
                             <li><a href="{!!url('admin/brands')!!}">商品品牌</a></li>
@@ -54,14 +55,15 @@
                         </ul>
                     </li>
                     <li><a href="{!!url('admin/categories')!!}"><i
-                                class="fa fa-circle-o"></i>{{ trans('menus.product.categories') }}</a></li>
+                                class="fa  fa-minus"></i>{{ trans('menus.product.categories') }}</a></li>
                     <li><a href="{!!url('admin/attributes')!!}"><i
-                                class="fa fa-circle-o"></i>{{ trans('menus.product.attributes') }}</a></li>
+                                class="fa  fa-minus"></i>{{ trans('menus.product.attributes') }}</a></li>
                 </ul>
             </li>
 
             <li class="{{ Active::pattern('admin/merchants') }}"><a
-                    href="{!! url('admin/merchants') !!}"><span>{{ trans('menus.merchant') }}</span></a></li>
+                    href="{!! url('admin/merchants') !!}"><i
+                        class="fa fa-male"></i><span>{{ trans('menus.merchant') }}</span></a></li>
 
             {{--<li class="{{ Active::pattern('admin/marketing') }}"><a--}}
             {{--href="{!! url('admin/marketing') !!}"><span>{{ trans('menus.marketing') }}</span></a></li>--}}
@@ -70,43 +72,47 @@
             {{--href="{!! url('admin/clients') !!}"><span>{{ trans('menus.client') }}</span></a></li>--}}
 
             <li class="{{ Active::pattern('admin/orders') }}"><a
-                    href="{!! url('admin/orders')  !!}"><span>{{ trans('menus.order') }}</span></a></li>
+                    href="{!! url('admin/orders')  !!}"><i
+                        class="fa fa-reorder"></i><span>{{ trans('menus.order') }}</span></a></li>
 
             {{--<li class="{{ Active::pattern('admin/dashboard') }}"><a--}}
             {{--href="url('admin/attributes')"><span>{{ trans('menus.express') }}</span></a></li>--}}
 
-            <li class="{{ Active::pattern('admin/accounts') }}"><a
-                    href="{!! url('admin/accounts') !!}"><span>{{ trans('menus.account') }}</span></a></li>
+            {{--<li class="{{ Active::pattern('admin/accounts') }}"><a--}}
+            {{--href="{!! url('admin/accounts') !!}"><i--}}
+            {{--class="fa fa-diamond"></i><span>{{ trans('menus.account') }}</span></a></li>--}}
 
             <li class="{{ Active::pattern('admin/media') }}">
-                <a href=""><span>{{ trans('menus.media') }}</span><i
+                <a href=""><i class="fa fa-magnet"></i><span>{{ trans('menus.media') }}</span><i
                         class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="{!! url('admin/images') !!}"><i class="fa fa-circle-o"></i>{{ trans('menus.image') }}
+                    <li><a href="{!! url('admin/images') !!}"><i class="fa fa-picture-o"></i>{{ trans('menus.image') }}
                         </a></li>
                     <li><a href="{!! url('admin/articles') !!}"><i
-                                class="fa fa-circle-o"></i>{{ trans('menus.article') }}</a></li>
+                                class="fa fa-newspaper-o"></i>{{ trans('menus.article') }}</a></li>
                 </ul>
             </li>
 
             <li class="{{ Active::pattern('admin/dashboard') }}">
-                <a href=""><span>商城设置</span><i
+                <a href=""><i class="fa fa-gear"></i><span>商城设置</span><i
                         class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="{!!url('admin/setting/basic')!!}"><i class="fa fa-circle-o"></i>基础设置</a></li>
-                    <li><a href="{!!url('admin/setting/navs')!!}"><i class="fa fa-circle-o"></i>导航设置</a></li>
-                    <li><a href="{!!url('admin/setting/banners')!!}"><i class="fa fa-circle-o"></i>轮播设置</a></li>
-                    <li><a href="{!!url('admin/setting/sections')!!}"><i class="fa fa-circle-o"></i>商品组设置</a></li>
+                    <li><a href="{!!url('admin/setting/basic')!!}"><i class="fa  fa-minus"></i>基础设置</a></li>
+                    <li><a href="{!!url('admin/setting/navs')!!}"><i class="fa  fa-minus"></i>导航设置</a></li>
+                    <li><a href="{!!url('admin/setting/banners')!!}"><i class="fa  fa-minus"></i>轮播设置</a></li>
+                    <li><a href="{!!url('admin/setting/sections')!!}"><i class="fa  fa-minus"></i>商品组设置</a></li>
                 </ul>
             </li>
 
             @permission('view-access-management')
             <li class="{{ Active::pattern('admin/access/*') }}"><a
-                    href="{!!url('admin/access/users')!!}"><span>{{ trans('menus.access_management') }}</span></a></li>
+                    href="{!!url('admin/access/users')!!}"><i
+                        class="fa fa-lock"></i><span>{{ trans('menus.access_management') }}</span></a></li>
             @endauth
 
             <li class="{{ Active::pattern('admin/log-viewer*') }} treeview">
                 <a href="#">
+                    <i class="fa fa-info"></i>
                     <span>{{ trans('menus.log-viewer.main') }}</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
