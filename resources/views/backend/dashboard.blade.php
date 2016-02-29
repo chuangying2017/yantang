@@ -21,7 +21,7 @@
                 <span class="info-box-icon bg-aqua"><i class="fa fa-bar-chart"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">访问量</span>
+                    <span class="info-box-text">今日销售额</span>
                     <span class="info-box-number">90<small>%</small></span>
                 </div>
                 <!-- /.info-box-content -->
@@ -34,7 +34,7 @@
                 <span class="info-box-icon bg-red"><i class="fa fa-cny"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">销售额</span>
+                    <span class="info-box-text">总销售额</span>
                     <span class="info-box-number">41,410</span>
                 </div>
                 <!-- /.info-box-content -->
