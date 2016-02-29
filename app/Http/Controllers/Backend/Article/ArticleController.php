@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers\Backend\Article;
 
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 
 /**
@@ -10,7 +12,7 @@ use Illuminate\Http\Request;
  * Date: 10/12/2015
  * Time: 5:57 PM
  */
-class ArticleController extends Controller
+class ArticleController extends BackendController
 {
     //todo@bryant: error handler
     public function index()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Backend\AddUserInfo;
 use App\Http\Traits\ApiFormatHelpers;
 use App\Http\Traits\ApiHelpers;
 use App\Services\Orders\Supports\PingxxProtocol;
@@ -15,7 +16,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 abstract class Controller extends BaseController {
 
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers, AddUserInfo;
+
 
     protected function getCurrentAuthUserId()
     {

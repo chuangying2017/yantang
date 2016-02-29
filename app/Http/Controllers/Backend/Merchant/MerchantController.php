@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Backend\Merchant;
 
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
@@ -11,7 +12,7 @@ use Exception;
  * Date: 10/12/2015
  * Time: 5:57 PM
  */
-class MerchantController extends Controller
+class MerchantController extends BackendController
 {
     /**
      * @return $this|string

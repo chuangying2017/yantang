@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Backend\Access\Permission;
 
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\Controller;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
 use App\Repositories\Backend\Permission\PermissionRepositoryContract;
@@ -14,7 +15,7 @@ use App\Repositories\Backend\Permission\Group\PermissionGroupRepositoryContract;
  * Class PermissionController
  * @package App\Http\Controllers\Access
  */
-class PermissionController extends Controller {
+class PermissionController extends BackendController {
 
 	/**
 	 * @var RoleRepositoryContract
@@ -37,7 +38,8 @@ class PermissionController extends Controller {
 	 * @param PermissionGroupRepositoryContract $groups
      */
 	public function __construct(RoleRepositoryContract $roles, PermissionRepositoryContract $permissions, PermissionGroupRepositoryContract $groups) {
-		$this->roles = $roles;
+        parent::__construct();
+        $this->roles = $roles;
 		$this->permissions = $permissions;
 		$this->groups = $groups;
 	}

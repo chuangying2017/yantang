@@ -166,11 +166,15 @@ class OrderRepository {
 
         if ( ! is_null($keyword)) {
             $query = $query->where(function ($query) use ($keyword) {
-                $query->whereHas('children', function ($query) use ($keyword) {
-                    $query->where('order_no', $keyword);
-                })->orWhereHas('address', function ($query) use ($keyword) {
-                    $query->where('name', $keyword)->orWhere('mobile', $keyword);
-                })->orWhere('title', 'like', '%' . $keyword . '%');
+                $query->where('order_no', $keyword)
+                    ->orWhereHas('children', function ($query) use ($keyword) {
+                        $query->where('order_no', $keyword);
+                    })->orWhereHas('address', function ($query) use ($keyword) {
+                        $query->where(function ($query) use ($keyword) {
+                            $query->where('mobile', '=', $keyword)
+                                ->orWhere('name', '=', $keyword);
+                        });
+                    })->orWhere('title', 'like', '%' . $keyword . '%');
             });
         }
 
