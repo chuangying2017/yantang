@@ -63,6 +63,8 @@ class PromotionRepository {
             return AgentRepository::byId($promotion['agent_id']);
         }
 
+        info('agent not found . promotion_id' . $promotion_id );
+
         return false;
     }
 

@@ -138,7 +138,13 @@ class AgentService {
     {
         $client = ClientService::show($user_id);
 
+        info('order by client' . $client['id']);
+
+
         if ($promotion_id = $client['promotion_id']) {
+            info('order promote by ' . $promotion_id);
+            info(PromotionRepository::getAgentByPromotion($promotion_id));
+
             return PromotionRepository::getAgentByPromotion($promotion_id);
         }
 
