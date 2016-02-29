@@ -10,10 +10,9 @@ use DB;
 
 class BackendController extends Controller {
 
-
     public function __construct()
     {
-        $this->showUserInfo();
+//        $this->showUserInfo();
     }
 
 }
