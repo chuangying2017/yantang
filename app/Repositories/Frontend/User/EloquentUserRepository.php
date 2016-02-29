@@ -76,19 +76,24 @@ class EloquentUserRepository implements UserContract {
     public function findByUserNameOrCreate($data, $provider)
     {
         $user = get_current_auth_user();
+
+        $user_provider = UserProvider::with('user')->where('provider_id', $data->id)->where('provider', $provider)->first();
+
+        //用户未登录
         if ( ! $user) {
             /**
              * 通过provider查找用户是否存在
-             * 不存在创建用户
              * 用户更新电话号码后选择绑定到已有用户,先查询是否存在使用该手机的用户,没有则绑定激活临时用户,有则绑定已注册用户
              */
-            $user_provider = UserProvider::with('user')->where('provider_id', $data->id)->where('provider', $provider)->first();
 
+            // 不存在第三方授权信息且为当前为微信开放平台或微信授权,使用union id 查询是否存在绑定用户
             if ( ! $user_provider && ($provider == 'weixin' || $provider == 'weixinweb') && ! is_null($data->union_id) && $data->union_id) {
-                // 微信,微信开放平台使用union id 查询绑定相同用户
                 $user_provider = UserProvider::with('user')->where('union_id', $data->union_id)->first();
             }
 
+            /*
+            * 不存在授权信息,创建用户
+            */
             if ( ! $user_provider) {
                 $user = $this->create([
                     'name'   => $data->name ?: (property_exists($data, 'nickname') ? $data->nickname : uniqid($provider . '_')),
@@ -97,6 +102,13 @@ class EloquentUserRepository implements UserContract {
                 ], true);
             } else {
                 $user = $user_provider->user;
+            }
+        } else {
+            // 用户已登录,且授权信息已存在,若两者不是相互绑定则抛出异常
+            if ($user_provider) {
+                if ($user['id'] != $user_provider['user_id']) {
+                    throw new \Exception('授权无效,已被其他帐号绑定');
+                }
             }
         }
 
@@ -108,9 +120,12 @@ class EloquentUserRepository implements UserContract {
             'union_id'    => (property_exists($data, 'union_id') ? $data->union_id : null)
         ];
 
+
         if ($this->hasProvider($user, $provider))
+            //用户已绑定,检查授权信息是否需要更新
             $this->checkIfUserNeedsUpdating($provider, $data, $user);
         else {
+            //用户未绑定第三方授权,绑定
             $user->providers()->save(new UserProvider($providerData));
         }
 
