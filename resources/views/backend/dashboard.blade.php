@@ -21,7 +21,7 @@
                 <span class="info-box-icon bg-aqua"><i class="fa fa-bar-chart"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">今日销售额</span>
+                    <span class="info-box-text">今日销售额(元)</span>
                     <span class="info-box-number">{{$stat_data['today_deal_amount']}}</span>
                 </div>
                 <!-- /.info-box-content -->
@@ -34,7 +34,7 @@
                 <span class="info-box-icon bg-red"><i class="fa fa-cny"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">总销售额</span>
+                    <span class="info-box-text">总销售额(元)</span>
                     <span class="info-box-number">{{$stat_data['total_deal_amount']}}</span>
                 </div>
                 <!-- /.info-box-content -->

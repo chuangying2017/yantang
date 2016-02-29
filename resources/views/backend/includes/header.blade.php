@@ -73,22 +73,9 @@
                             </p>
                         </li>
                         <!-- Menu Body -->
-                        <li class="user-body">
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Link</a>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Link</a>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Link</a>
-                            </div>
-                        </li>
+
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">{{ trans('navs.button') }}</a>
-                            </div>
                             <div class="pull-right">
                                 <a href="{!!url('auth/logout')!!}"
                                    class="btn btn-default btn-flat">{{ trans('navs.logout') }}</a>

@@ -24,8 +24,8 @@ class DashboardController extends BackendController
         $stat_data = [
             'total_user_count' => DataHelper::totalUserCount(),
             'today_user_count' => DataHelper::todayUserCount(),
-            'total_deal_amount' => DataHelper::totalDealAmount(),
-            'today_deal_amount' => DataHelper::todayDealAmount(),
+            'total_deal_amount' => display_price(DataHelper::totalDealAmount()),
+            'today_deal_amount' => display_price(DataHelper::todayDealAmount()),
         ];
         return view('backend.dashboard', [
             'products' => $products,

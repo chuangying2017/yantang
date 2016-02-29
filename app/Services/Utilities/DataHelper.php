@@ -15,28 +15,28 @@ class DataHelper {
     public static function totalUserCount()
     {
         return Cache::remember(self::DATA_PREFIX . 'total_users_count', self::CACHE_MINUTES, function () {
-            User::count();
+            return User::count();
         });
     }
 
     public static function todayUserCount()
     {
         return Cache::remember(self::DATA_PREFIX . 'today_users_count', self::CACHE_MINUTES, function () {
-            User::where('created_at', '>=', Carbon::today())->count();
+            return User::where('created_at', '>=', Carbon::today())->count();
         });
     }
 
     public static function totalDealAmount()
     {
         return Cache::remember(self::DATA_PREFIX . 'total_deal_amount', self::CACHE_MINUTES, function () {
-            Order::whereIn('status', [OrderProtocol::STATUS_OF_PAID, OrderProtocol::STATUS_OF_DELIVER, OrderProtocol::STATUS_OF_DONE]);
+            return Order::whereIn('status', [OrderProtocol::STATUS_OF_PAID, OrderProtocol::STATUS_OF_DELIVER, OrderProtocol::STATUS_OF_DONE])->sum('pay_amount');
         });
     }
 
     public static function todayDealAmount()
     {
         return Cache::remember(self::DATA_PREFIX . 'today_deal_amount', self::CACHE_MINUTES, function () {
-            Order::where('created_at', '>=', Carbon::today())->whereIn('status', [OrderProtocol::STATUS_OF_PAID, OrderProtocol::STATUS_OF_DELIVER, OrderProtocol::STATUS_OF_DONE]);
+            return Order::where('created_at', '>=', Carbon::today())->whereIn('status', [OrderProtocol::STATUS_OF_PAID, OrderProtocol::STATUS_OF_DELIVER, OrderProtocol::STATUS_OF_DONE])->sum('pay_amount');
         });
     }
 
