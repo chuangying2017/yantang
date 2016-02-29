@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Backend\Access\User;
 
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\Controller;
 use App\Repositories\Backend\User\UserContract;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
@@ -20,7 +21,7 @@ use App\Http\Requests\Backend\Access\User\ResendConfirmationEmailRequest;
 /**
  * Class UserController
  */
-class UserController extends Controller {
+class UserController extends BackendController {
 
 	/**
 	 * @var UserContract
@@ -43,7 +44,8 @@ class UserController extends Controller {
 	 * @param PermissionRepositoryContract $permissions
 	 */
 	public function __construct(UserContract $users, RoleRepositoryContract $roles, PermissionRepositoryContract $permissions) {
-		$this->users = $users;
+		parent::__construct();
+        $this->users = $users;
 		$this->roles = $roles;
 		$this->permissions = $permissions;
 	}

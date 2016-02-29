@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Backend\Access\Role;
 
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\Controller;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
 use App\Http\Requests\Backend\Access\Role\CreateRoleRequest;
@@ -14,7 +15,7 @@ use App\Repositories\Backend\Permission\Group\PermissionGroupRepositoryContract;
  * Class RoleController
  * @package App\Http\Controllers\Access
  */
-class RoleController extends Controller {
+class RoleController extends BackendController {
 
 	/**
 	 * @var RoleRepositoryContract
@@ -31,7 +32,8 @@ class RoleController extends Controller {
 	 * @param PermissionRepositoryContract $permissions
 	 */
 	public function __construct(RoleRepositoryContract $roles, PermissionRepositoryContract $permissions) {
-		$this->roles = $roles;
+		parent::__construct();
+        $this->roles = $roles;
 		$this->permissions = $permissions;
 	}
 

@@ -1,12 +1,12 @@
 <?php namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BackendController;
 
 /**
  * Class DashboardController
  * @package App\Http\Controllers\Backend
  */
-class DashboardController extends Controller {
+class DashboardController extends BackendController {
 
     /**
      * @return \Illuminate\View\View

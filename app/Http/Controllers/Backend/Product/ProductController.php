@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Backend\Product;
 
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,7 @@ use Illuminate\Http\Request;
  * Date: 10/12/2015
  * Time: 5:57 PM
  */
-class ProductController extends Controller
+class ProductController extends BackendController
 {
 
     /**

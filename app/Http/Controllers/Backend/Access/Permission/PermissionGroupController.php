@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Backend\Access\Permission;
 
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\Controller;
 use App\Repositories\Backend\Permission\Group\PermissionGroupRepositoryContract;
 use App\Http\Requests\Backend\Access\Permission\Group\EditPermissionGroupRequest;
@@ -13,7 +14,7 @@ use App\Http\Requests\Backend\Access\Permission\Group\DeletePermissionGroupReque
  * Class PermissionGroupController
  * @package App\Http\Controllers\Access
  */
-class PermissionGroupController extends Controller {
+class PermissionGroupController extends BackendController {
 
     /**
      * @var PermissionGroupRepositoryContract
@@ -24,6 +25,7 @@ class PermissionGroupController extends Controller {
      * @param PermissionGroupRepositoryContract $groups
      */
     public function __construct(PermissionGroupRepositoryContract $groups) {
+        parent::__construct();
         $this->groups = $groups;
     }
 

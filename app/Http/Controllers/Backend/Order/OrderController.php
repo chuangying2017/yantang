@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Order;
 
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
@@ -12,7 +13,7 @@ use Exception;
  * Date: 10/12/2015
  * Time: 5:57 PM
  */
-class OrderController extends Controller
+class OrderController extends BackendController
 {
     /**
      * @return $this|string

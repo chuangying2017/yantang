@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Http\Controllers\BackendController;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class AgentController extends Controller {
+class AgentController extends BackendController {
 
     /**
      * Display a listing of the resource.
