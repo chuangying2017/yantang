@@ -138,7 +138,8 @@ class AgentService {
     {
         $client = ClientService::show($user_id);
 
-        info('order by client' . $client['id']);
+        info('order by client' . $client['user_id']);
+        info($client);
 
 
         if ($promotion_id = $client['promotion_id']) {
@@ -147,6 +148,8 @@ class AgentService {
 
             return PromotionRepository::getAgentByPromotion($promotion_id);
         }
+
+        info('user unbind promotion' . $user_id);
 
         return false;
     }
