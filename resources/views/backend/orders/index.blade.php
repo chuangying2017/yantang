@@ -229,6 +229,7 @@
             <div class="box-tools pull-right" style="margin:10px;">
                 <div class="has-feedback">
                     <form action="?">
+                        <label class="text-yellow">(可根据用户名,电话,订单号搜索)</label>
                         <input name="keyword" type="text" class="form-control input-sm"
                                placeholder="关键词" value="">
                         <span type="submit" class="glyphicon glyphicon-search form-control-feedback"></span>
