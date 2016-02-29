@@ -22,7 +22,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">今日销售额</span>
-                    <span class="info-box-number">90<small>%</small></span>
+                    <span class="info-box-number">{{$stat_data['today_deal_amount']}}</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -35,7 +35,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">总销售额</span>
-                    <span class="info-box-number">41,410</span>
+                    <span class="info-box-number">{{$stat_data['total_deal_amount']}}</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -52,7 +52,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">用户总量</span>
-                    <span class="info-box-number">760</span>
+                    <span class="info-box-number">{{$stat_data['total_user_count']}}</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -65,7 +65,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">新增用户</span>
-                    <span class="info-box-number">2,000</span>
+                    <span class="info-box-number">{{$stat_data['today_user_count']}}</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
