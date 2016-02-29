@@ -86,6 +86,7 @@ class MerchantService {
             }
 
         } catch (\Exception $e) {
+            \Log::error($e);
             \Log::error('订单提醒信息发送失败,订单ID：' . $order_id);
         }
 

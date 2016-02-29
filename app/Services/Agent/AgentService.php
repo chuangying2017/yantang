@@ -61,8 +61,12 @@ class AgentService {
 
             event(new NewAgentOrder($agent_order));
 
+            info('new agent order deal, order_id:' . $order_id . ', agent_id: ' . $agent['id']);
+
             return $agent_order;
         }
+
+        info('not a agent order order_id: ' . $order_id);
 
         return false;
     }

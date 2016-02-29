@@ -60,7 +60,7 @@ class PromotionRepository {
     {
         $promotion = self::fetch($promotion_id);
         if ($promotion) {
-            return $promotion->agent;
+            return AgentRepository::byId($promotion['agent_id']);
         }
 
         return false;
