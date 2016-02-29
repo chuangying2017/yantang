@@ -23,99 +23,35 @@
                 {{--<li>{!! link_to('lang/zh-CN', trans('menus.language-picker.langs.zh-CN')) !!}</li>--}}
                 {{--</ul>--}}
                 {{--</li>--}}
-
-                <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu">
-                    <!-- Menu toggle button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-envelope-o"></i>
-                        <span class="label label-success">4</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">{{ trans_choice('strings.you_have.messages', 4, ['number' => 4]) }}</li>
-                        <li>
-                            <!-- inner menu: contains the messages -->
-                            <ul class="menu">
-                                <li><!-- start message -->
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <!-- User Image -->
-                                            <img src="{!! access()->user()->picture !!}" class="img-circle"
-                                                 alt="User Image"/>
-                                        </div>
-                                        <!-- Message title and timestamp -->
-                                        <h4>
-                                            Support Team
-                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                        </h4>
-                                        <!-- The message -->
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li><!-- end message -->
-                            </ul><!-- /.menu -->
-                        </li>
-                        <li class="footer"><a href="#">{{ trans('strings.see_all.messages') }}</a></li>
-                    </ul>
-                </li><!-- /.messages-menu -->
-
-                <!-- Notifications Menu -->
+                    <!-- Notifications Menu -->
                 <li class="dropdown notifications-menu">
                     <!-- Menu toggle button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-bell-o"></i>
-                        <span class="label label-warning">0</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">{{ trans_choice('strings.you_have.notifications', 0) }}</li>
-                        <li>
-                            <!-- Inner Menu: contains the notifications -->
-                            <ul class="menu">
-                                <li><!-- start notification -->
-                                    <a href="#">
-                                        <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                    </a>
-                                </li><!-- end notification -->
-                            </ul>
-                        </li>
-                        <li class="footer"><a href="#">{{ trans('strings.see_all.notifications') }}</a></li>
-                    </ul>
-                </li>
-                <!-- Tasks Menu -->
-                <li class="dropdown tasks-menu">
-                    <!-- Menu Toggle Button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-flag-o"></i>
-                        <span class="label label-danger">1</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">{{ trans_choice('strings.you_have.tasks', 1) }}</li>
-                        <li>
-                            <!-- Inner menu: contains the tasks -->
-                            <ul class="menu">
-                                <li><!-- Task item -->
-                                    <a href="#">
-                                        <!-- Task title and progress text -->
-                                        <h3>
-                                            Design some buttons
-                                            <small class="pull-right">20%</small>
-                                        </h3>
-                                        <!-- The progress bar -->
-                                        <div class="progress xs">
-                                            <!-- Change the css width attribute to simulate progress -->
-                                            <div class="progress-bar progress-bar-aqua" style="width: 20%"
-                                                 role="progressbar" aria-valuenow="20" aria-valuemin="0"
-                                                 aria-valuemax="100">
-                                                <span class="sr-only">20% Complete</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li><!-- end task item -->
-                            </ul>
-                        </li>
-                        <li class="footer">
-                            <a href="#">{{ trans('strings.see_all.tasks') }}</a>
-                        </li>
-                    </ul>
+                    @if(isset($delivers))
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="label label-warning">{{$delivers}}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            @if($delivers > 0)
+                                <li>
+                                    <!-- Inner Menu: contains the notifications -->
+                                    <ul class="menu">
+                                        <li><!-- start notification -->
+                                            <a href="#">
+                                                <i class="fa fa-reorder text-aqua"></i>有{{$delivers}}个待发货订单
+                                            </a>
+                                        </li><!-- end notification -->
+                                    </ul>
+                                </li>
+                                <li class="footer"><a
+                                        href="/admin/orders?status=paid">{{ trans('strings.see_all.notifications') }}</a>
+                                </li>
+                            @else
+                                <li class="header">暂时没有新的发货订单</li>
+                            @endif
+
+                        </ul>
+                    @endif
                 </li>
                 <!-- User Account Menu -->
                 <li class="dropdown user user-menu">
@@ -137,22 +73,9 @@
                             </p>
                         </li>
                         <!-- Menu Body -->
-                        <li class="user-body">
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Link</a>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Link</a>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Link</a>
-                            </div>
-                        </li>
+
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">{{ trans('navs.button') }}</a>
-                            </div>
                             <div class="pull-right">
                                 <a href="{!!url('auth/logout')!!}"
                                    class="btn btn-default btn-flat">{{ trans('navs.logout') }}</a>

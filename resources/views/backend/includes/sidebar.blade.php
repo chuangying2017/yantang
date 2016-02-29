@@ -42,22 +42,22 @@
                         class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a href="{!!url('admin/products')!!}"><i
-                                class="fa  fa-minus"></i>{{ trans('menus.product.all') }}</a></li>
+                                class="fa  fa-circle-o"></i>{{ trans('menus.product.all') }}</a></li>
                     <li><a href="{!!url('admin/groups')!!}"><i
-                                class="fa  fa-minus"></i>{{ trans('menus.product.groups') }}</a></li>
+                                class="fa  fa-circle-o"></i>{{ trans('menus.product.groups') }}</a></li>
                     <li class="active">
                         <a href="{!!url('admin/brands')!!}"><i
-                                class="fa  fa-minus"></i>品牌管理<i
+                                class="fa  fa-circle-o"></i>品牌管理<i
                                 class="fa fa-angle-left pull-right"></i></a>
                         <ul class="treeview-menu">
-                            <li><a href="{!!url('admin/brands')!!}">商品品牌</a></li>
-                            <li><a href="{!!url('admin/channels')!!}">品牌频道</a></li>
+                            <li><a href="{!!url('admin/brands')!!}"><i class="fa  fa-minus"></i>商品品牌</a></li>
+                            <li><a href="{!!url('admin/channels')!!}"><i class="fa  fa-minus"></i>品牌频道</a></li>
                         </ul>
                     </li>
                     <li><a href="{!!url('admin/categories')!!}"><i
-                                class="fa  fa-minus"></i>{{ trans('menus.product.categories') }}</a></li>
+                                class="fa  fa-circle-o"></i>{{ trans('menus.product.categories') }}</a></li>
                     <li><a href="{!!url('admin/attributes')!!}"><i
-                                class="fa  fa-minus"></i>{{ trans('menus.product.attributes') }}</a></li>
+                                class="fa  fa-circle-o"></i>{{ trans('menus.product.attributes') }}</a></li>
                 </ul>
             </li>
 
@@ -82,25 +82,25 @@
             {{--href="{!! url('admin/accounts') !!}"><i--}}
             {{--class="fa fa-diamond"></i><span>{{ trans('menus.account') }}</span></a></li>--}}
 
-            <li class="{{ Active::pattern('admin/media') }}">
+            <li class="active">
                 <a href=""><i class="fa fa-magnet"></i><span>{{ trans('menus.media') }}</span><i
                         class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a href="{!! url('admin/images') !!}"><i class="fa fa-picture-o"></i>{{ trans('menus.image') }}
                         </a></li>
-                    <li><a href="{!! url('admin/articles') !!}"><i
-                                class="fa fa-newspaper-o"></i>{{ trans('menus.article') }}</a></li>
+                    {{--<li><a href="{!! url('admin/articles') !!}"><i--}}
+                    {{--class="fa fa-newspaper-o"></i>{{ trans('menus.article') }}</a></li>--}}
                 </ul>
             </li>
 
-            <li class="{{ Active::pattern('admin/dashboard') }}">
+            <li class="active">
                 <a href=""><i class="fa fa-gear"></i><span>商城设置</span><i
                         class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="{!!url('admin/setting/basic')!!}"><i class="fa  fa-minus"></i>基础设置</a></li>
-                    <li><a href="{!!url('admin/setting/navs')!!}"><i class="fa  fa-minus"></i>导航设置</a></li>
-                    <li><a href="{!!url('admin/setting/banners')!!}"><i class="fa  fa-minus"></i>轮播设置</a></li>
-                    <li><a href="{!!url('admin/setting/sections')!!}"><i class="fa  fa-minus"></i>商品组设置</a></li>
+                    <li><a href="{!!url('admin/setting/basic')!!}"><i class="fa  fa-circle-o"></i>基础设置</a></li>
+                    <li><a href="{!!url('admin/setting/navs')!!}"><i class="fa  fa-circle-o"></i>导航设置</a></li>
+                    <li><a href="{!!url('admin/setting/banners')!!}"><i class="fa  fa-circle-o"></i>轮播设置</a></li>
+                    <li><a href="{!!url('admin/setting/sections')!!}"><i class="fa  fa-circle-o"></i>商品组设置</a></li>
                 </ul>
             </li>
 
