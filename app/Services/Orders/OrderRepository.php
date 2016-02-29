@@ -113,7 +113,7 @@ class OrderRepository {
 
     public static function queryOrderMerchants($order_id)
     {
-        return ChildOrder::where('order_id', $order_id)->select('merchant_id')->dinstict()->get()->toArray();
+        return ChildOrder::where('order_id', $order_id)->select('merchant_id')->distinct()->get()->toArray();
     }
 
     public static function queryOrderById($order_id)
