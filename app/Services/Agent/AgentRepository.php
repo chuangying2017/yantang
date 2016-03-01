@@ -161,8 +161,18 @@ class AgentRepository {
         $status = ! is_null($status) ? $status : AgentProtocol::AGENT_ORDER_STATUS_OF_OK;
 
 
-        return AgentOrderDetail::with('order', 'order.agent')->whereIn('agent_id', $agent_ids)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status)->paginate($paginate);
+        return AgentOrderDetail::with('order', 'order.agent', 'address')->whereIn('agent_id', $agent_ids)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status)->paginate($paginate);
     }
+
+    public static function getAgentOrderDetailCount($agent_id, $start_at = null, $end_at = null, $status = AgentProtocol::AGENT_ORDER_STATUS_OF_OK)
+    {
+        $start_at = ! is_null($start_at) ? $start_at : Carbon::createFromDate(2016, 1, 1);
+        $end_at = ! is_null($end_at) ? $end_at : Carbon::now();
+        $status = ! is_null($status) ? $status : AgentProtocol::AGENT_ORDER_STATUS_OF_OK;
+
+        return AgentOrderDetail::where('agent_id', $agent_id)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status)->count();
+    }
+
 
     public static function getAgentOrders($agent_id, $start_at, $end_at, $status = null)
     {

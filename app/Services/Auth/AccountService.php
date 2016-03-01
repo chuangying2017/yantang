@@ -13,7 +13,7 @@ class AccountService {
         if ($phone_user) {
             //已存在用户与当前用户不同
             if ($phone_user['id'] !== $current_user['id']) {
-                //当前用户已绑定手机,且变更手机与当前不同
+                //当前用户不是临时用户
                 if ( ! is_null($current_user['phone'])) {
                     throw new \Exception('手机号码已经被使用');
                 }

@@ -449,18 +449,26 @@ class AgentService {
         return $orders;
     }
 
+    public static function getOrdersCount($agent_id, $start_at = null, $end_at = null, $status = null)
+    {
+        return \Cache::remember('east_beauty_agent_order_count' . $agent_id, 5, function () use ($agent_id, $start_at, $end_at, $status) {
+            return AgentRepository::getAgentOrderDetailCount($agent_id, $start_at, $end_at, $status);
+        });
+    }
+
     public static function getEarnData($agent_id)
     {
         $month_first_day = Carbon::today()->startOfMonth();
-        $week_first_day = Carbon::today()->startOfWeek();
+//        $week_first_day = Carbon::today()->startOfWeek();
         $today = Carbon::today();
         $now = Carbon::now();
         $orders = self::getOrders($agent_id, $month_first_day, $now);
 
         $data = [
-            "today_amount" => 0,
-            "week_amount"  => 0,
-            "month_amount" => 0
+            "today_amount"      => 0,
+//            "week_amount"  => 0,
+            "month_amount"      => 0,
+            'total_order_count' => self::getOrdersCount($agent_id)
         ];
 
         if ( ! count($orders)) {
@@ -472,9 +480,9 @@ class AgentService {
             if ($order['created_at'] >= $today) {
                 $data['today_amount'] += $order['award_amount'];
             }
-            if ($order['created_at'] >= $week_first_day) {
-                $data['week_amount'] += $order['award_amount'];
-            }
+//            if ($order['created_at'] >= $week_first_day) {
+//                $data['week_amount'] += $order['award_amount'];
+//            }
             if ($order['created_at'] >= $month_first_day) {
                 $data['month_amount'] += $order['award_amount'];
             }

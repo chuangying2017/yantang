@@ -41,7 +41,11 @@ class AgentController extends Controller {
 
         $data = AgentService::getEarnData($agent['id']);
 
-        return $this->response->array(['data' => self::transformer($data)]);
+        return $this->response->array(['data' => [
+            'month_amount'      => display_price($data['month_amount']),
+            'today_amount'      => display_price($data['today_amount']),
+            'total_order_count' => ($data['total_order_count']),
+        ]]);
     }
 
     public function info($agent_id)
