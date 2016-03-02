@@ -34,7 +34,7 @@ class ImageRepository {
         ];
 
 
-        return $qiniu->uploadToken(null, 36000, $policy);
+        return $qiniu->uploadToken(null, 3600 * 24, $policy);
 
     }
 
