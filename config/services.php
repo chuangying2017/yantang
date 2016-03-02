@@ -71,6 +71,7 @@ return [
         'client_id' => env('WECHAT_APPID'),
         'client_secret' => env('WECHAT_APPSECRET'),
         'redirect' => env('WEIXIN_REDIRECT_URI'),
+        'base_redirect' =>  env('WEIXIN_BASE_REDIRECT_URL'),
     ],
 
 ];
