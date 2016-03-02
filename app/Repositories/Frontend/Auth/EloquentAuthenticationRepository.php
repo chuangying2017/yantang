@@ -112,8 +112,6 @@ class EloquentAuthenticationRepository implements AuthenticationContract {
     {
         $user = $this->users->findByUserNameOrCreate($this->getSocialUser($provider), $provider);
 
-        info($user);
-
         /**
          * The user can not log in with a social account if they have been banned or deactivated.
          */

@@ -176,7 +176,7 @@ class AgentRepository {
 
     public static function getAgentOrders($agent_id, $start_at, $end_at, $status = null)
     {
-        return self::listsAgentOrderDetail(($agent_id), $start_at, $end_at, $status);
+        return self::listsAgentOrderDetail($agent_id, $start_at, $end_at, $status);
     }
 
     public static function getStoreIds($agent_id)
