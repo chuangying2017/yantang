@@ -53,6 +53,7 @@ class EloquentUserRepository implements UserContract {
             'phone'             => $provider ? null : array_get($data, 'phone'),
             'password'          => $provider ? null : $data['password'],
             'confirmation_code' => md5(uniqid(mt_rand(), true)),
+            'status'            => 1,
             'confirmed'         => config('access.users.confirm_email') ? 0 : 1,
         ]);
 
