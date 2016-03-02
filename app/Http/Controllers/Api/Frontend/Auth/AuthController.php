@@ -112,8 +112,8 @@ class AuthController extends Controller {
 
             return $this->response->array(['data' => compact('token', 'roles')]);
         } catch (\Exception $e) {
-            return $e->getTrace();
-            $this->response->errorInternal('无效请求');
+//            return $e->getTrace();
+            $this->response->errorInternal($e->getMessage());
         }
     }
 
