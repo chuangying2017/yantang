@@ -152,7 +152,7 @@ class AgentRepository {
         return 1;
     }
 
-    public static function listsAgentOrderDetail($agent_id, $start_at = null, $end_at = null, $status = AgentProtocol::AGENT_ORDER_STATUS_OF_OK, $paginate = 20)
+    public static function listsAgentOrderDetail($agent_id, $user_id = null, $start_at = null, $end_at = null, $status = AgentProtocol::AGENT_ORDER_STATUS_OF_OK, $paginate = 20)
     {
         $agent_ids = to_array($agent_id);
 
@@ -160,8 +160,15 @@ class AgentRepository {
         $end_at = ! is_null($end_at) ? $end_at : Carbon::now();
         $status = ! is_null($status) ? $status : AgentProtocol::AGENT_ORDER_STATUS_OF_OK;
 
+        $query = AgentOrderDetail::with('order', 'order.agent', 'address')->whereIn('agent_id', $agent_ids)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status);
+        if ( ! is_null($user_id)) {
+            $query = $query->where('user_id', $user_id);
+        }
+        if ( ! is_null($paginate)) {
+            return $query->paginate($paginate);
+        }
 
-        return AgentOrderDetail::with('order', 'order.agent', 'address')->whereIn('agent_id', $agent_ids)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status)->paginate($paginate);
+        return $query->get();
     }
 
     public static function getAgentOrderDetailCount($agent_id, $start_at = null, $end_at = null, $status = AgentProtocol::AGENT_ORDER_STATUS_OF_OK)
@@ -174,9 +181,9 @@ class AgentRepository {
     }
 
 
-    public static function getAgentOrders($agent_id, $start_at, $end_at, $status = null)
+    public static function getAgentOrders($agent_id, $user_id = null, $start_at, $end_at, $status = null, $paginate = 20)
     {
-        return self::listsAgentOrderDetail($agent_id, $start_at, $end_at, $status);
+        return self::listsAgentOrderDetail($agent_id, $user_id, $start_at, $end_at, $status, $paginate);
     }
 
     public static function getStoreIds($agent_id)

@@ -16,6 +16,25 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class AgentService {
 
 
+    public static function checkAccess($current_agent, $access_agent)
+    {
+        $access_agent = self::byId($access_agent);
+        if ( ! self::canAccess($current_agent, $access_agent)) {
+            throw new \Exception('权限不足,无法查看', 403);
+        }
+
+        return $access_agent;
+    }
+
+    //permission
+    public static function canAccess($current_agent_id, $access_agent_id)
+    {
+        $current_agent = self::byId($current_agent_id);
+        $access_agent = self::byId($access_agent_id);
+
+        return $current_agent->isSelfOrAncestorOf($access_agent) || self::isSystemAgent($current_agent);
+    }
+
     public static function byId($agent_id)
     {
         return AgentRepository::byId($agent_id);
@@ -45,7 +64,7 @@ class AgentService {
 
         $agent->promotion_code = self::getAgentPromotionCode($agent['id']);
 
-        $agent->earn_data = self::getEarnData($agent_id);
+        $agent->earn_data = self::getEarnData($agent_id, $agent['user_id']);
 
         return $agent;
     }
@@ -82,6 +101,7 @@ class AgentService {
             $award_orders[ $key ] = [
                 'agent_order_id' => $agent_order['id'],
                 'agent_id'       => $award_agent['id'],
+                'user_id'        => $award_agent['user_id'],
                 'agent_level'    => $award_agent['level'],
                 'order_no'       => $agent_order['order_no'],
                 'status'         => AgentProtocol::AGENT_ORDER_STATUS_OF_OK,
@@ -442,9 +462,9 @@ class AgentService {
         return AgentRepository::byNo($agent_no);
     }
 
-    public static function getOrders($agent_id, $start_at = null, $end_at = null, $status = null)
+    public static function getOrders($agent_id, $user_id = null, $start_at = null, $end_at = null, $status = null, $paginate = 20)
     {
-        $orders = AgentRepository::getAgentOrders($agent_id, $start_at, $end_at, $status);
+        $orders = AgentRepository::getAgentOrders($agent_id, $user_id, $start_at, $end_at, $status, $paginate);
 
         return $orders;
     }
@@ -456,13 +476,14 @@ class AgentService {
         });
     }
 
-    public static function getEarnData($agent_id)
+    public static function getEarnData($agent_id, $user_id = null)
     {
         $month_first_day = Carbon::today()->startOfMonth();
 //        $week_first_day = Carbon::today()->startOfWeek();
         $today = Carbon::today();
         $now = Carbon::now();
-        $orders = self::getOrders($agent_id, $month_first_day, $now);
+        $paginate = null;
+        $orders = self::getOrders($agent_id, $user_id, $month_first_day, $now, $paginate);
 
         $data = [
             "today_amount"      => 0,
