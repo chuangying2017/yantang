@@ -98,7 +98,8 @@ class EloquentUserRepository implements UserContract {
                 $user = $this->create([
                     'name'   => $data->name ?: (property_exists($data, 'nickname') ? $data->nickname : uniqid($provider . '_')),
                     'email'  => $data->email ?: '',
-                    'avatar' => $data->avatar
+                    'avatar' => $data->avatar,
+                    'status' => 1
                 ], true);
             } else {
                 $user = $user_provider->user;
