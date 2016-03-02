@@ -48,7 +48,6 @@ class ProductRepository {
                 });
             }
         }
-
         if ( ! is_null($orderBy)) {
             if (ProductConst::getProductSortOption($orderBy)) {
                 $query = $query->orderBy($orderBy, $orderType);

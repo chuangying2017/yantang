@@ -24,7 +24,10 @@ class ProductController extends Controller {
     {
         $category_id = $request->input('cat_id') ?: null;
         $brand_id = $request->input('brand_id') ?: null;
-        $sort = ApiConst::decodeSort($request->input('sort'));
+        $sort = $request->input('sort') ? ApiConst::decodeSort($request->input('sort')) : [
+            'order_by'   => null,
+            'order_type' => null
+        ];
         $status = $request->input('status') ?: ProductConst::VAR_PRODUCT_STATUS_UP;
         $keyword = $request->input('keyword') ?: null;
         $channel_id = $request->input('channel_id') ?: null;
