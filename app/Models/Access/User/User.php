@@ -67,8 +67,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         $blockedStatuses = [0, 2];
 
-        info($this->status);
-
         return in_array($this->status, $blockedStatuses);
     }
 
