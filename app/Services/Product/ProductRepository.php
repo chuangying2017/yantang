@@ -56,7 +56,10 @@ class ProductRepository {
                 $query = $query->join('product_data_view', 'product_data_view.id', '=', 'products.id')
                     ->orderBy('product_data_view.' . $orderBy, $orderType);
             }
+        } else {
+            $query = $query->orderBy('category_id')->orderBy('product_no');
         }
+
 
         if ( ! is_null($paginate)) {
             $products = $query->paginate($paginate);

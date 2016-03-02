@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\Frontend;
 
+use App\Library\Wechat\WechatService;
 use App\Services\Orders\Exceptions\OrderAuthFail;
 use App\Services\Orders\Exceptions\OrderIsPaid;
 use App\Services\Orders\OrderService;
@@ -62,6 +63,12 @@ class CheckOutController extends Controller {
         try {
             $user_id = $this->getCurrentAuthUserId();
 
+            $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
+            PingxxProtocol::validChannel($channel);
+
+            if($channel == PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT){
+                WechatService::g
+            }
 
             #TODO REMOVE TEST PAY
 //            $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
@@ -86,8 +93,6 @@ class CheckOutController extends Controller {
                 throw new OrderIsPaid();
             }
 
-            $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
-            PingxxProtocol::validChannel($channel);
 
             $charge = Checkout::checkout($order_no, $channel);
 
