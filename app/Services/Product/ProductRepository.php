@@ -37,17 +37,13 @@ class ProductRepository {
             $query = $query->whereIn('brand_id', $brand_id);
         }
 
-        if ( ! is_null($keyword)) {
-            if ($new_query) {
-                $query = $query->orWhere('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
-                    return $query->where('tags', 'like', '%' . $keyword . '%');
-                });
-            } else {
-                $query = $query->where('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
-                    return $query->where('tags', 'like', '%' . $keyword . '%');
-                });
-            }
-        }
+
+        $query = $query->where(function ($query) use ($keyword) {
+            $query->where('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
+                return $query->where('tags', 'like', '%' . $keyword . '%');
+            });
+        });
+
         if ( ! is_null($orderBy)) {
             if (ProductConst::getProductSortOption($orderBy)) {
                 $query = $query->orderBy($orderBy, $orderType);
@@ -65,6 +61,7 @@ class ProductRepository {
         } else {
             $products = $query->get();
         }
+
 
         return $products;
     }

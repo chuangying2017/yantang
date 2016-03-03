@@ -102,6 +102,14 @@ class AgentRepository {
         return $agent;
     }
 
+    public static function getAgentOrderById($agent_order_id)
+    {
+        if($agent_order_id instanceof AgentOrder) {
+            return $agent_order_id;
+        }
+        return AgentOrder::findOrFail($agent_order_id);
+    }
+
 
     public static function createStoreAgent($parent_agent, $apply_info)
     {

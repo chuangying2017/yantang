@@ -92,9 +92,9 @@ class AgentService {
 
     public static function awardAgent($agent_order)
     {
+
         $award_agents = self::getParentAgents($agent_order['agent_id']);
         $award_agents[] = self::getSystemAgent();
-
 
         $award_orders = [];
         $award_agents = self::filterAwardAgents($award_agents);
