@@ -292,7 +292,6 @@ class ProductRepository {
              */
             $product->images()->detach();
             //解除标签绑定
-            $product->tags()->detach();
 
             /**
              * retrive all skus
@@ -322,7 +321,7 @@ class ProductRepository {
 
         } catch (Exception $e) {
             DB::rollBack();
-            throw new $e;
+            throw $e;
         }
     }
 }
