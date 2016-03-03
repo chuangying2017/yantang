@@ -31,7 +31,7 @@ class SmsRequest extends Request {
                 'phone' => 'required|zh_mobile'
             ];
             if ( ! get_current_auth_user()) {
-                $rules['phone'] .= 'required|unique:users,phone';
+                $rules['phone'] .= '|unique:users,phone';
             }
         }
 
