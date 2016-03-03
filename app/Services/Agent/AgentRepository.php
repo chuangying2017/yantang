@@ -160,7 +160,7 @@ class AgentRepository {
         $end_at = ! is_null($end_at) ? $end_at : Carbon::now();
         $status = ! is_null($status) ? $status : AgentProtocol::AGENT_ORDER_STATUS_OF_OK;
 
-        $query = AgentOrderDetail::with('order', 'order.agent', 'address')->whereIn('agent_id', $agent_ids)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status);
+        $query = AgentOrderDetail::with('order', 'order.agent', 'order.address')->whereIn('agent_id', $agent_ids)->whereBetween('created_at', [$start_at, $end_at])->where('status', $status);
         if ( ! is_null($user_id)) {
             $query = $query->where('user_id', $user_id);
         }
