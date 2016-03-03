@@ -59,6 +59,13 @@ if (App::environment() == 'local' || env('APP_DEBUG')) {
 
     });
 
+    Route::get('test/agent', function () {
+        $agent_order = \App\Models\AgentOrder::find(30);
+        event(new \App\Services\Agent\Event\NewAgentOrder($agent_order));
+
+        return 1;
+    });
+
     Route::get('test/token', function () {
         return csrf_token();
     });

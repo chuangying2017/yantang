@@ -95,9 +95,12 @@ class AgentService {
         $award_agents = self::getParentAgents($agent_order['agent_id']);
         $award_agents[] = self::getSystemAgent();
 
+
         $award_orders = [];
+        $award_agents = self::filterAwardAgents($award_agents);
+
         foreach ($award_agents as $key => $award_agent) {
-            $rate = self::getEarnRate($award_agent['level']);
+            $rate = array_get($award_agent, 'rate', 0);
             $award_orders[ $key ] = [
                 'agent_order_id' => $agent_order['id'],
                 'agent_id'       => $award_agent['id'],
@@ -112,8 +115,35 @@ class AgentService {
         }
 
         if (count($award_orders)) {
-            AgentRepository::storeAgentOrderDetail($award_orders);
+            AgentRepository::storeAgentOrderDetail($award_orders, $agent_order['id']);
         }
+    }
+
+    protected static function filterAwardAgents($origin_award_agents)
+    {
+        $rates = [];
+        $award_agents = [];
+        $rate_id = 0;
+        foreach ($origin_award_agents as $award_agent) {
+            if ($award_agent['mark']) {
+                $award_agents[] = $award_agent;
+                $rates[ ++$rate_id ] = $award_agent['level'];
+            }
+        }
+
+
+        sort($rates);
+
+        $rate_data = [];
+        foreach ($rates as $key => $level) {
+            $rate_data[ $level ] = self::getEarnRate($level, array_get($rates, $key + 1, AgentProtocol::AGENT_LEVEL_OF_STORE + 1) - 1);
+        }
+
+        foreach ($award_agents as $key => $award_agent) {
+            $award_agents[ $key ]['rate'] = array_get($rate_data, $award_agent['level'], self::getEarnRate($award_agent['level']));
+        }
+
+        return $award_agents;
     }
 
     public static function getSystemAgent()
@@ -143,9 +173,19 @@ class AgentService {
         }
     }
 
-    protected static function getEarnRate($agent_level, $all = false)
+
+    protected static function getEarnRate($agent_level, $last = false)
     {
         $data = AgentRepository::rate();
+        $result = 0;
+
+        if ($last && $last > $agent_level) {
+            for ($i = $agent_level; $i <= $last; $i++) {
+                $result = $result + array_get($data, $i, 0);
+            }
+
+            return $result;
+        }
 
         return array_get($data, $agent_level, 0);
     }

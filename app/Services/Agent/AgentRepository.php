@@ -139,8 +139,12 @@ class AgentRepository {
         ]);
     }
 
-    public static function storeAgentOrderDetail($orders)
+    public static function storeAgentOrderDetail($orders, $agent_order_id = null)
     {
+        if(!is_null($agent_order_id)) {
+            self::deleteOldAgentOrderDetail($agent_order_id);
+        }
+
         if (count($orders)) {
             foreach ($orders as $order) {
                 AgentOrderDetail::updateOrCreate(
@@ -151,6 +155,11 @@ class AgentRepository {
         }
 
         return 1;
+    }
+
+    public static function deleteOldAgentOrderDetail($agent_order_id)
+    {
+        AgentOrderDetail::where('agent_order_id', $agent_order_id)->delete();
     }
 
     public static function listsAgentOrderDetail($agent_id, $user_id = null, $start_at = null, $end_at = null, $status = AgentProtocol::AGENT_ORDER_STATUS_OF_OK, $paginate = 20)
