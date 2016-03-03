@@ -15,5 +15,9 @@ class AgentOrder extends Model {
         return $this->belongsTo(Agent::class);
     }
 
+    public function address()
+    {
+        return $this->hasOne('App\Models\OrderAddress', 'order_id', 'order_id');
+    }
 
 }

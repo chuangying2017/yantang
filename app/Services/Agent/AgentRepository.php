@@ -134,6 +134,7 @@ class AgentRepository {
             'agent_id'   => $agent['id'],
             'agent_type' => $agent instanceof Agent ? AgentProtocol::AGENT_TYPE_OF_AGENT : AgentProtocol::AGENT_TYPE_OF_CLIENT,
             'order_no'   => $order['order_no'],
+            'order_id'   => $order['id'],
             'amount'     => $order['pay_amount']
         ]);
     }
