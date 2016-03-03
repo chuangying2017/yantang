@@ -143,7 +143,7 @@ class AgentService {
         }
     }
 
-    protected static function getEarnRate($agent_level)
+    protected static function getEarnRate($agent_level, $all = false)
     {
         $data = AgentRepository::rate();
 
