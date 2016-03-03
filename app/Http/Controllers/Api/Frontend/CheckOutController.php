@@ -7,6 +7,7 @@ use App\Services\Orders\OrderService;
 use App\Services\Orders\Payments\BillingManager;
 use App\Services\Orders\Payments\CheckOut;
 use App\Services\Orders\Supports\PingxxProtocol;
+use App\Services\Orders\Supports\PingxxService;
 use App\Services\Utilities\HttpHelper;
 use Illuminate\Http\Request;
 
@@ -65,6 +66,8 @@ class CheckOutController extends Controller {
 
             $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
             PingxxProtocol::validChannel($channel);
+
+            info(get_current_auth_user_openid());
 
 
             #TODO REMOVE TEST PAY

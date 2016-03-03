@@ -63,8 +63,6 @@ class PingxxService implements PaymentInterface {
                 ]
             );
 
-            info($charge);
-
             return $charge;
         } catch (Exception $e) {
             info($e->getMessage());
