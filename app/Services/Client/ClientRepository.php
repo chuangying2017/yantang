@@ -114,5 +114,10 @@ class ClientRepository {
         return $query->get();
     }
 
+    public static function getCountByPromotionId($promotion_id, $paginate = 20)
+    {
+        return Client::where('promotion_id', $promotion_id)->count();
+    }
+
 
 }

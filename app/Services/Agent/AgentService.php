@@ -519,7 +519,7 @@ class AgentService {
 
         $data = [
             "today_amount"      => 0,
-//            "week_amount"  => 0,
+            "user_count"        => self::agentUsersCount($agent_id),
             "month_amount"      => 0,
             'total_order_count' => self::getOrdersCount($agent_id)
         ];
@@ -561,5 +561,12 @@ class AgentService {
         $promotion = self::getAgentPromotion($agent_id);
 
         return ClientRepository::getByPromotionId($promotion['id']);
+    }
+
+    public static function agentUsersCount($agent_id)
+    {
+        $promotion = self::getAgentPromotion($agent_id);
+
+        return ClientRepository::getCountByPromotionId($promotion['id']);
     }
 }
