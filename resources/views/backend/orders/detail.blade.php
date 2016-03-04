@@ -10,7 +10,7 @@
 @section('breadcrumbs')
     <li><a href="{!!route('backend.dashboard')!!}"><i class="fa fa-dashboard"></i> {{ trans('menus.dashboard') }}</a>
     </li>
-    <li class="active">{{ trans('strings.here') }}</li>
+    <li class="active"><a href="/admin/orders">返回订单列表</a></li>
 @endsection
 
 @section('content')
