@@ -38,6 +38,7 @@ class ClientController extends Controller {
     public function store(Request $request)
     {
         try {
+            return 1;
             $user_id = $this->getCurrentAuthUserId();
             $client = ClientService::update($user_id, $request->all());
 

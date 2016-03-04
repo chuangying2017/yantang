@@ -146,7 +146,7 @@ class ProductController extends Controller {
         try {
             ProductService::delete($id);
         } catch (\Exception $e) {
-            return $this->respondException($e);
+            $this->response->errorInternal($e->getMessage());
         }
 
         return $this->response->noContent();

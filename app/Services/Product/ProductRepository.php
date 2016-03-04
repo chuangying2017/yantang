@@ -37,17 +37,12 @@ class ProductRepository {
             $query = $query->whereIn('brand_id', $brand_id);
         }
 
-        if ( ! is_null($keyword)) {
-            if ($new_query) {
-                $query = $query->orWhere('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
-                    return $query->where('tags', 'like', '%' . $keyword . '%');
-                });
-            } else {
-                $query = $query->where('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
-                    return $query->where('tags', 'like', '%' . $keyword . '%');
-                });
-            }
-        }
+
+        $query = $query->where(function ($query) use ($keyword) {
+            $query->where('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
+                return $query->where('tags', 'like', '%' . $keyword . '%');
+            });
+        });
 
         if ( ! is_null($orderBy)) {
             if (ProductConst::getProductSortOption($orderBy)) {
@@ -56,13 +51,17 @@ class ProductRepository {
                 $query = $query->join('product_data_view', 'product_data_view.id', '=', 'products.id')
                     ->orderBy('product_data_view.' . $orderBy, $orderType);
             }
+        } else {
+            $query = $query->orderBy('category_id')->orderBy('product_no');
         }
+
 
         if ( ! is_null($paginate)) {
             $products = $query->paginate($paginate);
         } else {
             $products = $query->get();
         }
+
 
         return $products;
     }
@@ -290,7 +289,6 @@ class ProductRepository {
              */
             $product->images()->detach();
             //解除标签绑定
-            $product->tags()->detach();
 
             /**
              * retrive all skus
@@ -320,7 +318,7 @@ class ProductRepository {
 
         } catch (Exception $e) {
             DB::rollBack();
-            throw new $e;
+            throw $e;
         }
     }
 }

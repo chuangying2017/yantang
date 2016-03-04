@@ -33,13 +33,20 @@ class AgentController extends Controller {
     }
 
 
-    public function earnData()
+    public function earnData(Request $request)
     {
         $user_id = $this->getCurrentAuthUserId();
 
         $agent = AgentService::getAgentByUser($user_id);
 
-        $data = AgentService::getEarnData($agent['id']);
+
+        $access_agent_id = $request->input('agent_id') ?: null;
+        if ( ! is_null($access_agent_id)) {
+            $agent = AgentService::checkAccess($agent, $access_agent_id);
+        }
+
+
+        $data = AgentService::getEarnData($agent['id'], $agent['user_id']);
 
         return $this->response->array(['data' => [
             'month_amount'      => display_price($data['month_amount']),
@@ -57,17 +64,28 @@ class AgentController extends Controller {
 
     public function orders(Request $request)
     {
-        $user_id = $this->getCurrentAuthUserId();
+        try {
+            $user_id = $this->getCurrentAuthUserId();
 
-        $agent = AgentService::getAgentByUser($user_id);
+            $agent = AgentService::getAgentByUser($user_id);
 
-        $start_at = $request->input('start_at') ?: null;
-        $end_at = $request->input('end_at') ?: null;
-        $status = $request->input('status') ?: null;
 
-        $orders = AgentService::getOrders($agent['id'], $start_at, $end_at, $status);
+            $access_agent_id = $request->input('agent_id') ?: null;
+            if ( ! is_null($access_agent_id)) {
+                $agent = AgentService::checkAccess($agent, $access_agent_id);
+            }
 
-        return $this->response->array(['data' => self::transformer($orders, ['amount', 'award_amount'])]);
+            $start_at = $request->input('start_at') ?: null;
+            $end_at = $request->input('end_at') ?: null;
+            $status = $request->input('status') ?: null;
+
+            $orders = AgentService::getOrders($agent['id'], $agent['user_id'], $start_at, $end_at, $status);
+
+            return $this->response->array(['data' => self::transformer($orders, ['amount', 'award_amount'])]);
+        } catch (\Exception $e) {
+            $this->response->errorForbidden($e->getMessage());
+        }
+
     }
 
     public static function transformer($data, $key_names = null, $price = true)

@@ -13,10 +13,20 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
         $api->post('auth/password/change', 'PasswordController@postChangePassword')->name('password.change');
     });
 
+
     /**
      * These reoutes require the user NOT be logged in
      */
 
+    $api->get('auth/base/weixin', [
+        'as'   => 'weixin.base.url',
+        'uses' => 'AuthController@weixinUrl'
+    ]);
+
+    $api->post('auth/base/weixin', [
+        'as'   => 'weixin.base.info',
+        'uses' => 'AuthController@weixinOpenid'
+    ]);
 
     $api->get('auth/login/{provider}', 'AuthController@loginThirdPartyUrl')->name('auth.provider.url');
     $api->post('auth/login/{provider}', 'AuthController@loginThirdParty')->name('auth.provider');
@@ -24,4 +34,6 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
     $api->get('account/confirm/resend/{user_id}', 'AuthController@resendConfirmationEmail')->name('account.confirm.resend');
     $api->controller('auth', 'AuthController');
     $api->controller('password', 'PasswordController');
+
+
 });

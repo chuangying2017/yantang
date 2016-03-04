@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Http\Requests\Frontend\Access\LoginRequest;
 use App\Http\Requests\Frontend\Access\RegisterRequest;
 use App\Repositories\Frontend\Auth\AuthenticationContract;
+use Pingpp\WxpubOAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -112,8 +113,8 @@ class AuthController extends Controller {
 
             return $this->response->array(['data' => compact('token', 'roles')]);
         } catch (\Exception $e) {
-            return $e->getTrace();
-            $this->response->errorInternal('无效请求');
+//            return $e->getTrace();
+            $this->response->errorInternal($e->getMessage());
         }
     }
 
@@ -178,6 +179,26 @@ class AuthController extends Controller {
             $this->response->errorInternal($e->getMessage());
         }
 
+    }
+
+    /**
+     * 微信静默授权
+     */
+
+    public function weixinUrl(Request $request)
+    {
+        $url = WxpubOAuth::createOauthUrlForCode(config('services.weixin.client_id'), config('services.weixin.base_redirect'));
+
+        return $this->response->array(['data' => compact('url')]);
+    }
+
+    public function weixinOpenid(Request $request)
+    {
+        $code = $request->input('code');
+
+        $openid = WxpubOAuth::getOpenid(config('services.weixin.client_id'), config('services.weixin.client_secret'), $code);
+
+        return $this->response->array(['data' => compact('openid')]);
     }
 
 }

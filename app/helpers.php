@@ -197,9 +197,13 @@ if ( ! function_exists('get_current_auth_user_openid')) {
 
     function get_current_auth_user_openid()
     {
+        if ($openid = Request::get('openid')) {
+            return $openid;
+        }
+
         if ($user_id = get_current_auth_user_id()) {
             $openid = \App\Models\Access\User\UserProvider::where('provider', 'weixin')->where('user_id', $user_id)->pluck('provider_id');
-            if(! $openid) {
+            if ( ! $openid) {
                 throw new \Exception('用户需要微信授权');
             }
 

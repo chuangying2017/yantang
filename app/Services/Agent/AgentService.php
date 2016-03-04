@@ -16,6 +16,25 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class AgentService {
 
 
+    public static function checkAccess($current_agent, $access_agent)
+    {
+        $access_agent = self::byId($access_agent);
+        if ( ! self::canAccess($current_agent, $access_agent)) {
+            throw new \Exception('权限不足,无法查看', 403);
+        }
+
+        return $access_agent;
+    }
+
+    //permission
+    public static function canAccess($current_agent_id, $access_agent_id)
+    {
+        $current_agent = self::byId($current_agent_id);
+        $access_agent = self::byId($access_agent_id);
+
+        return $current_agent->isSelfOrAncestorOf($access_agent) || self::isSystemAgent($current_agent);
+    }
+
     public static function byId($agent_id)
     {
         return AgentRepository::byId($agent_id);
@@ -45,7 +64,7 @@ class AgentService {
 
         $agent->promotion_code = self::getAgentPromotionCode($agent['id']);
 
-        $agent->earn_data = self::getEarnData($agent_id);
+        $agent->earn_data = self::getEarnData($agent_id, $agent['user_id']);
 
         return $agent;
     }
@@ -73,15 +92,19 @@ class AgentService {
 
     public static function awardAgent($agent_order)
     {
+
         $award_agents = self::getParentAgents($agent_order['agent_id']);
         $award_agents[] = self::getSystemAgent();
 
         $award_orders = [];
+        $award_agents = self::filterAwardAgents($award_agents);
+
         foreach ($award_agents as $key => $award_agent) {
-            $rate = self::getEarnRate($award_agent['level']);
+            $rate = array_get($award_agent, 'rate', 0);
             $award_orders[ $key ] = [
                 'agent_order_id' => $agent_order['id'],
                 'agent_id'       => $award_agent['id'],
+                'user_id'        => $award_agent['user_id'],
                 'agent_level'    => $award_agent['level'],
                 'order_no'       => $agent_order['order_no'],
                 'status'         => AgentProtocol::AGENT_ORDER_STATUS_OF_OK,
@@ -92,8 +115,35 @@ class AgentService {
         }
 
         if (count($award_orders)) {
-            AgentRepository::storeAgentOrderDetail($award_orders);
+            AgentRepository::storeAgentOrderDetail($award_orders, $agent_order['id']);
         }
+    }
+
+    protected static function filterAwardAgents($origin_award_agents)
+    {
+        $rates = [];
+        $award_agents = [];
+        $rate_id = 0;
+        foreach ($origin_award_agents as $award_agent) {
+            if ($award_agent['mark']) {
+                $award_agents[] = $award_agent;
+                $rates[ ++$rate_id ] = $award_agent['level'];
+            }
+        }
+
+
+        sort($rates);
+
+        $rate_data = [];
+        foreach ($rates as $key => $level) {
+            $rate_data[ $level ] = self::getEarnRate($level, array_get($rates, $key + 1, AgentProtocol::AGENT_LEVEL_OF_STORE + 1) - 1);
+        }
+
+        foreach ($award_agents as $key => $award_agent) {
+            $award_agents[ $key ]['rate'] = array_get($rate_data, $award_agent['level'], self::getEarnRate($award_agent['level']));
+        }
+
+        return $award_agents;
     }
 
     public static function getSystemAgent()
@@ -123,9 +173,19 @@ class AgentService {
         }
     }
 
-    protected static function getEarnRate($agent_level)
+
+    protected static function getEarnRate($agent_level, $last = false)
     {
         $data = AgentRepository::rate();
+        $result = 0;
+
+        if ($last && $last > $agent_level) {
+            for ($i = $agent_level; $i <= $last; $i++) {
+                $result = $result + array_get($data, $i, 0);
+            }
+
+            return $result;
+        }
 
         return array_get($data, $agent_level, 0);
     }
@@ -442,9 +502,9 @@ class AgentService {
         return AgentRepository::byNo($agent_no);
     }
 
-    public static function getOrders($agent_id, $start_at = null, $end_at = null, $status = null)
+    public static function getOrders($agent_id, $user_id = null, $start_at = null, $end_at = null, $status = null, $paginate = 20)
     {
-        $orders = AgentRepository::getAgentOrders($agent_id, $start_at, $end_at, $status);
+        $orders = AgentRepository::getAgentOrders($agent_id, $user_id, $start_at, $end_at, $status, $paginate);
 
         return $orders;
     }
@@ -456,13 +516,14 @@ class AgentService {
         });
     }
 
-    public static function getEarnData($agent_id)
+    public static function getEarnData($agent_id, $user_id = null)
     {
         $month_first_day = Carbon::today()->startOfMonth();
 //        $week_first_day = Carbon::today()->startOfWeek();
         $today = Carbon::today();
         $now = Carbon::now();
-        $orders = self::getOrders($agent_id, $month_first_day, $now);
+        $paginate = null;
+        $orders = self::getOrders($agent_id, $user_id, $month_first_day, $now, $paginate);
 
         $data = [
             "today_amount"      => 0,

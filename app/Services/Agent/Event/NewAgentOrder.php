@@ -21,7 +21,6 @@ class NewAgentOrder extends Event
      */
     public function __construct($agent_order)
     {
-        //
         $this->agent_order = $agent_order;
     }
 
