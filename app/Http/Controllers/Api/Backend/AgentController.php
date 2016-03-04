@@ -53,6 +53,7 @@ class AgentController extends Controller {
             'month_amount'      => display_price($data['month_amount']),
             'today_amount'      => display_price($data['today_amount']),
             'total_order_count' => ($data['total_order_count']),
+            'user_count'        => ($data['user_count']),
         ]]);
     }
 
