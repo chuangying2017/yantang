@@ -98,4 +98,5 @@ class ClientService {
     {
         return FavService::delete($user_id, $product_id);
     }
+
 }

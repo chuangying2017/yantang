@@ -37,7 +37,7 @@ class AgentApplyController extends Controller {
     public function update(Request $request, $apply_id)
     {
         try {
-            $user_id = $this->getCurrentAuthUserId();
+            $user_id = get_current_auth_user_id();
             $action = $request->input('action', AgentProtocol::APPLY_STATUS_OF_APPROVE);
             $memo = $request->input('memo', '其他');
 
@@ -48,6 +48,19 @@ class AgentApplyController extends Controller {
             }
 
             return $this->response->array(['data' => $agent]);
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
+    }
+
+    public function updateInfo(Request $request, $apply_id)
+    {
+        try {
+            $data = $request->all();
+
+            $apply = AgentService::updateApplyInfo($apply_id, $data);
+
+            return $this->response->array(['data' => $apply]);
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }

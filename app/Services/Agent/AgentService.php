@@ -7,6 +7,7 @@ use App\Models\AgentOrder;
 use App\Models\AgentOrderDetail;
 use App\Services\Agent\Event\NewAgent;
 use App\Services\Agent\Event\NewAgentOrder;
+use App\Services\Client\ClientRepository;
 use App\Services\Client\ClientService;
 use App\Services\Orders\OrderRepository;
 use Carbon\Carbon;
@@ -198,18 +199,9 @@ class AgentService {
     {
         $client = ClientService::show($user_id);
 
-        info('order by client' . $client['user_id']);
-        info($client);
-
-
         if ($promotion_id = $client['promotion_id']) {
-            info('order promote by ' . $promotion_id);
-            info(PromotionRepository::getAgentByPromotion($promotion_id));
-
             return PromotionRepository::getAgentByPromotion($promotion_id);
         }
-
-        info('user unbind promotion' . $user_id);
 
         return false;
     }
@@ -552,4 +544,22 @@ class AgentService {
         return $data;
     }
 
+    public static function updateApplyInfo($agent_info_id, $data)
+    {
+        $apply = AgentApplyRepository::byId($agent_info_id);
+
+        if ($apply['user_id'] !== get_current_auth_user_id()) {
+            throw new \Exception('没有权限更新', 403);
+        }
+
+        return AgentApplyRepository::update($apply, $data);
+    }
+
+
+    public static function agentUsers($agent_id)
+    {
+        $promotion = self::getAgentPromotion($agent_id);
+
+        return ClientRepository::getByPromotionId($promotion['id']);
+    }
 }

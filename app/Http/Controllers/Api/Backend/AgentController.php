@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Backend;
 
 use App\Http\Requests\ApplyAgentRequest;
 use App\Services\Agent\AgentService;
+use Exception;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -82,8 +83,34 @@ class AgentController extends Controller {
             $orders = AgentService::getOrders($agent['id'], $agent['user_id'], $start_at, $end_at, $status);
 
             return $this->response->array(['data' => self::transformer($orders, ['amount', 'award_amount'])]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->response->errorForbidden($e->getMessage());
+        }
+
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function users(Request $request)
+    {
+        try {
+            $user_id = get_current_auth_user_id();
+
+            $agent = AgentService::getAgentByUser($user_id);
+
+            $access_agent_id = $request->input('agent_id') ?: null;
+            if ( ! is_null($access_agent_id)) {
+                $agent = AgentService::checkAccess($agent, $access_agent_id);
+            }
+
+            $clients = AgentService::agentUsers($agent['id']);
+
+            return $this->response->array(['data' => $clients]);
+
+        } catch (Exception $e) {
+            $this->response->errorInternal($e->getMessage());
         }
 
     }
@@ -101,5 +128,6 @@ class AgentController extends Controller {
 
         return $data;
     }
+
 
 }

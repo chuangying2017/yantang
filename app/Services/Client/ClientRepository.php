@@ -103,5 +103,16 @@ class ClientRepository {
 
     }
 
+    public static function getByPromotionId($promotion_id, $paginate = 20)
+    {
+        $query = Client::with('user')->where('promotion_id', $promotion_id);
+
+        if ( ! is_null($paginate)) {
+            return $query->paginate($paginate);
+        }
+
+        return $query->get();
+    }
+
 
 }

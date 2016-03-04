@@ -111,4 +111,17 @@ class AgentApplyRepository {
     }
 
 
+    public static function update($apply_id, $data)
+    {
+        //可修改电子邮箱、开户行、账号
+        $apply = self::byId($apply_id);
+        $apply->bank_no = array_get($data, 'bank_no', $apply['bank_no']);
+        $apply->bank_detail = array_get($data, 'bank_detail', $apply['bank_detail']);
+        $apply->email = array_get($data, 'email', $apply['email']);
+        $apply->save();
+
+        return $apply;
+    }
+
+
 }

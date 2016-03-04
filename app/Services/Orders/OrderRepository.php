@@ -221,6 +221,7 @@ class OrderRepository {
             OrderProtocol::STATUS_OF_CANCEL,
             OrderProtocol::STATUS_OF_PAID,
             OrderProtocol::STATUS_OF_DELIVER,
+            OrderProtocol::STATUS_OF_DONE,
         ];
 
         if (in_array($status, $need_change_child_order)) {
@@ -248,6 +249,7 @@ class OrderRepository {
 
         event(new OrderCancel($order_full));
     }
+
 
     public static function createChildOrder($merchant_order_info, $order_product_ids)
     {
