@@ -107,7 +107,8 @@
                             <tbody>
                             @foreach($orders->slice(0,10) as $order)
                                 <tr>
-                                    <td><a href="pages/examples/invoice.html">{{$order->order_no}}</a></td>
+                                    <td><a target="_blank"
+                                           href="/admin/orders/{{$order->order_no}}">{{$order->order_no}}</a></td>
                                     <td>{{$order->title}}</td>
                                     @if($order->status == 'paid')
                                         <td><span class="label label-success">已支付</span></td>
