@@ -339,7 +339,7 @@ class AgentService {
 
         if ( ! $apply_agent_id || is_null($apply_agent_id)) {
             $data['apply_agent_id'] = null;
-            if ( ! intval($parent_agent['level']) !== AgentProtocol::AGENT_LEVEL_OF_REGION) {
+            if ( intval($parent_agent['level']) !== AgentProtocol::AGENT_LEVEL_OF_REGION) {
                 throw new \Exception('申请的门店需要选择正确的区域!' . $parent_agent['level']);
             }
             $data['agent_role'] = AgentProtocol::AGENT_LEVEL_OF_STORE;
