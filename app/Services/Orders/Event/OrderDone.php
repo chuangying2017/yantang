@@ -6,14 +6,9 @@ use App\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class OrderCancel extends Event
+class OrderDone extends Event
 {
     use SerializesModels;
-    public $order;
-    public $skus;
-    public $express;
-    public $billings;
-
 
     /**
      * Create a new event instance.
@@ -22,10 +17,7 @@ class OrderCancel extends Event
      */
     public function __construct($order_info)
     {
-        $this->order = $order_info;
-        $this->skus = $order_info->skus;
-        $this->billings = $order_info->billings;
-        $this->express = $order_info->express;
+        //
     }
 
     /**

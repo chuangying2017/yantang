@@ -65,6 +65,8 @@ class EventServiceProvider extends ServiceProvider {
             'App\Services\Merchant\Listeners\SendOrderInfoToMerchant',
         ],
 
+        'App\Services\Orders\Event\OrderDone'     => [
+        ],
 
         /**
          * 九级分销

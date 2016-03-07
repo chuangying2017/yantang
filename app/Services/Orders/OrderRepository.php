@@ -5,6 +5,7 @@ use App\Models\Order;
 use App\Models\OrderAddress;
 use App\Models\OrderProduct;
 use App\Services\Orders\Event\OrderCancel;
+use App\Services\Orders\Event\OrderDone;
 use App\Services\Orders\Helpers\ExpressHelper;
 use App\Models\OrderDeliver as Deliver;
 use App\Services\Orders\Supports\PingxxPaymentRepository;
@@ -245,9 +246,21 @@ class OrderRepository {
         $order_full = self::queryFullOrder($order);
 
         self::updateStatus($order['id'], OrderProtocol::STATUS_OF_CANCEL);
+
+
+
         $order->delete();
 
         event(new OrderCancel($order_full));
+    }
+
+    public static function doneOrder($order_no)
+    {
+        $order = self::queryOrderByOrderNo($order_no);
+
+        self::updateStatus($order['id'], OrderProtocol::STATUS_OF_DONE);
+
+        event(new OrderDone(self::queryFullOrder($order)));
     }
 
 

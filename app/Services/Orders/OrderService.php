@@ -44,5 +44,18 @@ class OrderService {
 
     }
 
+    public static function done($user_id, $order_no)
+    {
+        try {
+            $order = self::authOrder($user_id, $order_no);
+            OrderProtocol::validStatus($order['status'], OrderProtocol::STATUS_OF_DONE);
+
+            OrderRepository::doneOrder($order);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+    }
+
 
 }
