@@ -104,9 +104,10 @@ class AgentRepository {
 
     public static function getAgentOrderById($agent_order_id)
     {
-        if($agent_order_id instanceof AgentOrder) {
+        if ($agent_order_id instanceof AgentOrder) {
             return $agent_order_id;
         }
+
         return AgentOrder::findOrFail($agent_order_id);
     }
 
@@ -122,6 +123,9 @@ class AgentRepository {
         ]);
 
         $agent->makeChildOf($parent_agent);
+
+        $apply_info->apply_agent_id = $agent['id'];
+        $apply_info->save();
 
         return $agent;
     }
@@ -149,7 +153,7 @@ class AgentRepository {
 
     public static function storeAgentOrderDetail($orders, $agent_order_id = null)
     {
-        if(!is_null($agent_order_id)) {
+        if ( ! is_null($agent_order_id)) {
             self::deleteOldAgentOrderDetail($agent_order_id);
         }
 

@@ -28,6 +28,18 @@ class OrderProtocol {
     const RESOURCE_OF_TICKET = 'App\Models\Ticket';
     const RESOURCE_OF_PINGXX = 'App\Models\PingxxPayment';
 
+    public static function statusAfterPaid()
+    {
+        return [
+            self::STATUS_OF_PAID,
+            self::STATUS_OF_DONE,
+            self::STATUS_OF_DELIVER,
+            self::STATUS_OF_REFUNDING,
+            self::STATUS_OF_RETURN_DELIVER,
+            self::STATUS_OF_REFUNDED,
+        ];
+    }
+
 
     public static function status($key = null)
     {

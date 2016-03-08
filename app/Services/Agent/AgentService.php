@@ -266,15 +266,17 @@ class AgentService {
         return AgentApplyRepository::lists($agent['id'], AgentProtocol::lowerLevel($agent['level']));
     }
 
-    public static function needCheckAgentApplyByUser($user_id)
+    public static function listsAgentApplyByUser($user_id, $status = AgentProtocol::APPLY_STATUS_OF_PENDING)
     {
         $agent_ids = AgentRepository::getAgentIdByUser($user_id, true);
 
         if (in_array(AgentProtocol::SYSTEM_AGENT_ID, $agent_ids)) {
-            return AgentApplyRepository::lists();
+            return AgentApplyRepository::lists(null, null, $status);
         }
 
-        return AgentApplyRepository::lists($agent_ids);
+        $level = null;
+
+        return AgentApplyRepository::lists($agent_ids, null, $status);
     }
 
     public static function getApplyById($apply_id, $user_id)
@@ -339,7 +341,7 @@ class AgentService {
 
         if ( ! $apply_agent_id || is_null($apply_agent_id)) {
             $data['apply_agent_id'] = null;
-            if ( intval($parent_agent['level']) !== AgentProtocol::AGENT_LEVEL_OF_REGION) {
+            if (intval($parent_agent['level']) !== AgentProtocol::AGENT_LEVEL_OF_REGION) {
                 throw new \Exception('申请的门店需要选择正确的区域!' . $parent_agent['level']);
             }
             $data['agent_role'] = AgentProtocol::AGENT_LEVEL_OF_STORE;
@@ -381,12 +383,11 @@ class AgentService {
 
 
         //门店代理
-        if ( ! $apply_agent_id || is_null($apply_agent_id)) {
+        if ( ! $apply_agent_id || is_null($apply_agent_id || $apply['agent_role'] == AgentProtocol::AGENT_LEVEL_OF_STORE)) {
             $agent = self::approveStoreAgent($apply);
         } else {
             //普通代理
             $agent = AgentRepository::byId($apply_agent_id);
-
 
             //检查是否有通过权限
             if ( ! self::isSystemAgent($handle_agent) && ! $handle_agent->isAncestorOf($agent)) {
@@ -398,12 +399,12 @@ class AgentService {
             }
 
             $agent = self::approveNormalAgent($agent, $apply['user_id']);
-            AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_APPROVE);
-            self::attachAgentRoleToUser($apply['user_id']);
-
         }
 
-        event(new NewAgent($agent));
+        AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_APPROVE);
+        self::attachAgentRoleToUser($apply['user_id']);
+
+        event(new NewAgent($agent, $apply));
 
         return $agent;
     }
@@ -434,6 +435,15 @@ class AgentService {
     public static function rejectApply($apply_id, $user_id, $memo = '')
     {
         $apply = self::authAgentApply($apply_id, $user_id);
+
+        try {
+            $phone = $apply['phone'];
+            $content = \Config::get('laravel-sms.notifyAgentReject');
+            app('PhpSms')->make()->to($phone)->content($content)->send();
+        } catch (\Exception $e) {
+            \Log::error('代理短信发送失败');
+            \Log::error($e);
+        }
 
         return AgentApplyRepository::updateStatus($apply_id, AgentProtocol::APPLY_STATUS_OF_REJECT, $memo);
     }

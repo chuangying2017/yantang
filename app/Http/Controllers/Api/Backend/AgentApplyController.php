@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Backend;
 
 use App\Http\Requests\ApplyAgentRequest;
+use App\Http\Transformers\AgentInfoTransformer;
 use App\Services\Agent\AgentProtocol;
 use App\Services\Agent\AgentService;
 use Illuminate\Http\Request;
@@ -13,11 +14,15 @@ use Toplan\PhpSms\Agent;
 
 class AgentApplyController extends Controller {
 
-    public function index()
+    public function index(Request $request)
     {
         $user_id = $this->getCurrentAuthUserId();
 
-        $apply = AgentService::needCheckAgentApplyByUser($user_id);
+        $status = $request->input('status') ?: AgentProtocol::APPLY_STATUS_OF_PENDING;
+
+        $apply = AgentService::listsAgentApplyByUser($user_id, $status);
+
+//        return $this->response->paginator($apply, new AgentInfoTransformer());
 
         return $this->response->array(['data' => $apply]);
     }

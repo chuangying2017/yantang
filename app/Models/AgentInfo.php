@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Access\User\User;
+use App\Services\Agent\AgentProtocol;
 use Illuminate\Database\Eloquent\Model;
 
 class AgentInfo extends Model {
@@ -10,6 +11,8 @@ class AgentInfo extends Model {
     protected $table = 'agent_apply_info';
 
     protected $guarded = ['id'];
+
+    protected $appends = ['agent_role_name'];
 
     public function user()
     {
@@ -24,6 +27,11 @@ class AgentInfo extends Model {
     public function agent()
     {
         return $this->hasOne(Agent::class, 'id', 'apply_agent_id');
+    }
+
+    public function getAgentRoleNameAttribute()
+    {
+        return AgentProtocol::name($this->attributes['agent_role']);
     }
 
 

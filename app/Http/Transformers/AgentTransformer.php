@@ -5,7 +5,7 @@ use App\Models\Agent;
 use App\Models\AgentInfo;
 use League\Fractal\TransformerAbstract;
 
-class AgentInfoTransformer extends TransformerAbstract {
+class AgentTransformer extends TransformerAbstract {
 
     public function transform(Agent $agent)
     {

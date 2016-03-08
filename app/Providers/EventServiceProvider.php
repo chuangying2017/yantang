@@ -78,7 +78,9 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Services\Agent\Event\NewAgent' => [
             'App\Services\Agent\Listeners\CreateNewAgent',
-        ]
+            'App\Services\Agent\Listeners\SendNotifyToAgent',
+        ],
+
     ];
 
     /**

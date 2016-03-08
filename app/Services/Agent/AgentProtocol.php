@@ -53,6 +53,19 @@ class AgentProtocol {
         return $upper_level;
     }
 
+    public static function name($level = null)
+    {
+        $data = [
+            self::AGENT_LEVEL_OF_SYSTEM   => '东方丽人',
+            self::AGENT_LEVEL_OF_PROVINCE => '省级',
+            self::AGENT_LEVEL_OF_CITY     => '市级',
+            self::AGENT_LEVEL_OF_REGION   => '区县',
+            self::AGENT_LEVEL_OF_STORE    => '门店',
+        ];
+
+        return is_null($level) ? $data : array_get($data, $level, '');
+    }
+
     public static function lowerLevel($level)
     {
         $lower_level = self::AGENT_LEVEL_OF_STORE;
