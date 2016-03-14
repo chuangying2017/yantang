@@ -14,6 +14,7 @@ class PingxxProtocol {
     const STATUS_OF_UNPAID = 'unpaid';
     const STATUS_OF_PAID = 'paid';
 
+    const STATUS_OF_REFUND_SUCCESS = 'succeeded';
 
     const PINGXX_APP_CHANNEL_ALIPAY = 'alipay';
     const PINGXX_APP_CHANNEL_WECHAT = 'wx';

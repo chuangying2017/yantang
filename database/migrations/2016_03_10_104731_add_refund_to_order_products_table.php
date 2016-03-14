@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddRefundStatusToOrdersTable extends Migration {
+class AddRefundToOrderProductsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,8 +12,9 @@ class AddRefundStatusToOrdersTable extends Migration {
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->integer('refund_amount')->nullable();
+        Schema::table('order_products', function (Blueprint $table) {
+            $table->integer('refund_amount')->default(0);
+            $table->integer('return_quantity')->default(0);
             $table->string('refund_status')->nullable();
             $table->timestamp('refund_at')->nullable();
         });
@@ -26,8 +27,9 @@ class AddRefundStatusToOrdersTable extends Migration {
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('order_products', function (Blueprint $table) {
             $table->dropColumn('refund_amount');
+            $table->dropColumn('return_quantity');
             $table->dropColumn('refund_status');
             $table->dropColumn('refund_at');
         });

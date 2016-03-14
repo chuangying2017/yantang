@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api\Frontend;
 
+use App\Http\Requests\OrderRefundDeliverRequest;
 use App\Http\Transformers\OrderTransformer;
 use App\Services\Cart\CartService;
 use App\Services\Client\AddressService;
 use App\Services\Orders\Exceptions\WrongStatus;
 use App\Services\Orders\OrderGenerator;
+use App\Services\Orders\OrderRefund;
 use App\Services\Orders\OrderService;
 use Illuminate\Http\Request;
 
@@ -150,5 +152,36 @@ class OrderController extends Controller {
         return $this->response->noContent();
     }
 
+    public function refund(Request $request, $order_no)
+    {
+        try {
+            $user_id = $this->getCurrentAuthUserId();
+
+            $refund_product_info = $request->input('refund_product_info');
+            $memo = $request->input('memo');
+
+            $order = OrderRefund::returns($user_id, $order_no, $refund_product_info, $memo);
+
+            return $this->response->item($order, new OrderTransformer());
+
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
+    }
+
+    public function redeliver(OrderRefundDeliverRequest $request, $refund_order_id)
+    {
+        try {
+            $user_id = $this->getCurrentAuthUserId();
+            $company_name = $request->input('company_name');
+            $post_no = $request->input('post_no');
+
+            $refund_order = OrderRefund::deliver($user_id, $refund_order_id, $company_name, $post_no);
+
+            return $this->response->array(['data' => $refund_order]);
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
+    }
 
 }

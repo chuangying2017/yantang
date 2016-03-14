@@ -1,6 +1,8 @@
 <?php namespace App\Services\Orders\Supports;
 
 use App\Models\PingxxPayment;
+use App\Models\PingxxPaymentRefund;
+use App\Models\PingxxRefund;
 use App\Services\Orders\OrderProtocol;
 
 class PingxxPaymentRepository {
@@ -75,6 +77,11 @@ class PingxxPaymentRepository {
         return PingxxPayment::where('billing_id', $billing_id)->firstOrFail();
     }
 
+    public static function getOrderPaidPingxxPayment($order_id)
+    {
+        return PingxxPayment::paid($order_id)->firstOrFail();
+    }
+
     public static function getOrderPingxxPayment($order_id, $channel = null, $valid = false)
     {
         $live_mode = env('PINGPP_LIVE_MODE', false) && env('PINGPP_ACCOUNT_TYPE') != 'TEST' ? 1 : 0;
@@ -103,5 +110,31 @@ class PingxxPaymentRepository {
         return $payment;
     }
 
+    public static function generateRefundPayment($data)
+    {
+        return PingxxRefund::updateOrCreate(['refund_id' => $data['id']], $data);
+    }
+
+    public static function updateRefundSuccess($refund_id, $data)
+    {
+        return PingxxRefund::where('refund_id', $refund_id)->update([
+            'time_succeed' => $data['time_succeed'],
+            'status'       => PingxxProtocol::STATUS_OF_REFUND_SUCCESS
+        ]);
+    }
+
+    public static function updateRefundPaymentFail($refund_id, $failure_code, $failure_msg)
+    {
+        return PingxxRefund::where('refund_id', $refund_id)->update([
+            'failure_code' => $failure_code,
+            'failure_msg'  => $failure_msg
+        ]);
+    }
+
+
+    public static function getRefundPingxxPaymentById($refund_id)
+    {
+        return PingxxPaymentRefund::where('refund_id', $refund_id)->firstOrFail();
+    }
 
 }

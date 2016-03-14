@@ -4,6 +4,7 @@ use App\Models\ChildOrder;
 use App\Models\Order;
 use App\Models\OrderAddress;
 use App\Models\OrderProduct;
+use App\Models\OrderRefund;
 use App\Services\Orders\Event\OrderCancel;
 use App\Services\Orders\Event\OrderDone;
 use App\Services\Orders\Helpers\ExpressHelper;
@@ -98,6 +99,7 @@ class OrderRepository {
         return Order::where('order_no', $order_no)->firstOrFail();
     }
 
+
     public static function queryChildOrderByOrderNo($order_no)
     {
         if ($order_no instanceof ChildOrder) {
@@ -128,7 +130,7 @@ class OrderRepository {
 
     public static function queryFullOrder($order)
     {
-        $relation = ['children', 'children.skus', 'children.deliver', 'address', 'billings'];
+        $relation = ['children', 'children.skus', 'children.deliver', 'address', 'billings', 'refund', 'refund.products'];
         if ($order instanceof Order) {
             $order = $order->load($relation);
         } else {
@@ -248,7 +250,6 @@ class OrderRepository {
         self::updateStatus($order['id'], OrderProtocol::STATUS_OF_CANCEL);
 
 
-
         $order->delete();
 
         event(new OrderCancel($order_full));
@@ -351,6 +352,111 @@ class OrderRepository {
         $child_order = self::queryChildOrderByOrderNo($child_order_no);
 
         return $child_order->order->order_no;
+    }
+
+    public static function updateOrderRefund($order, $status, $amount = 0)
+    {
+        $order = self::queryOrderByOrderNo($order);
+        $order['refund_status'] = $status;
+        if ($amount > 0) {
+            $order['refund_amount'] = $order['refund_amount'] + $amount;
+        }
+        $order->save();
+
+        return $order;
+    }
+
+    public static function queryOrderProduct($order_product_id)
+    {
+        if (is_array($order_product_id)) {
+            return OrderProduct::whereIn('id', $order_product_id)->get();
+        }
+
+        return OrderProduct::findOrFail($order_product_id);
+    }
+
+    public static function updateOrderProductRefund($order_product_id, $status, $quantity = 0, $amount = 0)
+    {
+        $order_product = self::queryOrderProduct($order_product_id);
+        $order_product['return_quantity'] = $order_product['return_quantity'] + $quantity;
+        $order_product['refund_amount'] = $order_product['refund_amount'] + $amount;
+        $order_product['refund_status'] = $status;
+        $order_product->save();
+
+        return $order_product;
+    }
+
+
+    public static function queryOrderProductByOrder($order_id)
+    {
+        return OrderProduct::where('order_id', $order_id)->get();
+    }
+
+
+    /**********************************************************************
+     *
+     * Refund Orders
+     *
+     * ********************************************************************
+     */
+    public static function createRefundOrder($data)
+    {
+        return OrderRefund::create($data);
+    }
+
+    public static function showRefundOrder($order_id)
+    {
+        return OrderRefund::with('products')->findOrFail($order_id);
+    }
+
+    public static function listsRefundOrder($status = OrderProtocol::STATUS_OF_RETURN_APPLY, $paginate = 20)
+    {
+        $query = OrderRefund::where('status', $status);
+
+        if ( ! is_null($paginate)) {
+            return $query->paginate($paginate);
+        }
+
+        return $query->get();
+    }
+
+    public static function fetchRefundOrder($refund_order)
+    {
+        if ($refund_order instanceof OrderRefund) {
+            return $refund_order;
+        }
+
+        return OrderRefund::findOrFail($refund_order);
+    }
+
+    public static function updateRefundOrderStatus($refund_order_id, $status, $memo = null)
+    {
+        $refund_order = self::fetchRefundOrder($refund_order_id);
+
+        $refund_order['status'] = $status;
+        if ( ! is_null($memo)) {
+            $refund_order['merchant_memo'] = $memo;
+        }
+        $refund_order->save();
+        Order::where('id', $refund_order['order_id'])->update(['refund_status' => $status]);
+
+        return 1;
+    }
+
+
+    public static function updateRefundOrderDeliver($refund_order_id, $company_name, $post_no)
+    {
+        $refund_order = self::fetchRefundOrder($refund_order_id);
+        $refund_order['company_name'] = $company_name;
+        $refund_order['post_no'] = $post_no;
+        $status = OrderProtocol::STATUS_OF_RETURN_DELIVER;
+        $refund_order['status'] = $status;
+        $refund_order['deliver_at'] = Carbon::now();
+        $refund_order->save();
+
+        Order::where('id', $refund_order['order_id'])->update(['refund_status' => $status]);
+
+        return $refund_order;
     }
 
 }

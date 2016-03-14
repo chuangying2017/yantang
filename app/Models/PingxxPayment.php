@@ -18,4 +18,5 @@ class PingxxPayment extends Model {
         return $query->where('order_id', $order_id)->where('status', OrderProtocol::STATUS_OF_PAID)->where('livemode', PingxxProtocol::LIVE_MODE);
     }
 
+
 }

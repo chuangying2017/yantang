@@ -3,6 +3,7 @@
 
 use App\Services\Orders\Helpers\UserHelper;
 use App\Services\Orders\OrderProtocol;
+use App\Services\Orders\OrderRefund;
 use App\Services\Orders\Payments\PaymentInterface;
 use Exception;
 use Pingpp\Charge;
@@ -339,8 +340,98 @@ class PingxxService implements PaymentInterface {
         return $payment['status'] == PingxxProtocol::STATUS_OF_UNPAID;
     }
 
+    public static function refund($order_refund, $amount, $desc = '')
+    {
+        $pingxx_payment = PingxxPaymentRepository::getOrderPaidPingxxPayment($order_refund['order_id']);
+
+        $ch = self::queryPingxxPaymentCharge($pingxx_payment['charge_id']);
+
+        /**
+         *
+         * {
+         * "id": "re_y1u944PmfnrTHyvnL0nD0iD1",
+         * "object": "refund",
+         * "order_no": "y1u944PmfnrTHyvnL0nD0iD1",
+         * "amount": 9,
+         * "created": 1409634160,
+         * "succeed": true,
+         * "status": "succeeded",
+         * "time_succeed": 1409634192,
+         * "description": "Refund Description",
+         * "failure_code": null,
+         * "failure_msg": null,
+         * "metadata": {},
+         * "charge": "ch_L8qn10mLmr1GS8e5OODmHaL4",
+         * "transaction_no": "2004450349201512090096425284"
+         * }
+         */
+
+        $result = $ch->refunds->create(
+            [
+                'amount'      => $amount,
+                'description' => $desc
+            ]
+        );
+
+        $pingxx_refund_data = [
+            'order_id'          => $order_refund['order_id'],
+            'payment_no'        => $result['order_no'],
+            'order_refund_id'   => $order_refund['id'],
+            'pingxx_payment_id' => $pingxx_payment['id'],
+            'refund_id'         => $result['id'],
+            'charge_id'         => $result['charge'],
+            'failure_code'      => $result['failure_code'] ?: '',
+            'failure_msg'       => $result['failure_msg'] ?: '',
+            'transaction_no'    => $result['transaction_no'],
+            'amount'            => $amount,
+            'description'       => $desc,
+            'status'            => $result['status'],
+            'time_succeed'      => $result['time_succeed']
+        ];
+        $pingxx_refund_payment = PingxxPaymentRepository::generateRefundPayment($pingxx_refund_data);
+
+        return $result;
+    }
+
+    public static function refunded($data, $pingxx_payment)
+    {
+        //修改pingxx订单状态
+        PingxxPaymentRepository::updateRefundSuccess($pingxx_payment['refund_id'], $data);
+
+        OrderRefund::refunded($pingxx_payment['order_refund_id']);
+    }
+
+    public static function refundFail($pingxx_payment, $code, $msg)
+    {
+        PingxxPaymentRepository::updateRefundPaymentFail($pingxx_payment['refund_id'], $code, $msg);
+        #todo 定时重试
+
+    }
 
 
+    public static function refundCallback($data)
+    {
+        $pingxx_payment = PingxxPaymentRepository::getRefundPingxxPaymentById($data['id']);
+        if ($pingxx_payment['status'] == PingxxProtocol::STATUS_OF_REFUND_SUCCESS) {
+            info('charge Succeed! no need to charge again');
+
+            return 1;
+        }
+        //退款成功处理
+        if (self::refundIsSucceed($data)) {
+            self::refunded($data, $pingxx_payment);
+        } else {
+            //退款失败
+            self::refundFail($pingxx_payment, $data['failure_code'], $data['failure_msg']);
+        }
+
+        exit('success');
+    }
+
+    protected static function refundIsSucceed($data)
+    {
+        return $data['succeed'] === true && $data['status'] === PingxxProtocol::STATUS_OF_REFUND_SUCCESS;
+    }
 
 
 }

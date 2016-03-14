@@ -65,13 +65,36 @@ class EventServiceProvider extends ServiceProvider {
             'App\Services\Merchant\Listeners\SendOrderInfoToMerchant',
         ],
 
-        'App\Services\Orders\Event\OrderDone'     => [
+        'App\Services\Orders\Event\OrderDone' => [
+
         ],
+
+        'App\Services\Orders\Event\OrderRefundApply' => [
+            'App\Services\Merchant\Listeners\SendOrderRefundNotifyToMerchant',
+        ],
+
+        'App\Services\Orders\Event\OrderRefundApprove' => [
+
+        ],
+
+        'App\Services\Orders\Event\OrderRefundDeliver' => [
+
+        ],
+
+        'App\Services\Orders\Event\OrderRefunding' => [
+            'App\Services\Agent\Listeners\CancelAwardAgent',
+            'App\Services\Clients\Listeners\SendOrderRefundApproveNotifyToClient',
+        ],
+
+        'App\Services\Orders\Event\OrderRefunded' => [
+
+        ],
+
 
         /**
          * 九级分销
          */
-        'App\Services\Agent\Event\NewAgentOrder'    => [
+        'App\Services\Agent\Event\NewAgentOrder'  => [
             'App\Services\Agent\Listeners\AwardClientAgent',
             'App\Services\Agent\Listeners\AwardAgent',
         ],
@@ -80,6 +103,7 @@ class EventServiceProvider extends ServiceProvider {
             'App\Services\Agent\Listeners\CreateNewAgent',
             'App\Services\Agent\Listeners\SendNotifyToAgent',
         ],
+
 
     ];
 

@@ -14,12 +14,14 @@ class CreatePingxxRefundTable extends Migration {
     {
         Schema::create('pingxx_refund', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('refund_id');
-            $table->integer('pingxx_payment_id');
-            $table->string('charge_id');
             $table->string('payment_no');
-            $table->string('transaction_no');
             $table->integer('order_id');
+            $table->integer('child_order_id');
+            $table->integer('order_refund_id');
+            $table->integer('pingxx_payment_id');
+            $table->string('refund_id');
+            $table->string('charge_id');
+            $table->string('transaction_no');
             $table->unsignedInteger('amount');
             $table->string('status');
             $table->integer('time_succeed');

@@ -32,7 +32,8 @@ class OrderController extends Controller {
             $status = $request->input('status') ?: null;
             $start_at = $request->input('start_at') ?: null;
             $end_at = $request->input('end_at') ?: null;
-            $orders = OrderManager::lists($user_id, $sort['order_by'], $sort['order_type'], ['children', 'address'], $status, ApiConst::ORDER_PER_PAGE, $merchant_id, $keyword, $start_at, $end_at);
+            $relations = ['children', 'address'];
+            $orders = OrderManager::lists($user_id, $sort['order_by'], $sort['order_type'], $relations, $status, ApiConst::ORDER_PER_PAGE, $merchant_id, $keyword, $start_at, $end_at);
 
             return $this->response->paginator($orders, new OrderTransformer());
         } catch (Exception $e) {

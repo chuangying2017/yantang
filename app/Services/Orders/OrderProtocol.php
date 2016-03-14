@@ -10,17 +10,19 @@ class OrderProtocol {
     const STATUS_OF_UNPAID = 'unpaid';
     const STATUS_OF_PAID = 'paid';
     const STATUS_OF_DELIVER = 'deliver';
-    const STATUS_OF_RETURN_DELIVER = 'redeliver';
     const STATUS_OF_DONE = 'done';
     const STATUS_OF_REVIEW = 'review';
     const STATUS_OF_CANCEL = 'cancel';
+
+    const STATUS_OF_RETURN_APPLY = 'apply';
+    const STATUS_OF_RETURN_APPROVE = 'approve';
+    const STATUS_OF_RETURN_REJECT = 'reject';
+    const STATUS_OF_RETURN_DELIVER = 'redeliver';
     const STATUS_OF_REFUNDING = 'refunding';
     const STATUS_OF_REFUNDED = 'refunded';
 
-
     const PAY_ONLINE = 'online';
     const PAY_CASH = 'cash';
-
 
     const TYPE_OF_DISCOUNT = 'discount';
     const TYPE_OF_MAIN = 'main';
@@ -83,7 +85,7 @@ class OrderProtocol {
         return true;
     }
 
-    public static function validStatus($from_status, $to_status)
+    public static function validStatus($from_status, $to_status, $exception = true)
     {
         $valid_status = [];
         switch ($to_status) {
@@ -111,13 +113,20 @@ class OrderProtocol {
             case self::STATUS_OF_UNPAID:
                 $valid_status = [self::STATUS_OF_UNPAID];
                 break;
+            case self::STATUS_OF_RETURN_APPLY:
+                $valid_status = [self::STATUS_OF_PAID, self::STATUS_OF_DELIVER, self::STATUS_OF_REVIEW, self::STATUS_OF_DONE];
+                break;
             default:
                 break;
         }
 
 
         if ( ! in_array($from_status, $valid_status)) {
-            throw new WrongStatus($from_status, $to_status);
+            if ($exception) {
+                throw new WrongStatus($from_status, $to_status);
+            } else {
+                return false;
+            }
         }
 
         return true;

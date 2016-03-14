@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Access\User\User;
+use App\Services\Orders\OrderProtocol;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -15,6 +17,7 @@ class Order extends Model {
 
     protected $guarded = ['id'];
 
+    protected $appends = ['can_return'];
 
     public function children()
     {
@@ -51,5 +54,14 @@ class Order extends Model {
         return $this->hasMany(PingxxPayment::class, 'order_id', 'id');
     }
 
+    public function refund()
+    {
+        return $this->hasMany(OrderRefund::class);
+    }
+
+    public function getCanReturnAttribute()
+    {
+        return OrderProtocol::validStatus($this->attributes['status'], OrderProtocol::STATUS_OF_RETURN_APPLY) && $this->attributes['pay_at'] < \Carbon\Carbon::now()->subDay(7);
+    }
 
 }

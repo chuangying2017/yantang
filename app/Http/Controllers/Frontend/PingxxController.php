@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Services\Orders\OrderProtocol;
 use App\Services\Orders\Supports\PingxxPaymentRepository;
+use App\Services\Orders\Supports\PingxxProtocol;
 use App\Services\Orders\Supports\PingxxService;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -41,23 +43,30 @@ class PingxxController extends Controller {
                 // 更新操作日志
             } else if ($type == 'transfer.succeeded') {
                 #todo 转账成功操作
+
+                self::refundCallbackSucceed($data);
+
+            } else if ($type == 'refund.succeeded') {
+
             } else {
                 Log::error('PingPP call back return unrecognized status = ' . $type);
 
                 return 0;
             }
 
-            // TODO 暂时不需要进行任何处理
             exit("success");
+        } catch (ModelNotFoundException $e) {
+            Log::error('Pingxx Payment not exist. no=' . $request->input('data.object.order_no') . ' no need to continue');
+            exit("fail");
         } catch (Exception $e) {
             Log::error('Callback FAILED! throw exception, ' . $e);
             exit("fail");
         }
     }
 
-
-    private function callbackFailed($request, $pingxx_payment_no)
+    private static function callbackFailed($request)
     {
+        $pingxx_payment_no = $request->input('data.object.order_no');
         $error_code = $request->input('failure_code');
         $error_msg = $request->input('failure_msg');
 
@@ -70,11 +79,18 @@ class PingxxController extends Controller {
     {
         if ($pingxx_payment['status'] == OrderProtocol::STATUS_OF_PAID) {
             info('charge Succeed! no need to charge again');
+
             return 1;
         }
 
         PingxxService::pingxxPaymentIsPaid($data);
         exit('success');
     }
+
+    private static function refundCallbackSucceed($data)
+    {
+        return PingxxService::refundCallback($data);
+    }
+
 
 }

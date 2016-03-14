@@ -4,6 +4,7 @@ use App\Events\Frontend\Auth\UserRegister;
 use App\Models\Access\User\User;
 use App\Models\Access\User\UserProvider;
 use App\Exceptions\GeneralException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
@@ -277,5 +278,16 @@ class EloquentUserRepository implements UserContract {
         $user->save();
 
         return $user;
+    }
+
+    public static function resetPassword($phone, $password)
+    {
+        $user = self::findUserByPhone($phone);
+        if ($user) {
+            $user->password = $password;
+            return $user->save();
+        }
+
+        throw new ModelNotFoundException('用户不存在');
     }
 }

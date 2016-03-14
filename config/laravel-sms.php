@@ -71,9 +71,9 @@ return [
 
     'codeValidTime' => 30,
 
-    'notifyNewOrder' => '你有新的订单，请到后台查看',
-    'notifyAgentApprove' => '你的代理申请已通过,请登录后台查看',
-    'notifyAgentReject' => '你的代理申请已被驳回, 请登录后台查看',
+    'notifyNewOrder' => '【东方丽人】你有新的订单，请到后台查看',
+    'notifyAgentApprove' => '【东方丽人】你的代理申请已通过,请登录后台查看',
+    'notifyAgentReject' => '【东方丽人】你的代理申请已被驳回, 请登录后台查看',
 
     /*
      * -----------------------------------
