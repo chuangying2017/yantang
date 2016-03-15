@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Backend;
 
 use App\Http\Requests\ApplyAgentRequest;
+use App\Services\Agent\AgentOrderService;
 use App\Services\Agent\AgentService;
 use Exception;
 use Illuminate\Http\Request;
@@ -47,7 +48,7 @@ class AgentController extends Controller {
         }
 
 
-        $data = AgentService::getEarnData($agent['id'], $agent['user_id']);
+        $data = AgentOrderService::getEarnData($agent['id'], $agent['user_id']);
 
         return $this->response->array(['data' => [
             'month_amount'      => display_price($data['month_amount']),
@@ -81,7 +82,7 @@ class AgentController extends Controller {
             $end_at = $request->input('end_at') ?: null;
             $status = $request->input('status') ?: null;
 
-            $orders = AgentService::getOrders($agent['id'], $agent['user_id'], $start_at, $end_at, $status);
+            $orders = AgentOrderService::getOrders($agent['id'], $agent['user_id'], $start_at, $end_at, $status);
 
             return $this->response->array(['data' => self::transformer($orders, ['amount', 'award_amount'])]);
         } catch (Exception $e) {
