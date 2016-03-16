@@ -30,8 +30,13 @@ class SmsRequest extends Request {
             $rules = [
                 'phone' => 'required|zh_mobile'
             ];
-            if ( ! get_current_auth_user()) {
-                $rules['phone'] .= '|unique:users,phone';
+
+            if ($this->input('reset')) {
+                $rules['phone'] .= '|exists:users,phone';
+            } else {
+                if ( ! get_current_auth_user()) {
+                    $rules['phone'] .= '|unique:users,phone';
+                }
             }
         }
 
