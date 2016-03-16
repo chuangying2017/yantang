@@ -74,7 +74,7 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
         'App\Services\Orders\Event\OrderRefundApprove' => [
-
+            'App\Services\Agent\Listeners\CancelAwardAgent',
         ],
 
         'App\Services\Orders\Event\OrderRefundDeliver' => [
@@ -82,7 +82,6 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
         'App\Services\Orders\Event\OrderRefunding' => [
-            'App\Services\Agent\Listeners\CancelAwardAgent',
             'App\Services\Clients\Listeners\SendOrderRefundApproveNotifyToClient',
         ],
 

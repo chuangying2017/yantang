@@ -12,6 +12,7 @@ use App\Models\OrderDeliver as Deliver;
 use App\Services\Orders\Supports\PingxxPaymentRepository;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 class OrderRepository {
@@ -420,6 +421,16 @@ class OrderRepository {
         return $query->get();
     }
 
+    public static function getRefundOrderByOrderNo($order_no)
+    {
+        $order = self::queryOrderByOrderNo($order_no);
+        if ($order) {
+            return OrderRefund::where('order_id', $order['id'])->orderBy('created_at', 'desc')->firstOrFail();
+        }
+
+        throw new ModelNotFoundException('不存在退货订单');
+    }
+
     public static function fetchRefundOrder($refund_order)
     {
         if ($refund_order instanceof OrderRefund) {
@@ -440,7 +451,8 @@ class OrderRepository {
         $refund_order->save();
         Order::where('id', $refund_order['order_id'])->update(['refund_status' => $status]);
 
-        return 1;
+
+        return $refund_order;
     }
 
 

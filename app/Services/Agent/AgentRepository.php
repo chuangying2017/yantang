@@ -262,5 +262,25 @@ class AgentRepository {
         return $agents;
     }
 
+    public static function increaseOrderRefund($order_id, $amount)
+    {
+        $order = AgentOrder::with('detail')->where('order_id', $order_id)->first();
+        if ($order) {
+            \DB::beginTransaction();
+            $order->refund_amount = $order->refund_amount + $amount;
+            foreach ($order->detail as $order_detail) {
+                $order_detail->refund_amount = $order_detail->refund_amount + $amount;
+                $order_detail->award_amount = bcmul(bcsub($order_detail->amount, $order_detail->refund_amount), $order_detail->rate, 0);
+                $order_detail->save();
+            }
+            $order->save();
+            \DB::commit();
+
+            return $order;
+        }
+
+        return 0;
+    }
+
 
 }

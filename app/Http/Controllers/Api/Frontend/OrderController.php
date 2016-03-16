@@ -169,14 +169,14 @@ class OrderController extends Controller {
         }
     }
 
-    public function redeliver(OrderRefundDeliverRequest $request, $refund_order_id)
+    public function redeliver(OrderRefundDeliverRequest $request, $order_no)
     {
         try {
             $user_id = $this->getCurrentAuthUserId();
             $company_name = $request->input('company_name');
             $post_no = $request->input('post_no');
 
-            $refund_order = OrderRefund::deliver($user_id, $refund_order_id, $company_name, $post_no);
+            $refund_order = OrderRefund::deliver($user_id, $order_no, $company_name, $post_no);
 
             return $this->response->array(['data' => $refund_order]);
         } catch (\Exception $e) {

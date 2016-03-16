@@ -285,6 +285,7 @@ class EloquentUserRepository implements UserContract {
         $user = self::findUserByPhone($phone);
         if ($user) {
             $user->password = $password;
+
             return $user->save();
         }
 

@@ -5,6 +5,8 @@ use App\Models\Client;
 
 class AgentProtocol {
 
+    const DELAY_DAYS = 7;
+
     const AGENT_ROLE_NAME = 'Agent';
     const SYSTEM_AGENT_ID = 0;
 
@@ -31,6 +33,9 @@ class AgentProtocol {
     const AGENT_LEVEL_OF_CITY = 3;
     const AGENT_LEVEL_OF_REGION = 4;
     const AGENT_LEVEL_OF_STORE = 5;
+
+    const AGENT_ORDER_EFFECTED = 'effected';
+    const AGENT_ORDER_NOT_EFFECT = 'not_effect';
 
     public static function upperLevel($level)
     {

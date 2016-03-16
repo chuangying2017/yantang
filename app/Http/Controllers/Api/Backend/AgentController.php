@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Backend;
 
 use App\Http\Requests\ApplyAgentRequest;
 use App\Services\Agent\AgentOrderService;
+use App\Services\Agent\AgentProtocol;
 use App\Services\Agent\AgentService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -72,14 +74,17 @@ class AgentController extends Controller {
 
             $agent = AgentService::getAgentByUser($user_id);
 
-
             $access_agent_id = $request->input('agent_id') ?: null;
             if ( ! is_null($access_agent_id)) {
                 $agent = AgentService::checkAccess($agent, $access_agent_id);
             }
 
+            $type = $request->input('type') ?: AgentProtocol::AGENT_ORDER_EFFECTED;
+
             $start_at = $request->input('start_at') ?: null;
-            $end_at = $request->input('end_at') ?: null;
+            if ($type == AgentProtocol::AGENT_ORDER_NOT_EFFECT) {
+                $end_at = Carbon::today()->subDay(AgentProtocol::DELAY_DAYS);
+            }
             $status = $request->input('status') ?: null;
 
             $orders = AgentOrderService::getOrders($agent['id'], $agent['user_id'], $start_at, $end_at, $status);

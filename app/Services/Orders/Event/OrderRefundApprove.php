@@ -9,15 +9,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class OrderRefundApprove extends Event
 {
     use SerializesModels;
+    /**
+     * @var
+     */
+    public $refund_order;
 
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param $refund_order
      */
-    public function __construct()
+    public function __construct($refund_order)
     {
-        //
+        $this->refund_order = $refund_order;
     }
 
     /**

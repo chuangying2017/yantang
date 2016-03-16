@@ -1,6 +1,7 @@
 <?php namespace App\Services\Orders;
 
 use App\Services\Orders\Event\OrderRefundApply;
+use App\Services\Orders\Event\OrderRefundApprove;
 use App\Services\Orders\Event\OrderRefunded;
 use App\Services\Orders\Event\OrderRefunding;
 use App\Services\Orders\Exceptions\OrderAuthFail;
@@ -20,6 +21,8 @@ class OrderRefund {
 
         throw new OrderAuthFail();
     }
+
+
 
     /**
      * 申请退货
@@ -44,9 +47,10 @@ class OrderRefund {
         return $order;
     }
 
-    public static function deliver($user_id, $refund_order_id, $company_name, $post_no)
+    public static function deliver($user_id, $order_no, $company_name, $post_no)
     {
-        $refund_order = self::authOrder($user_id, $refund_order_id);
+        $refund_order = OrderRepository::getRefundOrderByOrderNo($order_no);
+        $refund_order = self::authOrder($user_id, $refund_order);
 
         return OrderRepository::updateRefundOrderDeliver($refund_order, $company_name, $post_no);
     }
@@ -214,6 +218,7 @@ class OrderRefund {
     }
 
 
+
     /**
      * ---------------------------------------------------------------------------------------------------------------------------------
      *
@@ -231,7 +236,8 @@ class OrderRefund {
 
     public static function approve($refund_order_id, $memo = '')
     {
-        return OrderRepository::updateRefundOrderStatus($refund_order_id, OrderProtocol::STATUS_OF_RETURN_APPROVE, $memo);
+        $refund_order = OrderRepository::updateRefundOrderStatus($refund_order_id, OrderProtocol::STATUS_OF_RETURN_APPROVE, $memo);
+        event(new OrderRefundApprove($refund_order));
     }
 
     public static function reject($refund_order_id, $memo = '')
