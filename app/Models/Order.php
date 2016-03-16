@@ -61,7 +61,7 @@ class Order extends Model {
 
     public function getCanReturnAttribute()
     {
-        return OrderProtocol::validStatus($this->attributes['status'], OrderProtocol::STATUS_OF_RETURN_APPLY) && $this->attributes['pay_at'] < \Carbon\Carbon::now()->subDay(7);
+        return OrderProtocol::validStatus($this->attributes['status'], OrderProtocol::STATUS_OF_RETURN_APPLY, false) && $this->attributes['pay_at'] < \Carbon\Carbon::now()->subDay(7);
     }
 
 }

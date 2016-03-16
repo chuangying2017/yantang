@@ -15,7 +15,7 @@ $api->delete('deliver/{order_no}', [
     'uses' => 'OrderDeliverController@cancel'
 ]);
 
-$api->resource('orders/refund/{refund_order_id}done', [
+$api->post('orders/refund/{refund_order_id}/done', [
     'as'   => 'orders.refund.done',
     'uses' => 'OrderRefundController@done'
 ]);

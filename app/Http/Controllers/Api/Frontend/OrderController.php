@@ -42,8 +42,7 @@ class OrderController extends Controller {
 
         $orders = OrderService::lists($user_id);
 
-
-        return $this->response->collection($orders, new OrderTransformer());
+        return $this->response->paginator($orders, new OrderTransformer());
     }
 
     public function preConfirm(Request $request)

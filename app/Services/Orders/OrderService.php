@@ -32,7 +32,7 @@ class OrderService {
         return $order;
     }
 
-    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = ['children', 'address'], $status = null, $paginate = null)
+    public static function lists($user_id = null, $sort_by = 'created_at', $sort_type = 'desc', $relation = ['children', 'address'], $status = null, $paginate = 20)
     {
         return OrderRepository::lists($user_id, $sort_by, $sort_type, $relation, $status, $paginate);
     }

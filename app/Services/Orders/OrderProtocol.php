@@ -58,6 +58,9 @@ class OrderProtocol {
             self::STATUS_OF_CANCEL         => '已取消',
             self::STATUS_OF_REVIEW         => '已评价',
             self::STATUS_OF_REFUNDING      => '退款中',
+            self::STATUS_OF_RETURN_APPLY   => '退货,待审核',
+            self::STATUS_OF_RETURN_APPROVE => '退货,同意',
+            self::STATUS_OF_RETURN_REJECT  => '退货,拒绝',
             self::STATUS_OF_REFUNDED       => '已退款',
         ];
 
