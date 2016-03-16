@@ -30,6 +30,10 @@ class OrderProtocol {
     const RESOURCE_OF_TICKET = 'App\Models\Ticket';
     const RESOURCE_OF_PINGXX = 'App\Models\PingxxPayment';
 
+
+    const ACTION_OF_RETURN_REJECT = 'reject';
+    const ACTION_OF_RETURN_APPROVE = 'approve';
+
     public static function statusAfterPaid()
     {
         return [

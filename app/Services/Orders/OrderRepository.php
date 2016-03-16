@@ -131,7 +131,7 @@ class OrderRepository {
 
     public static function queryFullOrder($order)
     {
-        $relation = ['children', 'children.skus', 'children.deliver', 'address', 'billings', 'refund', 'refund.products'];
+        $relation = ['children', 'children.skus', 'children.deliver', 'address', 'billings', 'refund', 'refund.skus'];
         if ($order instanceof Order) {
             $order = $order->load($relation);
         } else {
@@ -407,12 +407,12 @@ class OrderRepository {
 
     public static function showRefundOrder($order_id)
     {
-        return OrderRefund::with('products')->findOrFail($order_id);
+        return OrderRefund::with('skus', 'order', 'order.child', 'order.child.skus')->findOrFail($order_id);
     }
 
     public static function listsRefundOrder($status = OrderProtocol::STATUS_OF_RETURN_APPLY, $paginate = 20)
     {
-        $query = OrderRefund::where('status', $status);
+        $query = OrderRefund::with('skus')->where('status', $status);
 
         if ( ! is_null($paginate)) {
             return $query->paginate($paginate);

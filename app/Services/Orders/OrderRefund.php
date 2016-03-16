@@ -23,7 +23,6 @@ class OrderRefund {
     }
 
 
-
     /**
      * 申请退货
      * @param $user_id
@@ -218,7 +217,6 @@ class OrderRefund {
     }
 
 
-
     /**
      * ---------------------------------------------------------------------------------------------------------------------------------
      *
@@ -234,10 +232,18 @@ class OrderRefund {
         return $orders;
     }
 
+    public static function show($id)
+    {
+        $order = OrderRepository::showRefundOrder($id);
+
+        return $order;
+    }
+
     public static function approve($refund_order_id, $memo = '')
     {
         $refund_order = OrderRepository::updateRefundOrderStatus($refund_order_id, OrderProtocol::STATUS_OF_RETURN_APPROVE, $memo);
         event(new OrderRefundApprove($refund_order));
+        return $refund_order;
     }
 
     public static function reject($refund_order_id, $memo = '')
@@ -250,12 +256,13 @@ class OrderRefund {
         $refund_order = OrderRepository::fetchRefundOrder($refund_order_id);
         //发起pingxx退款
         $desc = '退款订单ID: ' . $refund_order['id'] . ' 的退款';
-        PingxxService::refund($refund_order, $refund_order['amount'], $desc);
+        $result = PingxxService::refund($refund_order, $refund_order['amount'], $desc);
         //改变退款订单状态
 
         OrderRepository::updateRefundOrderStatus($refund_order, OrderProtocol::STATUS_OF_REFUNDING);
 
         event(new OrderRefunding($refund_order['order_id']));
+        return $result;
     }
 
     public static function refunded($refund_order_id)

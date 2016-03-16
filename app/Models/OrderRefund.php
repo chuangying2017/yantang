@@ -10,9 +10,14 @@ class OrderRefund extends Model {
 
     protected $guarded = ['id'];
 
-    public function products()
+    public function skus()
     {
         return $this->belongsToMany(OrderProduct::class, 'order_refund_products', 'order_refund_id', 'order_product_id')->withPivot(['quantity', 'amount']);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 
 }

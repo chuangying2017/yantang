@@ -73,8 +73,5 @@ class OrderController extends Controller {
         return $this->response->noContent();
     }
 
-    public function return()
-    {
-        
-    }
+
 }
