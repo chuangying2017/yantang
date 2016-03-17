@@ -36,11 +36,12 @@ class OrderController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user_id = $this->getCurrentAuthUserId();
+        $status = $request->input('status') ?: null;
 
-        $orders = OrderService::lists($user_id);
+        $orders = OrderService::lists($user_id, $status);
 
         return $this->response->paginator($orders, new OrderTransformer());
     }
@@ -128,12 +129,11 @@ class OrderController extends Controller {
             $order = OrderService::show($user_id, $order_no);
             $order->show_full = 1;
 
-
+            return $this->response->item($order, new OrderTransformer());
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
 
-        return $this->response->item($order, new OrderTransformer());
     }
 
 
@@ -164,6 +164,7 @@ class OrderController extends Controller {
             return $this->response->item($order, new OrderTransformer());
 
         } catch (\Exception $e) {
+//            return $e->getTrace();
             $this->response->errorInternal($e->getMessage());
         }
     }

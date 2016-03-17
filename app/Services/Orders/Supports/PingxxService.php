@@ -372,7 +372,6 @@ class PingxxService implements PaymentInterface {
                 'description' => $desc
             ]
         );
-
         $pingxx_refund_data = [
             'order_id'          => $order_refund['order_id'],
             'payment_no'        => $result['order_no'],

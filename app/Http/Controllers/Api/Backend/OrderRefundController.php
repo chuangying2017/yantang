@@ -53,7 +53,7 @@ class OrderRefundController extends Controller {
         $action = $request->input('action') ?: OrderProtocol::ACTION_OF_RETURN_REJECT;
         $memo = $request->input('memo');
 
-        if ($action == OrderProtocol::ACTION_OF_RETURN_REJECT) {
+        if ($action == OrderProtocol::ACTION_OF_RETURN_APPROVE) {
             $order = OrderRefund::approve($id, $memo);
         } else {
             $order = OrderRefund::reject($id, $memo);

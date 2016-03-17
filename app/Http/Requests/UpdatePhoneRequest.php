@@ -23,7 +23,7 @@ class UpdatePhoneRequest extends Request {
      */
     public function rules()
     {
-        $token = $this->input('uuid', null);
+        $token = $this->input('phone', null);
         return [
             'phone' => 'required|confirm_mobile_not_change:' . $token,
         ];

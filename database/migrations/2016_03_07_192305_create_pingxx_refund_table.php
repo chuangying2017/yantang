@@ -21,10 +21,10 @@ class CreatePingxxRefundTable extends Migration {
             $table->integer('pingxx_payment_id');
             $table->string('refund_id');
             $table->string('charge_id');
-            $table->string('transaction_no');
+            $table->string('transaction_no')->nullable();
             $table->unsignedInteger('amount');
             $table->string('status');
-            $table->integer('time_succeed');
+            $table->integer('time_succeed')->nullable();
             $table->string('failure_code');
             $table->string('failure_msg');
             $table->string('description');

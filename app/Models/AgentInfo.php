@@ -34,5 +34,17 @@ class AgentInfo extends Model {
         return AgentProtocol::name($this->attributes['agent_role']);
     }
 
+    public function setContractImageAttribute($value)
+    {
+        if ( ! is_null($value))
+            $this->attributes['contract_image'] = serialize($value);
+        else
+            $this->attributes['contract_image'] = $value;
+    }
+
+    public function getContractImageAttribute()
+    {
+        return unserialize($this->attributes['contract_image']);
+    }
 
 }

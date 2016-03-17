@@ -112,7 +112,7 @@ class PingxxPaymentRepository {
 
     public static function generateRefundPayment($data)
     {
-        return PingxxRefund::updateOrCreate(['refund_id' => $data['id']], $data);
+        return PingxxRefund::updateOrCreate(['refund_id' => $data['refund_id']], $data);
     }
 
     public static function updateRefundSuccess($refund_id, $data)

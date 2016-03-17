@@ -66,13 +66,12 @@ class OrderRepository {
                 'title'           => $order_product['title'],
                 'cover_image'     => $order_product['cover_image'],
                 'attributes'      => $order_product['attributes'],
-                'discount_amount' => array_get($order_product, 'discount_amount', 0),
-                'pay_amount'      => bcsub($order_product['price'], array_get($order_product, 'discount_amount', 0))
+                'discount_amount' => bcmul(array_get($order_product, 'discount_amount', 0), $order_product['quantity'], 0),
+                'pay_amount'      => bcsub(bcmul($order_product['price'], $order_product['quantity'], 0), array_get($order_product, 'discount_amount', 0))
             ];
         }
         DB::table('order_products')->insert($order_products_info);
     }
-
 
     protected static function storeAddress($address, $order_id)
     {
@@ -370,7 +369,7 @@ class OrderRepository {
     public static function queryOrderProduct($order_product_id)
     {
         if (is_array($order_product_id)) {
-            return OrderProduct::whereIn('id', $order_product_id)->get();
+            return OrderProduct::whereIn('id', array_values($order_product_id))->get();
         }
 
         return OrderProduct::findOrFail($order_product_id);

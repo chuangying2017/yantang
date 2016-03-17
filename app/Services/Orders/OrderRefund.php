@@ -41,6 +41,7 @@ class OrderRefund {
             $order_products = self::checkProducts($order, $refund_product_info);
         }
 
+
         $order = self::generateRefundOrder($order, $order_products, $memo);
 
         return $order;
@@ -56,6 +57,7 @@ class OrderRefund {
 
     protected static function generateRefundOrder($order, $order_products, $memo)
     {
+
         //计算需要退还的金额
         $refund_amount = self::calRefundAmount($order, $order_products);
         //生成退货订单
@@ -67,6 +69,8 @@ class OrderRefund {
             'client_memo' => $memo,
         ];
 
+        \DB::beginTransaction();
+
         $refund_order = OrderRepository::createRefundOrder($refund_order_data);
 
         //标记退货商品
@@ -74,21 +78,22 @@ class OrderRefund {
         foreach ($order_products as $order_product) {
             $order_product_quantity = $order_product['quantity'];
             $order_product_amount = $order_product['pay_amount'];
-            $refund_order_product_data[] = [
-                $order_product => [
-                    'quantity' => $order_product_quantity,
-                    'amount'   => $order_product_amount
-                ]
+
+            $refund_order_product_data[ $order_product['id'] ] = [
+                'quantity' => $order_product_quantity,
+                'amount'   => $order_product_amount
             ];
             OrderRepository::updateOrderProductRefund($order_product['id'], OrderProtocol::STATUS_OF_RETURN_APPLY, $order_product_quantity, $order_product_amount);
         }
 
         if (count($refund_order_product_data)) {
-            $refund_order->products()->attach($refund_order_product_data);
+            $refund_order->skus()->attach($refund_order_product_data);
         }
 
         //标记退货商品子订单,主订单
         $order = OrderRepository::updateOrderRefund($order, OrderProtocol::STATUS_OF_RETURN_APPLY, $refund_amount);
+
+        \DB::commit();
 
         //出发申请退货事件
         event(new OrderRefundApply($order));
@@ -144,6 +149,7 @@ class OrderRefund {
         }
         array_unique($order_product_ids);
 
+
         $origin_order_products = OrderRepository::queryOrderProduct($order_product_ids);
 
         //检查商品是否存在
@@ -157,13 +163,15 @@ class OrderRefund {
             if ($order_product['order_id'] != $order['id']) {
                 throw new \Exception('申请退货商品不是该订单');
             }
-            $request_return_sku_quantity = $refund_product_info[ $order_product['id'] ]['quantity'];
+            $request_return_sku_quantity = $order_product_info[ $order_product['id'] ];
             if ((bcsub($order_product['quantity'], $order_product['return_quantity'])) < $request_return_sku_quantity) {
                 throw new \Exception('退货商品数量不能超过购买数量');
             }
+            $order_products[ $key ]['id'] = $order_product['id'];
+
             //计算单品退还数量与金额
-            $order_products[ $key ]['quantity'] = $request_return_sku_quantity;
             $order_products[ $key ]['pay_amount'] = bcmul($request_return_sku_quantity, bcdiv($origin_order_products[ $key ]['pay_amount'], $origin_order_products[ $key ]['quantity'], 0));
+            $order_products[ $key ]['quantity'] = $request_return_sku_quantity;
         }
 
         return $order_products;
@@ -210,7 +218,7 @@ class OrderRefund {
 
         //支付超过七天
         if ($order['pay_at'] < Carbon::now()->subDay(7)) {
-            throw new \Exception('当前状态不可退');
+            throw new \Exception('超过退换时间');
         }
 
         return $order;
@@ -243,6 +251,7 @@ class OrderRefund {
     {
         $refund_order = OrderRepository::updateRefundOrderStatus($refund_order_id, OrderProtocol::STATUS_OF_RETURN_APPROVE, $memo);
         event(new OrderRefundApprove($refund_order));
+
         return $refund_order;
     }
 
@@ -262,6 +271,7 @@ class OrderRefund {
         OrderRepository::updateRefundOrderStatus($refund_order, OrderProtocol::STATUS_OF_REFUNDING);
 
         event(new OrderRefunding($refund_order['order_id']));
+
         return $result;
     }
 
