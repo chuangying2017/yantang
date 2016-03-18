@@ -84,7 +84,10 @@ class AgentController extends Controller {
             $start_at = $request->input('start_at') ?: null;
             if ($type == AgentProtocol::AGENT_ORDER_NOT_EFFECT) {
                 $end_at = Carbon::today()->subDay(AgentProtocol::DELAY_DAYS);
+            } else {
+                $end_at = $request->input('end_at') ? : null;
             }
+
             $status = $request->input('status') ?: null;
 
             $orders = AgentOrderService::getOrders($agent['id'], $agent['user_id'], $start_at, $end_at, $status);
