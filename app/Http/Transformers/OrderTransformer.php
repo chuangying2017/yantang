@@ -18,16 +18,19 @@ class OrderTransformer extends TransformerAbstract {
         $this->setDefaultIncludes($includes);
 
         $base_info = [
-            'order_no'     => $order->order_no,
-            'total_amount' => display_price($order->total_amount),
-            'discount_fee' => display_price($order->discount_amount),
-            'pay_amount'   => display_price($order->pay_amount),
-            'user_id'      => (int)$order->user_id,
-            'memo'         => $order->memo,
-            'created_at'   => $order->created_at->toDateTimeString(),
-            'pay_at'       => $order->pay_at,
-            'status'       => $order->status,
-            'pay_type'     => $order->pay_type,
+            'order_no'      => $order->order_no,
+            'total_amount'  => display_price($order->total_amount),
+            'discount_fee'  => display_price($order->discount_amount),
+            'pay_amount'    => display_price($order->pay_amount),
+            'user_id'       => (int)$order->user_id,
+            'memo'          => $order->memo,
+            'created_at'    => $order->created_at->toDateTimeString(),
+            'pay_at'        => $order->pay_at,
+            'status'        => $order->status,
+            'pay_type'      => $order->pay_type,
+            'refund_status' => $order->refund_status,
+            'refund_amount' => $order->refund_amount,
+            'refund_at'     => $order->refund_at,
         ];
 
         return array_merge($base_info);

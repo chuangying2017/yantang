@@ -8,7 +8,7 @@
 
 namespace App\Services\Product;
 
-
+use App\Http\Requests\Request;
 use App\Models\Product;
 use App\Models\ProductMeta;
 use App\Models\ProductSku;
@@ -25,7 +25,7 @@ use Exception;
 class ProductRepository {
 
 
-    public static function lists($category_id = null, $brand_id = null, $paginate = null, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP, $keyword = null, $new_query = true)
+    public static function lists($category_id = null, $brand_id = null, $paginate = 20, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP, $keyword = null, $new_query = true)
     {
         $query = Product::with('meta', 'data')->where('status', $status);
 
@@ -38,11 +38,34 @@ class ProductRepository {
         }
 
 
-        $query = $query->where(function ($query) use ($keyword) {
-            $query->where('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
-                return $query->where('tags', 'like', '%' . $keyword . '%');
-            });
-        });
+        if ( ! is_null($keyword)) {
+
+            $limit = 50;
+            $xs = new \XS('egrace');
+            $search = $xs->search;
+            $result = $search->setQuery($keyword)->setLimit($limit)->search();
+            $result_count = $search->count();
+            if ($result_count > 0) {
+                $product_ids = [];
+                foreach ($result as $result_value) {
+                    $product_ids[] = $result_value['id'];
+                }
+                for ($i = 1; $i <= $result_count / $limit + 1; $i++) {
+                    $result = $search->setQuery($keyword)->setLimit($limit, $limit * $i)->search();
+                    foreach ($result as $result_value) {
+                        $product_ids[] = $result_value['id'];
+                    }
+                }
+
+                $query = $query->whereIn('id', $product_ids);
+            }
+//            $query = $query->where(function ($query) use ($keyword) {
+//                $query->where('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
+//                    return $query->where('tags', 'like', '%' . $keyword . '%');
+//                });
+//            });
+        }
+
 
         if ( ! is_null($orderBy)) {
             if (ProductConst::getProductSortOption($orderBy)) {
