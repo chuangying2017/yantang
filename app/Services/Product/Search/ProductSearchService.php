@@ -3,6 +3,7 @@
 define('XS_APP_ROOT', env('SEARCH_INI_PATH'));
 
 use App\Models\Product;
+use App\Services\Product\ProductConst;
 use XS;
 use XSDocument;
 
@@ -30,7 +31,7 @@ class ProductSearchService {
     public function build()
     {
         $this->getIndex()->beginRebuild();
-        $products = Product::with('meta')->get();
+        $products = Product::with('meta')->where('status', ProductConst::VAR_PRODUCT_STATUS_UP)->get();
 
         if ( ! count($products)) return;
 
@@ -48,6 +49,12 @@ class ProductSearchService {
 
     public function add($product)
     {
+        if ($product->status == ProductConst::VAR_PRODUCT_STATUS_DOWN) {
+            $this->delete($product);
+
+            return 1;
+        };
+
         $product->load('meta');
 
         $data = array(

@@ -46,8 +46,8 @@ class ProductRepository {
             $search = ProductSearch::getSearch();
             $result = $search->setQuery($keyword)->setLimit($limit)->search();
             $result_count = $search->getLastCount();
+            $product_ids = [];
             if ($result_count > 0) {
-                $product_ids = [];
                 foreach ($result as $result_value) {
                     $product_ids[] = $result_value['id'];
                 }
@@ -57,9 +57,9 @@ class ProductRepository {
                         $product_ids[] = $result_value['id'];
                     }
                 }
-
-                $query = $query->whereIn('id', $product_ids);
             }
+            $query = $query->whereIn('id', $product_ids);
+
 //            $query = $query->where(function ($query) use ($keyword) {
 //                $query->where('title', 'like', '%' . $keyword . '%')->orWhereHas('meta', function ($query) use ($keyword) {
 //                    return $query->where('tags', 'like', '%' . $keyword . '%');

@@ -99,10 +99,10 @@ class ProductService {
                 $category_id = CategoryService::findIdByName($keyword) ?: null;
                 $keyword_flag = ! is_null($category_id) ? 1 : $keyword_flag;
             };
-            if (is_null($brand_id)) {
-                $brand_id = BrandService::queryIdByName($keyword);
-                $keyword_flag = ! is_null($brand_id) ? 1 : $keyword_flag;
-            }
+//            if (is_null($brand_id)) {
+//                $brand_id = BrandService::queryIdByName($keyword);
+//                $keyword_flag = ! is_null($brand_id) ? 1 : $keyword_flag;
+//            }
         }
 
         $brand_id = ! is_null($brand_id) ? to_array($brand_id) : null;

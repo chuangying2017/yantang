@@ -14,14 +14,18 @@ class ProductServiceProvider extends ServiceProvider {
         });
 
         Product::saved(function ($product) {
-
             app()->make('product_search')->add($product);
+        });
 
+        Product::restored(function ($product) {
+            app()->make('product_search')->add($product);
         });
 
         Product::deleted(function ($product) {
             app()->make('product_search')->delete($product);
         });
+
+
 
         $loader = AliasLoader::getInstance();
         $loader->alias('ProductSearch', ProductSearch::class);
