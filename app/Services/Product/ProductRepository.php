@@ -14,9 +14,11 @@ use App\Models\ProductMeta;
 use App\Models\ProductSku;
 use App\Services\Product\Comment\CommentService;
 use App\Services\Product\Fav\FavService;
+use App\Services\Product\Search\Facades\ProductSearch;
 use App\Services\Product\Tags\ProductTagService;
 use DB;
 use Exception;
+use XSTokenizerScws;
 
 /**
  * Class ProductRepository
@@ -41,10 +43,9 @@ class ProductRepository {
         if ( ! is_null($keyword)) {
 
             $limit = 50;
-            $xs = new \XS('egrace');
-            $search = $xs->search;
+            $search = ProductSearch::getSearch();
             $result = $search->setQuery($keyword)->setLimit($limit)->search();
-            $result_count = $search->count();
+            $result_count = $search->getLastCount();
             if ($result_count > 0) {
                 $product_ids = [];
                 foreach ($result as $result_value) {

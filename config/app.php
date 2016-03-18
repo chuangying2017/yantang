@@ -159,6 +159,9 @@ return [
         App\Services\Marketing\MarketingServiceProvider::class,
         \App\Providers\ApiServiceProvider::class,
 
+
+        \App\Services\Product\Search\ProductServiceProvider::class,
+
         /*
 		 * Third party service providers
 		 */
