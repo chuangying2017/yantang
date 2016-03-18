@@ -44,7 +44,16 @@ class AgentInfo extends Model {
 
     public function getContractImageAttribute()
     {
-        return unserialize($this->attributes['contract_image']);
+        if ($this->attributes['contract_image']) {
+            $array = @unserialize($this->attributes['contract_image']);
+            if ($array === false && $this->attributes['contract_image'] !== 'b:0;') {
+                return to_array($this->attributes['contract_image']);
+            }
+
+            return $array;
+        }
+
+        return to_array($this->attributes['contract_image']);
     }
 
 }

@@ -20,10 +20,10 @@ class AgentOrderService {
 
     public static function getEarnData($agent_id, $user_id = null)
     {
-        $month_first_day = Carbon::today()->startOfMonth()->addDay(AgentProtocol::DELAY_DAYS);
+        $month_first_day = Carbon::today()->startOfMonth();
 //        $week_first_day = Carbon::today()->startOfWeek();
-        $today = Carbon::today()->addDay(AgentProtocol::DELAY_DAYS);
-        $now = Carbon::now()->addDay(AgentProtocol::DELAY_DAYS);
+        $today = Carbon::today()->subDay(AgentProtocol::DELAY_DAYS);
+        $now = Carbon::now()->subDay(AgentProtocol::DELAY_DAYS);
         $paginate = null;
         $orders = self::getOrders($agent_id, $user_id, $month_first_day, $now, $paginate);
 
