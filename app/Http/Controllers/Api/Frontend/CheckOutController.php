@@ -67,8 +67,6 @@ class CheckOutController extends Controller {
             $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
             PingxxProtocol::validChannel($channel);
 
-            info(get_current_auth_user_openid());
-
 
             #TODO REMOVE TEST PAY
 //            $channel = $request->input('channel', PingxxProtocol::PINGXX_SPECIAL_CHANNEL_WECHAT_QR);
