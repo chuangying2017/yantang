@@ -161,15 +161,18 @@ class OrderRepository {
             }
         }
 
+
         if ( ! is_null($merchant_id) && $merchant_id) {
             $query = $query->whereHas('children', function ($query) use ($merchant_id) {
                 $query->where('merchant_id', $merchant_id);
             });
         }
 
+
         if ( ! is_null($user_id)) {
             $query = $query->where('user_id', $user_id);
         }
+
 
         if ( ! is_null($keyword)) {
             $query = $query->where(function ($query) use ($keyword) {

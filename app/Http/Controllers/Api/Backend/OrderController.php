@@ -27,13 +27,13 @@ class OrderController extends Controller {
             $merchant_id = MerchantService::getMerchantIdByUserId($user_id);
             $keyword = $request->input('keyword') ?: null;
 
-            $user_id = $request->input('user_id') ?: null;
+            $query_user_id = $request->input('user_id') ?: null;
             $sort = ApiConst::decodeSort($request->input('sort'));
             $status = $request->input('status') ?: null;
             $start_at = $request->input('start_at') ?: null;
             $end_at = $request->input('end_at') ?: null;
             $relations = ['children', 'address'];
-            $orders = OrderManager::lists($user_id, $sort['order_by'], $sort['order_type'], $relations, $status, ApiConst::ORDER_PER_PAGE, $merchant_id, $keyword, $start_at, $end_at);
+            $orders = OrderManager::lists($query_user_id, $sort['order_by'], $sort['order_type'], $relations, $status, ApiConst::ORDER_PER_PAGE, $merchant_id, $keyword, $start_at, $end_at);
 
             return $this->response->paginator($orders, new OrderTransformer());
         } catch (Exception $e) {
