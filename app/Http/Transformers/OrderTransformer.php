@@ -1,6 +1,7 @@
 <?php namespace App\Http\Transformers;
 
 use App\Models\Order;
+use App\Models\OrderRefund;
 use League\Fractal\TransformerAbstract;
 
 class OrderTransformer extends TransformerAbstract {
@@ -11,9 +12,9 @@ class OrderTransformer extends TransformerAbstract {
     {
         $this->show_full = isset($order['show_full']) ? 1 : 0;
 
-        $includes = ['child_orders', 'address'];
+        $includes = ['child_orders', 'address', 'refund_order'];
         if ($this->show_full) {
-            $includes = ['child_orders', 'address'];
+            $includes = ['child_orders', 'address', 'refund_order'];
         }
         $this->setDefaultIncludes($includes);
 
@@ -48,6 +49,12 @@ class OrderTransformer extends TransformerAbstract {
         $child_orders = $order->children;
 
         return $this->collection($child_orders, new ChildOrderTransformer($this->show_full));
+    }
+
+    public function includeRefundOrder(Order $order)
+    {
+        $refund = $order->refund;
+        return $this->collection($refund, new OrderRefundTransformer());
     }
 
 

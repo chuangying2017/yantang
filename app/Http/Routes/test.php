@@ -4,6 +4,7 @@
  */
 
 use App\Models\AttributeValue;
+use App\Models\OrderProduct;
 use App\Services\Product\ProductConst;
 
 if (App::environment() == 'local' || env('APP_DEBUG')) {
@@ -82,22 +83,19 @@ if (App::environment() == 'local' || env('APP_DEBUG')) {
         Auth::user()->logout();
     });
 
-    get('test/sku/{id}', function ($id) {
-        $attribute_values = AttributeValue::with('attribute')->whereIn('id', [1, 5])->get();
-        $attributes = [];
-        foreach ($attribute_values as $attribute_value) {
-            $attributes[] = [
-                'attribute_value_id'   => $attribute_value['id'],
-                'attribute_value_name' => $attribute_value['value'],
-                'attribute_id'         => $attribute_value['attribute']['id'],
-                'attribute_name'       => $attribute_value['attribute']['name'],
-            ];
+    get('test/sku', function () {
+        $order_products = OrderProduct::withTrashed()->with('product')->get();
+
+//        return $order_products;
+        foreach($order_products as $order_product) {
+            if(isset($order_product->product->attributes)) {
+                $order_product->attributes = $order_product->product->attributes;
+//            dd($order_product);
+                $order_product->save();
+            }
+//            dd($order_product->product->attributes);
+
         }
-
-        return json_encode($attributes);
-        $sku = \App\Models\ProductSku::with('attributeValues')->find('228');
-
-        return $sku;
     });
 
 }
