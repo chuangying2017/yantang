@@ -152,9 +152,13 @@ class OrderRepository {
         }
 
         if ( ! is_null($status)) {
-            $query = $query->whereHas('children', function ($query) use ($status) {
-                $query->where('status', $status);
-            });
+            if (OrderProtocol::isReturn($status)) {
+                $query = $query->where('refund_status', $status);
+            } else {
+                $query = $query->whereHas('children', function ($query) use ($status) {
+                    $query->where('status', $status);
+                });
+            }
         }
 
         if ( ! is_null($merchant_id) && $merchant_id) {

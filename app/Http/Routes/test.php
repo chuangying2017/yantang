@@ -3,6 +3,7 @@
  * Test routes
  */
 
+use App\Models\AttributeValue;
 use App\Services\Product\ProductConst;
 
 if (App::environment() == 'local' || env('APP_DEBUG')) {
@@ -79,6 +80,24 @@ if (App::environment() == 'local' || env('APP_DEBUG')) {
 
     Route::get('/test/logout', function () {
         Auth::user()->logout();
+    });
+
+    get('test/sku/{id}', function ($id) {
+        $attribute_values = AttributeValue::with('attribute')->whereIn('id', [1, 5])->get();
+        $attributes = [];
+        foreach ($attribute_values as $attribute_value) {
+            $attributes[] = [
+                'attribute_value_id'   => $attribute_value['id'],
+                'attribute_value_name' => $attribute_value['value'],
+                'attribute_id'         => $attribute_value['attribute']['id'],
+                'attribute_name'       => $attribute_value['attribute']['name'],
+            ];
+        }
+
+        return json_encode($attributes);
+        $sku = \App\Models\ProductSku::with('attributeValues')->find('228');
+
+        return $sku;
     });
 
 }

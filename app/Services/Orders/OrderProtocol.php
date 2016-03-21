@@ -92,6 +92,18 @@ class OrderProtocol {
         return true;
     }
 
+    public static function isReturn($status)
+    {
+        return in_array($status, [
+            self::STATUS_OF_RETURN_APPLY,
+            self::STATUS_OF_RETURN_APPROVE,
+            self::STATUS_OF_RETURN_REJECT,
+            self::STATUS_OF_RETURN_DELIVER,
+            self::STATUS_OF_REFUNDING,
+            self::STATUS_OF_REFUNDED
+        ]);
+    }
+
     public static function validStatus($from_status, $to_status, $exception = true)
     {
         $valid_status = [];
