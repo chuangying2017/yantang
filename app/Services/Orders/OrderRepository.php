@@ -159,7 +159,7 @@ class OrderRepository {
                 $query = $query->where('refund_status', $status);
             } else {
                 $query = $query->whereHas('children', function ($query) use ($status) {
-                    $query->where('status', $status)->whereIsNull('refund_status');
+                    $query->where('status', $status)->whereNull('refund_status');
                 });
             }
         }
