@@ -94,7 +94,7 @@ class PingxxService implements PaymentInterface {
                 break;
             case 'upacp_wap':
                 $extra = array(
-                    'result_url' => env('PAYMENT_SUCCESS_URL')
+                    'result_url' => env('MOBILE_PAYMENT_SUCCESS_URL')
                 );
                 break;
             case 'upacp_pc':
