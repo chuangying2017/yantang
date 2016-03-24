@@ -12,5 +12,9 @@ class OrderProduct extends Model
 
     protected $guarded = ['id'];
 
+    public function product()
+    {
+        return $this->hasOne(ProductSku::class, 'id', 'product_sku_id');
+    }
 
 }

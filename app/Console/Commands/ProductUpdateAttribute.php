@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\AttributeValue;
+use App\Models\OrderProduct;
 use App\Models\ProductSku;
 use Illuminate\Console\Command;
 
@@ -41,7 +42,8 @@ class ProductUpdateAttribute extends Command {
     {
         $skus = ProductSku::get();
         foreach ($skus as $sku) {
-            $attribute_values = AttributeValue::with('attribute')->whereIn('id', [1, 5])->get();
+            $attribute_values = $sku->attributeValues()->get();
+            $attribute_values->load('attribute');
             $attributes = [];
             foreach ($attribute_values as $attribute_value) {
                 $attributes[] = [
@@ -54,6 +56,14 @@ class ProductUpdateAttribute extends Command {
 
             $sku->attributes = json_encode($attributes);
             $sku->save();
+        }
+
+        $order_products = OrderProduct::with('product')->get();
+        foreach ($order_products as $order_product) {
+            if (isset($order_product->product->attributes)) {
+                $order_product->attributes = $order_product->product->attributes;
+                $order_product->save();
+            }
         }
     }
 }

@@ -146,6 +146,9 @@ class OrderRepository {
     {
 
         if ( ! is_null($relation)) {
+            if(OrderProtocol::isReturn($status)) {
+                $relation[] = 'refund';
+            }
             $query = Order::with($relation)->orderBy($sort_by, $sort_type);
         } else {
             $query = Order::orderBy($sort_by, $sort_type);
@@ -156,11 +159,10 @@ class OrderRepository {
                 $query = $query->where('refund_status', $status);
             } else {
                 $query = $query->whereHas('children', function ($query) use ($status) {
-                    $query->where('status', $status);
+                    $query->where('status', $status)->whereNull('refund_status');
                 });
             }
         }
-
 
         if ( ! is_null($merchant_id) && $merchant_id) {
             $query = $query->whereHas('children', function ($query) use ($merchant_id) {
