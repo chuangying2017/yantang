@@ -98,6 +98,8 @@
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li :class="{active: status == 'paid'}"><a href="?status=paid">待发货</a></li>
+                    <li :class="{active: status == 'deliver'}"><a href="?status=deliver">已发货</a></li>
+                    <li :class="{active: status == 'unpaid'}"><a href="?status=unpaid">未支付</a></li>
                     <li :class="{active: status == 'apply'}"><a href="?status=apply">申请退货</a></li>
                     <li :class="{active: status == 'redeliver'}"><a href="?status=redeliver">退货中</a></li>
                     <li :class="{active: status == 'refunded'}"><a href="?status=refunded">已退款</a></li>

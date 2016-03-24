@@ -92,24 +92,45 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body no-padding">
-                    <ul id="progressbar" class="mt10">
-                        <li class="active">买家下单<br>{{$order->created_at}}</li>
-                        @if($order->status == 'paid')
-                            <li class="active">成功支付<br>{{$order->pay_at}}</li>
-                        @else
-                            <li class="">成功支付<br></li>
-                        @endif
-                        @if($order->children[0]->status == 'deliver')
-                            <li class="active">商家发货<br>{{$order->deliver_at}}</li>
-                        @else
-                            <li>商家发货<br></li>
-                        @endif
-                        @if($order->children[0]->status == 'deliver')
-                            <li class="active">交易完成<br>{{$order->deliver_at}}</li>
-                        @else
-                            <li>交易完成<br></li>
-                        @endif
-                    </ul>
+                    @if($order->refund_status == null)
+                        <ul id="progressbar" class="mt10">
+                            <li class="active">买家下单<br>{{$order->created_at}}</li>
+                            @if($order->status == 'paid')
+                                <li class="active">成功支付<br>{{$order->pay_at}}</li>
+                            @else
+                                <li class="">成功支付<br></li>
+                            @endif
+                            @if($order->children[0]->status == 'deliver')
+                                <li class="active">商家发货<br>{{$order->deliver_at}}</li>
+                            @else
+                                <li>商家发货<br></li>
+                            @endif
+                            @if($order->children[0]->status == 'done')
+                                <li class="active">交易完成<br>{{$order->deliver_at}}</li>
+                            @else
+                                <li>交易完成<br></li>
+                            @endif
+                        </ul>
+                    @else
+                        <ul id="progressbar" class="mt10">
+                            <li class="active">申请退款<br>{{$order->created_at}}</li>
+                            @if($order->refund_status == 'approve' || $order->refund_status !== 'apply')
+                                <li class="active">通过申请<br>{{$order->pay_at}}</li>
+                            @else
+                                <li class="">通过申请<br>{{$order->pay_at}}</li>
+                            @endif
+                            @if($order->refund_status == 'redeliver' || $order->refund_status == 'refunded')
+                                <li class="active">商品寄回<br>{{$order->pay_at}}</li>
+                            @else
+                                <li class="">商品寄回<br>{{$order->pay_at}}</li>
+                            @endif
+                            @if($order->refund_status == 'refunded')
+                                <li class="active">退款成功<br>{{$order->pay_at}}</li>
+                            @else
+                                <li class="">退款成功<br>{{$order->pay_at}}</li>
+                            @endif
+                        </ul>
+                    @endif
                 </div>
                 <!-- /.box-body -->
             </div>
