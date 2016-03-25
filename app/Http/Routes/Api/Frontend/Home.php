@@ -20,6 +20,11 @@ $api->get('sections/{section_id}', [
     'uses' => 'IndexController@getSection'
 ]);
 
+$api->get('social/weixin/js-sign', [
+    'as'   => 'wechat.js.sign',
+    'uses' => 'IndexController@jsSign'
+]);
+
 
 
 

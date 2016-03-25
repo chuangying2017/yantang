@@ -183,7 +183,7 @@ return [
         Toplan\PhpSms\PhpSmsServiceProvider::class,
         Toplan\Sms\SmsManagerServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
-
+        Overtrue\LaravelWechat\ServiceProvider::class,
     ],
 
     /*
@@ -251,6 +251,7 @@ return [
         'JWTAuth'    => Tymon\JWTAuth\Facades\JWTAuth::class,
         'PhpSms'     => Toplan\PhpSms\Facades\Sms::class,
         'SmsManager' => Toplan\Sms\Facades\SmsManager::class,
+        'EasyWeChat' => Overtrue\LaravelWechat\Facade::class,
     ],
 
 ];

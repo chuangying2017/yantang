@@ -73,5 +73,14 @@ class IndexController extends Controller {
         return $this->response->array(['data' => $section]);
     }
 
+    public function jsSign(Request $request)
+    {
+        $url = $request->get('url');
+
+        $result = \EasyWeChat::js()->signature($url);
+
+        return $this->response->array(['data' => $result]);
+    }
+
 
 }

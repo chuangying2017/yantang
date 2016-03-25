@@ -33,7 +33,8 @@
         "toplan/laravel-sms":"~2.2.3",
         "socialiteproviders/weixin": "^1.0",
         "socialiteproviders/weixin-web": "^1.0",
-        "hightman/xunsearch": "*@beta"
+        "hightman/xunsearch": "*@beta",
+        "overtrue/laravel-wechat": "~3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
