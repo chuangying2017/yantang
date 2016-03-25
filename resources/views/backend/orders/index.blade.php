@@ -85,147 +85,6 @@
     <div class="row">
         <!-- /.col -->
         <div class="col-md-12">
-            {{--<div class="box box-primary">--}}
-            {{--<div class="box-header with-border">--}}
-            {{--<h3 class="box-title">筛选条件</h3>--}}
-            {{--<!-- /.box-tools -->--}}
-            {{--</div>--}}
-            {{--<!-- /.box-header -->--}}
-            {{--<div class="box-body no-padding">--}}
-            {{--<form class="form-horizontal">--}}
-            {{--<div class="row">--}}
-            {{--<div class="col-sm-1"></div>--}}
-            {{--<div class="col-sm-4">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-4 control-label">订单号：</label>--}}
-            {{--<div class="col-sm-8">--}}
-            {{--<input type="text" class="form-control">--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="col-sm-3">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-5 control-label">下单时间：</label>--}}
-            {{--<div class="col-sm-7">--}}
-            {{--<input type="text" class="form-control pull-right" id="reservation">--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="row">--}}
-            {{--<div class="col-sm-1"></div>--}}
-            {{--<div class="col-sm-4">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-4 control-label">外部单号：</label>--}}
-            {{--<div class="col-sm-8">--}}
-            {{--<input type="text" class="form-control">--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="col-sm-3">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-5 control-label">订单类型：</label>--}}
-            {{--<div class="col-sm-7">--}}
-            {{--<select name="" id="" class="form-control">--}}
-            {{--<option value="">全部订单</option>--}}
-            {{--<option value="">未支付</option>--}}
-            {{--</select>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="col-sm-3">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-5 control-label">付款方式：</label>--}}
-            {{--<div class="col-sm-7">--}}
-            {{--<select name="" id="" class="form-control">--}}
-            {{--<option value="">网银付款</option>--}}
-            {{--<option value="">微信支付</option>--}}
-            {{--</select>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="row">--}}
-            {{--<div class="col-sm-1"></div>--}}
-            {{--<div class="col-sm-4">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-4 control-label">收货人姓名：</label>--}}
-            {{--<div class="col-sm-8">--}}
-            {{--<input type="text" class="form-control">--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="col-sm-3">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-5 control-label">订单状态：</label>--}}
-            {{--<div class="col-sm-7">--}}
-            {{--<select name="" id="" class="form-control">--}}
-            {{--<option value="">全部订单</option>--}}
-            {{--</select>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="col-sm-3">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-5 control-label">物流方式：</label>--}}
-            {{--<div class="col-sm-7">--}}
-            {{--<select name="" id="" class="form-control">--}}
-            {{--<option value="">普通物流</option>--}}
-            {{--</select>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="row">--}}
-            {{--<div class="col-sm-1"></div>--}}
-            {{--<div class="col-sm-4">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-4 control-label">收货人手机：</label>--}}
-            {{--<div class="col-sm-8">--}}
-            {{--<input type="text" class="form-control">--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="col-sm-3">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-5 control-label">微信昵称：</label>--}}
-            {{--<div class="col-sm-7">--}}
-            {{--<input type="text" class="form-control">--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="col-sm-3">--}}
-            {{--<div class="form-group">--}}
-            {{--<label class="col-sm-5 control-label">维权状态：</label>--}}
-            {{--<div class="col-sm-7">--}}
-            {{--<select name="" id="" class="form-control">--}}
-            {{--<option value="">全部</option>--}}
-            {{--</select>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-
-            {{--</form>--}}
-            {{--<!-- /.mail-box-messages -->--}}
-            {{--</div>--}}
-            {{--<!-- /.box-body -->--}}
-            {{--<div class="box-footer">--}}
-            {{--<div class="row">--}}
-            {{--<div class="col-sm-1"></div>--}}
-            {{--<div class="col-sm-10">--}}
-            {{--<div class="row">--}}
-            {{--<div class="col-sm-2"></div>--}}
-            {{--<div class="col-sm-8">--}}
-            {{--<button type="submit" class="btn btn-primary">根据条件筛选</button>--}}
-            {{--<button type="submit" class="btn btn-default">批量导出</button>--}}
-            {{--<button type="submit" class="btn btn-default">查看已生成报表</button>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
-            {{--</div>--}}
             <div class="box-tools pull-right" style="margin:10px;">
                 <div class="has-feedback">
                     <form action="?">
@@ -238,31 +97,24 @@
             </div>
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li :class="{active: status == ''}"><a href="?">全部订单</a></li>
-                    <li :class="{active: status == 'unpaid'}"><a href="?status=unpaid">待支付</a></li>
                     <li :class="{active: status == 'paid'}"><a href="?status=paid">待发货</a></li>
-                    {{--<li :class="{active: status == 'deliver'}"><a href="?status=deliver">已发货</a></li>--}}
-                    <li :class="{active: status == 'deliver'}"><a href="?status=deliver">已完成</a></li>
-                    <li :class="{active: status == 'refund'}"><a href="?status=refund">退款中</a></li>
+                    <li :class="{active: status == 'deliver'}"><a href="?status=deliver">已发货</a></li>
+                    <li :class="{active: status == 'unpaid'}"><a href="?status=unpaid">未支付</a></li>
+                    <li :class="{active: status == 'apply'}"><a href="?status=apply">申请退货</a></li>
+                    <li :class="{active: status == 'redeliver'}"><a href="?status=redeliver">退货中</a></li>
+                    <li :class="{active: status == 'refunded'}"><a href="?status=refunded">已退款</a></li>
+                    <li :class="{active: status == 'done'}"><a href="?status=done">已完成</a></li>
                     <li :class="{active: status == 'closed'}"><a href="?status=closed">已关闭</a></li>
+                    <li :class="{active: status == ''}"><a href="?status=">全部订单</a></li>
                 </ul>
                 <div class="tab-content order-tables">
                     <div class="active tab-pane" id="activity">
-                        <table class="table table-bordered">
-                            <tbody>
-                            <tr>
-                                <th width="40%">商品</th>
-                                <th width="10%">单价/数量</th>
-                                {{--<th width="10%">售后</th>--}}
-                                <th width="10%">买家</th>
-                                <th width="10%">下单时间</th>
-                                <th width="10%">订单状态</th>
-                                <th width="10%">实付金额</th>
-                            </tr>
-                            </tbody>
-                        </table>
 
-                        <order v-for="order in orders | filterBy status in 'children[0].status'" :order="order"></order>
+                        <div class="no-orders" v-if="orders.length <= 0">
+                            暂时没有订单
+                        </div>
+                        <order v-for="order in orders"
+                               :order="order"></order>
 
                     </div>
                     <!-- /.tab-pane -->
@@ -280,7 +132,7 @@
             </div>
             <!-- /. box -->
 
-            <ul class="pagination">
+            <ul class="pagination" v-if="pagination.total > 1">
                 <li :class="{active: pagination.current_page == n + 1 }" v-for="n in pagination.last_page"><a
                         href="?status=[! status !]&page=[! n+1 !]">[! n + 1 !]</a></li>
             </ul>
@@ -318,7 +170,7 @@
             data: {
                 pagination: app.pagination,
                 orders: app.pagination.data,
-                status: '',
+                status: 'paid',
                 expressOrder: {},
                 express: {
                     name: 'default',
@@ -327,7 +179,6 @@
                 expressCompanies: []
             },
             ready: function () {
-                this.$log('pagination')
                 if (location.search.indexOf('status') > 0) {
                     this.$set('status', getQuery('status'));
                 }

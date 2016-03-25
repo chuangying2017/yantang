@@ -72,7 +72,7 @@
             {{--href="{!! url('admin/clients') !!}"><span>{{ trans('menus.client') }}</span></a></li>--}}
 
             <li class="{{ Active::pattern('admin/orders') }}"><a
-                    href="{!! url('admin/orders')  !!}"><i
+                    href="{!! url('admin/orders?status=paid')  !!}"><i
                         class="fa fa-reorder"></i><span>{{ trans('menus.order') }}</span></a></li>
 
             {{--<li class="{{ Active::pattern('admin/dashboard') }}"><a--}}
