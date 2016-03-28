@@ -38,7 +38,7 @@ class Provider extends AbstractProvider implements ProviderInterface {
     {
         return [
             'response_type' => 'code',
-            'appid'         => $this->clientId,
+            'app_id'         => $this->clientId,
             'redirect_uri'  => urlencode($this->redirectUrl),
             'state'         => $state,
         ];
@@ -82,7 +82,7 @@ class Provider extends AbstractProvider implements ProviderInterface {
     protected function getTokenFields($code)
     {
         return [
-            'appid'        => $this->clientId,
+            'app_id'        => $this->clientId,
             'private_key'  => $this->clientSecret,
             'code'         => $code,
             'grant_type'   => 'authorization_code',
