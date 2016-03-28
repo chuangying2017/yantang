@@ -57,7 +57,7 @@ class Provider extends AbstractProvider implements ProviderInterface {
      */
     protected function getUserByToken($result)
     {
-        return $result['data'];
+        return $result['data']['user_info'];
     }
 
     /**
@@ -66,7 +66,7 @@ class Provider extends AbstractProvider implements ProviderInterface {
     protected function mapUserToObject(array $user)
     {
         return (new User())->setRaw($user)->map([
-            'id'       => $user['mobile'],
+            'id'       => $user['member_id'],
             'phone'    => $user['mobile'],
             'union_id' => array_get($user, 'unionid', null),
             'nickname' => array_get($user, 'nick_name', '每天惠用户' . Str::random(5)),
@@ -95,6 +95,7 @@ class Provider extends AbstractProvider implements ProviderInterface {
      */
     public function getAccessToken($code)
     {
+
         $response = $this->getHttpClient()->get($this->getTokenUrl(), [
             'query' => $this->getTokenFields($code),
         ]);
