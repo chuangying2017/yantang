@@ -37,9 +37,9 @@ class Provider extends AbstractProvider implements ProviderInterface {
     protected function getCodeFields($state = null)
     {
         return [
-            'appid'         => $this->clientId,
-            'redirect_uri'  => $this->redirectUrl,
             'response_type' => 'code',
+            'appid'         => $this->clientId,
+            'redirect_uri'  => urlencode($this->redirectUrl),
             'state'         => $state,
         ];
     }
@@ -86,7 +86,7 @@ class Provider extends AbstractProvider implements ProviderInterface {
             'private_key'  => $this->clientSecret,
             'code'         => $code,
             'grant_type'   => 'authorization_code',
-            'redirect_uri' => $this->redirectUrl,
+            'redirect_uri' => urlencode($this->redirectUrl),
         ];
     }
 
