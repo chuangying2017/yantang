@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Services\Socialite\Weixin;
+<?php namespace App\Services\Socialite\Weixin;
 
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
