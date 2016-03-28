@@ -45,7 +45,7 @@ class ClientRepository {
             ['user_id' => $user->id],
             [
                 'user_id'      => $user->id,
-                'nickname'     => $user->name,
+                'nickname'     => $user->nickname,
                 'avatar'       => array_get($extra_data, 'avatar', self::DEFAULT_AVATAR),
                 'promotion_id' => AgentService::getPromotionId(array_get($extra_data, 'promotion_code', null)),
             ]

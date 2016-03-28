@@ -20,9 +20,9 @@ class EventServiceProvider extends ServiceProvider {
 
         'SocialiteProviders\Manager\SocialiteWasCalled' => [
             // add your listeners (aka providers) here
-            'App\Services\Socialite\Weixin\WeixinExtendSocialite'
+//            'App\Services\Socialite\Weixin\WeixinExtendSocialite',
+            'App\Services\Socialite\Weixin\MeitianhuiExtendSocialite',
         ],
-
 
         /**
          * Frontend Events

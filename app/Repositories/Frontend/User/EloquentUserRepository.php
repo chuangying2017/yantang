@@ -51,7 +51,7 @@ class EloquentUserRepository implements UserContract {
         $user = User::create([
             'name'              => array_get($data, 'name', ''),
             'email'             => array_get($data, 'email', ''),
-            'phone'             => $provider ? null : array_get($data, 'phone'),
+            'phone'             => array_get($data, 'phone', null),
             'password'          => $provider ? null : $data['password'],
             'confirmation_code' => md5(uniqid(mt_rand(), true)),
             'status'            => 1,
@@ -97,12 +97,15 @@ class EloquentUserRepository implements UserContract {
             * 不存在授权信息,创建用户
             */
             if ( ! $user_provider) {
-                $user = $this->create([
-                    'name'   => $data->name ?: (property_exists($data, 'nickname') ? $data->nickname : uniqid($provider . '_')),
-                    'email'  => $data->email ?: '',
-                    'avatar' => $data->avatar,
-                    'status' => 1
-                ], true);
+                $user_data = [
+                    'name'     => $data->name ?: (property_exists($data, 'nickname') ? $data->nickname : uniqid($provider . '_')),
+                    'nickname' => property_exists($data, 'nickname') ? $data->nickname : uniqid($provider . '_'),
+                    'email'    => $data->email ?: '',
+                    'avatar'   => $data->avatar,
+                    'phone'    => property_exists($data, 'phone') ? $data->phone : null,
+                    'status'   => 1
+                ];
+                $user = $this->create($user_data, true);
             } else {
                 $user = $user_provider->user;
             }

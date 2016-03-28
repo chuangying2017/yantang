@@ -2,7 +2,7 @@
 
 return [
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Third Party Services
 	|--------------------------------------------------------------------------
@@ -14,28 +14,28 @@ return [
 	|
 	*/
 
-	'mailgun' => [
-		'domain' => env('MAILGUN_DOMAIN'),
-		'secret' => env('MAILGUN_SECRET'),
-	],
+    'mailgun' => [
+        'domain' => env('MAILGUN_DOMAIN'),
+        'secret' => env('MAILGUN_SECRET'),
+    ],
 
-	'mandrill' => [
-		'secret' => env('MANDRILL_SECRET'),
-	],
+    'mandrill' => [
+        'secret' => env('MANDRILL_SECRET'),
+    ],
 
-	'ses' => [
-		'key'    => env('SES_KEY'),
-		'secret' => env('SES_SECRET'),
-		'region' => 'us-east-1',
-	],
+    'ses' => [
+        'key'    => env('SES_KEY'),
+        'secret' => env('SES_SECRET'),
+        'region' => 'us-east-1',
+    ],
 
-	'stripe' => [
-		'model'  => 'App\User',
-		'key'    => env('STRIPE_KEY'),
-		'secret' => env('STRIPE_SECRET'),
-	],
+    'stripe' => [
+        'model'  => 'App\User',
+        'key'    => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+    ],
 
-	/*
+    /*
 	 * Socialite Credentials
 	 * Redirect URL's need to be the same as specified on each network you set up this application on
 	 * as well as conform to the route:
@@ -43,35 +43,41 @@ return [
 	 * Where service can github, facebook, twitter, or google
 	 */
 
-	'github' => [
-		'client_id' => env('GITHUB_CLIENT_ID'),
-		'client_secret' => env('GITHUB_CLIENT_SECRET'),
-		'redirect' => env('GITHUB_REDIRECT'),
-	],
+    'github' => [
+        'client_id'     => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect'      => env('GITHUB_REDIRECT'),
+    ],
 
-	'facebook' => [
-		'client_id' => env('FACEBOOK_CLIENT_ID'),
-		'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-		'redirect' => env('FACEBOOK_REDIRECT'),
-	],
+    'facebook' => [
+        'client_id'     => env('FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+        'redirect'      => env('FACEBOOK_REDIRECT'),
+    ],
 
-	'twitter' => [
-		'client_id' => env('TWITTER_CLIENT_ID'),
-		'client_secret' => env('TWITTER_CLIENT_SECRET'),
-		'redirect' => env('TWITTER_REDIRECT'),
-	],
+    'twitter' => [
+        'client_id'     => env('TWITTER_CLIENT_ID'),
+        'client_secret' => env('TWITTER_CLIENT_SECRET'),
+        'redirect'      => env('TWITTER_REDIRECT'),
+    ],
 
-	'google' => [
-		'client_id' => env('GOOGLE_CLIENT_ID'),
-		'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-		'redirect' => env('GOOGLE_REDIRECT'),
-	],
+    'google' => [
+        'client_id'     => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect'      => env('GOOGLE_REDIRECT'),
+    ],
 
     'weixin' => [
-        'client_id' => env('WECHAT_APPID'),
+        'client_id'     => env('WECHAT_APPID'),
         'client_secret' => env('WECHAT_APPSECRET'),
-        'redirect' => env('WEIXIN_REDIRECT_URI'),
-        'base_redirect' =>  env('WEIXIN_BASE_REDIRECT_URL'),
+        'redirect'      => env('WEIXIN_REDIRECT_URI'),
+        'base_redirect' => env('WEIXIN_BASE_REDIRECT_URL'),
+    ],
+
+    'meitianhui' => [
+        'client_id'     => env('MTH_APPID'),
+        'client_secret' => env('MTH_APPSECRET'),
+        'redirect'      => env('MTH_REDIRECT_URI'),
     ],
 
 ];
