@@ -292,7 +292,7 @@
             open_status: "now",
             attributes: [],
             brand_id: null,
-            detail: "test",
+            detail: "",
             express_fee: 0,
             skus: {
                 data: []
