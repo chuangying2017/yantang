@@ -69,8 +69,8 @@ class Provider extends AbstractProvider implements ProviderInterface {
             'id'       => $user['member_id'],
             'phone'    => $user['mobile'] ? : null,
             'union_id' => array_get($user, 'unionid', null),
-            'nickname' => array_get($user, 'nick_name', '每天惠用户' . Str::random(5)),
-            'avatar'   => array_get($user, 'headimgurl', 'http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg'),
+            'nickname' => array_get($user, 'nick_name', uniqid('每天惠')),
+            'avatar'   => array_get($user, 'head_pic_url', 'http://7xpdx2.com2.z0.glb.qiniucdn.com/default.jpeg'),
             'name'     => array_get($user, 'full_name', null),
             'email'    => null,
         ]);
