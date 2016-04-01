@@ -408,6 +408,7 @@
                     }
                     this.product.images.data.$remove(image)
                     this.product.image_ids.$remove(image.id.toString())
+                    this.product.image_ids.$remove(image.id)
                 },
                 setEditorContent: function (data) {
                     _.map(data, function (val, key) {
