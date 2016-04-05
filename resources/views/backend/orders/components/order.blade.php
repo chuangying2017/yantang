@@ -74,7 +74,7 @@
             <th colspan="7" class="msg">买家留言：[! order.memo !]
             </th>
         </tr>
-        <tr v-if="order.refund.length > 0">
+        <tr v-if="order.refund[0]['client_memo'].length > 0">
             <th colspan="7" class="msg">退货原因：[! order.refund[0]['client_memo'] !]
             </th>
         </tr>

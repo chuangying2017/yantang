@@ -113,7 +113,7 @@
                         </ul>
                     @else
                         <ul id="progressbar" class="mt10">
-                            <li class="active">申请退款<br>{{$order->created_at}}</li>
+                            <li class="active">申请退货<br>{{$order->created_at}}</li>
                             @if($order->refund_status == 'approve' || $order->refund_status !== 'apply')
                                 <li class="active">通过申请<br>{{$order->pay_at}}</li>
                             @else
@@ -176,7 +176,7 @@
                     <!-- /.mail-box-messages -->
                 </div>
                 <div class="box-footer clearfix">
-                    @if($order->children[0]->status == 'paid')
+                    @if($order->children[0]->status == 'paid' && $order->refund_status !== 'redeliver')
                         <button type="submit" class="btn btn-primary pull-right" data-toggle="modal"
                                 data-target=".express-modal">马上发货
                         </button>
@@ -243,7 +243,6 @@
             ready: function () {
                 var attrs = '[' + app.order.children[0]['skus'][0]['attributes'] + ']';
                 this.$set('attrs', JSON.parse(attrs))
-                this.$log('attrs')
             },
             methods: {
                 closeExpressBox: function () {
@@ -256,6 +255,16 @@
                     this.$http.post(app.config.api_url + '/admin/deliver/' + this.order_no, this.$get('express'), function (data) {
                         if (data.data) {
                             alert('发货成功!')
+                            window.location.reload();
+                        }
+                    }).error(function (data) {
+                        console.error(data)
+                    })
+                },
+                refund: function () {
+                    this.$http.post(app.config.api_url + '/admin/orders/refund/' + this.order_no + '/done', function (data) {
+                        if (data.data) {
+                            alert('退款提交成功!')
                             window.location.reload();
                         }
                     }).error(function (data) {
