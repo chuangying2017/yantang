@@ -46,7 +46,8 @@
                             @foreach($images['data'] as $image)
                                 <tr>
                                     <td>
-                                        <img src="{{$image['url']}}?imageView2/1/w/50/h/50" alt=""
+                                        <img width="50" height="50" src="{{$image['url']}}?imageView2/1/w/50/h/50"
+                                             alt=""
                                              class="thumb-img">
                                     </td>
                                     <td>{{$image['filename']}}</td>
@@ -76,14 +77,22 @@
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
                     <ul class="pagination pagination-sm no-margin pull-right">
-                        @for($i=0; $i<$images['meta']['pagination']['total_pages']; $i++)
-                            @if($i+1 == $images['meta']['pagination']['current_page'])
-                                <li class="active">
-                            @else
-                                <li class="">
-                                    @endif
-                                    <a href="{{url('admin/images')}}?page={{$i+1}}">{{$i+1}}</a></li>
-                                @endfor
+                        @if($images['meta']['pagination']['current_page'] > 1)
+                            <li>
+                                <a href="{{url('admin/images')}}?page=1">首页</a>
+                            </li>
+                            <li>
+                                <a href="{{url('admin/images')}}?page={{$images['meta']['pagination']['current_page'] - 1}}">上一页</a>
+                            </li>
+                        @endif
+                        @if($images['meta']['pagination']['current_page'] < $images['meta']['pagination']['total_pages'])
+                            <li>
+                                <a href="{{url('admin/images')}}?page={{$images['meta']['pagination']['current_page'] + 1}}">下一页</a>
+                            </li>
+                            <li>
+                                <a href="{{url('admin/images')}}?page={{$images['meta']['pagination']['total_pages']}}">末页</a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>
