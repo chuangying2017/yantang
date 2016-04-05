@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\Inspire',
         'App\Console\Commands\CheckAgentOrder',
         'App\Console\Commands\InitSearch',
-        'App\Console\Commands\DeleteProductContentTest'
+        'App\Console\Commands\DeleteProductContentTest',
+        'App\Console\Commands\CheckOrderSkuProduct'
     ];
 
     /**
