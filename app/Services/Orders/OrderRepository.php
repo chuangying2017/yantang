@@ -61,6 +61,7 @@ class OrderRepository {
                 'order_id'        => $order_id,
                 'merchant_id'     => $order_product['merchant_id'],
                 'product_sku_id'  => $order_product['product_sku_id'],
+                'product_id'      => $order_product['product_id'],
                 'quantity'        => $order_product['quantity'],
                 'price'           => $order_product['price'],
                 'title'           => $order_product['title'],
@@ -146,7 +147,7 @@ class OrderRepository {
     {
 
         if ( ! is_null($relation)) {
-            if(OrderProtocol::isReturn($status)) {
+            if (OrderProtocol::isReturn($status)) {
                 $relation[] = 'refund';
             }
             $query = Order::with($relation)->orderBy($sort_by, $sort_type);
