@@ -21,7 +21,7 @@ class CartTransformer extends TransformerAbstract {
                 'title'       => $productSku['title'],
                 'category_id' => (int)$productSku['category_id'],
                 'cover_image' => $productSku['cover_image'],
-                'attributes'  => $productSku['attributes'] ? json_decode('[' . $productSku['attributes'] . ']', true) : null
+                'attributes'  => $productSku['attributes'] ? json_decode($productSku['attributes'], true) : null
             ];
         }
 

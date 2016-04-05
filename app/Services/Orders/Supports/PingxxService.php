@@ -77,7 +77,7 @@ class PingxxService implements PaymentInterface {
         switch ($channel) {
             case 'alipay_wap':
                 $extra = array(
-                    'success_url' => env('PAYMENT_SUCCESS_URL'),
+                    'success_url' => env('MOBILE_PAYMENT_SUCCESS_URL'),
                     'cancel_url'  => 'http://www.yourdomain.com/cancel'
                 );
                 break;

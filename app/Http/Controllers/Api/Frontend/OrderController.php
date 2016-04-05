@@ -80,7 +80,7 @@ class OrderController extends Controller {
         $order_info['discount_fee'] = display_price($order_info['discount_fee']);
         if (isset($order_info['products'])) {
             foreach ($order_info['products'] as $key => $product) {
-                $product['attributes'] = json_decode('[' . $product['attributes'] . ']', true);
+                $product['attributes'] = json_decode($product['attributes'], true);
                 $product['price'] = display_price($product['price']);
                 $order_info['products'][ $key ] = $product;
             }
