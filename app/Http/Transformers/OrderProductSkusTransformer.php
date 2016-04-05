@@ -10,6 +10,7 @@ class OrderProductSkusTransformer extends TransformerAbstract {
     {
         return [
             'id'          => (int)$sku->id,
+            'product_id'  => (int)$sku->product_id,
             'title'       => $sku->title,
             'cover_image' => $sku->cover_image,
             'quantity'    => (int)$sku->quantity,
