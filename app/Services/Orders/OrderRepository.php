@@ -275,6 +275,7 @@ class OrderRepository {
     }
 
 
+
     public static function createChildOrder($merchant_order_info, $order_product_ids)
     {
         $merchant_order_info['order_no'] = '1' . self::generateOrderNo();
@@ -318,25 +319,39 @@ class OrderRepository {
 
     public static function updateChildOrderAsDeliver($order_no, $deliver_id)
     {
-
         $status = OrderProtocol::STATUS_OF_DELIVER;
 
         return ChildOrder::where('order_no', $order_no)->update([
             'deliver_id' => $deliver_id,
             'status'     => $status,
+            'deliver_at' => Carbon::now()
         ]);
         //商品关联发货信息
 //        OrderProduct::whereIn('child_order_id', $child_order_ids)->update(['deliver_id' => $deliver_id]);
     }
 
+    public static function updateChildOrderAsDone($order_no)
+    {
+        $status = OrderProtocol::STATUS_OF_DONE;
+
+        return self::updateChildOrderStatus($order_no, $status);
+    }
+
+    protected static function updateChildOrderStatus($order_no, $status)
+    {
+        return ChildOrder::where('order_no', $order_no)->update([
+            'status'     => $status,
+        ]);
+    }
+
     public static function updateChildOrderAsDeliverByOrder($order_id, $deliver_id)
     {
-
         $status = OrderProtocol::STATUS_OF_DELIVER;
 
         return ChildOrder::where('order_id', $order_id)->update([
             'deliver_id' => $deliver_id,
             'status'     => $status,
+            'deliver_at' => Carbon::now()
         ]);
         //商品关联发货信息
 //        OrderProduct::whereIn('child_order_id', $child_order_ids)->update(['deliver_id' => $deliver_id]);

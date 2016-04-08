@@ -16,7 +16,9 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\CheckAgentOrder',
         'App\Console\Commands\InitSearch',
         'App\Console\Commands\DeleteProductContentTest',
-        'App\Console\Commands\CheckOrderSkuProduct'
+        'App\Console\Commands\CheckOrderSkuProduct',
+        'App\Console\Commands\SetOrderDoneIfOverTime',
+
     ];
 
     /**
@@ -27,6 +29,6 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-//        $schedule->command('inspire')->hourly();
+        $schedule->command('orders:done')->everyFiveMinutes();
     }
 }

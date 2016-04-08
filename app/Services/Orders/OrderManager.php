@@ -31,5 +31,17 @@ class OrderManager {
 
     }
 
+    public static function done($order_no)
+    {
+        try {
+            $order = OrderRepository::queryChildOrderByOrderNo($order_no);
+            OrderProtocol::validStatus($order['status'], OrderProtocol::STATUS_OF_DONE);
+
+            return OrderRepository::updateChildOrderAsDone($order_no);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
 
 }

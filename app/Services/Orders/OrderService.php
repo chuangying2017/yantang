@@ -54,13 +54,21 @@ class OrderService {
 
     }
 
+    /**
+     * 完成订单
+     * @param $user_id
+     * @param $order_no
+     * @throws \Exception
+     */
     public static function done($user_id, $order_no)
     {
         try {
-            $order = self::authOrder($user_id, $order_no);
+
+//            $order = self::authOrder($user_id, $order_no);
+            $order = self::authChildOrder($user_id, $order_no);
             OrderProtocol::validStatus($order['status'], OrderProtocol::STATUS_OF_DONE);
 
-            OrderRepository::doneOrder($order);
+            OrderRepository::updateChildOrderAsDone($order_no);
         } catch (\Exception $e) {
             throw $e;
         }
