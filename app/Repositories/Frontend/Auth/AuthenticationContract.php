@@ -31,6 +31,11 @@ interface AuthenticationContract {
     public function loginThirdParty($request, $provider);
 
 
+	/**
+     * @param $request
+     * @param $provider
+     * @return mixed
+     */
     public function loginThirdPartyUrl($request, $provider);
 
 

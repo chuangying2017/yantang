@@ -18,7 +18,7 @@ $api->group(['middleware' => 'api.auth'], function ($api) {
     $api->resource('address', 'AddressController');
 
     $api->get('images/token', [
-        'as'   => 'images.token',
+        'as'   => 'user.images.token',
         'uses' => 'ImageController@token'
     ]);
 });
