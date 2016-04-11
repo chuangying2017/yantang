@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use Auth;
 
-class AuthUserController extends ApiController {
+class AuthUserController extends Controller {
 
 	protected $auth;
 

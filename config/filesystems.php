@@ -79,6 +79,19 @@ return [
             'region'    => 'IAD',
             'url_type'  => 'publicURL',
         ],
+        //todo@bryant
+        'qiniu'     => [
+            'driver'     => 'qiniu',
+            'domains'    => [
+                'default' => getenv("QINIU_DEFAULT_DOMAIN"), //你的七牛域名
+                'https'   => 'dn-yourdomain.qbox.me',         //你的HTTPS域名
+                'custom'  => 'static.abc.com',                //你的自定义域名
+            ],
+            'access_key' => getenv("QINIU_ACCESS_KEY"),  //AccessKey
+            'secret_key' => getenv("QINIU_SECRET_KEY"),  //SecretKey
+            'bucket'     => getenv("QINIU_BUCKET"),  //Bucket名字
+            'notify_url' => '',  //持久化处理回调地址
+        ],
 
     ],
 

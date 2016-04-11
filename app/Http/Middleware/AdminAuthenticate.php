@@ -6,46 +6,40 @@ use Auth;
 
 class AdminAuthenticate {
 
-	/**
-	 * The Guard implementation.
-	 *
-	 * @var Guard
-	 */
-	protected $auth;
+    /**
+     * @var Guard
+     */
+    private $auth;
 
-	/**
-	 * Create a new filter instance.
-	 *
-	 * @param  Guard  $auth
-	 * @return void
-	 */
-	public function __construct()
-	{
-		$this->auth = Auth::admin();
-	}
+    /**
+     * Create a new filter instance.
+     *
+     * @param  Guard $auth
+     * @return void
+     */
+    public function __construct(Guard $auth)
+    {
+        $this->auth = $auth;
+    }
 
-	/**
-	 * Handle an incoming request.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Closure  $next
-	 * @return mixed
-	 */
-	public function handle($request, Closure $next)
-	{
-		if ($this->auth->guest())
-		{
-			if ($request->ajax() || $request->is('api/*'))
-			{
-				return response('Unauthorized.', 401);
-			}
-			else
-			{
-				return redirect()->route('admin.login');
-			}
-		}
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        if ($this->auth->guest()) {
+            if ($request->ajax() || $request->is('api/*')) {
+                return response('Unauthorized.', 401);
+            } else {
+                return redirect()->to('/auth/login');
+            }
+        }
 
-		return $next($request);
-	}
+        return $next($request);
+    }
 
 }

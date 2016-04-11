@@ -9,7 +9,7 @@
       <div class="am-u-sm-12 am-u-md-6">
         <div class="am-btn-toolbar">
           <div class="am-btn-group am-btn-group-xs">
-            <a class="am-btn am-btn-success" href="{{action('AdminAccountController@create')}}"><span class="am-icon-plus"></span> 新增管理员 </a>
+            <a class="am-btn am-btn-success" href="{{action('AccountController@create')}}"><span class="am-icon-plus"></span> 新增管理员 </a>
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
                     <td>
                         <div class="am-btn-toolbar">
                           <div class="am-btn-group am-btn-group-xs">
-                            <a class="am-btn am-btn-default am-btn-xs" href="{{action('AdminAccountController@edit', $admin['id'])}}"><span class="am-icon-pencil-square-o"></span> 编辑用户</a>
+                            <a class="am-btn am-btn-default am-btn-xs" href="{{action('AccountController@edit', $admin['id'])}}"><span class="am-icon-pencil-square-o"></span> 编辑用户</a>
                           </div>
                         </div>
                     </td>

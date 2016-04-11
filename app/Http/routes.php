@@ -1,98 +1,61 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
+$api = app('Dingo\Api\Routing\Router');
 
 
-
-if(App::environment() == 'local' || env('APP_DEBUG')) {
-	
-	Route::get('test', function(){
-
-	});
-
-	Route::get('test/token', function(){
-		return Session::token();
-	});
-
-	Route::get('/test/login/{id}', function($id){
-		Auth::user()->logout();
-		Auth::user()->loginUsingId($id);
-		return $id . 'login';
-	});
-
-	Route::get('/test/logout', function(){
-		Auth::user()->logout();
-	});
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
+require(__DIR__ . "/api.php");
 
 
-Route::group(['middleware' => 'auth.wechat'], function(){
+/**
+ * Frontend Routes
+ * Namespaces indicate folder structure
+ */
+$router->group(['namespace' => 'Frontend'], function () use ($router) {
+    //pingxx 回调
+    require(__DIR__ . "/Routes/Frontend/Payment.php");
+    require(__DIR__ . "/Routes/Frontend/Frontend.php");
+    require(__DIR__ . "/Routes/Frontend/Access.php");
+});
 
-	get('/', function(){
-		return view('welcome');
-	});
 
-	Route::group(['prefix' => 'api'], function(){
+/**
+ * Backend Routes
+ * Namespaces indicate folder structure
+ */
+$router->group(['namespace' => 'Backend'], function () use ($router) {
 
-		
+    $router->group(['middleware' => 'auth'], function ($router) {
+        $router->group(['prefix' => 'admin'], function () use ($router) {
+            /**
+             * These routes need view-backend permission (good if you want to allow more than one group in the backend, then limit the backend features by different roles or permissions)
+             *
+             * Note: Administrator has all permissions so you do not have to specify the administrator role everywhere.
+             */
+            $router->group(['middleware' => 'access.routeNeedsPermission:view-backend'], function () use ($router) {
+                require(__DIR__ . "/Routes/Backend/Access.php");
+                require(__DIR__ . "/Routes/Backend/Dashboard.php");
+                require(__DIR__ . "/Routes/Backend/Client.php");
+                require(__DIR__ . "/Routes/Backend/Product.php");
+                require(__DIR__ . "/Routes/Backend/Merchant.php");
+//                require(__DIR__ . "/Routes/Backend/Marketing.php");
+                require(__DIR__ . "/Routes/Backend/Order.php");
+                require(__DIR__ . "/Routes/Backend/Express.php");
+                require(__DIR__ . "/Routes/Backend/Account.php");
+                require(__DIR__ . "/Routes/Backend/Image.php");
+                require(__DIR__ . "/Routes/Backend/Article.php");
+                require(__DIR__ . "/Routes/Backend/Setting.php");
+            });
 
-	});
+        });
+    });
 
+    require(__DIR__ . "/Routes/Backend/Agent.php");
 
 });
 
 
-Route::controller('wechat', 'Auth\WechatAuthController');
+/**
+ * 测试路由,当 env => local debug => true 有效
+ */
+require(__DIR__ . "/Routes/test.php");
 
-
-Route::group(['prefix' => 'admin'], function(){
-
-	Route::get('login', [
-		'as' => 'admin.login',
-		'uses' => 'Auth\AdminAuthController@getLogin'
-	]);
-
-	Route::get('logout', [
-		'as' => 'admin.logout',
-		'uses' => 'Auth\AdminAuthController@getLogout'
-	]);
-
-	Route::post('login', [
-		'as' => 'admin.login.store',
-		'uses' => 'Auth\AdminAuthController@postLogin'
-	]);
-
-	Route::group(['middleware' => 'auth.admin'], function(){
-
-		get('/dashboard', [
-			'as' => 'admin.dashboard',
-			'uses' => 'AdminController@index'
-		]);
-
-		resource('account', 'AdminAccountController');
-
-
-	});
-
-});

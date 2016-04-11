@@ -42,7 +42,7 @@
             @include('partials.show-errors')
 
             <form class="form-signin am-form" role="form" action="{{route('admin.login.store')}}" method="post">
-                <input name="_token" type="hidden" value="{!!csrf_token()!!}"/>
+                {!! csrf_field() !!}
                 <label for="username">账号:</label>
                 <input type="text" class="form-control" placeholder="账号" name="username" required autofocus id="username">
                 <br>

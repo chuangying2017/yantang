@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Be right back.</title>
+        <title>{{ trans('strings.be_right_back') }}</title>
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+
+        <link href="https://fonts.useso.com/css?family=Lato:100" rel="stylesheet" type="text/css">
 
         <style>
             html, body {
@@ -40,8 +41,9 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Be right back.</div>
+                <div class="title">{{ trans('strings.be_right_back') }}</div>
             </div>
         </div>
     </body>
 </html>
+

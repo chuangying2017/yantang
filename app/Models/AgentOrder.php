@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AgentOrder extends Model {
+
+    protected $table = 'agent_orders';
+
+    protected $guarded = ['id'];
+
+    public function agent()
+    {
+        return $this->belongsTo(Agent::class);
+    }
+
+    public function detail()
+    {
+        return $this->hasMany(AgentOrderDetail::class);
+    }
+
+    public function address()
+    {
+        return $this->hasOne('App\Models\OrderAddress', 'order_id', 'order_id');
+    }
+
+}

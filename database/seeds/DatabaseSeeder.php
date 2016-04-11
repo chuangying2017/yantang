@@ -3,8 +3,8 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class DatabaseSeeder extends Seeder
-{
+class DatabaseSeeder extends Seeder {
+
     /**
      * Run the database seeds.
      *
@@ -14,8 +14,23 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-	    $this->call(AdminTableSeeder::class);
+        if (env('DB_DRIVER') == 'mysql')
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+//        $this->call(BrandSeeder::class);
+//        $this->call(CategoryTableSeeder::class);
+//        $this->call(AttributeSeeder::class);
+//        $this->call(ImageSeeder::class);
+//        $this->call(NavSeeder::class);
+//        $this->call(ClientSeeder::class);
+        $this->call(AccessTableSeeder::class);
+        $this->call(AgentRateSeeder::class);
+
+
+        if (env('DB_DRIVER') == 'mysql')
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         Model::reguard();
     }
 }
+
