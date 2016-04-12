@@ -51,8 +51,8 @@ class SetOrderDoneIfOverTime extends Command {
         $total = ChildOrder::where('status', OrderProtocol::STATUS_OF_DELIVER)
             ->where('deliver_at', '<', Carbon::now()->subDay(self::OVER_TIME_DAYS))
             ->update(['status' => OrderProtocol::STATUS_OF_DONE]);
-
-        echo " {$total} 个订单逾期自动完成 \n";
-        info(" {$total} 个订单逾期自动完成 \n");
+//
+//        echo " {$total} 个订单逾期自动完成 \n";
+//        info(" {$total} 个订单逾期自动完成 \n");
     }
 }
