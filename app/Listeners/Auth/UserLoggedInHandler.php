@@ -1,7 +1,7 @@
-<?php namespace App\Listeners\Frontend\Auth;
+<?php namespace App\Listeners\Auth;
 
 use Illuminate\Queue\InteractsWithQueue;
-use App\Events\Frontend\Auth\UserLoggedIn;
+use App\Events\Auth\UserLoggedIn;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 /**

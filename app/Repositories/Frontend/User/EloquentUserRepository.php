@@ -1,6 +1,6 @@
 <?php namespace App\Repositories\Frontend\User;
 
-use App\Events\Frontend\Auth\UserRegister;
+use App\Events\Auth\UserRegister;
 use App\Models\Access\User\User;
 use App\Models\Access\User\UserProvider;
 use App\Exceptions\GeneralException;

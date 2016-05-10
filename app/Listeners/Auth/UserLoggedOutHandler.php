@@ -1,7 +1,7 @@
-<?php namespace App\Listeners\Frontend\Auth;
+<?php namespace App\Listeners\Auth;
 
 use Illuminate\Queue\InteractsWithQueue;
-use App\Events\Frontend\Auth\UserLoggedOut;
+use App\Events\Auth\UserLoggedOut;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 /**

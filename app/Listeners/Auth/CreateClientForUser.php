@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Listeners\Frontend\Auth;
+namespace App\Listeners\Auth;
 
-use App\Events\Frontend\Auth\UserRegister;
+use App\Events\Auth\UserRegister;
 use App\Services\Client\ClientService;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;

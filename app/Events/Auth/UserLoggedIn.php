@@ -1,4 +1,4 @@
-<?php namespace App\Events\Frontend\Auth;
+<?php namespace App\Events\Auth;
 
 use App\Events\Event;
 use Illuminate\Queue\SerializesModels;
