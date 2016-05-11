@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
  * @package App\Http\Middleware
  */
 class RedirectIfAuthenticated {
+    use Illuminate\Support\Facades\Auth;
 
     /**
      * The Guard implementation.
@@ -35,18 +36,11 @@ class RedirectIfAuthenticated {
      * @param  \Closure $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $guard = null)
     {
 
-        if ($user = get_current_auth_user()) {
-            if ( ! $this->auth->check()) {
-                $this->auth->login($user, true);
-            }
-
-            return redirect()->route('backend.dashboard');
-        }
-        if ($this->auth->check()) {
-            return new RedirectResponse(url('/'));
+        if (Auth::guard($guard)->check()) {
+            return redirect('/');
         }
 
         return $next($request);

@@ -1,9 +1,5 @@
 <?php
 
-$api = app('Dingo\Api\Routing\Router');
-
-
-require(__DIR__ . "../Api/api.php");
 
 
 /**
@@ -34,22 +30,22 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
             $router->group(['middleware' => 'access.routeNeedsPermission:view-backend'], function () use ($router) {
                 require(__DIR__ . "/Routes/Backend/Access.php");
                 require(__DIR__ . "/Routes/Backend/Dashboard.php");
-                require(__DIR__ . "/Routes/Backend/Client.php");
-                require(__DIR__ . "/Routes/Backend/Product.php");
-                require(__DIR__ . "/Routes/Backend/Merchant.php");
+//                require(__DIR__ . "/Routes/Backend/Client.php");
+//                require(__DIR__ . "/Routes/Backend/Product.php");
+//                require(__DIR__ . "/Routes/Backend/Merchant.php");
 //                require(__DIR__ . "/Routes/Backend/Marketing.php");
-                require(__DIR__ . "/Routes/Backend/Order.php");
-                require(__DIR__ . "/Routes/Backend/Express.php");
-                require(__DIR__ . "/Routes/Backend/Account.php");
-                require(__DIR__ . "/Routes/Backend/Image.php");
-                require(__DIR__ . "/Routes/Backend/Article.php");
-                require(__DIR__ . "/Routes/Backend/Setting.php");
+//                require(__DIR__ . "/Routes/Backend/Order.php");
+//                require(__DIR__ . "/Routes/Backend/Express.php");
+//                require(__DIR__ . "/Routes/Backend/Account.php");
+//                require(__DIR__ . "/Routes/Backend/Image.php");
+//                require(__DIR__ . "/Routes/Backend/Article.php");
+//                require(__DIR__ . "/Routes/Backend/Setting.php");
             });
 
         });
     });
 
-    require(__DIR__ . "/Routes/Backend/Agent.php");
+//    require(__DIR__ . "/Routes/Backend/Agent.php");
 
 });
 
