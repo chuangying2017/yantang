@@ -1,25 +1,18 @@
 <?php namespace App\Models\Access\User;
 
-use App\Models\Client;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
+
 use App\Models\Access\User\Traits\UserAccess;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Access\User\Traits\Attribute\UserAttribute;
 use App\Models\Access\User\Traits\Relationship\UserRelationship;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-
 /**
  * Class User
  * @package App\Models\Access\User
  */
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
-
-    use Authenticatable,
-        CanResetPassword,
-        SoftDeletes,
+class User extends Authenticatable
+{
+    use SoftDeletes,
         UserAccess,
         UserRelationship,
         UserAttribute;

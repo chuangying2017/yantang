@@ -4,17 +4,14 @@
 use App\Http\Traits\ApiHelpers;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Exception;
-use HttpResponseException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-//use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Bugsnag\BugsnagLaravel\BugsnagExceptionHandler as ExceptionHandler;
 
 
 class Handler extends ExceptionHandler {
-
-    use ApiHelpers;
 
     /**
      * A list of the exception types that should not be reported.
@@ -22,9 +19,11 @@ class Handler extends ExceptionHandler {
      * @var array
      */
     protected $dontReport = [
+        AuthorizationException::class,
         HttpException::class,
         ModelNotFoundException::class,
-        StoreResourceFailedException::class
+        StoreResourceFailedException::class,
+        ValidationException::class,
     ];
 
     /**
@@ -37,7 +36,7 @@ class Handler extends ExceptionHandler {
      */
     public function report(Exception $e)
     {
-        return parent::report($e);
+        parent::report($e);
     }
 
     /**
@@ -66,6 +65,7 @@ class Handler extends ExceptionHandler {
         }
 
         //Catch all
+
         return parent::render($request, $e);
     }
 }

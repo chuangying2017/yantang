@@ -28,7 +28,7 @@ class MacroServiceProvider extends HtmlServiceProvider {
 	{
 		parent::register();
 
-		$this->app->bindShared('form', function($app)
+		$this->app->singleton('form', function($app)
 		{
 			$form = new Macros($app['html'], $app['url'], $app['session.store']->getToken());
 			return $form->setSessionStore($app['session.store']);

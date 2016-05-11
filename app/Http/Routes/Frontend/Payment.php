@@ -1,4 +1,4 @@
 <?php
 
-post('pingxx/notify', 'PingxxController@callback');
+Route::post('pingxx/notify', 'PingxxController@callback');
 

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder {
 
@@ -31,6 +30,7 @@ class DatabaseSeeder extends Seeder {
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         Model::reguard();
+        // $this->call(UsersTableSeeder::class);
     }
 }
 

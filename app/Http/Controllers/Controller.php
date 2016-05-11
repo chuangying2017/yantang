@@ -12,11 +12,14 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-abstract class Controller extends BaseController {
+use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers, AddUserInfo;
+class Controller extends BaseController {
+
+    use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests, ApiHelpers, ApiFormatHelpers, Helpers, AddUserInfo;
 
 
     protected function getCurrentAuthUserId()
@@ -31,7 +34,7 @@ abstract class Controller extends BaseController {
 
     protected function getCurrentAuthUser()
     {
-        if ( ! JWTAuth::getToken()) {
+        if (!JWTAuth::getToken()) {
 
             if (Auth::check()) {
                 return Auth::user();
