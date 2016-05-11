@@ -1,9 +1,5 @@
 <?php
 
-$api = app('Dingo\Api\Routing\Router');
-
-
-require(__DIR__ . "../Api/api.php");
 
 
 /**

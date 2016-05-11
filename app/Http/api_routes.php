@@ -1,8 +1,9 @@
 <?php
 
+$api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
-    $api->group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => 'cors'], function ($api) {
+    $api->group(['namespace' => 'App\V1\Controllers\Api', 'middleware' => 'cors'], function ($api) {
 
         /**
          * Frontend Routes 前端路由
