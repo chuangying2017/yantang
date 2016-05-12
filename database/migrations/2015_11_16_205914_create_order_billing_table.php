@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrderBillingTable extends Migration
-{
+class CreateOrderBillingTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -14,14 +14,15 @@ class CreateOrderBillingTable extends Migration
     {
         Schema::create('order_billing', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('billing_no');
-            $table->integer('order_id');
-            $table->integer('user_id');
+            $table->integer('order_id')->unsigned()->index();
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->string('billing_no')->index();
+            $table->integer('user_id')->unsigned();
             $table->unsignedInteger('amount');
-            $table->string('resource_type');
-            $table->integer('resource_id');
-            $table->string('type');
-            $table->string('status');
+            $table->string('pay_type', 45)->default('money'); //
+            $table->string('pay_channel', 45); //weixin,alipay,credits
+            $table->string('status', 45)->default('unpaid'); //paid,unpaid
+            $table->unsignedInteger('return_amount')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

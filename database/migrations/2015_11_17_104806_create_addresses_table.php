@@ -17,7 +17,7 @@ class CreateAddressesTable extends Migration {
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name');
-            $table->string('mobile', 15);
+            $table->string('phone', 15);
             $table->string('tel', 15);
             $table->string('province', 20);
             $table->string('city', 20);
