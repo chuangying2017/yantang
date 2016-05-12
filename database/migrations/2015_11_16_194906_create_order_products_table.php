@@ -16,7 +16,6 @@ class CreateOrderProductsTable extends Migration {
             $table->increments('id');
             $table->integer('origin_order_id')->unsigned()->index();
             $table->integer('order_id')->unsigned()->index();
-            $table->foreign(['order_id', 'origin_order_id'])->references('id')->on('orders');
             $table->integer('merchant_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->integer('product_sku_id')->unsigned();
@@ -30,6 +29,9 @@ class CreateOrderProductsTable extends Migration {
             $table->smallInteger('return_quantity')->default(0);
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('origin_order_id')->references('id')->on('orders');
         });
 
     }
@@ -41,6 +43,12 @@ class CreateOrderProductsTable extends Migration {
      */
     public function down()
     {
+        Schema::table('order_products', function (Blueprint $table) {
+            $table->dropForeign('order_products_order_id_foreign');
+        });
+        Schema::table('order_products', function (Blueprint $table) {
+            $table->dropForeign('order_products_origin_order_id_foreign');
+        });
         Schema::drop('order_products');
     }
 }

@@ -28,6 +28,12 @@ class CreateCouponRulesTable extends Migration {
      */
     public function down()
     {
+        Schema::table('coupon_rules', function (Blueprint $table) {
+            $table->dropForeign('coupon_rules_coupon_id_foreign');
+        });
+        Schema::table('coupon_rules', function (Blueprint $table) {
+            $table->dropForeign('coupon_rules_rule_id_foreign');
+        });
         Schema::drop('coupon_rules');
     }
 }

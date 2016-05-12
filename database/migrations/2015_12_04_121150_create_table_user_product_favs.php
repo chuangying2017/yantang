@@ -17,8 +17,6 @@ class CreateTableUserProductFavs extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 
@@ -29,6 +27,6 @@ class CreateTableUserProductFavs extends Migration
      */
     public function down()
     {
-        Schema::drop('user_product_favs');
+        Schema::drop('favs');
     }
 }

@@ -29,6 +29,9 @@ class CreatePromotionQuaValue extends Migration {
      */
     public function down()
     {
+        Schema::table('promotion_qua_value', function (Blueprint $table) {
+            $table->dropForeign('promotion_qua_value_rule_id_foreign');
+        });
         Schema::drop('promotion_qua_value');
     }
 }

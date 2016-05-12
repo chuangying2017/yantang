@@ -33,6 +33,13 @@ class CreateCartTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('cart');
+        Schema::table('carts', function (Blueprint $table) {
+            $table->dropForeign('carts_user_id_foreign');
+        });
+        Schema::table('carts', function (Blueprint $table) {
+            $table->dropForeign('carts_product_sku_id_foreign');
+        });
+
+        Schema::drop('carts');
     }
 }

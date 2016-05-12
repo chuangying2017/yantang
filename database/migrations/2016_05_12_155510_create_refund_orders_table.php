@@ -16,8 +16,8 @@ class CreateRefundOrdersTable extends Migration {
             $table->integer('order_id')->unsigned()->index();
             $table->integer('return_order_id')->unsigned()->index();
             $table->string('operator', 45);
-            $table->foreign(['return_order_id', 'order_id'])->references('id')->on('orders');
-            $table->timestamps();
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('return_order_id')->references('id')->on('orders');
             $table->timestamps();
         });
     }
@@ -29,6 +29,12 @@ class CreateRefundOrdersTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('refund_orders');
+        Schema::table('return_orders', function (Blueprint $table) {
+            $table->dropForeign('return_orders_order_id_foreign');
+        });
+        Schema::table('return_orders', function (Blueprint $table) {
+            $table->dropForeign('return_orders_return_order_id_foreign');
+        });
+        Schema::drop('return_orders');
     }
 }

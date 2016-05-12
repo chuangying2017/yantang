@@ -28,6 +28,9 @@ class CreateCampaignInfo extends Migration {
      */
     public function down()
     {
+        Schema::table('campaign_info', function (Blueprint $table) {
+            $table->dropForeign('campaign_info_campaign_id_foreign');
+        });
         Schema::drop('campaign_info');
     }
 }

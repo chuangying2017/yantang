@@ -28,6 +28,12 @@ class CreateCampaignRulesTable extends Migration {
      */
     public function down()
     {
+        Schema::table('campaign_rules', function (Blueprint $table) {
+            $table->dropForeign('campaign_rules_campaign_id_foreign');
+        });
+        Schema::table('campaign_rules', function (Blueprint $table) {
+            $table->dropForeign('campaign_rules_rule_id_foreign');
+        });
         Schema::drop('campaign_rules');
     }
 }

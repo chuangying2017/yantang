@@ -15,9 +15,9 @@ class CreateCouponCounterTable extends Migration {
         Schema::create('coupon_counter', function (Blueprint $table) {
             $table->integer('coupon_id')->unsigned()->index();
             $table->foreign('coupon_id')->references('id')->on('coupons');
-            $table->intger('total')->unsigned();
-            $table->intger('dispatch')->unsigned()->default(0);
-            $table->intger('used')->unsigned()->default(0);
+            $table->integer('total')->unsigned();
+            $table->integer('dispatch')->unsigned()->default(0);
+            $table->integer('used')->unsigned()->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +29,9 @@ class CreateCouponCounterTable extends Migration {
      */
     public function down()
     {
+        Schema::table('coupon_counter', function (Blueprint $table) {
+            $table->dropForeign('coupon_counter_coupon_id_foreign');
+        });
         Schema::drop('coupon_counter');
     }
 }

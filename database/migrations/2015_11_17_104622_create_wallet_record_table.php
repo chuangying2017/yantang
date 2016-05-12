@@ -14,7 +14,7 @@ class CreateWalletRecordTable extends Migration
     {
         Schema::create('wallet_records', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('amount')->unsigned();
             $table->tinyInteger('income')->unsigned();// 0,1
@@ -33,6 +33,9 @@ class CreateWalletRecordTable extends Migration
      */
     public function down()
     {
-        Schema::drop('wallet_record');
+        Schema::table('wallet_records', function (Blueprint $table) {
+            $table->dropForeign('wallet_records_user_id_foreign');
+        });
+        Schema::drop('wallet_records');
     }
 }

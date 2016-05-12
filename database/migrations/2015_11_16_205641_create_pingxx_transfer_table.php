@@ -26,7 +26,7 @@ class CreatePingxxTransferTable extends Migration {
             $table->string('status');
             $table->string('description');
             $table->string('app');
-            $table->boolean('livemode')->default('false');
+            $table->boolean('livemode')->default(false);
             $table->string('failure_code');
             $table->string('failure_msg');
             $table->softDeletes();

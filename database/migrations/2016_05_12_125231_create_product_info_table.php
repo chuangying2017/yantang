@@ -29,6 +29,9 @@ class CreateProductInfoTable extends Migration {
      */
     public function down()
     {
+        Schema::table('product_info', function (Blueprint $table) {
+            $table->dropForeign('product_info_product_id_foreign');
+        });
         Schema::drop('product_info');
     }
 }

@@ -17,7 +17,7 @@ class CreatePingxxPaymentsTable extends Migration {
             $table->string('charge_id')->index();
             $table->string('payment_no')->index();
             $table->integer('user_id')->unsigned();
-            $table->boolean('livemode')->default('false');
+            $table->boolean('livemode')->default(false);
             $table->string('app')->index();
             $table->string('channel', 45);
             $table->string('currency', 45)->default('cny');
@@ -29,8 +29,8 @@ class CreatePingxxPaymentsTable extends Migration {
             $table->string('transaction_no');
             $table->string('credential', 512);
 
-            $table->boolean('paid')->default('false');
-            $table->boolean('refunded')->default('false');
+            $table->boolean('paid')->default(false);
+            $table->boolean('refunded')->default(false);
 
             $table->timestamps();
             $table->string('failure_code', 45)->nullable();

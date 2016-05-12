@@ -30,6 +30,9 @@ class CreateCreditsWalletTable extends Migration
      */
     public function down()
     {
+        Schema::table('credits', function (Blueprint $table) {
+            $table->dropForeign('credits_user_id_foreign');
+        });
         Schema::drop('credits');
     }
 }

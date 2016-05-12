@@ -29,6 +29,9 @@ class CreateTableProductMeta extends Migration {
      */
     public function down()
     {
+        Schema::table('product_meta', function (Blueprint $table) {
+            $table->dropForeign('product_meta_product_id_foreign');
+        });
         Schema::drop('product_meta');
     }
 }

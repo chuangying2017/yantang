@@ -29,6 +29,7 @@ class CreateOrderMemoTable extends Migration {
      */
     public function down()
     {
+
         Schema::drop('order_memo');
     }
 }

@@ -29,6 +29,9 @@ class CreatePromotionItemValue extends Migration
      */
     public function down()
     {
+        Schema::table('promotion_item_value', function (Blueprint $table) {
+            $table->dropForeign('promotion_item_value_rule_id_foreign');
+        });
         Schema::drop('promotion_item_value');
     }
 }

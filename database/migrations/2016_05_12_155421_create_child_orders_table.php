@@ -16,7 +16,8 @@ class CreateChildOrdersTable extends Migration {
             $table->integer('order_id')->unsigned()->index();
             $table->integer('child_order_id')->unsigned()->index();
             $table->integer('merchant_id')->unsigned()->index();
-            $table->foreign(['child_order_id', 'order_id'])->references('id')->on('orders');
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('child_order_id')->references('id')->on('orders');
             $table->timestamps();
         });
     }
@@ -28,6 +29,12 @@ class CreateChildOrdersTable extends Migration {
      */
     public function down()
     {
+        Schema::table('child_orders', function (Blueprint $table) {
+            $table->dropForeign('child_orders_order_id_foreign');
+        });
+        Schema::table('child_orders', function (Blueprint $table) {
+            $table->dropForeign('child_orders_child_order_id_foreign');
+        });
         Schema::drop('child_orders');
     }
 }

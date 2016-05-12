@@ -36,6 +36,9 @@ class CreateOrderBillingTable extends Migration {
      */
     public function down()
     {
+        Schema::table('order_billing', function (Blueprint $table) {
+            $table->dropForeign('order_billing_order_id_foreign');
+        });
         Schema::drop('order_billing');
     }
 }

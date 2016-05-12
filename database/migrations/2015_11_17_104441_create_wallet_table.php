@@ -13,7 +13,7 @@ class CreateWalletTable extends Migration
     public function up()
     {
         Schema::create('wallet', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('amount')->unsigned()->default(0);
             $table->integer('frozen_amount')->unsigned()->default(0);
@@ -30,6 +30,9 @@ class CreateWalletTable extends Migration
      */
     public function down()
     {
+        Schema::table('wallet', function (Blueprint $table) {
+            $table->dropForeign('wallet_user_id_foreign');
+        });
         Schema::drop('wallet');
     }
 }

@@ -35,6 +35,12 @@ class CreateTicketsTable extends Migration {
      */
     public function down()
     {
+        Schema::table('tickets', function (Blueprint $table) {
+            $table->dropForeign('tickets_user_id_foreign');
+        });
+        Schema::table('tickets', function (Blueprint $table) {
+            $table->dropForeign('tickets_coupon_id_foreign');
+        });
         Schema::drop('tickets');
     }
 }

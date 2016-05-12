@@ -13,7 +13,7 @@ class SetupAccessTables extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table(config('auth.table'), function ($table) {
+		Schema::table('users', function ($table) {
 			$table->tinyInteger('status')->after('password')->default(1);
 		});
 
@@ -31,7 +31,7 @@ class SetupAccessTables extends Migration {
 			$table->integer('role_id')->unsigned();
 			$table->foreign('user_id')
 				->references('id')
-				->on(config('auth.table'))
+				->on('users')
 				->onUpdate('cascade')
 				->onDelete('cascade');
 			$table->foreign('role_id')->references('id')->on(config('access.roles_table'));
@@ -89,7 +89,7 @@ class SetupAccessTables extends Migration {
 				->on(config('access.permissions_table'));
 			$table->foreign('user_id')
 				->references('id')
-				->on(config('auth.table'));
+				->on('users');
 		});
 	}
 
@@ -100,7 +100,7 @@ class SetupAccessTables extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table(config('auth.table'), function(Blueprint $table)
+		Schema::table('users', function(Blueprint $table)
 		{
 			$table->dropColumn('status');
 		});
