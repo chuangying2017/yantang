@@ -14,6 +14,8 @@ class CreateSectionsTable extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->increments('id');
+            $table->smallInteger('index')->default(1);
+            $table->tinyInteger('active')->default(1);
             $table->string('title');
             $table->text('style');
             $table->string('url');

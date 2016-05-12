@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableImageables extends Migration
-{
+class CreateTableImageables extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -14,11 +14,10 @@ class CreateTableImageables extends Migration
     {
         Schema::create('imageables', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('image_id');
-            $table->integer('imageable_id');
-            $table->string('imageable_type');
-            $table->softDeletes();
-            $table->timestamps();
+            $table->integer('image_id')->unsigned()->index();
+            $table->foreign('image_id')->references('id')->on('images');
+            $table->integer('imageable_id')->unsigned()->index();
+            $table->string('imageable_type')->index();
         });
     }
 

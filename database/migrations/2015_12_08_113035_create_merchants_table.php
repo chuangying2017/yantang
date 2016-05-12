@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMerchantsTable extends Migration
-{
+class CreateMerchantsTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -12,10 +12,16 @@ class CreateMerchantsTable extends Migration
      */
     public function up()
     {
-        Schema::create('merchants', function ($table) {
+        Schema::create('merchants', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('avatar');
+            $table->string('director');
+            $table->string('phone', 15)->nullable();
+            $table->string('address');
+            $table->string('tel', 15)->nullable();
+            $table->string('email', 64)->nullable();
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 

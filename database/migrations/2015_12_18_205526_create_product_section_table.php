@@ -20,6 +20,7 @@ class CreateProductSectionTable extends Migration {
             $table->string('cover_image');
             $table->integer('price');
             $table->integer('index');
+            $table->string('url');
             $table->softDeletes();
             $table->timestamps();
         });

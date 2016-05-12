@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateImagesTable extends Migration
-{
+class CreateImagesTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -14,7 +14,7 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('merchant_id');
+            $table->integer('merchant_id')->unsigned()->nullable();
             $table->string('media_id');
             $table->string('filename');
             $table->string('imageinfo');

@@ -12,11 +12,12 @@ class CreateCreditsWalletTable extends Migration
      */
     public function up()
     {
-        Schema::create('credits_wallet', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
+        Schema::create('credits', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->integer('amount')->unsigned()->default(0);
             $table->integer('frozen_amount')->unsigned()->default(0);
+            $table->integer('used_amount')->unsigned()->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -29,6 +30,6 @@ class CreateCreditsWalletTable extends Migration
      */
     public function down()
     {
-        Schema::drop('credits_wallet');
+        Schema::drop('credits');
     }
 }

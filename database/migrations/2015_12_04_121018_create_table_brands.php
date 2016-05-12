@@ -16,6 +16,8 @@ class CreateTableBrands extends Migration {
             $table->increments('id');
             $table->string('name');
             $table->string('cover_image')->nullable();
+            $table->integer('product_count')->unsigned()->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

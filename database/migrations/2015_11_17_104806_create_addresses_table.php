@@ -12,21 +12,21 @@ class CreateAddressesTable extends Migration {
      */
     public function up()
     {
-        //todo@bryant change role to is_primary
         Schema::create('addresses', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('name');
-            $table->string('mobile');
-            $table->string('tel');
-            $table->string('province');
-            $table->string('city');
-            $table->string('district');
+            $table->string('mobile', 15);
+            $table->string('tel', 15);
+            $table->string('province', 20);
+            $table->string('city', 20);
+            $table->string('district', 20);
             $table->string('detail');
             $table->boolean('is_primary');
-            $table->tinyInteger('role')->default(4);
-            $table->string('display_name');
-            $table->string('zip');
+            $table->tinyInteger('index')->default(1);
+            $table->string('display_name', 64);
+            $table->string('zip', 10);
             $table->softDeletes();
             $table->timestamps();
         });

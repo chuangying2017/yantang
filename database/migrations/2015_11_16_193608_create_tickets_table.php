@@ -14,12 +14,14 @@ class CreateTicketsTable extends Migration {
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('resource_id');
-            $table->string('resource_type');
-            $table->string('billing_id');
-            $table->string('ticket_no')->nullable();
-            $table->string('status');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('coupon_id')->unsigned();
+            $table->foreign('coupon_id')->references('id')->on('coupons');
+            $table->string('ticket_no')->index()->nullable();
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
+            $table->tinyInteger('status');
             $table->softDeletes();
             $table->timestamps();
         });

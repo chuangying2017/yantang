@@ -31,7 +31,7 @@
         "dingo/api": "1.0.x@dev",
         "tymon/jwt-auth": "0.5.*",
         "barryvdh/laravel-cors": "^0.7.1",
-        "toplan/laravel-sms":"~2.2.3",
+        "toplan/laravel-sms":"~2.3.1",
         "socialiteproviders/weixin": "^1.0",
         "socialiteproviders/weixin-web": "^1.0",
         "hightman/xunsearch": "*@beta",

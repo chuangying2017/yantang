@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAttributesTable extends Migration
-{
+class CreateAttributesTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -14,10 +14,9 @@ class CreateAttributesTable extends Migration
     {
         Schema::create('attributes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->integer('merchant_id')->nullable()->default(null);
             $table->softDeletes();
-            $table->timestamps();
         });
     }
 

@@ -12,13 +12,15 @@ class CreateWalletRecordTable extends Migration
      */
     public function up()
     {
-        Schema::create('wallet_record', function (Blueprint $table) {
+        Schema::create('wallet_records', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->integer('amount')->unsigned();
-            $table->smallInteger('income')->unsigned();
-            $table->string('type');
-            $table->string('status');
+            $table->tinyInteger('income')->unsigned();// 0,1
+            $table->string('resource_type');
+            $table->integer('resource_id')->unsigned();
+            $table->tinyInteger('status');
             $table->softDeletes();
             $table->timestamps();
         });

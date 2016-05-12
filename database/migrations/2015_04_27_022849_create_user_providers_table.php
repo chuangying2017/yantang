@@ -16,12 +16,15 @@ class CreateUserProvidersTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users');
+            $table->string('nickname');
+            $table->string('union_id')->nullable();
 			$table->string('provider');
 			$table->string('provider_id');
 			$table->string('avatar')->nullable();
 			$table->timestamps();
-		});
+
+            $table->foreign('user_id')->references('id')->on('users');
+        });
 	}
 
 	/**

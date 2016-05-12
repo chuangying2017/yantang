@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMerchantAdminsTable extends Migration
-{
+class CreateMerchantAdminsTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -13,9 +13,9 @@ class CreateMerchantAdminsTable extends Migration
     public function up()
     {
         Schema::create('merchant_admins', function (Blueprint $table) {
-            $table->integer('user_id')->primaryKey();
-            $table->integer('merchant_id');
-            $table->string('name');
+            $table->integer('user_id')->unsigned();
+            $table->integer('merchant_id')->unsigned();
+            $table->string('title');
             $table->softDeletes();
             $table->timestamps();
         });

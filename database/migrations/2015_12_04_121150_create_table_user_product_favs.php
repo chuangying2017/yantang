@@ -12,11 +12,13 @@ class CreateTableUserProductFavs extends Migration
      */
     public function up()
     {
-        Schema::create('user_product_favs', function (Blueprint $table) {
+        Schema::create('favs', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 

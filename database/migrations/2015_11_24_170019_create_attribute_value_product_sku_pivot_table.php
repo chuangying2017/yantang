@@ -13,7 +13,6 @@ class CreateAttributeValueProductSkuPivotTable extends Migration
     public function up()
     {
         Schema::create('sku_attribute_value', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('attribute_value_id')->unsigned();
             $table->integer('product_sku_id')->unsigned();
         });
