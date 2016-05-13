@@ -67,7 +67,7 @@ trait UserAccess {
 	 *
 	 * @return bool
 	 */
-	public function can($nameOrId)
+	public function allow($nameOrId)
 	{
 		foreach ($this->roles as $role) {
 			//See if role has all permissions
@@ -110,7 +110,7 @@ trait UserAccess {
 	 * @param $needsAll
 	 * @return bool
 	 */
-	public function canMultiple($permissions, $needsAll = false) {
+	public function allowMultiple($permissions, $needsAll = false) {
 		//User has to possess all of the permissions specified
 		if ($needsAll)
 		{

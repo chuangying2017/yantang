@@ -161,7 +161,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\AccessServiceProvider::class,
         App\Providers\ConfigServiceProvider::class,
-        App\Providers\MacroServiceProvider::class,
 
         /*
         * Custom Service Providers
