@@ -142,30 +142,6 @@ if ( ! function_exists('store_price')) {
     }
 }
 
-if ( ! function_exists('get_current_auth_user')) {
-
-    function get_current_auth_user()
-    {
-
-        if ( ! \Tymon\JWTAuth\Facades\JWTAuth::getToken()) {
-            if (Auth::check()) {
-                return Auth::user();
-            }
-
-            return false;
-        }
-
-        try {
-            $user = \Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
-
-            return $user;
-        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return false;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-}
 
 if ( ! function_exists('get_current_auth_user_id')) {
 

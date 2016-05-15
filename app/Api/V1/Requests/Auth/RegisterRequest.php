@@ -1,10 +1,13 @@
-<?php
+<?php namespace App\Api\V1\Requests\Auth;
 
-namespace App\Http\Requests;
+use App\Api\V1\Requests\Request;
 
-use App\Http\Requests\Request;
 
-class ThirdPartyRequest extends Request {
+/**
+ * Class RegisterRequest
+ * @package App\Api\V1\Requests\Frontend\Access
+ */
+class RegisterRequest extends Request {
 
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +27,8 @@ class ThirdPartyRequest extends Request {
     public function rules()
     {
         return [
-            'code' => 'required'
+            'phone' => 'required|zh_mobile|unique:users,phone',
+            'password' => 'required|confirmed|min:6',
         ];
     }
 }

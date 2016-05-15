@@ -4,10 +4,12 @@ use App\Events\Auth\UserRegister;
 use App\Models\Access\User\User;
 use App\Models\Access\User\UserProvider;
 use App\Exceptions\GeneralException;
+use Illuminate\Contracts\Validation\UnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * Class EloquentUserRepository
@@ -49,7 +51,6 @@ class EloquentUserRepository implements UserContract {
     public function create($data, $provider = false)
     {
         $user = User::create([
-            'name'              => array_get($data, 'name', ''),
             'email'             => array_get($data, 'email', ''),
             'phone'             => array_get($data, 'phone', null),
             'password'          => $provider ? null : $data['password'],
@@ -77,7 +78,7 @@ class EloquentUserRepository implements UserContract {
      */
     public function findByUserNameOrCreate($data, $provider)
     {
-        $user = get_current_auth_user();
+        $user = access()->user();;
 
         $user_provider = UserProvider::with('user')->where('provider_id', $data->id)->where('provider', $provider)->first();
 
@@ -98,7 +99,6 @@ class EloquentUserRepository implements UserContract {
             */
             if ( ! $user_provider) {
                 $user_data = [
-                    'name'     => $data->name ?: (property_exists($data, 'nickname') ? $data->nickname : uniqid($provider . '_')),
                     'nickname' => property_exists($data, 'nickname') ? $data->nickname : uniqid($provider . '_'),
                     'email'    => $data->email ?: '',
                     'avatar'   => $data->avatar,
@@ -113,7 +113,7 @@ class EloquentUserRepository implements UserContract {
             // 用户已登录,且授权信息已存在,若两者不是相互绑定则抛出异常
             if ($user_provider) {
                 if ($user['id'] != $user_provider['user_id']) {
-                    throw new \Exception('授权无效,已被其他帐号绑定');
+                    throw new UnauthorizedHttpException('授权无效,已被其他帐号绑定');
                 }
             }
         }

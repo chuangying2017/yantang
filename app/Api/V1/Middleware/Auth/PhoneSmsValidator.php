@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\Middleware;
+namespace App\Api\V1\Middleware\Auth;
 
 use Closure;
 
-class ValidatorUserRegisterPhone {
+class PhoneSmsValidator {
 
     /**
      * Handle an incoming request.

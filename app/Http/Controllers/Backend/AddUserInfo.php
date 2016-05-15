@@ -3,6 +3,6 @@ trait AddUserInfo {
 
     public function showUserInfo()
     {
-        \View::share('user_info', get_current_auth_user());
+        \View::share('user_info', access()->user());
     }
 }

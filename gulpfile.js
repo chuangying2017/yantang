@@ -5,44 +5,44 @@ elixir(function (mix) {
         .phpUnit()
 
         // Copy webfont files from /vendor directories to /public directory.
-        .copy('vendor/fortawesome/font-awesome/fonts', 'public/build/fonts/font-awesome')
-        .copy('vendor/twbs/bootstrap-sass/assets/fonts/bootstrap', 'public/build/fonts/bootstrap')
-        .copy('vendor/twbs/bootstrap/dist/js/bootstrap.min.js', 'public/js/vendor')
-        .copy('vendor/bower_components/select2', 'public/js/vendor/select2')
-        .copy('vendor/bower_components/jquery-mask-plugin', 'public/js/vendor/jquery-mask-plugin')
-        .copy('vendor/bower_components/vue', 'public/js/vendor/vue')
-        .copy('vendor/bower_components/vue-resource', 'public/js/vendor/vue-resource')
-        .copy('vendor/bower_components/underscore', 'public/js/vendor/underscore')
-
-        .sass([ // Process front-end stylesheets
-            'frontend/main.scss'
-        ], 'resources/assets/css/frontend/main.css')
-        .styles([  // Combine pre-processed CSS files
-            'frontend/main.css'
-        ], 'public/css/frontend.css')
-        .scripts([ // Combine front-end scripts
-            'plugins.js',
-            'frontend/main.js'
-        ], 'public/js/frontend.js')
-
-        .sass([ // Process back-end stylesheets
-            'backend/main.scss',
-            'backend/skin.scss',
-            'backend/dflr.scss',
-            'backend/plugin/toastr/toastr.scss'
-        ], 'resources/assets/css/backend/main.css')
-        .styles([ // Combine pre-processed CSS files
-            'backend/main.css'
-        ], 'public/css/backend.css')
-        .scripts([ // Combine back-end scripts
-            'plugins.js',
-            'backend/main.js',
-            'backend/plugin/toastr/toastr.min.js',
-            'backend/custom.js'
-        ], 'public/js/backend.js')
-
-        // Apply version control
-        .version(["public/css/frontend.css", "public/js/frontend.js", "public/css/backend.css", "public/js/backend.js"]);
+        //.copy('vendor/fortawesome/font-awesome/fonts', 'public/build/fonts/font-awesome')
+        //.copy('vendor/twbs/bootstrap-sass/assets/fonts/bootstrap', 'public/build/fonts/bootstrap')
+        //.copy('vendor/twbs/bootstrap/dist/js/bootstrap.min.js', 'public/js/vendor')
+        //.copy('vendor/bower_components/select2', 'public/js/vendor/select2')
+        //.copy('vendor/bower_components/jquery-mask-plugin', 'public/js/vendor/jquery-mask-plugin')
+        //.copy('vendor/bower_components/vue', 'public/js/vendor/vue')
+        //.copy('vendor/bower_components/vue-resource', 'public/js/vendor/vue-resource')
+        //.copy('vendor/bower_components/underscore', 'public/js/vendor/underscore')
+        //
+        //.sass([ // Process front-end stylesheets
+        //    'frontend/main.scss'
+        //], 'resources/assets/css/frontend/main.css')
+        //.styles([  // Combine pre-processed CSS files
+        //    'frontend/main.css'
+        //], 'public/css/frontend.css')
+        //.scripts([ // Combine front-end scripts
+        //    'plugins.js',
+        //    'frontend/main.js'
+        //], 'public/js/frontend.js')
+        //
+        //.sass([ // Process back-end stylesheets
+        //    'backend/main.scss',
+        //    'backend/skin.scss',
+        //    'backend/dflr.scss',
+        //    'backend/plugin/toastr/toastr.scss'
+        //], 'resources/assets/css/backend/main.css')
+        //.styles([ // Combine pre-processed CSS files
+        //    'backend/main.css'
+        //], 'public/css/backend.css')
+        //.scripts([ // Combine back-end scripts
+        //    'plugins.js',
+        //    'backend/main.js',
+        //    'backend/plugin/toastr/toastr.min.js',
+        //    'backend/custom.js'
+        //], 'public/js/backend.js')
+        //
+        //// Apply version control
+        //.version(["public/css/frontend.css", "public/js/frontend.js", "public/css/backend.css", "public/js/backend.js"]);
 });
 
 /**
