@@ -18,7 +18,7 @@ class RouteNeedsPermission {
      */
     public function handle($request, Closure $next, $permission)
     {
-        if ( ! access()->can($permission)) {
+        if ( ! access()->allow($permission)) {
             return new RedirectResponse('http://e-grace.com.cn/');
         }
 

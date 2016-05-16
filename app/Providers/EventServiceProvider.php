@@ -18,10 +18,9 @@ class EventServiceProvider extends ServiceProvider {
      */
     protected $listen = [
 
+        //第三方授权注册
         'SocialiteProviders\Manager\SocialiteWasCalled' => [
-            // add your listeners (aka providers) here
-//            'App\Services\Socialite\Weixin\WeixinExtendSocialite',
-            'App\Services\Socialite\Meitianhui\MeitianhuiExtendSocialite',
+            'App\Services\Socialite\Weixin\WeixinExtendSocialite',
         ],
 
         /**

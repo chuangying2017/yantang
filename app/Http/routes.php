@@ -9,8 +9,8 @@
 $router->group(['namespace' => 'Frontend'], function () use ($router) {
     //pingxx 回调
     require(__DIR__ . "/Routes/Frontend/Payment.php");
-    require(__DIR__ . "/Routes/Frontend/Frontend.php");
-    require(__DIR__ . "/Routes/Frontend/Access.php");
+//    require(__DIR__ . "/Routes/Frontend/Frontend.php");
+//    require(__DIR__ . "/Routes/Frontend/Access.php");
 });
 
 

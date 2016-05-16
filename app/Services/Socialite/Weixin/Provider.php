@@ -2,11 +2,14 @@
 
 namespace App\Services\Socialite\Weixin;
 
+use App\Services\Socialite\ApiStateless;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
 
 class Provider extends AbstractProvider implements ProviderInterface {
+
+    use ApiStateless;
 
     /**
      * {@inheritdoc}.
@@ -140,4 +143,6 @@ class Provider extends AbstractProvider implements ProviderInterface {
 
         return $response;
     }
+
+
 }

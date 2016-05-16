@@ -74,10 +74,4 @@ return [
         'base_redirect' => env('WEIXIN_BASE_REDIRECT_URL'),
     ],
 
-    'meitianhui' => [
-        'client_id'     => env('MTH_APPID'),
-        'client_secret' => env('MTH_APPSECRET'),
-        'redirect'      => env('MTH_REDIRECT_URI'),
-    ],
-
 ];

@@ -15,7 +15,8 @@ class ApiConst
     /**
      * Frontend
      */
-
+    const WALLET_RECORD_PER_PAGE = 20;
+    const CREDITS_RECORD_PER_PAGE = 20;
 
     const SORT_SPLICE = ',';
 
