@@ -26,38 +26,39 @@ class EventServiceProvider extends ServiceProvider {
         /**
          * Frontend Events
          */
-        'App\Events\Frontend\Auth\UserLoggedIn'         => [
-            'App\Listeners\Frontend\Auth\UserLoggedInHandler',
-        ],
-        'App\Events\Frontend\Auth\UserLoggedOut'        => [
-            'App\Listeners\Frontend\Auth\UserLoggedOutHandler',
+        \App\Events\Auth\UserLoggedIn::class => [
+            \App\Listeners\Auth\UserLoggedInHandler::class,
         ],
 
-        'App\Events\Frontend\Auth\UserRegister'     => [
-            'App\Listeners\Frontend\Auth\CreateClientForUser',
+        \App\Events\Auth\UserLoggedOut::class => [
+            \App\Listeners\Auth\UserLoggedOutHandler::class,
         ],
-        'App\Services\Orders\Event\OrderRequest'    => [
+
+        \App\Events\Auth\UserRegister::class => [
+            \App\Listeners\Auth\CreateClientForUser::class
+        ],
+        'App\Services\Orders\Event\OrderRequest' => [
 
         ],
         'App\Services\Orders\Event\OrderInfoChange' => [
             'App\Services\Orders\Listeners\CacheOrderRequestData',
         ],
-        'App\Services\Orders\Event\OrderConfirm'    => [
+        'App\Services\Orders\Event\OrderConfirm' => [
             'App\Services\Cart\Listeners\RemovePurchasedItemsFromCart',
             'App\Services\Marketing\Listeners\GenerateMarketingBillingAndFrozenMarketingItem',
             'App\Services\Marketing\Listeners\GenerateMainBilling',
             'App\Services\Product\Listeners\DecreaseStock',
             'App\Services\Orders\Listeners\OrderSpilt',
         ],
-        'App\Services\Orders\Event\OrderCancel'     => [
+        'App\Services\Orders\Event\OrderCancel' => [
             'App\Services\Marketing\Listeners\DeleteMarketingBillingAndUnFrozenMarketingItem',
             'App\Services\Product\Listeners\IncreaseStock',
             'App\Services\Orders\Listeners\DeleteOrderPayment',
         ],
-        'App\Services\Orders\Event\PingxxPaid'      => [
+        'App\Services\Orders\Event\PingxxPaid' => [
             'App\Services\Orders\Listeners\HandlePingxxBilling',
         ],
-        'App\Services\Orders\Event\OrderIsPaid'     => [
+        'App\Services\Orders\Event\OrderIsPaid' => [
             'App\Services\Orders\Listeners\HandleOrderPaid',
             'App\Services\Marketing\Listeners\UpdateMarketingBillingAndUsedMarketingItem',
             'App\Services\Agent\Listeners\AgentOrderDeal',
@@ -92,7 +93,7 @@ class EventServiceProvider extends ServiceProvider {
         /**
          * 九级分销
          */
-        'App\Services\Agent\Event\NewAgentOrder'  => [
+        'App\Services\Agent\Event\NewAgentOrder' => [
             'App\Services\Agent\Listeners\AwardClientAgent',
             'App\Services\Agent\Listeners\AwardAgent',
         ],

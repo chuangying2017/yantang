@@ -42,7 +42,7 @@ $factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Account\Wallet::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Client\Account\Wallet::class, function (Faker\Generator $faker) {
     return [
         'user_id' => $faker->randomNumber(),
         'amount' => 0,

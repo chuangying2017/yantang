@@ -16,7 +16,7 @@ class AccountProtocol {
     const PER_PAGE = 10;
 
     const ACCOUNT_TYPE_USE = 'use';
-    const ACCOUNT_TYPE_CHARGE = 'charge';
+    const ACCOUNT_TYPE_RECHARGE = 'recharge';
     const ACCOUNT_TYPE_FROZEN = 'frozen';
     const ACCOUNT_TYPE_FROZEN_USE = 'frozen_use';
     const ACCOUNT_TYPE_UNFROZEN = 'unfrozen';
@@ -46,11 +46,11 @@ class AccountProtocol {
         }
 
         if(in_array($type, [
-            self::ACCOUNT_TYPE_CHARGE,
+            self::ACCOUNT_TYPE_RECHARGE,
             self::ACCOUNT_TYPE_UNFROZEN,
             self::ACCOUNT_TYPE_REFUND,
         ])) {
-            return self::ACCOUNT_OUTCOME;
+            return self::ACCOUNT_INCOME;
         }
 
         if(in_array($type, [
@@ -67,7 +67,7 @@ class AccountProtocol {
         $type = null;
         if (is_null($from)) {
             if ($to == self::ACCOUNT_AMOUNT_MAIN_NAME) {
-                $type = self::ACCOUNT_TYPE_CHARGE;
+                $type = self::ACCOUNT_TYPE_RECHARGE;
             }
         } else if ($from == self::ACCOUNT_AMOUNT_MAIN_NAME) {
             if ($to == self::ACCOUNT_AMOUNT_USED_NAME) {

@@ -1,6 +1,6 @@
 <?php namespace App\Http\Transformers;
 
-use App\Models\Address;
+use App\Models\Client\Address;
 use App\Models\OrderDeliver;
 use League\Fractal\TransformerAbstract;
 

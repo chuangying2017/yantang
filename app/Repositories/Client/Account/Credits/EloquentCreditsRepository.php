@@ -1,7 +1,7 @@
-<?php namespace App\Repositories\Client\Account\Wallet;
+<?php namespace App\Repositories\Client\Account\Credits;
 
-use App\Models\Account\Credits;
-use App\Models\Account\CreditsRecord;
+use App\Models\Client\Account\Credits;
+use App\Models\Client\Account\CreditsRecord;
 use App\Repositories\Client\Account\EloquentAccountRepository;
 
 class EloquentCreditsRepository extends EloquentAccountRepository implements CreditsRepositoryContract {

@@ -9,7 +9,7 @@
 namespace App\Services\Client\Address;
 
 
-use App\Models\Address;
+use App\Models\Client\Address;
 
 class AddressRepository {
 

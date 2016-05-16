@@ -61,9 +61,6 @@ class EloquentUserRepository implements UserContract {
 
         $user->attachRole($this->role->getDefaultUserRole());
 
-//        if (config('access.users.confirm_email') && $provider === false)
-//            $this->sendConfirmationEmail($user);
-//        else
         $user->confirmed = $user['phone'] ? 1 : 0;
 
         event(new UserRegister($user, $data));

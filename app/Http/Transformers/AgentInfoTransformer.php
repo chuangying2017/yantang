@@ -1,6 +1,6 @@
 <?php namespace App\Http\Transformers;
 
-use App\Models\Address;
+use App\Models\Client\Address;
 use App\Models\Agent;
 use App\Models\AgentInfo;
 use App\Services\Agent\AgentProtocol;

@@ -8,9 +8,9 @@
 
 namespace App\Services\Client;
 
-use App\Models\Client;
-use App\Models\Account\Credits;
-use App\Models\Account\Wallet;
+use App\Models\Client\Client;
+use App\Models\Client\Account\Credits;
+use App\Models\Client\Account\Wallet;
 use App\Repositories\Backend\Role\EloquentRoleRepository;
 use App\Repositories\Frontend\User\EloquentUserRepository;
 use App\Services\Agent\AgentService;
