@@ -34,7 +34,7 @@ class SmsRequest extends Request {
             if ($this->input('reset')) {
                 $rules['phone'] .= '|exists:users,phone';
             } else {
-                if ( ! get_current_auth_user()) {
+                if ( ! access()->user()) {
                     $rules['phone'] .= '|unique:users,phone';
                 }
             }

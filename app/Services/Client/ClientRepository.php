@@ -9,8 +9,8 @@
 namespace App\Services\Client;
 
 use App\Models\Client;
-use App\Models\CreditsWallet;
-use App\Models\Wallet;
+use App\Models\Account\Credits;
+use App\Models\Account\Wallet;
 use App\Repositories\Backend\Role\EloquentRoleRepository;
 use App\Repositories\Frontend\User\EloquentUserRepository;
 use App\Services\Agent\AgentService;
@@ -53,7 +53,7 @@ class ClientRepository {
         //create wallet
         Wallet::firstOrCreate(['user_id' => $user->id]);
         //create creditWallet
-        CreditsWallet::firstOrCreate(['user_id' => $user->id]);
+        Credits::firstOrCreate(['user_id' => $user->id]);
 
         return ['user_id' => $user->id];
     }

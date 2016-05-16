@@ -92,14 +92,31 @@ class AuthController extends Controller {
         }
     }
 
+
     /**
      * @param Request $request
      * @param $provider
      * @return mixed
      */
-    public function loginThirdParty(Request $request, $provider)
+    public function loginThirdParty(ThirdPartyRequest $request, $provider)
     {
-        return $this->auth->loginThirdParty($request->all(), $provider);
+        try {
+            $user = $this->auth->loginThirdParty($request->all(), $provider);
+
+            $token = JWTAuth::fromUser($user);
+            $roles = UserInfoTransformer::getRoles($user);
+
+            return $this->response->array(['data' => compact('token', 'roles')]);
+        } catch (\Exception $e) {
+            $this->response->errorInternal($e->getMessage());
+        }
+    }
+
+    public function loginThirdPartyUrl(Request $request, $provider)
+    {
+        $url = $this->auth->loginThirdPartyUrl($request->all(), $provider);
+
+        return $this->response->array(['data' => compact('url')]);
     }
 
     /**

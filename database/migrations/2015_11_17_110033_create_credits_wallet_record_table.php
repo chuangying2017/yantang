@@ -20,6 +20,7 @@ class CreateCreditsWalletRecordTable extends Migration
             $table->tinyInteger('income')->unsigned();// 0,1
             $table->string('resource_type');
             $table->integer('resource_id')->unsigned();
+            $table->string('type', 10);
             $table->tinyInteger('status');
             $table->softDeletes();
             $table->timestamps();

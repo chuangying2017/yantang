@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWalletRecordTable extends Migration
-{
+class CreateWalletRecordTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -20,6 +20,7 @@ class CreateWalletRecordTable extends Migration
             $table->tinyInteger('income')->unsigned();// 0,1
             $table->string('resource_type');
             $table->integer('resource_id')->unsigned();
+            $table->string('type', 10);
             $table->tinyInteger('status');
             $table->softDeletes();
             $table->timestamps();
