@@ -21,7 +21,6 @@ class UserRegisterAndLoginTest extends TestCase
     }
 
 
-
     /** @test */
     public function user_can_register()
     {
@@ -41,6 +40,10 @@ class UserRegisterAndLoginTest extends TestCase
 
         $this->assertResponseOk();
         $this->seeJsonStructure(['data' => ['token', 'roles' => []]]);
+
+        $content = $this->getResponseData();
+
+        return JWTAuth::toUser($content['data']['token']);
     }
 
     /** @test */

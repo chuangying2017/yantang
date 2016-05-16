@@ -168,6 +168,7 @@ return [
         App\Providers\LocalEnvironmentServiceProvider::class,
         App\Services\Marketing\MarketingServiceProvider::class,
         \App\Providers\ApiServiceProvider::class,
+        App\Providers\AccountServiceProvider::class,
 
 
         \App\Services\Product\Search\ProductServiceProvider::class,

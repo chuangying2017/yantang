@@ -1,7 +1,7 @@
 <?php namespace App\Services\Orders\Payments;
 
 
-use App\Models\OrderBilling;
+use App\Models\Billing\OrderBilling;
 use App\Models\PingxxPayment;
 use App\Services\Orders\OrderProtocol;
 use DB;

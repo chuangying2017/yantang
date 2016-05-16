@@ -1,6 +1,8 @@
 <?php namespace App\Models\Access\User\Traits\Relationship;
 
 use App\Models\Access\User\UserProvider;
+use App\Models\Account\Credits;
+use App\Models\Account\Wallet;
 
 /**
  * Class UserRelationship
@@ -32,7 +34,24 @@ trait UserRelationship {
     /**
      * @return mixed
      */
-    public function providers() {
+    public function providers()
+    {
         return $this->hasMany(UserProvider::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function credits()
+    {
+        return $this->hasOne(Credits::class);
     }
 }
