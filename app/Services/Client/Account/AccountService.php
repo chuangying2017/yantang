@@ -37,19 +37,17 @@ abstract class AccountService implements PayableContract, RechargeableContract, 
 
     public function pay(BillingContract $billing)
     {
-        $this->setPayer($billing);
-
         $pay_amount = $this->transAmount($billing->getAmount());
 
         if (!$this->enough($pay_amount)) {
-            throw new NotEnoughException;
+            throw new NotEnoughException();
         }
 
         $record = $this->account->change(
             $pay_amount,
             $billing->getType(),
             $billing->getID(),
-            AccountProtocol::ACCOUNT_TYPE_USE,
+            AccountProtocol::ACCOUNT_AMOUNT_USED_NAME,
             AccountProtocol::ACCOUNT_AMOUNT_MAIN_NAME
         );
 
@@ -62,8 +60,6 @@ abstract class AccountService implements PayableContract, RechargeableContract, 
     public function recharge(BillingContract $billing)
     {
         $this->validRecharge($billing);
-
-        $this->setPayer($billing);
 
         $pay_amount = $this->transAmount($billing->getAmount());
 
@@ -97,7 +93,7 @@ abstract class AccountService implements PayableContract, RechargeableContract, 
     /**
      * @return null
      */
-    public function getUserId()
+    public function getPayer()
     {
         return $this->user_id;
     }

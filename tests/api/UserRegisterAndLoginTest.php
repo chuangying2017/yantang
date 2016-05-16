@@ -43,7 +43,6 @@ class UserRegisterAndLoginTest extends TestCase
 
         $content = $this->getResponseData();
 
-        return JWTAuth::toUser($content['data']['token']);
     }
 
     /** @test */
@@ -58,7 +57,6 @@ class UserRegisterAndLoginTest extends TestCase
         ];
 
         $this->json('post', 'auth/login', $login_data);
-
 
         $this->dumpResponse();
 
