@@ -12,13 +12,13 @@ class CreatePreorderOrderProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('preorder_order_products', function (Blueprint $table) {
+        Schema::create('preorder_order_products', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('preorder_order_id')->unsigned();
             $table->integer('sku_id')->unsigned();
             $table->string('name');
             $table->integer('price');
-            $table->timestamp();
+            $table->timestamps();
         });
     }
 

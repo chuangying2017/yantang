@@ -12,7 +12,7 @@ class CreatePreordersTable extends Migration
      */
     public function up()
     {
-        Schema::table('preorders', function (Blueprint $table) {
+        Schema::create('preorders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('order_no');
@@ -23,10 +23,10 @@ class CreatePreordersTable extends Migration
             $table->dateTime('end_time');
             $table->dateTime('pause_time'); //暂停时间
             $table->dateTime('restart_time');
-            $table->tinyInteger('daytime')->default(o);
+            $table->tinyInteger('daytime')->default(0);
             $table->string('status', 32);
             $table->string('charge_status', 32);
-            $table->timestamp();
+            $table->timestamps();
         });
     }
 

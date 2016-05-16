@@ -12,7 +12,7 @@ class CreateStationTable extends Migration
      */
     public function up()
     {
-        Schema::table('station', function (Blueprint $table) {
+        Schema::create('station', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('desc');
@@ -24,7 +24,7 @@ class CreateStationTable extends Migration
             $table->string('longitude', 45);
             $table->string('latitude', 45);
             $table->string('status', 45);
-            $table->timestamp();
+            $table->timestamps();
         });
     }
 

@@ -12,7 +12,7 @@ class CreateStaffPreorderDeliverTable extends Migration
      */
     public function up()
     {
-        Schema::table('staff_preorder_deliver', function (Blueprint $table) {
+        Schema::create('staff_preorder_deliver', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('preorder_id')->unsigned();
             $table->integer('preorder_order_id')->unsigned();
@@ -20,7 +20,7 @@ class CreateStaffPreorderDeliverTable extends Migration
             $table->tinyInteger('status');
             $table->tinyInteger('daytime');
             $table->integer('station_id');
-            $table->timestamp();
+            $table->timestamps();
         });
     }
 

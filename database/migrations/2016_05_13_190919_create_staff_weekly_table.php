@@ -12,7 +12,7 @@ class CreateStaffWeeklyTable extends Migration
      */
     public function up()
     {
-        Schema::table('staff_weekly', function (Blueprint $table) {
+        Schema::create('staff_weekly', function (Blueprint $table) {
             $table->increments('id');
             $table->string('week_id', 8);
             $table->integer('staff_id')->unsigned();
@@ -21,7 +21,7 @@ class CreateStaffWeeklyTable extends Migration
             $table->string('fri');
             $table->string('sat');
             $table->string('sun');
-            $table->timestamp();
+            $table->timestamps();
         });
     }
 
