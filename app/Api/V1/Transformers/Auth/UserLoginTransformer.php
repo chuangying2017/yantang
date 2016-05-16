@@ -1,17 +1,18 @@
 <?php namespace App\Api\V1\Transformers\Auth;
 
+use App\Models\Access\User\User;
 use JWTAuth;
 use League\Fractal\TransformerAbstract;
 
-class UserLoginTransformer extends TransformerAbstract {
+class UserLoginTransformer extends  TransformerAbstract {
 
 	/**
      * @param $token
      * @return array
      */
-    public function transform($token)
+    public function transform(User $user)
     {
-        $user = JWTAuth::toUser($token);
+        $token = JWTAuth::fromUser($user);
 
         $data = [
             'token' => $token,
@@ -20,7 +21,6 @@ class UserLoginTransformer extends TransformerAbstract {
 
         return $data;
     }
-
 
 
     public static function getRoles(User $user)

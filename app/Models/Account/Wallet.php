@@ -9,6 +9,8 @@ class Wallet extends Model
 
     protected $table = 'wallet';
 
+    protected $primaryKey = 'user_id';
+
     protected $guarded = ['id'];
 
     public function records()

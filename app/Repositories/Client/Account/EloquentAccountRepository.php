@@ -118,6 +118,11 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
     protected function createRecord($amount, $resource_type, $resource_id, $type)
     {
         $record_model = $this->getAccountRecordModel();
+
+        if($record_model::where(['resource_type' => $resource_type, 'resource_id' => $resource_id])->first()){
+            throw new \Exception('重复处理账单');
+        }
+
         $record = $record_model::create([
             'user_id' => $this->getUserId(),
             'amount' => $amount,

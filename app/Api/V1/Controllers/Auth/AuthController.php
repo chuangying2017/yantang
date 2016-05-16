@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use JWTAuth;
 use App\Api\V1\Transformers\Auth\UserInfoTransformer;
 use App\Api\V1\Requests\Auth\ThirdPartyRequest;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use ArrayObject;
 
 
 /**
@@ -32,15 +34,13 @@ class AuthController extends Controller {
 
     /**
      * @param RegisterRequest $request
-     * @return \Illuminate\Api\V1\RedirectResponse
      */
     public function postRegister(RegisterRequest $request)
     {
         try {
             $user = $this->auth->create($request->all());
-            $token = JWTAuth::fromUser($user);
 
-            return $this->response->item($token, new UserLoginTransformer());
+            return $this->response->item($user, new UserLoginTransformer());
         } catch (JWTException $e) {
             return $this->response->error('could_not_create_token', 500);
         }
@@ -57,7 +57,7 @@ class AuthController extends Controller {
                 return $this->response->errorUnauthorized();
             }
 
-            return $this->response->item($token, new UserLoginTransformer());
+            return $this->response->item(JWTAuth::toUser($token), new UserLoginTransformer());
         } catch (JWTException $e) {
             return $this->response->error('could_not_create_token', 500);
         }
@@ -72,9 +72,8 @@ class AuthController extends Controller {
     {
         try {
             $user = $this->auth->loginThirdParty($request->all(), $provider);
-            $token = JWTAuth::fromUser($user);
 
-            return $this->response->item($token, new UserLoginTransformer());
+            return $this->response->item($user, new UserLoginTransformer());
         } catch (\Exception $e) {
             return $this->response->errorUnauthorized($e->getMessage());
         }
@@ -88,9 +87,6 @@ class AuthController extends Controller {
     }
 
 
-    /**
-     * @return \Illuminate\Api\V1\RedirectResponse
-     */
     public function getLogout()
     {
         $this->auth->logout();
