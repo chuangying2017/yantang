@@ -42,6 +42,7 @@ $api->version('v1', function ($api) {
         $api->group(['namespace' => 'Backend'], function ($api) {
             $api->group(['namespace' => 'Station', 'prefix' => 'stations'], function ($api) {
                 $api->resource('products', 'ProductsController', ['only' => ['index']]); //查看可定购商品
+                $api->resource('staffs', 'StaffsController');
             });
         });
 

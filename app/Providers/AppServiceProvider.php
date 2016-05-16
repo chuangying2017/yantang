@@ -7,7 +7,8 @@ use Illuminate\Support\ServiceProvider;
 use XS;
 use XSDocument;
 
-class AppServiceProvider extends ServiceProvider {
+class AppServiceProvider extends ServiceProvider
+{
 
     /**
      * Bootstrap any application services.
@@ -16,8 +17,10 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-
-
+        $this->app->bind(
+            \App\Repositories\Backend\Staff\StaffRepositoryContract::class,
+            \App\Repositories\Backend\Staff\EloquentStaffRepository::class
+        );
     }
 
     /**

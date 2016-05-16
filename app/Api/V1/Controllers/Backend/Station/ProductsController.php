@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Backend\Station;
+namespace App\Api\V1\Controllers\Backend\Station;
 
 
 use App\Api\V1\Controllers\Controller;

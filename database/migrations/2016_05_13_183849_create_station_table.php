@@ -25,6 +25,7 @@ class CreateStationTable extends Migration
             $table->string('latitude', 45);
             $table->string('status', 45);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
