@@ -1,9 +1,10 @@
-<?php namespace App\Repositories\Frontend\User;
+<?php namespace App\Repositories\Auth\User;
 
 use App\Events\Auth\UserRegister;
 use App\Models\Access\User\User;
 use App\Models\Access\User\UserProvider;
 use App\Exceptions\GeneralException;
+use App\Repositories\Auth\User\UserContract;
 use Illuminate\Contracts\Validation\UnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Mail;

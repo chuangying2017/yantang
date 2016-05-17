@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Frontend\Auth;
+<?php namespace App\Repositories\Auth;
 
 /**
  * Interface AuthenticationContract

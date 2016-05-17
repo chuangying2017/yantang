@@ -9,9 +9,9 @@
 namespace App\Services\Product;
 
 use App\Http\Requests\Request;
-use App\Models\Product;
-use App\Models\ProductMeta;
-use App\Models\ProductSku;
+use App\Models\Product\Product;
+use App\Models\Product\ProductMeta;
+use App\Models\Product\ProductSku;
 use App\Services\Product\Comment\CommentService;
 use App\Services\Product\Fav\FavService;
 use App\Services\Product\Search\Facades\ProductSearch;

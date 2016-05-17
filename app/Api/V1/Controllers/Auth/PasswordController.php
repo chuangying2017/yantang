@@ -8,7 +8,7 @@ use Illuminate\Contracts\Auth\Guard;
 use App\Exceptions\GeneralException;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Contracts\Auth\PasswordBroker;
-use App\Repositories\Frontend\User\UserContract;
+use App\Repositories\Auth\User\UserContract;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use App\Api\V1\Requests\Frontend\Access\ChangePasswordRequest;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

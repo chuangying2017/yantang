@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Product;
+use App\Models\Product\Product;
 use App\Services\Product\Search\Facades\ProductSearch;
 use Illuminate\Console\Command;
 

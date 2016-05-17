@@ -1,6 +1,6 @@
 <?php namespace App\Services\Product\Search;
 
-use App\Models\Product;
+use App\Models\Product\Product;
 use App\Services\Product\Search\Facades\ProductSearch;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;

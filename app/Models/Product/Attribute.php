@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Product;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AgentRate extends Model
+class Attribute extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'agent_rate';
-
     protected $guarded = ['id'];
 
+    public function values()
+    {
+        return $this->hasMany(AttributeValue::class);
+    }
 }

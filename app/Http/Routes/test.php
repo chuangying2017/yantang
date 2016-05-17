@@ -3,7 +3,7 @@
  * Test routes
  */
 
-use App\Models\AttributeValue;
+use App\Models\Product\AttributeValue;
 use App\Models\OrderProduct;
 use App\Services\Product\ProductConst;
 

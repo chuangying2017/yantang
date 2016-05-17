@@ -2,7 +2,7 @@
 
 define('XS_APP_ROOT', env('SEARCH_INI_PATH'));
 
-use App\Models\Product;
+use App\Models\Product\Product;
 use App\Services\Product\ProductConst;
 use XS;
 use XSDocument;

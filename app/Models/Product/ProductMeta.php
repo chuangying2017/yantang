@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Product;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductMeta extends Model
-{
-    use SoftDeletes;
+class ProductMeta extends Model {
 
     protected $table = 'product_meta';
 
-    protected $guarded = ['id'];
+    protected $primaryKey = 'product_id';
+
+    protected $guarded = [];
 }

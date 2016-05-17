@@ -1,6 +1,6 @@
 <?php namespace App\Http\Transformers;
 
-use App\Models\Product;
+use App\Models\Product\Product;
 use League\Fractal\TransformerAbstract;
 
 class ProductTransformer extends TransformerAbstract {

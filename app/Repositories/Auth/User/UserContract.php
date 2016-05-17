@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Frontend\User;
+<?php namespace App\Repositories\Auth\User;
 
 /**
  * Interface UserContract

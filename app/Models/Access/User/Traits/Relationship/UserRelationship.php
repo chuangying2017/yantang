@@ -3,6 +3,7 @@
 use App\Models\Access\User\UserProvider;
 use App\Models\Client\Account\Credits;
 use App\Models\Client\Account\Wallet;
+use App\Models\Client\Address;
 
 /**
  * Class UserRelationship
@@ -54,4 +55,10 @@ trait UserRelationship {
     {
         return $this->hasOne(Credits::class);
     }
+
+    public function address()
+    {
+        return $this->hasMany(Address::class);
+    }
+
 }

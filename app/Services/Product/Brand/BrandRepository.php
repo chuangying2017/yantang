@@ -7,7 +7,7 @@ namespace App\Services\Product\Brand;
  * Date: 3/12/2015
  * Time: 5:00 PM
  */
-use App\Models\Brand;
+use App\Models\Product\Brand;
 use Exception;
 
 /**

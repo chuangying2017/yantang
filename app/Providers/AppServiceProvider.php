@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Product;
+use App\Models\Product\Product;
 use Illuminate\Support\ServiceProvider;
 use XS;
 use XSDocument;

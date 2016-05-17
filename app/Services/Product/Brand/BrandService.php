@@ -9,8 +9,8 @@
 namespace App\Services\Product\Brand;
 
 
-use App\Models\Brand;
-use App\Models\Category;
+use App\Models\Product\Brand;
+use App\Models\Product\Category;
 use App\Services\Product\Attribute\AttributeService;
 use App\Services\Product\Attribute\AttributeValueService;
 use Pheanstalk\Exception;

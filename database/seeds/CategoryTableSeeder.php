@@ -1,6 +1,6 @@
 database/seeds/Agent.php<?php
 
-use App\Models\Category;
+use App\Models\Product\Category;
 use Illuminate\Database\Seeder;
 
 // composer require laracasts/testdummy
@@ -10,7 +10,7 @@ class CategoryTableSeeder extends Seeder {
 
     public function run()
     {
-        App\Models\Category::truncate();
+        \App\Models\Product\Category::truncate();
 
         $categories = [
             ['name' => '护理', 'children' => [

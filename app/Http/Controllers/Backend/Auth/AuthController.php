@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Http\Requests\Frontend\Access\LoginRequest;
 use App\Http\Requests\Frontend\Access\RegisterRequest;
-use App\Repositories\Frontend\Auth\AuthenticationContract;
+use App\Repositories\Auth\AuthenticationContract;
 
 /**
  * Class AuthController

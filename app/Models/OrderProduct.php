@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Product\ProductSku;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

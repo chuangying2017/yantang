@@ -8,8 +8,8 @@
 
 namespace App\Services\Product;
 
-use App\Models\Product;
-use App\Models\ProductSku;
+use App\Models\Product\Product;
+use App\Models\Product\ProductSku;
 use App\Models\ProductSkuView;
 use Exception;
 use Log;

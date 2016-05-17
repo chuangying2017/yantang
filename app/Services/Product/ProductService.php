@@ -9,8 +9,8 @@
 namespace App\Services\Product;
 
 
-use App\Models\Category;
-use App\Models\Product;
+use App\Models\Product\Category;
+use App\Models\Product\Product;
 use App\Services\Product\Brand\BrandService;
 use App\Services\Product\Brand\ChannelService;
 use App\Services\Product\Category\CategoryService;

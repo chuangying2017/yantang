@@ -12,7 +12,7 @@ use App\Models\Client\Client;
 use App\Models\Client\Account\Credits;
 use App\Models\Client\Account\Wallet;
 use App\Repositories\Backend\Role\EloquentRoleRepository;
-use App\Repositories\Frontend\User\EloquentUserRepository;
+use App\Repositories\Auth\User\EloquentUserRepository;
 use App\Services\Agent\AgentService;
 use App\Services\Client\Exceptions\ClientException;
 use App\Services\Mth\MthApiService;

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Product;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Product\Traits\CategoryRelation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Baum\Node;
 
 class Category extends Node {
 
-    use SoftDeletes;
+    use SoftDeletes, CategoryRelation;
 
     // 'parent_id' column name
     protected $parentColumn = 'pid';
@@ -25,18 +25,6 @@ class Category extends Node {
     // guard attributes from mass-assignment
     protected $guarded = array('id', 'pid', 'lid', 'rid', 'depth');
 
-    public function products()
-    {
-        return $this->hasMany('App\Models\Product');
-    }
 
-    public function attributes()
-    {
-        return $this->belongsToMany('App\Models\Attribute', 'category_attribute');
-    }
 
-    public function brands()
-    {
-        return $this->belongsToMany('App\Models\Brand', 'brand_category');
-    }
 }
