@@ -12,7 +12,7 @@ class AttributeValue extends Model
 
     protected $guarded = ['id'];
 
-    public function attribute()
+    public function attr()
     {
         return $this->belongsTo(Attribute::class);
     }

@@ -5,7 +5,7 @@
 
 use App\Models\Product\AttributeValue;
 use App\Models\OrderProduct;
-use App\Services\Product\ProductConst;
+use App\Repositories\Product\ProductProtocol;
 
 if (App::environment() == 'local' || env('APP_DEBUG')) {
 

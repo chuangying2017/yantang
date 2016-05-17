@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Backend\Api;
 
 use App\Http\Requests\Request;
-use App\Services\Product\ProductConst;
+use App\Repositories\Product\ProductProtocol;
 
 class ProductRequest extends Request {
 
@@ -32,7 +32,7 @@ class ProductRequest extends Request {
                 'data.brand_id'    => 'required',
                 'data.title'       => 'required',
                 'data.price'       => 'required|numeric',
-                'data.open_status' => 'required|in:' . implode(',', array_keys(ProductConst::openStatus())),
+                'data.open_status' => 'required|in:' . implode(',', array_keys(ProductProtocol::openStatus())),
                 'data.attributes'  => 'required|array',
                 'data.detail'      => 'required',
                 'data.skus'        => 'required|array',
@@ -43,7 +43,7 @@ class ProductRequest extends Request {
 
         if ($this->route()->getName() == 'api.products.operate') {
             $rules = [
-                'action'      => 'required|in:' . ProductConst::VAR_PRODUCT_STATUS_UP . ',' . ProductConst::VAR_PRODUCT_STATUS_DOWN,
+                'action'      => 'required|in:' . ProductProtocol::VAR_PRODUCT_STATUS_UP . ',' . ProductProtocol::VAR_PRODUCT_STATUS_DOWN,
                 'product_ids' => 'required'
             ];
         }

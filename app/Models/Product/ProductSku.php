@@ -10,7 +10,7 @@ class ProductSku extends Model {
 
     use SoftDeletes, ProductSkuRelation;
 
-    protected $table = 'product_sku';
+    protected $table = 'product_skus';
 
     protected $guarded = ['id'];
 

@@ -17,7 +17,7 @@ trait ProductSkuRelation {
 
     public function attributeValues()
     {
-        return $this->belongsToMany(AttributeValue::class, 'sku_attribute_value', 'sku_id', '');
+        return $this->belongsToMany(AttributeValue::class, 'sku_attribute_value', 'product_sku_id', 'attr_value_id');
     }
 
     public function product()

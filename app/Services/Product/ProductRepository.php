@@ -12,6 +12,7 @@ use App\Http\Requests\Request;
 use App\Models\Product\Product;
 use App\Models\Product\ProductMeta;
 use App\Models\Product\ProductSku;
+use App\Repositories\Product\ProductProtocol;
 use App\Services\Product\Comment\CommentService;
 use App\Services\Product\Fav\FavService;
 use App\Services\Product\Search\Facades\ProductSearch;
@@ -27,7 +28,7 @@ use XSTokenizerScws;
 class ProductRepository {
 
 
-    public static function lists($category_id = null, $brand_id = null, $paginate = 20, $orderBy = null, $orderType = 'desc', $status = ProductConst::VAR_PRODUCT_STATUS_UP, $keyword = null, $new_query = true)
+    public static function lists($category_id = null, $brand_id = null, $paginate = 20, $orderBy = null, $orderType = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $keyword = null, $new_query = true)
     {
         $query = Product::with('meta', 'data')->where('status', $status);
 
@@ -69,7 +70,7 @@ class ProductRepository {
 
 
         if ( ! is_null($orderBy)) {
-            if (ProductConst::getProductSortOption($orderBy)) {
+            if (ProductProtocol::getProductSortOption($orderBy)) {
                 $query = $query->orderBy($orderBy, $orderType);
             } else if ($orderBy == 'sales' || $orderBy == 'favs' || $orderBy == 'stock') {
                 $query = $query->join('product_data_view', 'product_data_view.id', '=', 'products.id')
@@ -272,7 +273,7 @@ class ProductRepository {
 
         if (is_null($id)) { //如果id为null, 则为创建, 反之为更新
             $basic_data['product_no'] = uniqid('pn_');
-            $basic_data['status'] = ProductConst::VAR_PRODUCT_STATUS_UP;
+            $basic_data['status'] = ProductProtocol::VAR_PRODUCT_STATUS_UP;
         }
         /**
          * 将attributes序列化储存

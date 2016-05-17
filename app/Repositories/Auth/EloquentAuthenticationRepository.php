@@ -118,7 +118,7 @@ class EloquentAuthenticationRepository implements AuthenticationContract {
         return $user;
     }
 
-	/**
+    /**
      * @param $request
      * @param $provider
      * @return \Symfony\Component\HttpFoundation\RedirectResponse

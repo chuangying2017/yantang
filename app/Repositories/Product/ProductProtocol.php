@@ -1,19 +1,9 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Bryant
- * Date: 25/11/2015
- * Time: 11:50 AM
- */
+<?php namespace App\Repositories\Product;
+final class ProductProtocol {
 
-namespace App\Services\Product;
+    const DEFAULT_MERCHANT_ID = 0;
 
-
-/**
- * Class ProductConst
- * @package App\Services\Product
- */
-final class ProductConst {
+    const PRODUCT_PER_PAGE = 20;
 
     /**
      *
@@ -84,5 +74,3 @@ final class ProductConst {
 
 
 }
-
-
