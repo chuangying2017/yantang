@@ -1,23 +1,38 @@
 <?php namespace App\Repositories\Backend\Staff;
 
-use App\Models\Station\StationStaffs;
+use App\Models\Subscribe\StationStaffs;
 use Pheanstalk\Exception;
 
 class EloquentStaffRepository implements StaffRepositoryContract
 {
-    public function getStaffPaginated($per_page, $order_by = 'id', $sort = 'asc')
+    public function getStaffPaginated($station_id, $per_page, $order_by = 'id', $sort = 'asc')
     {
-        return StationStaffs::orderBy($order_by, $sort)->paginate($per_page);
+        $query = StationStaffs::query();
+        if (!empty($station_id)) {
+            $query->find($station_id);
+        }
+        if (!empty($order_by) && !empty($sort)) {
+            $query = $query->orderBy($order_by, $sort);
+        }
+        if (!empty($per_page)) {
+            $query = $query->paginate($per_page);
+        }
+        return $query;
     }
 
     public function create($input)
     {
+        $input['staff_no'] = uniqid('stf_');
         return StationStaffs::create($input);
     }
 
-    public function update($id, $input)
+    public function update($id, $input, $station_id)
     {
-
+        $query = StationStaffs::find('id', $id);
+        if ($query->station_id != $station_id) {
+            throw new \Exception('该配送员不属于当前服务部');
+        }
+        return $query->updateOrCreate($input);
     }
 
     public function show($id)

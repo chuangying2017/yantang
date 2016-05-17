@@ -1,4 +1,4 @@
-<?php namespace App\Api\V1\Transformers\Backend\Station;
+<?php namespace App\Api\V1\Transformers\Subscribe\Station;
 
 use JWTAuth;
 use League\Fractal\TransformerAbstract;

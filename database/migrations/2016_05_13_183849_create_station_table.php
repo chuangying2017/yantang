@@ -15,11 +15,11 @@ class CreateStationTable extends Migration
         Schema::create('station', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('desc');
+            $table->integer('desc');
             $table->string('address');
-            $table->string('tel');
+            $table->string('tel')->nullable();
             $table->string('director');
-            $table->string('phone', 32);
+            $table->string('phone', 32)->nullable();
             $table->string('cover_image');
             $table->string('longitude', 45);
             $table->string('latitude', 45);

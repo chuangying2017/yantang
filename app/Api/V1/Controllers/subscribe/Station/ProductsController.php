@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\V1\Controllers\Backend\Station;
+namespace App\Api\V1\Controllers\Subscribe\Station;
 
 
 use App\Api\V1\Controllers\Controller;

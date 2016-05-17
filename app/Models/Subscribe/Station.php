@@ -1,13 +1,13 @@
-<?php namespace App\Models\Station;
+<?php namespace App\Models\Subscribe;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StationStaffs extends Model
+class Station extends Model
 {
     use SoftDeletes;
 
     protected $guarded = ['id'];
 
-    protected $table = 'station_staffs';
+    protected $table = 'station';
 }

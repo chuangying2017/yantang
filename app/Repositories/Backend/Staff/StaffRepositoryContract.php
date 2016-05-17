@@ -9,7 +9,7 @@ interface StaffRepositoryContract
      * @param string $sort
      * @return mixed
      */
-    public function getStaffPaginated($per_page, $order_by = 'id', $sort = 'asc');
+    public function getStaffPaginated($station_id, $per_page, $order_by = 'id', $sort = 'asc');
 
     /**
      * @param $input
@@ -26,9 +26,10 @@ interface StaffRepositoryContract
     /**
      * @param $id
      * @param $input
+     * @param $station_id
      * @return mixed
      */
-    public function update($id, $input);
+    public function update($id, $input, $station_id);
 
     /**
      * @param $id

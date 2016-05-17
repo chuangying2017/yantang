@@ -1,7 +1,7 @@
-<?php namespace App\Api\V1\Transformers\Backend\Station;
+<?php namespace App\Api\V1\Transformers\Subscribe\Station;
 
 use League\Fractal\TransformerAbstract;
-use App\Models\Station\StationStaffs;
+use App\Models\Subscribe\StationStaffs;
 
 class StaffsTransformer extends TransformerAbstract
 {
