@@ -1,15 +1,12 @@
 <?php namespace App\Repositories\Frontend\Auth;
 
-use App\Events\Auth\UserRegister;
 use App\Models\Access\User\User;
 use App\Exceptions\GeneralException;
 use Illuminate\Contracts\Auth\Guard;
 use App\Events\Auth\UserLoggedIn;
 use App\Events\Auth\UserLoggedOut;
 use App\Repositories\Frontend\User\UserContract;
-use Illuminate\Http\Request;
 use Laravel\Socialite\Contracts\Factory as Socialite;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class Registrar

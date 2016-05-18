@@ -1,7 +1,7 @@
 <?php namespace App\Services\Agent;
 
 use App\Models\Agent;
-use App\Models\Client;
+use App\Models\Client\Client;
 
 class AgentProtocol {
 

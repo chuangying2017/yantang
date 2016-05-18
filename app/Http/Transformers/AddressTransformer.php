@@ -1,6 +1,6 @@
 <?php namespace App\Http\Transformers;
 
-use App\Models\Address;
+use App\Models\Client\Address;
 use League\Fractal\TransformerAbstract;
 
 class AddressTransformer extends TransformerAbstract {

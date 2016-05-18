@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class AccountServiceProvider extends ServiceProvider {
+class ClientServiceProvider extends ServiceProvider {
 
     /**
      * Register the service provider.
@@ -17,8 +17,16 @@ class AccountServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
-            \App\Repositories\Client\Account\Wallet\CreditsRepositoryContract::class,
-            \App\Repositories\Client\Account\Wallet\EloquentCreditsRepository::class
+            \App\Repositories\Client\Account\Credits\CreditsRepositoryContract::class,
+            \App\Repositories\Client\Account\Credits\EloquentCreditsRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Client\ClientRepositoryContract::class,
+            \App\Repositories\Client\EloquentClientRepository::class
+        );
+
+
     }
+
 }

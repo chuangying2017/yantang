@@ -49,10 +49,7 @@ class WalletServiceTest extends TestCase {
 
         $this->wallet_service->pay($this->billing_stub);
 
-        $this->setExpectedException(\Exception::class);
-        $this->wallet_service->pay($this->billing_stub);
-
-        $current_wallet_account = \App\Models\Account\Wallet::find($this->payer->id);
+        $current_wallet_account = \App\Models\Client\Account\Wallet::find($this->payer->id);
         $this->assertEquals($this->wallet_amount - $this->billing_amount, $current_wallet_account['amount']);
         $this->seeInDatabase('wallet_records', [
             'user_id' => $this->payer->id,
@@ -69,7 +66,7 @@ class WalletServiceTest extends TestCase {
     /** @test */
     public function can_not_pay_same_billing_twice()
     {
-        $this->setBilling($this->billing_amount);
+        $this->setBilling();
 
         $this->assertTrue($this->wallet_service->enough($this->billing_stub->getAmount()));
 
@@ -90,6 +87,27 @@ class WalletServiceTest extends TestCase {
         $this->setExpectedException(NotEnoughException::class);
         $this->wallet_service->pay($this->billing_stub);
 
+    }
+
+    /** @test */
+    public function wallet_can_be_recharge()
+    {
+        $this->billing_type = \App\Services\Billing\BillingProtocol::BILLING_TYPE_OF_RECHARGE_BILLING;
+        $this->billing_amount = 100;
+        $this->setBilling();
+
+        $record = $this->wallet_service->recharge($this->billing_stub);
+
+        $current_wallet_account = \App\Models\Client\Account\Wallet::find($this->payer->id);
+        $this->assertEquals($this->wallet_amount + $this->billing_amount, $current_wallet_account['amount']);
+        $this->seeInDatabase('wallet_records', [
+            'user_id' => $this->payer->id,
+            'amount' => $this->billing_amount,
+            'income' => \App\Services\Client\Account\AccountProtocol::ACCOUNT_INCOME,
+            'resource_type' => $this->billing_type,
+            'resource_id' => $this->billing_id,
+            'type' => \App\Services\Client\Account\AccountProtocol::ACCOUNT_TYPE_RECHARGE,
+        ]);
     }
 
     protected function setBilling()

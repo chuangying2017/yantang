@@ -1,8 +1,8 @@
 <?php namespace App\Models\Access\User\Traits\Relationship;
 
 use App\Models\Access\User\UserProvider;
-use App\Models\Account\Credits;
-use App\Models\Account\Wallet;
+use App\Models\Client\Account\Credits;
+use App\Models\Client\Account\Wallet;
 
 /**
  * Class UserRelationship

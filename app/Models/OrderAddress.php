@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Client\Address;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderAddress extends Address

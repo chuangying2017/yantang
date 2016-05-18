@@ -8,7 +8,7 @@ use App\Http\Controllers\Backend\Api\BaseController;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Models\Client;
+use App\Models\Client\Client;
 
 //use App\Http\Requests\Admin\ClientRequest as Request;
 

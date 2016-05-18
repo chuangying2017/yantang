@@ -48,7 +48,6 @@ class AuthController extends Controller {
 
     /**
      * @param LoginRequest $request
-     * @return \Illuminate\Api\V1\RedirectResponse
      */
     public function postLogin(Request $request)
     {

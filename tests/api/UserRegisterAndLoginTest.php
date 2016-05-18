@@ -1,11 +1,12 @@
 <?php
 
+use App\Events\Auth\UserRegister;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class UserRegisterAndLoginTest extends TestCase
-{
+class UserRegisterAndLoginTest extends TestCase {
+
     use DatabaseTransactions;
 
     protected $phone;
@@ -28,7 +29,7 @@ class UserRegisterAndLoginTest extends TestCase
         $this->user_can_get_validation_code_by_phone_sms();
 
         $register_data = [
-            'phone' =>  $this->phone,
+            'phone' => $this->phone,
             'password' => $this->password,
             'password_confirmation' => $this->password,
             'code' => $this->code,
@@ -42,7 +43,10 @@ class UserRegisterAndLoginTest extends TestCase
         $this->seeJsonStructure(['data' => ['token', 'roles' => []]]);
 
         $content = $this->getResponseData();
+        $user = \JWTAuth::toUser(array_get($content, 'data.token'));
 
+        $this->seeInDatabase('wallet', ['user_id' => $user['id']]);
+        $this->seeInDatabase('clients', ['user_id' => $user['id']]);
     }
 
     /** @test */
@@ -90,8 +94,8 @@ class UserRegisterAndLoginTest extends TestCase
             $this->assertTrue($content['success']);
         }
 
-        $record = \DB::table('laravel_sms')->where('to', $phone)->orderBy('created_at', 'desc')->first();
-        $data = json_decode($record->data, true);
+        $send_data = \DB::table('laravel_sms')->where('to', $phone)->orderBy('created_at', 'desc')->pluck('data');
+        $data = json_decode($send_data[0], true);
         $this->code = $data['code'];
     }
 

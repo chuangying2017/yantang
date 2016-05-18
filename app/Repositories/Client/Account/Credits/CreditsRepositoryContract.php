@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Client\Account\Wallet;
+<?php namespace App\Repositories\Client\Account\Credits;
 
 use App\Repositories\Client\Account\AccountRepositoryContract;
 
