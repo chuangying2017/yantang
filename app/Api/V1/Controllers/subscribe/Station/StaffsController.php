@@ -9,6 +9,7 @@ use App\Repositories\Backend\Staff\StaffRepositoryContract;
 use App\Repositories\Backend\Station\StationRepositoryContract;
 use Illuminate\Http\Request;
 use App\Api\V1\Requests\Station\StationRequest;
+use Auth;
 
 class StaffsController extends Controller
 {
@@ -18,8 +19,7 @@ class StaffsController extends Controller
     public function __construct(StaffRepositoryContract $staffs, StationRepositoryContract $station)
     {
         $this->staffs = $staffs;
-        //todo 需修改为方法获取的
-        $this->station_id = 1;
+        $this->station_id = $station->getByUserId(Auth::user()->id());
     }
 
     /**
@@ -66,5 +66,19 @@ class StaffsController extends Controller
             $this->response->errorInternal($e->getMessage());
         }
         return $this->response->item($staffs, new StaffsTransformer());
+    }
+
+    public function destroy($id)
+    {
+        try {
+            DB::beginTransaction();
+            $this->staffs->destroy($id);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->response->errorInternal($e->getMessage());
+        }
+
+        return $this->response->noContent();
     }
 }

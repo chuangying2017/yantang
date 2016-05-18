@@ -32,7 +32,8 @@ class EloquentStaffRepository implements StaffRepositoryContract
         if ($query->station_id != $station_id) {
             throw new \Exception('该配送员不属于当前服务部');
         }
-        return $query->updateOrCreate($input);
+        $query = $query->fill($input);
+        return $query->save();
     }
 
     public function show($id)
@@ -47,6 +48,8 @@ class EloquentStaffRepository implements StaffRepositoryContract
 
     public function destroy($id)
     {
-
+        //todo 补充关联的删除
+        $station = StationStaffs::findOrFail($id);
+        $station->delete();
     }
 }
