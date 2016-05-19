@@ -1,4 +1,4 @@
-<?php namespace App\Api\V1\Requests\Station;
+<?php namespace App\Api\V1\Requests\Subscribe;
 
 use App\Api\V1\Requests\Request;
 

@@ -47,6 +47,9 @@ $api->version('v1', function ($api) {
                 $api->get('products', 'StationController@products'); //查看可定购商品
                 $api->get('bind_station', 'StationController@bindStation'); //绑定服务部
             });
+            $api->group(['namespace' => 'Preorder'], function ($api) {
+                $api->get('subscribe/preorders', 'PreorderController@stations');
+            });
         });
 
         /**
@@ -55,6 +58,7 @@ $api->version('v1', function ($api) {
         $api->group(['namespace' => 'Admin\\Station', 'prefix' => 'admin'], function ($api) {
             $api->resource('stations', 'AdminStationController'); //查看服务部列表
         });
+
 
     });
 

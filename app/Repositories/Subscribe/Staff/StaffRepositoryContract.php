@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Backend\Staff;
+<?php namespace App\Repositories\Subscribe\Staff;
 
 
 interface StaffRepositoryContract

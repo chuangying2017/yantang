@@ -5,10 +5,10 @@ namespace App\Api\V1\Controllers\Subscribe\Station;
 
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Subscribe\Station\StaffsTransformer;
-use App\Repositories\Backend\Staff\StaffRepositoryContract;
-use App\Repositories\Backend\Station\StationRepositoryContract;
+use App\Repositories\Subscribe\Staff\StaffRepositoryContract;
+use App\Repositories\Subscribe\Station\StationRepositoryContract;
 use Illuminate\Http\Request;
-use App\Api\V1\Requests\Station\StationRequest;
+use App\Api\V1\Requests\Subscribe\StationRequest;
 use Auth;
 
 class StaffsController extends Controller

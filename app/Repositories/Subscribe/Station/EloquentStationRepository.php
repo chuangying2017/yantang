@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Backend\Station;
+<?php namespace App\Repositories\Subscribe\Station;
 
 use App\Models\Subscribe\Station;
 use App\Http\Traits\EloquentRepository;
