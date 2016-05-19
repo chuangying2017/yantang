@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 // use Illuminate\Http\Request;
 
-use App\Http\Controllers\Backend\Api\BaseController;
+//use App\Http\Controllers\Backend\Api\BaseController;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +14,7 @@ use App\Models\Client\Client;
 
 
 
-class AdminClientController extends BaseController
+class AdminClientController extends Controller
 {
 
 		public function __construct()

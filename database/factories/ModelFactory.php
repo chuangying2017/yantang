@@ -21,13 +21,13 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Product\Category::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->colorName,
     ];
 });
 
-$factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Product\Product::class, function (Faker\Generator $faker) {
     return [
         'product_id' => $faker->uuid,
         'merchant_id' => $faker->randomDigitNotNull,

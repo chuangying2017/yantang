@@ -1,5 +1,6 @@
 <?php
 
+use Baum\Extensions\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder {
@@ -23,8 +24,7 @@ class DatabaseSeeder extends Seeder {
 //        $this->call(NavSeeder::class);
 //        $this->call(ClientSeeder::class);
         $this->call(AccessTableSeeder::class);
-        $this->call(AgentRateSeeder::class);
-
+        $this->call(GroupSeeder::class);
 
         if (env('DB_DRIVER') == 'mysql')
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');

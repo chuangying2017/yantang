@@ -9,8 +9,8 @@
 namespace App\Services\Product;
 
 
-use App\Models\Category;
-use App\Models\Product;
+use App\Models\Product\Category;
+use App\Models\Product\Product;
 use App\Services\Product\Brand\BrandService;
 use App\Services\Product\Brand\ChannelService;
 use App\Services\Product\Category\CategoryService;
@@ -54,7 +54,7 @@ class ProductService {
      */
     public static function up($id)
     {
-        return ProductRepository::updateStatus($id, ProductConst::VAR_PRODUCT_STATUS_UP);
+        return ProductRepository::updateStatus($id, ProductProtocol::VAR_PRODUCT_STATUS_UP);
     }
 
     /**
@@ -63,12 +63,12 @@ class ProductService {
      */
     public static function down($id)
     {
-        return ProductRepository::update($id, ProductConst::VAR_PRODUCT_STATUS_DOWN);
+        return ProductRepository::update($id, ProductProtocol::VAR_PRODUCT_STATUS_DOWN);
     }
 
     public static function sellOut($id)
     {
-        return ProductRepository::update($id, ProductConst::VAR_PRODUCT_STATUS_SELLOUT);
+        return ProductRepository::update($id, ProductProtocol::VAR_PRODUCT_STATUS_SELLOUT);
     }
 
     /**
@@ -87,7 +87,7 @@ class ProductService {
     {
         $keyword_flag = 0;
 
-        $status = ProductConst::saleStatus($status, true);
+        $status = ProductProtocol::saleStatus($status, true);
 
         if ( ! is_null($category_id) && ! is_numeric($category_id)) {
             $category_id = CategoryService::findIdByName($category_id);
@@ -130,7 +130,7 @@ class ProductService {
     {
         $category = Category::findOrFail($category_id);
 
-        return $category->products()->where('status', ProductConst::VAR_PRODUCT_STATUS_UP)->orderBy($order_by, $sort)->paginate($page);
+        return $category->products()->where('status', ProductProtocol::VAR_PRODUCT_STATUS_UP)->orderBy($order_by, $sort)->paginate($page);
     }
 
     /**

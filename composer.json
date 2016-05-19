@@ -65,7 +65,7 @@
     "autoload-dev": {
         "classmap": [
             "tests/TestCase.php",
-            "tests"
+            "tests/"
         ]
     },
     "scripts": {

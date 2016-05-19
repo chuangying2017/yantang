@@ -4,7 +4,7 @@ use App\Http\Controllers\BackendController;
 use App\Http\Controllers\Controller;
 use App\Repositories\Backend\User\UserContract;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
-use App\Repositories\Frontend\Auth\AuthenticationContract;
+use App\Repositories\Auth\AuthenticationContract;
 use App\Http\Requests\Backend\Access\User\CreateUserRequest;
 use App\Http\Requests\Backend\Access\User\StoreUserRequest;
 use App\Http\Requests\Backend\Access\User\EditUserRequest;

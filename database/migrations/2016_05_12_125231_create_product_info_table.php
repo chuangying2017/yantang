@@ -18,7 +18,7 @@ class CreateProductInfoTable extends Migration {
             $table->string('attr', 2046);
             $table->string('tags', 2046);
             $table->text('detail');
-            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

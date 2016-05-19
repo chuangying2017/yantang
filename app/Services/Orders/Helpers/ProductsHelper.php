@@ -1,6 +1,6 @@
 <?php namespace App\Services\Orders\Helpers;
 
-use App\Services\Product\ProductConst;
+use App\Repositories\Product\ProductProtocol;
 use App\Services\Product\ProductSkuService;
 
 trait ProductsHelper {
@@ -49,7 +49,7 @@ trait ProductsHelper {
 
     public static function productCanAfford($product_info)
     {
-        return $product_info['code'] == ProductConst::CODE_SKU_AFFORD_OK;
+        return $product_info['code'] == ProductProtocol::CODE_SKU_AFFORD_OK;
     }
 
     protected static function decodeRequest($product_request)

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\ProductMeta;
+use App\Models\Product\ProductMeta;
 use Illuminate\Console\Command;
 
 class DeleteProductContentTest extends Command {

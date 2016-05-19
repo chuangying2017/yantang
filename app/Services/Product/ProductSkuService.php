@@ -8,8 +8,8 @@
 
 namespace App\Services\Product;
 
-use App\Models\Product;
-use App\Models\ProductSku;
+use App\Models\Product\Product;
+use App\Models\Product\ProductSku;
 use App\Models\ProductSkuView;
 use Exception;
 use Log;
@@ -117,10 +117,10 @@ class ProductSkuService
             ];
             #TODO @bryant 判断其他边界条件,例如商品是否上架,是否开售,是否限购,etc
             if ($sku->stock >= $query['quantity']) {
-                $temp['code'] = ProductConst::CODE_SKU_AFFORD_OK;
+                $temp['code'] = ProductProtocol::CODE_SKU_AFFORD_OK;
             } else {
-                $temp['code'] = ProductConst::CODE_SKU_NOT_AFFORD;
-                $temp['err_msg'] = ProductConst::MSG_SKU_NOT_AFFORD;
+                $temp['code'] = ProductProtocol::CODE_SKU_NOT_AFFORD;
+                $temp['err_msg'] = ProductProtocol::MSG_SKU_NOT_AFFORD;
             }
             $data[] = $temp;
         }

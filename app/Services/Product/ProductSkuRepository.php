@@ -8,8 +8,8 @@
 
 namespace App\Services\Product;
 
-use App\Models\AttributeValue;
-use App\Models\ProductSku;
+use App\Models\Product\AttributeValue;
+use App\Models\Product\ProductSku;
 use Exception;
 use Log;
 

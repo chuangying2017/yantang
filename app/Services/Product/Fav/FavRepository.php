@@ -10,7 +10,7 @@ namespace App\Services\Product\Fav;
 
 
 use App\Models\Access\User\User;
-use App\Models\Product;
+use App\Models\Product\Product;
 use App\Models\ProductCollection;
 use \Exception;
 

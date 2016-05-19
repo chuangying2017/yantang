@@ -9,8 +9,8 @@
 namespace App\Services\Product\Attribute;
 
 
-use App\Models\Attribute;
-use App\Models\AttributeValue;
+use App\Models\Product\Attribute;
+use App\Models\Product\AttributeValue;
 use Exception;
 
 class AttributeValueRepository {

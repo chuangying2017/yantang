@@ -9,11 +9,11 @@
 namespace App\Services\Product\Attribute;
 
 
-use App\Models\Category;
+use App\Models\Product\Category;
 use App\Models\Merchant;
-use App\Models\Product;
-use App\Models\ProductSku;
-use App\Models\Attribute;
+use App\Models\Product\Product;
+use App\Models\Product\ProductSku;
+use App\Models\Product\Attribute;
 
 /**
  * Class AttributeService

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\AttributeValue;
+use App\Models\Product\AttributeValue;
 use App\Models\OrderProduct;
-use App\Models\ProductSku;
+use App\Models\Product\ProductSku;
 use Illuminate\Console\Command;
 
 class ProductUpdateAttribute extends Command {

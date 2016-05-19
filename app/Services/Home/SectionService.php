@@ -1,6 +1,6 @@
 <?php namespace App\Services\Home;
 
-use App\Models\Product;
+use App\Models\Product\Product;
 use App\Services\Product\ProductRepository;
 
 class SectionService {

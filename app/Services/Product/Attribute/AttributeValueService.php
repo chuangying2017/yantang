@@ -17,7 +17,7 @@ namespace App\Services\Product\Attribute;
  * Class AttributeValueService
  * @package App\Services\Product\Attribute
  */
-use App\Models\AttributeValue;
+use App\Models\Product\AttributeValue;
 
 /**
  * Class AttributeValueService

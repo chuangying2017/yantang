@@ -1,6 +1,6 @@
 <?php namespace App\Services\Auth;
 
-use App\Repositories\Frontend\User\EloquentUserRepository;
+use App\Repositories\Auth\User\EloquentUserRepository;
 
 class AccountService {
 

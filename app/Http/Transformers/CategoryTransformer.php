@@ -1,5 +1,5 @@
 <?php namespace App\Http\Transformers;
-use App\Models\Category;
+use App\Models\Product\Category;
 use League\Fractal\TransformerAbstract;
 
 class CategoryTransformer extends TransformerAbstract{

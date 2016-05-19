@@ -4,7 +4,7 @@ use App\Api\V1\Transformers\Auth\UserLoginTransformer;
 use App\Exceptions\GeneralException;
 use App\Api\V1\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-use App\Repositories\Frontend\Auth\AuthenticationContract;
+use App\Repositories\Auth\AuthenticationContract;
 use App\Api\V1\Requests\Auth\LoginRequest;
 use App\Api\V1\Requests\Auth\RegisterRequest;
 use Illuminate\Http\Request;

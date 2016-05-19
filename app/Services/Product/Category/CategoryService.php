@@ -8,7 +8,7 @@
 
 namespace App\Services\Product\Category;
 
-use App\Models\Category;
+use App\Models\Product\Category;
 
 
 /**

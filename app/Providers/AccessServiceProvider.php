@@ -66,13 +66,13 @@ class AccessServiceProvider extends ServiceProvider
 	 */
 	public function registerBindings() {
 		$this->app->bind(
-			\App\Repositories\Frontend\Auth\AuthenticationContract::class,
-			\App\Repositories\Frontend\Auth\EloquentAuthenticationRepository::class
+			\App\Repositories\Auth\AuthenticationContract::class,
+			\App\Repositories\Auth\EloquentAuthenticationRepository::class
 		);
 
 		$this->app->bind(
-			\App\Repositories\Frontend\User\UserContract::class,
-			\App\Repositories\Frontend\User\EloquentUserRepository::class
+			\App\Repositories\Auth\User\UserContract::class,
+			\App\Repositories\Auth\User\EloquentUserRepository::class
 		);
 
 		$this->app->bind(

@@ -9,7 +9,7 @@
 namespace App\Services\Product\Attribute;
 
 
-use App\Models\Attribute;
+use App\Models\Product\Attribute;
 use DB;
 use Exception;
 
