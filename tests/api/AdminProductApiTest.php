@@ -15,7 +15,6 @@ class AdminProductApiTest extends TestCase {
         $this->json('get', '/admin/products', $query);
 
         $this->dumpResponse();
-
     }
 
     /** @test */

@@ -7,14 +7,14 @@ interface TreeNodeContract {
 
     public function getFullTree();
 
-    public function getSingleTree();
+    public function getSingleTree($node_id);
 
     public function getAllRoots();
 
     public function getAllRootsId();
 
-    public function getSingleTreeLeaves();
+    public function getSingleTreeLeaves($node_id);
 
-    public function getSingleTreeLeavesId();
+    public function getSingleTreeLeavesId($node_id);
 
 }

@@ -1,16 +1,16 @@
 <?php namespace App\Repositories\Product\Editor;
 
 use App\Models\Product\Product;
+use App\Repositories\Category\CategoryProtocol;
 
 class RelateProduct extends EditorAbstract {
 
 
     public function handle(array $product_data, Product $product)
     {
-        $cat_ids = array_get($product, 'group_ids', []);
-        array_push($cat_ids, $product_data['cat_id']);
+        $product->brand()->sync(array_get($product, 'group_ids', []), ['type' => CategoryProtocol::TYPE_OF_GROUP]);
 
-        $product->cats()->sync($cat_ids);
+        $product->cats()->sync($product_data['cat_id'], ['type' => CategoryProtocol::TYPE_OF_MAIN]);
 
         return $this->next($product_data, $product);
     }

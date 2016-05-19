@@ -16,7 +16,16 @@ class ProductTransformer extends TransformerAbstract {
         $this->setInclude($product);
 
         return [
-            'title' => $product['title']
+            'id' => $product['id'],
+            'brand' => ['id' => $product['brand_id']],
+            'cover_image' => $product['cover_image'],
+            'title' => $product['title'],
+            'sub_title' => $product['sub_title'],
+            'digest' => $product['digest'],
+            'price' => display_price($product['price']),
+            'sales' => $product['meta']['sales'],
+            'favs' => $product['meta']['favs'],
+            'type' => $product['type'],
         ];
 
     }

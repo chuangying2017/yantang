@@ -15,6 +15,7 @@ use App\Models\Product\Category;
 use App\Models\Product\ProductInfo;
 use App\Models\Product\ProductSku;
 use App\Models\Product\ProductMeta;
+use App\Repositories\Category\CategoryProtocol;
 
 trait ProductRelation {
 
@@ -45,8 +46,12 @@ trait ProductRelation {
 
     public function cats()
     {
-        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'cat_id');
+        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'cat_id')->withPivot('type')->wherePivot('type', CategoryProtocol::TYPE_OF_MAIN);
     }
 
+    public function groups()
+    {
+        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'cat_id')->withPivot('type')->wherePivot('type', CategoryProtocol::TYPE_OF_GROUP);
+    }
 
 }

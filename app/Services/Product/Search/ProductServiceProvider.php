@@ -69,7 +69,7 @@ class ProductServiceProvider extends ServiceProvider {
 
         $this->app->bind(
             \App\Repositories\Category\CategoryRepositoryContract::class,
-            \App\Repositories\Category\EloquentCategoryRepository::class
+            \App\Repositories\Category\CategoryRepositoryAbstract::class
         );
 
 
