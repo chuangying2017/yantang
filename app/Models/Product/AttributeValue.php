@@ -10,11 +10,15 @@ class AttributeValue extends Model
 {
     use SoftDeletes;
 
+    public $timestamps = false;
+
     protected $guarded = ['id'];
+
+    protected $table = 'attribute_values';
 
     public function attr()
     {
-        return $this->belongsTo(Attribute::class);
+        return $this->belongsTo(Attribute::class, 'attr_id', 'id');
     }
 
 }

@@ -37,6 +37,19 @@ $api->version('v1', function ($api) {
         });
 
 
+        /**
+         *
+         * Admin
+         *
+         */
+        $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
+            $api->group(['namespace' => 'Product'], function ($api) {
+
+                $api->resource('products', 'ProductController');
+
+            });
+        });
+
     });
 
 });

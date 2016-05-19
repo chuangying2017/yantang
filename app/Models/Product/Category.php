@@ -25,6 +25,6 @@ class Category extends Node {
     // guard attributes from mass-assignment
     protected $guarded = array('id', 'pid', 'lid', 'rid', 'depth');
 
-
+    protected $table = 'categories';
 
 }

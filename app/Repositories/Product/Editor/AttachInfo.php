@@ -3,7 +3,7 @@
 use App\Models\Product\Product;
 use App\Models\Product\ProductInfo;
 
-class AddInfo extends ProductEditor {
+class AttachInfo extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)
     {

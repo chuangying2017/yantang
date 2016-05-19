@@ -5,9 +5,11 @@ use App\Models\Product\AttributeValue;
 class EloquentAttributeValueRepository implements AttributeValueRepositoryContract {
 
 
+    protected $fields = ['id', 'name', 'attr_id'];
+
     public function getAllValuesOfAttributes($attr_id)
     {
-        return AttributeValue::where('attr_id', $attr_id)->get(['id', 'name']);
+        return AttributeValue::where('attr_id', $attr_id)->get($this->fields);
     }
 
     public function createAttribute($attr_id, $name)
@@ -27,25 +29,12 @@ class EloquentAttributeValueRepository implements AttributeValueRepositoryContra
 
     public function getValues($value_id, $with_attr = true)
     {
-        return $this->queryValues($value_id, $with_attr);
-    }
-
-    protected function queryValues($id = null, $with_attr = false, $fields = ['id', 'name'])
-    {
-        $query = AttributeValue::query();
-
+        $values = AttributeValue::find($value_id, $this->fields);
         if ($with_attr) {
-            $query = $query->with('attr')->select($fields);
+            $values->load('attr');
         }
 
-        if (is_array($id)) {
-            $query = $query->whereIn('id', $id);
-        } else if (is_numeric($id)) {
-            $query = $query->where('id', $id);
-        } elseif (!is_null($id)) {
-            return null;
-        }
-
-        return $query->get();
+        return $values;
     }
+
 }

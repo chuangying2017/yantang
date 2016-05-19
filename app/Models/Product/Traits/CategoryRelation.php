@@ -19,9 +19,4 @@ trait CategoryRelation {
         return $this->belongsTo(Product::class, 'product_category', 'cat_id', 'product_id');
     }
 
-    public function brands()
-    {
-        return $this->belongsToMany(Brand::class, 'brand_category', 'cat_id', 'brand_id');
-    }
-
 }

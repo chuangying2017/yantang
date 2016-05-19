@@ -2,7 +2,7 @@
 
 use App\Models\Product\Product;
 
-class ProductRelate extends ProductEditor {
+class RelateProduct extends EditorAbstract {
 
 
     public function handle(array $product_data, Product $product)

@@ -5,6 +5,12 @@ final class ProductProtocol {
 
     const PRODUCT_PER_PAGE = 20;
 
+    const TYPE_OF_MIX = 'mix';
+    const TYPE_OF_ENTITY = 'entity';
+    const TYPE_OF_SERVICE = 'service';
+    const TYPE_OF_VIRTUAL = 'virtual';
+    const TYPE_OF_SUBSCRIBE = 'subscribe';
+
     /**
      *
      */
@@ -36,13 +42,13 @@ final class ProductProtocol {
     public static function saleStatus($status = null, $key = false)
     {
         $data = [
-            self::VAR_PRODUCT_STATUS_UP      => '在售',
-            self::VAR_PRODUCT_STATUS_DOWN    => '下架',
+            self::VAR_PRODUCT_STATUS_UP => '在售',
+            self::VAR_PRODUCT_STATUS_DOWN => '下架',
             self::VAR_PRODUCT_STATUS_SELLOUT => '售罄',
         ];
 
         if ($key) {
-            return isset($data[ $status ]) ? $status : self::VAR_PRODUCT_STATUS_UP;
+            return isset($data[$status]) ? $status : self::VAR_PRODUCT_STATUS_UP;
         }
 
         return is_null($key) ? array_get($data, $key, null) : $data;
@@ -52,12 +58,12 @@ final class ProductProtocol {
     public static function openStatus($key = null, $find_key = false)
     {
         $data = [
-            self::VAR_PRODUCT_OPEN_STATUS_NOW   => '马上开售',
+            self::VAR_PRODUCT_OPEN_STATUS_NOW => '马上开售',
             self::VAR_PRODUCT_OPEN_STATUS_FIXED => '定时开售'
         ];
 
         if ($find_key) {
-            return isset($data[ $key ]) ? $key : self::VAR_PRODUCT_OPEN_STATUS_NOW;
+            return isset($data[$key]) ? $key : self::VAR_PRODUCT_OPEN_STATUS_NOW;
         }
 
         return is_null($key) ? array_get($data, $key, null) : $data;
@@ -70,7 +76,6 @@ final class ProductProtocol {
 
         return in_array($order_by, $options) ? $order_by : false;
     }
-
 
 
 }

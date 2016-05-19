@@ -9,10 +9,12 @@ class Attribute extends Model {
 
     use SoftDeletes;
 
+    public $timestamps = false;
+
     protected $guarded = ['id'];
 
     public function values()
     {
-        return $this->hasMany(AttributeValue::class);
+        return $this->hasMany(AttributeValue::class, 'attr_id', 'id');
     }
 }

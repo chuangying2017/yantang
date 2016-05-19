@@ -6,7 +6,9 @@ class EloquentGroupRepository extends EloquentCategoryRepository {
 
     protected function init()
     {
-        $this->setType('brand');
+        $this->setType('group');
     }
+
+
 
 }

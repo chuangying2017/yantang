@@ -3,11 +3,12 @@
 use App\Models\Product\Product;
 use Carbon\Carbon;
 
-class FillProduct extends ProductEditor {
+class FillProduct extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)
     {
-        return $this->next($product_data, $product->save($this->filterMain($product_data)));
+        $product->fill($this->filterMain($product_data))->save();
+        return $this->next($product_data, $product);
     }
 
     protected function filterMain($product_data)

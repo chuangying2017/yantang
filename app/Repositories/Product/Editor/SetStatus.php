@@ -3,7 +3,7 @@
 use App\Models\Product\Product;
 use App\Repositories\Product\ProductProtocol;
 
-class SetStatus extends ProductEditor {
+class SetStatus extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)
     {

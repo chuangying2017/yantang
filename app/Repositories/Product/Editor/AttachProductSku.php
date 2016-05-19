@@ -3,7 +3,7 @@
 use App\Models\Product\Product;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 
-class AttachProductSku extends ProductEditor {
+class AttachProductSku extends EditorAbstract {
 
     public function __construct(ProductSkuRepositoryContract $productSkuRepository)
     {

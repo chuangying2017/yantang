@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Product;
+<?php namespace App\Repositories\Product\Brand;
 class EloquentBrandRepository implements BrandRepositoryContract {
 
     public function createBrand($data)

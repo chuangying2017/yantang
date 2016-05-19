@@ -3,7 +3,7 @@
 use App\Models\Product\Product;
 use App\Repositories\Product\Attribute\AttributeValueRepositoryContract;
 
-class CheckAttributes extends ProductEditor {
+class SetAttributes extends EditorAbstract {
 
     private $attr_value_repository;
 
@@ -20,18 +20,22 @@ class CheckAttributes extends ProductEditor {
 
     public function handle(array $product_data, Product $product)
     {
-        foreach ($product_data['sku'] as $key => $sku) {
-            $sku_attr = $this->getSkuAttributes($sku);
-            $product_data['sku'][$key]['attr'] = json_encode($sku_attr);
-        }
+        $product_data['attr'] = $this->encodeAttr($product_data['attr']);
 
-        $product_data['attr'] = json_encode($product_data['attr']);
+        foreach ($product_data['skus'] as $key => $sku) {
+            $product_data['skus'][$key]['attr'] = $this->encodeAttr($this->getSkuAttributes($sku));
+        }
 
         return $this->next($product_data, $product);
     }
 
     protected function getSkuAttributes($sku)
     {
+        if (empty($sku['attr_value_ids'])) {
+            return [];
+        }
+
+        $attributes = [];
         $attribute_values = $this->attr_value_repository->getValues($sku['attr_value_ids']);
         foreach ($attribute_values as $attribute_value) {
             $attributes[] = [
@@ -42,7 +46,12 @@ class CheckAttributes extends ProductEditor {
             ];
         }
 
-        return $attribute_values;
+        return $attributes;
+    }
+
+    protected function encodeAttr($attr)
+    {
+        return empty($attr) ? '' : json_encode($attr);
     }
 
 

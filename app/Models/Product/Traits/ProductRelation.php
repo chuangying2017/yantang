@@ -45,7 +45,7 @@ trait ProductRelation {
 
     public function cats()
     {
-        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'category');
+        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'cat_id');
     }
 
 

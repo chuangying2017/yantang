@@ -9,7 +9,7 @@
 namespace App\Services\Product\Group;
 
 
-use App\Models\Group;
+use App\Models\Product\Group;
 use DB;
 use Pheanstalk\Exception;
 

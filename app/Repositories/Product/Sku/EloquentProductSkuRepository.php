@@ -8,7 +8,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract {
     {
         $sku_model = ProductSku::create(
             [
-                'sku' => uniqid('psn_'),
+                'sku_no' => uniqid('psn_'),
                 'product_id' => $product_id ?: 0,
                 'name' => $sku_data['name'],
                 'cover_image' => $sku_data['cover_image'],
@@ -19,7 +19,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract {
                 'settle_price' => $sku_data['settle_price'],
                 'bar_code' => $sku_data['bar_code'],
                 'stock' => $sku_data['stock'],
-                'attr' => $sku_data['attr'],
+                'attr' => array_get($sku_data, 'attr', ''),
             ]);
 
         if (count(array_get($sku_data, 'sku_ids', [])) > 0) {
@@ -87,23 +87,24 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract {
 
     public function updateSkusOfProduct($product_id, $new_sku_data)
     {
+        $current_skus = [];
         $remain_sku_ids = [];
         $old_sku_ids = ProductSku::where('product_id', $product_id)->lists('id')->all();
         foreach ($new_sku_data as $sku_data) {
             if (array_key_exists('id', $sku_data)) {
-                $this->updateSku($sku_data['id'], $sku_data);
+                $current_skus[] = $this->updateSku($sku_data['id'], $sku_data);
                 $remain_sku_ids[] = $sku_data['id'];
             } else {
-                $this->createSku($sku_data, $product_id);
+                $current_skus[] = $this->createSku($sku_data, $product_id);
             }
         }
 
         $detach_sku_ids = array_diff($old_sku_ids, $remain_sku_ids);
         foreach ($detach_sku_ids as $detach_sku_id) {
-            $this->deleteSku($detach_sku_ids);
+            $this->deleteSku($detach_sku_id);
         }
 
-        return 1;
+        return $current_skus;
     }
 
     protected function detachAllRelation($sku)

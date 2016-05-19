@@ -2,11 +2,11 @@
 
 use App\Models\Product\Product;
 
-class AddMeta extends ProductEditor {
+class UpdateMeta extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)
     {
-        $product->meta()->create([
+        $product->meta()->update([
             'stock' => $this->sumStock($product_data['skus']),
             'favs' => 0,
             'sales' => 0

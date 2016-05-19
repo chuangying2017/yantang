@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\DeleteProductContentTest',
         'App\Console\Commands\CheckOrderSkuProduct',
         'App\Console\Commands\SetOrderDoneIfOverTime',
+        'App\Console\Commands\TransformerMakeCommand',
     ];
 
     /**

@@ -9,7 +9,10 @@ class ProductMeta extends Model {
 
     protected $table = 'product_meta';
 
+    public $timestamps = false;
+
     protected $primaryKey = 'product_id';
+
 
     protected $guarded = [];
 }

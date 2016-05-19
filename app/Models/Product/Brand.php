@@ -2,16 +2,24 @@
 
 namespace App\Models\Product;
 
+use App\Repositories\Category\CategoryProtocol;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Brand extends Model {
+class Brand extends Category {
 
-    use SoftDeletes;
+    protected $attributes = [
+        'type' => CategoryProtocol::TYPE_OF_BRAND
+    ];
 
-    protected $table = 'brands';
+    protected static function boot()
+    {
+        parent::boot();
 
-    protected $guarded = ['id'];
+        static::addGlobalScope('type', function (Builder $builder) {
+            $builder->where('type', CategoryProtocol::TYPE_OF_BRAND);
+        });
+    }
 
     public function products()
     {

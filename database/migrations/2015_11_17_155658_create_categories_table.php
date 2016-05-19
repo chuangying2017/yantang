@@ -14,7 +14,7 @@ class CreateCategoriesTable extends Migration {
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('type', 11); // 类型:主,品牌,促销...
+            $table->string('type', 11)->index(); // 类型:主,品牌,促销...
             $table->string('name');
             $table->smallInteger('index')->default(1);
             $table->integer('pid')->nullable(); //parent id
