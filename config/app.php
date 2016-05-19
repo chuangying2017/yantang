@@ -172,6 +172,7 @@ return [
 
 
         \App\Services\Product\Search\ProductServiceProvider::class,
+        App\Providers\SubscribeServiceProvider::class,
 
         /*
 		 * Third party service providers
@@ -242,23 +243,23 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         /* Third Party */
-        'Active'     => HieuLe\Active\Facades\Active::class,
-        'Form'       => Collective\Html\FormFacade::class,
-        'Gravatar'   => Creativeorange\Gravatar\Facades\Gravatar::class,
-        'HTML'       => Collective\Html\HtmlFacade::class,
-        'Socialite'  => Laravel\Socialite\Facades\Socialite::class,
-        'APIRoute'   => Dingo\Api\Facade\Route::class,
-        'API'        => Dingo\Api\Facade\API::class,
-        'JWTAuth'    => Tymon\JWTAuth\Facades\JWTAuth::class,
-        'PhpSms'     => Toplan\PhpSms\Facades\Sms::class,
+        'Active' => HieuLe\Active\Facades\Active::class,
+        'Form' => Collective\Html\FormFacade::class,
+        'Gravatar' => Creativeorange\Gravatar\Facades\Gravatar::class,
+        'HTML' => Collective\Html\HtmlFacade::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'APIRoute' => Dingo\Api\Facade\Route::class,
+        'API' => Dingo\Api\Facade\API::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'PhpSms' => Toplan\PhpSms\Facades\Sms::class,
         'SmsManager' => Toplan\Sms\Facades\SmsManager::class,
         'EasyWeChat' => Overtrue\LaravelWechat\Facade::class,
 
         /*
         * Custom Alias
         */
-        'Bugsnag'    => Bugsnag\BugsnagLaravel\BugsnagFacade::class,
-        'Excel'      => Maatwebsite\Excel\Facades\Excel::class,
+        'Bugsnag' => Bugsnag\BugsnagLaravel\BugsnagFacade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

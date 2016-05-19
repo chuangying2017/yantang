@@ -102,6 +102,7 @@ if (!function_exists('to_array')) {
     }
 }
 
+
 if (!function_exists('merge_array')) {
 
     function merge_array()
@@ -118,6 +119,7 @@ if (!function_exists('merge_array')) {
         return $items;
     }
 }
+
 
 if (!function_exists('display_price')) {
 
@@ -159,25 +161,24 @@ if (!function_exists('store_price')) {
     }
 }
 
+if (!function_exists('store_coordinate')) {
 
-if (!function_exists('get_current_auth_user_openid')) {
-
-    function get_current_auth_user_openid()
+    function store_coordinate($coordinate)
     {
-        if ($openid = Request::get('openid')) {
-            return $openid;
-        }
-
-        if ($user_id = get_current_auth_user_id()) {
-            $openid = \App\Models\Access\User\UserProvider::where('provider', 'weixin')->where('user_id', $user_id)->pluck('provider_id');
-            if (!$openid) {
-                throw new \Exception('用户需要微信授权');
-            }
-
-            return $openid;
-        }
+        return bcmul($coordinate, 1000000, 0);
     }
 }
+
+if (!function_exists('display_coordinate')) {
+
+    function display_coordinate($coordinate)
+    {
+        return bcdiv($coordinate, 1000000, 6);
+    }
+}
+
+
+
 
 
 
