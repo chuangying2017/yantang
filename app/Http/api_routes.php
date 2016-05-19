@@ -50,6 +50,14 @@ $api->version('v1', function ($api) {
             });
         });
 
+        /**
+         *
+         * Station
+         *
+         */
+        $api->group(['namespace' => 'Subscribe\Station', 'prefix' => 'stations'], function ($api) {
+            $api->get('products', 'ProductController@index');
+        });
     });
 
 });

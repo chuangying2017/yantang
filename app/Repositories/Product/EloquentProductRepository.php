@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Product;
 
 use App\Models\Product\Product;
+use App\Models\Product\ProductSku;
 use App\Repositories\Category\CategoryProtocol;
 use App\Repositories\Product\Editor\AttachInfo;
 use App\Repositories\Product\Editor\AttachMeta;
@@ -16,6 +17,7 @@ use App\Repositories\Product\Editor\UpdateMeta;
 use App\Repositories\Product\Editor\UpdateProductSku;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentProductRepository implements ProductRepositoryContract, ProductSubscribeRepositoryContract {
 
@@ -152,7 +154,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
 
         if ($cats) {
             $query = $query->whereHas('cats', function ($query) use ($cats) {
-                $query->whereIn('id', to_array($cats));
+                $query->whereIn('cat_id', to_array($cats));
             });
         }
 
@@ -191,9 +193,23 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
         // TODO: Implement search() method.
     }
 
-    public function getAllSubscribedProducts($status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $with_time = true)
+    public function getAllSubscribedProducts($status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $with_time = true, $expend = true)
     {
-        return $this->queryProducts('created_at', 'asc', $status, null, CategoryProtocol::ID_OF_SUBSCRIBE_GROUP, null, null, $with_time);
+        $products = $this->queryProducts('created_at', 'asc', $status, null, CategoryProtocol::ID_OF_SUBSCRIBE_GROUP, null, null, $with_time);
+        $products->load('skus');
+        if ($expend) {
+            $skus = null;
+            foreach ($products as $product) {
+                if(is_null($skus)) {
+                    $skus = $product->skus;
+                } else {
+                    $skus->merge($product->skus);
+                }
+            }
+            return $skus;
+        }
+
+        return $products;
     }
 
     public function setProductsStopSubscribe($product_id)
