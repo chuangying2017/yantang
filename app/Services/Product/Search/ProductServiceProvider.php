@@ -68,10 +68,14 @@ class ProductServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
-            \App\Repositories\Category\CategoryRepositoryContract::class,
-            \App\Repositories\Category\CategoryRepositoryAbstract::class
+            \App\Repositories\Product\Group\GroupRepositoryContract::class,
+            \App\Repositories\Product\Group\EloquentGroupRepository::class
         );
 
+        $this->app->bind(
+            \App\Repositories\Category\CategoryRepositoryContract::class,
+            \App\Repositories\Category\EloquentCategoryRepository::class
+        );
 
     }
 

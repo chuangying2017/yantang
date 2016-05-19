@@ -3,6 +3,7 @@
 namespace App\Api\V1\Controllers\Admin\Product;
 
 use App\API\V1\Controllers\Controller;
+use App\Api\V1\Transformers\Admin\Product\AttrTransformer;
 use App\Repositories\Product\Attribute\AttributeRepositoryContract;
 use Illuminate\Http\Request;
 
@@ -32,17 +33,9 @@ class AttributeController extends Controller {
      */
     public function index()
     {
+        $attributes = $this->attributeRepository->getAllAttributes(true);
 
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->response->collection($attributes, new AttrTransformer());
     }
 
     /**
@@ -53,7 +46,9 @@ class AttributeController extends Controller {
      */
     public function store(Request $request)
     {
-        //
+        $attr = $this->attributeRepository->createAttribute($request->input('name'));
+
+        return $this->response->created()->setContent(['data' => $attr->toArray()]);
     }
 
     /**
@@ -64,18 +59,9 @@ class AttributeController extends Controller {
      */
     public function show($id)
     {
-        //
-    }
+        $attr = $this->attributeRepository->getAttribute($id, true);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $this->response->item($attr, new AttrTransformer());
     }
 
     /**
@@ -87,7 +73,9 @@ class AttributeController extends Controller {
      */
     public function update(Request $request, $id)
     {
-        //
+        $attr = $this->attributeRepository->updateAttribute($id, $request->input('name'));
+
+        return $this->response->item($attr, new AttrTransformer());
     }
 
     /**
@@ -98,6 +86,8 @@ class AttributeController extends Controller {
      */
     public function destroy($id)
     {
-        //
+        $this->attributeRepository->deleteAttribute($id);
+
+        return $this->response->noContent();
     }
 }

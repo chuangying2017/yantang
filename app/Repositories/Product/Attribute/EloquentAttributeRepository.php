@@ -26,12 +26,32 @@ class EloquentAttributeRepository implements AttributeRepositoryContract {
 
     public function updateAttribute($attr_id, $name)
     {
-        return Attribute::where('id', $attr_id)->update(['name' => $name]);
+        $attr = Attribute::find($attr_id);
+        $attr->name = $name;
+        $attr->save();
+        return $attr;
     }
 
     public function getAllAttributes($with_value = false)
     {
-        return $this->queryAttributes(null, $with_value);
+        $attr = Attribute::get();
+
+        if ($with_value) {
+            $attr->load('values');
+        }
+
+        return $attr;
+    }
+
+    public function getAttribute($attr_id, $with_value = true)
+    {
+        $attr = Attribute::find($attr_id);
+
+        if ($with_value) {
+            $attr->load('values');
+        }
+
+        return $attr;
     }
 
     public function deleteAttribute($attr_id)
@@ -42,25 +62,14 @@ class EloquentAttributeRepository implements AttributeRepositoryContract {
 
     public function getAttributesById($id, $with_value = true)
     {
-        return $this->queryAttributes($id, $with_value);
-    }
-
-    protected function queryAttributes($id = null, $with_value = false, $fields = ['id', 'name'])
-    {
-        $query = Attribute::query();
+        $attr = Attribute::find($id);
 
         if ($with_value) {
-            $query = $query->with('values')->select($fields);
+            $attr->load('values');
         }
 
-        if (is_array($id)) {
-            $query = $query->whereIn('id', $id);
-        } else if (is_numeric($id)) {
-            $query = $query->where('id', $id);
-        } elseif (!is_null($id)) {
-            return null;
-        }
-
-        return $query->get();
+        return $attr;
     }
+
+
 }

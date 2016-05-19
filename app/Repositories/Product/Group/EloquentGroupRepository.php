@@ -1,10 +1,10 @@
-<?php namespace App\Services\Product\Group;
+<?php namespace App\Repositories\Product\Group;
 
 use App\Models\Product\Group;
 use App\Repositories\Category\CategoryProtocol;
 use App\Repositories\Category\CategoryRepositoryAbstract;
 
-class GroupRepositoryAbstract extends CategoryRepositoryAbstract {
+class EloquentGroupRepository extends CategoryRepositoryAbstract implements GroupRepositoryContract{
 
     protected function init()
     {

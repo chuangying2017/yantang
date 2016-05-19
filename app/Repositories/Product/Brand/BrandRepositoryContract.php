@@ -1,13 +1,7 @@
 <?php namespace App\Repositories\Product\Brand;
 
-interface BrandRepositoryContract {
+use App\Repositories\Category\CategoryRepositoryContract;
 
-    public function createBrand($data);
-
-    public function updateBrand($data);
-
-    public function getAllBrands($order_by = 'product_count', $sort = 'desc');
-
-    public function deleteBrand($brand_id);
+interface BrandRepositoryContract extends CategoryRepositoryContract {
 
 }

@@ -1,23 +1,14 @@
 <?php namespace App\Repositories\Product\Brand;
-class EloquentBrandRepository implements BrandRepositoryContract {
 
-    public function createBrand($data)
-    {
-        // TODO: Implement createBrand() method.
-    }
+use App\Models\Product\Brand;
+use App\Repositories\Category\CategoryProtocol;
+use App\Repositories\Category\CategoryRepositoryAbstract;
 
-    public function updateBrand($data)
-    {
-        // TODO: Implement updateBrand() method.
-    }
+class EloquentBrandRepository extends CategoryRepositoryAbstract implements BrandRepositoryContract{
 
-    public function getAllBrands($order_by = 'product_count', $sort = 'desc')
+    protected function init()
     {
-        // TODO: Implement getAllBrands() method.
-    }
-
-    public function deleteBrand($brand_id)
-    {
-        // TODO: Implement deleteBrand() method.
+        $this->setType(CategoryProtocol::TYPE_OF_BRAND)
+            ->setModel(Brand::class);
     }
 }

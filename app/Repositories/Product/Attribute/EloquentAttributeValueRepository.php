@@ -24,7 +24,10 @@ class EloquentAttributeValueRepository implements AttributeValueRepositoryContra
 
     public function updateAttribute($value_id, $name)
     {
-        return AttributeValue::where('id', $value_id)->update(['name' => $name]);
+        $attr = AttributeValue::find($value_id);
+        $attr->name = $name;
+        $attr->save();
+        return $attr;
     }
 
     public function getValues($value_id, $with_attr = true)

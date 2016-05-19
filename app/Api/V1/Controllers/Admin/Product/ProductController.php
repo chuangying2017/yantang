@@ -56,7 +56,9 @@ class ProductController extends Controller {
      */
     public function store(ProductRequest $request)
     {
+        $product = $this->productRepositoryContract->createProduct($request->all());
 
+        return $this->response->created(null, ['data' => $product->toArray()]);
     }
 
     /**
@@ -73,26 +75,17 @@ class ProductController extends Controller {
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        //
+        $product = $this->productRepositoryContract->updateProduct($id, $request->all());
+
+        return $this->response->item($product, new ProductTransformer());
     }
 
     /**
@@ -103,6 +96,8 @@ class ProductController extends Controller {
      */
     public function destroy($id)
     {
-        //
+        $this->productRepositoryContract->deleteProduct($id);
+
+        return $this->response->noContent();
     }
 }

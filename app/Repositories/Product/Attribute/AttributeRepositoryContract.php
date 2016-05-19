@@ -8,6 +8,8 @@ interface AttributeRepositoryContract {
 
     public function updateAttribute($attr_id, $name);
 
+    public function getAttribute($attr_id, $with_value = true);
+
     public function getAllAttributes($with_value = false);
 
     public function getAttributesById($id, $with_value = true);
