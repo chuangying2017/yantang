@@ -15,6 +15,7 @@ class CreatePreordersTable extends Migration
         Schema::create('preorders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
+            $table->integer('station_id')->unsigned();
             $table->string('order_no');
             $table->string('name');
             $table->string('phone', 11);

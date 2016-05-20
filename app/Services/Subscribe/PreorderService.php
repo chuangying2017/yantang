@@ -47,7 +47,7 @@ class PreorderService
      * @param float $lat 纬度值
      * @param float $lng 经度值
      */
-    function getDistance($lat1, $lng1, $lat2, $lng2)
+    public function getDistance($lat1, $lng1, $lat2, $lng2)
     {
         $earthRadius = 6367000; //approximate radius of earth in meters
 

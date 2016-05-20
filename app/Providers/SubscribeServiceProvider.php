@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Services\Subscribe\PreorderService;
+use App\Services\Subscribe\PreorderProductService;
 
 
 class SubscribeServiceProvider extends ServiceProvider
@@ -12,6 +13,7 @@ class SubscribeServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerPreorderService();
+        $this->registerPreorderProductService();
 //        $this->registerFacade();
         $this->registerBindings();
     }
@@ -20,6 +22,13 @@ class SubscribeServiceProvider extends ServiceProvider
     {
         $this->app->bind('PreorderService', function ($app) {
             return new PreorderService($app);
+        });
+    }
+
+    private function registerPreorderProductService()
+    {
+        $this->app->bind('PreorderProductService', function ($app) {
+            return new PreorderProductService($app);
         });
     }
 

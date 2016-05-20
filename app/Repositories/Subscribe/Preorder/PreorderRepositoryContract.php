@@ -10,4 +10,9 @@ interface PreorderRepositoryContract
      */
     public function create($input);
 
+    /**
+     * @param int $user_id
+     * @return mixed
+     */
+    public function byUserId($user_id);
 }

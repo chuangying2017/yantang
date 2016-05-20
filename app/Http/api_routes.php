@@ -49,6 +49,7 @@ $api->version('v1', function ($api) {
             });
             $api->group(['namespace' => 'Preorder'], function ($api) {
                 $api->get('subscribe/preorders', 'PreorderController@stations');
+                $api->resource('subscribe/preorders', 'PreorderController');
             });
         });
 

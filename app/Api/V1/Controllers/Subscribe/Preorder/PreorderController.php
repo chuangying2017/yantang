@@ -3,23 +3,36 @@
 namespace App\Api\V1\Controllers\Subscribe\Preorder;
 
 use App\Api\V1\Controllers\Controller;
-use App\Api\V1\Requests\Client\ClientRequest;
 use App\Repositories\Subscribe\Address\AddressRepositoryContract;
 use App\Api\V1\Requests\Subscribe\AddressRequest;
 use App\Api\V1\Requests\Subscribe\CoordinateRequest;
 use App\Api\V1\Transformers\Subscribe\Preorder\AddressTransformer;
 use App\Services\Subscribe\Facades\PreorderService;
+use App\Api\V1\Requests\Subscribe\PreorderRequest;
+use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
+use App\Api\V1\Requests\Subscribe\PreorderProductRequest;
 use Auth;
+
 
 class PreorderController extends Controller
 {
     protected $address;
     protected $user_id;
+    protected $preorder;
 
-    public function __construct(AddressRepositoryContract $address)
+    public function __construct(AddressRepositoryContract $address, PreorderRepositoryContract $preorder)
     {
         $this->address = $address;
+        $this->preorder = $preorder;
 //        $this->user_id = Auth::user()->id();
+        $this->user_id = 2;
+    }
+
+    public function index()
+    {
+        $preorder = $this->preorder->byUserId($this->user_id);
+        return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
 
     public function address(AddressRequest $request)
@@ -39,5 +52,23 @@ class PreorderController extends Controller
         $input = $request->only(['longitude', 'latitude']);
         $station = PreorderService::getRecentlyStation($input['longitude'], $input['latitude']);
         return $this->response->array(['data' => $station]);
+    }
+
+    public function store(PreorderRequest $request)
+    {
+        $input = $request->only(['name', 'phone', 'address', 'area', 'station_id']);
+        $input['user_id'] = $this->user_id;
+        $preorder = $this->preorder->create($input);
+        return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
+    }
+
+    public function update()
+    {
+
+    }
+
+    public function PreorderProduct(PreorderProductRequest $request)
+    {
+        $input = $request->only(['preorder_id', 'weekday', 'sku']);
     }
 }

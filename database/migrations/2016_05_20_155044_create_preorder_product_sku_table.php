@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePreorderProductsTable extends Migration
+class CreatePreorderProductSkuTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,12 @@ class CreatePreorderProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('preorder_products', function (Blueprint $table) {
+        Schema::create('preorder_product_sku', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('preorder_id')->unsigned();
-            $table->tinyInteger('weekday');
-            $table->tinyInteger('daytime');
+            $table->integer('pre_product_id')->unsigned();
+            $table->integer('sku_id')->unsigned();
+            $table->integer('count');
+            $table->string('sku_name');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreatePreorderProductsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('preorder_products');
+        Schema::drop('preorder_product_sku');
     }
 }
