@@ -14,6 +14,8 @@ class CreatePingxxPaymentsTable extends Migration {
     {
         Schema::create('pingxx_payments', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('billing_id')->unsigned()->index();
+            $table->string('billing_type', 64)->index();
             $table->string('charge_id')->index();
             $table->string('payment_no')->index();
             $table->integer('user_id')->unsigned();

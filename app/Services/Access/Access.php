@@ -75,6 +75,12 @@ class Access {
         }
     }
 
+    public function getProviderId($provider = 'weixin')
+    {
+        $user = $this->user();
+        return $user->providers()->where("provider", $provider)->pluck('provider_id');
+    }
+
     /**
      * Checks if the current user has a Role by its name or id
      *

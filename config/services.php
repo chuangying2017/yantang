@@ -44,34 +44,44 @@ return [
 	 */
 
     'github' => [
-        'client_id'     => env('GITHUB_CLIENT_ID'),
+        'client_id' => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect'      => env('GITHUB_REDIRECT'),
+        'redirect' => env('GITHUB_REDIRECT'),
     ],
 
     'facebook' => [
-        'client_id'     => env('FACEBOOK_CLIENT_ID'),
+        'client_id' => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-        'redirect'      => env('FACEBOOK_REDIRECT'),
+        'redirect' => env('FACEBOOK_REDIRECT'),
     ],
 
     'twitter' => [
-        'client_id'     => env('TWITTER_CLIENT_ID'),
+        'client_id' => env('TWITTER_CLIENT_ID'),
         'client_secret' => env('TWITTER_CLIENT_SECRET'),
-        'redirect'      => env('TWITTER_REDIRECT'),
+        'redirect' => env('TWITTER_REDIRECT'),
     ],
 
     'google' => [
-        'client_id'     => env('GOOGLE_CLIENT_ID'),
+        'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect'      => env('GOOGLE_REDIRECT'),
+        'redirect' => env('GOOGLE_REDIRECT'),
     ],
 
     'weixin' => [
-        'client_id'     => env('WECHAT_APPID'),
+        'client_id' => env('WECHAT_APPID'),
         'client_secret' => env('WECHAT_APPSECRET'),
-        'redirect'      => env('WEIXIN_REDIRECT_URI'),
+        'redirect' => env('WEIXIN_REDIRECT_URI'),
         'base_redirect' => env('WEIXIN_BASE_REDIRECT_URL'),
     ],
+
+    'pingxx' => [
+        'app_id' => env('PINGXX_APP_ID'),
+        'api_key' => env(env('PINGXX_ACCOUNT_ENV', 'TEST') . '_PINGXX_API_KEY'),
+        'live' => env('PINGXX_LIVE_MODE', false),
+        'mobile_success' => env('PAYMENT_MOBILE_SUCCESS_URL'),
+        'mobile_cancel' => env('PAYMENT_MOBILE_CANCEL_URL'),
+        'pc_success' => env('PAYMENT_PC_SUCCESS_URL'),
+        'pc_cancel' => env('PAYMENT_PC_CANCEL_URL'),
+    ]
 
 ];

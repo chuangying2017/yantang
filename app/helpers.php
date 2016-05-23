@@ -177,6 +177,13 @@ if (!function_exists('display_coordinate')) {
     }
 }
 
+if (!function_exists('generate_no')) {
+    function generate_no($type = null)
+    {
+        return mt_rand(1, 9) . substr(date('Y'), -2) . date('md') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', mt_rand(0, 99));
+    }
+}
+
 
 
 
