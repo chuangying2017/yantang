@@ -22,13 +22,13 @@ class EloquentPreorderProductRepository implements PreorderProductRepositoryCont
 
     public function byId($id)
     {
-        return PreorderProduct::find($id);
+        return PreorderProduct::with('preorderProductSku')->findOrFail($id);
     }
 
     public function update($input, $id)
     {
-        $query = PreorderProduct::find('id', $id);
-        $query = $query->fill($input);
-        return $query->save();
+        $preorder_product = PreorderProduct::find($id);
+        $preorder_product->fill($input)->save();
+        return $preorder_product;
     }
 }

@@ -11,6 +11,6 @@ class PreorderProduct extends Model
 
     public function preorderProductSku()
     {
-        return $this->hasMany('App\Models\PreorderProductSku', 'pre_product_id');
+        return $this->hasMany('App\Models\Subscribe\PreorderProductSku', 'pre_product_id');
     }
 }

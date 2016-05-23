@@ -14,5 +14,10 @@ class EloquentPreorderProductSkuRepository implements PreorderProductSkuReposito
     {
         return PreorderProductSku::create($input);
     }
-    
+
+    public function delete($pre_product_id)
+    {
+        return PreorderProductSku::where('pre_product_id', $pre_product_id)->delete();
+    }
+
 }

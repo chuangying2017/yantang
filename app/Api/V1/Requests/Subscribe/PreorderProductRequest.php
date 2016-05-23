@@ -22,7 +22,7 @@ class PreorderProductRequest extends Request
 
     /**
      * Get the validation rules that apply to the request.
-     * sku [['sku_id'=>'1' ,'sku_name'=>'a', 'count' => 'b']]
+     * sku [{"sku_id":"1","sku_name":"a","count":"b"}]
      *
      * @return array
      */

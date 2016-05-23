@@ -26,17 +26,30 @@ class PreorderProductService
         $this->app = $app;
     }
 
-    public function create($input)
+    public function operation($input, $id)
     {
         $preorder_product = $this->app->make('App\Repositories\Subscribe\PreorderProduct\PreorderProductRepositoryContract');
-        $product_input = array_only(['preorder_id', 'weekday', 'daytime'], $input);
-        $skus = array_get($input, 'sku');
-        $preorder_product = $preorder_product->create($product_input);
-        $preorder_product_sku = $this->app->make('App\Repositories\Subscribe\PreorderProductSku\PreorderProductSkuRepositoryContract');
-        foreach ($skus as $sku_value) {
-            $preorder_product_sku[] = $preorder_product_sku->create($sku_value);
+        $skus = json_decode(array_get($input, 'sku'), true);
+        unset($input['sku']);
+
+        if (empty($id)) {
+            $preorder_product = $preorder_product->create($input);
+        } else {
+            $preorder_product = $preorder_product->update($input, $id);
         }
-        $preorder_product->preorder_product_sku = $preorder_product_sku;
+
+        foreach ($skus as $value) {
+            if (!empty($id)) {
+                $product_sku = $this->app->make('App\Repositories\Subscribe\PreorderProductSku\PreorderProductSkuRepositoryContract');
+                $product_sku->delete($preorder_product->id);
+            }
+            $value['pre_product_id'] = $preorder_product->id;
+            $preorder_product_sku[] = new PreorderProductSku($value);
+        }
+        $sku = $preorder_product->preorderProductSku()->saveMany($preorder_product_sku);
+
+        $preorder_product->preorder_product_sku = $sku;
+
         return $preorder_product;
     }
 
