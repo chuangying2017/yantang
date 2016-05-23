@@ -4,9 +4,8 @@ use App\Repositories\Pay\Pingxx\PingxxPaymentRepository;
 use App\Services\Billing\BillingContract;
 use App\Services\Pay\Events\PingxxPaymentIsPaid;
 use App\Services\Pay\PayableContract;
-use App\Services\Pay\ThirdPartyPayContract;
 
-class PingxxPayService implements PayableContract, ThirdPartyPayContract {
+class PingxxPayService implements PayableContract {
 
     protected $channel;
 
@@ -27,24 +26,25 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
 
     public function pay(BillingContract $billing)
     {
+
         if ($billing->isPaid()) {
             throw new \Exception('订单已支付,无需重复支付');
         }
 
-        $payment = $this->paymentRepository->getPaymentByBilling($billing->getID(), $billing->getType());
+        $payment = $this->paymentRepository->getPaymentByBilling($billing->getID(), $billing->getType(), $this->getChannel());
 
 
         if ($payment) {
 
             $charge = $this->paymentRepository->getCharge($payment['charge_id']);
 
-            if ($this->isPaid($charge)) {
-                $payment = $this->paymentRepository->setPaymentAsPaid($payment, $this->getTransaction($charge));
+            if ($this->paymentRepository->isPaid($charge)) {
+                $payment = $this->paymentRepository->setPaymentAsPaid($payment, $this->paymentRepository->getTransaction($charge));
                 event(new PingxxPaymentIsPaid($payment));
             }
 
         } else {
-            $charge = $this->paymentRepository->createCharge($billing->getAmount(), $this->getChannel());
+            $charge = $this->paymentRepository->createCharge($billing->getAmount(), $billing->getOrderNo(), $this->getChannel());
             $payment = $this->paymentRepository->createPayment($charge, $billing->getID(), $billing->getType());
         }
 
@@ -75,17 +75,4 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
         return $this->channel;
     }
 
-    public function isPaid($charge)
-    {
-        if (config('services.pingxx.live')) {
-            return $charge->paid && $charge->livemode;
-        }
-
-        return $charge->paid;
-    }
-
-    public function getTransaction($charge)
-    {
-        return $charge->transaction_no;
-    }
 }

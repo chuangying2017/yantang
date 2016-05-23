@@ -120,9 +120,8 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
 
     public function getCharge($charge_id)
     {
-        return Charge::retrieve($charge_id);
+        return is_string($charge_id) ? Charge::retrieve($charge_id) : $charge_id;
     }
-
 
 
     public function createPayment($charge, $billing_id, $billing_type)
@@ -138,7 +137,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
             'channel' => $charge->channel,
             'livemode' => $charge->livemode,
             'time_expire' => $charge->time_expire,
-            'status' => PingxxProtocol::STATUS_OF_UNPAID
+            'paid' => false
         ]);
     }
 
@@ -147,7 +146,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
     {
         $payment = $this->getPayment($payment_no);
         $payment->transaction_no = $transaction_no;
-        $payment->status = PingxxProtocol::STATUS_OF_PAID;
+        $payment->paid = true;
         $payment->save();
         return $payment;
     }
@@ -176,10 +175,29 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         return PingxxPayment::class;
     }
 
-    public function getPaymentByBilling($billing_id, $billing_type)
+    public function getPaymentByBilling($billing_id, $billing_type, $channel)
     {
         return PingxxPayment::where('billing_id', $billing_id)
             ->where('billing_type', $billing_type)
+            ->where('channel', $channel)
             ->first();
+    }
+
+    public function isPaid($charge_id)
+    {
+        $charge = $this->getCharge($charge_id);
+
+        if (config('services.pingxx.live')) {
+            return $charge->paid && $charge->livemode;
+        }
+
+        return $charge->paid;
+    }
+
+    public function getTransaction($charge_id)
+    {
+        $charge = $this->getCharge($charge_id);
+
+        return $charge->transaction_no;
     }
 }

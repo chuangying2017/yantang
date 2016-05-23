@@ -10,6 +10,8 @@ interface BillingContract {
 
     public function getID();
 
+    public function getOrderNo();
+
     public function isPaid();
 
     public function getAmount();

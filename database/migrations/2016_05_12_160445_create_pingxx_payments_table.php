@@ -34,9 +34,11 @@ class CreatePingxxPaymentsTable extends Migration {
             $table->boolean('paid')->default(false);
             $table->boolean('refunded')->default(false);
 
-            $table->timestamps();
             $table->string('failure_code', 45)->nullable();
             $table->string('failure_msg')->nullable();
+            $table->softDeletes();
+            $table->timestamps();
+
         });
     }
 
