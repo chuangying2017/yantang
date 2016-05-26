@@ -6,40 +6,27 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract {
 
     public function createSku($sku_data, $product_id)
     {
-        $sku_model = ProductSku::create(
-            [
-                'sku_no' => uniqid('psn_'),
-                'product_id' => $product_id ?: 0,
-                'name' => $sku_data['name'],
-                'cover_image' => $sku_data['cover_image'],
-                'display_price' => $sku_data['display_price'],
-                'express_fee' => $sku_data['express_fee'],
-                'price' => $sku_data['price'],
-                'income_price' => $sku_data['income_price'],
-                'settle_price' => $sku_data['settle_price'],
-                'bar_code' => $sku_data['bar_code'],
-                'stock' => $sku_data['stock'],
-                'attr' => array_get($sku_data, 'attr', ''),
-            ]);
-
-        if (count(array_get($sku_data, 'sku_ids', [])) > 0) {
-            $sku_model->mix()->attach($sku_data['sku_ids']);
-        }
-
-        if (count(array_get($sku_data, 'attr_value_ids', [])) > 0) {
-            $sku_model->attributeValues()->attach($sku_data['attr_value_ids']);
-        }
-
-        return $sku_model;
+        return $this->updateOrCreate($sku_data, null, $product_id);
     }
 
     public function updateSku($product_sku_id, $sku_data)
     {
-        $sku_model = ProductSku::findOrFail($product_sku_id);
+        return $this->updateOrCreate($sku_data, $product_sku_id);
+    }
 
-        $sku_model->save(
+    protected function updateOrCreate($sku_data, $product_sku_id = null, $product_id = 0)
+    {
+        if (!is_null($product_sku_id)) {
+            $sku = ProductSku::findOrFail($product_sku_id);
+        } else {
+            $sku = new ProductSku([
+                'product_id' => $product_id,
+                'sku_no' => uniqid('psn_'),
+            ]);
+        }
+
+        $sku->fill(
             [
-                'sku' => uniqid('psn_'),
                 'name' => $sku_data['name'],
                 'cover_image' => $sku_data['cover_image'],
                 'display_price' => $sku_data['display_price'],
@@ -47,20 +34,24 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract {
                 'price' => $sku_data['price'],
                 'income_price' => $sku_data['income_price'],
                 'settle_price' => $sku_data['settle_price'],
+                'subscribe_price' => array_get($sku_data, 'subscribe_price', $sku_data['price']),
+                'service_fee' => array_get($sku_data, 'service_fee', 0),
                 'bar_code' => $sku_data['bar_code'],
                 'stock' => $sku_data['stock'],
-                'attr' => $sku_data['attr'],
+                'attr' => array_get($sku_data, 'attr', ''),
             ]);
+        $sku->save();
 
         if (count(array_get($sku_data, 'sku_ids', [])) > 0) {
-            $sku_model->mix()->attach($sku_data['sku_ids']);
+            $sku->mix()->sync($sku_data['sku_ids']);
         }
 
         if (count(array_get($sku_data, 'attr_value_ids', [])) > 0) {
-            $sku_model->attributeValues()->attach($sku_data['attr_value_ids']);
+            $sku->attributeValues()->sync($sku_data['attr_value_ids']);
         }
 
-        return $sku_model;
+        return $sku;
+
     }
 
     public function deleteSku($product_sku_id)

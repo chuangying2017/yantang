@@ -27,6 +27,8 @@ class CreateProductSkuTable extends Migration {
             $table->integer('express_fee')->unsigned()->default(0);
             $table->integer('income_price')->unsigned();
             $table->integer('settle_price')->unsigned();
+            $table->integer('subscribe_price')->unsigned();
+            $table->integer('service_fee')->unsigned();
             $table->string('attr', 1024);
             $table->softDeletes();
             $table->timestamps();

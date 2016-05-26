@@ -8,9 +8,9 @@ class RelateProduct extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)
     {
-        $product->brand()->sync(array_get($product, 'group_ids', []), ['type' => CategoryProtocol::TYPE_OF_GROUP]);
+        $product->groups()->sync(array_get($product, 'group_ids', []), ['type' => CategoryProtocol::TYPE_OF_GROUP]);
 
-        $product->cats()->sync($product_data['cat_id'], ['type' => CategoryProtocol::TYPE_OF_MAIN]);
+        $product->cats()->sync(to_array($product_data['cat_id']), ['type' => CategoryProtocol::TYPE_OF_MAIN]);
 
         return $this->next($product_data, $product);
     }

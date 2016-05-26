@@ -139,7 +139,7 @@ class ProductRepoTest extends TestCase {
         return [
             "cat_id" => 1,
             "merchant_id" => 1,
-            "title" => "燕塘 原味酸奶饮品 300ml/盒 ",
+            "title" => "燕塘 原味酸奶饮品 200ml/盒 ",
             "sub_title" => "",
             "digest" => "简介",
             "cover_image" => "http://7xp47i.com1.z0.glb.clouddn.com/pd-info-1.jpg",

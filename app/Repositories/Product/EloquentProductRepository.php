@@ -16,6 +16,7 @@ use App\Repositories\Product\Editor\UpdateInfo;
 use App\Repositories\Product\Editor\UpdateMeta;
 use App\Repositories\Product\Editor\UpdateProductSku;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
+use App\Repositories\Search\Item\ProductSearchRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -25,6 +26,10 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
      * @var ProductSkuRepositoryContract
      */
     private $productSkuRepository;
+    /**
+     * @var ProductSearchRepository
+     */
+
 
     /**
      * EloquentProductRepository constructor.
@@ -106,8 +111,8 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
     {
         $handler = $this->getUpdateProductHandler();
 
-        $result = \DB::transaction(function () use ($handler, $product_data) {
-            return $handler->handle($product_data, new Product());
+        $result = \DB::transaction(function () use ($handler, $product_data, $product_id) {
+            return $handler->handle($product_data, $this->getProduct($product_id));
         });
 
         $product = $result['product'];
@@ -190,7 +195,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
 
     public function search($keyword, $options = [])
     {
-        // TODO: Implement search() method.
+        return (new ProductSearchRepository($this))->get($keyword);
     }
 
     public function getAllSubscribedProducts($status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $with_time = true, $expend = true)
@@ -200,7 +205,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
         if ($expend) {
             $skus = null;
             foreach ($products as $product) {
-                if(is_null($skus)) {
+                if (is_null($skus)) {
                     $skus = $product->skus;
                 } else {
                     $skus->merge($product->skus);

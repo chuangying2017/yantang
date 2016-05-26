@@ -4,11 +4,14 @@ interface SearchRepositoryContract {
 
     public function init();
 
-    public function get();
+    public function get($keyword = null);
 
-    public function create();
+    public function create($model);
 
-    public function update();
+    public function update($model);
 
-    public function delete();
+    public function delete($model);
+
+    public function hot($limit);
+
 }

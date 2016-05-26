@@ -1,0 +1,24 @@
+<?php namespace App\Models\Promotion\Traits;
+
+use App\Models\Promotion\PromotionCounter;
+use App\Models\Promotion\PromotionDetail;
+use App\Models\Promotion\Rule;
+
+trait PromotionRelations {
+
+    public function detail()
+    {
+        return $this->hasOne(PromotionDetail::class, 'promotion_id', 'id');
+    }
+
+    public function rules()
+    {
+        return $this->belongsToMany(Rule::class, 'promotion_rule', 'promotion_id', 'rule_id');
+    }
+
+    public function counter()
+    {
+        return $this->hasOne(PromotionCounter::class, 'promotion_id', 'id');
+    }
+
+}

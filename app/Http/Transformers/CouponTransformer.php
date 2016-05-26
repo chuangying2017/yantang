@@ -1,7 +1,7 @@
 <?php namespace App\Http\Transformers;
 
-use App\Models\Coupon;
-use App\Models\Ticket;
+use App\Models\Promotion\Coupon;
+use App\Models\Promotion\Ticket;
 use App\Services\Marketing\MarketingProtocol;
 use League\Fractal\TransformerAbstract;
 

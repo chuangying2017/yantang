@@ -82,6 +82,10 @@ return [
         'mobile_cancel' => env('PAYMENT_MOBILE_CANCEL_URL'),
         'pc_success' => env('PAYMENT_PC_SUCCESS_URL'),
         'pc_cancel' => env('PAYMENT_PC_CANCEL_URL'),
+    ],
+
+    'search' => [
+        'root' => env('SEARCH_ROOT_PATH')
     ]
 
 ];
