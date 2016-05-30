@@ -15,6 +15,7 @@ class CreateCampaignsTable extends Migration {
         Schema::create('campaigns', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('cover_image');
             $table->string('desc');
             $table->dateTime('start_time');
             $table->dateTime('end_time');

@@ -1,6 +1,6 @@
-<?php namespace App\Services\Orders\Supports;
+<?php namespace App\Services\Pay\Pingxx;
 
-use App\Services\Orders\Exceptions\WrongStatus;
+use App\Exceptions\WrongStatus;
 
 class PingxxProtocol {
 
@@ -56,7 +56,6 @@ class PingxxProtocol {
                 break;
         }
 
-
         if (in_array($from_status, $valid_status)) {
             throw new WrongStatus($from_status, $to_status);
         }
@@ -76,6 +75,31 @@ class PingxxProtocol {
     const AGENT_OF_PC = 'pc';
     const AGENT_OF_MOBILE = 'mobile';
     const AGENT_OF_APP = 'app';
+
+    public static function getChannelNo($channel)
+    {
+        self::validChannel($channel);
+
+        $channels = [
+            self::PINGXX_SPECIAL_CHANNEL_ALIPAY_QR => '01',
+            self::PINGXX_SPECIAL_CHANNEL_WECHAT_QR => '02',
+            self::PINGXX_PC_CHANNEL_ALIPAY => '03',
+            self::PINGXX_PC_CHANNEL_UNIONPAY => '04',
+            self::PINGXX_WAP_CHANNEL_ALIPAY => '05',
+            self::PINGXX_WAP_CHANNEL_WECHAT => '06',
+            self::PINGXX_WAP_CHANNEL_UNIONPAY_NEW => '07',
+            self::PINGXX_WAP_CHANNEL_BAIDU => '08',
+            self::PINGXX_WAP_CHANNEL_YEEPAY => '09',
+            self::PINGXX_WAP_CHANNEL_JINGDONG => '10',
+            self::PINGXX_APP_CHANNEL_ALIPAY => '11',
+            self::PINGXX_APP_CHANNEL_WECHAT => '12',
+            self::PINGXX_APP_CHANNEL_UNIONPAY_NEW => '13',
+            self::PINGXX_APP_CHANNEL_BAIDU => '14',
+            self::PINGXX_APP_CHANNEL_APPLE_PAY => '15',
+        ];
+
+        return $channels[$channel];
+    }
 
 
     public static function agent($agent, $channel = null)
@@ -132,3 +156,4 @@ class PingxxProtocol {
     }
 
 }
+

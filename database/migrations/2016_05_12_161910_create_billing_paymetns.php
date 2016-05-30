@@ -14,8 +14,9 @@ class CreateBillingPaymetns extends Migration {
     {
         Schema::create('billing_payments', function (Blueprint $table) {
             $table->integer('billing_id')->unsigned()->index();
-            $table->string('billing_type', 45)->index();
+            $table->string('billing_type', 64)->index();
             $table->integer('pingxx_payment_id')->unsigned()->index();
+            $table->boolean('paid')->default(false);
             $table->timestamps();
         });
     }

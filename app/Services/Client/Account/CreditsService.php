@@ -1,6 +1,6 @@
 <?php namespace App\Services\Client\Account;
 
-use App\Repositories\Client\Account\Wallet\CreditsRepositoryContract;
+use App\Repositories\Client\Account\Credits\CreditsRepositoryContract;
 use App\Services\Billing\BillingContract;
 
 class CreditsService extends AccountService {

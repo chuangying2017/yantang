@@ -2,6 +2,7 @@
 
 namespace App\Models\Billing;
 
+use App\Models\PingxxPayment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -12,5 +13,9 @@ class OrderBilling extends Model {
 
     protected $guarded = ['id'];
 
+    public function payment()
+    {
+        return $this->morphToMany(PingxxPayment::class, 'billing');
+    }
 
 }

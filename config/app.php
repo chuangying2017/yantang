@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'name' => '东方丽人商城后台',
+
+    'name' => '东方丽人',
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -171,7 +172,7 @@ return [
         App\Providers\ClientServiceProvider::class,
 
 
-        \App\Services\Product\Search\ProductServiceProvider::class,
+        \App\Services\Product\Providers\ProductServiceProvider::class,
         App\Providers\SubscribeServiceProvider::class,
 
         /*

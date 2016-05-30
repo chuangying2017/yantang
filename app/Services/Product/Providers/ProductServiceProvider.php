@@ -1,7 +1,6 @@
-<?php namespace App\Services\Product\Search;
+<?php namespace App\Services\Product\Providers;
 
-
-use App\Services\Product\ProductSkuRepository;
+use App\Services\Product\Search\ProductSearchService;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 

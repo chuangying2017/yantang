@@ -10,10 +10,16 @@ interface BillingContract {
 
     public function getID();
 
+    public function getOrderNo();
+
+    public function isPaid();
+
     public function getAmount();
 
     public function getType();
 
     public function getPayer();
+
+    public function setPaid($pay_type, $pay_channel);
 
 }
