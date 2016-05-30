@@ -32,6 +32,8 @@ class EloquentRuleRepository implements RuleRepositoryContract {
         $rule = is_null($rule_id) ? new Rule() : $this->getRule($rule_id);
         $rule->fill($rule_data);
         $rule->save();
+        $this->syncItems($rule['id'], $items);
+        $this->syncQualifies($rule['id'], $qualifies);
         return $rule;
     }
 
@@ -44,7 +46,6 @@ class EloquentRuleRepository implements RuleRepositoryContract {
     {
         return $this->updateOrCreate($rule_id, $qualifies, $items, $range, $discount, $weight, $multi, $memo);
     }
-
 
     public function getRules($with_values = true)
     {

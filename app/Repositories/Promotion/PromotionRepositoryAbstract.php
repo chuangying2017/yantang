@@ -77,6 +77,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         $promotion->rules()->sync($rule_ids);
     }
 
+
     public function getAll($not_over_time = true)
     {
         $model = $this->getModel();
@@ -90,11 +91,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         return $query->get();
     }
 
-    public function get($promotion_id)
-    {
-        $model = $this->getModel();
-        return $promotion_id instanceof $model ? $promotion_id : $model::find($promotion_id);
-    }
+    public abstract function get($promotion_id, $with_detail = true);
 
     public function update($promotion_id, $data)
     {

@@ -5,4 +5,5 @@ interface RuleItemRepoContract {
     public function syncItems($rule_id, $items);
 
 
+
 }

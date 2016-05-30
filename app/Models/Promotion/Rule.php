@@ -40,7 +40,7 @@ class Rule extends Model {
     public function setQuaContentAttribute($value)
     {
         if (is_array($value)) {
-            if (count($value) > 125) {
+            if (count($value) > 512) {
                 $this->attributes['qua_content'] = null;
             } else {
                 $this->attributes['qua_content'] = json_encode($value);
@@ -53,5 +53,23 @@ class Rule extends Model {
     public function getQuaContentAttribute()
     {
         return json_decode($this->attributes['qua_content']);
+    }
+
+    public function setItemContentAttribute($value)
+    {
+        if (is_array($value)) {
+            if (count($value) > 512) {
+                $this->attributes['item_content'] = null;
+            } else {
+                $this->attributes['item_content'] = json_encode($value);
+            }
+        } else {
+            $this->attributes['item_content'] = $value;
+        }
+    }
+
+    public function getItemContentAttribute()
+    {
+        return json_decode($this->attributes['item_content']);
     }
 }

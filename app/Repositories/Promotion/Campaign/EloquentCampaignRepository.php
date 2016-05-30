@@ -4,7 +4,7 @@ use App\Models\Promotion\Campaign;
 use App\Repositories\Promotion\PromotionRepositoryAbstract;
 use App\Repositories\Promotion\Traits\Detail;
 
-class EloquentCampaignRepository extends PromotionRepositoryAbstract {
+class EloquentCampaignRepository extends PromotionRepositoryAbstract implements CampaignRepositoryContract {
 
     use Detail;
 
@@ -23,5 +23,13 @@ class EloquentCampaignRepository extends PromotionRepositoryAbstract {
         return $this->updateDetail($promotion_id, $data['detail']);
     }
 
-
+    public function get($promotion_id, $with_detail = true)
+    {
+        $campaign = $promotion_id instanceof Campaign ? $promotion_id : Campaign::find($promotion_id);
+        if ($with_detail) {
+            $campaign = $campaign->load('detail');
+        }
+        
+        return $campaign;
+    }
 }

@@ -16,8 +16,9 @@ class CreatePromotionRulesTable extends Migration {
             $table->increments('id');
             $table->integer('qua_quantity');//次数
             $table->string('qua_type', 45);//参与要求:新用户,会员,指定用户
-            $table->string('qua_content');
-            $table->string('item_type'); //优惠对象:商品
+            $table->string('qua_content', 1024);
+            $table->string('item_type', 45); //优惠对象:商品
+            $table->string('item_content', 1024); //优惠对象:商品
             $table->string('range_type', 45); //数量,金额
             $table->integer('range_max')->nullable(); //
             $table->integer('range_min');

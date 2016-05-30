@@ -1,5 +1,6 @@
 <?php namespace App\Models\Promotion\Traits;
 
+use App\Models\Product\Product;
 use App\Models\Promotion\PromotionCounter;
 use App\Models\Promotion\PromotionDetail;
 use App\Models\Promotion\Rule;
@@ -20,5 +21,12 @@ trait PromotionRelations {
     {
         return $this->hasOne(PromotionCounter::class, 'promotion_id', 'id');
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_promotion', 'promotion_id', 'product_id');
+    }
+
+    
 
 }

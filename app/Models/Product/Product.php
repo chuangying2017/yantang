@@ -19,4 +19,8 @@ class Product extends Model {
         return $query->where('status', $status);
     }
 
+    public function promotions()
+    {
+        return $this->belongsToMany('product_promotion', 'product_id', 'promotion_id');
+    }
 }

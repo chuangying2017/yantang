@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Product;
 
+use App\Models\Product\Brand;
 use App\Models\Product\Product;
 use App\Models\Product\ProductSku;
 use App\Repositories\Category\CategoryProtocol;
@@ -18,9 +19,10 @@ use App\Repositories\Product\Editor\UpdateProductSku;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 use App\Repositories\Search\Item\ProductSearchRepository;
 use Carbon\Carbon;
+use EasyWeChat\User\Group;
 use Illuminate\Database\Eloquent\Collection;
 
-class EloquentProductRepository implements ProductRepositoryContract, ProductSubscribeRepositoryContract {
+class EloquentProductRepository implements ProductRepositoryContract, ProductSubscribeRepositoryContract, ProductIdListContract {
 
     /**
      * @var ProductSkuRepositoryContract
@@ -227,4 +229,20 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
         return Product::whereIn('id', to_array($product_id))->update(['end_time' => Carbon::now()->addYears(10)]);
     }
 
+    public function listsOfGroup($group_id)
+    {
+        return \DB::table('product_category')->where('cat_id', $group_id)->pluck('product_id');
+    }
+
+    public function listsOfCategory($cat_id)
+    {
+        return \DB::table('product_category')->where('cat_id', $cat_id)->pluck('product_id');
+
+        // TODO: Implement listsOfCategory() method.
+    }
+
+    public function listsOfBrand($brand_id)
+    {
+        return Product::where('brand_id', $brand_id)->pluck('id');
+    }
 }

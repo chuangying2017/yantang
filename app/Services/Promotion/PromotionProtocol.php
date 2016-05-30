@@ -16,12 +16,15 @@ class PromotionProtocol {
     const QUALI_TYPE_OF_USER = 'user';
     const QUALI_TYPE_OF_LEVEL = 'level';
     const QUALI_TYPE_OF_ROLE = 'role';
+    const QUALI_TYPE_OF_ALL = 'all';
 
     const ITEM_TYPE_OF_PRODUCT = 'product';
     const ITEM_TYPE_OF_SKU = 'sku';
     const ITEM_TYPE_OF_CATEGORY = 'cat';
     const ITEM_TYPE_OF_GROUP = 'group';
     const ITEM_TYPE_OF_BRAND = 'brand';
+    const ITEM_TYPE_OF_ALL = 'all';
+
 
     const RANGE_TYPE_OF_AMOUNT = 'amount';
     const RANGE_TYPE_OF_QUANTITY = 'quantity';
