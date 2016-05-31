@@ -71,6 +71,11 @@ class SubscribeServiceProvider extends ServiceProvider
             \App\Repositories\Subscribe\PreorderProductSku\PreorderProductSkuRepositoryContract::class,
             \App\Repositories\Subscribe\PreorderProductSku\EloquentPreorderProductSkuRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Subscribe\StaffPreorder\StaffPreorderRepositoryContract::class,
+            \App\Repositories\Subscribe\StaffPreorder\EloquentStaffPreorderRepository::class
+        );
     }
 
 }

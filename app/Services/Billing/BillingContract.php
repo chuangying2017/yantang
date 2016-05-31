@@ -4,7 +4,8 @@
  * Interface BillingContract
  * @package App\Services\Billing
  */
-interface BillingContract {
+interface BillingContract
+{
 
     public function create($amount);
 
@@ -21,5 +22,7 @@ interface BillingContract {
     public function getPayer();
 
     public function setPaid($pay_type, $pay_channel);
+
+    public function setId($id);
 
 }

@@ -14,7 +14,6 @@ use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Requests\Subscribe\PreorderProductRequest;
 use Auth;
 
-
 class PreorderController extends Controller
 {
     protected $address;
@@ -62,13 +61,19 @@ class PreorderController extends Controller
         return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
 
-    public function update()
+    public function update(PreorderRequest $request, $preorder_id)
     {
-
-    }
-
-    public function PreorderProduct(PreorderProductRequest $request)
-    {
-        $input = $request->only(['preorder_id', 'weekday', 'sku']);
+        //status 订奶状态 pause 暂停 normal配送中
+        $input = $request->only(['status']);
+        $preorder = $this->preorder->byUserId($this->user_id);
+        if (empty($preorder)) {
+            $this->response->errorInternal('修改的订奶配置不存在');
+        } else {
+            if ($preorder->user_id != $this->user_id) {
+                $this->response->errorInternal('修改的订奶配置不属于本会员');
+            }
+        }
+        $preorder = $this->preorder->update($input, $preorder_id);
+        return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
 }

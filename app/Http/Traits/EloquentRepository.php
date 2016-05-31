@@ -40,5 +40,9 @@ trait EloquentRepository
         return $query;
     }
 
-
+    public function create($input)
+    {
+        $query = app($this->moder());
+        return $query->create($input);
+    }
 }

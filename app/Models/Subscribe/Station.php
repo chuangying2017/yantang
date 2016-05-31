@@ -10,4 +10,9 @@ class Station extends Model
     protected $guarded = ['id'];
 
     protected $table = 'station';
+
+    public function preorder()
+    {
+        return $this->hasMany('App\Models\Subscribe\preorder');
+    }
 }

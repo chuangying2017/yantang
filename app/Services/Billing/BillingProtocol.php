@@ -1,8 +1,10 @@
 <?php namespace App\Services\Billing;
+
 use App\Models\Billing\RechargeBilling;
 use App\Models\Billing\OrderBilling;
 
-class BillingProtocol {
+class BillingProtocol
+{
 
     const BILLING_TYPE_OF_ORDER_BILLING = OrderBilling::class;
     const BILLING_TYPE_OF_RECHARGE_BILLING = RechargeBilling::class;

@@ -34,14 +34,6 @@ class StationController extends Controller
         return $this->response->item($station, new StationTransformer());
     }
 
-    /**
-     * 查看可定购商品
-     */
-    public function products()
-    {
-
-    }
-
     public function bindStation(Request $request)
     {
         $station_id = $request->input('station_id', null);

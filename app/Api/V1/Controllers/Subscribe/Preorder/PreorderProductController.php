@@ -25,9 +25,10 @@ class PreorderProductController extends Controller
 
     public function index(Request $request)
     {
-//        $preorder_id = $request->input('preorder_id', null);
-//        $weekday = $request->input('weekday', null);
-
+        $preorder_id = $request->input('preorder_id', null);
+        $weekday = $request->input('weekday', null);
+        $preorder_product = $this->preorder_product->byPreorderId($preorder_id, $weekday);
+        return $this->response->item($preorder_product, new PreorderProductTransformer())->setStatusCode(201);
     }
 
     public function store(PreorderProductRequest $request)

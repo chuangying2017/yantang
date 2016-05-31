@@ -23,4 +23,6 @@ interface PreorderProductRepositoryContract
     public function byId($id);
 
     public function update($input, $id);
+
+    public function byPreorderId($preorder_id, $weekday);
 }

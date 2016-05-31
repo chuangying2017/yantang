@@ -55,4 +55,6 @@ interface StationRepositoryContract
      * @return mixed
      */
     public function destroy($id);
+
+    public function preorder($user_id, $type, $pre_page);
 }

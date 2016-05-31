@@ -25,6 +25,11 @@ class EloquentPreorderProductRepository implements PreorderProductRepositoryCont
         return PreorderProduct::with('preorderProductSku')->findOrFail($id);
     }
 
+    public function byPreorderId($preorder_id, $weekday)
+    {
+        return PreorderProduct::with('preorderProductSku')->where('preorder_id', '=', $preorder_id)->where('weekday', '=', $weekday)->first();
+    }
+
     public function update($input, $id)
     {
         $preorder_product = PreorderProduct::find($id);

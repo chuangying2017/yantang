@@ -37,20 +37,24 @@ $api->version('v1', function ($api) {
         });
 
         /**
-         * 服务部
+         * 订奶系统
          */
         $api->group(['namespace' => 'Subscribe'], function ($api) {
+            //服务部端
             $api->group(['namespace' => 'Station', 'prefix' => 'stations'], function ($api) {
                 $api->resource('products', 'ProductsController', ['only' => ['index']]); //查看可定购商品
                 $api->resource('staffs', 'StaffsController');
                 $api->get('info', 'StationController@index'); //查看服务部信息
                 $api->get('products', 'StationController@products'); //查看可定购商品
                 $api->get('bind_station', 'StationController@bindStation'); //绑定服务部
+                $api->resource('preorders', 'StationPreorderController'); //服务部下的订奶订单列表
             });
+            //订奶客户端
             $api->group(['namespace' => 'Preorder'], function ($api) {
                 $api->get('subscribe/preorders', 'PreorderController@stations');
                 $api->resource('subscribe/preorders', 'PreorderController');
                 $api->resource('subscribe/preorder_product', 'PreorderProductController');
+                $api->resource('subscribe/topup', 'TopUpController');
             });
         });
 

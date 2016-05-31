@@ -7,7 +7,7 @@ use App\Api\V1\Requests\Request;
  * Class RegisterRequest
  * @package App\Api\V1\Requests\Frontend\Access
  */
-class PreorderRequest extends Request
+class TopUpRequest extends Request
 {
 
     /**
@@ -27,17 +27,10 @@ class PreorderRequest extends Request
      */
     public function rules()
     {
-        if ($this->isMethod('put')) {
+        if ($this->isMethod('post')) {
             return [
-                'status' => 'required',
+                'amount' => 'required',
             ];
         }
-        return [
-            'name' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
-            'area' => 'required',
-            'station_id' => 'required',
-        ];
     }
 }

@@ -46,6 +46,7 @@ class PreorderService
      * @desc 根据两点间的经纬度计算距离
      * @param float $lat 纬度值
      * @param float $lng 经度值
+     * @return float
      */
     public function getDistance($lat1, $lng1, $lat2, $lng2)
     {
