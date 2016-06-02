@@ -11,6 +11,9 @@ use Auth;
 use App\Api\V1\Transformers\Subscribe\Station\StationPreorderTransformer;
 use App\Repositories\Subscribe\StaffPreorder\StaffPreorderRepositoryContract;
 use App\Api\V1\Transformers\Subscribe\Station\StaffPreorderTransformer;
+use App\Api\V1\Requests\Subscribe\PreorderRequest;
+use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 
 class StationPreorderController extends Controller
 {
@@ -41,7 +44,7 @@ class StationPreorderController extends Controller
 
     public function store(Request $request, StaffPreorderRepositoryContract $staffPreorder)
     {
-        $input = $request->only(['preorder_id', 'preorder_id', 'index']);
+        $input = $request->only(['preorder_id', 'staff_id', 'index']);
         if (empty($input['index'])) {
             $input['index'] = 0;
         }
@@ -52,9 +55,22 @@ class StationPreorderController extends Controller
             }
             $input['station_id'] = $station->id;
             $staffPreorder = $staffPreorder->create($input);
+            $staffPreorder->load('preorder');
             return $this->response->item($staffPreorder, new StaffPreorderTransformer());
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }
+    }
+
+    public function update(PreorderRequest $request, $preorder_id, PreorderRepositoryContract $preorder)
+    {
+        //status 订奶状态 pause 暂停 normal配送中
+        $input = $request->only(['status']);
+        $preorder = $this->preorder->byUserId($this->user_id);
+        if (empty($preorder)) {
+            $this->response->errorInternal('修改的订奶配置不存在');
+        }
+        $preorder = $preorder->update($input, $preorder_id);
+        return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
 }

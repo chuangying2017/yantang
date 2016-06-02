@@ -5,39 +5,38 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Subscribe\PreorderService;
 use App\Services\Subscribe\PreorderProductService;
+use App\Services\Subscribe\StaffService;
 
 
 class SubscribeServiceProvider extends ServiceProvider
 {
 
+
+
     public function register()
     {
-        $this->registerPreorderService();
-        $this->registerPreorderProductService();
-//        $this->registerFacade();
         $this->registerBindings();
+        $this->registerFacade();
     }
 
-    private function registerPreorderService()
+
+    public function registerFacade()
     {
         $this->app->bind('PreorderService', function ($app) {
             return new PreorderService($app);
         });
-    }
 
-    private function registerPreorderProductService()
-    {
         $this->app->bind('PreorderProductService', function ($app) {
             return new PreorderProductService($app);
         });
-    }
 
-    public function registerFacade()
-    {
-        $this->app->booting(function () {
-            $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-            $loader->alias('PreorderService', \App\Services\Subscribe\Facades\PreorderService::class);
+        $this->app->singleton('StaffService', function ($app) {
+            return $app->make(StaffService::class);
         });
+
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader->alias('PreorderService', \App\Services\Subscribe\Facades\PreorderService::class);
+        $loader->alias('StaffService', \App\Services\Subscribe\Facades\StaffService::class);
     }
 
     public function registerBindings()

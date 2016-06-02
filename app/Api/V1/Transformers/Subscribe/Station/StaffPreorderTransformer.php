@@ -14,6 +14,7 @@ class StaffPreorderTransformer extends TransformerAbstract
             'station_id' => $staff_preorder->station_id,
             'staff_id' => $staff_preorder->staff_id,
             'index' => $staff_preorder->index,
+            'preorder' => $staff_preorder->preorder,
         ];
 
         return $data;

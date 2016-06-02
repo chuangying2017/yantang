@@ -56,6 +56,11 @@ $api->version('v1', function ($api) {
                 $api->resource('subscribe/preorder_product', 'PreorderProductController');
                 $api->resource('subscribe/topup', 'TopUpController');
             });
+            //订奶配送端
+            $api->group(['namespace' => 'Staff'], function ($api) {
+                $api->get('staffs/preorders/data', 'StaffPreorderController@data');
+                $api->resource('staffs/preorders', 'StaffPreorderController');
+            });
         });
 
         /**

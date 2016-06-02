@@ -14,6 +14,9 @@ class PreorderProtocol
     const STATUS_OF_NOT_ENOUGH = 'not_enough';
     const STATUS_OF_ENOUGH = 'enough';
 
+    const DAYTIME_OF_AM = 0;
+    const DAYTIME_OF_PM = 1;
+
 
     public static function status($key = null)
     {
@@ -25,6 +28,15 @@ class PreorderProtocol
         ];
 
         return is_null($key) ? $message : $message[$key];
+    }
+
+    public static function StatusName($status = null, $charge_status = null)
+    {
+        if ($status == self::STATUS_OF_NORMAL && $charge_status == self::STATUS_OF_NOT_ENOUGH) {
+            return self::status($charge_status);
+        }
+
+        return is_null($status) ? "数据异常" : self::status($status);
     }
 
 

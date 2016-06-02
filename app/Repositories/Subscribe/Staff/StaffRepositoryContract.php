@@ -36,4 +36,8 @@ interface StaffRepositoryContract
      * @return mixed
      */
     public function destroy($id);
+
+
+    public function byUserId($user_id, $with_orders = false, $query_day, $daytime);
+
 }

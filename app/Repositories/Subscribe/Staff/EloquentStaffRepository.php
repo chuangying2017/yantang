@@ -1,7 +1,9 @@
 <?php namespace App\Repositories\Subscribe\Staff;
 
 use App\Models\Subscribe\StationStaffs;
+use Carbon\Carbon;
 use Pheanstalk\Exception;
+use App\Services\Subscribe\PreorderProtocol;
 
 class EloquentStaffRepository implements StaffRepositoryContract
 {
@@ -48,8 +50,32 @@ class EloquentStaffRepository implements StaffRepositoryContract
 
     public function destroy($id)
     {
-        //todo 补充关联的删除
-        $station = StationStaffs::findOrFail($id);
-        $station->delete();
+        return StationStaffs::destroy($id);
     }
+
+    public function byUserId($user_id, $with_order = false, $query_day, $daytime = null)
+    {
+        $staff = StationStaffs::where('user_id', '=', $user_id)->first();
+        if ($with_order) {
+            if ($query_day == Carbon::now()) {
+                $weekday = intval(date("w", strtotime($query_day)));
+                $status = PreorderProtocol::STATUS_OF_NORMAL;
+                $charge_status = PreorderProtocol::STATUS_OF_ENOUGH;
+                $staff = $staff->load(['preorders' => function ($query) use ($status, $charge_status, $weekday, $daytime) {
+                    $query->where('status', '=', $status)->where('charge_status', '=', $charge_status)->with('product')
+                        ->whereHas('product', function ($query) use ($weekday, $daytime) {
+                            $query->where('preorder_products.weekday', $weekday);
+                            if (!is_null($daytime)) {
+                                $query->where('daytime', $daytime);
+                            }
+                        })->with('product.sku');
+                }]);
+            } else {
+                //todo 从历史记录里查
+            }
+        }
+
+        return $staff;
+    }
+
 }

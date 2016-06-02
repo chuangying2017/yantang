@@ -10,10 +10,15 @@ class StaffsTransformer extends TransformerAbstract
     {
         $data = [
             'id' => (int)$staffs->id,
+            'station_id' => $staffs->staff_no,
             'staff_no' => $staffs->staff_no,
             'name' => $staffs->name,
             'phone' => $staffs->phone,
         ];
+
+        if (isset($staffs->with_preorder) && $staffs->with_preorder) {
+            $data['preorder'] = $staffs->preorders;
+        }
 
         return $data;
     }

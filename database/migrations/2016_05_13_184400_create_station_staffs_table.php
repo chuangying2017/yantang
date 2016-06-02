@@ -15,6 +15,7 @@ class CreateStationStaffsTable extends Migration
         Schema::create('station_staffs', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('station_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->string('staff_no', 64);
             $table->string('name');
             $table->string('phone');

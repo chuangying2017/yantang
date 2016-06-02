@@ -84,7 +84,7 @@ class EloquentStationRepository implements StationRepositoryContract
 
     public function update($id, $input)
     {
-        return Station::find('id', $id)->fill($input)->save();
+        return Station::find($id)->fill($input)->save();
     }
 
     public function show($id)

@@ -42,7 +42,7 @@ interface StationRepositoryContract
      * @param $input
      * @return mixed
      */
-    public function update($id, $input);
+    public function update($input, $id);
 
     /**
      * @param $id

@@ -12,5 +12,5 @@ class EloquentStaffPreorderRepository implements StaffPreorderRepositoryContract
     {
         return 'App\Models\Subscribe\StaffPreorder';
     }
-
+    
 }

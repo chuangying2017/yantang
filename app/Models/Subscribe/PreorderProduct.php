@@ -9,7 +9,7 @@ class PreorderProduct extends Model
 
     protected $table = 'preorder_products';
 
-    public function preorderProductSku()
+    public function sku()
     {
         return $this->hasMany('App\Models\Subscribe\PreorderProductSku', 'pre_product_id');
     }

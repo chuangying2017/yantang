@@ -4,6 +4,13 @@
 trait EloquentRepository
 {
 
+    /**
+     * @param $per_page 0不分页
+     * @param array $where where条件数组 [['field'=>'part_id_card', 'value'=>$input['id_card'], 'compare_type'=>'=']]
+     * @param string $order_by
+     * @param string $sort
+     * @return mixed
+     */
     public function Paginated($per_page, $where = [], $order_by = 'id', $sort = 'asc')
     {
         $query = app($this->moder());
@@ -44,5 +51,13 @@ trait EloquentRepository
     {
         $query = app($this->moder());
         return $query->create($input);
+    }
+
+    public function update($input, $id)
+    {
+        $query = app($this->moder());
+        $query = $query->find($id)->fill($input);
+        $query->save();
+        return $query;
     }
 }

@@ -11,17 +11,17 @@ class StaffPreorder extends Model
 
     public function staff()
     {
-        return $this->belongsTo('App\Models\StationStaffs');
+        return $this->belongsTo('App\Models\Subscribe\StationStaffs');
     }
 
     public function preorder()
     {
-        return $this->belongsTo('App\Models\Preorder');
+        return $this->belongsTo('App\Models\Subscribe\Preorder');
     }
 
     public function station()
     {
-        return $this->belongsTo('App\Models\station');
+        return $this->belongsTo('App\Models\Subscribe\station');
     }
 
 }
