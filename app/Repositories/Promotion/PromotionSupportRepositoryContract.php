@@ -1,6 +1,10 @@
 <?php namespace App\Repositories\Promotion;
 interface PromotionSupportRepositoryContract {
 
+    public function getCampaignRules();
+
+    public function getCouponRules($coupon_ids);
+
     public function getCampaigns();
 
     public function getCampaign($campaign_id);
@@ -11,6 +15,6 @@ interface PromotionSupportRepositoryContract {
 
     public function getCoupons($coupon_ids);
 
-    public function getUserPromotionTimes($promotion_id, $user_id);
+    public function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null);
 
 }

@@ -112,13 +112,13 @@ class CachePromotionSupportRepository implements PromotionSupportRepositoryContr
             $data['remain'] = $promotion['counter']['remain'];
         }
 
-        $data['rules'] = $this->decodePromotionRules($promotion['rules']);
+        $data['rules'] = $this->decodePromotionRules($promotion);
     }
 
-    private function decodePromotionRules($rule_models)
+    private function decodePromotionRules($promotion)
     {
         $rules = [];
-        foreach ($rule_models as $rule_model) {
+        foreach ($promotion['rules'] as $rule_model) {
             $rules[$rule_model['id']] = $this->decodePromotionRule($rule_model);
         }
         return $rules;
@@ -135,7 +135,7 @@ class CachePromotionSupportRepository implements PromotionSupportRepositoryContr
             ],
             'items' => [
                 'item_type' => $rule['item_type'],
-                'values' => to_array($rule['item_content'])
+                'values' => to_array($rule['item_content']),
             ],
             'range' => [
                 'type' => $rule['range_type'],
@@ -152,8 +152,24 @@ class CachePromotionSupportRepository implements PromotionSupportRepositoryContr
         ];
     }
 
-    public function getUserPromotionTimes($promotion_id, $user_id)
+    public function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
     {
-        return UserPromotion::where('user_id', $user_id)->where('promotion_id', $promotion_id)->count();
+        $query = UserPromotion::where('user_id', $user_id)->where('promotion_id', $promotion_id);
+
+        if (!is_null($rule_id)) {
+            $query = $query->where('rule_id', $rule_id);
+        }
+
+        return $query->count();
+    }
+
+    public function getCampaignRules()
+    {
+        // TODO: Implement getCampaignRules() method.
+    }
+
+    public function getCouponRules($coupon_ids)
+    {
+        // TODO: Implement getCouponRules() method.
     }
 }

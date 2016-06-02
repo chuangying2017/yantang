@@ -1,47 +1,60 @@
 <?php namespace App\Services\Promotion;
 
-
 use App\Repositories\Promotion\PromotionSupportRepositoryContract;
+use App\Services\Promotion\Data\PromotionData;
 
-abstract class PromotionServiceAbstract implements PromotionCheckingContract, PromotionUsedContract, PromotionDispatchContact {
+abstract class PromotionServiceAbstract {
 
+    /**
+     * @var PromotionData
+     */
+    private $data;
     /**
      * @var PromotionSupportRepositoryContract
      */
-    protected $promotionSupportRepo;
+    private $promotionSupportRepo;
 
     /**
      * PromotionServiceAbstract constructor.
-     * @param PromotionSupportRepositoryContract $promotionSupportRepo
+     * @param
      */
-    public function __construct(PromotionSupportRepositoryContract $promotionSupportRepo)
+    public function __construct(PromotionData $data, PromotionSupportRepositoryContract $promotionSupportRepo)
     {
+        $this->data = $data;
         $this->promotionSupportRepo = $promotionSupportRepo;
     }
 
-    protected function canDispatched($user, $rule, $promotion_id)
+    public function check($user, $items)
     {
-        return $this->hasQualify($user, $rule) && $this->hasRemain($user['id'], $rule, $promotion_id);
-    }
+        $rules = $this->promotionSupportRepo->getCampaignRules();
 
-    protected function hasQualify($user, $rule)
-    {
-        $type = $rule['qualify']['type'];
-        switch ($type) {
-            case PromotionProtocol::QUALI_TYPE_OF_ALL :
-                return true;
-            case PromotionProtocol::QUALI_TYPE_OF_LEVEL:
-                return in_array($user['level'], $rule['qualify']['values']);
-            case PromotionProtocol::QUALI_TYPE_OF_USER:
-                return in_array($user['id'], $rule['qualify']['values']);
-            default :
-                return false;
-        }
-    }
+        $this->data->initPromotionData($user, $items, $rules);
+        //检查用户资格
 
-    protected function hasRemain($user_id, $rule, $promotion_id)
-    {
-        return $this->promotionSupportRepo->getUserPromotionTimes($promotion_id, $user_id) <= $rule['qualify']['quantity'];
+        //检查规则对象,关联规则
+
+        /**
+         * 规则排序:
+         * 1. 排他优先
+         * 2. 分组和组内权重降序排序（分组优先,权重大优先）
+         * 3. 规则对象范围小优先
+         */
+
+        /**
+         * 计算生效的规则
+         * 1. 计算优惠资源
+         * 2. 排他生效后结束
+         * 3. 组内权重高生效后跳过同组
+         * 4. 记录未生效信息
+         */
+
+        /**
+         * 现有基础上增减优惠
+         * 1. 检查和现有生效规则是否冲突
+         * 2. 计算优惠资源
+         */
+
+        return $this->data->getPromotionData();
     }
 
 

@@ -1,5 +1,8 @@
 <?php namespace App\Services\Promotion;
 
+use App\Services\Promotion\Rule\Qualification\AllUserQualification;
+use App\Services\Promotion\Rule\Usage\AllItemsUsage;
+
 class PromotionProtocol {
 
     const TYPE_OF_COUPON = 'coupon';
@@ -18,6 +21,18 @@ class PromotionProtocol {
     const QUALI_TYPE_OF_ROLE = 'role';
     const QUALI_TYPE_OF_ALL = 'all';
 
+    public static function getRuleQualification($type)
+    {
+        $handler = null;
+        switch ($type) {
+            case self::QUALI_TYPE_OF_ALL:
+                $handler = new AllUserQualification();
+                break;
+        }
+
+        return $handler;
+    }
+
     const ITEM_TYPE_OF_PRODUCT = 'product';
     const ITEM_TYPE_OF_SKU = 'sku';
     const ITEM_TYPE_OF_CATEGORY = 'cat';
@@ -25,9 +40,21 @@ class PromotionProtocol {
     const ITEM_TYPE_OF_BRAND = 'brand';
     const ITEM_TYPE_OF_ALL = 'all';
 
-
     const RANGE_TYPE_OF_AMOUNT = 'amount';
     const RANGE_TYPE_OF_QUANTITY = 'quantity';
+
+    public static function getRuleUsage($type)
+    {
+        $handler = null;
+        switch ($type) {
+            case self::QUALI_TYPE_OF_ALL:
+                $handler = new AllItemsUsage();
+                break;
+        }
+
+        return $handler;
+    }
+
 
     const DISCOUNT_TYPE_OF_AMOUNT = 'amount';
     const DISCOUNT_TYPE_OF_EXPRESS = 'express';
@@ -44,7 +71,7 @@ class PromotionProtocol {
     const MULTI_TYPE_OF_ONLY = 0;
     const MULTI_TYPE_OF_CAN_MULTI = 1;
 
-    public function getQualifyType($name = null)
+    public static function getQualifyType($name = null)
     {
         $data = [
             self::QUALI_TYPE_OF_USER => '指定用户',
@@ -55,7 +82,7 @@ class PromotionProtocol {
         return is_null($name) ? $data : $data[$name];
     }
 
-    public function getItemType($name = null)
+    public static function getItemType($name = null)
     {
         $data = [
             self::ITEM_TYPE_OF_PRODUCT => '指定商品',
@@ -68,7 +95,7 @@ class PromotionProtocol {
         return is_null($name) ? $data : $data[$name];
     }
 
-    public function getRangeType($name = null)
+    public static function getRangeType($name = null)
     {
         $data = [
             self::RANGE_TYPE_OF_AMOUNT => '指定金额',
@@ -78,7 +105,7 @@ class PromotionProtocol {
         return is_null($name) ? $data : $data[$name];
     }
 
-    public function getDiscountType($name = null)
+    public static function getDiscountType($name = null)
     {
         $data = [
             self::DISCOUNT_TYPE_OF_AMOUNT => '总额',
@@ -92,7 +119,7 @@ class PromotionProtocol {
         return is_null($name) ? $data : $data[$name];
     }
 
-    public function getDiscountMode($name = null)
+    public static function getDiscountMode($name = null)
     {
         $data = [
             self::DISCOUNT_MODE_OF_DECREASE => '满减',
@@ -105,7 +132,7 @@ class PromotionProtocol {
     }
 
 
-    public function getMultiType($name = null)
+    public static function getMultiType($name = null)
     {
         $data = [
             self::MULTI_TYPE_OF_ONLY => '不可叠加',
@@ -121,5 +148,6 @@ class PromotionProtocol {
     const STATUS_OF_TICKET_EXPIRED = 2;
 
     const LENGTH_OF_TICKET_NO = 8;
+
 
 }
