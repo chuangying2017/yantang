@@ -4,6 +4,10 @@ class AllItemsUsage implements Usage {
 
     public function filter($items, $item_values)
     {
-        return $items;
+        $item_id = [];
+        foreach($items as $item) {
+            $item_id[] = $item['id'];
+        }
+        return $item_id;
     }
 }

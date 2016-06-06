@@ -30,8 +30,11 @@ class PromotionServiceTest extends TestCase {
             'price' => $faker->numberBetween(100, 10000),
             'brand' => ['id' => $faker->numberBetween(1, 10)],
             'category' => ['id' => $faker->numberBetween(1, 10)],
-            'group' => ['id' => $faker->numberBetween(1, 10)],
-            'discount' => 0
+            'group' => $faker->randomElements(
+                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                $faker->numberBetween(1, 10)
+            ),
+            'discount_price' => 0
         ];
     }
 

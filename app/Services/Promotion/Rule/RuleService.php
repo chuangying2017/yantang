@@ -18,10 +18,8 @@ class RuleService implements RuleServiceContract {
         return true;
     }
 
-    public function canGetPromotion($user)
+    public function canGetPromotion($user, $rule_qualify)
     {
-        $rule_qualify = $this->getRuleQualify();
-
         $qualification = PromotionProtocol::getRuleQualification($rule_qualify['type']);
 
         if (!$qualification->check($user, $rule_qualify['values'])) {
@@ -36,9 +34,8 @@ class RuleService implements RuleServiceContract {
         return false;
     }
 
-    public function itemsPromotionUsage($items)
+    public function itemsFitPromotion($items, $rule_items)
     {
-        $rule_items = $this->getRuleItems();
         $usage = PromotionProtocol::getRuleUsage($rule_items['type']);
 
         return $usage->filter($items, $rule_items['values']);
@@ -50,44 +47,15 @@ class RuleService implements RuleServiceContract {
         $this->rule = $rule;
     }
 
-
-    public function getRuleQualify()
+    public function calculatePromotionBenefits($items, $discount)
     {
-        return $this->rule['qualify'];
-    }
+        $benefit_handler = PromotionProtocol::getRuleBenefit($discount['type']);
 
-    public function getRuleItems()
-    {
-        return $this->rule['items'];
+        return $benefit_handler->calculate($items, $discount['mode'], $discount['value']);
     }
 
 
-    public function calculatePromotionBenefits($items, $amount)
-    {
-        //符合优惠条件
-
-        //针对单品,改变单品价格
-
-        //针对整单,改变总价
-
-
-    }
-
-    protected function getItemsRangeValue($items, $range_type)
-    {
-        $item_value = 0;
-        foreach ($items as $item) {
-            if ($range_type == PromotionProtocol::RANGE_TYPE_OF_AMOUNT) {
-                $item_value = bcadd($item_value, bcmul($item['quantity'], $item['price']));
-            } else if ($range_type == PromotionProtocol::RANGE_TYPE_OF_QUANTITY) {
-                $item_value = bcadd($item_value, $item['quantity']);
-            }
-        }
-
-        return $item_value;
-    }
-
-    protected function itemInRange($usable_items, $range)
+    public function itemsInRange($usable_items, $range)
     {
         $usable_items_range_value = $this->getItemsRangeValue($usable_items, $range['type']);
 
@@ -105,4 +73,19 @@ class RuleService implements RuleServiceContract {
 
         return true;
     }
+
+    protected function getItemsRangeValue($items, $range_type)
+    {
+        $item_value = 0;
+        foreach ($items as $item) {
+            if ($range_type == PromotionProtocol::RANGE_TYPE_OF_AMOUNT) {
+                $item_value = bcadd($item_value, bcmul($item['quantity'], $item['price']));
+            } else if ($range_type == PromotionProtocol::RANGE_TYPE_OF_QUANTITY) {
+                $item_value = bcadd($item_value, $item['quantity']);
+            }
+        }
+
+        return $item_value;
+    }
+
 }

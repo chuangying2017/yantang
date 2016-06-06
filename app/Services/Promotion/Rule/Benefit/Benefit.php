@@ -2,6 +2,6 @@
 
 interface Benefit {
 
-    public function calculate($items, $rule);
+    public function calculate($resource, $mode, $value);
 
 }

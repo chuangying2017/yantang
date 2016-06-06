@@ -185,6 +185,30 @@ if (!function_exists('generate_no')) {
 }
 
 
+if (!function_exists('array_multi_sort')) {
+    function array_multi_sort($data, $criteria)
+    {
+        /**
+         *  $criteria = array(
+         *      'gold'=>'desc',
+         *      'ts'=>'desc' //这里还可以根据需要继续加条件 如:'x'=>'asc'等
+         *  );
+         */
+        usort($data, function ($a, $b) use ($criteria) {
+            foreach ($criteria as $what => $order) {
+                if (array_get($a, $what) == array_get($b, $what)) {
+                    continue;
+                }
+                return (($order == 'desc') ? -1 : 1) * ((array_get($a, $what) < array_get($b, $what)) ? -1 : 1);
+            }
+            return 0;
+        });
+
+        return $data;
+    }
+}
+
+
 
 
 

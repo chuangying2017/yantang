@@ -2,11 +2,13 @@
 
 interface RuleServiceContract {
 
-    public function canGetPromotion($user);
+    public function canGetPromotion($user, $rule_qualify);
 
-    public function itemsPromotionUsage($items);
+    public function itemsFitPromotion($items, $rule_items);
 
-    public function calculatePromotionBenefits($items, $amount);
+    public function itemsInRange($usable_items, $range);
+
+    public function calculatePromotionBenefits($items, $benefits);
 
     public function setRule($rule);
 

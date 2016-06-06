@@ -1,6 +1,7 @@
 <?php namespace App\Services\Promotion\Data;
 
 use App\Services\Promotion\Data\Traits\PromotionAmountData;
+use App\Services\Promotion\Data\Traits\PromotionBenefitData;
 use App\Services\Promotion\Data\Traits\PromotionExpressFeeData;
 use App\Services\Promotion\Data\Traits\PromotionItemsData;
 use App\Services\Promotion\Data\Traits\PromotionRuleData;
@@ -9,15 +10,10 @@ use App\Services\Promotion\Data\Traits\PromotionUserData;
 Class PromotionData {
 
     use PromotionRuleData,
+        PromotionBenefitData,
         PromotionItemsData,
-        PromotionAmountData,
-        PromotionUserData,
-        PromotionExpressFeeData;
+        PromotionUserData;
 
-    protected $discount_amount = 0;
-    protected $amount = 0;
-    protected $express_fee = 0;
-    protected $discount_express_fee = 0;
 
     public function initPromotionData($user, $items, $rules)
     {

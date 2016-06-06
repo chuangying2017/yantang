@@ -11,4 +11,9 @@ trait PromotionUserData {
         $this->user = $user;
     }
 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
 }

@@ -1,5 +1,6 @@
 <?php namespace App\Services\Promotion;
 
+use App\Services\Promotion\Rule\Benefit\AmountBenefit;
 use App\Services\Promotion\Rule\Qualification\AllUserQualification;
 use App\Services\Promotion\Rule\Usage\AllItemsUsage;
 
@@ -63,10 +64,44 @@ class PromotionProtocol {
     const DISCOUNT_TYPE_OF_COUPON = 'coupon';
     const DISCOUNT_TYPE_OF_PRODUCT = 'product';
 
+    public static function getRuleBenefit($type)
+    {
+        $handler = null;
+        switch ($type) {
+            case self::DISCOUNT_TYPE_OF_AMOUNT:
+                $handler = new AmountBenefit();
+                break;
+        }
+        return $handler;
+    }
+
     const DISCOUNT_MODE_OF_DECREASE = 'decrease';
     const DISCOUNT_MODE_OF_PERCENTAGE = 'percentage';
     const DISCOUNT_MODE_OF_EQUAL = 'equal';
     const DISCOUNT_MODE_OF_MUL = 'mul';
+
+
+    public static function calModeValue($mode, $origin_value, $cal_value)
+    {
+        $result = $origin_value;
+        switch ($mode) {
+            case self::DISCOUNT_MODE_OF_DECREASE:
+                $result = bcsub($origin_value, $cal_value, 0);
+                break;
+            case self::DISCOUNT_MODE_OF_PERCENTAGE:
+                $result = bcmul($origin_value, (100 - $cal_value), 0);
+                break;
+            case self::DISCOUNT_MODE_OF_EQUAL:
+                $result = $cal_value;
+                break;
+            case self::DISCOUNT_MODE_OF_MUL:
+                $result = bcmul($origin_value, $cal_value, 0);
+                break;
+            default:
+                throw new \Exception('优惠模式错误');
+        }
+        return $result;
+    }
 
     const MULTI_TYPE_OF_ONLY = 0;
     const MULTI_TYPE_OF_CAN_MULTI = 1;
