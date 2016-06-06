@@ -4,6 +4,8 @@ use App\Models\Promotion\Traits\PromotionRelations;
 use App\Services\Promotion\PromotionProtocol;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Coupon extends Model {
 
@@ -16,6 +18,15 @@ class Coupon extends Model {
     protected $attributes = [
         'type' => PromotionProtocol::TYPE_OF_COUPON
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('type', function (Builder $builder) {
+            $builder->where('type', PromotionProtocol::TYPE_OF_COUPON);
+        });
+    }
 
     /*
      * Relations

@@ -2,6 +2,7 @@
 
 namespace App\Services\Cart\Listeners;
 
+use App\Repositories\Cart\CartRepositoryContract;
 use App\Services\Cart\CartService;
 use App\Services\Orders\Event\OrderConfirm;
 use Illuminate\Queue\InteractsWithQueue;
@@ -10,12 +11,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class RemovePurchasedItemsFromCart {
 
     /**
+     * @var CartRepositoryContract
+     */
+    private $cart;
+
+    /**
      * Create the event listener.
      *
      */
-    public function __construct()
+    public function __construct(CartRepositoryContract $cart)
     {
-        //
+        $this->cart = $cart;
     }
 
     /**
@@ -26,9 +32,8 @@ class RemovePurchasedItemsFromCart {
      */
     public function handle(OrderConfirm $event)
     {
-        if ( ! is_null($event->carts)) {
-            $carts = $event->carts;
-            CartService::remove($carts, $event->user_id);
+        if (!is_null($event->carts)) {
+            $this->cart->deleteMany($event->carts);
         }
     }
 }

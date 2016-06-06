@@ -8,5 +8,6 @@ interface ProductSkuStockRepositoryContract {
 
     public function getStock($product_sku_ids);
 
+    public function enoughStock($product_sku_id, $quantity);
 
 }
