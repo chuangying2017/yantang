@@ -14,7 +14,7 @@ class PreorderBilling implements BillingContract
     public function create($amount)
     {
         $input = [
-            'user_id' => Auth::user()->id(),
+            'user_id' => access()->id(),
 //            'user_id' => 2,
             'billing_no' => uniqid('bill_'),
             'amount' => $amount * 10,

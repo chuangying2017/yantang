@@ -28,4 +28,9 @@ class Preorder extends Model
     {
         return $this->hasOne(PreorderOrder::class, 'preorder_id');
     }
+
+    public function station()
+    {
+        return $this->belongsTo('App\Models\Subscribe\Station');
+    }
 }

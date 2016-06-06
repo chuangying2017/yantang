@@ -24,8 +24,7 @@ class PreorderController extends Controller
     {
         $this->address = $address;
         $this->preorder = $preorder;
-//        $this->user_id = Auth::user()->id();
-        $this->user_id = 2;
+        $this->user_id = access()->id();
     }
 
     public function index()
@@ -53,6 +52,7 @@ class PreorderController extends Controller
         return $this->response->array(['data' => $station]);
     }
 
+    //客户创建
     public function store(PreorderRequest $request)
     {
         $input = $request->only(['name', 'phone', 'address', 'area', 'station_id']);
@@ -65,14 +65,6 @@ class PreorderController extends Controller
     {
         //status 订奶状态 pause 暂停 normal配送中
         $input = $request->only(['status']);
-        $preorder = $this->preorder->byUserId($this->user_id);
-        if (empty($preorder)) {
-            $this->response->errorInternal('修改的订奶配置不存在');
-        } else {
-            if ($preorder->user_id != $this->user_id) {
-                $this->response->errorInternal('修改的订奶配置不属于本会员');
-            }
-        }
         $preorder = $this->preorder->update($input, $preorder_id);
         return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }

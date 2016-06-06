@@ -16,11 +16,13 @@ class CreateStaffWeeklyTable extends Migration
             $table->increments('id');
             $table->string('week_id', 8);
             $table->integer('staff_id')->unsigned();
-            $table->string('tue');
-            $table->string('thu');
-            $table->string('fri');
-            $table->string('sat');
-            $table->string('sun');
+            $table->string('mon')->nullable();
+            $table->string('wed')->nullable();
+            $table->string('tue')->nullable();
+            $table->string('thu')->nullable();
+            $table->string('fri')->nullable();
+            $table->string('sat')->nullable();
+            $table->string('sun')->nullable();
             $table->timestamps();
         });
     }

@@ -28,6 +28,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract
         return Preorder::where('user_id', $user_id)->first();
     }
 
+    public function byStationId($station_id)
+    {
+        return Preorder::where('station_id', $station_id)->first();
+    }
+
     public function update($input, $preorder_id)
     {
         if ($input['status'] == PreorderProtocol::STATUS_OF_PAUSE) {
@@ -38,5 +43,14 @@ class EloquentPreorderRepository implements PreorderRepositoryContract
         $preorder = Preorder::find($preorder_id);
         $preorder->fill($input)->save();
         return $preorder;
+    }
+
+    public function byId($preorder_id, $with = [])
+    {
+        $query = Preorder::query();
+        if (!empty($with)) {
+            $query = $query->with($with);
+        }
+        return $query->find($preorder_id);
     }
 }

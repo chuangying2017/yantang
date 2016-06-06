@@ -14,6 +14,7 @@ use App\Api\V1\Transformers\Subscribe\Station\StaffPreorderTransformer;
 use App\Api\V1\Requests\Subscribe\PreorderRequest;
 use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
+use StaffService;
 
 class StationPreorderController extends Controller
 {
@@ -25,8 +26,7 @@ class StationPreorderController extends Controller
     public function __construct(StaffRepositoryContract $staffs, StationRepositoryContract $station)
     {
         $this->station = $station;
-        //        $this->user_id = Auth::user()->id();
-        $this->user_id = 3;
+        $this->user_id = access()->id();
     }
 
     /**
@@ -54,10 +54,12 @@ class StationPreorderController extends Controller
                 throw new \Exception("该会员不属于服务部");
             }
             $input['station_id'] = $station->id;
-            $staffPreorder = $staffPreorder->create($input);
-            $staffPreorder->load('preorder');
+            \DB::beginTransaction();
+            $staffPreorder = StaffService::assign($input);
+            \DB::commit();
             return $this->response->item($staffPreorder, new StaffPreorderTransformer());
         } catch (\Exception $e) {
+            \DB::rollBack();
             $this->response->errorInternal($e->getMessage());
         }
     }
@@ -66,11 +68,13 @@ class StationPreorderController extends Controller
     {
         //status 订奶状态 pause 暂停 normal配送中
         $input = $request->only(['status']);
-        $preorder = $this->preorder->byUserId($this->user_id);
-        if (empty($preorder)) {
+        $preorder_model = $preorder->byUserId($this->user_id);
+        if (empty($preorder_model)) {
             $this->response->errorInternal('修改的订奶配置不存在');
         }
         $preorder = $preorder->update($input, $preorder_id);
+        //todo 改成事件
+        StaffService::updateStaffWeekly($preorder_id);
         return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
 }

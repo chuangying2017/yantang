@@ -17,7 +17,7 @@ class TopUpController extends Controller
 
     public function index()
     {
-        $user_id = Auth::user()->id();
+        $user_id = access()->id();
         $charge_billing = ChargeBilling::where('user_id', $user_id);
         return $this->response->item($charge_billing, new ChargeBillingTransformer);
     }

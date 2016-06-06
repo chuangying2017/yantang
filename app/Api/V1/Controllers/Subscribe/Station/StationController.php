@@ -27,7 +27,7 @@ class StationController extends Controller
      */
     public function index()
     {
-        $user_id = Auth::user()->id();
+        $user_id = access()->id();
 
         $station = $this->station->getByUserId($user_id);
 
@@ -41,7 +41,7 @@ class StationController extends Controller
             $this->response->noContent();
         }
         try {
-            $user_id = Auth::user()->id();
+            $user_id = access()->id();
             $this->station->bindStation($station_id, $user_id);
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());

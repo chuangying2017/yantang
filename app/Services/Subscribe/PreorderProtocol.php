@@ -54,4 +54,18 @@ class PreorderProtocol
         return is_null($key) ? $message : $message[$key];
     }
 
+    public static function weekName($key = null)
+    {
+        $array = [
+            0 => 'sun',
+            1 => 'mon',
+            2 => 'tue',
+            3 => 'thu',
+            4 => 'fri',
+            6 => 'sat',
+        ];
+
+        return is_null($key) ? $array : $array[$key];
+    }
+
 }

@@ -20,8 +20,7 @@ class StaffPreorderController extends Controller
     public function __construct(StaffRepositoryContract $staff)
     {
         $this->staff = $staff;
-//        $this->user_id = Auth::user()->id();
-        $this->user_id = 4;
+        $this->user_id = access()->id();
     }
 
     public function index(Request $request)

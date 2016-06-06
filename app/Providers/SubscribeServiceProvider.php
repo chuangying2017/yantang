@@ -12,7 +12,6 @@ class SubscribeServiceProvider extends ServiceProvider
 {
 
 
-
     public function register()
     {
         $this->registerBindings();
@@ -22,12 +21,12 @@ class SubscribeServiceProvider extends ServiceProvider
 
     public function registerFacade()
     {
-        $this->app->bind('PreorderService', function ($app) {
-            return new PreorderService($app);
+        $this->app->singleton('PreorderService', function ($app) {
+            return $app->make(PreorderService::class);
         });
 
-        $this->app->bind('PreorderProductService', function ($app) {
-            return new PreorderProductService($app);
+        $this->app->singleton('PreorderProductService', function ($app) {
+            return $app->make(PreorderProductService::class);
         });
 
         $this->app->singleton('StaffService', function ($app) {
@@ -37,6 +36,7 @@ class SubscribeServiceProvider extends ServiceProvider
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('PreorderService', \App\Services\Subscribe\Facades\PreorderService::class);
         $loader->alias('StaffService', \App\Services\Subscribe\Facades\StaffService::class);
+        $loader->alias('PreorderProductService', \App\Services\Subscribe\Facades\PreorderProductService::class);
     }
 
     public function registerBindings()
@@ -74,6 +74,11 @@ class SubscribeServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Repositories\Subscribe\StaffPreorder\StaffPreorderRepositoryContract::class,
             \App\Repositories\Subscribe\StaffPreorder\EloquentStaffPreorderRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Subscribe\StaffWeekly\StaffWeeklyRepositoryContract::class,
+            \App\Repositories\Subscribe\StaffWeekly\EloquentStaffWeeklyRepository::class
         );
     }
 

@@ -6,7 +6,7 @@ use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Subscribe\PreorderProductRequest;
 use Auth;
 use App\Repositories\Subscribe\PreorderProduct\PreorderProductRepositoryContract;
-use App\Services\Subscribe\Facades\PreorderProductService;
+use PreorderProductService;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderProductTransformer;
 use Illuminate\Http\Request;
 use DB;
@@ -19,8 +19,7 @@ class PreorderProductController extends Controller
     public function __construct(PreorderProductRepositoryContract $preorder_product)
     {
         $this->preorder_product = $preorder_product;
-//        $this->user_id = Auth::user()->id();
-        $this->user_id = 2;
+        $this->user_id = access()->id();
     }
 
     public function index(Request $request)
@@ -33,10 +32,10 @@ class PreorderProductController extends Controller
 
     public function store(PreorderProductRequest $request)
     {
-        $input = $request->only(['preorder_id', 'weekday', 'sku', 'daytime']);
+        $input = $request->only(['preorder_id', 'weekdays']);
         try {
             DB::beginTransaction();
-            $preorder_product = PreorderProductService::operation($input);
+            $preorder_product = PreorderProductService::batchOperation($input);
             DB::commit();
             return $this->response->item($preorder_product, new PreorderProductTransformer())->setStatusCode(201);
         } catch (\Exception $e) {
@@ -51,12 +50,12 @@ class PreorderProductController extends Controller
         return $this->response->item($preorder_product, new PreorderProductTransformer())->setStatusCode(201);
     }
 
-    public function update(PreorderProductRequest $request, $preorder_product_id)
+    public function update(PreorderProductRequest $request)
     {
-        $input = $request->only(['preorder_id', 'weekday', 'sku', 'daytime']);
+        $input = $request->only(['preorder_id', 'weekdays']);
         try {
             DB::beginTransaction();
-            $preorder_product = PreorderProductService::operation($input, $preorder_product_id);
+            $preorder_product = PreorderProductService::batchOperation($input);
             DB::commit();
             return $this->response->item($preorder_product, new PreorderProductTransformer())->setStatusCode(201);
         } catch (\Exception $e) {
