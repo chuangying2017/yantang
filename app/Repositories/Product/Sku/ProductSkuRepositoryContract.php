@@ -12,5 +12,6 @@ interface ProductSkuRepositoryContract {
 
     public function deleteSkusOfProduct($product_id);
 
+    public function getSkus($sku_ids);
 
 }

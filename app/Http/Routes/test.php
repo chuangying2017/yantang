@@ -4,7 +4,7 @@
  */
 
 use App\Models\Product\AttributeValue;
-use App\Models\OrderProduct;
+use App\Models\Order\OrderSku;
 use App\Repositories\Product\ProductProtocol;
 
 if (App::environment() == 'local' || env('APP_DEBUG')) {

@@ -23,7 +23,6 @@ class PingxxPayService implements PayableContract {
         $this->paymentRepository = $paymentRepository;
     }
 
-
     public function pay(BillingContract $billing)
     {
 

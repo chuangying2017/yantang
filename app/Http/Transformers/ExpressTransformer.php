@@ -1,7 +1,7 @@
 <?php namespace App\Http\Transformers;
 
 use App\Models\Client\Address;
-use App\Models\OrderDeliver;
+use App\Models\Order\OrderDeliver;
 use League\Fractal\TransformerAbstract;
 
 class ExpressTransformer extends TransformerAbstract {

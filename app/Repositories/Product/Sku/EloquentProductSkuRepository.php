@@ -104,4 +104,8 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract {
         $sku->attributeValues()->detach();
     }
 
+    public function getSkus($sku_ids)
+    {
+        return ProductSku::find($sku_ids);
+    }
 }

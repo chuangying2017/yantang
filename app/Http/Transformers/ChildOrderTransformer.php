@@ -1,7 +1,7 @@
 <?php namespace App\Http\Transformers;
 
 use App\Models\ChildOrder;
-use App\Models\Order;
+use App\Models\Order\Order;
 use League\Fractal\TransformerAbstract;
 
 class ChildOrderTransformer extends TransformerAbstract {

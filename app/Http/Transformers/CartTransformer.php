@@ -1,6 +1,6 @@
 <?php namespace App\Http\Transformers;
 
-use App\Models\Cart;
+use App\Models\Client\Cart;
 use League\Fractal\TransformerAbstract;
 
 class CartTransformer extends TransformerAbstract {

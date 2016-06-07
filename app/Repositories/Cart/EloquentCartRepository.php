@@ -1,6 +1,6 @@
 <?php namespace App\Repositories\Cart;
 
-use App\Models\Cart;
+use App\Models\Client\Cart;
 use App\Repositories\Product\Sku\ProductSkuStockRepositoryContract;
 
 class EloquentCartRepository implements CartRepositoryContract {
@@ -24,13 +24,19 @@ class EloquentCartRepository implements CartRepositoryContract {
         return Cart::count();
     }
 
-    public function getAll()
+    public function getAll($with_sku = true)
     {
+        if($with_sku) {
+            return Cart::get();
+        }
         return Cart::with('sku')->get();
     }
 
-    public function getMany($cart_ids)
+    public function getMany($cart_ids, $with_sku = true)
     {
+        if (!$with_sku) {
+            return Cart::find($cart_ids);
+        }
         return Cart::with('sku')->find($cart_ids);
     }
 

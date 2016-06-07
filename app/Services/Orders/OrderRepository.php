@@ -1,14 +1,14 @@
 <?php namespace App\Services\Orders;
 
 use App\Models\ChildOrder;
-use App\Models\Order;
-use App\Models\OrderAddress;
-use App\Models\OrderProduct;
+use App\Models\Order\Order;
+use App\Models\Order\OrderAddress;
+use App\Models\Order\OrderSku;
 use App\Models\OrderRefund;
 use App\Services\Orders\Event\OrderCancel;
 use App\Services\Orders\Event\OrderDone;
 use App\Services\Orders\Helpers\ExpressHelper;
-use App\Models\OrderDeliver as Deliver;
+use App\Models\Order\OrderDeliver as Deliver;
 use App\Services\Orders\Supports\PingxxPaymentRepository;
 use Carbon\Carbon;
 use DB;
@@ -287,7 +287,7 @@ class OrderRepository {
                 array_only($merchant_order_info, ['order_id', 'order_no', 'merchant_id', 'total_amount', 'pay_amount', 'discount_fee', 'status'])
             );
 
-            OrderProduct::whereIn('id', $order_product_ids)->update(['child_order_id' => $child_order['id']]);
+            OrderSku::whereIn('id', $order_product_ids)->update(['child_order_id' => $child_order['id']]);
         });
     }
 
@@ -394,10 +394,10 @@ class OrderRepository {
     public static function queryOrderProduct($order_product_id)
     {
         if (is_array($order_product_id)) {
-            return OrderProduct::whereIn('id', array_values($order_product_id))->get();
+            return OrderSku::whereIn('id', array_values($order_product_id))->get();
         }
 
-        return OrderProduct::findOrFail($order_product_id);
+        return OrderSku::findOrFail($order_product_id);
     }
 
     public static function updateOrderProductRefund($order_product_id, $status, $quantity = 0, $amount = 0)
@@ -414,7 +414,7 @@ class OrderRepository {
 
     public static function queryOrderProductByOrder($order_id)
     {
-        return OrderProduct::where('order_id', $order_id)->get();
+        return OrderSku::where('order_id', $order_id)->get();
     }
 
 

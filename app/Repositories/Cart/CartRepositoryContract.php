@@ -4,9 +4,9 @@ interface CartRepositoryContract {
 
     public function getCount();
 
-    public function getAll();
+    public function getAll($with_sku = true);
 
-    public function getMany($cart_ids);
+    public function getMany($cart_ids, $with_sku = true);
 
     public function addOne($product_sku_id, $quantity);
 

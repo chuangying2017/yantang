@@ -237,8 +237,6 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
     public function listsOfCategory($cat_id)
     {
         return \DB::table('product_category')->where('cat_id', $cat_id)->pluck('product_id');
-
-        // TODO: Implement listsOfCategory() method.
     }
 
     public function listsOfBrand($brand_id)
