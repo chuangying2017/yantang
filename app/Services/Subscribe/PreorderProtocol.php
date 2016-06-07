@@ -68,4 +68,29 @@ class PreorderProtocol
         return is_null($key) ? $array : $array[$key];
     }
 
+    public static function weekPauseName($week_key = null)
+    {
+        $array = [
+            0 => 'sun',
+            1 => 'mon',
+            2 => 'tue',
+            3 => 'thu',
+            4 => 'fri',
+            6 => 'sat',
+        ];
+        if (is_null($week_key)) {
+            return $array;
+        }
+        $array = array_where($array, function ($key, $value) use ($week_key) {
+            if ($week_key > 0 && $key == 0) {
+                return $value;
+            }
+            if ($key >= $week_key) {
+                return $value;
+            }
+        });
+
+        return $array;
+    }
+
 }

@@ -11,7 +11,7 @@ class StaffPreorder extends Model
 
     public function staff()
     {
-        return $this->belongsTo('App\Models\Subscribe\StationStaffs');
+        return $this->belongsTo('App\Models\Subscribe\StationStaffs', 'staff_id');
     }
 
     public function preorder()

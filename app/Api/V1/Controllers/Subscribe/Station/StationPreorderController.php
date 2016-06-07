@@ -15,6 +15,8 @@ use App\Api\V1\Requests\Subscribe\PreorderRequest;
 use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use StaffService;
+use PreorderService;
+use App\Services\Subscribe\PreorderProtocol;
 
 class StationPreorderController extends Controller
 {
@@ -72,9 +74,17 @@ class StationPreorderController extends Controller
         if (empty($preorder_model)) {
             $this->response->errorInternal('修改的订奶配置不存在');
         }
-        $preorder = $preorder->update($input, $preorder_id);
-        //todo 改成事件
-        StaffService::updateStaffWeekly($preorder_id);
-        return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
+        if ($input['status'] != PreorderProtocol::STATUS_OF_NORMAL && $input['status'] != PreorderProtocol::STATUS_OF_PAUSE) {
+            $this->response->errorInternal('操作只能为停止配送或者恢复配送');
+        }
+        try {
+            \DB::beginTransaction();
+            PreorderService::updateStatus($input, $preorder_id);
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            $this->response->errorInternal($e->getMessage());
+        }
+        return $this->response->item($preorder_model, new PreorderTransformer())->setStatusCode(201);
     }
 }

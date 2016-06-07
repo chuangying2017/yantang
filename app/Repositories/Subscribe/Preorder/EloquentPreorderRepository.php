@@ -35,11 +35,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract
 
     public function update($input, $preorder_id)
     {
-        if ($input['status'] == PreorderProtocol::STATUS_OF_PAUSE) {
-            $input['pause_time'] = Carbon::now();
-        } elseif ($input['status'] == PreorderProtocol::STATUS_OF_NORMAL) {
-            $input['restart_time'] = Carbon::now();
-        }
         $preorder = Preorder::find($preorder_id);
         $preorder->fill($input)->save();
         return $preorder;

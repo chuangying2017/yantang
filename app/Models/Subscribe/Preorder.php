@@ -19,9 +19,9 @@ class Preorder extends Model
         return $this->hasMany('App\Models\Subscribe\PreorderProduct');
     }
 
-    public function staff()
+    public function staffPreorder()
     {
-        return $this->belongsToMany(StationStaffs::class, 'staff_preorders', 'preorder_id', 'staff_id')->withPivot('index')->orderBy('pivot_index', 'asc');
+        return $this->hasOne('App\Models\Subscribe\StaffPreorder');
     }
 
     public function preorderOrder()
