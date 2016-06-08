@@ -38,6 +38,6 @@ interface StaffRepositoryContract
     public function destroy($id);
 
 
-    public function byUserId($user_id, $with_orders = false, $query_day, $daytime);
+    public function byUserId($user_id, $with_orders = false);
 
 }

@@ -9,4 +9,13 @@ class StaffWeekly extends Model
 
     protected $table = 'staff_weekly';
 
+    protected $casts = [
+        'mon' => 'array',
+        'tue' => 'array',
+        'wed' => 'array',
+        'thu' => 'array',
+        'fri' => 'array',
+        'sat' => 'array',
+        'sun' => 'array',
+    ];
 }

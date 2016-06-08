@@ -9,6 +9,8 @@ use App\Repositories\Subscribe\Staff\StaffRepositoryContract;
 use App\Api\V1\Transformers\Subscribe\Station\StaffsTransformer;
 use App\Services\Subscribe\PreorderProtocol;
 use App\Api\V1\Transformers\Subscribe\Station\StaffsDataTransformer;
+use StaffService;
+use App\Api\V1\Transformers\Subscribe\Staff\StaffWeeklyTransformer;
 use Auth;
 
 class StaffPreorderController extends Controller
@@ -23,27 +25,15 @@ class StaffPreorderController extends Controller
         $this->user_id = access()->id();
     }
 
-    public function index(Request $request)
-    {
-        $query_day = $request->input('query_day', Carbon::now());
-        $staff = $this->staff->byUserId($this->user_id, true, $query_day);
-        $staff->with_preorder = true;
-        return $this->response->item($staff, new StaffsTransformer());
-    }
-
     public function data(Request $request)
     {
         $daytime = $request->has('time') ? intval($request->input('time')) : null;
-//        dd($daytime, isset($daytime) && is_null($daytime), is_null(0), isset($daytime));
-        $query_day = $request->input('date', Carbon::now());
-        $staff = $this->staff->byUserId($this->user_id, true, $query_day, $daytime);
-//        dd($staff->toArray());
-        if ($query_day == Carbon::now()) {
-            $staff->today = true;
+        if ($daytime != PreorderProtocol::DAYTIME_OF_AM && $daytime != PreorderProtocol::DAYTIME_OF_PM) {
+            $daytime = null;
         }
-        $staff->daytime = $daytime;
-
-        return $this->response->item($staff, new StaffsDataTransformer());
+        $query_day = $request->input('date', Carbon::now());
+        $data = StaffService::weeklyForStaff($query_day, $daytime);
+        return $this->response->array($data);
     }
 
     public function update(Request $request, $staff_preorder_id, StaffPreorderRepositoryContract $staff_preorder)

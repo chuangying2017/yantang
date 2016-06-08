@@ -70,7 +70,7 @@ class StationPreorderController extends Controller
     {
         //status 订奶状态 pause 暂停 normal配送中
         $input = $request->only(['status']);
-        $preorder_model = $preorder->byUserId($this->user_id);
+        $preorder_model = $preorder->byId($preorder_id);
         if (empty($preorder_model)) {
             $this->response->errorInternal('修改的订奶配置不存在');
         }
@@ -79,7 +79,7 @@ class StationPreorderController extends Controller
         }
         try {
             \DB::beginTransaction();
-            PreorderService::updateStatus($input, $preorder_id);
+            $preorder_model = PreorderService::updateStatus($input, $preorder_id);
             \DB::commit();
         } catch (\Exception $e) {
             \DB::rollBack();

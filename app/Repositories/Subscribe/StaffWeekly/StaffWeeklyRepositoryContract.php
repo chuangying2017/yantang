@@ -13,4 +13,5 @@ interface StaffWeeklyRepositoryContract
 
     public function pause($week_of_year, $preorder_id, $staff_id, $day_of_week);
 
+    public function byStaffId($staff_id, $week_of_year, $column);
 }

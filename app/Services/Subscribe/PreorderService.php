@@ -94,8 +94,9 @@ class PreorderService
         } elseif ($input['status'] == PreorderProtocol::STATUS_OF_NORMAL) {
             $input['restart_time'] = Carbon::now();
         }
-//        $preorder = $this->preorderRepo->update($input, $preorder_id);
+        $preorder = $this->preorderRepo->update($input, $preorder_id);
         //更新相关星期字段信息
         $this->staffService->updateStaffWeekly($preorder_id, $is_delete);
+        return $preorder;
     }
 }

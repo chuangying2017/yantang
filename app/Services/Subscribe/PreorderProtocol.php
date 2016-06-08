@@ -60,8 +60,9 @@ class PreorderProtocol
             0 => 'sun',
             1 => 'mon',
             2 => 'tue',
-            3 => 'thu',
-            4 => 'fri',
+            3 => 'wed',
+            4 => 'thu',
+            5 => 'fri',
             6 => 'sat',
         ];
 
@@ -74,8 +75,9 @@ class PreorderProtocol
             0 => 'sun',
             1 => 'mon',
             2 => 'tue',
-            3 => 'thu',
-            4 => 'fri',
+            3 => 'wed',
+            4 => 'thu',
+            5 => 'fri',
             6 => 'sat',
         ];
         if (is_null($week_key)) {

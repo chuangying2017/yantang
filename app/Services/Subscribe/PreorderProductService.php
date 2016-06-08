@@ -1,8 +1,11 @@
 <?php namespace App\Services\Subscribe;
 
 use App\Models\Subscribe\PreorderProductSku;
+use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
 use App\Repositories\Subscribe\PreorderProduct\PreorderProductRepositoryContract;
 use App\Repositories\Subscribe\PreorderProductSku\PreorderProductSkuRepositoryContract;
+use App\Services\Subscribe\PreorderProtocol;
+use StaffService;
 
 /**
  * Class Access
@@ -20,16 +23,18 @@ class PreorderProductService
 
     private $preorder_product;
     private $product_sku;
+    private $preorderRepo;
 
     /**
      * Create a new confide instance.
      *
      * @param \Illuminate\Foundation\Application $app
      */
-    public function __construct(PreorderProductRepositoryContract $preorder_product, PreorderProductSkuRepositoryContract $product_sku)
+    public function __construct(PreorderProductRepositoryContract $preorder_product, PreorderProductSkuRepositoryContract $product_sku, PreorderRepositoryContract $preorderRepo)
     {
         $this->preorder_product = $preorder_product;
         $this->product_sku = $product_sku;
+        $this->preorderRepo = $preorderRepo;
     }
 
     public function batchOperation($input = [])
@@ -61,9 +66,15 @@ class PreorderProductService
 
         if (empty($id)) {
             $preorder_product = $preorder_product->create($input);
-            //todo preorder status 更新为 no_staff
+            //preorder status 更新为 no_staff
+            $this->preorderRepo->update(['status' => PreorderProtocol::STATUS_OF_NO_STAFF], $input['preorder_id']);
         } else {
             $preorder_product = $preorder_product->update($input, $id);
+            $preorder = $this->preorderRepo->byId($input['preorder_id'], ['staffPreorder']);
+            if (!empty($preorder->staffPreorder->staff_id)) {
+                //更新staff_weekly
+                StaffService::updateStaffWeekly($input['preorder_id']);
+            }
         }
 
         foreach ($skus as $sku_id => $value) {

@@ -64,8 +64,8 @@ class PreorderController extends Controller
     public function update(PreorderRequest $request, $preorder_id)
     {
         //status 订奶状态 pause 暂停 normal配送中
-        $input = $request->only(['status']);
-        $preorder = $this->preorder->update($input, $preorder_id);
-        return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
+//        $input = $request->only(['status']);
+//        $preorder = $this->preorder->update($input, $preorder_id);
+//        return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
 }
