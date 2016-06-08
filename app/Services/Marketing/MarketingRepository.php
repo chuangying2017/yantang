@@ -1,8 +1,8 @@
 <?php namespace App\Services\Marketing;
 
-use App\Models\Coupon;
+use App\Models\Promotion\Coupon;
 use App\Models\DiscountLimit;
-use App\Models\Ticket;
+use App\Models\Promotion\Ticket;
 use App\Services\Marketing\Exceptions\CouponValidationException;
 use App\Services\Marketing\MarketingProtocol;
 use App\Services\Utility\StringUtility;

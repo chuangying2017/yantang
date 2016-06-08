@@ -21,6 +21,8 @@ interface BillingContract
 
     public function getPayer();
 
+    public function setID($billing_id);
+
     public function setPaid($pay_type, $pay_channel);
 
     public function setId($id);

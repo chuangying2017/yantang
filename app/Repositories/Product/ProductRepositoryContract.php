@@ -16,4 +16,5 @@ interface ProductRepositoryContract extends SearchableContract {
 
     public function deleteProduct($product_id);
 
+
 }
