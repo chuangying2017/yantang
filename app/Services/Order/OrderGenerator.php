@@ -1,5 +1,6 @@
 <?php namespace App\Services\Order;
 
+use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Services\Order\Generator\CalExpressFee;
 use App\Services\Order\Generator\CalSkuAmount;
 use App\Services\Order\Generator\CheckCampaign;
@@ -15,6 +16,19 @@ use Cache;
 class OrderGenerator implements OrderGeneratorContract {
 
     use OrderGeneratorHandler;
+    /**
+     * @var ClientOrderRepositoryContract
+     */
+    private $orderRepo;
+
+    /**
+     * OrderGenerator constructor.
+     * @param ClientOrderRepositoryContract $orderRepo
+     */
+    public function __construct(ClientOrderRepositoryContract $orderRepo)
+    {
+        $this->orderRepo = $orderRepo;
+    }
 
     /**
      * @param $user_id
@@ -53,6 +67,9 @@ class OrderGenerator implements OrderGeneratorContract {
             throw new \Exception('下单超时');
         }
 
+        $order = $this->orderRepo->createOrder($temp_order);
+
+        return $order;
     }
 
     public function useCoupon($temp_order_id, $coupon_id)

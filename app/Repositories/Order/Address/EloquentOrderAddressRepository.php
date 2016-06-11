@@ -3,7 +3,7 @@
 use App\Models\Order\OrderAddress;
 use App\Repositories\Address\AddressRepositoryContract;
 
-class EloquentAddressRepository {
+class EloquentOrderAddressRepository {
 
     /**
      * @var AddressRepositoryContract

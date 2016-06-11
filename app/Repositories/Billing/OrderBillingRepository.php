@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Billing;
 
 use App\Models\Billing\OrderBilling;
+use App\Repositories\NoGenerator;
 use App\Services\Order\OrderProtocol;
 
 class OrderBillingRepository implements BillingRepositoryContract {
@@ -10,6 +11,7 @@ class OrderBillingRepository implements BillingRepositoryContract {
     public function createBilling($amount, $order_id)
     {
         return OrderBilling::create([
+            'billing_no' => NoGenerator::generateOrderBillingNo(),
             'order_id' => $order_id,
             'amount' => $amount,
             'pay_type' => $this->getPayType(),
@@ -47,6 +49,7 @@ class OrderBillingRepository implements BillingRepositoryContract {
     public function setType($pay_type)
     {
         $this->pay_type = $pay_type;
+        return $this;
     }
 
     public function getPayType()

@@ -11,6 +11,8 @@ class TempOrder {
     protected $skus;
     protected $promotion;
     protected $error;
+    protected $product_amount = 0;
+    protected $discount_amount;
 
     public function __construct($user_id, $skus, $address = null)
     {
@@ -28,6 +30,8 @@ class TempOrder {
             'skus' => $this->skus,
             'address' => $this->address,
             'total_amount' => $this->total_amount,
+            'product_amount' => $this->product_amount,
+            'discount_amount' => $this->discount_amount,
             'express_fee' => $this->express_fee,
             'promotion' => $this->promotion
         ];
@@ -111,6 +115,11 @@ class TempOrder {
     public function setSkus($skus)
     {
         $this->skus = $skus;
+        $product_amount = 0;
+        foreach($skus as $sku) {
+            $product_amount = bcadd($sku['price'], $product_amount, 0);
+        }
+        $this->setProductAmount($product_amount);
     }
 
     /**
@@ -174,6 +183,22 @@ class TempOrder {
         } else {
             $this->error[] = $error;
         }
+    }
+
+    /**
+     * @param mixed $product_amount
+     */
+    public function setProductAmount($product_amount)
+    {
+        $this->product_amount = $product_amount;
+    }
+
+    /**
+     * @param mixed $discount_amount
+     */
+    public function setDiscountAmount($discount_amount)
+    {
+        $this->discount_amount = $discount_amount;
     }
 
 }

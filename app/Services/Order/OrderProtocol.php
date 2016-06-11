@@ -33,5 +33,21 @@ class OrderProtocol {
     const ORDER_TYPE_OF_MALL_MAIN = 0;
     const ORDER_TYPE_OF_MALL_CHILD = 1;
     const ORDER_TYPE_OF_MALL_REFUND = 2;
-    const ORDER_TYPE_OF_CAMPAIGN= 3;
+    const ORDER_TYPE_OF_CAMPAIGN = 3;
+
+    //Deliver type
+    const DELIVER_TYPE_OF_EXPRESS = 'express';
+    const DELIVER_TYPE_OF_STORE = 'store';
+
+    //Pay type
+    const PAY_TYPE_OF_ONLINE = 'online';
+
+    public static function getDeliverType($order_type)
+    {
+        if ($order_type == self::ORDER_TYPE_OF_CAMPAIGN) {
+            return self::DELIVER_TYPE_OF_STORE;
+        }
+
+        return self::DELIVER_TYPE_OF_EXPRESS;
+    }
 }
