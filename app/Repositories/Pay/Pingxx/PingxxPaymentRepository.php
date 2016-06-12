@@ -7,7 +7,8 @@ use App\Services\Pay\Pingxx\PingxxProtocol;
 use Pingpp\Charge;
 use Pingpp\Pingpp;
 
-class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentRepositoryContract {
+class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentRepositoryContract
+{
 
     public function __construct()
     {

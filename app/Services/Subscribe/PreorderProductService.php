@@ -5,7 +5,6 @@ use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
 use App\Repositories\Subscribe\PreorderProduct\PreorderProductRepositoryContract;
 use App\Repositories\Subscribe\PreorderProductSku\PreorderProductSkuRepositoryContract;
 use App\Services\Subscribe\PreorderProtocol;
-use StaffService;
 
 /**
  * Class Access

@@ -19,4 +19,9 @@ class PreorderOrder extends Model
         return $this->hasMany(PreorderOrderProducts::class, 'preorder_order_id');
     }
 
+    public function product()
+    {
+        return $this->hasMany(PreorderOrderProducts::class, 'preorder_order_id');
+    }
+
 }

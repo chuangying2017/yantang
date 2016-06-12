@@ -80,6 +80,11 @@ class SubscribeServiceProvider extends ServiceProvider
             \App\Repositories\Subscribe\StaffWeekly\StaffWeeklyRepositoryContract::class,
             \App\Repositories\Subscribe\StaffWeekly\EloquentStaffWeeklyRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Subscribe\PreorderOrder\PreorderOrderRepositoryContract::class,
+            \App\Repositories\Subscribe\PreorderOrder\EloquentPreorderOrderRepository::class
+        );
     }
 
 }

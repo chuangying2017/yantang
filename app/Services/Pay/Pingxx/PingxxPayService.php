@@ -5,7 +5,8 @@ use App\Services\Billing\BillingContract;
 use App\Services\Pay\Events\PingxxPaymentIsPaid;
 use App\Services\Pay\PayableContract;
 
-class PingxxPayService implements PayableContract {
+class PingxxPayService implements PayableContract
+{
 
     protected $channel;
 

@@ -12,5 +12,11 @@ class EloquentStaffPreorderRepository implements StaffPreorderRepositoryContract
     {
         return 'App\Models\Subscribe\StaffPreorder';
     }
-    
+
+    public function updateByPreorderId($input, $preorder_id)
+    {
+        $query = StaffPreorder::where('preorder_id', $preorder_id)->fill($input);
+        $query->save();
+        return $query;
+    }
 }

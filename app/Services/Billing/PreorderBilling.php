@@ -6,7 +6,7 @@ use Auth;
 class PreorderBilling implements BillingContract
 {
     private $id;
-
+    private $charge_billing;
 
     /**
      * @return mixed
@@ -20,6 +20,7 @@ class PreorderBilling implements BillingContract
             'amount' => $amount * 10,
         ];
         $charge_billing = ChargeBilling::create($input);
+        $this->charge_billing = $charge_billing;
         $this->id = $charge_billing->id;
         return $charge_billing;
     }
@@ -31,18 +32,18 @@ class PreorderBilling implements BillingContract
 
     public function getOrderNo()
     {
-        return ChargeBilling::find($this->id)->billing_no;
+        return empty($this->charge_billing) ? ChargeBilling::find($this->id)->billing_no : $this->charge_billing->billing_no;
     }
 
     public function isPaid()
     {
-        $status = ChargeBilling::find($this->id)->status;
+        $status = empty($this->charge_billing) ? ChargeBilling::find($this->id)->status : $this->charge_billing->status;
         return $status == 1 ? true : false;
     }
 
     public function getAmount()
     {
-        return ChargeBilling::find($this->id)->amount;
+        return empty($this->charge_billing) ? ChargeBilling::find($this->id)->amount : $this->charge_billing->amount;
     }
 
     public function getType()
@@ -52,7 +53,7 @@ class PreorderBilling implements BillingContract
 
     public function getPayer()
     {
-        return ChargeBilling::find($this->id)->user_id;
+        return empty($this->charge_billing) ? ChargeBilling::find($this->id)->user_id : $this->charge_billing->user_id;
     }
 
     public function setPaid($pay_type, $pay_channel)
@@ -61,9 +62,9 @@ class PreorderBilling implements BillingContract
         return ChargeBilling::find($this->id)->update(['pay_type' => $pay_type, 'pay_channel' => $pay_channel, 'status' => 1]);
     }
 
-    public function setId($id)
+    public function setID($billing_id)
     {
-        $this->id = $id;
+        $this->id = $billing_id;
     }
 
 }

@@ -25,6 +25,4 @@ interface BillingContract
 
     public function setPaid($pay_type, $pay_channel);
 
-    public function setId($id);
-
 }

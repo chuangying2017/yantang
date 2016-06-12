@@ -34,4 +34,9 @@ class EloquentStaffWeeklyRepository implements StaffWeeklyRepositoryContract
     {
         return StaffWeekly::where('staff_id', $staff_id)->where('week_of_year', $week_of_year)->get([$column, 'preorder_id', 'staff_id']);
     }
+
+    public function getOneDayDelivery($week_of_year, $column)
+    {
+        return StaffWeekly::where('week_of_year', $week_of_year)->get([$column, 'preorder_id', 'staff_id']);
+    }
 }

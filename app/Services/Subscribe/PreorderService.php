@@ -3,6 +3,9 @@
 use App\Repositories\Subscribe\Station\StationRepositoryContract;
 use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
 use Carbon\Carbon;
+use App\Repositories\Subscribe\StaffWeekly\StaffWeeklyRepositoryContract;
+use App\Repositories\Subscribe\PreorderOrder\PreorderOrderRepositoryContract;
+use App\Models\Subscribe\PreorderOrderProducts;
 
 /**
  * Class Access
@@ -17,16 +20,23 @@ class PreorderService
 
     protected $staffService;
 
+    protected $staffWeeklyRepo;
+
+    protected $preorderOrderRepo;
+
     /**
      * Create a new confide instance.
      *
      * @param \Illuminate\Foundation\Application $app
      */
-    public function __construct(StationRepositoryContract $stationRepo, PreorderRepositoryContract $preorderRepo, StaffService $staffService)
+    public function __construct(StationRepositoryContract $stationRepo, PreorderRepositoryContract $preorderRepo,
+                                StaffService $staffService, StaffWeeklyRepositoryContract $staffWeeklyRepo, PreorderOrderRepositoryContract $preorderOrderRepo)
     {
         $this->stationRepo = $stationRepo;
         $this->preorderRepo = $preorderRepo;
         $this->staffService = $staffService;
+        $this->staffWeeklyRepo = $staffWeeklyRepo;
+        $this->preorderOrderRepo = $preorderOrderRepo;
     }
 
     public function getRecentlyStation($longitude, $latitude)
@@ -98,5 +108,47 @@ class PreorderService
         //更新相关星期字段信息
         $this->staffService->updateStaffWeekly($preorder_id, $is_delete);
         return $preorder;
+    }
+
+    public function settle()
+    {
+//        $dt = Carbon::now();
+        $dt = Carbon::parse('2016-06-06');
+        $week_of_year = $dt->weekOfYear;
+        $day_of_week = $dt->dayOfWeek;
+        $week_name = PreorderProtocol::weekName($day_of_week);
+        $weeklys = $this->staffWeeklyRepo->getOneDayDelivery($week_of_year, $week_name);
+        foreach ($weeklys as $weekly) {
+            $day_data = $weekly->$week_name;
+            $amount = 0;
+            if (!empty($day_data)) {
+                foreach ($day_data->sku as $sku) {
+                    $amount += $sku->count * $sku->price;
+                    $preorder_order_product_sku[] = new PreorderOrderProducts([
+                        'sku_id' => $sku->sku_id,
+                        'name' => $sku->sku_name,
+                        'count' => $sku->count,
+                        'price' => $sku->price,
+                    ]);
+                }
+                $preorder_order_data = [
+                    'preorder_id' => $weekly->preorder_id,
+                    'record_no' => uniqid('rec_'),
+                    'amount' => $amount,
+                    'pay_at' => Carbon::now(),
+                    'deliver_at' => Carbon::now(),
+                    //状态 0,未对账,1已对账
+                    'status' => 0,
+                ];
+
+                $preorderOrder = $this->preorderOrderRepo->create($preorder_order_data);
+                $preorderOrder->product()->saveMany($preorder_order_product_sku);
+            }
+            $user_id = $this->preorderRepo->byId($weekly->preorder_id)->user_id;
+            //todo 记录,扣除钱包金额
+
+        }
+
+
     }
 }

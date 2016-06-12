@@ -36,13 +36,13 @@ class StaffPreorderController extends Controller
         return $this->response->array($data);
     }
 
-    public function update(Request $request, $staff_preorder_id, StaffPreorderRepositoryContract $staff_preorder)
+    public function update(Request $request, $preorder_id, StaffPreorderRepositoryContract $staff_preorder)
     {
         $input = $request->only(['index']);
         if (empty($input['index'])) {
             $input['index'] = 0;
         }
-        $staff_preorder = $staff_preorder->update($input, $staff_preorder_id);
+        $staff_preorder = $staff_preorder->updateByPreorderId($input, $preorder_id);
         return $this->response->item($staff_preorder, new StaffPreorderTransformer());
     }
 }
