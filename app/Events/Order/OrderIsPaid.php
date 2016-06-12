@@ -1,31 +1,29 @@
 <?php
 
-namespace App\Services\Orders\Event;
+namespace App\Events\Order;
 
 use App\Events\Event;
+use App\Models\Order\Order;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class OrderCancel extends Event
+class OrderIsPaid extends Event
 {
     use SerializesModels;
-    public $order;
-    public $skus;
-    public $express;
-    public $billings;
 
+    /**
+     * @var Order
+     */
+    public $order;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($order_info)
+    public function __construct(Order $order)
     {
-        $this->order = $order_info;
-        $this->skus = $order_info->skus;
-        $this->billings = $order_info->billings;
-        $this->express = $order_info->express;
+        $this->order = $order;
     }
 
     /**

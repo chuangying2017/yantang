@@ -30,10 +30,18 @@ class OrderBillingRepository implements BillingRepositoryContract {
 
     public function getBilling($billing_no)
     {
-        return OrderBilling::where('billing_no', $billing_no)->first();
+        if ($billing_no instanceof OrderBilling) {
+            return $billing_no;
+        }
+
+        if (strlen($billing_no) == NoGenerator::LENGTH_OF_ORDER_BILLING_NO) {
+            return OrderBilling::where('billing_no', $billing_no)->first();
+        }
+
+        return OrderBilling::find($billing_no);
     }
 
-    public function getBillingOfType($order_id, $pay_type)
+    public function getBillingOfType($order_id, $pay_type = OrderProtocol::BILLING_TYPE_OF_MONEY)
     {
         return OrderBilling::order($order_id)->where('pay_type', $pay_type)->first();
     }

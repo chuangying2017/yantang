@@ -7,6 +7,9 @@ interface BillingRepositoryContract {
 
     public function getBilling($billing_no);
 
-    public function getAllBilling($entity_id, $status);
+    public function getAllBilling($entity_id, $status = null);
+
+    public function getBillingOfType($order_id, $pay_type);
+
 
 }

@@ -2,10 +2,12 @@
 
 use App\Repositories\Pay\Pingxx\PingxxPaymentRepository;
 use App\Services\Billing\BillingContract;
+use App\Services\Order\OrderProtocol;
 use App\Services\Pay\Events\PingxxPaymentIsPaid;
 use App\Services\Pay\PayableContract;
+use App\Services\Pay\ThirdPartyPayContract;
 
-class PingxxPayService implements PayableContract {
+class PingxxPayService implements PayableContract, ThirdPartyPayContract {
 
     protected $channel;
 
@@ -32,16 +34,8 @@ class PingxxPayService implements PayableContract {
 
         $payment = $this->paymentRepository->getPaymentByBilling($billing->getID(), $billing->getType(), $this->getChannel());
 
-
         if ($payment) {
-
-            $charge = $this->paymentRepository->getCharge($payment['charge_id']);
-
-            if ($this->paymentRepository->isPaid($charge)) {
-                $payment = $this->paymentRepository->setPaymentAsPaid($payment, $this->paymentRepository->getTransaction($charge));
-                event(new PingxxPaymentIsPaid($payment));
-            }
-
+            $charge = $this->getChargeAndSetIfPaid($payment);
         } else {
             $charge = $this->paymentRepository->createCharge($billing->getAmount(), $billing->getOrderNo(), $this->getChannel());
             $payment = $this->paymentRepository->createPayment($charge, $billing->getID(), $billing->getType());
@@ -74,4 +68,26 @@ class PingxxPayService implements PayableContract {
         return $this->channel;
     }
 
+    public function getChargeAndSetIfPaid($payment)
+    {
+        $payment = $this->paymentRepository->getPayment($payment);
+        $charge = $this->paymentRepository->getCharge($payment['charge_id']);
+
+        if ($payment['status'] == OrderProtocol::PAID_STATUS_OF_UNPAID && $this->paymentRepository->chargeIsPaid($charge)) {
+            $payment = $this->paymentRepository->setPaymentAsPaid($payment, $this->paymentRepository->getChargeTransaction($charge));
+            event(new PingxxPaymentIsPaid($payment));
+        }
+
+        return $charge;
+    }
+
+    public function checkPaymentPaid($payment)
+    {
+        $payment = $this->paymentRepository->getPayment($payment);
+        if ($payment['status'] == OrderProtocol::PAID_STATUS_OF_PAID) {
+            return $payment;
+        }
+
+        return false;
+    }
 }

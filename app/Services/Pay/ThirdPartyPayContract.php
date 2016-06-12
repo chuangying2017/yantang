@@ -1,7 +1,8 @@
 <?php namespace App\Services\Pay;
 interface ThirdPartyPayContract {
 
-    public function isPaid($charge);
+    public function getChargeAndSetIfPaid($payment);
 
-    public function getTransaction($charge);
+    public function checkPaymentPaid($payment);
+
 }

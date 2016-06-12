@@ -42,6 +42,11 @@ class OrderProtocol {
     //Pay type
     const PAY_TYPE_OF_ONLINE = 'online';
 
+    //ticket status
+    const ORDER_TICKET_STATUS_OF_OK = 'ok';
+    const ORDER_TICKET_STATUS_OF_OVERTIME = 'overtime';
+    const ORDER_TICKET_STATUS_OF_USED = 'used';
+
     public static function getDeliverType($order_type)
     {
         if ($order_type == self::ORDER_TYPE_OF_CAMPAIGN) {
@@ -50,4 +55,35 @@ class OrderProtocol {
 
         return self::DELIVER_TYPE_OF_EXPRESS;
     }
+
+
+    public static function statusIs($need_status, $current_status)
+    {
+        $valid_status = [$need_status];
+        switch ($current_status) {
+            case self::STATUS_OF_PAID:
+                $valid_status = [self::STATUS_OF_PAID, self::STATUS_OF_SHIPPING, self::STATUS_OF_SHIPPED, self::STATUS_OF_DONE];
+                break;
+            case self::STATUS_OF_SHIPPING:
+                $valid_status = [self::STATUS_OF_SHIPPING, self::STATUS_OF_SHIPPED, self::STATUS_OF_DONE];
+                break;
+            case self::STATUS_OF_UNPAID:
+                $valid_status = [self::STATUS_OF_UNPAID, self::STATUS_OF_CANCEL];
+                break;
+            case self::STATUS_OF_CANCEL:
+                $valid_status = [self::STATUS_OF_UNPAID, self::STATUS_OF_PAID, self::STATUS_OF_CANCEL];
+                break;
+            default:
+                break;
+        }
+
+
+        if (!in_array($current_status, $valid_status)) {
+            return false;
+        }
+
+        return true;
+    }
+
+
 }

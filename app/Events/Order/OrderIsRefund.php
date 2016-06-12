@@ -1,27 +1,23 @@
 <?php
 
-namespace App\Services\Orders\Event;
+namespace App\Events\Order;
 
 use App\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class OrderRefundApprove extends Event
+class OrderIsRefund extends Event
 {
     use SerializesModels;
-    /**
-     * @var
-     */
-    public $refund_order;
 
     /**
      * Create a new event instance.
      *
-     * @param $refund_order
+     * @return void
      */
-    public function __construct($refund_order)
+    public function __construct()
     {
-        $this->refund_order = $refund_order;
+        //
     }
 
     /**
