@@ -22,7 +22,9 @@ class StaffService
 
     private $staffRepo;
 
-    public function __construct(StaffPreorderRepositoryContract $staffPreorderRepo, PreorderRepositoryContract $preorderRepo, StaffWeeklyRepositoryContract $staffWeeklyRepo, StaffRepositoryContract $staffRepo)
+
+    public function __construct(StaffPreorderRepositoryContract $staffPreorderRepo, PreorderRepositoryContract $preorderRepo,
+                                StaffWeeklyRepositoryContract $staffWeeklyRepo, StaffRepositoryContract $staffRepo)
     {
         $this->staffPreorderRepo = $staffPreorderRepo;
         $this->preorderRepo = $preorderRepo;
@@ -36,8 +38,13 @@ class StaffService
         $this->addStaffWeekly($input['preorder_id'], $input['staff_id']);
         $staffPreorder->load('preorder');
         //preorder status 更新为 normal
-        $this->preorderRepo->update(['status' => 'normal'], $input['preorder_id']);
+        $this->preorderRepo->update(['status' => PreorderProtocol::STATUS_OF_NORMAL], $input['preorder_id']);
         return $staffPreorder;
+    }
+
+    public function refuse($preorder_id)
+    {
+        return $this->preorderRepo->update(['status' => PreorderProtocol::STATUS_OF_REJECT], $preorder_id);
     }
 
     public function addStaffWeekly($preorder_id, $staff_id)

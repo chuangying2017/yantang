@@ -47,6 +47,7 @@ $api->version('v1', function ($api) {
                 $api->get('info', 'StationController@index'); //查看服务部信息
                 $api->get('products', 'StationController@products'); //查看可定购商品
                 $api->get('bind_station', 'StationController@bindStation'); //绑定服务部
+                $api->get('claim_goods', 'StationController@claimGoods'); //取货单
                 $api->resource('preorders', 'StationPreorderController'); //服务部下的订奶订单列表
             });
             //订奶客户端

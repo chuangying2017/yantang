@@ -49,7 +49,7 @@ class EloquentStationRepository implements StationRepositoryContract
                 $query = Station::query();
                 break;
         }
-
+        $query = $query->where('status', '!=', PreorderProtocol::STATUS_OF_REJECT);
         $query = $query->where('user_id', $user_id);
 
         if (!empty($pre_page)) {
@@ -96,9 +96,16 @@ class EloquentStationRepository implements StationRepositoryContract
         }
     }
 
+    public function weekly($user_id, $week_of_year)
+    {
+        $query = Station::where('user_id', $user_id)->with(['weekly' => function ($query) use ($week_of_year) {
+            $query->where('week_of_year', $week_of_year);
+        }])->first();
+        return $query;
+    }
+
     public function destroy($id)
     {
-        //todo 补充关联的删除
         $station = Station::findOrFail($id);
         $station->delete();
     }

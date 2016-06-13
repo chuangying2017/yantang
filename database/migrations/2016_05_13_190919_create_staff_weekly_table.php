@@ -16,6 +16,7 @@ class CreateStaffWeeklyTable extends Migration
             $table->increments('id');
             $table->string('week_id', 8);
             $table->integer('staff_id')->unsigned();
+            $table->integer('station_id')->unsigned();
             $table->string('mon')->nullable();
             $table->string('wed')->nullable();
             $table->string('tue')->nullable();

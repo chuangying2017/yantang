@@ -19,6 +19,5 @@ class StationStaffs extends Model
     public function preorderOrders()
     {
         return $this->hasMany(PreorderOrder::class, 'staff_id');
-
     }
 }

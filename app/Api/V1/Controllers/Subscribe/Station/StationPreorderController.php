@@ -44,11 +44,16 @@ class StationPreorderController extends Controller
         return $this->response->item($station, new StationPreorderTransformer());
     }
 
-    public function store(Request $request, StaffPreorderRepositoryContract $staffPreorder)
+    public function store(Request $request)
     {
         $input = $request->only(['preorder_id', 'staff_id', 'index']);
         if (empty($input['index'])) {
             $input['index'] = 0;
+        }
+        //staff_id空为拒绝分配到当前服务部
+        if (empty($input['staff_id'])) {
+            StaffService::refuse($input['preorder_id']);
+            return $this->response->noContent();
         }
         try {
             $station = $this->station->getByUserId($this->user_id);

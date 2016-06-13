@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Services\Subscribe\PreorderService;
 use App\Services\Subscribe\PreorderProductService;
 use App\Services\Subscribe\StaffService;
+use App\Services\Subscribe\StationService;
 
 
 class SubscribeServiceProvider extends ServiceProvider
@@ -33,9 +34,14 @@ class SubscribeServiceProvider extends ServiceProvider
             return $app->make(StaffService::class);
         });
 
+        $this->app->singleton('StationService', function ($app) {
+            return $app->make(StationService::class);
+        });
+
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('PreorderService', \App\Services\Subscribe\Facades\PreorderService::class);
         $loader->alias('StaffService', \App\Services\Subscribe\Facades\StaffService::class);
+        $loader->alias('StationService', \App\Services\Subscribe\Facades\StationService::class);
         $loader->alias('PreorderProductService', \App\Services\Subscribe\Facades\PreorderProductService::class);
     }
 

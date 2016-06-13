@@ -7,9 +7,11 @@ use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Repositories\Subscribe\Staff\StaffRepositoryContract;
 use App\Repositories\Subscribe\Station\StationRepositoryContract;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Api\V1\Requests\Station\StationRequest;
 use Auth;
+use StationService;
 
 class StationController extends Controller
 {
@@ -46,6 +48,14 @@ class StationController extends Controller
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }
+    }
+
+    public function claimGoods(Request $request)
+    {
+        $query_day = $request->input('date', Carbon::now());
+        $query_day = '2016-06-06';
+        $data = StationService::claimGoods($query_day);
+        return $this->response->array($data);
     }
 
 }
