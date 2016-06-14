@@ -49,6 +49,8 @@ $api->version('v1', function ($api) {
                 $api->get('bind_station', 'StationController@bindStation'); //绑定服务部
                 $api->get('claim_goods', 'StationController@claimGoods'); //取货单
                 $api->resource('preorders', 'StationPreorderController'); //服务部下的订奶订单列表
+                $api->get('statements', 'StatementsController@index'); //查看某年对账列表
+                $api->post('account_check', 'StatementsController@accountCheck'); //对账
             });
             //订奶客户端
             $api->group(['namespace' => 'Preorder'], function ($api) {

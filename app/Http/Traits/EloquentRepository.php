@@ -60,4 +60,10 @@ trait EloquentRepository
         $query->save();
         return $query;
     }
+
+    public function destroy($id)
+    {
+        $station = Station::findOrFail($id);
+        $station->delete();
+    }
 }

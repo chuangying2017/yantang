@@ -7,7 +7,7 @@ use App\Services\Subscribe\PreorderService;
 use App\Services\Subscribe\PreorderProductService;
 use App\Services\Subscribe\StaffService;
 use App\Services\Subscribe\StationService;
-
+use App\Services\Subscribe\StatementsService;
 
 class SubscribeServiceProvider extends ServiceProvider
 {
@@ -38,11 +38,16 @@ class SubscribeServiceProvider extends ServiceProvider
             return $app->make(StationService::class);
         });
 
+        $this->app->singleton('StatementsService', function ($app) {
+            return $app->make(StatementsService::class);
+        });
+
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('PreorderService', \App\Services\Subscribe\Facades\PreorderService::class);
         $loader->alias('StaffService', \App\Services\Subscribe\Facades\StaffService::class);
         $loader->alias('StationService', \App\Services\Subscribe\Facades\StationService::class);
         $loader->alias('PreorderProductService', \App\Services\Subscribe\Facades\PreorderProductService::class);
+        $loader->alias('StatementsService', \App\Services\Subscribe\Facades\StatementsService::class);
     }
 
     public function registerBindings()
@@ -90,6 +95,11 @@ class SubscribeServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Repositories\Subscribe\PreorderOrder\PreorderOrderRepositoryContract::class,
             \App\Repositories\Subscribe\PreorderOrder\EloquentPreorderOrderRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Subscribe\Statements\StatementsRepositoryContract::class,
+            \App\Repositories\Subscribe\Statements\EloquentStatementsRepository::class
         );
     }
 
