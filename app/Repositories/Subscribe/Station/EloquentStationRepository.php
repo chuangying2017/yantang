@@ -104,10 +104,13 @@ class EloquentStationRepository implements StationRepositoryContract
         return $query;
     }
 
-    public function destroy($id)
+    public function allStationBillings($begin_time, $end_time)
     {
-        $station = Station::findOrFail($id);
-        $station->delete();
+        $query = Station::with('preorderOrder')->with('preorderOrder.product')->with('preorderOrder.orderBillings')
+            ->whereHas('preorderOrder.orderBillings', function ($query) use ($begin_time, $end_time) {
+                $query->where('created_at', '>=', $begin_time)->where('created_at', '<=', $end_time);
+            })->get();
+        return $query;
     }
 
 }

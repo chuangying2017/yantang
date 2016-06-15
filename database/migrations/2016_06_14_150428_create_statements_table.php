@@ -18,8 +18,8 @@ class CreateStatementsTable extends Migration
             $table->integer('year');
             $table->string('statement_no');
             $table->integer('month');
-            $table->integer('settle_amount');
-            $table->integer('service_amount');
+            $table->float('settle_amount');
+            $table->float('service_amount');
             //ok:已对账 pending:未对账 error: 有异议
             $table->string('status');
             $table->timestamps();

@@ -71,6 +71,7 @@ $api->version('v1', function ($api) {
          */
         $api->group(['namespace' => 'Admin\\Station', 'prefix' => 'admin'], function ($api) {
             $api->resource('stations', 'AdminStationController'); //查看服务部列表
+            $api->post('create_billing', 'AdminStatementsController@createBilling');
         });
 
 

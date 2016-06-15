@@ -59,4 +59,6 @@ interface StationRepositoryContract
     public function preorder($user_id, $type, $pre_page);
 
     public function weekly($user_id, $week_of_year);
+
+    public function allStationBillings($begin_time, $end_time);
 }

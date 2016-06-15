@@ -13,7 +13,7 @@ class Station extends Model
 
     public function preorder()
     {
-        return $this->hasMany('App\Models\Subscribe\Reorder');
+        return $this->hasMany(Preorder::class);
     }
 
     public function staffPreorders()
@@ -31,4 +31,8 @@ class Station extends Model
         return $this->hasMany(StaffWeekly::class);
     }
 
+    public function preorderOrder()
+    {
+        return $this->hasManyThrough(PreorderOrder::class, Preorder::class, 'station_id', 'preorder_id');
+    }
 }

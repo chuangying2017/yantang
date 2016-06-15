@@ -33,8 +33,6 @@ interface StatementsRepositoryContract
 
     public function byStationId($station_id, $year, $month);
 
-    public function accountCheck($status);
-
     public function destroy($id);
 
 }

@@ -16,8 +16,8 @@ class CreateStatementsProductTable extends Migration
             $table->increments('id');
             $table->integer('statements_id')->unsigned();
             $table->string('name');
-            $table->integer('settle_price');
-            $table->integer('service_fee');
+            $table->float('settle_price');
+            $table->float('service_fee');
             $table->integer('quantity');
             $table->timestamps();
         });
