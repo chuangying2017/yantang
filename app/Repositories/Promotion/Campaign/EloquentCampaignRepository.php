@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Promotion\Campaign;
 
 use App\Models\Promotion\Campaign;
+use App\Models\Promotion\UserPromotion;
 use App\Repositories\Promotion\PromotionRepositoryAbstract;
 use App\Repositories\Promotion\Traits\Detail;
 
@@ -29,7 +30,17 @@ class EloquentCampaignRepository extends PromotionRepositoryAbstract implements 
         if ($with_detail) {
             $campaign = $campaign->load('detail');
         }
-        
+
         return $campaign;
+    }
+
+    public function getUsefulPromotions()
+    {
+        $campaigns = $this->getAll();
+        $campaigns->load('rules', 'counter');
+
+
+
+        return $campaigns;
     }
 }

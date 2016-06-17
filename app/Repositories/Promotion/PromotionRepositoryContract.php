@@ -11,5 +11,4 @@ interface PromotionRepositoryContract {
 
     public function delete($promotion_id);
 
-
 }

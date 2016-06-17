@@ -1,6 +1,7 @@
 <?php namespace App\Models\Promotion;
 
 use App\Models\Promotion\Traits\PromotionRelations;
+use App\Models\Promotion\Traits\PromotionScope;
 use App\Services\Promotion\PromotionProtocol;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Coupon extends Model {
 
-    use SoftDeletes, PromotionRelations;
+    use SoftDeletes, PromotionRelations, PromotionScope;
 
     protected $table = 'promotions';
 

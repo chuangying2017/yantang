@@ -19,6 +19,7 @@ class EloquentTicketRepository implements TicketRepositoryContract {
             'end_time' => $this->calEndTime($coupon),
             'status' => PromotionProtocol::STATUS_OF_TICKET_OK
         ]);
+
     }
 
     private function calEndTime(Coupon $coupon)

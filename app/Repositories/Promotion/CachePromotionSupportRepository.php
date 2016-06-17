@@ -1,34 +1,11 @@
 <?php namespace App\Repositories\Promotion;
 
-use App\Models\Models\Promotion\UserPromotion;
-use App\Models\Promotion\Coupon;
-use App\Repositories\Promotion\Campaign\CampaignRepositoryContract;
-use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
 use Cache;
 
 class CachePromotionSupportRepository implements PromotionSupportRepositoryContract {
 
     const CACHE_KEY_OF_CAMPAIGNS = 'YT_CURRENT_CAMPAIGNS';
 
-    /**
-     * @var CampaignRepositoryContract
-     */
-    private $campaignRepo;
-    /**
-     * @var CouponRepositoryContract
-     */
-    private $couponRepo;
-
-    /**
-     * CachePromotionSupportRepository constructor.
-     * @param CampaignRepositoryContract $campaignRepo
-     * @param CouponRepositoryContract $couponRepo
-     */
-    public function __construct(CampaignRepositoryContract $campaignRepo, CouponRepositoryContract $couponRepo)
-    {
-        $this->campaignRepo = $campaignRepo;
-        $this->couponRepo = $couponRepo;
-    }
 
     public function getCampaigns()
     {
@@ -73,103 +50,13 @@ class CachePromotionSupportRepository implements PromotionSupportRepositoryContr
     }
 
 
-    public function getCampaignsByProduct($product_id, $sku_id, $cat_id, $group_id, $brand_id)
+    public function getUsefulRules()
     {
-
-    }
-
-    public function getCouponsByProduct($product_id, $sku_id, $cat_id, $group_id, $brand_id)
-    {
-
-    }
-
-    public function getCoupons($coupon_ids)
-    {
-        return $this->decodePromotions($this->couponRepo->getCouponsById($coupon_ids));
-    }
-
-    private function decodePromotions($promotion_models)
-    {
-        $promotions = [];
-        foreach ($promotion_models as $promotion_model) {
-            $promotions[$promotion_model['id']] = $this->decodePromotion($promotion_model);
-        }
-        return $promotions;
-    }
-
-    private function decodePromotion($promotion)
-    {
-        $data = [
-            'id' => $promotion['id'],
-            'name' => $promotion['name'],
-            'desc' => $promotion['desc'],
-            'start_time' => $promotion['start_time'],
-            'end_time' => $promotion['end_time'],
-            'active' => $promotion['active'],
-            'remain' => 1
-        ];
-        if ($promotion instanceof Coupon) {
-            $data['remain'] = $promotion['counter']['remain'];
-        }
-
-        $data['rules'] = $this->decodePromotionRules($promotion);
-    }
-
-    private function decodePromotionRules($promotion)
-    {
-        $rules = [];
-        foreach ($promotion['rules'] as $rule_model) {
-            $rules[$rule_model['id']] = $this->decodePromotionRule($rule_model);
-        }
-        return $rules;
-    }
-
-    private function decodePromotionRule($rule)
-    {
-        return [
-            'id' => $rule['id'],
-            'qualify' => [
-                'type' => $rule['qua_type'],
-                'quantity' => $rule['qua_quantity'],
-                'values' => to_array($rule['qua_content'])
-            ],
-            'items' => [
-                'item_type' => $rule['item_type'],
-                'values' => to_array($rule['item_content']),
-            ],
-            'range' => [
-                'type' => $rule['range_type'],
-                'min' => $rule['range_min'],
-                'max' => $rule['range_max']
-            ],
-            'discount' => [
-                'type' => $rule['discount_resource'],
-                'mode' => $rule['discount_mode'],
-                'value' => $rule['discount_content']
-            ],
-            'weight' => $rule['weight'],
-            'multi' => $rule['multi_able']
-        ];
+        // TODO: Implement getUsefulRules() method.
     }
 
     public function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
     {
-        $query = UserPromotion::where('user_id', $user_id)->where('promotion_id', $promotion_id);
-
-        if (!is_null($rule_id)) {
-            $query = $query->where('rule_id', $rule_id);
-        }
-
-        return $query->count();
-    }
-
-    public function getCampaignRules()
-    {
-        // TODO: Implement getCampaignRules() method.
-    }
-
-    public function getCouponRules($coupon_ids)
-    {
-        // TODO: Implement getCouponRules() method.
+        // TODO: Implement getUserPromotionTimes() method.
     }
 }

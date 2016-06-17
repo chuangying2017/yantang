@@ -16,7 +16,7 @@ class PromotionCounter extends Model {
 
     public function getRemainAttribute()
     {
-        return $this->attributes['total'] - $this->attributes['dispatch'];
+        return $this->attributes['total'] ? $this->attributes['total'] - $this->attributes['dispatch'] : 1;
     }
 
 }

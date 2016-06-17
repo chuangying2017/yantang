@@ -113,6 +113,11 @@ trait PromotionRuleData {
         return $this->rules[$rule_key]['qualify'];
     }
 
+    public function getRulePromotionId($rule_key)
+    {
+        return $this->rules[$rule_key]['promotion_id'];
+    }
+
     /**
      * Usage
      */
