@@ -47,6 +47,11 @@ class OrderProtocol {
     const ORDER_TICKET_STATUS_OF_OVERTIME = 'overtime';
     const ORDER_TICKET_STATUS_OF_USED = 'used';
 
+    //order promotion
+    const ORDER_PROMOTION_STATUS_OF_DONE = 'done';
+    const ORDER_PROMOTION_STATUS_OF_PENDING = 'pending';
+    const ORDER_PROMOTION_STATUS_OF_CANCEL = 'cancel';
+
     public static function getDeliverType($order_type)
     {
         if ($order_type == self::ORDER_TYPE_OF_CAMPAIGN) {

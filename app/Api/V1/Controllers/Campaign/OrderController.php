@@ -1,12 +1,12 @@
-<?php namespace App\Api\V1\Controllers\Mall;
+<?php
+
+namespace App\Api\V1\Controllers\Campaign;
 
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
-use App\Repositories\Order\ClientOrderRepositoryContract;
-use App\Repositories\Order\MallClientOrderRepository;
-use App\Repositories\Order\MallClientOrderRepositoryAbstract;
-use App\Services\Order\Checkout\OrderCheckoutContract;
+use App\Repositories\Order\CampaignOrderRepository;
 use App\Services\Order\OrderGenerator;
 use App\Services\Order\OrderManageContract;
+use App\Services\Order\OrderProtocol;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -15,17 +15,22 @@ use App\Http\Controllers\Controller;
 class OrderController extends Controller {
 
     /**
-     * @var ClientOrderRepositoryContract
+     * @var CampaignOrderRepository
      */
-    private $clientOrderRepo;
+    private $orderRepo;
+    /**
+     * @var OrderGenerator
+     */
+    private $orderGenerator;
 
     /**
      * OrderController constructor.
-     * @param ClientOrderRepositoryContract $clientOrderRepo
+     * @param CampaignOrderRepository $orderRepo
      */
-    public function __construct(MallClientOrderRepository $clientOrderRepo)
+    public function __construct(CampaignOrderRepository $orderRepo, OrderGenerator $orderGenerator)
     {
-        $this->clientOrderRepo = $clientOrderRepo;
+        $this->orderRepo = $orderRepo;
+        $this->orderGenerator = $orderGenerator;
     }
 
     /**
@@ -35,7 +40,7 @@ class OrderController extends Controller {
      */
     public function index()
     {
-        $orders = $this->clientOrderRepo->getAllOrders();
+        $orders = $this->orderRepo->getAllOrders();
 
         return $this->response->paginator($orders, new ClientOrderTransformer());
     }
@@ -50,11 +55,14 @@ class OrderController extends Controller {
     public function store(Request $request)
     {
         try {
-            $temp_order_id = $request->input(['temp_order_id']);
+            $skus = $request->input(['skus']);
+            $pay_channel = $request->input('channel');
 
-            $order = app()->make(OrderGenerator::class)->confirm($temp_order_id);
+            $order = $this->orderGenerator->buy(access()->id(), $skus, OrderProtocol::ORDER_TYPE_OF_CAMPAIGN);
 
-            return $this->response->item($order, new ClientOrderTransformer());
+            $charge = $this->checkout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
+
+            return $this->response->array(['data' => $charge]);
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
@@ -66,9 +74,9 @@ class OrderController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($order_no)
+    public function show($id)
     {
-        $order = $this->clientOrderRepo->getOrder($order_no);
+        $order = $this->orderRepo->getOrder($id, true);
 
         return $this->response->item($order, new ClientOrderTransformer());
     }

@@ -3,8 +3,7 @@
 
 use App\Services\Order\OrderProtocol;
 
-class MallEloquentClientOrderRepository extends EloquentClientOrderRepository {
-
+class MallClientOrderRepository extends ClientOrderRepositoryAbstract {
 
     protected function setOrderType()
     {

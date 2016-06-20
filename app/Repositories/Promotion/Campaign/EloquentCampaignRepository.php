@@ -27,9 +27,11 @@ class EloquentCampaignRepository extends PromotionRepositoryAbstract implements 
     public function get($promotion_id, $with_detail = true)
     {
         $campaign = $promotion_id instanceof Campaign ? $promotion_id : Campaign::find($promotion_id);
+        $relation = ['rules'];
         if ($with_detail) {
-            $campaign = $campaign->load('detail');
+            $relation[] = ['detail'];
         }
+        $campaign = $campaign->load($relation);
 
         return $campaign;
     }
@@ -38,8 +40,6 @@ class EloquentCampaignRepository extends PromotionRepositoryAbstract implements 
     {
         $campaigns = $this->getAll();
         $campaigns->load('rules', 'counter');
-
-
 
         return $campaigns;
     }

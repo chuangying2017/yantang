@@ -10,6 +10,7 @@ use App\Services\Order\Generator\GetSkuInfo;
 use App\Services\Order\Generator\GetUserInfo;
 use App\Services\Order\Generator\SaveTempOrder;
 use App\Services\Order\Generator\TempOrder;
+use App\Services\Order\Generator\UseCampaign;
 use App\Services\Order\Generator\UseCoupon;
 use Cache;
 
@@ -40,7 +41,34 @@ class OrderGenerator implements OrderGeneratorContract {
      *  ]
      * ]
      */
-    public function buy($user_id, $skus, $address = null, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN)
+    public function buy($user_id, $skus, $address = null, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN, $promotion_id = null)
+    {
+        if ($type == OrderProtocol::ORDER_TYPE_OF_CAMPAIGN) {
+            return $this->campaignOrder($user_id, $skus, $promotion_id);
+        }
+
+        return $this->mallOrder($user_id, $skus, $address);
+    }
+
+    protected function campaignOrder($user_id, $skus, $campaign_id)
+    {
+        $config = [
+            GetSkuInfo::class,
+            GetUserInfo::class,
+            CalSkuAmount::class,
+            UseCampaign::class,
+            SaveTempOrder::class,
+        ];
+        $handler = $this->getOrderGenerateHandler($config);
+
+        $temp_order = new TempOrder($user_id, $skus);
+        $temp_order->setRequestPromotion($campaign_id);
+        $temp_order = $handler->handle($temp_order);
+
+        return $temp_order;
+    }
+
+    protected function mallOrder($user_id, $skus, $address)
     {
         $config = [
             GetSkuInfo::class,
@@ -56,7 +84,9 @@ class OrderGenerator implements OrderGeneratorContract {
 
         $temp_order = $handler->handle(new TempOrder($user_id, $skus, $address));
 
-        return $temp_order;
+        $order = $this->orderRepo->createOrder($temp_order);
+
+        return $order;
     }
 
 

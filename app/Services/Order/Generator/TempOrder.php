@@ -8,13 +8,15 @@ class TempOrder implements PromotionAbleItemContract{
     protected $address;
     protected $total_amount;
     protected $sku_amount;
-    protected $express_fee;
+    protected $express_fee = 0;
     protected $user;
     protected $skus;
     protected $promotion;
     protected $error;
     protected $product_amount = 0;
     protected $discount_amount;
+
+    protected $request_promotion;
 
     public function __construct($user_id, $skus, $address = null)
     {
@@ -401,5 +403,23 @@ class TempOrder implements PromotionAbleItemContract{
     public function unsetCouponBenefit($rule_key = null)
     {
         // TODO: Implement unsetCouponBenefit() method.
+    }
+
+    /**
+     * @param mixed $request_promotion
+     * @return TempOrder
+     */
+    public function setRequestPromotion($request_promotion)
+    {
+        $this->request_promotion = $request_promotion;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequestPromotion()
+    {
+        return $this->request_promotion;
     }
 }

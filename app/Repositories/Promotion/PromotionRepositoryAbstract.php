@@ -2,6 +2,7 @@
 
 use App\Models\Promotion\UserPromotion;
 use App\Repositories\Promotion\Rule\RuleRepositoryContract;
+use App\Services\Order\OrderProtocol;
 use Carbon\Carbon;
 
 abstract class PromotionRepositoryAbstract implements PromotionRepositoryContract, PromotionSupportRepositoryContract {
@@ -89,6 +90,17 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         return $query->get();
     }
 
+    public function getAllPaginated($not_over_time = true)
+    {
+        $model = $this->getModel();
+        $query = $model::newQuery();
+        if ($not_over_time) {
+            $query = $query->effect();
+        }
+
+        return $query->paginate(OrderProtocol::ORDER_PER_PAGE);
+    }
+
     public abstract function get($promotion_id, $with_detail = true);
 
     public function update($promotion_id, $data)
@@ -152,18 +164,19 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     {
         if ($promotion['counter']['remain'] > 0) {
             foreach ($promotion['rules'] as $rule_model) {
-                $this->decodePromotionRule($rule_model, $promotion['id']);
+                $this->decodePromotionRule($rule_model, $promotion);
             }
         }
         return false;
     }
 
-    protected function decodePromotionRule($rule, $promotion_id)
+    protected function decodePromotionRule($rule, $promotion)
     {
         return [
             'id' => $rule['id'],
-            'promotion_id' => $promotion_id,
-            'group' => $promotion_id,
+            'promotion_id' => $promotion['id'],
+            'promotion_type' => get_class($promotion),
+            'group' => $promotion['id'],
             'qualify' => [
                 'type' => $rule['qua_type'],
                 'quantity' => $rule['qua_quantity'],

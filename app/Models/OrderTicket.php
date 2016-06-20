@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Order\Order;
+use App\Models\Order\OrderSku;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderTicket extends Model {
@@ -14,4 +16,17 @@ class OrderTicket extends Model {
     {
         return $this->hasOne(Store::class, 'store_id', 'id');
     }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
+
+    public function skus()
+    {
+        return $this->hasMany(OrderSku::class, 'order_id', 'order_id');
+    }
+
+
+
 }

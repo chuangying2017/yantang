@@ -1,13 +1,14 @@
 <?php namespace App\Repositories\OrderTicket;
 
 use App\Models\Order\Order;
+use App\Models\Order\OrderPromotion;
 use App\Models\OrderTicket;
 use App\Repositories\NoGenerator;
 use App\Services\Order\OrderProtocol;
 
 class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
 
-    public function createOrderTicket(Order $order)
+    public function createOrderTicket(Order $order, OrderPromotion $order_promotion)
     {
         $ticket = $this->getOrderTicketsOfOrder($order['id']);
         if ($ticket) {
@@ -17,6 +18,8 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
         return OrderTicket::create([
             'order_id' => $order['id'],
             'user_id' => $order['user_id'],
+            'campaign_id' => $order_promotion['promotion_id'],
+            'rule_id' => $order_promotion['promotion_rule_id'],
             'status' => OrderProtocol::ORDER_TICKET_STATUS_OF_OK
         ]);
     }
@@ -42,7 +45,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
 
 
         if ($with_detail) {
-
+            $ticket->load(['skus.mix', 'exchange']);
         }
 
         return $ticket;

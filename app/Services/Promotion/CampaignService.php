@@ -21,4 +21,9 @@ class CampaignService extends PromotionServiceAbstract implements PromotionAutoU
 
         return $items;
     }
+
+    protected function getRelateRules(PromotionAbleItemContract $items)
+    {
+        return $items->getRelateCampaigns();
+    }
 }

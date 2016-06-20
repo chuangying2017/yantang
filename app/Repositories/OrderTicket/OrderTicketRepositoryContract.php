@@ -1,11 +1,12 @@
 <?php namespace App\Repositories\OrderTicket;
 
 use App\Models\Order\Order;
+use App\Models\Order\OrderPromotion;
 use App\Services\Order\OrderProtocol;
 
 interface OrderTicketRepositoryContract {
 
-    public function createOrderTicket(Order $order);
+    public function createOrderTicket(Order $order, OrderPromotion $order_promotion);
 
     public function getOrderTicketsOfOrder($order_id);
 

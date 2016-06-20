@@ -41,11 +41,6 @@ class OrderServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
-            \App\Repositories\Order\ClientOrderRepositoryContract::class,
-            \App\Repositories\Order\EloquentClientOrderRepository::class
-        );
-
-        $this->app->bind(
             \App\Repositories\Order\Sku\OrderSkuRepositoryContract::class,
             \App\Repositories\Order\Sku\EloquentOrderSkuRepository::class
         );

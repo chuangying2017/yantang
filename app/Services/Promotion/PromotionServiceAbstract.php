@@ -38,7 +38,7 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
 
     public function usable(PromotionAbleItemContract $items)
     {
-        $rules = $items->getRelateCoupons();
+        $rules = $this->getRelateRules($items);
         if (!$rules) {
             $this->related($items);
         } else {
@@ -52,7 +52,7 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
 
     public function using(PromotionAbleItemContract $items, $rule_key)
     {
-        $rules = $items->getRelateCoupons();
+        $rules = $this->getRelateRules($items);
         if (!$rules) {
             $this->usable($items);
         } else {
@@ -68,7 +68,7 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
 
     public function notUsing(PromotionAbleItemContract $items, $rule_key)
     {
-        $rules = $items->getRelateCoupons();
+        $rules = $this->getRelateRules($items);
         if (!$rules) {
             $this->usable($items);
         } else {
@@ -80,6 +80,8 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
 
         return $items;
     }
+
+    protected abstract function getRelateRules(PromotionAbleItemContract $items);
 
 
 }

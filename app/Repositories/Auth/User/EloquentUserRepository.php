@@ -303,6 +303,12 @@ class EloquentUserRepository implements UserContract {
         if ($with_roles) {
             $relation[] = 'roles';
         }
+
+        if ($user_id instanceof User) {
+            $user = $user_id->load($relation);
+            return $user;
+        }
+
         if (count($relation)) {
             return User::with($relation)->find($user_id);
         }

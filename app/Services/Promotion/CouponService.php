@@ -19,6 +19,8 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
     }
 
 
-
-
+    protected function getRelateRules(PromotionAbleItemContract $items)
+    {
+        return $items->getRelateCoupons();
+    }
 }

@@ -5,6 +5,8 @@ interface PromotionRepositoryContract {
 
     public function getAll($not_over_time = true);
 
+    public function getAllPaginated($not_over_time = true);
+
     public function get($promotion_id, $with_detail = true);
 
     public function update($promotion_id, $data);
