@@ -1,6 +1,6 @@
 <?php namespace App\Repositories\Pay\Pingxx;
 
-use App\Models\PingxxPayment;
+use App\Models\Pay\PingxxPayment;
 use App\Repositories\Pay\ChargeRepositoryContract;
 use App\Repositories\Pay\PaymentRepositoryContract;
 use App\Services\Pay\Pingxx\PingxxProtocol;

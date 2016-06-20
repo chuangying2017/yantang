@@ -34,7 +34,7 @@ class OrderCheckoutService implements OrderCheckoutContract {
         $this->orderBillingService = $orderBillingService;
     }
 
-    public function checkout($order_id, $pay_type, $pay_channel = null)
+    public function checkout($order_id, $pay_type = OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel = null)
     {
         if ($pay_type == OrderProtocol::BILLING_TYPE_OF_MONEY) {
             return $this->payWithPingxx($order_id, $pay_channel);

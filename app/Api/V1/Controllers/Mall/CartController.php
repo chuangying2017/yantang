@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\V1\Mall\Controllers;
+namespace App\Api\V1\Controllers\Mall;
 
 use App\Api\V1\Transformers\Mall\CartTransformer;
 use App\Repositories\Cart\CartRepositoryContract;

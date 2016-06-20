@@ -28,40 +28,58 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
         $this->promotionSupportRepo = $promotionSupportRepo;
     }
 
-    public function check($user, $items)
+
+    public function related(PromotionAbleItemContract $items, $rules = null)
     {
-
-        /**
-         * 现有基础上增减优惠
-         * 1. 检查和现有生效规则是否冲突
-         * 2. 计算优惠资源
-         */
-
+        $rules_array = is_null($rules) ? $this->promotionSupportRepo->getUsefulRules() : $rules;
+        $this->ruleService->setRules($rules_array)->filterRelate($items, $this->promotionSupportRepo);
+        return $items;
     }
 
-    public function checkRange()
+    public function usable(PromotionAbleItemContract $items)
     {
-        foreach ($this->data->getRules() as $rule_key => $rule) {
-            if ($this->ruleService->itemsInRange($this->data->getRuleUsageItems($rule_key), $this->data->getRuleRange($rule_key))) {
-                $this->data->setRuleUsageInRange($rule_key);
-            }
+        $rules = $items->getRelateCoupons();
+        if (!$rules) {
+            $this->related($items);
+        } else {
+            $this->ruleService->setRules($rules);
         }
+
+        $this->ruleService->filterUsable($items);
+
+        return $items;
     }
 
-    public function calBenefits()
+    public function using(PromotionAbleItemContract $items, $rule_key)
     {
-        foreach ($this->data->getInRangeRules() as $rule_key => $rule) {
-            $promotion_data_benefit_object = PromotionDataProtocol::getBenefitObjectHandler(
-                $this->data->getRuleDiscountType($rule_key),
-                $this->data,
-                $rule_key
-            );
-            $benefits = $this->ruleService->calculatePromotionBenefits(
-                $promotion_data_benefit_object->getBenefitObject(),
-                $this->data->getRuleDiscount($rule_key)
-            );
-            $promotion_data_benefit_object->setRuleBenefit($benefits);
+        $rules = $items->getRelateCoupons();
+        if (!$rules) {
+            $this->usable($items);
+        } else {
+            $this->ruleService->setRules($rules);
         }
+
+        $this->ruleService->setRules($rules)
+            ->using($items, $rule_key);
+
+        return $items;
     }
+
+
+    public function notUsing(PromotionAbleItemContract $items, $rule_key)
+    {
+        $rules = $items->getRelateCoupons();
+        if (!$rules) {
+            $this->usable($items);
+        } else {
+            $this->ruleService->setRules($rules);
+        }
+
+        $this->ruleService->setRules($rules)
+            ->notUsing($items, $rule_key);
+
+        return $items;
+    }
+
 
 }

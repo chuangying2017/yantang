@@ -163,4 +163,9 @@ class RuleData implements RuleDataContract {
     {
         // TODO: Implement setMessage() method.
     }
+
+    public function setConflictUsable()
+    {
+        // TODO: Implement setConflictUsable() method.
+    }
 }

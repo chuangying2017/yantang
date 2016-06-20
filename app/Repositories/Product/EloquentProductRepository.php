@@ -133,7 +133,6 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
 
     public function getAllProducts($brand = null, $cat = null, $group = null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP)
     {
-
         return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat));
     }
 

@@ -2,7 +2,7 @@
 
 use App\Models\Product\ProductSku;
 
-class EloquentProductSkuRepository implements ProductSkuRepositoryContract {
+class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract {
 
     public function createSku($sku_data, $product_id)
     {
@@ -107,5 +107,38 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract {
     public function getSkus($sku_ids)
     {
         return ProductSku::find($sku_ids);
+    }
+
+    public function increaseStock($product_sku_id, $quantity = 1)
+    {
+        $sku = $this->getSkus($product_sku_id);
+        $sku->stock = $sku->stock + $quantity;
+        $sku->save();
+
+        return $sku;
+    }
+
+    public function decreaseStock($product_sku_id, $quantity = 1)
+    {
+        $sku = $this->getSkus($product_sku_id);
+        if ($sku->stock < $quantity) {
+            throw new \Exception('库存不足,减库存失败');
+        }
+        $sku->stock = $sku->stock - $quantity;
+        $sku->sales = $sku->sales + $quantity;
+        $sku->save();
+
+        return $sku;
+    }
+
+    public function getStock($product_sku_id)
+    {
+        $sku = $this->getSkus($product_sku_id);
+        return $sku->stock;
+    }
+
+    public function enoughStock($product_sku_id, $quantity)
+    {
+        return $this->getStock($product_sku_id) > $quantity;
     }
 }

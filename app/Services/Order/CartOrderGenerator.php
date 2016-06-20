@@ -30,6 +30,7 @@ class CartOrderGenerator {
         $order = $this->orderGenerator->buy($user_id, $carts->only(['product_sku_id', 'quantity']));
 
         //删除已购买购物车信息
+
     }
 
 }

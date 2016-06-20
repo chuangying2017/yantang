@@ -5,8 +5,8 @@ namespace App\Api\V1\Controllers\Admin\Station;
 
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
-use App\Repositories\Backend\Staff\StaffRepositoryContract;
-use App\Repositories\Backend\Station\StationRepositoryContract;
+use App\Repositories\Subscribe\Staff\StaffRepositoryContract;
+use App\Repositories\Subscribe\Station\StationRepositoryContract;
 use Illuminate\Http\Request;
 use App\Api\V1\Requests\Station\AdminStationRequest;
 use Auth;

@@ -21,7 +21,7 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(\App\Models\Product\Category::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Product\CategoryAbstract::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->colorName,
     ];

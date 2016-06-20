@@ -6,7 +6,7 @@ use App\Repositories\Category\CategoryProtocol;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class Brand extends Category {
+class Brand extends CategoryAbstract {
 
     protected $attributes = [
         'type' => CategoryProtocol::TYPE_OF_BRAND

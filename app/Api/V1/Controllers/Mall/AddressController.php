@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Api\V1\Mall\Controllers;
+<?php namespace App\Api\V1\Controllers\Mall;
 
 use App\Api\V1\Requests\Mall\AddressRequest;
 use App\Api\V1\Transformers\Mall\AddressTransformer;

@@ -1,7 +1,7 @@
 <?php namespace App\Services\Orders\Supports;
 
-use App\Models\PingxxPayment;
-use App\Models\PingxxPaymentRefund;
+use App\Models\Pay\PingxxPayment;
+use App\Models\Pay\PingxxPaymentRefund;
 use App\Models\PingxxRefund;
 use App\Services\Orders\OrderProtocol;
 

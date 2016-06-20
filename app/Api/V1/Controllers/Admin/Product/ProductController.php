@@ -4,6 +4,7 @@ namespace App\Api\V1\Controllers\Admin\Product;
 
 use App\Api\V1\Requests\Admin\ProductRequest;
 use App\Api\V1\Transformers\Admin\Product\ProductTransformer;
+use App\Repositories\Product\ProductProtocol;
 use App\Repositories\Product\ProductRepositoryContract;
 use Illuminate\Http\Request;
 
@@ -37,12 +38,13 @@ class ProductController extends Controller {
         $brand = $request->input('brand');
         $cat = $request->input('cat');
         $group = $request->input('group');
+        $status = $request->input('status') ?: null;
 
         $keyword = $request->input('keyword');
         if ($keyword) {
-            $products = $this->productRepositoryContract->search($keyword, compact('brand', 'cat', 'group'));
+            $products = $this->productRepositoryContract->search($keyword, compact('brand', 'cat', 'group', 'status'));
         } else {
-            $products = $this->productRepositoryContract->getProductsPaginated($brand, $cat, $group);
+            $products = $this->productRepositoryContract->getProductsPaginated($brand, $cat, $group, $status);
         }
 
         return $this->response->paginator($products, new ProductTransformer());

@@ -2,7 +2,7 @@
 
 namespace App\Models\Billing;
 
-use App\Models\PingxxPayment;
+use App\Models\Pay\PingxxPayment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

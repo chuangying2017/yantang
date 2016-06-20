@@ -46,7 +46,7 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
     public function getAll()
     {
         $model = $this->getModel();
-        return $model::get();
+        return $model::orderBy('index', 'asc')->get();
     }
 
     public function get($cat_id)

@@ -2,29 +2,22 @@
 
 namespace App\Models\Product;
 
-use App\Models\Product\Traits\CategoryRelation;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Baum\Node;
+use App\Repositories\Category\CategoryProtocol;
+use Illuminate\Database\Eloquent\Builder;
 
-class Category extends Node {
+class Category extends CategoryAbstract {
 
-    use SoftDeletes, CategoryRelation;
+    protected $attributes = [
+        'type' => CategoryProtocol::TYPE_OF_MAIN
+    ];
 
-    // 'parent_id' column name
-    protected $parentColumn = 'pid';
+    protected static function boot()
+    {
+        parent::boot();
 
-    // 'lft' column name
-    protected $leftColumn = 'lid';
-
-    // 'rgt' column name
-    protected $rightColumn = 'rid';
-
-    // 'depth' column name
-    protected $depthColumn = 'depth';
-
-    // guard attributes from mass-assignment
-    protected $guarded = array('id', 'pid', 'lid', 'rid', 'depth');
-
-    protected $table = 'categories';
+        static::addGlobalScope('type', function (Builder $builder) {
+            $builder->where('type', CategoryProtocol::TYPE_OF_MAIN);
+        });
+    }
 
 }
