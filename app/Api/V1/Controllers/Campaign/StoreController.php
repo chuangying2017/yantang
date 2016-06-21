@@ -52,8 +52,7 @@ class StoreController extends Controller {
 
         $store = $this->storeRepo->getStore($store_id);
 
-//        version('v1')->route('api.store.check.bind', [$store_id]) =  generate_bind_token($store_id);
-//        return $this->response->item($store, new StoreTransformer())->setMeta($bind_token);
+        return $this->response->item($store, new StoreTransformer())->setMeta(['bind_url' => $this->storeRepo->getBindUrl($store_id)]);
     }
 
     /**
@@ -76,6 +75,5 @@ class StoreController extends Controller {
 
         $this->response->errorBadRequest('绑定失败');
     }
-
 
 }

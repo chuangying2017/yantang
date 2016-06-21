@@ -4,7 +4,7 @@
  * 商城
  */
 $api->group(['namespace' => 'Mall', 'prefix' => 'mall'], function ($api) {
-    $api->group(['middleware' => 'auth'], function ($api) {
+    $api->group(['middleware' => 'api.auth'], function ($api) {
         $api->resource('orders/cart', 'CartOrderController', ['only' => ['store', 'update', 'destroy']]);
         $api->resource('cart', 'CartController');
         $api->resource('orders', 'OrderController');

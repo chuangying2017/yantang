@@ -8,7 +8,7 @@
  */
 $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
 
-    $api->group(['middleware' => 'auth'], function ($api) {
+    $api->group(['middleware' => 'api.auth'], function ($api) {
         $api->group(['namespace' => 'Product'], function ($api) {
             $api->resource('products/mix', 'ProductMixController', ['only' => ['index']]);
             $api->resource('products', 'ProductController');

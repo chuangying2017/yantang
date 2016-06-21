@@ -7,7 +7,7 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
     /**
      * These routes require the user to be logged in
      */
-    $api->group(['middleware' => 'auth'], function ($api) {
+    $api->group(['middleware' => 'api.auth'], function ($api) {
         $api->get('auth/logout', 'AuthController@getLogout');
         $api->get('auth/password/change', 'PasswordController@getChangePassword');
         $api->post('auth/password/change', 'PasswordController@postChangePassword')->name('password.change');

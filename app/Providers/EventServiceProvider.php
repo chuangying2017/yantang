@@ -10,8 +10,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
  * Class EventServiceProvider
  * @package App\Providers
  */
-class EventServiceProvider extends ServiceProvider
-{
+class EventServiceProvider extends ServiceProvider {
 
     /**
      * The event listener mappings for the application.
@@ -31,6 +30,11 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Auth\UserLoggedIn' => [
             'App\Listeners\Auth\UserLoggedInHandler',
         ],
+
+        'App\Events\Auth\UserRegister' => [
+
+        ],
+
 
         'App\Events\Auth\UserLoggedOut' => [
             'App\Listeners\Auth\UserLoggedOutHandler',

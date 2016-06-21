@@ -7,7 +7,7 @@
 $api->group(['namespace' => 'Campaign'], function ($api) {
 
     $api->group(['prefix' => 'campaigns'], function ($api) {
-        $api->group(['middleware' => 'auth'], function ($api) {
+        $api->group(['middleware' => 'api.auth'], function ($api) {
 
             $api->resource('orders', 'OrderController');
             $api->resource('order-tickets', 'OrderTicketController');
@@ -17,7 +17,7 @@ $api->group(['namespace' => 'Campaign'], function ($api) {
     });
     $api->group(['prefix' => 'store'], function ($api) {
 
-        $api->group(['middleware' => 'auth'], function ($api) {
+        $api->group(['middleware' => 'api.auth'], function ($api) {
 
             $api->resource('exchange', 'StoreExchangeController');
             $api->get('info', 'StoreController@info');

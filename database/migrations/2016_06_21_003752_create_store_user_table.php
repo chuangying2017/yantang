@@ -14,7 +14,7 @@ class CreateStoreUserTable extends Migration {
     {
         Schema::create('store_user', function (Blueprint $table) {
             $table->integer('user_id')->index();
-            $table->integer('store')->index();
+            $table->integer('store_id')->index();
             $table->timestamps();
         });
     }

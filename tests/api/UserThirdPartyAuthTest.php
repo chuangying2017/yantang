@@ -26,7 +26,7 @@ class UserThirdPartyAuthTest extends TestCase {
         $this->setProvider('weixin');
 
         // need setup
-        $this->oauth_code = '123';
+        $this->oauth_code = '041h1AiN19GDFY0knmhN1UWyiN1h1Aij';
 
         $this->oathRegister();
     }
