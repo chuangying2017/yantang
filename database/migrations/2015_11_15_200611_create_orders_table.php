@@ -16,7 +16,7 @@ class CreateOrdersTable extends Migration {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('order_no')->index();
+            $table->string('order_no');
             $table->string('title');
             $table->unsignedInteger('total_amount');
             $table->unsignedInteger('products_amount');
@@ -41,6 +41,13 @@ class CreateOrdersTable extends Migration {
             $table->softDeletes();
             $table->timestamps();
 
+            $table->index([
+                'order_no',
+                'status',
+                'pay_status',
+                'refund_status',
+                'created_at',
+            ]);
         });
 
     }

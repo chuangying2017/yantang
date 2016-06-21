@@ -2,7 +2,7 @@
 
 namespace App\Models\Billing;
 
-use App\Models\PingxxPayment;
+use App\Models\Pay\PingxxPayment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -16,6 +16,11 @@ class OrderBilling extends Model {
     public function payment()
     {
         return $this->morphToMany(PingxxPayment::class, 'billing');
+    }
+
+    public function scopeOrder($query, $order_id)
+    {
+        return $query->where('order_id', $order_id);
     }
 
 }

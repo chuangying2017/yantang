@@ -1,9 +1,11 @@
 <?php namespace App\Repositories\Promotion;
 
+use App\Models\Promotion\UserPromotion;
 use App\Repositories\Promotion\Rule\RuleRepositoryContract;
+use App\Services\Order\OrderProtocol;
 use Carbon\Carbon;
 
-abstract class PromotionRepositoryAbstract implements PromotionRepositoryContract {
+abstract class PromotionRepositoryAbstract implements PromotionRepositoryContract, PromotionSupportRepositoryContract {
 
     protected $model;
 
@@ -81,14 +83,22 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     public function getAll($not_over_time = true)
     {
         $model = $this->getModel();
-        $query = $model::query();
+        $query = $model::newQuery();
         if ($not_over_time) {
-            $query = $model::where(function ($query) {
-                $query->where('start_time', '<', Carbon::now())
-                    ->andWhere('end_time', '>', Carbon::now());
-            });
+            $query = $query->effect();
         }
         return $query->get();
+    }
+
+    public function getAllPaginated($not_over_time = true)
+    {
+        $model = $this->getModel();
+        $query = $model::newQuery();
+        if ($not_over_time) {
+            $query = $query->effect();
+        }
+
+        return $query->paginate(OrderProtocol::ORDER_PER_PAGE);
     }
 
     public abstract function get($promotion_id, $with_detail = true);
@@ -129,5 +139,76 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         return $this->model;
     }
 
+    /*
+     * Support
+     */
+    public function getUsefulRules()
+    {
+        $promotions = $this->getUsefulPromotions();
 
+        $rules = [];
+        foreach ($promotions as $promotion) {
+            $promotion_rules = $this->decodePromotionRules($promotion);
+            if ($promotion_rules) {
+                $rules = array_merge($rules, $promotion_rules);
+            }
+        }
+
+        return $rules;
+    }
+
+    public abstract function getUsefulPromotions();
+
+
+    protected function decodePromotionRules($promotion)
+    {
+        if ($promotion['counter']['remain'] > 0) {
+            foreach ($promotion['rules'] as $rule_model) {
+                $this->decodePromotionRule($rule_model, $promotion);
+            }
+        }
+        return false;
+    }
+
+    protected function decodePromotionRule($rule, $promotion)
+    {
+        return [
+            'id' => $rule['id'],
+            'promotion_id' => $promotion['id'],
+            'promotion_type' => get_class($promotion),
+            'group' => $promotion['id'],
+            'qualify' => [
+                'type' => $rule['qua_type'],
+                'quantity' => $rule['qua_quantity'],
+                'values' => to_array($rule['qua_content'])
+            ],
+            'items' => [
+                'type' => $rule['item_type'],
+                'values' => to_array($rule['item_content']),
+            ],
+            'range' => [
+                'type' => $rule['range_type'],
+                'min' => $rule['range_min'],
+                'max' => $rule['range_max']
+            ],
+            'discount' => [
+                'type' => $rule['discount_resource'],
+                'mode' => $rule['discount_mode'],
+                'value' => $rule['discount_content']
+            ],
+            'weight' => $rule['weight'],
+            'multi' => $rule['multi_able']
+        ];
+    }
+
+    public function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
+    {
+        $query = UserPromotion::where('user_id', $user_id)->where('promotion_id', $promotion_id);
+
+        if (!is_null($rule_id)) {
+            $query = $query->where('rule_id', $rule_id);
+        }
+
+        return $query->count();
+    }
 }

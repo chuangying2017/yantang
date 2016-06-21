@@ -1,6 +1,6 @@
 <?php namespace App\Services\Orders\Payments;
 
-use App\Models\Order;
+use App\Models\Order\Order;
 use App\Services\Orders\Event\OrderIsPaid;
 use App\Services\Orders\Helpers\UserHelper;
 use App\Services\Orders\OrderProtocol;

@@ -29,7 +29,7 @@ class AttributeController extends Controller {
      * Display a listing of the resource.
      *
      * @return \I
-     * lluminate\Http\Response
+     * Illuminate\Http\Response
      */
     public function index()
     {

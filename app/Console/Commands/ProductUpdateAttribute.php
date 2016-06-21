@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Product\AttributeValue;
-use App\Models\OrderProduct;
+use App\Models\Order\OrderSku;
 use App\Models\Product\ProductSku;
 use Illuminate\Console\Command;
 
@@ -58,7 +58,7 @@ class ProductUpdateAttribute extends Command {
             $sku->save();
         }
 
-        $order_products = OrderProduct::with('product')->get();
+        $order_products = OrderSku::with('product')->get();
         foreach ($order_products as $order_product) {
             if (isset($order_product->product->attributes)) {
                 $order_product->attributes = $order_product->product->attributes;

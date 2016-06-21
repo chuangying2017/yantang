@@ -1,6 +1,6 @@
 <?php namespace App\Repositories\Pay\Pingxx;
 
-use App\Models\PingxxPayment;
+use App\Models\Pay\PingxxPayment;
 use App\Repositories\Pay\ChargeRepositoryContract;
 use App\Repositories\Pay\PaymentRepositoryContract;
 use App\Services\Pay\Pingxx\PingxxProtocol;
@@ -123,7 +123,6 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         return is_string($charge_id) ? Charge::retrieve($charge_id) : $charge_id;
     }
 
-
     public function createPayment($charge, $billing_id, $billing_type)
     {
         return PingxxPayment::create([
@@ -161,6 +160,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         if ($payment_no instanceof PingxxPayment) {
             return $payment_no;
         }
+
         return PingxxPayment::where('payment_no', $payment_no)->firstOrFail();
     }
 
@@ -183,7 +183,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
             ->first();
     }
 
-    public function isPaid($charge_id)
+    public function chargeIsPaid($charge_id)
     {
         $charge = $this->getCharge($charge_id);
 
@@ -194,7 +194,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         return $charge->paid;
     }
 
-    public function getTransaction($charge_id)
+    public function getChargeTransaction($charge_id)
     {
         $charge = $this->getCharge($charge_id);
 

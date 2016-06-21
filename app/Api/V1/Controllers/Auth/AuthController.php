@@ -9,10 +9,8 @@ use App\Api\V1\Requests\Auth\LoginRequest;
 use App\Api\V1\Requests\Auth\RegisterRequest;
 use Illuminate\Http\Request;
 use JWTAuth;
-use App\Api\V1\Transformers\Auth\UserInfoTransformer;
 use App\Api\V1\Requests\Auth\ThirdPartyRequest;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use ArrayObject;
 
 
 /**
@@ -42,7 +40,7 @@ class AuthController extends Controller {
 
             return $this->response->item($user, new UserLoginTransformer());
         } catch (JWTException $e) {
-            return $this->response->error('could_not_create_token', 500);
+            $this->response->error('could_not_create_token', 500);
         }
     }
 
@@ -53,12 +51,12 @@ class AuthController extends Controller {
     {
         try {
             if (!$token = JWTAuth::attempt($request->only('phone', 'password'))) {
-                return $this->response->errorUnauthorized();
+                $this->response->errorUnauthorized();
             }
 
             return $this->response->item(JWTAuth::toUser($token), new UserLoginTransformer());
         } catch (JWTException $e) {
-            return $this->response->error('could_not_create_token', 500);
+            $this->response->error('could_not_create_token', 500);
         }
     }
 
@@ -74,7 +72,7 @@ class AuthController extends Controller {
 
             return $this->response->item($user, new UserLoginTransformer());
         } catch (\Exception $e) {
-            return $this->response->errorUnauthorized($e->getMessage());
+            $this->response->errorUnauthorized($e->getMessage());
         }
     }
 

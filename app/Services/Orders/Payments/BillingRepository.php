@@ -2,7 +2,7 @@
 
 
 use App\Models\Billing\OrderBilling;
-use App\Models\PingxxPayment;
+use App\Models\Pay\PingxxPayment;
 use App\Services\Orders\OrderProtocol;
 use DB;
 

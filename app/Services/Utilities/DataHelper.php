@@ -1,7 +1,7 @@
 <?php namespace App\Services\Utilities;
 
 use App\Models\Access\User\User;
-use App\Models\Order;
+use App\Models\Order\Order;
 use App\Services\Orders\OrderProtocol;
 use Cache;
 use Carbon\Carbon;

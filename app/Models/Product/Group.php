@@ -5,7 +5,7 @@ namespace App\Models\Product;
 use App\Repositories\Category\CategoryProtocol;
 use Illuminate\Database\Eloquent\Builder;
 
-class Group extends Category {
+class Group extends CategoryAbstract {
 
     protected $attributes = [
         'type' => CategoryProtocol::TYPE_OF_GROUP

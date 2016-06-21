@@ -39,7 +39,7 @@ class EloquentUserRepository implements UserContract {
     public function findOrThrowException($id)
     {
         $user = User::find($id);
-        if ( ! is_null($user)) return $user;
+        if (!is_null($user)) return $user;
 
         throw new GeneralException('That user does not exist.');
     }
@@ -52,12 +52,12 @@ class EloquentUserRepository implements UserContract {
     public function create($data, $provider = false)
     {
         $user = User::create([
-            'email'             => array_get($data, 'email', ''),
-            'phone'             => array_get($data, 'phone', null),
-            'password'          => $provider ? null : $data['password'],
+            'email' => array_get($data, 'email', ''),
+            'phone' => array_get($data, 'phone', null),
+            'password' => $provider ? null : $data['password'],
             'confirmation_code' => md5(uniqid(mt_rand(), true)),
-            'status'            => 1,
-            'confirmed'         => config('access.users.confirm_email') ? 0 : 1,
+            'status' => 1,
+            'confirmed' => config('access.users.confirm_email') ? 0 : 1,
         ]);
 
         $user->attachRole($this->role->getDefaultUserRole());
@@ -81,27 +81,27 @@ class EloquentUserRepository implements UserContract {
         $user_provider = UserProvider::with('user')->where('provider_id', $data->id)->where('provider', $provider)->first();
 
         //用户未登录
-        if ( ! $user) {
+        if (!$user) {
             /**
              * 通过provider查找用户是否存在
              * 用户更新电话号码后选择绑定到已有用户,先查询是否存在使用该手机的用户,没有则绑定激活临时用户,有则绑定已注册用户
              */
 
             // 不存在第三方授权信息且为当前为微信开放平台或微信授权,使用union id 查询是否存在绑定用户
-            if ( ! $user_provider && ($provider == 'weixin' || $provider == 'weixinweb') && ! is_null($data->union_id) && $data->union_id) {
+            if (!$user_provider && ($provider == 'weixin' || $provider == 'weixinweb') && !is_null($data->union_id) && $data->union_id) {
                 $user_provider = UserProvider::with('user')->where('union_id', $data->union_id)->first();
             }
 
             /*
             * 不存在授权信息,创建用户
             */
-            if ( ! $user_provider) {
+            if (!$user_provider) {
                 $user_data = [
                     'nickname' => property_exists($data, 'nickname') ? $data->nickname : uniqid($provider . '_'),
-                    'email'    => $data->email ?: '',
-                    'avatar'   => $data->avatar,
-                    'phone'    => property_exists($data, 'phone') ? $data->phone : null,
-                    'status'   => 1
+                    'email' => $data->email ?: '',
+                    'avatar' => $data->avatar,
+                    'phone' => property_exists($data, 'phone') ? $data->phone : null,
+                    'status' => 1
                 ];
                 $user = $this->create($user_data, true);
             } else {
@@ -117,11 +117,11 @@ class EloquentUserRepository implements UserContract {
         }
 
         $providerData = [
-            'avatar'      => $data->avatar,
-            'nickname'    => (property_exists($data, 'nickname') ? $data->nickname : $data->name),
-            'provider'    => $provider,
+            'avatar' => $data->avatar,
+            'nickname' => (property_exists($data, 'nickname') ? $data->nickname : $data->name),
+            'provider' => $provider,
             'provider_id' => $data->id,
-            'union_id'    => (property_exists($data, 'union_id') ? $data->union_id : null)
+            'union_id' => (property_exists($data, 'union_id') ? $data->union_id : null)
         ];
 
 
@@ -163,14 +163,14 @@ class EloquentUserRepository implements UserContract {
         //Have to first check to see if name and email have to be updated
         $userData = [
             'email' => $providerData->email,
-            'name'  => $providerData->name,
+            'name' => $providerData->name,
         ];
         $dbData = [
             'email' => $user->email,
-            'name'  => $user->name,
+            'name' => $user->name,
         ];
         $differences = array_diff($userData, $dbData);
-        if ( ! empty($differences)) {
+        if (!empty($differences)) {
             $user->email = $providerData->email;
             $user->name = $providerData->name;
             $user->save();
@@ -258,7 +258,7 @@ class EloquentUserRepository implements UserContract {
     public function sendConfirmationEmail($user)
     {
         //$user can be user instance or id
-        if ( ! $user instanceof User)
+        if (!$user instanceof User)
             $user = User::findOrFail($user);
 
         return Mail::queue('emails.confirm', ['token' => $user->confirmation_code], function ($message) use ($user) {
@@ -291,5 +291,27 @@ class EloquentUserRepository implements UserContract {
         }
 
         throw new ModelNotFoundException('用户不存在');
+    }
+
+
+    public function getUserInfo($user_id, $with_client = false, $with_roles = true)
+    {
+        $relation = [];
+        if ($with_client) {
+            $relation[] = 'client';
+        }
+        if ($with_roles) {
+            $relation[] = 'roles';
+        }
+
+        if ($user_id instanceof User) {
+            $user = $user_id->load($relation);
+            return $user;
+        }
+
+        if (count($relation)) {
+            return User::with($relation)->find($user_id);
+        }
+        return User::find($user_id);
     }
 }

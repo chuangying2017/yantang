@@ -49,4 +49,8 @@ interface UserContract {
 	 * @return mixed
 	 */
 	public function sendConfirmationEmail($user);
+
+
+
+    public function getUserInfo($user_id, $with_client = false, $with_roles = true);
 }

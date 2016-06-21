@@ -10,6 +10,8 @@ class PromotionProtocol {
     const TYPE_OF_MALL_CAMPAIGN = 'mall_campaign';
     const TYPE_OF_SPECIAL_CAMPAIGN = 'spec_campaign';
 
+    const RULE_TYPE_OF_CAMPAIGN = 'campaign';
+    const RULE_TYPE_OF_COUPON = 'coupon';
 
     const NAME_OF_COUNTER_TOTAL = 'total';
     const NAME_OF_COUNTER_DISPATCH = 'dispatch';
@@ -22,7 +24,7 @@ class PromotionProtocol {
     const QUALI_TYPE_OF_ROLE = 'role';
     const QUALI_TYPE_OF_ALL = 'all';
 
-    public static function getRuleQualification($type)
+    public static function getRuleQualifyChecker($type)
     {
         $handler = null;
         switch ($type) {
@@ -44,7 +46,7 @@ class PromotionProtocol {
     const RANGE_TYPE_OF_AMOUNT = 'amount';
     const RANGE_TYPE_OF_QUANTITY = 'quantity';
 
-    public static function getRuleUsage($type)
+    public static function getRuleUsageFilter($type)
     {
         $handler = null;
         switch ($type) {
@@ -64,7 +66,7 @@ class PromotionProtocol {
     const DISCOUNT_TYPE_OF_COUPON = 'coupon';
     const DISCOUNT_TYPE_OF_PRODUCT = 'product';
 
-    public static function getRuleBenefit($type)
+    public static function getRuleBenefitCalculator($type)
     {
         $handler = null;
         switch ($type) {

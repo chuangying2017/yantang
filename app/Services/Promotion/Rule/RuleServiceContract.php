@@ -1,15 +1,43 @@
 <?php namespace App\Services\Promotion\Rule;
 
+use App\Repositories\Promotion\PromotionSupportRepositoryContract;
+use App\Services\Promotion\Rule\Data\RuleDataContract;
+use App\Services\Promotion\Support\PromotionAbleItemContract;
+
 interface RuleServiceContract {
 
-    public function canGetPromotion($user, $rule_qualify);
+	/**
+     * @return $this
+     */
+    public function filterRelate(PromotionAbleItemContract $items, PromotionSupportRepositoryContract $promotionSupport);
 
-    public function itemsFitPromotion($items, $rule_items);
+	/**
+     * @return $this
+     */
+    public function filterUsable(PromotionAbleItemContract $items);
 
-    public function itemsInRange($usable_items, $range);
+	/**
+     * @param $rule_key
+     * @return $this
+     */
+    public function using(PromotionAbleItemContract $items, $rule_key);
 
-    public function calculatePromotionBenefits($items, $benefits);
+	/**
+     * @param $rule_key
+     * @return $this
+     */
+    public function notUsing(PromotionAbleItemContract $items, $rule_key);
 
-    public function setRule($rule);
+	/**
+     * @param $rules
+     * @return $this
+     */
+    public function setRules($rules);
+
+	/**
+     * @return RuleDataContract
+     */
+    public function getRules();
+
 
 }
