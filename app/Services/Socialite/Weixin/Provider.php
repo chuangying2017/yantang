@@ -145,5 +145,16 @@ class Provider extends AbstractProvider implements ProviderInterface {
         return $response;
     }
 
+    /**
+     * Get the code from the request.
+     *
+     * @return string
+     */
+    protected function getCode()
+    {
+        return \Request::input('code');
+    }
+
+
 
 }

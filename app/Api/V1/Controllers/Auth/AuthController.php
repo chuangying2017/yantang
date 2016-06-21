@@ -68,7 +68,7 @@ class AuthController extends Controller {
     public function loginThirdParty(ThirdPartyRequest $request, $provider)
     {
         try {
-            $user = $this->auth->loginThirdParty($request, $provider);
+            $user = $this->auth->loginThirdParty($request->all(), $provider);
 
             return $this->response->item($user, new UserLoginTransformer());
         } catch (\Exception $e) {
