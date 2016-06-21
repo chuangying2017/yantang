@@ -1,12 +1,12 @@
 <?php namespace App\Api\V1\Transformers\Admin\Product;
 
 
-use App\Models\Product\Category;
+use App\Models\Product\CategoryAbstract;
 use League\Fractal\TransformerAbstract;
 
 class CategoryTransformer extends TransformerAbstract {
 
-    public function transform(Category $category)
+    public function transform(CategoryAbstract $category)
     {
         return $category->toArray();
     }

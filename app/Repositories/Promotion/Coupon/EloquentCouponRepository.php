@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Promotion\Coupon;
 
 use App\Models\Promotion\Coupon;
+use App\Models\Promotion\Ticket;
 use App\Repositories\Promotion\PromotionRepositoryAbstract;
 use App\Repositories\Promotion\Traits\Counter;
 
@@ -31,5 +32,13 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
     public function getCouponsById($coupon_ids)
     {
         return Coupon::with('rules')->whereIn('id', to_array($coupon_ids))->get();
+    }
+
+    public function getUsefulPromotions()
+    {
+        $coupons = Ticket::where('user_id', access()->id())->effect()->coupon()->get();
+        $coupons->load('rules', 'counter');
+
+        return $coupons;
     }
 }

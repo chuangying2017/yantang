@@ -3,7 +3,7 @@
 namespace App\Services\Pay\Events;
 
 use App\Events\Event;
-use App\Models\PingxxPayment;
+use App\Models\Pay\PingxxPayment;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 

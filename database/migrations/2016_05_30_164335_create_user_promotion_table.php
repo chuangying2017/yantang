@@ -15,6 +15,7 @@ class CreateUserPromotionTable extends Migration {
         Schema::create('user_promotion', function (Blueprint $table) {
             $table->integer('user_id')->index();
             $table->integer('promotion_id')->index();
+            $table->integer('rule_id')->index();
             $table->tinyInteger('used')->default(0);
         });
     }

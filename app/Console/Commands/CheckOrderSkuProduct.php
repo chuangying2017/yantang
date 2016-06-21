@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\OrderProduct;
+use App\Models\Order\OrderSku;
 use Illuminate\Console\Command;
 
 class CheckOrderSkuProduct extends Command {
@@ -38,7 +38,7 @@ class CheckOrderSkuProduct extends Command {
      */
     public function handle()
     {
-        $orders = OrderProduct::withTrashed()->with(['product' => function ($query) {
+        $orders = OrderSku::withTrashed()->with(['product' => function ($query) {
             $query->withTrashed();
         }])->get();
         foreach ($orders as $order) {

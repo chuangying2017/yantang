@@ -1,10 +1,18 @@
 <?php namespace App\Services\Promotion;
 
-
 use App\Repositories\Promotion\PromotionSupportRepositoryContract;
+use App\Services\Promotion\Data\PromotionDataProtocol;
+use App\Services\Promotion\Rule\Data\RuleDataContract;
+use App\Services\Promotion\Rule\RuleServiceContract;
+use App\Services\Promotion\Support\PromotionAbleItemContract;
 
-abstract class PromotionServiceAbstract implements PromotionCheckingContract, PromotionUsedContract, PromotionDispatchContact {
+abstract class PromotionServiceAbstract implements PromotionServiceContract {
 
+
+    /**
+     * @var RuleServiceContract
+     */
+    protected $ruleService;
     /**
      * @var PromotionSupportRepositoryContract
      */
@@ -12,37 +20,68 @@ abstract class PromotionServiceAbstract implements PromotionCheckingContract, Pr
 
     /**
      * PromotionServiceAbstract constructor.
-     * @param PromotionSupportRepositoryContract $promotionSupportRepo
+     * @param
      */
-    public function __construct(PromotionSupportRepositoryContract $promotionSupportRepo)
+    public function __construct(PromotionSupportRepositoryContract $promotionSupportRepo, RuleServiceContract $ruleService)
     {
+        $this->ruleService = $ruleService;
         $this->promotionSupportRepo = $promotionSupportRepo;
     }
 
-    protected function canDispatched($user, $rule, $promotion_id)
+
+    public function related(PromotionAbleItemContract $items, $rules = null)
     {
-        return $this->hasQualify($user, $rule) && $this->hasRemain($user['id'], $rule, $promotion_id);
+        $rules_array = is_null($rules) ? $this->promotionSupportRepo->getUsefulRules() : $rules;
+        $this->ruleService->setRules($rules_array)->filterRelate($items, $this->promotionSupportRepo);
+        return $items;
     }
 
-    protected function hasQualify($user, $rule)
+    public function usable(PromotionAbleItemContract $items)
     {
-        $type = $rule['qualify']['type'];
-        switch ($type) {
-            case PromotionProtocol::QUALI_TYPE_OF_ALL :
-                return true;
-            case PromotionProtocol::QUALI_TYPE_OF_LEVEL:
-                return in_array($user['level'], $rule['qualify']['values']);
-            case PromotionProtocol::QUALI_TYPE_OF_USER:
-                return in_array($user['id'], $rule['qualify']['values']);
-            default :
-                return false;
+        $rules = $this->getRelateRules($items);
+        if (!$rules) {
+            $this->related($items);
+        } else {
+            $this->ruleService->setRules($rules);
         }
+
+        $this->ruleService->filterUsable($items);
+
+        return $items;
     }
 
-    protected function hasRemain($user_id, $rule, $promotion_id)
+    public function using(PromotionAbleItemContract $items, $rule_key)
     {
-        return $this->promotionSupportRepo->getUserPromotionTimes($promotion_id, $user_id) <= $rule['qualify']['quantity'];
+        $rules = $this->getRelateRules($items);
+        if (!$rules) {
+            $this->usable($items);
+        } else {
+            $this->ruleService->setRules($rules);
+        }
+
+        $this->ruleService->setRules($rules)
+            ->using($items, $rule_key);
+
+        return $items;
     }
+
+
+    public function notUsing(PromotionAbleItemContract $items, $rule_key)
+    {
+        $rules = $this->getRelateRules($items);
+        if (!$rules) {
+            $this->usable($items);
+        } else {
+            $this->ruleService->setRules($rules);
+        }
+
+        $this->ruleService->setRules($rules)
+            ->notUsing($items, $rule_key);
+
+        return $items;
+    }
+
+    protected abstract function getRelateRules(PromotionAbleItemContract $items);
 
 
 }

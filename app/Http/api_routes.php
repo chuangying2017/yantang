@@ -4,37 +4,25 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
 
+
     $api->group(['namespace' => 'App\Api\V1\Controllers', 'middleware' => 'cors'], function ($api) {
 
         /**
-         * Frontend Access Controllers
+         * 用户相关
          */
-        $api->group(['namespace' => 'Auth'], function () use ($api) {
-            /**
-             * These routes require the user to be logged in
-             */
-            $api->group(['middleware' => 'auth'], function ($api) {
-                $api->get('auth/logout', 'AuthController@getLogout');
-                $api->get('auth/password/change', 'PasswordController@getChangePassword');
-                $api->post('auth/password/change', 'PasswordController@postChangePassword')->name('password.change');
-            });
+        require_once(__DIR__ . '/../Api/V1/Routes/user_api.php');
 
-            /**
-             * These reoutes require the user NOT be logged in
-             */
-            $api->group(['middleware' => 'guest', 'web'], function () use ($api) {
-                $api->get('auth/login/{provider}', 'AuthController@loginThirdPartyUrl')->name('auth.provider.url');
-                $api->post('auth/login/{provider}', 'AuthController@loginThirdParty')->name('auth.provider');
-                $api->controller('auth', 'AuthController');
-                $api->controller('password', 'PasswordController');
-            });
+        /**
+         * 商城
+         */
+        require_once(__DIR__ . '/../Api/V1/Routes/mall_api.php');
 
-            /**
-             * Sms
-             */
-            $api->post('auth/sms/send-code', 'SmsController@postSendCode')->name('auth.sms.send');
-            $api->get('auth/sms/debug', 'SmsController@getInfo')->name('auth.sms.debug');
-        });
+        /**
+         *
+         * Admin
+         *
+         */
+        require_once(__DIR__ . '/../Api/V1/Routes/admin_api.php');
 
         /**
          * 订奶系统
@@ -77,28 +65,14 @@ $api->version('v1', function ($api) {
 
         /**
          *
-         * Admin
-         *
-         */
-        $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
-            $api->group(['namespace' => 'Product'], function ($api) {
-                $api->resource('products', 'ProductController');
-                $api->resource('attributes', 'AttributeController');
-                $api->resource('attributes.values', 'AttributeValueController');
-                $api->resource('brands', 'BrandController');
-                $api->resource('groups', 'BrandController');
-                $api->resource('cats', 'CategoryController');
-            });
-        });
-
-        /**
-         *
          * Station
          *
          */
         $api->group(['namespace' => 'Subscribe\Station', 'prefix' => 'stations'], function ($api) {
             $api->get('products', 'ProductController@index');
         });
+
+
     });
 
 });

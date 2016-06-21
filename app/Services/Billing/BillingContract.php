@@ -7,7 +7,7 @@
 interface BillingContract
 {
 
-    public function create($amount);
+//    public function create($amount);
 
     public function getID();
 
@@ -23,6 +23,6 @@ interface BillingContract
 
     public function setID($billing_id);
 
-    public function setPaid($pay_type, $pay_channel);
+//    public function setPaid($pay_type, $pay_channel);
 
 }

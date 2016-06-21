@@ -167,12 +167,13 @@ return [
         * Custom Service Providers
         */
         App\Providers\LocalEnvironmentServiceProvider::class,
-        App\Services\Marketing\MarketingServiceProvider::class,
-        \App\Providers\ApiServiceProvider::class,
+        App\Providers\ApiServiceProvider::class,
         App\Providers\ClientServiceProvider::class,
+        App\Providers\OrderServiceProvider::class,
 
 
-        \App\Services\Product\Providers\ProductServiceProvider::class,
+
+        App\Services\Product\Providers\ProductServiceProvider::class,
         App\Providers\SubscribeServiceProvider::class,
 
         /*

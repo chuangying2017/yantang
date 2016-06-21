@@ -1,31 +1,29 @@
 <?php namespace App\Services\Promotion;
 
-class CampaignService extends PromotionServiceAbstract {
+use App\Repositories\Promotion\Campaign\CampaignRepositoryContract;
+use App\Services\Promotion\Rule\RuleServiceContract;
+use App\Services\Promotion\Support\PromotionAbleItemContract;
 
+class CampaignService extends PromotionServiceAbstract implements PromotionAutoUsing {
 
-    public function check($items, $user)
+    public function __construct(CampaignRepositoryContract $campaignRepo, RuleServiceContract $ruleService)
     {
-        $campaigns = $this->promotionSupportRepo->getCampaigns();
-
-        foreach ($campaigns as $campaign_key => $campaign) {
-            if (!$this->dispatch($campaign, $user['id'])) {
-            }
-        }
+        parent::__construct($campaignRepo, $ruleService);
     }
 
-    public function used($promotions, $items, $user, $order)
+    public function autoUsing(PromotionAbleItemContract $items)
     {
-        // TODO: Implement used() method.
-    }
+        $this->usable($items);
 
-    public function dispatch($campaign, $user)
-    {
-        foreach ($campaign['rules'] as $rule_key => $rule) {
-            if (!$this->canDispatched($user, $rule, $campaign['id'])) {
-                unset($campaign['rules'][$rule_key]);
-            }
+        foreach ($this->ruleService->getRules()->getAll() as $rule_key => $rule) {
+            $this->using($items, $rule_key);
         }
 
-        return count($campaign['rules']);
+        return $items;
+    }
+
+    protected function getRelateRules(PromotionAbleItemContract $items)
+    {
+        return $items->getRelateCampaigns();
     }
 }

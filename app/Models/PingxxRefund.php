@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Pay\PingxxPayment;
 use Illuminate\Database\Eloquent\Model;
 
 class PingxxRefund extends Model {
