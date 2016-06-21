@@ -1,5 +1,7 @@
 <?php namespace App\Services\Access;
+
 use App\Repositories\Store\StoreRepositoryContract;
+use JWTAuth;
 
 /**
  * Class Access
@@ -30,7 +32,7 @@ class Access {
     public function user()
     {
         //从jwt token中获取用户
-        if (!\Tymon\JWTAuth\Facades\JWTAuth::getToken()) {
+        if (!JWTAuth::getToken()) {
 
             if (auth('web')->check()) {
                 return auth('web')->user();
@@ -40,8 +42,7 @@ class Access {
         }
 
         try {
-            $user = \Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
-
+            $user = JWTAuth::authenticate();
             return $user;
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return false;
@@ -56,8 +57,7 @@ class Access {
      */
     public function id()
     {
-        if (!\Tymon\JWTAuth\Facades\JWTAuth::getToken()) {
-
+        if (!JWTAuth::getToken()) {
             if (auth('web')->check()) {
                 return auth('web')->id();
             }
@@ -66,7 +66,7 @@ class Access {
         }
 
         try {
-            $user = \Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
+            $user = JWTAuth::authenticate();
 
             return $user->id;
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {

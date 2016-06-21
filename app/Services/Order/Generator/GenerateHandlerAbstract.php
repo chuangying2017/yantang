@@ -24,7 +24,7 @@ abstract class GenerateHandlerAbstract {
             $this->handler->handle($temp_order);
         }
 
-        return compact('order_info');
+        return $temp_order;
     }
 
 }

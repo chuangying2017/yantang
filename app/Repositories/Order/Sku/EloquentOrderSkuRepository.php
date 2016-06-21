@@ -34,7 +34,7 @@ class EloquentOrderSkuRepository implements OrderSkuRepositoryContract {
             'price' => $temp_order_sku['price'],
             'discount_amount' => $temp_order_sku['discount_amount'],
             'pay_amount' => $temp_order_sku['pay_amount'],
-            'attr' => $temp_order_sku['attr']
+            'attr' => $temp_order_sku['attr'] ? : ''
         ]);
     }
 

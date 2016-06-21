@@ -1,15 +1,15 @@
 <?php namespace App\Api\V1\Transformers\Campaign;
 
+use App\Models\Store;
 use League\Fractal\TransformerAbstract;
-use Symfony\Component\HttpKernel\HttpCache\Store;
 
 class StoreTransformer extends TransformerAbstract {
 
     public function transform(Store $store)
     {
         return [
+            'id' => $store['id'],
             'name' => $store['name'],
-            'user_id' => $store['user_id'],
             'address' => $store['address'],
             'cover_image' => $store['cover_image'],
             'director' => $store['director'],

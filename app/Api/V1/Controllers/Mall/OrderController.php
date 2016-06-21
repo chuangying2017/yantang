@@ -54,7 +54,7 @@ class OrderController extends Controller {
 
             $order = app()->make(OrderGenerator::class)->confirm($temp_order_id);
 
-            return $this->response->item($order, new ClientOrderTransformer());
+            return $this->response->item($order, new ClientOrderTransformer())->setStatusCode(201);
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }

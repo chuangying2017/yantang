@@ -74,13 +74,13 @@ abstract class ClientOrderRepositoryAbstract implements ClientOrderRepositoryCon
             'user_id' => $data['user']['id'],
             'order_no' => NoGenerator::generateOrderNo(),
             'total_amount' => $data['total_amount'],
-            'product_amount' => $data['product_amount'],
+            'products_amount' => $data['products_amount'],
             'discount_amount' => $data['discount_amount'],
             'express_fee' => $data['express_fee'],
             'pay_amount' => $data['pay_amount'],
             'order_type' => $this->type,
             'pay_status' => OrderProtocol::PAID_STATUS_OF_UNPAID,
-            'order_status' => OrderProtocol::STATUS_OF_UNPAID,
+            'status' => OrderProtocol::STATUS_OF_UNPAID,
             'pay_type' => OrderProtocol::PAY_TYPE_OF_ONLINE,
             'deliver_type' => OrderProtocol::getDeliverType($this->type)
         ]);

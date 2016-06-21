@@ -38,11 +38,24 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         return Faker\Factory::create();
     }
 
-    protected function setUser()
+    protected function setUser($user_id = null)
     {
-        $user = \App\Models\Access\User\User::create();
+        if ($user_id) {
+            $user = \App\Models\Access\User\User::find($user_id);
+        } else {
+            $user = \App\Models\Access\User\User::create();
+        }
 
         $this->actingAs($user);
+        return $user;
+    }
+
+    protected function getToken($user_id = null)
+    {
+        $user = $this->setUser($user_id);
+
+        return JWTAuth::fromUser($user);
+
     }
 
 

@@ -6,7 +6,10 @@ class EloquentAddressRepository implements AddressRepositoryContract {
 
     public function getAddress($address_id)
     {
-        return Address::query()->findOrFail($address_id);
+        if($address_id instanceof Address) {
+            return $address_id;
+        }
+        return Address::findOrFail($address_id);
     }
 
     public function getAllAddress()

@@ -5,6 +5,7 @@ use App\Models\Access\User\User;
 use App\Models\Access\User\UserProvider;
 use App\Exceptions\GeneralException;
 use App\Repositories\Auth\User\UserContract;
+use App\Services\Promotion\Support\PromotionAbleUserContract;
 use Illuminate\Contracts\Validation\UnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Mail;
@@ -16,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
  * Class EloquentUserRepository
  * @package App\Repositories\User
  */
-class EloquentUserRepository implements UserContract {
+class EloquentUserRepository implements UserContract, PromotionAbleUserContract {
 
     /**
      * @var RoleRepositoryContract
@@ -313,5 +314,25 @@ class EloquentUserRepository implements UserContract {
             return User::with($relation)->find($user_id);
         }
         return User::find($user_id);
+    }
+
+    public function setUser(User $user)
+    {
+        // TODO: Implement setUser() method.
+    }
+
+    public function getUserId()
+    {
+        // TODO: Implement getUserId() method.
+    }
+
+    public function getUserLevel()
+    {
+        // TODO: Implement getUserLevel() method.
+    }
+
+    public function getUserRoles()
+    {
+        // TODO: Implement getUserRoles() method.
     }
 }

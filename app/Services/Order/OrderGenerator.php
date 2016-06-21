@@ -54,8 +54,7 @@ class OrderGenerator implements OrderGeneratorContract {
     public function buyCart($user_id, $cart_ids, $address_id)
     {
         $carts = app(CartRepositoryContract::class)->getMany($cart_ids, false);
-
-        return $this->buy($user_id, $carts->only(['product_sku_id', 'quantity']), $address_id);
+        return $this->buy($user_id, $carts->toArray(), $address_id);
     }
 
     protected function campaignOrder($user_id, $skus, $campaign_id)
@@ -75,7 +74,7 @@ class OrderGenerator implements OrderGeneratorContract {
         $temp_order = $handler->handle($temp_order);
 
         $this->setOrderRepo(app()->make(CampaignOrderRepository::class));
-        $order = $this->orderRepo->createOrder($temp_order);
+        $order = $this->orderRepo->createOrder($temp_order->toArray());
 
         return $order;
     }
@@ -108,7 +107,7 @@ class OrderGenerator implements OrderGeneratorContract {
         }
 
         $this->setOrderRepo(app()->make(MallClientOrderRepository::class));
-        $order = $this->orderRepo->createOrder($temp_order);
+        $order = $this->orderRepo->createOrder($temp_order->toArray());
 
         return $order;
     }
@@ -142,15 +141,6 @@ class OrderGenerator implements OrderGeneratorContract {
     {
         $temp_order = Cache::pull($temp_order_id);
         return $temp_order;
-    }
-
-    protected function saveTempOrder(TempOrder $temp_order)
-    {
-        $temp_order_id = $temp_order->getTempOrderId();
-        if (Cache::has($temp_order_id)) {
-            Cache::forget($temp_order_id);
-            Cache::put($temp_order_id, $temp_order, 30);
-        }
     }
 
 

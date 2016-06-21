@@ -53,5 +53,21 @@ class PromotionServiceProvider extends ServiceProvider {
             \App\Repositories\Promotion\Rule\RuleRepositoryContract::class,
             \App\Repositories\Promotion\Rule\EloquentRuleRepository::class
         );
+
+        $this->app->bind(
+            \App\Services\Promotion\Rule\RuleServiceContract::class,
+            \App\Services\Promotion\Rule\RuleService::class
+        );
+
+        $this->app->bind(
+            \App\Services\Promotion\Rule\Data\RuleDataContract::class,
+            \App\Services\Promotion\Rule\Data\RuleData::class
+        );
+
+        $this->app->bind(
+            \App\Services\Promotion\Support\PromotionAbleUserContract::class,
+            \App\Repositories\Auth\User\EloquentUserRepository::class
+        );
+
     }
 }

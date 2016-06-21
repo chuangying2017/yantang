@@ -83,7 +83,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     public function getAll($not_over_time = true)
     {
         $model = $this->getModel();
-        $query = $model::newQuery();
+        $query = $model::query();
         if ($not_over_time) {
             $query = $query->effect();
         }
@@ -93,7 +93,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     public function getAllPaginated($not_over_time = true)
     {
         $model = $this->getModel();
-        $query = $model::newQuery();
+        $query = $model::query();
         if ($not_over_time) {
             $query = $query->effect();
         }

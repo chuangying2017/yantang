@@ -8,6 +8,9 @@ class OrderPromotionRepository implements OrderPromotionRepositoryContract {
 
     public function createOrderPromotion($order_id, $promotions_data)
     {
+        if(!$promotions_data) {
+            return ;
+        }
 
         foreach ($promotions_data as $promotion_data) {
             OrderPromotion::create([

@@ -13,7 +13,7 @@ class UpdateStaffWeeklyTable extends Migration
     public function up()
     {
         Schema::table('staff_weekly', function (Blueprint $table) {
-            $table->integer('preorder_id')->after('week_of_year');
+            $table->integer('preorder_id')->after('week_id');
             $table->text('mon')->nullable()->change();
             $table->text('wed')->nullable()->change();
             $table->text('tue')->nullable()->change();

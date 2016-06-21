@@ -38,7 +38,7 @@ class CartOrderController extends Controller {
 
         $temp_order = $this->orderGenerator->buyCart(access()->id(), $cart_ids, $address_id);
 
-        return $this->response->array(['data' => $temp_order>toArray()]);
+        return $this->response->array(['data' => $temp_order->toArray()]);
     }
 
 

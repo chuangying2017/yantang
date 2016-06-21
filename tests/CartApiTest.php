@@ -30,7 +30,7 @@ class CartApiTest extends TestCase {
     /** @test */
     public function it_can_add_a_sku_to_cart()
     {
-        $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 100]);
+        $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 100], ['Authorization' => 'Bearer ' . $this->getToken()]);
         $this->dumpResponse();
         $this->assertResponseStatus(201);
     }
