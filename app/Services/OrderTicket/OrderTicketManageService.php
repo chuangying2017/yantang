@@ -1,5 +1,6 @@
 <?php namespace App\Services\OrderTicket;
 
+use App\Repositories\Order\CampaignOrderRepository;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\Promotion\OrderPromotionRepositoryContract;
 use App\Repositories\OrderTicket\OrderTicketProtocol;
@@ -13,7 +14,7 @@ class OrderTicketManageService implements OrderTicketManageContract {
      */
     private $ticketRepo;
     /**
-     * @var ClientOrderRepositoryContract
+     * @var CampaignOrderRepository
      */
     private $orderRepo;
     /**
@@ -27,7 +28,7 @@ class OrderTicketManageService implements OrderTicketManageContract {
      */
     public function __construct(
         OrderTicketRepositoryContract $ticketRepo,
-        ClientOrderRepositoryContract $orderRepo,
+        CampaignOrderRepository $orderRepo,
         OrderPromotionRepositoryContract $orderPromotion
     )
     {

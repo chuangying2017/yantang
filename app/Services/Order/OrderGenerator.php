@@ -1,7 +1,9 @@
 <?php namespace App\Services\Order;
 
 use App\Repositories\Cart\CartRepositoryContract;
+use App\Repositories\Order\CampaignOrderRepository;
 use App\Repositories\Order\ClientOrderRepositoryContract;
+use App\Repositories\Order\MallClientOrderRepository;
 use App\Services\Order\Generator\CalExpressFee;
 use App\Services\Order\Generator\CalSkuAmount;
 use App\Services\Order\Generator\CheckCampaign;
@@ -23,14 +25,6 @@ class OrderGenerator implements OrderGeneratorContract {
      */
     private $orderRepo;
 
-    /**
-     * OrderGenerator constructor.
-     * @param ClientOrderRepositoryContract $orderRepo
-     */
-    public function __construct(ClientOrderRepositoryContract $orderRepo)
-    {
-        $this->orderRepo = $orderRepo;
-    }
 
     /**
      * @param $user_id
@@ -75,11 +69,15 @@ class OrderGenerator implements OrderGeneratorContract {
         ];
         $handler = $this->getOrderGenerateHandler($config);
 
+
         $temp_order = new TempOrder($user_id, $skus);
         $temp_order->setRequestPromotion($campaign_id);
         $temp_order = $handler->handle($temp_order);
 
-        return $temp_order;
+        $this->setOrderRepo(app()->make(CampaignOrderRepository::class));
+        $order = $this->orderRepo->createOrder($temp_order);
+
+        return $order;
     }
 
     protected function mallOrder($user_id, $skus, $address)
@@ -98,9 +96,7 @@ class OrderGenerator implements OrderGeneratorContract {
 
         $temp_order = $handler->handle(new TempOrder($user_id, $skus, $address));
 
-        $order = $this->orderRepo->createOrder($temp_order);
-
-        return $order;
+        return $temp_order;
     }
 
 
@@ -111,6 +107,7 @@ class OrderGenerator implements OrderGeneratorContract {
             throw new \Exception('下单超时');
         }
 
+        $this->setOrderRepo(app()->make(MallClientOrderRepository::class));
         $order = $this->orderRepo->createOrder($temp_order);
 
         return $order;
@@ -157,4 +154,8 @@ class OrderGenerator implements OrderGeneratorContract {
     }
 
 
+    public function setOrderRepo(ClientOrderRepositoryContract $orderRepo)
+    {
+        $this->orderRepo = $orderRepo;
+    }
 }

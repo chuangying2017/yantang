@@ -17,6 +17,7 @@ class UserThirdPartyAuthTest extends TestCase {
     {
         $this->setProvider('weixin');
         $this->oauthUrl();
+        $this->dumpResponse();
     }
 
     /** @test */

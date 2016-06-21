@@ -19,7 +19,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
             $api->resource('cats', 'CategoryController');
         });
 
-        $api->group(['namespace' => 'Product'], function ($api) {
+        $api->group(['namespace' => 'Campaign'], function ($api) {
             $api->resource('stores', 'StoreController');
             $api->resource('campaigns', 'CampaignController');
         });

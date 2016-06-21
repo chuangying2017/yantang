@@ -19,7 +19,8 @@ class StaffsController extends Controller
     public function __construct(StaffRepositoryContract $staffs, StationRepositoryContract $station)
     {
         $this->staffs = $staffs;
-        $this->station_id = $station->getByUserId(access()->id())->id;
+        $station = $station->getByUserId(access()->id());
+        $this->station_id = $station['id'];
     }
 
     /**

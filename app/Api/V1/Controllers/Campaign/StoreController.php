@@ -43,9 +43,17 @@ class StoreController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function getBind(Request $request, $store_id)
     {
-        //
+
+        if (!check_bind_token($store_id, $request->input('bind_token'))) {
+            $this->response->errorForbidden('无权限查看');
+        }
+
+        $store = $this->storeRepo->getStore($store_id);
+
+//        version('v1')->route('api.store.check.bind', [$store_id]) =  generate_bind_token($store_id);
+//        return $this->response->item($store, new StoreTransformer())->setMeta($bind_token);
     }
 
     /**
@@ -54,42 +62,20 @@ class StoreController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function postBind(Request $request, $store_id)
     {
-        //
+        if (!check_bind_token($store_id, $request->input('bind_token'))) {
+            $this->response->errorForbidden('无权限查看');
+        }
+
+        $success = $this->storeRepo->bindUser($store_id, access()->id());
+
+        if ($success) {
+            return $this->response->created();
+        }
+
+        $this->response->errorBadRequest('绑定失败');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

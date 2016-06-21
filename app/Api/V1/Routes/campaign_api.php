@@ -21,6 +21,8 @@ $api->group(['namespace' => 'Campaign'], function ($api) {
 
             $api->resource('exchange', 'StoreExchangeController');
             $api->get('info', 'StoreController@info');
+            $api->get('/{store_id}/bind', 'StoreController@getBind')->name('api.store.check.bind.get');
+            $api->post('/{store_id}/bind', 'StoreController@postBind')->name('api.store.bind');
             $api->resource('statements', 'StoreStatementController');
             $api->resource('tickets', 'StoreTicketController');
 

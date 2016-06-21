@@ -15,6 +15,6 @@ trait ApiStateless {
     protected function hasInvalidState()
     {
         #TODO 提高安全性
-        return true;
+        return false;
     }
 }

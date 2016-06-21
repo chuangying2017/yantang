@@ -18,6 +18,11 @@ $api->version('v1', function ($api) {
         require_once(__DIR__ . '/../Api/V1/Routes/mall_api.php');
 
         /**
+         * 优惠购
+         */
+        require_once(__DIR__ . '/../Api/V1/Routes/campaign_api.php');
+
+        /**
          *
          * Admin
          *
