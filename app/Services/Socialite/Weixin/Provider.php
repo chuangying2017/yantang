@@ -122,6 +122,7 @@ class Provider extends AbstractProvider implements ProviderInterface {
      */
     protected function parseAccessToken($body)
     {
+
         $jsonArray = json_decode($body, true);
         $this->openId = $jsonArray['openid'];
 
