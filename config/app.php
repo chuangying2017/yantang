@@ -170,6 +170,7 @@ return [
         App\Providers\ApiServiceProvider::class,
         App\Providers\ClientServiceProvider::class,
         App\Providers\OrderServiceProvider::class,
+        App\Providers\UserServiceProvider::class,
 
 
 

@@ -1,5 +1,6 @@
 <?php namespace App\Services\Order;
 
+use App\Repositories\Cart\CartRepositoryContract;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Services\Order\Generator\CalExpressFee;
 use App\Services\Order\Generator\CalSkuAmount;
@@ -41,13 +42,26 @@ class OrderGenerator implements OrderGeneratorContract {
      *  ]
      * ]
      */
-    public function buy($user_id, $skus, $address = null, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN, $promotion_id = null)
+    public function buy($user_id, $skus, $address_id = null, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN, $promotion_id = null)
     {
         if ($type == OrderProtocol::ORDER_TYPE_OF_CAMPAIGN) {
             return $this->campaignOrder($user_id, $skus, $promotion_id);
         }
 
-        return $this->mallOrder($user_id, $skus, $address);
+        return $this->mallOrder($user_id, $skus, $address_id);
+    }
+
+    /**
+     * @param $user_id
+     * @param $cart_ids
+     * @param $address_id
+     * @return TempOrder
+     */
+    public function buyCart($user_id, $cart_ids, $address_id)
+    {
+        $carts = app(CartRepositoryContract::class)->getMany($cart_ids, false);
+
+        return $this->buy($user_id, $carts->only(['product_sku_id', 'quantity']), $address_id);
     }
 
     protected function campaignOrder($user_id, $skus, $campaign_id)
@@ -102,6 +116,11 @@ class OrderGenerator implements OrderGeneratorContract {
         return $order;
     }
 
+    /**
+     * @param $temp_order_id
+     * @param $coupon_id
+     * @return TempOrder
+     */
     public function useCoupon($temp_order_id, $coupon_id)
     {
         #todo 传输coupon值
@@ -136,4 +155,6 @@ class OrderGenerator implements OrderGeneratorContract {
             Cache::put($temp_order_id, $temp_order, 30);
         }
     }
+
+
 }

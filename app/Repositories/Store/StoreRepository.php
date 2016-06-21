@@ -54,12 +54,12 @@ class StoreRepository implements StoreRepositoryContract {
 
     public function updateAsActive($store_ids)
     {
-        return Store::whereIn('store', to_array($store_ids))->update(['active' => 1]);
+        return Store::whereIn('id', to_array($store_ids))->update(['active' => 1]);
     }
 
     public function updateAsUnActive($store_ids)
     {
-        return Store::whereIn('store', to_array($store_ids))->update(['active' => 0]);
+        return Store::whereIn('id', to_array($store_ids))->update(['active' => 0]);
     }
 
     public function deleteStore($store_id)
@@ -75,6 +75,18 @@ class StoreRepository implements StoreRepositoryContract {
         return Store::find($store_id);
     }
 
+    public function getStoreByUser($user_id)
+    {
+        $relate = \DB::table('store_user')
+            ->where('user_id', $user_id)
+            ->first();
+        if (!$relate) {
+            throw new \Exception('用户未绑定店铺', 403);
+        }
+
+        return $this->getStore($relate->store_id);
+    }
+
     public function getAll()
     {
         return Store::get();
@@ -88,5 +100,12 @@ class StoreRepository implements StoreRepositoryContract {
     public function unbindUser($store_id, $user_id)
     {
         DB::table('store_user')->where('store_id', $store_id)->where('user_id', $user_id)->delete();
+    }
+
+    public function getStoreIdByUser($user_id)
+    {
+        $store = $this->getStoreByUser($user_id);
+
+        return $store['id'];
     }
 }

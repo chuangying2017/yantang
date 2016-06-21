@@ -35,7 +35,7 @@ class OrderController extends Controller {
      */
     public function index()
     {
-        $orders = $this->clientOrderRepo->getAllOrders();
+        $orders = $this->clientOrderRepo->getPaginatedOrders();
 
         return $this->response->paginator($orders, new ClientOrderTransformer());
     }
@@ -60,6 +60,7 @@ class OrderController extends Controller {
         }
     }
 
+
     /**
      * Display the specified resource.
      *
@@ -83,5 +84,7 @@ class OrderController extends Controller {
     public function destroy(Request $request, $id)
     {
         app()->make(OrderManageContract::class)->orderCancel($id, $request->input('memo'));
+
+        return $this->response->noContent();
     }
 }

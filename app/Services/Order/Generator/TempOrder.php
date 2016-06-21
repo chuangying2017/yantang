@@ -26,7 +26,7 @@ class TempOrder implements PromotionAbleItemContract{
         $this->setTempOrderId('temp_' . generate_no());
     }
 
-    public function get()
+    public function toArray()
     {
         return [
             'temp_order_id' => $this->temp_order_id,
@@ -421,5 +421,10 @@ class TempOrder implements PromotionAbleItemContract{
     public function getRequestPromotion()
     {
         return $this->request_promotion;
+    }
+
+    public function get()
+    {
+        // TODO: Implement get() method.
     }
 }

@@ -1,5 +1,5 @@
 <?php namespace App\Repositories\Order\Promotion;
-interface OrderPromotionContract {
+interface OrderPromotionRepositoryContract {
 
     public function createOrderPromotion($order_id, $promotion_data);
 

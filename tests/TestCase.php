@@ -38,5 +38,12 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         return Faker\Factory::create();
     }
 
+    protected function setUser()
+    {
+        $user = \App\Models\Access\User\User::create();
+
+        $this->actingAs($user);
+    }
+
 
 }

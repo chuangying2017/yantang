@@ -5,9 +5,10 @@
  */
 $api->group(['namespace' => 'Mall', 'prefix' => 'mall'], function ($api) {
     $api->group(['middleware' => 'auth'], function ($api) {
+        $api->resource('orders/cart', 'CartOrderController', ['only' => ['store', 'update', 'destroy']]);
         $api->resource('cart', 'CartController');
         $api->resource('orders', 'OrderController');
-        $api->resource('orders.checkout', 'CheckoutController');
+        $api->resource('orders.checkout', 'CheckoutController', ['only' => ['index', 'store']]);
     });
 
     $api->resource('products', 'ProductController', ['only' => ['index', 'show']]);

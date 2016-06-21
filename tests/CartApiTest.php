@@ -35,10 +35,5 @@ class CartApiTest extends TestCase {
         $this->assertResponseStatus(201);
     }
 
-    protected function setUser()
-    {
-        $user = \App\Models\Access\User\User::create();
 
-        $this->actingAs($user);
-    }
 }

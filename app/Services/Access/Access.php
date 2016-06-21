@@ -1,4 +1,5 @@
 <?php namespace App\Services\Access;
+use App\Repositories\Store\StoreRepositoryContract;
 
 /**
  * Class Access
@@ -73,6 +74,11 @@ class Access {
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function storeId()
+    {
+        return $this->app->make(StoreRepositoryContract::class)->getStoreIdByUser($this->id());
     }
 
     public function getProviderId($provider = 'weixin')
