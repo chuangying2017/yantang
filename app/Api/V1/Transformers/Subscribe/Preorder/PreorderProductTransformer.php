@@ -1,0 +1,31 @@
+<?php namespace App\Api\V1\Transformers\Subscribe\Preorder;
+
+use League\Fractal\TransformerAbstract;
+use App\Models\Subscribe\PreorderProduct;
+
+class PreorderProductTransformer extends TransformerAbstract
+{
+
+    public function transform(PreorderProduct $preorder_product)
+    {
+        $data = [
+            'id' => $preorder_product->id,
+            'preorder_id' => $preorder_product->preorder_id,
+            'weekday' => $preorder_product->weekday,
+            'created_at' => $preorder_product->created_at,
+            'updated_at' => $preorder_product->updated_at,
+        ];
+
+        $data['preorder_product_sku'] = $this->transformSku($preorder_product);
+
+        return $data;
+    }
+
+
+    public function transformSku($preorder_product)
+    {
+        $preorder_product_sku = $preorder_product->preorderProductSku;
+        return $preorder_product_sku->toArray();
+    }
+
+}

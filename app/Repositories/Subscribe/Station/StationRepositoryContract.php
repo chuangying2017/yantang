@@ -42,7 +42,7 @@ interface StationRepositoryContract
      * @param $input
      * @return mixed
      */
-    public function update($id, $input);
+    public function update($input, $id);
 
     /**
      * @param $id
@@ -55,4 +55,10 @@ interface StationRepositoryContract
      * @return mixed
      */
     public function destroy($id);
+
+    public function preorder($user_id, $type, $pre_page);
+
+    public function weekly($user_id, $week_of_year);
+
+    public function allStationBillings($begin_time, $end_time);
 }

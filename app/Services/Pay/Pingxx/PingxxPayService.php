@@ -7,7 +7,8 @@ use App\Services\Pay\Events\PingxxPaymentIsPaid;
 use App\Services\Pay\PayableContract;
 use App\Services\Pay\ThirdPartyPayContract;
 
-class PingxxPayService implements PayableContract, ThirdPartyPayContract {
+class PingxxPayService implements PayableContract, ThirdPartyPayContract
+{
 
     protected $channel;
 

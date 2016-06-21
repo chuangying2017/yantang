@@ -16,9 +16,7 @@ class CreatePreorderProductsTable extends Migration
             $table->increments('id');
             $table->integer('preorder_id')->unsigned();
             $table->tinyInteger('weekday');
-            $table->integer('sku_id')->unsigned();
-            $table->string('sku_name');
-            $table->integer('count');
+            $table->tinyInteger('daytime');
             $table->timestamps();
         });
     }

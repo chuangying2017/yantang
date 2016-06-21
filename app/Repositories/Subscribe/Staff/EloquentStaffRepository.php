@@ -1,7 +1,9 @@
 <?php namespace App\Repositories\Subscribe\Staff;
 
 use App\Models\Subscribe\StationStaffs;
+use Carbon\Carbon;
 use Pheanstalk\Exception;
+use App\Services\Subscribe\PreorderProtocol;
 
 class EloquentStaffRepository implements StaffRepositoryContract
 {
@@ -48,8 +50,21 @@ class EloquentStaffRepository implements StaffRepositoryContract
 
     public function destroy($id)
     {
-        //todo 补充关联的删除
-        $station = StationStaffs::findOrFail($id);
-        $station->delete();
+        return StationStaffs::destroy($id);
     }
+
+    public function byUserId($user_id, $with_order = false)
+    {
+        $staff = StationStaffs::where('user_id', '=', $user_id)->first();
+        if ($with_order) {
+            $status = PreorderProtocol::STATUS_OF_NORMAL;
+            $charge_status = PreorderProtocol::STATUS_OF_ENOUGH;
+            $staff = $staff->load(['preorders' => function ($query) use ($status, $charge_status) {
+                $query->where('status', '=', $status)->where('charge_status', '=', $charge_status)->with('product')->with('product.sku');
+            }]);
+        }
+
+        return $staff;
+    }
+
 }

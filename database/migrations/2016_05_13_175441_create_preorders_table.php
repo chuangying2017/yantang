@@ -15,6 +15,7 @@ class CreatePreordersTable extends Migration
         Schema::create('preorders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
+            $table->integer('station_id')->unsigned();
             $table->string('order_no');
             $table->string('name');
             $table->string('phone', 11);
@@ -24,8 +25,8 @@ class CreatePreordersTable extends Migration
             $table->dateTime('pause_time'); //暂停时间
             $table->dateTime('restart_time');
             $table->tinyInteger('daytime')->default(0);
-            $table->string('status', 32);
-            $table->string('charge_status', 32);
+            $table->string('status', 32)->default(0);
+            $table->string('charge_status', 32)->default(0);
             $table->timestamps();
         });
     }

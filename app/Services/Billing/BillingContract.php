@@ -4,7 +4,8 @@
  * Interface BillingContract
  * @package App\Services\Billing
  */
-interface BillingContract {
+interface BillingContract
+{
 
 //    public function create($amount);
 
