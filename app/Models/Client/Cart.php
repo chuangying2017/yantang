@@ -13,10 +13,9 @@ class Cart extends Model {
 
     protected $guarded = ['id'];
 
-
     public function sku()
     {
-        return $this->hasOne(ProductSku::class, 'product_sku_id', 'id');
+        return $this->hasOne(ProductSku::class, 'id', 'product_sku_id');
     }
 
 }
