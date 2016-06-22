@@ -2,7 +2,7 @@
 
 use App\Services\Order\OrderProtocol;
 
-class CampaignOrderRepository extends ClientOrderRepositoryAbstract {
+class CampaignOrderRepository extends ClientOrderRepository {
 
     protected function setOrderType()
     {
