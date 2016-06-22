@@ -51,11 +51,19 @@ class CartOrderController extends Controller {
      */
     public function update(Request $request, $temp_order_id)
     {
-        $ticket_id = $request->input('ticket_id');
+        $address_id = $request->input('address') ?: null;
+        if ($address_id) {
+            $temp_order = $this->orderGenerator->setAddress($temp_order_id, $address_id);
+            return $this->response->array(['data' => $temp_order->toArray()]);
+        }
 
-        $temp_order = $this->orderGenerator->useCoupon($temp_order_id, $ticket_id);
+        $ticket_id = $request->input('ticket_id') ?: null;
+        if ($ticket_id) {
+            $temp_order = $this->orderGenerator->useCoupon($temp_order_id, $ticket_id);
+            return $this->response->array(['data' => $temp_order->toArray()]);
+        }
 
-        return $this->response->array(['data' => $temp_order->toArray()]);
+        $this->response->errorBadRequest();
     }
 
     /**

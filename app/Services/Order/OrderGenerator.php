@@ -37,13 +37,13 @@ class OrderGenerator implements OrderGeneratorContract {
      *  ]
      * ]
      */
-    public function buy($user_id, $skus, $address_id = null, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN, $promotion_id = null)
+    public function buy($user_id, $skus, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN)
     {
         if ($type == OrderProtocol::ORDER_TYPE_OF_CAMPAIGN) {
-            return $this->campaignOrder($user_id, $skus, $promotion_id);
+            return $this->campaignOrder($user_id, $skus);
         }
 
-        return $this->mallOrder($user_id, $skus, $address_id);
+        return $this->mallOrder($user_id, $skus);
     }
 
     /**
@@ -66,23 +66,18 @@ class OrderGenerator implements OrderGeneratorContract {
         return $this->buy($user_id, $skus, $address_id);
     }
 
-    protected function campaignOrder($user_id, $skus, $campaign_id)
+    protected function campaignOrder($user_id, $skus)
     {
         $config = [
             GetSkuInfo::class,
             GetUserInfo::class,
             CalSkuAmount::class,
-//            UseCampaign::class,
             SaveTempOrder::class,
         ];
 
-
         $handler = $this->getOrderGenerateHandler($config);
 
-
-        $temp_order = new TempOrder($user_id, $skus);
-        $temp_order->setRequestPromotion($campaign_id);
-        $temp_order = $handler->handle($temp_order);
+        $temp_order = $handler->handle(new TempOrder($user_id, $skus));
 
         $this->setOrderRepo(app()->make(CampaignOrderRepository::class));
         $order = $this->orderRepo->createOrder($temp_order->toArray());
@@ -90,12 +85,11 @@ class OrderGenerator implements OrderGeneratorContract {
         return $order;
     }
 
-    protected function mallOrder($user_id, $skus, $address)
+    protected function mallOrder($user_id, $skus)
     {
         $config = [
             GetSkuInfo::class,
             GetUserInfo::class,
-            GetOrderAddress::class,
             CalExpressFee::class,
             CalSkuAmount::class,
             CheckCampaign::class,
@@ -104,7 +98,7 @@ class OrderGenerator implements OrderGeneratorContract {
         ];
         $handler = $this->getOrderGenerateHandler($config);
 
-        $temp_order = $handler->handle(new TempOrder($user_id, $skus, $address));
+        $temp_order = $handler->handle(new TempOrder($user_id, $skus));
 
         return $temp_order;
     }
@@ -160,5 +154,23 @@ class OrderGenerator implements OrderGeneratorContract {
     public function setOrderRepo(ClientOrderRepositoryContract $orderRepo)
     {
         $this->orderRepo = $orderRepo;
+    }
+
+    public function setAddress($temp_order_id, $address)
+    {
+        $temp_order = $this->getTempOrder($temp_order_id);
+
+        $temp_order->setAddress($address);
+
+        $config = [
+            GetOrderAddress::class,
+            SaveTempOrder::class,
+        ];
+
+        $handler = $this->getOrderGenerateHandler($config);
+
+        $temp_order = $handler->handle($temp_order);
+
+        return $temp_order;
     }
 }

@@ -50,18 +50,18 @@ class OrderController extends Controller {
      */
     public function store(Request $request)
     {
-//        try {
+        try {
             $skus = $request->input(['product_skus']);
             $pay_channel = $request->input('channel');
-//            $campaign_id = $request->input('campaign');
 
-            $order = app()->make(OrderGenerator::class)->buy(access()->id(), $skus, null, OrderProtocol::ORDER_TYPE_OF_CAMPAIGN);
+            $order = app()->make(OrderGenerator::class)->buy(access()->id(), $skus, OrderProtocol::ORDER_TYPE_OF_CAMPAIGN);
 
             $charge = app()->make(OrderCheckoutService::class)->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
+
             return $this->response->array(['data' => $charge]);
-//        } catch (\Exception $e) {
-//            $this->response->errorBadRequest($e->getMessage());
-//        }
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
     }
 
     /**

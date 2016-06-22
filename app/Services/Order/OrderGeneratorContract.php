@@ -3,9 +3,11 @@ use App\Repositories\Order\ClientOrderRepositoryContract;
 
 interface OrderGeneratorContract {
 
-    public function buy($user_id, $skus, $address_id = null, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN, $promotion_id = null);
+    public function buy($user_id, $skus, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN);
 
     public function confirm($temp_order_id);
+
+    public function setAddress($temp_order_id ,$address);
 
     public function useCoupon($temp_order_id, $coupon_id);
 

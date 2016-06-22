@@ -24,6 +24,7 @@ class GetOrderAddress extends GenerateHandlerAbstract {
         $temp_order->setAddress(
             $this->addressRepo->getAddress($temp_order->getAddress())
         );
+
         return $this->next($temp_order);
     }
 }
