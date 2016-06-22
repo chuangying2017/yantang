@@ -4,6 +4,7 @@ namespace App\Api\V1\Controllers\Campaign;
 
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Repositories\Order\CampaignOrderRepository;
+use App\Services\Order\Checkout\OrderCheckoutService;
 use App\Services\Order\OrderGenerator;
 use App\Services\Order\OrderManageContract;
 use App\Services\Order\OrderProtocol;
@@ -18,19 +19,14 @@ class OrderController extends Controller {
      * @var CampaignOrderRepository
      */
     private $orderRepo;
-    /**
-     * @var OrderGenerator
-     */
-    private $orderGenerator;
 
     /**
      * OrderController constructor.
      * @param CampaignOrderRepository $orderRepo
      */
-    public function __construct(CampaignOrderRepository $orderRepo, OrderGenerator $orderGenerator)
+    public function __construct(CampaignOrderRepository $orderRepo)
     {
         $this->orderRepo = $orderRepo;
-        $this->orderGenerator = $orderGenerator;
     }
 
     /**
@@ -54,18 +50,18 @@ class OrderController extends Controller {
      */
     public function store(Request $request)
     {
-        try {
-            $skus = $request->input(['skus']);
+//        try {
+            $skus = $request->input(['product_skus']);
             $pay_channel = $request->input('channel');
+//            $campaign_id = $request->input('campaign');
 
-            $order = $this->orderGenerator->buy(access()->id(), $skus, OrderProtocol::ORDER_TYPE_OF_CAMPAIGN);
+            $order = app()->make(OrderGenerator::class)->buy(access()->id(), $skus, null, OrderProtocol::ORDER_TYPE_OF_CAMPAIGN);
 
-            $charge = $this->checkout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
-
+            $charge = app()->make(OrderCheckoutService::class)->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
             return $this->response->array(['data' => $charge]);
-        } catch (\Exception $e) {
-            $this->response->errorBadRequest($e->getMessage());
-        }
+//        } catch (\Exception $e) {
+//            $this->response->errorBadRequest($e->getMessage());
+//        }
     }
 
     /**

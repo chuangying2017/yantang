@@ -7,7 +7,7 @@ class StoreTransformer extends TransformerAbstract {
 
     public function transform(Store $store)
     {
-        return [
+        $data = [
             'id' => $store['id'],
             'name' => $store['name'],
             'address' => $store['address'],
@@ -16,7 +16,12 @@ class StoreTransformer extends TransformerAbstract {
             'phone' => $store['phone'],
             'longitude' => $store['longitude'],
             'latitude' => $store['latitude'],
-            'active' => $store['active']
+            'active' => $store['active'],
         ];
+        if (isset($store['bind_token'])) {
+            $data['bind_token'] = $store['bind_token'];
+        }
+
+        return $data;
     }
 }

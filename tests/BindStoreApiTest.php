@@ -16,12 +16,14 @@ class BindStoreApiTest extends TestCase {
         $store = \App\Models\Store::create();
 
 
-        $this->get('store/' . $store['id'] . '/bind?token=' . $token);
         $url = 'store/' . $store['id'] . '/bind';
         $response = $this->json('get', $url,
             ['bind_token' => generate_bind_token($store['id'])],
             ['Authorization' => 'Bearer ' . $token]
         );
+
+        $this->dumpResponse();
+
         $this->assertResponseOk();
 
         $this->json('POST', $url,

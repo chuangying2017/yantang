@@ -84,7 +84,7 @@ class Access {
     public function getProviderId($provider = 'weixin')
     {
         $user = $this->user();
-        return $user->providers()->where("provider", $provider)->pluck('provider_id');
+        return $user->providers()->where("provider", $provider)->pluck('provider_id')->first();
     }
 
     /**

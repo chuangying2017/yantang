@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Promotion;
 
+use App\Models\Promotion\PromotionDetail;
 use App\Models\Promotion\UserPromotion;
 use App\Repositories\Promotion\Rule\RuleRepositoryContract;
 use App\Services\Order\OrderProtocol;
@@ -34,7 +35,9 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     {
         $promotion = $this->fillPromotion(null, $data);
 
-        $this->syncRules($promotion, $data['rules']);
+        if(isset($data['rules'])) {
+            $this->syncRules($promotion, $data['rules']);
+        }
 
         $this->attachRelation($promotion['id'], $data);
 

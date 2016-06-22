@@ -109,8 +109,8 @@ class StoreRepository implements StoreRepositoryContract {
         return $store['id'];
     }
 
-    public function getBindUrl($store_id)
+    public function getBindToken($store_id)
     {
-        return url('/api/' . $store_id . '/bind') . '?bind_token' . generate_bind_token($store_id);
+        return generate_bind_token($store_id);
     }
 }

@@ -47,8 +47,9 @@ class StoreController extends Controller {
     public function store(Request $request)
     {
         $store = $this->storeRepo->createStore($request->all());
+        $store['bind_token'] = generate_bind_token($store['id']);
 
-        return $this->response->created()->setContent(['data' => $store->toArray()]);
+        return $this->response->item($store, new StoreTransformer())->setStatusCode(201);
     }
 
     /**
