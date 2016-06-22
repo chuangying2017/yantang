@@ -11,8 +11,7 @@ class ProductSkuTransformer extends TransformerAbstract {
             'id' => $sku['id'],
             'name' => $sku['name'],
             'cover_image' => $sku['cover_image'],
-            'price' => display_price($sku['price']),
-            'settle_price' => display_price($sku['settle_price']),
+            'price' => display_price($sku['subscribe_price']),
             'attr' => json_decode($sku['attr'], true),
         ];
     }

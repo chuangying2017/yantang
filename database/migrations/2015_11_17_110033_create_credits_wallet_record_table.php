@@ -15,7 +15,6 @@ class CreateCreditsWalletRecordTable extends Migration
         Schema::create('credits_records', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
             $table->integer('amount')->unsigned();
             $table->tinyInteger('income')->unsigned();// 0,1
             $table->string('resource_type');
@@ -34,9 +33,6 @@ class CreateCreditsWalletRecordTable extends Migration
      */
     public function down()
     {
-        Schema::table('credits_records', function (Blueprint $table) {
-            $table->dropForeign('credits_records_user_id_foreign');
-        });
         Schema::drop('credits_records');
     }
 }
