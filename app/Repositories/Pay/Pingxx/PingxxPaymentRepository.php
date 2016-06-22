@@ -4,11 +4,11 @@ use App\Models\Pay\PingxxPayment;
 use App\Repositories\Pay\ChargeRepositoryContract;
 use App\Repositories\Pay\PaymentRepositoryContract;
 use App\Services\Pay\Pingxx\PingxxProtocol;
+use Carbon\Carbon;
 use Pingpp\Charge;
 use Pingpp\Pingpp;
 
-class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentRepositoryContract
-{
+class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentRepositoryContract {
 
     public function __construct()
     {
@@ -147,6 +147,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         $payment = $this->getPayment($payment_no);
         $payment->transaction_no = $transaction_no;
         $payment->paid = true;
+        $payment->pay_at = Carbon::now();
         $payment->save();
         return $payment;
     }

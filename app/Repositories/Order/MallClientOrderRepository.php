@@ -3,7 +3,7 @@
 
 use App\Services\Order\OrderProtocol;
 
-class MallClientOrderRepository extends ClientOrderRepositoryAbstract {
+class MallClientOrderRepository extends ClientOrderRepository {
 
     protected function setOrderType()
     {

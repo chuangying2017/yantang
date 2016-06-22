@@ -36,6 +36,7 @@ class CampaignOrderTest extends TestCase {
 
     }
 
+    /** @test */
     public function it_can_create_campaign()
     {
         $user_id = 1;

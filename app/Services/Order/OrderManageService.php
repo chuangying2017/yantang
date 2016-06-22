@@ -1,6 +1,7 @@
 <?php namespace App\Services\Order;
 
 use App\Repositories\Billing\OrderBillingRepository;
+use App\Repositories\Order\ClientOrderRepository;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\Deliver\OrderDeliverRepository;
 use App\Services\Billing\OrderBillingService;
@@ -35,7 +36,7 @@ class OrderManageService implements OrderManageContract {
     public function __construct(
         OrderBillingRepository $orderBillingRepo,
         OrderBillingService $orderBillingService,
-        ClientOrderRepositoryContract $orderRepositoryContract,
+        ClientOrderRepository $orderRepositoryContract,
         OrderDeliverRepository $orderDeliverRepo
     )
     {

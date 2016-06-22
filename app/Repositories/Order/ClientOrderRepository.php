@@ -15,7 +15,7 @@ use App\Services\Order\OrderProtocol;
 use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-abstract class ClientOrderRepositoryAbstract implements ClientOrderRepositoryContract {
+class ClientOrderRepository implements ClientOrderRepositoryContract {
 
     protected $type;
     /**
@@ -62,7 +62,9 @@ abstract class ClientOrderRepositoryAbstract implements ClientOrderRepositoryCon
         $this->memoRepo = $memoRepo;
     }
 
-    protected abstract function setOrderType();
+    protected function setOrderType(){
+
+    }
 
     /**
      * @param $data

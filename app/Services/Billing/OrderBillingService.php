@@ -26,7 +26,7 @@ class OrderBillingService extends BillingAbstract {
 
     public function getType()
     {
-        return $this->billing['pay_type'];
+        return BillingProtocol::BILLING_TYPE_OF_ORDER_BILLING;
     }
 
     public function setID($billing_id)
