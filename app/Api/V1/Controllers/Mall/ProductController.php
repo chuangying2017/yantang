@@ -39,9 +39,9 @@ class ProductController extends Controller {
         $keyword = $request->input('keyword');
 
         if ($keyword) {
-            $products = $this->productRepositoryContract->search($keyword, compact('brand', 'cat', 'group', 'status'));
+            $products = $this->productRepo->search($keyword, compact('brand', 'cat', 'group', 'status'));
         } else {
-            $products = $this->productRepositoryContract->getProductsPaginated($brand, $cat, $group);
+            $products = $this->productRepo->getProductsPaginated($brand, $cat, $group);
         }
 
         return $this->response->paginator($products, new ProductTransformer());

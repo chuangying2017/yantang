@@ -9,6 +9,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Bugsnag\BugsnagLaravel\BugsnagExceptionHandler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class Handler extends ExceptionHandler {
@@ -49,10 +50,7 @@ class Handler extends ExceptionHandler {
     public function render($request, Exception $e)
     {
         if ($e instanceof ModelNotFoundException) {
-            if ($request->ajax()) {
-                return $this->respondNotFound();
-            }
-            $e = new NotFoundHttpException($e->getMessage(), $e);
+            throw new NotFoundHttpException();
         }
 
         //As to preserve the catch all
@@ -60,12 +58,7 @@ class Handler extends ExceptionHandler {
             return redirect()->back()->withInput()->withFlashDanger($e->getMessage());
         }
 
-        if ($e instanceof Backend\Access\User\UserNeedsRolesException) {
-            return redirect()->route('admin.access.users.edit', $e->userID())->withInput()->withFlashDanger($e->validationErrors());
-        }
-
         //Catch all
-
         return parent::render($request, $e);
     }
 }

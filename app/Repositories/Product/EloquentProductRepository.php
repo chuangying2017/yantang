@@ -16,6 +16,7 @@ use App\Repositories\Product\Editor\SetPrice;
 use App\Repositories\Product\Editor\UpdateInfo;
 use App\Repositories\Product\Editor\UpdateMeta;
 use App\Repositories\Product\Editor\UpdateProductSku;
+use App\Repositories\Product\Sku\ProductMixRepositoryContract;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 use App\Repositories\Search\Item\ProductSearchRepository;
 use Carbon\Carbon;
@@ -124,7 +125,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
 
     public function getProduct($product_id, $with_detail = true)
     {
-        $product = Product::find($product_id);
+        $product = Product::findOrFail($product_id);
         if ($with_detail) {
             $product = $product->load('skus', 'cats', 'brand', 'meta', 'info');
         }
@@ -242,4 +243,6 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
     {
         return Product::where('brand_id', $brand_id)->pluck('id');
     }
+
+
 }

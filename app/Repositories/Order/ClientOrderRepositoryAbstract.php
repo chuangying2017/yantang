@@ -9,7 +9,7 @@ use App\Repositories\Billing\OrderBillingRepository;
 use App\Repositories\NoGenerator;
 use App\Repositories\Order\Address\EloquentOrderAddressRepository;
 use App\Repositories\Order\Memo\OrderMemoRepository;
-use App\Repositories\Order\Promotion\OrderPromotionContract;
+use App\Repositories\Order\Promotion\OrderPromotionRepositoryContract;
 use App\Repositories\Order\Sku\OrderSkuRepositoryContract;
 use App\Services\Order\OrderProtocol;
 use DB;
@@ -31,7 +31,7 @@ abstract class ClientOrderRepositoryAbstract implements ClientOrderRepositoryCon
      */
     private $orderBillingRepo;
     /**
-     * @var OrderPromotionContract
+     * @var OrderPromotionRepositoryContract
      */
     private $orderPromotionRepo;
     /**
@@ -50,7 +50,7 @@ abstract class ClientOrderRepositoryAbstract implements ClientOrderRepositoryCon
         OrderSkuRepositoryContract $orderSkuRepo,
         EloquentOrderAddressRepository $orderAddressRepo,
         OrderBillingRepository $orderBillingRepo,
-        OrderPromotionContract $orderPromotionRepo,
+        OrderPromotionRepositoryContract $orderPromotionRepo,
         OrderMemoRepository $memoRepo
     )
     {
@@ -74,13 +74,13 @@ abstract class ClientOrderRepositoryAbstract implements ClientOrderRepositoryCon
             'user_id' => $data['user']['id'],
             'order_no' => NoGenerator::generateOrderNo(),
             'total_amount' => $data['total_amount'],
-            'product_amount' => $data['product_amount'],
+            'products_amount' => $data['products_amount'],
             'discount_amount' => $data['discount_amount'],
             'express_fee' => $data['express_fee'],
             'pay_amount' => $data['pay_amount'],
             'order_type' => $this->type,
             'pay_status' => OrderProtocol::PAID_STATUS_OF_UNPAID,
-            'order_status' => OrderProtocol::STATUS_OF_UNPAID,
+            'status' => OrderProtocol::STATUS_OF_UNPAID,
             'pay_type' => OrderProtocol::PAY_TYPE_OF_ONLINE,
             'deliver_type' => OrderProtocol::getDeliverType($this->type)
         ]);

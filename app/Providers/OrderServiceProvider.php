@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\Order\Facade\OrderGeneratorFacade;
+
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
@@ -53,6 +53,11 @@ class OrderServiceProvider extends ServiceProvider {
         $this->app->bind(
             \App\Services\Order\Checkout\OrderCheckoutContract::class,
             \App\Services\Order\Checkout\OrderCheckoutService::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Order\Promotion\OrderPromotionRepositoryContract::class,
+            \App\Repositories\Order\Promotion\OrderPromotionRepository::class
         );
 
     }

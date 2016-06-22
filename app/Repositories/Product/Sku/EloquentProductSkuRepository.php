@@ -1,8 +1,10 @@
 <?php namespace App\Repositories\Product\Sku;
 
+use App\Models\Product\Product;
 use App\Models\Product\ProductSku;
+use App\Repositories\Product\ProductProtocol;
 
-class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract {
+class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract, ProductMixRepositoryContract {
 
     public function createSku($sku_data, $product_id)
     {
@@ -106,7 +108,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
 
     public function getSkus($sku_ids)
     {
-        return ProductSku::find($sku_ids);
+        return ProductSku::findOrFail($sku_ids);
     }
 
     public function increaseStock($product_sku_id, $quantity = 1)
@@ -140,5 +142,23 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
     public function enoughStock($product_sku_id, $quantity)
     {
         return $this->getStock($product_sku_id) > $quantity;
+    }
+
+
+    /**
+     * @return ProductSku
+     */
+    public function getAllMixAbleProductSku()
+    {
+        return Product::where('type', ProductProtocol::TYPE_OF_ENTITY)->skus()->get();
+    }
+
+
+    public function getMixSkus($mix_sku_id)
+    {
+        $sku = $this->getSkus($mix_sku_id);
+        $sku->load('mix');
+
+        return $sku->mix;
     }
 }

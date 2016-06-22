@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use API;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tymon\JWTAuth\Test\GetUserFromTokenTest;
 
 class ApiServiceProvider extends ServiceProvider {
@@ -22,6 +24,11 @@ class ApiServiceProvider extends ServiceProvider {
         $this->app['router']->middleware('jwt.auth', \Tymon\JWTAuth\Middleware\GetUserFromToken::class);
         $this->app['router']->middleware('jwt.refresh', \Tymon\JWTAuth\Middleware\RefreshToken::class);
 
+
+        API::error(function (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            throw new HttpException(404, $e->getMessage());
+        });
+
     }
 
     /**
@@ -31,6 +38,6 @@ class ApiServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        //
+
     }
 }

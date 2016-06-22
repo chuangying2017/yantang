@@ -5,6 +5,7 @@ use App\Models\Order\OrderPromotion;
 use App\Models\OrderTicket;
 use App\Repositories\NoGenerator;
 use App\Services\Order\OrderProtocol;
+use Carbon\Carbon;
 
 class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
 
@@ -43,7 +44,6 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
             $ticket = OrderTicket::findOrFail($ticket_no);
         }
 
-
         if ($with_detail) {
             $ticket->load(['skus.mix', 'exchange']);
         }
@@ -56,6 +56,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
         $ticket = $this->getOrderTicket($ticket_no);
         $ticket->store_id = $store_id;
         $ticket->status = OrderProtocol::ORDER_TICKET_STATUS_OF_USED;
+        $ticket->exchange_at = Carbon::now();
         $ticket->save();
         return $ticket;
     }
@@ -68,5 +69,19 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
     public function getOrderTicketsOfOrder($order_id)
     {
         return OrderTicket::where('order_id', $order_id)->first();
+    }
+
+    public function getOrderTicketsOfStore($store_id, $start_at = null, $end_at = null)
+    {
+        $query = OrderTicket::where('store_id', $store_id);
+        if (!is_null($start_at)) {
+            $query = $query->where('exchange_at', '>=', $start_at);
+        }
+
+        if (!is_null($end_at)) {
+            $query = $query->where('exchange_at', '<=', $start_at);
+        }
+
+        return $query->paginate(OrderTicketProtocol::TICKET_PER_PAGE);
     }
 }

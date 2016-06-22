@@ -35,7 +35,7 @@ class OrderController extends Controller {
      */
     public function index()
     {
-        $orders = $this->clientOrderRepo->getAllOrders();
+        $orders = $this->clientOrderRepo->getPaginatedOrders();
 
         return $this->response->paginator($orders, new ClientOrderTransformer());
     }
@@ -54,11 +54,12 @@ class OrderController extends Controller {
 
             $order = app()->make(OrderGenerator::class)->confirm($temp_order_id);
 
-            return $this->response->item($order, new ClientOrderTransformer());
+            return $this->response->item($order, new ClientOrderTransformer())->setStatusCode(201);
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -83,5 +84,7 @@ class OrderController extends Controller {
     public function destroy(Request $request, $id)
     {
         app()->make(OrderManageContract::class)->orderCancel($id, $request->input('memo'));
+
+        return $this->response->noContent();
     }
 }

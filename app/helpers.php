@@ -185,6 +185,21 @@ if (!function_exists('generate_no')) {
 }
 
 
+if (!function_exists('generate_bind_token')) {
+    function generate_bind_token($id)
+    {
+        return sha1('token_' . $id);
+    }
+}
+
+if (!function_exists('check_bind_token')) {
+    function check_bind_token($id, $token)
+    {
+        return sha1('token_' . $id) == $token;
+    }
+}
+
+
 if (!function_exists('array_multi_sort')) {
     function array_multi_sort($data, $criteria)
     {
