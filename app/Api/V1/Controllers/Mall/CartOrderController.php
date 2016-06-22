@@ -34,7 +34,7 @@ class CartOrderController extends Controller {
     public function store(Request $request)
     {
         $cart_ids = $request->input('cart_ids');
-        $address_id = $request->input('address_id');
+        $address_id = $request->input('address');
 
         $temp_order = $this->orderGenerator->buyCart(access()->id(), $cart_ids, $address_id);
 
