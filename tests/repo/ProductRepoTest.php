@@ -35,6 +35,19 @@ class ProductRepoTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_create_a_subscribe_product()
+    {
+        $product_data = $this->getSubscribeData();
+
+        $productRepo = $this->getRepo();
+
+        $product = $productRepo->createProduct($product_data);
+
+        $this->assertInstanceOf(\App\Models\Product\Product::class, $product);
+
+    }
+
+    /** @test */
     public function it_return_a_product()
     {
         $productRepo = $this->getRepo();
@@ -91,8 +104,7 @@ class ProductRepoTest extends TestCase {
                 3
             ],
             "group_ids" => [
-                2,
-                3
+
             ],
             "with_invoice" => 0,
             "with_care" => 0,
@@ -111,7 +123,7 @@ class ProductRepoTest extends TestCase {
                     "income_price" => 350,
                     "settle_price" => 380,
                     "attr_value_ids" => [
-                        3
+
                     ],
                     "sku_ids" => [
                         1,
@@ -119,22 +131,22 @@ class ProductRepoTest extends TestCase {
                     ]
                 ]
             ],
-            "attr" => [
-                [
-                    "id" => 1,
-                    "name" => "规格",
-                    "values" => [
-                        [
-                            "id" => 2,
-                            "name" => "200ml"
-                        ]
-                    ]
-                ]
-            ]
+//            "attr" => [
+//                [
+//                    "id" => 1,
+//                    "name" => "规格",
+//                    "values" => [
+//                        [
+//                            "id" => 2,
+//                            "name" => "200ml"
+//                        ]
+//                    ]
+//                ]
+//            ]
         ];
     }
 
-    private function getUpdateInput()
+    private function getSubscribeData()
     {
         return [
             "cat_id" => 1,
@@ -145,15 +157,12 @@ class ProductRepoTest extends TestCase {
             "cover_image" => "http://7xp47i.com1.z0.glb.clouddn.com/pd-info-1.jpg",
             "brand_id" => 7,
             "detail" => '<p><img src="http://7xp47i.com1.z0.glb.clouddn.com/pd-info-1.jpg"></img></p>',
-            "type" => "mix",
+            "type" => "entity",
             "image_ids" => [
-                1,
-                2,
-                3
+                1
             ],
             "group_ids" => [
-                2,
-                3
+                1
             ],
             "with_invoice" => 0,
             "with_care" => 0,
@@ -162,8 +171,8 @@ class ProductRepoTest extends TestCase {
             "end_time" => "2016-06-01",
             "skus" => [
                 [
-//                    "name" => "燕塘 原味酸奶饮品 200ml/盒",
-//                    "cover_image" => "http://7xp47i.com1.z0.glb.clouddn.com/pd-info-1.jpg",
+                    "name" => "燕塘 原味酸奶饮品 200ml/盒",
+                    "cover_image" => "http://7xp47i.com1.z0.glb.clouddn.com/pd-info-1.jpg",
                     "display_price" => 5,
                     "price" => 4,
                     "express_fee" => 0,
@@ -172,24 +181,7 @@ class ProductRepoTest extends TestCase {
                     "income_price" => 3.5,
                     "settle_price" => 3.80,
                     "attr_value_ids" => [
-                        4
-                    ],
-                    "sku_ids" => [
-                        1,
-                        2,
-                        3
-                    ]
-                ]
-            ],
-            "attr" => [
-                [
-                    "id" => 1,
-                    "name" => "规格",
-                    "values" => [
-                        [
-                            "id" => 2,
-                            "name" => "200ml"
-                        ]
+
                     ]
                 ]
             ]

@@ -15,7 +15,6 @@ class CreateOrdersTable extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
             $table->string('order_no');
             $table->string('title');
             $table->unsignedInteger('total_amount');
@@ -59,9 +58,6 @@ class CreateOrdersTable extends Migration {
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropForeign('orders_user_id_foreign');
-        });
         Schema::drop('orders');
     }
 }

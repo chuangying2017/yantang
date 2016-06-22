@@ -14,7 +14,6 @@ class CreateOrderAddressTable extends Migration {
     {
         Schema::create('order_address', function (Blueprint $table) {
             $table->integer('order_id')->unsigned()->index();
-            $table->foreign('order_id')->references('id')->on('orders');
             $table->string('name');
             $table->string('phone', 15);
             $table->string('tel', 15);
@@ -36,9 +35,6 @@ class CreateOrderAddressTable extends Migration {
      */
     public function down()
     {
-        Schema::table('order_address', function (Blueprint $table) {
-            $table->dropForeign('order_address_order_id_foreign');
-        });
         Schema::drop('order_address');
     }
 }

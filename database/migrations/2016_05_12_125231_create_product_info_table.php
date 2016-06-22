@@ -14,7 +14,6 @@ class CreateProductInfoTable extends Migration {
     {
         Schema::create('product_info', function (Blueprint $table) {
             $table->integer('product_id')->unsigned()->index();
-            $table->foreign('product_id')->references('id')->on('products');
             $table->string('attr', 2046);
             $table->string('tags', 2046);
             $table->text('detail');
@@ -29,9 +28,6 @@ class CreateProductInfoTable extends Migration {
      */
     public function down()
     {
-        Schema::table('product_info', function (Blueprint $table) {
-            $table->dropForeign('product_info_product_id_foreign');
-        });
         Schema::drop('product_info');
     }
 }

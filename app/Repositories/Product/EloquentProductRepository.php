@@ -147,6 +147,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
     {
         $query = Product::query();
 
+
         if ($with_time) {
             $query = $query->where(function ($query) {
                 $now = Carbon::now();
@@ -160,14 +161,21 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
         }
 
         if ($cats) {
-            $query = $query->whereHas('cats', function ($query) use ($cats) {
-                $query->whereIn('cat_id', to_array($cats));
+//            $query = $query->whereHas('groups', function ($query) use ($cats) {
+//                $query->whereIn('cat_id', to_array($cats));
+//            });
+
+            $query = $query->join('product_category', function($join) use ($cats) {
+                $join->whereIn('cat_id', to_array($cats));
             });
         }
+
 
         if ($type) {
             $query = $query->where('type', $type);
         }
+
+
 
         if ($status) {
             $query = $query->where('status', $status);
@@ -204,6 +212,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
     {
         $products = $this->queryProducts('created_at', 'asc', $status, null, CategoryProtocol::ID_OF_SUBSCRIBE_GROUP, null, null, $with_time);
         $products->load('skus');
+
         if ($expend) {
             $skus = null;
             foreach ($products as $product) {
@@ -213,7 +222,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
                     $skus->merge($product->skus);
                 }
             }
-            return $skus;
+            return $skus ? $skus : new Collection();
         }
 
         return $products;
