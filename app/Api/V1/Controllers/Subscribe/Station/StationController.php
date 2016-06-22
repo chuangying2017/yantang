@@ -44,10 +44,11 @@ class StationController extends Controller
         }
         try {
             $user_id = access()->id();
-            $this->station->bindStation($station_id, $user_id);
+            $station = $this->station->bindStation($station_id, $user_id);
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }
+        return $this->response->item($station, new StationTransformer());
     }
 
     public function claimGoods(Request $request)
