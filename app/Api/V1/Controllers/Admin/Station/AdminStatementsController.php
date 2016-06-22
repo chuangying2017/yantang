@@ -11,9 +11,16 @@ class AdminStatementsController extends Controller
 
     }
 
+    public function billingList()
+    {
+        
+    }
+
     public function createBilling(Request $request)
     {
         $input = $request->only(['begin_time', 'end_time']);
         StatementsService::create($input);
+        return $this->response->noContent();
     }
+
 }

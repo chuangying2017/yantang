@@ -53,7 +53,7 @@ class StationController extends Controller
     public function claimGoods(Request $request)
     {
         $query_day = $request->input('date', Carbon::now());
-        $query_day = '2016-06-06';
+//        $query_day = '2016-06-06';
         $data = StationService::claimGoods($query_day);
         return $this->response->array($data);
     }
