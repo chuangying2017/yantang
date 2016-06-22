@@ -63,9 +63,12 @@ class OrderGenerator implements OrderGeneratorContract {
             GetSkuInfo::class,
             GetUserInfo::class,
             CalSkuAmount::class,
-            UseCampaign::class,
+//            UseCampaign::class,
             SaveTempOrder::class,
         ];
+
+
+
         $handler = $this->getOrderGenerateHandler($config);
 
 

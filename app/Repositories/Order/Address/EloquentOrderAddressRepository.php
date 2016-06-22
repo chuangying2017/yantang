@@ -21,6 +21,9 @@ class EloquentOrderAddressRepository {
 
     public function createOrderAddress($order_id, $address_id)
     {
+        if(!$address_id) {
+            return null;
+        }
         $address = $this->addressRepo->getAddress($address_id);
 
         $order_address = OrderAddress::findOrNew($order_id);

@@ -45,14 +45,14 @@ class StoreController extends Controller {
      */
     public function getBind(Request $request, $store_id)
     {
-
         if (!check_bind_token($store_id, $request->input('bind_token'))) {
             $this->response->errorForbidden('无权限查看');
         }
 
         $store = $this->storeRepo->getStore($store_id);
+        $store['bind_token'] = $this->storeRepo->getBindToken($store_id);
 
-        return $this->response->item($store, new StoreTransformer())->setMeta(['bind_url' => $this->storeRepo->getBindUrl($store_id)]);
+        return $this->response->item($store, new StoreTransformer());
     }
 
     /**

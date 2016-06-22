@@ -18,7 +18,7 @@ interface StoreRepositoryContract {
 
     public function getStore($store_id, $with_user = true);
 
-    public function getBindUrl($store_id);
+    public function getBindToken($store_id);
 
     public function getStoreByUser($user_id);
 

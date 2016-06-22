@@ -113,9 +113,8 @@ abstract class ClientOrderRepositoryAbstract implements ClientOrderRepositoryCon
     protected function createOrderBilling($order, $wallet = null, $credits = null)
     {
         $billings = [
-            OrderProtocol::PAY_TYPE_OF_ONLINE => $this->orderBillingRepo->setType(OrderProtocol::PAY_TYPE_OF_ONLINE)->createBilling($order['pay_amount'], $order['id'])
+            OrderProtocol::BILLING_TYPE_OF_MONEY => $this->orderBillingRepo->setType(OrderProtocol::BILLING_TYPE_OF_MONEY)->createBilling($order['pay_amount'], $order['id'])
         ];
-
         return $billings;
     }
 

@@ -48,7 +48,7 @@ class CampaignController extends Controller {
     {
         $campaign = $this->campaignRepo->create($request->all());
 
-        return $this->response->created()->setContent(['data' => $campaign->toArray()]);
+        return $this->response->item($campaign, new CampaignTransformer())->setStatusCode(201);
     }
 
     /**

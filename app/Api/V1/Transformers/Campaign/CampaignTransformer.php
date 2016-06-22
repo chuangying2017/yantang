@@ -8,6 +8,7 @@ class CampaignTransformer extends TransformerAbstract {
     public function transform(Campaign $campaign)
     {
         $data = [
+            'id' => $campaign['id'],
             'name' => $campaign['name'],
             'desc' => $campaign['desc'],
             'start_at' => $campaign['start_at'],
