@@ -43,7 +43,7 @@ class AdminStationController extends Controller
 
     public function store(AdminStationRequest $request)
     {
-        $input = $request->only(['name', 'desc', 'user_id', 'address', 'district', 'tel', 'director', 'phone', 'cover_image', 'longitude', 'latitude', 'status']);
+        $input = $request->only(['name', 'desc', 'user_id', 'address', 'district_id', 'tel', 'director', 'phone', 'cover_image', 'longitude', 'latitude', 'status']);
         $station = $this->station->create($input);
         return $this->response->item($station, new StationTransformer())->setStatusCode(201);
     }
