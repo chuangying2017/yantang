@@ -70,9 +70,17 @@ return [
     'weixin' => [
         'client_id' => env('WECHAT_APPID'),
         'client_secret' => env('WECHAT_APPSECRET'),
-        'redirect' => env('WEIXIN_REDIRECT_URI'),
+        'redirect' => [
+            'user' => 'http://client.yt.weazm.com/auth/wechatAuth',
+            'station' => 'http://station.yt.weazm.com/auth/wechatAuth',
+            'store' => 'http://store.yt.weazm.com/auth/wechatAuth',
+            'staff' => 'http://staff.yt.weazm.com/auth/wechatAuth',
+            'admin' => 'http://admin.yt.weazm.com/auth/wechatAuth',
+        ],
         'base_redirect' => env('WEIXIN_BASE_REDIRECT_URL'),
     ],
+
+
 
     'pingxx' => [
         'app_id' => env('PINGXX_APP_ID'),

@@ -18,7 +18,6 @@ class UserInfoTransformer extends TransformerAbstract {
 
         $client_info = $this->getClientInfo($user);
 
-
         return array_merge($base_info, $client_info);
     }
 
@@ -43,7 +42,6 @@ class UserInfoTransformer extends TransformerAbstract {
 
     protected function getProviderInfo(User $user)
     {
-
         $providers = $user->providers;
 
         $data = [];

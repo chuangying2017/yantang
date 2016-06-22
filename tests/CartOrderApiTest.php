@@ -15,7 +15,7 @@ class CartOrderApiTest extends TestCase {
         $user_id = 1;
         $this->it_can_add_a_sku_to_cart();
 
-        $address = \App\Models\Client\Address::create(['user_id' => $user_id]);
+        $address = \App\Models\Client\Address::create(['user_id' => $user_id, 'name' => 'troy']);
 
         $this->json('post', 'mall/orders/cart',
             [
@@ -25,10 +25,22 @@ class CartOrderApiTest extends TestCase {
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
         $result = $this->getResponseData();
 
-        $this->dump();
         $this->assertResponseOk();
 
         $temp_order_id = $result['data']['temp_order_id'];
+
+
+        //add address
+        $this->json('put', 'mall/orders/cart/' . $temp_order_id,
+            [
+                'address' => $address['id']
+            ],
+            ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+        $result = $this->getResponseData();
+
+        $this->assertResponseOk();
+
+
 
         $this->json('post', 'mall/orders', ['temp_order_id' => $temp_order_id], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 

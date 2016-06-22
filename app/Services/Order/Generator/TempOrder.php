@@ -4,6 +4,7 @@ use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 class TempOrder implements PromotionAbleItemContract {
 
+    protected $carts;
     protected $temp_order_id;
     protected $address;
     protected $total_amount;
@@ -21,6 +22,7 @@ class TempOrder implements PromotionAbleItemContract {
     {
         $this->setUser($user_id);
         $this->setSkus($skus);
+        $this->setCarts();
         $this->setAddress($address);
         $this->setTempOrderId('temp_' . generate_no());
     }
@@ -431,5 +433,29 @@ class TempOrder implements PromotionAbleItemContract {
     public function getPayAmount()
     {
         return bcsub($this->total_amount, $this->discount_amount, 0);
+    }
+
+    /**
+     * @param mixed $carts
+     * @return TempOrder
+     */
+    protected function setCarts()
+    {
+        $carts = [];
+        foreach ($this->skus as $sku) {
+            $carts[] = array_get($sku, 'cart_id', null);
+        }
+        if (count($carts)) {
+            $this->carts = $carts;
+        }
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarts()
+    {
+        return $this->carts;
     }
 }

@@ -9,6 +9,7 @@ class EloquentAddressRepository implements AddressRepositoryContract {
         if($address_id instanceof Address) {
             return $address_id;
         }
+
         return Address::findOrFail($address_id);
     }
 

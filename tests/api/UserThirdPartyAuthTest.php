@@ -48,7 +48,7 @@ class UserThirdPartyAuthTest extends TestCase {
     protected function oauthUrl()
     {
 
-        $this->json('get', '/auth/login/' . $this->provider);
+        $this->json('get', '/auth/login/' . $this->provider, ['role' => 'station']);
 
         $this->seeJsonStructure(['data' => ['url']]);
 
