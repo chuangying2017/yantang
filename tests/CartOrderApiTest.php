@@ -25,7 +25,6 @@ class CartOrderApiTest extends TestCase {
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
         $result = $this->getResponseData();
 
-        $this->dump();
         $this->assertResponseOk();
 
         $temp_order_id = $result['data']['temp_order_id'];

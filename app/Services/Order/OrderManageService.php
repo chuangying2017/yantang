@@ -75,7 +75,7 @@ class OrderManageService implements OrderManageContract {
                 if (!$this->orderBillingService->setID($billing)->isPaid()) {
                     throw new BillingNotPaidException();
                 }
-                if ($this->orderBillingService->getType() == OrderProtocol::BILLING_TYPE_OF_MONEY) {
+                if ($this->orderBillingService->getPayType() == OrderProtocol::BILLING_TYPE_OF_MONEY) {
                     $pay_channel = $billing['pay_channel'];
                 }
             }
@@ -84,7 +84,7 @@ class OrderManageService implements OrderManageContract {
             return $order;
         } catch (BillingNotPaidException $e) {
             //TODO:  重新检查billings支付状态
-
+            throw $e;
         }
     }
 

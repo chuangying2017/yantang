@@ -39,16 +39,20 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Auth\UserLoggedOutHandler',
         ],
 
-        'App\Events\Order\OrderIsCancel' => [
-
-        ],
-
         'App\Services\Pay\Events\PingxxPaymentIsPaid' => [
             'App\Listeners\Order\SetOrderMainBillingAsPaid',
         ],
 
         'App\Events\Order\OrderIsPaid' => [
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
+        ],
+
+        'App\Events\Order\OrderIsCreated' => [
+            'App\Listeners\Order\RemoveCheckoutCartItems',
+        ],
+
+        'App\Events\Order\OrderIsCancel' => [
+
         ],
 
         'App\Events\Order\OrderIsDone' => [

@@ -1,5 +1,6 @@
 <?php namespace App\Services\Order;
 
+use App\Events\Order\OrderIsCreated;
 use App\Repositories\Cart\CartRepositoryContract;
 use App\Repositories\Order\CampaignOrderRepository;
 use App\Repositories\Order\ClientOrderRepositoryContract;
@@ -54,7 +55,15 @@ class OrderGenerator implements OrderGeneratorContract {
     public function buyCart($user_id, $cart_ids, $address_id)
     {
         $carts = app(CartRepositoryContract::class)->getMany($cart_ids, false);
-        return $this->buy($user_id, $carts->toArray(), $address_id);
+        $skus = [];
+        foreach ($carts as $cart) {
+            $skus[] = [
+                'cart_id' => $cart['id'],
+                'product_sku_id' => $cart['product_sku_id'],
+                'quantity' => $cart['quantity']
+            ];
+        }
+        return $this->buy($user_id, $skus, $address_id);
     }
 
     protected function campaignOrder($user_id, $skus, $campaign_id)
@@ -66,7 +75,6 @@ class OrderGenerator implements OrderGeneratorContract {
 //            UseCampaign::class,
             SaveTempOrder::class,
         ];
-
 
 
         $handler = $this->getOrderGenerateHandler($config);
@@ -111,6 +119,8 @@ class OrderGenerator implements OrderGeneratorContract {
 
         $this->setOrderRepo(app()->make(MallClientOrderRepository::class));
         $order = $this->orderRepo->createOrder($temp_order->toArray());
+
+        event(new OrderIsCreated($temp_order));
 
         return $order;
     }

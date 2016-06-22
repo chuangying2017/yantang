@@ -25,4 +25,9 @@ abstract class BillingAbstract implements BillingContract {
     {
         return $this->billing['user_id'];
     }
+
+    public function getPayType()
+    {
+        return $this->billing['pay_type'];
+    }
 }

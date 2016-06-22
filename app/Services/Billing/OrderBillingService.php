@@ -35,4 +35,9 @@ class OrderBillingService extends BillingAbstract {
         return $this;
     }
 
+    public function getPayType()
+    {
+        return $this->billing['pay_type'];
+    }
+
 }
