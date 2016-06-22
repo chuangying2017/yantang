@@ -50,7 +50,7 @@ class AdminStationController extends Controller
 
     public function update(AdminStationRequest $request, $id)
     {
-        $input = $request->only(['name', 'desc', 'user_id', 'address', 'district', 'tel', 'phone', 'cover_image', 'longitude', 'latitude']);
+        $input = $request->only(['name', 'desc', 'user_id', 'address', 'district_id', 'tel', 'phone', 'cover_image', 'longitude', 'latitude']);
         $station = $this->station->update($input, $id);
         return $this->response->item($station, new StationTransformer())->setStatusCode(201);
     }

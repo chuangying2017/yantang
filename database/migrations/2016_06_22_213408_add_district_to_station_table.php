@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDirectorTable extends Migration
+class AddDistrictToStationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,8 @@ class CreateDirectorTable extends Migration
      */
     public function up()
     {
-        Schema::create('director', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('station', function (Blueprint $table) {
+            $table->integer('district_id')->nullable()->after('address');
         });
     }
 
@@ -26,6 +24,8 @@ class CreateDirectorTable extends Migration
      */
     public function down()
     {
-        Schema::drop('director');
+        Schema::table('station', function (Blueprint $table) {
+            $table->dropColumn('district_id');
+        });
     }
 }

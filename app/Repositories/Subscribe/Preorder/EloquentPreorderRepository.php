@@ -14,7 +14,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract
 
     public function create($input)
     {
-        $input['address'] = $input['area'] . $input['address'];
         unset($input['area']);
         $input['order_no'] = uniqid('pre_');
         //是否需要充值 enough:不是 not_enough:是

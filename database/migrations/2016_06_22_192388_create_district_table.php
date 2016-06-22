@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateStationTable extends Migration
+class CreateDistrictTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,10 @@ class UpdateStationTable extends Migration
      */
     public function up()
     {
-        Schema::table('station', function (Blueprint $table) {
-            $table->string('district')->after('address');
+        Schema::create('district', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +26,6 @@ class UpdateStationTable extends Migration
      */
     public function down()
     {
-        Schema::table('station', function (Blueprint $table) {
-            $table->dropColumn('district');
-        });
+        Schema::drop('district');
     }
 }

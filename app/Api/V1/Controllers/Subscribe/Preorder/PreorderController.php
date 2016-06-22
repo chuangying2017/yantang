@@ -56,16 +56,21 @@ class PreorderController extends Controller
     //客户创建
     public function store(PreorderRequest $request)
     {
-        $input = $request->only(['phone', 'address', 'area', 'longitude', 'latitude']);
+        $input = $request->only(['phone', 'address', 'district_id', 'longitude', 'latitude']);
         $input['user_id'] = $this->user_id;
+        $station = PreorderService::getRecentlyStation($input['longitude'], $input['latitude'], $input['district_id']);
+        if (empty($station)) {
+            $this->response->errorInternal('提交失败,该区域没有对应的服务部');
+        }
         try {
             DB::beginTransaction();
-            $station = PreorderService::getRecentlyStation($input['longitude'], $input['latitude']);
             $input['station_id'] = $station['id'];
             unset($input['longitude'], $input['latitude']);
             $preorder = $this->preorder->create($input);
+            $preorder->load('district');
             DB::commit();
         } catch (\Exception $e) {
+            dd($e->getMessage());
             $this->response->errorInternal('提交出错,请刷新重试或联系客服');
         }
         return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);

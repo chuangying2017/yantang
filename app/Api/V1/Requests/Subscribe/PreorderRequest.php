@@ -35,7 +35,6 @@ class PreorderRequest extends Request
         return [
             'phone' => 'required',
             'address' => 'required',
-            'area' => 'required',
         ];
     }
 }
