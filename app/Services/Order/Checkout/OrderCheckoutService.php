@@ -46,6 +46,7 @@ class OrderCheckoutService implements OrderCheckoutContract {
 
     protected function payWithPingxx($order_id, $pay_channel)
     {
+
         $billing = $this->billingRepo->getBillingOfType($order_id, OrderProtocol::BILLING_TYPE_OF_MONEY);
 
         if (!$billing) {

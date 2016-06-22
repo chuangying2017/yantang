@@ -32,7 +32,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
             "app" => ["id" => config('services.pingxx.app_id')],
             "subject" => config('app.name') . '订单',
             "body" => $payment_no,
-            "extra" => self::getExtraData($channel),
+            "extra" => self::getExtraData($channel, $payment_no),
         ]);
     }
 
