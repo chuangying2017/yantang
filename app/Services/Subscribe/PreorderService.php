@@ -41,7 +41,7 @@ class PreorderService
 
     public function getRecentlyStation($longitude, $latitude)
     {
-        $station = $$this->stationRepo->Paginated(0);
+        $station = $this->stationRepo->Paginated(0);
         $data = [];
         foreach ($station as $value) {
             $distance = $this->getDistance($longitude, $latitude, display_coordinate($value['longitude']), display_coordinate($value['latitude']));
