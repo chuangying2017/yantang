@@ -16,7 +16,7 @@ class PreorderBilling implements BillingContract
         $input = [
             'user_id' => access()->id(),
 //            'user_id' => 2,
-            'billing_no' => uniqid('bill_'),
+            'billing_no' => uniqid('bill'),
             'amount' => $amount * 10,
         ];
         $charge_billing = ChargeBilling::create($input);

@@ -10,7 +10,7 @@ use Auth;
 use App\Services\Billing\BillingProtocol;
 use App\Repositories\Pay\PaymentRepositoryContract;
 use Illuminate\Http\Request;
-use App\Services\Pay\Events\PreorderPaymentIsPaid;
+use App\Services\Client\Account\WalletService;
 use PreorderService;
 
 class TopUpController extends Controller
@@ -34,14 +34,14 @@ class TopUpController extends Controller
         $charge_billing = $preorderBilling->create($amount);
         $preorderBilling->setId($charge_billing->id);
         $pingxxPayService = $pingxxPayService->setChannel(BillingProtocol::BILLING_CHANNEL_OF_PREORDER_BILLING);
-        $return = $pingxxPayService->pay($preorderBilling)->toArray();
+        $return = $pingxxPayService->pay($preorderBilling);
         return $this->response->array($return);
     }
 
-    public function payConfirm(Request $request, PaymentRepositoryContract $paymentRepo)
+    public function payConfirm(Request $request, PaymentRepositoryContract $paymentRepo, WalletService $walletService)
     {
         list($payment_no, $transaction_no) = $request->only(['payment_no', 'transaction_no']);
         $payment = $paymentRepo->setPaymentAsPaid($payment_no, $transaction_no);
-        event(new PreorderPaymentIsPaid($payment));
+        $walletService->pay();
     }
 }

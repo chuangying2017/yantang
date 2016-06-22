@@ -43,14 +43,14 @@ class AdminStationController extends Controller
 
     public function store(AdminStationRequest $request)
     {
-        $input = $request->only(['name', 'desc', 'user_id', 'address', 'tel', 'director', 'phone', 'cover_image', 'longitude', 'latitude', 'status']);
+        $input = $request->only(['name', 'desc', 'user_id', 'address', 'district', 'tel', 'director', 'phone', 'cover_image', 'longitude', 'latitude', 'status']);
         $station = $this->station->create($input);
         return $this->response->item($station, new StationTransformer())->setStatusCode(201);
     }
 
     public function update(AdminStationRequest $request, $id)
     {
-        $input = $request->only(['name', 'desc', 'user_id', 'address', 'tel', 'phone', 'cover_image', 'longitude', 'latitude']);
+        $input = $request->only(['name', 'desc', 'user_id', 'address', 'district', 'tel', 'phone', 'cover_image', 'longitude', 'latitude']);
         $station = $this->station->update($input, $id);
         return $this->response->item($station, new StationTransformer())->setStatusCode(201);
     }
@@ -59,7 +59,6 @@ class AdminStationController extends Controller
     {
         try {
             $station = $this->station->show($id);
-            $station->show_bind_url = true;
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }

@@ -22,8 +22,10 @@ class StatementsService
 
     public function create($input)
     {
-        $begin_time = '2016-06-08';
-        $end_time = '2016-06-30';
+        $begin_time = $input['begin_time'];
+//        $begin_time = '2016-06-08';
+        $end_time = $input['end_time'];
+//        $end_time = '2016-06-30';
         $dt = Carbon::parse($begin_time);
         $year = $dt->year;
         $month = $dt->month;

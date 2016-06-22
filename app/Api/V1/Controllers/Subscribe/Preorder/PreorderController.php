@@ -13,6 +13,7 @@ use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Requests\Subscribe\PreorderProductRequest;
 use Auth;
+use DB;
 
 class PreorderController extends Controller
 {
@@ -55,9 +56,18 @@ class PreorderController extends Controller
     //客户创建
     public function store(PreorderRequest $request)
     {
-        $input = $request->only(['name', 'phone', 'address', 'area', 'station_id']);
+        $input = $request->only(['name', 'phone', 'address', 'area', 'station_id', 'longitude', 'latitude']);
         $input['user_id'] = $this->user_id;
-        $preorder = $this->preorder->create($input);
+        try {
+            DB::beginTransaction();
+            $station = PreorderService::getRecentlyStation($input['longitude'], $input['latitude']);
+            $input['station_id'] = $station['id'];
+            $preorder = $this->preorder->create($input);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->response->errorInternal('提交出错,请刷新重试或联系客服');
+        }
         return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
 

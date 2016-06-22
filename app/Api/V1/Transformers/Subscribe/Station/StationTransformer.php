@@ -21,10 +21,7 @@ class StationTransformer extends TransformerAbstract
             'latitude' => display_coordinate($station->latitude),
             'status' => $station->status,
         ];
-
-        if (isset($station->show_bind_url) && $station->show_bind_url) {
-            $data['mete']['bind_url'] = url('bind_station', ['station_id' => $station->id]);
-        }
+        
         return $data;
     }
 
