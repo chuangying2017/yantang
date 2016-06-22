@@ -72,6 +72,8 @@ class EloquentStationRepository implements StationRepositoryContract
             }
         }
         $station->user_id = $user_id;
+        $station->save();
+        return $station;
     }
 
     public function create($input)

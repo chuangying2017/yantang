@@ -9,6 +9,7 @@ class PreorderTransformer extends TransformerAbstract
     public function transform(Preorder $preorder)
     {
         $data = [
+            'id' => $preorder->id,
             'name' => $preorder->name,
             'user_id' => $preorder->user_id,
             'phone' => $preorder->phone,
