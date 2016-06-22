@@ -15,7 +15,7 @@ class CreateStationTable extends Migration
         Schema::create('station', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('user_id');
+            $table->integer('user_id')->nullable();
             $table->integer('desc');
             $table->string('address');
             $table->string('tel')->nullable();
