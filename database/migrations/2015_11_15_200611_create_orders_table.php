@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration {
             $table->string('order_no');
             $table->string('title');
             $table->unsignedInteger('total_amount');
-            $table->unsignedInteger('product_amount');
+            $table->unsignedInteger('products_amount');
             $table->unsignedInteger('express_fee');
             $table->unsignedInteger('discount_amount');
             $table->unsignedInteger('pay_amount');
