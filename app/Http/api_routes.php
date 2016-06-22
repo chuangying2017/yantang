@@ -47,9 +47,10 @@ $api->version('v1', function ($api) {
             });
             //订奶客户端
             $api->group(['namespace' => 'Preorder'], function ($api) {
-                $api->get('subscribe/preorders', 'PreorderController@stations');
+                $api->get('subscribe/stations', 'PreorderController@stations');
                 $api->resource('subscribe/preorders', 'PreorderController');
                 $api->resource('subscribe/preorder_product', 'PreorderProductController');
+                $api->post('subscribe/pay_confirm', 'TopUpController@payConfirm');
                 $api->resource('subscribe/topup', 'TopUpController');
             });
             //订奶配送端

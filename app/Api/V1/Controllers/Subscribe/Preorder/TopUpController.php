@@ -11,6 +11,7 @@ use App\Services\Billing\BillingProtocol;
 use App\Repositories\Pay\PaymentRepositoryContract;
 use Illuminate\Http\Request;
 use App\Services\Client\Account\WalletService;
+use Log;
 use PreorderService;
 
 class TopUpController extends Controller
@@ -38,10 +39,19 @@ class TopUpController extends Controller
         return $this->response->array($return);
     }
 
-    public function payConfirm(Request $request, PaymentRepositoryContract $paymentRepo, WalletService $walletService)
+    public function payConfirm(Request $request, PaymentRepositoryContract $paymentRepo, WalletService $walletService, PreorderBilling $preorderBilling)
     {
-        list($payment_no, $transaction_no) = $request->only(['payment_no', 'transaction_no']);
-        $payment = $paymentRepo->setPaymentAsPaid($payment_no, $transaction_no);
-        $walletService->pay();
+        $input = $request->all();
+        if (!empty($input) && $input['type'] == "charge.succeeded") {
+            $payment_no = $input['id'];
+            $transaction_no = $input['data']['transaction_no'];
+            $payment = $paymentRepo->setPaymentAsPaid($payment_no, $transaction_no);
+            $charge_billing = ChargeBilling::where('billing_no', $input['billing_no'])->first();
+            $preorderBilling->setId($charge_billing->id);
+            $walletService->pay($preorderBilling);
+        } else {
+            //todo 出错写入日志
+        }
+
     }
 }
