@@ -37,7 +37,6 @@ class PreorderRequest extends Request
             'phone' => 'required',
             'address' => 'required',
             'area' => 'required',
-            'station_id' => 'required',
         ];
     }
 }

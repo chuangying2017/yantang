@@ -56,7 +56,7 @@ class PreorderController extends Controller
     //客户创建
     public function store(PreorderRequest $request)
     {
-        $input = $request->only(['name', 'phone', 'address', 'area', 'station_id', 'longitude', 'latitude']);
+        $input = $request->only(['name', 'phone', 'address', 'area', 'longitude', 'latitude']);
         $input['user_id'] = $this->user_id;
         try {
             DB::beginTransaction();
