@@ -15,7 +15,7 @@ class CampaignOrderTest extends TestCase {
                 'product_sku_id' => 2
             ]
         ];
-        $channel = 'wx_pub';
+        $channel = 'wx_pub_qr';
         $user_id = 1;
 
         $this->json('post', 'campaigns/orders',
@@ -27,6 +27,13 @@ class CampaignOrderTest extends TestCase {
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
         $this->assertResponseOk();
+
+        $result = $this->getResponseData();
+
+        $this->visit("http://sissi.pingxx.com/notify.php?ch_id=" . $result['data']['id']);
+
+        $this->see('success');
+
     }
 
     public function it_can_create_campaign()

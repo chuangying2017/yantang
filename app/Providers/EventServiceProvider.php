@@ -43,6 +43,10 @@ class EventServiceProvider extends ServiceProvider {
 
         ],
 
+        'App\Services\Pay\Events\PingxxPaymentIsPaid' => [
+            
+        ],
+
         'App\Events\Order\OrderIsPaid' => [
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
         ],

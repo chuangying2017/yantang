@@ -16,6 +16,5 @@ class MallOrderApiTest extends TestCase
         $this->json('get', 'mall/orders');
         $this->dumpResponse();
         $this->assertResponseOk();
-
     }
 }
