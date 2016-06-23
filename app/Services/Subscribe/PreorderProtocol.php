@@ -23,15 +23,18 @@ class PreorderProtocol
     {
         $message = [
             self::STATUS_OF_UNTREATED => '未处理',
+            self::STATUS_OF_NOT_SET => '未设置',
+            self::STATUS_OF_NO_STAFF => '无配送员',
             self::STATUS_OF_NORMAL => '正常状态',
-            self::STATUS_OF_NOT_ENOUGH => '余额不足',
             self::STATUS_OF_PAUSE => '暂停',
+            self::STATUS_OF_REJECT => '已拒绝',
+            self::STATUS_OF_NOT_ENOUGH => '余额不足',
         ];
 
         return is_null($key) ? $message : $message[$key];
     }
 
-    public static function StatusName($status = null, $charge_status = null)
+    public static function preorderStatusName($status = null, $charge_status = null)
     {
         if ($status == self::STATUS_OF_NORMAL && $charge_status == self::STATUS_OF_NOT_ENOUGH) {
             return self::status($charge_status);
@@ -41,15 +44,12 @@ class PreorderProtocol
     }
 
 
-    public static function stationPreorderStatus($key = null)
+    public static function stationPreorderMenus($key = null)
     {
         $message = [
             self::STATUS_OF_UNTREATED => '未处理',
-            self::STATUS_OF_NOT_SET => '未设置',
-            self::STATUS_OF_NO_STAFF => '无配送员',
             self::STATUS_OF_NORMAL => '正常状态',
             self::STATUS_OF_NOT_ENOUGH => '余额不足',
-//            self::STATUS_OF_PAUSE => '暂停',
         ];
 
         return is_null($key) ? $message : $message[$key];

@@ -115,4 +115,25 @@ class EloquentStationRepository implements StationRepositoryContract
         return $query;
     }
 
+    public function SearchInfo($keyword, $district_id, $per_page)
+    {
+        $query = Station::query();
+        if (!empty($keyword)) {
+            $query = Station::where(function ($query) use ($keyword) {
+                $query->where('director', 'like', '%' . $keyword . '%')->orwhere('name', 'like', '%' . $keyword . '%')
+                    ->orwhere('phone', $keyword)->orwhere('tel', $keyword);
+            });
+        }
+        if (!empty($district_id)) {
+            $query = $query->where('district_id', $district_id);
+        }
+        if (!empty($per_page)) {
+            $query = $query->paginate($per_page);
+        } else {
+            $query = $query->get();
+        }
+
+        return $query;
+    }
+
 }

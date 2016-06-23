@@ -12,8 +12,8 @@ class StatementsProductTransformer extends TransformerAbstract
             'id' => (int)$statementsProduct->id,
             'statements_id' => $statementsProduct->statements_id,
             'name' => $statementsProduct->name,
-            'settle_price' => store_price($statementsProduct->settle_price),
-            'service_fee' => store_price($statementsProduct->service_fee),
+            'settle_price' => $statementsProduct->settle_price,
+            'service_fee' => $statementsProduct->service_fee,
             'quantity' => $statementsProduct->quantity,
         ];
 

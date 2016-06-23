@@ -17,7 +17,7 @@ class AdminStationController extends Controller
     protected $staff;
     protected $station;
     protected $station_id;
-    const STATION_PER_PAGE = 10;
+    const STATION_PER_PAGE = 20;
 
     public function __construct(StaffRepositoryContract $staffs, StationRepositoryContract $station)
     {
@@ -31,14 +31,12 @@ class AdminStationController extends Controller
      */
     public function index(Request $request)
     {
-        $name = $request->input('name', '');
+        $district_id = $request->input('district_id', null);
+        $keyword = $request->input('keyword', null);
         $paginate = $request->input('paginate', self::STATION_PER_PAGE);
-        $where = [
-            ['field' => 'name', 'value' => $name, 'compare_type' => '=']
-        ];
-        $station = $this->station->Paginated($paginate, $where);
+        $station = $this->station->SearchInfo($keyword, $district_id, $paginate);
 
-        return $this->response->item($station, new StationTransformer());
+        return $this->response->paginator($station, new StationTransformer());
     }
 
     public function store(AdminStationRequest $request)

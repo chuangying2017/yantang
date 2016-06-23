@@ -58,6 +58,7 @@ class PreorderController extends Controller
     {
         $input = $request->only(['phone', 'address', 'district_id', 'longitude', 'latitude']);
         $input['user_id'] = $this->user_id;
+        $input['name'] = access()->user()->username;
         $station = PreorderService::getRecentlyStation($input['longitude'], $input['latitude'], $input['district_id']);
         if (empty($station)) {
             $this->response->errorInternal('提交失败,该区域没有对应的服务部');
@@ -70,8 +71,7 @@ class PreorderController extends Controller
             $preorder->load('district');
             DB::commit();
         } catch (\Exception $e) {
-            dd($e->getMessage());
-            $this->response->errorInternal('提交出错,请刷新重试或联系客服');
+            $this->response->errorInternal('提交出错,请刷新重试');
         }
         return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
