@@ -11,7 +11,7 @@ $api->group(['namespace' => 'Campaign'], function ($api) {
 
             $api->resource('orders', 'OrderController');
             $api->resource('orders.checkout', 'CheckoutController', ['only' => ['index', 'store']]);
-            $api->resource('order-tickets', 'OrderTicketController');
+            $api->resource('tickets', 'OrderTicketController');
             $api->resource('campaigns', 'CampaignController');
 
         });

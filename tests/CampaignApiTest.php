@@ -49,7 +49,6 @@ class CampaignApiTest extends TestCase {
         $this->assertResponseOk();
 
         $this->dumpResponse();
-
     }
 
 

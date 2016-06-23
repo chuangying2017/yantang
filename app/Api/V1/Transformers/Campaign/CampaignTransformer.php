@@ -10,6 +10,7 @@ class CampaignTransformer extends TransformerAbstract {
         $data = [
             'id' => $campaign['id'],
             'name' => $campaign['name'],
+            'cover_image' => $campaign['cover_image'],
             'desc' => $campaign['desc'],
             'start_at' => $campaign['start_at'],
             'end_at' => $campaign['end_at'],
