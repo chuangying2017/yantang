@@ -47,12 +47,12 @@ class OrderController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrderGenerator $orderGenerator, Request $request)
     {
         try {
             $temp_order_id = $request->input(['temp_order_id']);
 
-            $order = app()->make(OrderGenerator::class)->confirm($temp_order_id);
+            $order = $orderGenerator->confirm($temp_order_id);
 
             return $this->response->item($order, new ClientOrderTransformer())->setStatusCode(201);
         } catch (\Exception $e) {
@@ -81,9 +81,9 @@ class OrderController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(OrderManageContract $orderManage, Request $request, $id)
     {
-        app()->make(OrderManageContract::class)->orderCancel($id, $request->input('memo'));
+        $orderManage->orderCancel($id, $request->input('memo'));
 
         return $this->response->noContent();
     }

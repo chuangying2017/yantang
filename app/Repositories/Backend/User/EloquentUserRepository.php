@@ -59,7 +59,7 @@ class EloquentUserRepository implements UserContract {
      */
     public function getUsersPaginated($per_page, $status = 1, $order_by = 'id', $sort = 'asc')
     {
-        return User::where('status', $status)->orderBy($order_by, $sort)->paginate($per_page);
+        return User::with('roles')->where('status', $status)->orderBy($order_by, $sort)->paginate($per_page);
     }
 
     /**
@@ -135,7 +135,7 @@ class EloquentUserRepository implements UserContract {
             $this->flushRoles($roles, $user);
             $this->flushPermissions($permissions, $user);
 
-            return true;
+            return $user;
         }
 
         throw new GeneralException('There was a problem updating this user. Please try again.');
@@ -313,12 +313,13 @@ class EloquentUserRepository implements UserContract {
     private function createUserStub($input)
     {
         $user = new User;
-        $user->name = $input['name'];
-        $user->email = $input['email'];
+        $user->username = $input['username'];
+        $user->email = array_get($input, 'email', null);
+        $user->phone = array_get($input, 'phone', null);
         $user->password = $input['password'];
-        $user->status = isset($input['status']) ? 1 : 0;
+        $user->status = array_get($input, 'status', 1);
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
-        $user->confirmed = isset($input['confirmed']) ? 1 : 0;
+        $user->confirmed = array_get($input, 'confirmed', 1);
 
         return $user;
     }

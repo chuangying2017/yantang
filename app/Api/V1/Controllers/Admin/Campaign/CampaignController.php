@@ -2,12 +2,12 @@
 
 namespace App\Api\V1\Controllers\Admin\Campaign;
 
+use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Campaign\CampaignTransformer;
 use App\Repositories\Promotion\Campaign\CampaignRepositoryContract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class CampaignController extends Controller {
 
