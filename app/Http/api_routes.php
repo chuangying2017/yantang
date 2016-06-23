@@ -65,8 +65,16 @@ $api->version('v1', function ($api) {
          */
         $api->group(['namespace' => 'Admin\\Station', 'prefix' => 'admin'], function ($api) {
             $api->resource('stations', 'AdminStationController'); //查看服务部列表
-            $api->post('create_billing', 'AdminStatementsController@createBilling');
         });
+
+        $api->group(['namespace' => 'Admin\\Subcribe', 'prefix' => 'admin'], function ($api) {
+            $api->get('allot_station', 'PreorderController@allotStation');
+            $api->resource('preorders', 'PreorderController'); //后台查看订单列表
+            $api->post('create_billing', 'AdminStatementsController@createBilling'); //生成对账单
+            $api->resource('statements', 'AdminStatementsController'); //查看对账单
+            $api->resource('recharge_amount', 'RechargeAmountController'); //后台查看设置充值金额
+        });
+
 
 
         /**
@@ -76,6 +84,12 @@ $api->version('v1', function ($api) {
          */
         $api->group(['namespace' => 'Subscribe\Station', 'prefix' => 'stations'], function ($api) {
             $api->get('products', 'ProductController@index');
+        });
+
+
+        //区域
+        $api->group(['namespace' => 'District'], function ($api) {
+            $api->resource('district', 'DistrictController');
         });
 
 

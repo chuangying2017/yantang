@@ -18,8 +18,8 @@ class StatementsTransformer extends TransformerAbstract
             'statement_no' => $statements->address,
             'year' => $statements->year,
             'month' => $statements->month,
-            'settle_amount' => display_price($statements->settle_amount),
-            'service_amount' => display_price($statements->settle_amount),
+            'settle_amount' => $statements->settle_amount,
+            'service_amount' => $statements->settle_amount,
             'status' => $statements->status,
             'status_name' => SubscribeProtocol::statements_status($statements->status),
         ];

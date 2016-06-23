@@ -10,7 +10,7 @@ interface StatementsRepositoryContract
      * @param string $sort
      * @return mixed
      */
-    public function Paginated($per_page, $where, $order_by = 'id', $sort = 'asc');
+    public function Paginated($per_page, $where = [], $order_by = 'id', $sort = 'asc');
 
     /**
      * @param $input
@@ -34,5 +34,7 @@ interface StatementsRepositoryContract
     public function byStationId($station_id, $year, $month);
 
     public function destroy($id);
+
+    public function info($per_page = null);
 
 }

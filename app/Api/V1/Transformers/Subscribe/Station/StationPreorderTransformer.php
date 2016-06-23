@@ -16,7 +16,7 @@ class StationPreorderTransformer extends TransformerAbstract
             'user' => $station->preorder->user->name,
             'status' => $station->preorder->status,
             'charge_status' => $station->preorder->charge_status,
-            'status_name' => PreorderProtocol::StatusName($station->preorder->status, $station->preorder->charge_status),
+            'status_name' => PreorderProtocol::preorderStatusName($station->preorder->status, $station->preorder->charge_status),
             'preorder_id' => $station->preorder->id,
         ];
 
@@ -25,7 +25,7 @@ class StationPreorderTransformer extends TransformerAbstract
 
     public function includeSearchType()
     {
-        $menus = PreorderProtocol::stationPreorderStatus();
+        $menus = PreorderProtocol::stationPreorderMenus();
 
         return $this->array(['menus' => $menus]);
     }

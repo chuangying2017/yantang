@@ -47,4 +47,37 @@ class EloquentPreorderRepository implements PreorderRepositoryContract
         }
         return $query->find($preorder_id);
     }
+
+    public function searchInfo($per_page, $order_no, $begin_time, $end_time, $phone, $status)
+    {
+        $query = Preorder::query();
+        if (!empty($order_no)) {
+            $query = $query->where('order_no', $order_no);
+        }
+
+        if (!empty($begin_time)) {
+            $query = $query->where('created_at', '>=', $begin_time);
+        }
+
+        if (!empty($end_time)) {
+            $query = $query->where('created_at', '<=', $end_time);
+        }
+
+        if (!empty($phone)) {
+            $query = $query->where('phone', $phone);
+        }
+
+        if (!empty($status)) {
+            $query = $query->where('status', $status);
+        }
+        $query = $query->with(['district'])->orderBy('created_at', 'desc');
+
+        if (!empty($per_page)) {
+            $query = $query->paginate($per_page);
+        } else {
+            $query = $query->get();
+        }
+
+        return $query;
+    }
 }

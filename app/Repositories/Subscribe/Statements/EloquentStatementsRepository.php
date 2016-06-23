@@ -15,7 +15,8 @@ class EloquentStatementsRepository implements StatementsRepositoryContract
 
     public function show($id)
     {
-
+        $query = Statements::find($id);
+        return $query;
     }
 
     public function byStationId($station_id, $year, $month = null)
@@ -27,5 +28,19 @@ class EloquentStatementsRepository implements StatementsRepositoryContract
             return $query->first();
         }
         return $query->get();
+    }
+
+    public function info($per_page = null)
+    {
+        $query = Statements::orderBy('created_at', 'DESC');
+        $query = $query->with(['product']);
+
+        if (!empty($per_page)) {
+            $query = $query->paginate($per_page);
+        } else {
+            $query = $query->get();
+        }
+
+        return $query;
     }
 }

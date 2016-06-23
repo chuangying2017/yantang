@@ -5,7 +5,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Statements extends Model
 {
-    use SoftDeletes;
 
     protected $guarded = ['id'];
 
