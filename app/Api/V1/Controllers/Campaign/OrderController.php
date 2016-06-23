@@ -49,15 +49,15 @@ class OrderController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout, Request $request)
     {
         try {
             $skus = $request->input(['product_skus']);
-            $pay_channel = $request->input('channel') ? : PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
+            $pay_channel = $request->input('channel') ?: PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
 
-            $order = app()->make(OrderGenerator::class)->buy(access()->id(), $skus, OrderProtocol::ORDER_TYPE_OF_CAMPAIGN);
+            $order = $orderGenerator->buy(access()->id(), $skus, OrderProtocol::ORDER_TYPE_OF_CAMPAIGN);
 
-            $charge = app()->make(OrderCheckoutService::class)->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
+            $charge = $orderCheckout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 
             return $this->response->array(['data' => $charge]);
         } catch (\Exception $e) {
@@ -85,9 +85,11 @@ class OrderController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(OrderManageContract $orderManage, Request $request, $id)
     {
-        app()->make(OrderManageContract::class)->orderCancel($id, $request->input('memo'));
+        $orderManage->orderCancel($id, $request->input('memo'));
+
+        return $this->response->noContent();
     }
 
 

@@ -12,6 +12,9 @@ class ProductTransformer extends TransformerAbstract {
 
     public function transform(Product $product)
     {
+
+        $this->setInclude($product);
+
         return [
             'id' => $product['id'],
             'brand' => ['id' => $product['brand_id']],

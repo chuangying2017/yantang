@@ -32,7 +32,9 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
         'App\Events\Auth\UserRegister' => [
-            'App\Listeners\Auth\CreateClientForUser'
+            'App\Listeners\Auth\CreateClientForUser',
+            'App\Listeners\Auth\CreateWalletForUser',
+            'App\Listeners\Auth\CreateCreditsWalletForUser'
         ],
 
         'App\Events\Auth\UserLoggedOut' => [

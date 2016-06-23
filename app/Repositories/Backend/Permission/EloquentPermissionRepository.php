@@ -136,7 +136,7 @@ class EloquentPermissionRepository implements PermissionRepositoryContract {
 				foreach ($input['dependencies'] as $dependency_id)
 					$this->dependencies->create($permission->id, $dependency_id);
 
-			return true;
+			return $permission;
 		}
 
 		throw new GeneralException("There was a problem creating this permission. Please try again.");
@@ -216,7 +216,7 @@ class EloquentPermissionRepository implements PermissionRepositoryContract {
 				//None checked, remove any if they were there prior
 				$this->dependencies->clear($permission->id);
 
-			return true;
+			return $permission;
 		}
 
 		throw new GeneralException("There was a problem updating this permission. Please try again.");

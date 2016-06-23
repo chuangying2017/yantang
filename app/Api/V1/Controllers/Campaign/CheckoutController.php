@@ -23,17 +23,6 @@ class CheckoutController extends Controller {
     private $checkoutService;
 
     /**
-     * CheckoutController constructor.
-     * @param CampaignOrderRepository $orderRepo
-     * @param OrderCheckoutService $checkoutService
-     */
-    public function __construct(CampaignOrderRepository $orderRepo, OrderCheckoutService $checkoutService)
-    {
-        $this->orderRepo = $orderRepo;
-        $this->checkoutService = $checkoutService;
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -49,13 +38,13 @@ class CheckoutController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $order_no)
+    public function store(CampaignOrderRepository $orderRepo, OrderCheckoutService $checkoutService, Request $request, $order_no)
     {
         $pay_channel = $request->input('channel') ?: PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
 
-        $order = $this->orderRepo->getOrder($order_no);
+        $order = $orderRepo->getOrder($order_no);
 
-        $charge = $this->checkoutService->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
+        $charge = $checkoutService->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 
         return $this->response->array(['data' => $charge]);
     }

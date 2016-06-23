@@ -9,6 +9,44 @@
 $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
 
     $api->group(['middleware' => 'api.auth'], function ($api) {
+        $api->group(['namespace' => 'Access', 'prefix' => 'access'], function ($api) {
+
+            $api->resource('users', 'UserController');
+
+            $api->get('users/deleted', 'UserController@deleted')->name('admin.access.users.deleted');
+
+            /**
+             * Specific User
+             */
+            $api->group(['prefix' => 'user/{id}', 'where' => ['id' => '[0-9]+']], function ($api) {
+                $api->get('delete', 'UserController@delete')->name('admin.access.user.delete-permanently');
+                $api->get('restore', 'UserController@restore')->name('admin.access.user.restore');
+                $api->get('mark/{status}', 'UserController@mark')->name('admin.access.user.mark')->where(['status' => '[0,1,2]']);
+                $api->post('password/change', 'UserController@updatePassword')->name('admin.access.user.change-password');
+            });
+
+
+            /**
+             * Role Management
+             */
+            $api->group(['namespace' => 'Role'], function ($api) {
+                $api->resource('roles', 'RoleController', ['except' => ['show', 'create', 'edit']]);
+            });
+
+            /**
+             * Permission Management
+             */
+            $api->group(['prefix' => 'roles', 'namespace' => 'Permission'], function ($api) {
+                $api->resource('permission-group', 'PermissionGroupController', ['except' => ['show', 'create', 'edit']]);
+                $api->resource('permissions', 'PermissionController', ['except' => ['show', 'create', 'edit']]);
+
+                $api->group(['prefix' => 'groups'], function ($api) {
+                    $api->post('update-sort', 'PermissionGroupController@updateSort')->name('admin.access.roles.groups.update-sort');
+                });
+            });
+        });
+
+
         $api->group(['namespace' => 'Product'], function ($api) {
             $api->resource('products/mix', 'ProductMixController', ['only' => ['index']]);
             $api->resource('products', 'ProductController');
