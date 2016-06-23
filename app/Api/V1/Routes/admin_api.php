@@ -57,9 +57,25 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
             $api->resource('cats', 'CategoryController');
         });
 
+        /**
+         * Mall Orders
+         */
+        $api->group(['namespace' => 'Order'], function ($api) {
+            $api->group(['prefix' => 'mall'], function ($api) {
+                $api->resource('orders', 'MallOrderController', ['only' => ['index', 'show', 'update']]);
+            });
+
+            $api->group(['prefix' => 'special'], function ($api) {
+                $api->resource('orders', 'SpecialOrderController', ['only' => ['index', 'show', 'update']]);
+            });
+        });
+
+
         $api->group(['namespace' => 'Campaign'], function ($api) {
             $api->resource('store', 'StoreController');
             $api->resource('campaigns', 'CampaignController');
         });
+
+
     });
 });
