@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateStationTable extends Migration
+class AddTypeToProductSkusTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class UpdateStationTable extends Migration
      */
     public function up()
     {
-        Schema::table('station', function (Blueprint $table) {
-            $table->string('district')->after('address');
+        Schema::table('product_skus', function (Blueprint $table) {
+            $table->string('type')->default('entity');
         });
     }
 
@@ -24,8 +24,8 @@ class UpdateStationTable extends Migration
      */
     public function down()
     {
-        Schema::table('station', function (Blueprint $table) {
-            $table->dropColumn('district');
+        Schema::table('product_skus', function (Blueprint $table) {
+            $table->dropColumn('type');
         });
     }
 }

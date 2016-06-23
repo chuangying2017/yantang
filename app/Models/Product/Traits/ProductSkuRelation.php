@@ -27,7 +27,7 @@ trait ProductSkuRelation {
 
     public function mix()
     {
-        return $this->belongsToMany(ProductSku::class, 'product_mix_sku', 'product_sku_id', 'product_sku_mix_id');
+        return $this->belongsToMany(ProductSku::class, 'product_mix_sku', 'product_sku_id', 'product_sku_mix_id')->withPivot('quantity');
     }
 
 

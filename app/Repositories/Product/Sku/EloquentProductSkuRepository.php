@@ -42,10 +42,15 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
                 'stock' => $sku_data['stock'],
                 'attr' => array_get($sku_data, 'attr', ''),
             ]);
+
+        if ($this->isMixProductSku($sku_data)) {
+            $sku->type = ProductProtocol::TYPE_OF_MIX;
+        }
+
         $sku->save();
 
-        if (count(array_get($sku_data, 'sku_ids', [])) > 0) {
-            $sku->mix()->sync($sku_data['sku_ids']);
+        if ($this->isMixProductSku($sku_data)) {
+            $this->attachMixSku($sku_data, $sku);
         }
 
         if (count(array_get($sku_data, 'attr_value_ids', [])) > 0) {
@@ -53,7 +58,6 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
         }
 
         return $sku;
-
     }
 
     public function deleteSku($product_sku_id)
@@ -160,5 +164,30 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
         $sku->load('mix');
 
         return $sku->mix;
+    }
+
+    /**
+     * @param $sku_data
+     * @return bool
+     */
+    protected function isMixProductSku($sku_data)
+    {
+        return count(array_get($sku_data, 'mix_skus', [])) > 0;
+    }
+
+    /**
+     * @param $sku_data
+     * @param $mix_sku_data
+     * @param $sku
+     */
+    protected function attachMixSku($sku_data, $sku)
+    {
+        $mix_sku_data = [];
+        foreach ($sku_data['mix_skus'] as $mix_sku) {
+            $mix_sku_data[$mix_sku['sku_id']] = ['quantity' => $mix_sku['quantity']];
+        }
+        if (count($mix_sku_data)) {
+            $sku->mix()->sync($mix_sku_data);
+        }
     }
 }

@@ -28,13 +28,11 @@ class OrderTicketManageService implements OrderTicketManageContract {
      */
     public function __construct(
         OrderTicketRepositoryContract $ticketRepo,
-        CampaignOrderRepository $orderRepo,
-        OrderPromotionRepositoryContract $orderPromotion
+        CampaignOrderRepository $orderRepo
     )
     {
         $this->ticketRepo = $ticketRepo;
         $this->orderRepo = $orderRepo;
-        $this->orderPromotion = $orderPromotion;
     }
 
     public function createTicket($order_id)
@@ -45,9 +43,9 @@ class OrderTicketManageService implements OrderTicketManageContract {
             throw new \Exception('订单状态错误,无法生成兑换券');
         }
 
-        $order_promotions = $this->orderPromotion->getOrderPromotion($order['id']);
-        $this->ticketRepo->createOrderTicket($order, $order_promotions->first());
+        $this->ticketRepo->createOrderTicket($order);
         $this->orderRepo->updateOrderStatusAsDeliver($order);
+        $this->orderRepo->updateOrderStatusAsDeliverDone($order);
 
         return true;
     }

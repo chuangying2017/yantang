@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductCategoryTable extends Migration {
-
+class AddQuantityToProductMixSkuTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,10 +12,8 @@ class CreateProductCategoryTable extends Migration {
      */
     public function up()
     {
-        Schema::create('product_category', function (Blueprint $table) {
-            $table->integer('cat_id')->unsigned();
-            $table->integer('product_id')->unsigned();
-            $table->string('type', 11);
+        Schema::table('product_mix_sku', function (Blueprint $table) {
+            $table->integer('quantity')->default(1);
         });
     }
 
@@ -26,6 +24,8 @@ class CreateProductCategoryTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('product_category');
+        Schema::table('product_mix_sku', function (Blueprint $table) {
+            $table->dropColumn('quantity');
+        });
     }
 }

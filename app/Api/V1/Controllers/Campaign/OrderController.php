@@ -8,6 +8,7 @@ use App\Services\Order\Checkout\OrderCheckoutService;
 use App\Services\Order\OrderGenerator;
 use App\Services\Order\OrderManageContract;
 use App\Services\Order\OrderProtocol;
+use App\Services\Pay\Pingxx\PingxxProtocol;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -52,7 +53,7 @@ class OrderController extends Controller {
     {
         try {
             $skus = $request->input(['product_skus']);
-            $pay_channel = $request->input('channel');
+            $pay_channel = $request->input('channel') ? : PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
 
             $order = app()->make(OrderGenerator::class)->buy(access()->id(), $skus, OrderProtocol::ORDER_TYPE_OF_CAMPAIGN);
 
@@ -88,4 +89,6 @@ class OrderController extends Controller {
     {
         app()->make(OrderManageContract::class)->orderCancel($id, $request->input('memo'));
     }
+
+
 }

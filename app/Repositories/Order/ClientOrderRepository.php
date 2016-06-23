@@ -2,6 +2,7 @@
 
 use App\Events\Order\OrderIsCancel;
 use App\Events\Order\OrderIsDeliver;
+use App\Events\Order\OrderIsDeliverDone;
 use App\Events\Order\OrderIsDone;
 use App\Events\Order\OrderIsPaid;
 use App\Models\Order\Order;
@@ -62,7 +63,8 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         $this->memoRepo = $memoRepo;
     }
 
-    protected function setOrderType(){
+    protected function setOrderType()
+    {
 
     }
 
@@ -87,7 +89,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
             'deliver_type' => OrderProtocol::getDeliverType($this->type)
         ]);
 
-        $order->skus = $this->createOrderSkus($order['id'], $data['skus']);
+        $order->skus = $this->orderSkuRepo->createOrderSkus($order, $data['skus']);
         $order->address = $this->createOrderAddress($order['id'], $data['address']);
         $order->billings = $this->createOrderBilling($order);
         $order->promotions = $this->createOrderPromotion($order['id'], $data['promotion']);
@@ -95,11 +97,6 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         DB::commit();
 
         return $order;
-    }
-
-    protected function createOrderSkus($order_id, $skus)
-    {
-        return $this->orderSkuRepo->createOrderSkus($order_id, $skus);
     }
 
     /**
@@ -202,6 +199,15 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         $order = $this->updateOrderStatus($order_id, OrderProtocol::STATUS_OF_SHIPPING);
 
         event(new OrderIsDeliver($order));
+
+        return $order;
+    }
+
+    public function updateOrderStatusAsDeliverDone($order_id)
+    {
+        $order = $this->updateOrderStatus($order_id, OrderProtocol::STATUS_OF_SHIPPED);
+
+        event(new OrderIsDeliverDone($order));
 
         return $order;
     }

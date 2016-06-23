@@ -39,7 +39,8 @@ class TempOrder implements PromotionAbleItemContract {
             'discount_amount' => $this->discount_amount,
             'pay_amount' => $this->getPayAmount(),
             'express_fee' => $this->express_fee,
-            'promotion' => $this->promotion
+            'promotion' => $this->promotion,
+            'error' => $this->error
         ];
     }
 
@@ -186,6 +187,11 @@ class TempOrder implements PromotionAbleItemContract {
         } else {
             $this->error[] = $error;
         }
+    }
+
+    public function getError()
+    {
+        return $this->error;
     }
 
     /**

@@ -30,7 +30,12 @@ class OrderTicketTransformer extends TransformerAbstract {
 
     public function includeSkus(OrderTicket $ticket)
     {
-        return $this->collection($ticket->skus->mix, new OrderTicketSkuTransformer(), true);
+        foreach ($ticket->skus as $key => $sku) {
+            if (!($sku['pay_amount'] == 0 && $sku['discount_amount'] == 0)) {
+                unset($ticket->skus[$key]);
+            }
+        }
+        return $this->collection($ticket->skus, new OrderTicketSkuTransformer(), true);
     }
 
     public function includeExchange(OrderTicket $ticket)

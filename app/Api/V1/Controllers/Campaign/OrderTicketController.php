@@ -52,7 +52,7 @@ class OrderTicketController extends Controller {
      */
     public function show($ticket_no)
     {
-        $ticket = $this->ticketRepo->getOrderTicket($ticket_no);
+        $ticket = $this->ticketRepo->getOrderTicket($ticket_no, true);
 
         return $this->response->item($ticket, new OrderTicketTransformer());
     }

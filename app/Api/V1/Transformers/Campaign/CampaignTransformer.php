@@ -14,8 +14,13 @@ class CampaignTransformer extends TransformerAbstract {
             'start_at' => $campaign['start_at'],
             'end_at' => $campaign['end_at'],
         ];
-        if (isset($data['detail'])) {
-            $data['detail'] = $data['detail']['detail'];
+
+        if (isset($campaign['detail'])) {
+            $data['detail'] = $campaign['detail']['detail'];
+        }
+
+        if (isset($campaign['skus'])) {
+            $data['product_sku'] = $campaign['skus']['product_sku_id'];
         }
 
         return $data;

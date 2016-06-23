@@ -12,10 +12,15 @@ class UserSeeder extends Seeder {
      */
     public function run()
     {
-        $user = User::create([
-            'phone' => '12345678910',
-            'status' => 1,
-            'confirmed' => 1
-        ]);
+        try {
+            DB::connection('mysql_testing')->table('users')->insert([
+                'id' => 1,
+                'phone' => '12345678910',
+                'status' => 1,
+                'confirmed' => 1
+            ]);
+        } catch (\Exception $e) {
+            echo 'skip user seeder';
+        }
     }
 }

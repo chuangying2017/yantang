@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ProductRepoTest extends TestCase {
 
-//    use DatabaseTransactions;
+    use DatabaseTransactions;
 
     protected $productRepo;
 
@@ -25,6 +25,9 @@ class ProductRepoTest extends TestCase {
         $productRepo = $this->getRepo();
 
         $product = $productRepo->createProduct($product_data);
+
+        $this->seeInDatabase('product_skus', ['product_id' => $product['id'], 'type' => \App\Repositories\Product\ProductProtocol::TYPE_OF_MIX]);
+
 
 //        $this->assertInstanceOf(\App\Models\Product\Product::class, $product);
 //
@@ -44,6 +47,7 @@ class ProductRepoTest extends TestCase {
         $product = $productRepo->createProduct($product_data);
 
         $this->assertInstanceOf(\App\Models\Product\Product::class, $product);
+
 
     }
 
@@ -125,9 +129,9 @@ class ProductRepoTest extends TestCase {
                     "attr_value_ids" => [
 
                     ],
-                    "sku_ids" => [
-                        1,
-                        2,
+                    "mix_skus" => [
+                        ['sku_id' => 1, 'quantity' => 2],
+                        ['sku_id' => 2, 'quantity' => 3]
                     ]
                 ]
             ],

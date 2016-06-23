@@ -2,18 +2,26 @@
 
 use App\Models\Order\OrderSku;
 use App\Repositories\Product\Sku\ProductMixRepositoryContract;
+use App\Services\Order\OrderProtocol;
 
 class EloquentOrderSkuRepository implements OrderSkuRepositoryContract {
 
-    public function createOrderSkus($order_id, $data)
+    public function createOrderSkus($order, $data)
     {
+        $order_id = $order['id'];
         $order_skus = [];
-        foreach ($data as $temp_order_sku) {
-            $order_sku = $this->saveOrderSku($order_id, $temp_order_sku);
-            $order_skus[] = $order_sku;
-        }
+        if ($order['order_type'] == OrderProtocol::ORDER_TYPE_OF_CAMPAIGN) {
+            foreach ($data as $temp_order_sku) {
+                $this->createMixSku($order_id, $temp_order_sku);
+            }
+        } else {
+            foreach ($data as $temp_order_sku) {
+                $order_sku = $this->saveOrderSku($order_id, $temp_order_sku);
+                $order_skus[] = $order_sku;
+            }
 
-        return $order_skus;
+            return $order_skus;
+        }
     }
 
     public function getOrderSkus($order_id)
@@ -30,22 +38,26 @@ class EloquentOrderSkuRepository implements OrderSkuRepositoryContract {
             'product_id' => $temp_order_sku['product_id'],
             'name' => $temp_order_sku['name'],
             'cover_image' => $temp_order_sku['cover_image'],
-            'quantity' => $temp_order_sku['quantity'],
+            'quantity' => array_get($temp_order_sku, 'quantity', 1),
             'price' => $temp_order_sku['price'],
-            'discount_amount' => $temp_order_sku['discount_amount'],
+            'discount_amount' => array_get($temp_order_sku, 'discount_amount', 0),
             'pay_amount' => $temp_order_sku['pay_amount'],
-            'attr' => $temp_order_sku['attr'] ? : ''
+            'attr' => $temp_order_sku['attr'] ?: ''
         ]);
     }
 
 
-    #todo 带完成
     protected function createMixSku($order_id, $temp_order_sku)
     {
-        $skus = app()->make(ProductMixRepositoryContract::class)->getMixSkus($temp_order_sku['id']);
-        $this->saveOrderSku($order_id, $temp_order_sku);
-        foreach ($skus as $sku) {
+        $mix_skus = app()->make(ProductMixRepositoryContract::class)->getMixSkus($temp_order_sku['id']);
+
+        foreach ($mix_skus as $sku) {
+            $sku['discount_amount'] = 0;
+            $sku['pay_amount'] = 0;
+            $sku['quantity'] = $sku['pivot']['quantity'];
             $this->saveOrderSku($order_id, $sku);
         }
+
+        $this->saveOrderSku($order_id, $temp_order_sku);
     }
 }

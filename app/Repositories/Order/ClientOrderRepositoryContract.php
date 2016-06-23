@@ -14,6 +14,8 @@ interface ClientOrderRepositoryContract {
 
     public function updateOrderStatusAsDeliver($order_id);
 
+    public function updateOrderStatusAsDeliverDone($order_id);
+
     public function updateOrderStatusAsDone($order_id);
 
     public function updateOrderStatusAsCancel($order_id);

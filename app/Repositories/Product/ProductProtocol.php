@@ -9,7 +9,7 @@ final class ProductProtocol {
     const TYPE_OF_ENTITY = 'entity';
     const TYPE_OF_SERVICE = 'service';
     const TYPE_OF_VIRTUAL = 'virtual';
-    const TYPE_OF_SUBSCRIBE = 'subscribe';
+//    const TYPE_OF_SUBSCRIBE = 'subscribe';
 
     /**
      *

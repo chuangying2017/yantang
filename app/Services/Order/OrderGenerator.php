@@ -79,6 +79,10 @@ class OrderGenerator implements OrderGeneratorContract {
 
         $temp_order = $handler->handle(new TempOrder($user_id, $skus));
 
+        if ($temp_order->getError()) {
+            throw new \Exception($temp_order->getError());
+        }
+
         $this->setOrderRepo(app()->make(CampaignOrderRepository::class));
         $order = $this->orderRepo->createOrder($temp_order->toArray());
 
@@ -109,6 +113,10 @@ class OrderGenerator implements OrderGeneratorContract {
         $temp_order = $this->getTempOrder($temp_order_id);
         if (!$temp_order) {
             throw new \Exception('下单超时');
+        }
+
+        if ($temp_order->getError()) {
+            throw new \Exception($temp_order->getError());
         }
 
         $this->setOrderRepo(app()->make(MallClientOrderRepository::class));

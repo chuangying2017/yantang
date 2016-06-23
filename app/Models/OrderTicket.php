@@ -14,7 +14,7 @@ class OrderTicket extends Model {
 
     public function exchange()
     {
-        return $this->hasOne(Store::class, 'store_id', 'id');
+        return $this->hasOne(Store::class, 'id', 'store_id');
     }
 
     public function order()

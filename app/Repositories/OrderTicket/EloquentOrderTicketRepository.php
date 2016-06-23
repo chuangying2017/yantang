@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
 
-    public function createOrderTicket(Order $order, OrderPromotion $order_promotion)
+    public function createOrderTicket(Order $order)
     {
         $ticket = $this->getOrderTicketsOfOrder($order['id']);
         if ($ticket) {
@@ -19,8 +19,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
         return OrderTicket::create([
             'order_id' => $order['id'],
             'user_id' => $order['user_id'],
-            'campaign_id' => $order_promotion['promotion_id'],
-            'rule_id' => $order_promotion['promotion_rule_id'],
+            'ticket_no' => NoGenerator::generateOrderTicketNo($order['order_no']),
             'status' => OrderProtocol::ORDER_TICKET_STATUS_OF_OK
         ]);
     }
@@ -39,14 +38,16 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
         if ($ticket_no instanceof OrderTicket) {
             $ticket = $ticket_no;
         } else if (NoGenerator::isOrderTicketNo($ticket_no)) {
-            $ticket = OrderTicket::where('ticket_no', $ticket_no);
+            $ticket = OrderTicket::where('ticket_no', $ticket_no)->firstOrFail();
         } else {
             $ticket = OrderTicket::findOrFail($ticket_no);
         }
 
         if ($with_detail) {
-            $ticket->load(['skus.mix', 'exchange']);
+            $ticket->load(['skus', 'exchange']);
         }
+
+
 
         return $ticket;
     }
