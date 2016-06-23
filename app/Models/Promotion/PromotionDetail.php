@@ -10,6 +10,6 @@ class PromotionDetail extends Model {
 
     protected $table = 'promotion_info';
 
-    protected $guarded = ['promotion_id'];
+    protected $guarded = [];
 
 }

@@ -6,7 +6,7 @@ use App\Services\Order\OrderProtocol;
 
 interface OrderTicketRepositoryContract {
 
-    public function createOrderTicket(Order $order, OrderPromotion $order_promotion);
+    public function createOrderTicket(Order $order);
 
     public function getOrderTicketsOfOrder($order_id);
 

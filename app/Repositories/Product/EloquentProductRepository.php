@@ -143,10 +143,9 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
         return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat), null, $per_page);
     }
 
-    protected function queryProducts($order_by = 'created_at', $sort = 'desc', $status = null, $brand = null, $cats = null, $type = null, $per_page = null, $with_time = true)
+    protected function queryProducts($order_by = 'created_at', $sort = 'desc', $status = null, $brand = null, $cats = null, $type = null, $per_page = null, $with_time = false)
     {
         $query = Product::query();
-
 
         if ($with_time) {
             $query = $query->where(function ($query) {
@@ -161,11 +160,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
         }
 
         if ($cats) {
-//            $query = $query->whereHas('groups', function ($query) use ($cats) {
-//                $query->whereIn('cat_id', to_array($cats));
-//            });
-
-            $query = $query->join('product_category', function($join) use ($cats) {
+            $query = $query->join('product_category', function ($join) use ($cats) {
                 $join->whereIn('cat_id', to_array($cats));
             });
         }
@@ -175,13 +170,11 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
             $query = $query->where('type', $type);
         }
 
-
-
         if ($status) {
             $query = $query->where('status', $status);
         }
 
-        $query = $query->orderBy($order_by, $sort);
+        $query = $query->orderBy('priority', 'desc')->orderBy($order_by, $sort);
 
         if ($per_page) {
             return $query->paginate($per_page);

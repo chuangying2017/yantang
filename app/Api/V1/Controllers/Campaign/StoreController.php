@@ -2,6 +2,7 @@
 
 namespace App\Api\V1\Controllers\Campaign;
 
+use App\Api\V1\Requests\Campaign\BindStoreRequest;
 use App\Api\V1\Transformers\Campaign\StoreTransformer;
 use App\Repositories\Store\StoreRepositoryContract;
 use Illuminate\Http\Request;
@@ -43,12 +44,8 @@ class StoreController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function getBind(Request $request, $store_id)
+    public function getBind(BindStoreRequest $request, $store_id)
     {
-        if (!check_bind_token($store_id, $request->input('bind_token'))) {
-            $this->response->errorForbidden('无权限查看');
-        }
-
         $store = $this->storeRepo->getStore($store_id);
         $store['bind_token'] = $this->storeRepo->getBindToken($store_id);
 
@@ -61,12 +58,8 @@ class StoreController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function postBind(Request $request, $store_id)
+    public function postBind(BindStoreRequest $request, $store_id)
     {
-        if (!check_bind_token($store_id, $request->input('bind_token'))) {
-            $this->response->errorForbidden('无权限查看');
-        }
-
         $success = $this->storeRepo->bindUser($store_id, access()->id());
 
         if ($success) {

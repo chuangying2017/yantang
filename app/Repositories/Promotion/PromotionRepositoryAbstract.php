@@ -35,7 +35,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     {
         $promotion = $this->fillPromotion(null, $data);
 
-        if(isset($data['rules'])) {
+        if (isset($data['rules'])) {
             $this->syncRules($promotion, $data['rules']);
         }
 
@@ -50,7 +50,8 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
 
         $promotion_data = [
             'name' => array_get($data, 'name'),
-            'desc' => array_get($data, 'desc'),
+            'desc' => array_get($data, 'desc', ''),
+            'cover_image' => array_get($data, 'cover_image', ''),
             'start_time' => array_get($data, 'start_time', Carbon::now()),
             'end_time' => array_get($data, 'end_time', Carbon::today()->addYears(10)),
             'active' => array_get($data, 'active', 1),

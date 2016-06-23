@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Order;
 
+use App\Events\Order\MainBillingIsPaid;
 use App\Repositories\Billing\OrderBillingRepository;
 use App\Repositories\Order\ClientOrderRepository;
 use App\Services\Billing\BillingProtocol;
@@ -16,15 +17,19 @@ class SetOrderMainBillingAsPaid {
      * @var OrderManageService
      */
     private $orderManage;
+    /**
+     * @var OrderBillingRepository
+     */
+    private $orderBillingRepository;
 
     /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct(OrderManageService $orderManage)
+    public function __construct(OrderBillingRepository $orderBillingRepository)
     {
-        $this->orderManage = $orderManage;
+        $this->orderBillingRepository = $orderBillingRepository;
     }
 
     /**
@@ -39,8 +44,8 @@ class SetOrderMainBillingAsPaid {
 
         switch ($pingxx_payment['billing_type']) {
             case BillingProtocol::BILLING_TYPE_OF_ORDER_BILLING:
-                $billing = app()->make(OrderBillingRepository::class)->updateAsPaid($pingxx_payment['billing_id'], $pingxx_payment['channel']);
-                $this->orderManage->orderPaid($billing['order_id']);
+                $billing = $this->orderBillingRepository->updateAsPaid($pingxx_payment['billing_id'], $pingxx_payment['channel']);
+                event(new MainBillingIsPaid($billing));
                 break;
             case BillingProtocol::BILLING_TYPE_OF_RECHARGE_BILLING:
                 break;

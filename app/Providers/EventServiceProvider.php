@@ -43,6 +43,10 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Order\SetOrderMainBillingAsPaid',
         ],
 
+        'App\Events\Order\MainBillingIsPaid' => [
+            'App\Listeners\Order\SetOrderAsPaid',
+        ],
+
         'App\Events\Order\OrderIsPaid' => [
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
         ],
@@ -60,6 +64,10 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
         'App\Events\Order\OrderIsDeliver' => [
+
+        ],
+
+        'App\Events\Order\OrderIsDeliverDone' => [
 
         ],
 

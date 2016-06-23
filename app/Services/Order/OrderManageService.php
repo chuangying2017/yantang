@@ -1,5 +1,6 @@
 <?php namespace App\Services\Order;
 
+use App\Events\Order\OrderIsPaid;
 use App\Repositories\Billing\OrderBillingRepository;
 use App\Repositories\Order\ClientOrderRepository;
 use App\Repositories\Order\ClientOrderRepositoryContract;
@@ -66,8 +67,9 @@ class OrderManageService implements OrderManageContract {
             $order = $this->orderRepositoryContract->getOrder($order_id, false);
 
             //check Order status
-            if (!OrderProtocol::statusIs(OrderProtocol::STATUS_OF_UNPAID, $order['status'])) {
-                throw new \Exception('订单状态错误,当前状态:' . $order['status'] . ' ' . '不能改为已支付');
+            if ($order['pay_status'] == OrderProtocol::PAID_STATUS_OF_PAID) {
+                event(new OrderIsPaid($order));
+                return $order;
             }
 
             $pay_channel = '';

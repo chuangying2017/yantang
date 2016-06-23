@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Billing;
 
+use App\Events\Order\MainBillingIsPaid;
 use App\Models\Billing\OrderBilling;
 use App\Repositories\NoGenerator;
 use App\Services\Order\OrderProtocol;
@@ -22,9 +23,15 @@ class OrderBillingRepository implements BillingRepositoryContract {
     public function updateAsPaid($billing_no, $pay_channel)
     {
         $billing = $this->getBilling($billing_no);
+
+        if ($billing['status'] == OrderProtocol::PAID_STATUS_OF_PAID) {
+            return $billing;
+        }
+
         $billing->pay_channel = $pay_channel;
         $billing->status = OrderProtocol::PAID_STATUS_OF_PAID;
         $billing->save();
+
         return $billing;
     }
 

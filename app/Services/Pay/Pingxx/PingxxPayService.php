@@ -7,8 +7,7 @@ use App\Services\Pay\Events\PingxxPaymentIsPaid;
 use App\Services\Pay\PayableContract;
 use App\Services\Pay\ThirdPartyPayContract;
 
-class PingxxPayService implements PayableContract, ThirdPartyPayContract
-{
+class PingxxPayService implements PayableContract, ThirdPartyPayContract {
 
     protected $channel;
 
@@ -28,9 +27,8 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract
 
     public function pay(BillingContract $billing)
     {
-
         if ($billing->isPaid()) {
-            throw new \Exception('订单已支付,无需重复支付');
+            throw new \Exception('订单已支付,无需重复支付', 402);
         }
 
         $payment = $this->paymentRepository->getPaymentByBilling($billing->getID(), $billing->getType(), $this->getChannel());
@@ -74,8 +72,9 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract
         $payment = $this->paymentRepository->getPayment($payment);
         $charge = $this->paymentRepository->getCharge($payment['charge_id']);
 
-
-        if ( ! $payment['paid'] && $this->paymentRepository->chargeIsPaid($charge)) {
+        if ($payment['paid']) {
+            event(new PingxxPaymentIsPaid($payment));
+        } else if ($this->paymentRepository->chargeIsPaid($charge)) {
             $payment = $this->paymentRepository->setPaymentAsPaid($payment, $this->paymentRepository->getChargeTransaction($charge));
             event(new PingxxPaymentIsPaid($payment));
         }
