@@ -39,10 +39,13 @@ class PreorderService
         $this->preorderOrderRepo = $preorderOrderRepo;
     }
 
-    public function getRecentlyStation($longitude, $latitude)
+    public function getRecentlyStation($longitude, $latitude, $district_id)
     {
-        $station = $this->stationRepo->Paginated(0);
         $data = [];
+        $station = $this->stationRepo->Paginated(0, [['field' => 'district_id', 'value' => $district_id, 'compare_type' => '=']]);
+        if (empty($station->toArray())) {
+            return $data;
+        }
         foreach ($station as $value) {
             $distance = $this->getDistance($longitude, $latitude, display_coordinate($value['longitude']), display_coordinate($value['latitude']));
             $data[$distance] = [
