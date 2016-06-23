@@ -64,13 +64,6 @@ class EloquentStationRepository implements StationRepositoryContract
     public function bindStation($station_id, $user_id)
     {
         $station = Station::findOrFail($station_id);
-        if (!empty($station->user_id)) {
-            if ($station->user_id == $user_id) {
-                throw \Exception('该服务部已经绑定,无须重新绑定');
-            } else {
-                throw \Exception('该服务部已经绑定其他人,绑定不成功');
-            }
-        }
         $station->user_id = $user_id;
         $station->save();
         return $station;

@@ -67,4 +67,12 @@ class EloquentStaffRepository implements StaffRepositoryContract
         return $staff;
     }
 
+    public function bindStaff($staff_id = null, $user_id = null)
+    {
+        $staff = StationStaffs::findOrFail($staff_id);
+        $staff->user_id = $user_id;
+        $staff->save();
+        return $staff;
+    }
+
 }

@@ -11,10 +11,11 @@ class PreorderProductSkuTransformer extends TransformerAbstract
         $data = [
             'pre_product_id' => $preorderProductSku->pre_product_id,
             'sku_id' => $preorderProductSku->sku_id,
+            'price' => display_price($preorderProductSku->price),
             'count' => $preorderProductSku->count,
             'sku_name' => $preorderProductSku->sku_name,
         ];
-        
+
         return $data;
     }
 
