@@ -3,29 +3,28 @@
 namespace App\Listeners\Order;
 
 use App\Events\Order\MainBillingIsPaid;
-use App\Repositories\Billing\OrderBillingRepository;
-use App\Repositories\Order\ClientOrderRepository;
 use App\Services\Billing\BillingProtocol;
-use App\Services\Order\OrderManageService;
+use App\Services\Order\Checkout\OrderCheckoutService;
 use App\Services\Pay\Events\PingxxPaymentIsPaid;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SetOrderMainBillingAsPaid {
 
+
     /**
-     * @var OrderBillingRepository
+     * @var OrderCheckoutService
      */
-    private $orderBillingRepository;
+    private $orderCheckoutService;
 
     /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct(OrderBillingRepository $orderBillingRepository)
+    public function __construct(OrderCheckoutService $orderCheckoutService)
     {
-        $this->orderBillingRepository = $orderBillingRepository;
+        $this->orderCheckoutService = $orderCheckoutService;
     }
 
     /**
@@ -39,7 +38,7 @@ class SetOrderMainBillingAsPaid {
         $pingxx_payment = $event->payment;
 
         if ($pingxx_payment['billing_type'] == BillingProtocol::BILLING_TYPE_OF_ORDER_BILLING) {
-            $billing = $this->orderBillingRepository->updateAsPaid($pingxx_payment['billing_id'], $pingxx_payment['channel']);
+            $billing = $this->orderCheckoutService->billingPaid($pingxx_payment);
             event(new MainBillingIsPaid($billing));
         }
     }

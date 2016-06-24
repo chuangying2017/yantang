@@ -90,7 +90,7 @@ class CartOrderApiTest extends TestCase {
             []
         );
 
-        $this->seeInDatabase('orders', ['order_no' => $order['order_no'], 'pay_status'=> \App\Services\Order\OrderProtocol::PAID_STATUS_OF_PAID, 'status'=> \App\Services\Order\OrderProtocol::STATUS_OF_PAID]);
+        $this->seeInDatabase('orders', ['order_no' => $order['order_no'], 'pay_status' => \App\Services\Order\OrderProtocol::PAID_STATUS_OF_PAID, 'status' => \App\Services\Order\OrderProtocol::STATUS_OF_PAID]);
 
         $this->assertResponseStatus(202);
     }

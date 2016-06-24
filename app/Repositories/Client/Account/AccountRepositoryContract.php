@@ -14,5 +14,9 @@ interface AccountRepositoryContract {
 
     public function getRecordsPaginated($type, $order_by = 'created_at', $sort = 'desc', $per_page);
 
+	/**
+     * @param $user
+     * @return $this
+     */
     public function setUserId($user);
 }

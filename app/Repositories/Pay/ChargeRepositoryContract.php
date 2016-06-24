@@ -5,8 +5,6 @@ interface ChargeRepositoryContract {
 
     public function getCharge($charge_id);
 
-    public function chargeIsPaid($charge_id);
-
     public function getChargeTransaction($charge_id);
 
     public function getChargePayment($charge_id);

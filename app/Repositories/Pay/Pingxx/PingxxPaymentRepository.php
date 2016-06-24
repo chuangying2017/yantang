@@ -190,16 +190,6 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
             ->first();
     }
 
-    public function chargeIsPaid($charge_id)
-    {
-        $charge = $this->getCharge($charge_id);
-
-        if (config('services.pingxx.live')) {
-            return $charge->paid && $charge->livemode;
-        }
-
-        return $charge->paid;
-    }
 
     public function getChargeTransaction($charge_id)
     {

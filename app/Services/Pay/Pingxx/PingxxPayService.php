@@ -84,7 +84,7 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
 
     public function paid($charge)
     {
-        if ($this->paymentRepository->chargeIsPaid($charge)) {
+        if ($this->checkChargeIsPaid($charge)) {
             $payment = $this->paymentRepository->getPayment($this->paymentRepository->getChargePayment($charge));
             if ($payment['paid']) {
                 return true;
@@ -99,10 +99,21 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
         return false;
     }
 
+    public function checkChargeIsPaid($charge)
+    {
+        $charge = $this->paymentRepository->getCharge($charge);
+
+        if (config('services.pingxx.live')) {
+            return $charge->paid && $charge->livemode;
+        }
+
+        return $charge->paid;
+    }
+
     public function checkPaymentPaid($payment)
     {
         $payment = $this->paymentRepository->getPayment($payment);
-        if ($payment['status'] == OrderProtocol::PAID_STATUS_OF_PAID) {
+        if ($payment['paid']) {
             return $payment;
         }
 
