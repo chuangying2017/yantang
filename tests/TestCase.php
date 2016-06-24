@@ -26,10 +26,13 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         var_dump($this->getResponseData());
     }
 
-    protected function getResponseData()
+    protected function getResponseData($key = null)
     {
         $content = json_decode($this->response->getContent(), true);
 
+        if ($key) {
+            return array_get($content, 'data');
+        }
         return $content;
     }
 

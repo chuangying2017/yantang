@@ -2,9 +2,9 @@
 
 namespace App\API\V1\Controllers\Auth;
 
+use App\API\V1\Controllers\Controller;
 use \SmsManager;
 use App\Http\Requests\SmsRequest;
-use App\Http\Controllers\Controller;
 
 
 class SmsController extends Controller {

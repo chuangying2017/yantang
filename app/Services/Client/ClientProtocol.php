@@ -11,7 +11,10 @@ class ClientProtocol {
     const STATUS_BLOCK = 0;
 
 
-    const GROUP_TYPE_OF_MEMBER  = 'member';
-    const GROUP_TYPE_OF_NORMAL  = 'normal';
+    const GROUP_TYPE_OF_MEMBER = 'member';
+    const GROUP_TYPE_OF_NORMAL = 'normal';
+
+    const GROUP_PER_PAGE = 10;
+    const GROUP_USERS_PER_PAGE = 20;
 
 }

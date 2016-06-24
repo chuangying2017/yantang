@@ -2,11 +2,11 @@
 
 namespace App\Api\V1\Controllers\Mall;
 
+use App\API\V1\Controllers\Controller;
 use App\Services\Order\OrderGenerator;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class CartOrderController extends Controller {
 

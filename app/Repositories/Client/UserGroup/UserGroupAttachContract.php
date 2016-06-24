@@ -2,16 +2,15 @@
 
 interface UserGroupAttachContract {
 
-    public function GroupAddUsers($user_ids, $group_id);
+    public function groupAddUsers($user_ids, $group_id);
 
-    public function addUserToGroups($user_id, $group_ids);
+    public function groupRemoveUsers($group_id, $user_ids);
 
-    public function removeUserFromGroup($user_id, $group_id);
+    public function groupRemoveAllUsers($group_id);
 
-    public function removeUserAllGroup($user_id);
+    public function userInGroup($user_id, $group_ids);
 
-    public function GroupRemoveAllUsers($group_id);
+    public function getGroupUsersPaginated($group_id, $per_page);
 
-    public function userInGroups($user_id, $group_ids);
-
+    public function getGroupUsersAll($group_id);
 }

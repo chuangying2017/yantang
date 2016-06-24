@@ -1,7 +1,7 @@
 <?php namespace App\Repositories\Client\UserGroup;
 use App\Models\Client\UserGroup;
 
-class UserNormalGroupRepository extends UserGroupRepositoryAbstract{
+class UserGroupRepository extends UserGroupRepositoryAbstract{
 
     protected function setModel()
     {

@@ -47,14 +47,26 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
         });
 
 
+        $api->group(['namespace' => 'Client'], function ($api) {
+            $api->group(['prefix' => 'clients'], function ($api) {
+                $api->resource('groups.users', 'GroupUserController');
+                $api->resource('groups', 'GroupController', ['except' => ['show', 'edit']]);
+                $api->resource('members.users', 'MemberUserController');
+                $api->resource('members', 'MemberController', ['except' => ['show', 'edit']]);
+            });
+        });
+
+
         $api->group(['namespace' => 'Product'], function ($api) {
-            $api->resource('products/mix', 'ProductMixController', ['only' => ['index']]);
-            $api->resource('products', 'ProductController');
-            $api->resource('attributes', 'AttributeController');
-            $api->resource('attributes.values', 'AttributeValueController');
-            $api->resource('brands', 'BrandController');
-            $api->resource('groups', 'BrandController');
-            $api->resource('cats', 'CategoryController');
+            $api->group(['prefix' => 'products'], function ($api) {
+                $api->resource('attributes', 'AttributeController');
+                $api->resource('attributes.values', 'AttributeValueController');
+                $api->resource('brands', 'BrandController');
+                $api->resource('groups', 'BrandController');
+                $api->resource('cats', 'CategoryController');
+                $api->resource('mix-skus', 'ProductMixController', ['only' => ['index']]);
+                $api->resource('/', 'ProductController');
+            });
         });
 
         /**

@@ -5,10 +5,12 @@ interface UserGroupRepositoryContract {
 
     public function updateGroup($group_id, $name, $priority = 0, $cover_image = null);
 
-    public function getAll();
+    public function getAllGroups();
 
-    public function getGroup($id, $with_user = true);
+    public function deleteGroup($group_id);
 
-    public function getGroupByName($name, $with_user = true);
+    public function getGroup($id);
+
+    public function getGroupByName($name);
 
 }
