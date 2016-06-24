@@ -6,6 +6,7 @@ use App\Services\Order\OrderProtocol;
 use App\Services\Pay\Events\PingxxPaymentIsPaid;
 use App\Services\Pay\PayableContract;
 use App\Services\Pay\ThirdPartyPayContract;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PingxxPayService implements PayableContract, ThirdPartyPayContract {
 
@@ -74,12 +75,28 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
 
         if ($payment['paid']) {
             event(new PingxxPaymentIsPaid($payment));
-        } else if ($this->paymentRepository->chargeIsPaid($charge)) {
-            $payment = $this->paymentRepository->setPaymentAsPaid($payment, $this->paymentRepository->getChargeTransaction($charge));
-            event(new PingxxPaymentIsPaid($payment));
+        } else {
+            $this->paid($charge);
         }
 
         return $charge;
+    }
+
+    public function paid($charge)
+    {
+        if ($this->paymentRepository->chargeIsPaid($charge)) {
+            $payment = $this->paymentRepository->getPayment($this->paymentRepository->getChargePayment($charge));
+            if ($payment['paid']) {
+                return true;
+            }
+
+            $payment = $this->paymentRepository->setPaymentAsPaid($payment, $this->paymentRepository->getChargeTransaction($charge));
+            event(new PingxxPaymentIsPaid($payment));
+
+            return true;
+        }
+
+        return false;
     }
 
     public function checkPaymentPaid($payment)
@@ -91,4 +108,6 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
 
         return false;
     }
+
+
 }

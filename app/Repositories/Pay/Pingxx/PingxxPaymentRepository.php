@@ -145,8 +145,13 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
     public function setPaymentAsPaid($payment_no, $transaction_no)
     {
         $payment = $this->getPayment($payment_no);
+
+        if ($payment->paid) {
+            return $payment;
+        }
+
         $payment->transaction_no = $transaction_no;
-        $payment->paid = true;
+        $payment->paid = 1;
         $payment->pay_at = Carbon::now();
         $payment->save();
         return $payment;
@@ -201,5 +206,13 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         $charge = $this->getCharge($charge_id);
 
         return $charge->transaction_no;
+    }
+
+
+    public function getChargePayment($charge_id)
+    {
+        $charge = $this->getCharge($charge_id);
+
+        return $charge->order_no;
     }
 }

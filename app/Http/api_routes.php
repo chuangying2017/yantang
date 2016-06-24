@@ -29,6 +29,27 @@ $api->version('v1', function ($api) {
          */
         require_once(__DIR__ . '/../Api/V1/Routes/admin_api.php');
 
+
+        /**
+         * Gateway
+         */
+
+
+        $api->group(['namespace' => 'Gateway'], function ($api) {
+
+            $api->group(['prefix' => 'pingxx'], function ($api) {
+                $api->post('paid', 'PingxxNotifyController@paid');
+                $api->post('refund', 'PingxxNotifyController@refund');
+                $api->post('transfer', 'PingxxNotifyController@transfer');
+                $api->post('summary', 'PingxxNotifyController@summary');
+            });
+
+            $api->group(['prefix' => 'qiniu'], function ($api) {
+                $api->post('callback', 'QiniuNotifyController@store')->name('qiniu.callback');
+            });
+
+        });
+
         /**
          * 订奶系统
          */
@@ -78,7 +99,6 @@ $api->version('v1', function ($api) {
             $api->resource('statements', 'AdminStatementsController'); //查看对账单
             $api->resource('recharge_amount', 'RechargeAmountController'); //后台查看设置充值金额
         });
-
 
 
         /**

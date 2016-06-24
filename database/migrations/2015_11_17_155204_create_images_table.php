@@ -13,11 +13,10 @@ class CreateImagesTable extends Migration {
     public function up()
     {
         Schema::create('images', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('merchant_id')->unsigned()->nullable();
-            $table->string('media_id');
+            $table->string('media_id')->primary();
             $table->string('filename');
             $table->string('imageinfo');
+            $table->integer('merchant_id')->nullable();
             $table->string('url');
             $table->softDeletes();
             $table->timestamps();

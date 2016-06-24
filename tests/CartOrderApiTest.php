@@ -41,7 +41,6 @@ class CartOrderApiTest extends TestCase {
         $this->assertResponseOk();
 
 
-
         $this->json('post', 'mall/orders', ['temp_order_id' => $temp_order_id], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
         $order = $this->getResponseData();
@@ -67,7 +66,7 @@ class CartOrderApiTest extends TestCase {
         $order = $this->ite_can_create_a_cart_order();
         $channel = 'wx_pub_qr';
 
-        $this->json('post', 'mall/orders/' . $order['order_no']. '/checkout', ['channel' => $channel], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+        $this->json('post', 'mall/orders/' . $order['order_no'] . '/checkout', ['channel' => $channel], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
         $result = $this->getResponseData();
 
@@ -82,10 +81,18 @@ class CartOrderApiTest extends TestCase {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        $this->json('post', 'mall/orders/' . $order['order_no']. '/checkout', ['channel' => $channel], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+        $this->json('post', 'mall/orders/' . $order['order_no'] . '/checkout', ['channel' => $channel], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
-        $this->dumpResponse();
+        $charge = $this->getResponseData('data');
 
+        $this->json('post', 'pingxx/paid',
+            $charge,
+            []
+        );
+
+        $this->seeInDatabase('orders', ['order_no' => $order['order_no'], 'pay_status'=> \App\Services\Order\OrderProtocol::PAID_STATUS_OF_PAID, 'status'=> \App\Services\Order\OrderProtocol::STATUS_OF_PAID]);
+
+        $this->assertResponseStatus(202);
     }
 
 }

@@ -14,10 +14,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class SetOrderMainBillingAsPaid {
 
     /**
-     * @var OrderManageService
-     */
-    private $orderManage;
-    /**
      * @var OrderBillingRepository
      */
     private $orderBillingRepository;
@@ -42,14 +38,9 @@ class SetOrderMainBillingAsPaid {
     {
         $pingxx_payment = $event->payment;
 
-        switch ($pingxx_payment['billing_type']) {
-            case BillingProtocol::BILLING_TYPE_OF_ORDER_BILLING:
-                $billing = $this->orderBillingRepository->updateAsPaid($pingxx_payment['billing_id'], $pingxx_payment['channel']);
-                event(new MainBillingIsPaid($billing));
-                break;
-            case BillingProtocol::BILLING_TYPE_OF_RECHARGE_BILLING:
-                break;
+        if ($pingxx_payment['billing_type'] == BillingProtocol::BILLING_TYPE_OF_ORDER_BILLING) {
+            $billing = $this->orderBillingRepository->updateAsPaid($pingxx_payment['billing_id'], $pingxx_payment['channel']);
+            event(new MainBillingIsPaid($billing));
         }
-
     }
 }
