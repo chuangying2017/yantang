@@ -10,9 +10,10 @@ class StaffsTransformer extends TransformerAbstract
     {
         $data = [
             'id' => (int)$staffs->id,
-            'station_id' => $staffs->staff_no,
-            'staff_no' => $staffs->staff_no,
             'name' => $staffs->name,
+            'station_id' => $staffs->staff_no,
+            'user_id' => $staffs->user_id,
+            'staff_no' => $staffs->staff_no,
             'phone' => $staffs->phone,
         ];
 

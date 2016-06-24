@@ -9,6 +9,9 @@ class PreorderTransformer extends TransformerAbstract
 
     public function transform(Preorder $preorder)
     {
+        if (isset($preorder->show_product_and_sku) && $preorder->show_product_and_sku) {
+            $this->setDefaultIncludes(['product']);
+        }
         $data = [
             'id' => $preorder->id,
             'name' => $preorder->name,
@@ -34,6 +37,12 @@ class PreorderTransformer extends TransformerAbstract
         }
 
         return $data;
+    }
+
+    public function includeProduct(Preorder $preorder)
+    {
+        $product = $preorder->product;
+        return $this->collection($product, new PreorderProductTransformer());
     }
 
 }

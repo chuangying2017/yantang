@@ -39,4 +39,9 @@ class Preorder extends Model
     {
         return $this->belongsTo(District::class);
     }
+
+    public function weekly()
+    {
+        return $this->hasMany(StaffWeekly::class);
+    }
 }

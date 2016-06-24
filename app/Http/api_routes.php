@@ -36,6 +36,7 @@ $api->version('v1', function ($api) {
             //服务部端
             $api->group(['namespace' => 'Station', 'prefix' => 'stations'], function ($api) {
                 $api->resource('products', 'ProductsController', ['only' => ['index']]); //查看可定购商品
+                $api->get('bind_staff', 'StaffsController@bindStaff'); //绑定配送员
                 $api->resource('staffs', 'StaffsController');
                 $api->get('info', 'StationController@index'); //查看服务部信息
                 $api->get('products', 'StationController@products'); //查看可定购商品
@@ -48,6 +49,9 @@ $api->version('v1', function ($api) {
             //订奶客户端
             $api->group(['namespace' => 'Preorder'], function ($api) {
                 $api->get('subscribe/stations', 'PreorderController@stations');
+                $api->get('subscribe/user_amount', 'PreorderController@userAmount'); //获取用户余额
+                $api->get('subscribe/preorder_record', 'PreorderController@preorderRecord'); //获取送奶记录
+                $api->get('subscribe/recharge_record', 'PreorderController@rechargeRecord'); //获取充值记录
                 $api->resource('subscribe/preorders', 'PreorderController');
                 $api->resource('subscribe/preorder_product', 'PreorderProductController');
                 $api->post('subscribe/pay_confirm', 'TopUpController@payConfirm');

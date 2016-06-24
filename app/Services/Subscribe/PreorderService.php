@@ -115,8 +115,8 @@ class PreorderService
 
     public function settle()
     {
-//        $dt = Carbon::now();
-        $dt = Carbon::parse('2016-06-06');
+        $dt = Carbon::now();
+//        $dt = Carbon::parse('2016-06-06');
         $week_of_year = $dt->weekOfYear;
         $day_of_week = $dt->dayOfWeek;
         $week_name = PreorderProtocol::weekName($day_of_week);

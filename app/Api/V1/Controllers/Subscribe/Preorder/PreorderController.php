@@ -12,14 +12,20 @@ use App\Api\V1\Requests\Subscribe\PreorderRequest;
 use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Requests\Subscribe\PreorderProductRequest;
+use App\Repositories\Client\Account\Wallet\WalletRepositoryContract;
+use App\Repositories\Subscribe\PreorderOrder\PreorderOrderRepositoryContract;
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderOrderTransformer;
+use App\Api\V1\Transformers\Subscribe\Preorder\WalletRecordTransformer;
 use Auth;
 use DB;
+use Illuminate\Http\Request;
 
 class PreorderController extends Controller
 {
     protected $address;
     protected $user_id;
     protected $preorder;
+    const PER_PAGE = 5;
 
     public function __construct(AddressRepositoryContract $address, PreorderRepositoryContract $preorder)
     {
@@ -34,17 +40,6 @@ class PreorderController extends Controller
         return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
 
-    public function address(AddressRequest $request)
-    {
-        $input = $request->only(['phone', 'district', 'detail']);
-        $input['user_id'] = $this->user_id;
-        try {
-            $address = $this->address->create($input);
-        } catch (\Exception $e) {
-            $this->response->errorInternal($e->getMessage());
-        }
-        return $this->response->item($address, new AddressTransformer);
-    }
 
     public function stations(CoordinateRequest $request)
     {
@@ -74,6 +69,40 @@ class PreorderController extends Controller
             $this->response->errorInternal('提交出错,请刷新重试');
         }
         return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
+    }
+
+    public function show($preorder_id)
+    {
+        $preorder = $this->preorder->byId($preorder_id, ['product', 'product.sku']);
+        $preorder->show_product_and_sku = true;
+        return $this->response->item($preorder, new PreorderTransformer());
+    }
+
+    public function userAmount(WalletRepositoryContract $walletRepo)
+    {
+        $user_id = access()->id();
+        $walletRepo = $walletRepo->setUserId($user_id);
+        $amount = $walletRepo->getAmount();
+        return $this->response->array(['data' => ['amount' => $amount]]);
+    }
+
+    public function preorderRecord(Request $request, PreorderOrderRepositoryContract $preorderOrderRepo)
+    {
+        $per_page = $request->input('paginate', self::PER_PAGE);
+        $user_id = access()->id();
+        $preorder = $this->preorder->byUserId($user_id);
+        $where = [['field' => 'id', 'value' => $preorder->id, 'compare_type' => '=']];
+        $preorder_order = $preorderOrderRepo->Paginated($per_page, $where);
+        return $this->response->paginator($preorder_order, new PreorderOrderTransformer());
+    }
+
+    public function rechargeRecord(Request $request, WalletRepositoryContract $walletRepo)
+    {
+        $per_page = $request->input('paginate', self::PER_PAGE);
+        $user_id = access()->id();
+        $walletRepo = $walletRepo->setUserId($user_id);
+        $wallet = $walletRepo->getRecordsPaginated(null, null, null, $per_page);
+        return $this->response->paginator($wallet, new WalletRecordTransformer());
     }
 
     public function update(PreorderRequest $request, $preorder_id)

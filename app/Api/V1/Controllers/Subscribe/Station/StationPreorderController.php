@@ -9,7 +9,6 @@ use App\Repositories\Subscribe\Station\StationRepositoryContract;
 use Illuminate\Http\Request;
 use Auth;
 use App\Api\V1\Transformers\Subscribe\Station\StationPreorderTransformer;
-use App\Repositories\Subscribe\StaffPreorder\StaffPreorderRepositoryContract;
 use App\Api\V1\Transformers\Subscribe\Station\StaffPreorderTransformer;
 use App\Api\V1\Requests\Subscribe\PreorderRequest;
 use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;

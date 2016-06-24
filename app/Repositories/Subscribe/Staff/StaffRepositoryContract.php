@@ -40,4 +40,6 @@ interface StaffRepositoryContract
 
     public function byUserId($user_id, $with_orders = false);
 
+    public function bindStaff($staff_id, $user_id);
+
 }
