@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Mall;
 
+use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\MallClientOrderRepository;
@@ -10,7 +11,6 @@ use App\Services\Order\OrderManageContract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class OrderController extends Controller {
 

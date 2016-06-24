@@ -4,6 +4,7 @@ use App\Models\Access\User\UserProvider;
 use App\Models\Client\Account\Credits;
 use App\Models\Client\Account\Wallet;
 use App\Models\Client\Address;
+use App\Models\Client\UserGroup;
 
 /**
  * Class UserRelationship
@@ -59,6 +60,11 @@ trait UserRelationship {
     public function address()
     {
         return $this->hasMany(Address::class);
+    }
+
+    public function groups()
+    {
+        return $this->belongToMany(UserGroup::class, 'user_id', 'group_id');
     }
 
 }

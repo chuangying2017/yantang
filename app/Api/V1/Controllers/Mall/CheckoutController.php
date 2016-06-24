@@ -2,6 +2,7 @@
 
 namespace App\Api\V1\Controllers\Mall;
 
+use App\API\V1\Controllers\Controller;
 use App\Repositories\Order\MallClientOrderRepository;
 use App\Services\Order\Checkout\OrderCheckoutContract;
 use App\Services\Order\OrderProtocol;
@@ -9,7 +10,6 @@ use App\Services\Pay\Pingxx\PingxxProtocol;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class CheckoutController extends Controller {
 

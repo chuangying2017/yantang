@@ -2,12 +2,12 @@
 
 namespace App\Api\V1\Controllers\Mall;
 
+use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\GroupTransformer;
 use App\Repositories\Product\Group\GroupRepositoryContract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class GroupController extends Controller {
 

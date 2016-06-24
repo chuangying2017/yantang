@@ -24,6 +24,7 @@ class UserController extends Controller {
     public function index(Request $request)
     {
         $status = $request->input('status') ?: AccessProtocol::USER_STATUS_OF_OK;
+
         $users = $this->users->getUsersPaginated(config('access.users.default_per_page'), $status);
 
         return $this->response->paginator($users, new UserTransformer());
@@ -117,4 +118,6 @@ class UserController extends Controller {
         $this->users->updatePassword($id, $request->all());
         return $this->show($id);
     }
+
+
 }

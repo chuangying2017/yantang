@@ -1,8 +1,7 @@
 <?php namespace App\Api\V1\Controllers\Admin\Access\Permission;
 
+use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Admin\Access\PermissionTransformer;
-use App\Http\Controllers\BackendController;
-use App\Http\Controllers\Controller;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
 use App\Repositories\Backend\Permission\PermissionRepositoryContract;
 use App\Repositories\Backend\Permission\Group\PermissionGroupRepositoryContract;
@@ -12,7 +11,7 @@ use Illuminate\Http\Request;
  * Class PermissionController
  * @package App\Http\Controllers\Access
  */
-class PermissionController extends BackendController {
+class PermissionController extends Controller {
 
     /**
      * @var RoleRepositoryContract

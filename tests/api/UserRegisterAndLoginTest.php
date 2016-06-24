@@ -44,8 +44,9 @@ class UserRegisterAndLoginTest extends TestCase {
         $content = $this->getResponseData();
         $user = \JWTAuth::toUser(array_get($content, 'data.token'));
 
-        $this->seeInDatabase('wallet', ['user_id' => $user['id']]);
         $this->seeInDatabase('clients', ['user_id' => $user['id']]);
+        $this->seeInDatabase('wallet', ['user_id' => $user['id'], 'amount' => 0]);
+        $this->seeInDatabase('credits', ['user_id' => $user['id'], 'amount' => 0]);
     }
 
     /** @test */

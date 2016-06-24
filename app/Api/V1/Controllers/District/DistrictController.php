@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\District;
 
-use App\Http\Controllers\Controller;
+use App\API\V1\Controllers\Controller;
 use App\Models\District;
 use Illuminate\Http\Request;
 

@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Client\UserGroup;
 
 use App\Models\Client\UserGroupAbstract;
+use App\Services\Client\ClientProtocol;
 
 abstract class UserGroupRepositoryAbstract implements UserGroupRepositoryContract, UserGroupAttachContract {
 
@@ -40,6 +41,7 @@ abstract class UserGroupRepositoryAbstract implements UserGroupRepositoryContrac
         if ($group && $group['id'] !== $group_id) {
             throw new \Exception('用户分组已存在');
         }
+        $group = $this->getGroup($group_id);
 
         $group->update([
             'name' => $name,
@@ -50,14 +52,23 @@ abstract class UserGroupRepositoryAbstract implements UserGroupRepositoryContrac
         return $group;
     }
 
-    public function getAll()
+
+    public function getAllGroups()
     {
         $model = $this->getModel();
 
         return $model::get();
     }
 
-    public function getGroup($id, $with_user = true)
+    public function getAllGroupsPaginated($per_page = ClientProtocol::GROUP_PER_PAGE)
+    {
+        $model = $this->getModel();
+
+        return $model::paginate($per_page);
+    }
+
+
+    public function getGroup($id)
     {
         $model = $this->getModel();
 
@@ -67,15 +78,10 @@ abstract class UserGroupRepositoryAbstract implements UserGroupRepositoryContrac
             $group = $model::findOrFail($id);
         }
 
-
-        if ($with_user) {
-            $group->load('users');
-        }
-
         return $group;
     }
 
-    public function getGroupByName($name, $with_user = true)
+    public function getGroupByName($name)
     {
         $model = $this->getModel();
 
@@ -85,12 +91,19 @@ abstract class UserGroupRepositoryAbstract implements UserGroupRepositoryContrac
             $group = $model::where('name', $name)->first();
         }
 
-        if ($with_user) {
-            $group->load('users');
-        }
-
         return $group;
     }
+
+
+    public function deleteGroup($group_id)
+    {
+        $this->groupRemoveAllUsers($group_id);
+
+        $group = $this->getGroup($group_id);
+
+        return $group->delete();
+    }
+
 
     protected abstract function setModel();
 
@@ -102,33 +115,54 @@ abstract class UserGroupRepositoryAbstract implements UserGroupRepositoryContrac
         return $this->model;
     }
 
-    public function GroupAddUsers($user_ids, $group_id)
+    public function groupAddUsers($group_id, $user_ids)
     {
-        // TODO: Implement GroupAddUsers() method.
+        $group = $this->getGroup($group_id);
+        $change = $group->users()->sync($user_ids);
+        $increase_count = count($change['attached']) - count($change['detached']);
+        $group->user_count = $group->user_count + $increase_count;
+        $group->save();
+
+        return $group;
     }
 
-    public function addUserToGroups($user_id, $group_ids)
+
+    public function groupRemoveUsers($group_id, $user_ids)
     {
-        // TODO: Implement addUserToGroups() method.
+        $group = $this->getGroup($group_id);
+        $detach_count = $group->users()->detach($user_ids);
+        $group->user_count = $group->user_count - $detach_count;
+        $group->save();
+
+        return $group;
     }
 
-    public function removeUserFromGroup($user_id, $group_id)
+    public function groupRemoveAllUsers($group_id)
     {
-        // TODO: Implement removeUserFromGroup() method.
+        $group = $this->getGroup($group_id);
+        $group->users()->detach();
+        $group->user_count = 0;
+        $group->save();
+
+        return $group;
     }
 
-    public function removeUserAllGroup($user_id)
+    public function userInGroup($user_id, $group_id)
     {
-        // TODO: Implement removeUserAllGroup() method.
+        return \DB::table('group_user')->where('user_id', $user_id)->where('group_id', $group_id)->count();
     }
 
-    public function GroupRemoveAllUsers($group_id)
+    public function getGroupUsersPaginated($group_id, $per_page = ClientProtocol::GROUP_USERS_PER_PAGE)
     {
-        // TODO: Implement GroupRemoveAllUsers() method.
+        $group = $this->getGroup($group_id);
+
+        return $group->users()->paginate($per_page);
     }
 
-    public function userInGroups($user_id, $group_ids)
+    public function getGroupUsersAll($group_id)
     {
-        // TODO: Implement userInGroups() method.
+        $group = $this->getGroup($group_id);
+
+        return $group->users()->get();
     }
 }
