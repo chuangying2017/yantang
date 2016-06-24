@@ -80,8 +80,6 @@ return [
         'base_redirect' => env('WEIXIN_BASE_REDIRECT_URL'),
     ],
 
-
-
     'pingxx' => [
         'app_id' => env('PINGXX_APP_ID'),
         'api_key' => env(env('PINGXX_ACCOUNT_ENV', 'TEST') . '_PINGXX_API_KEY'),
@@ -90,6 +88,7 @@ return [
         'mobile_cancel' => env('PAYMENT_MOBILE_CANCEL_URL'),
         'pc_success' => env('PAYMENT_PC_SUCCESS_URL'),
         'pc_cancel' => env('PAYMENT_PC_CANCEL_URL'),
+        'pub_key_path' => app_path('Repositories/Pay/Pingxx') . '/pingpp_rsa_public_key.pem',
     ],
 
     'search' => [

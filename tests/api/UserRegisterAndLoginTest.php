@@ -99,10 +99,5 @@ class UserRegisterAndLoginTest extends TestCase {
         $this->code = $data['code'];
     }
 
-    /** @test */
-    public function it_can_create_client_and_wallet_for_user_when_register()
-    {
-        #todo
-    }
 
 }
