@@ -17,7 +17,7 @@ class PreorderBilling implements BillingContract
             'user_id' => access()->id(),
 //            'user_id' => 2,
             'billing_no' => uniqid('bill'),
-            'amount' => $amount * 10,
+            'amount' => $amount * 100,
         ];
         $charge_billing = ChargeBilling::create($input);
         $this->charge_billing = $charge_billing;
@@ -56,15 +56,16 @@ class PreorderBilling implements BillingContract
         return empty($this->charge_billing) ? ChargeBilling::find($this->id)->user_id : $this->charge_billing->user_id;
     }
 
-    public function setPaid($pay_type, $pay_channel)
+    public function setPaid($pay_channel)
     {
         //status 充值状态0,未支付,1已支付
-        return ChargeBilling::find($this->id)->update(['pay_type' => $pay_type, 'pay_channel' => $pay_channel, 'status' => 1]);
+        return ChargeBilling::find($this->id)->update(['pay_channel' => $pay_channel, 'status' => 1]);
     }
 
     public function setID($billing_id)
     {
         $this->id = $billing_id;
+        return $this;
     }
 
 }

@@ -3,7 +3,8 @@
 use App\Services\Client\Account\AccountProtocol;
 use Exception;
 
-abstract class EloquentAccountRepository implements AccountRepositoryContract {
+abstract class EloquentAccountRepository implements AccountRepositoryContract
+{
 
     /**
      * type; cash or credit
@@ -90,12 +91,12 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
 
     public function getAllRecords($type = null, $order_by = 'created_at', $sort = 'desc')
     {
-        $this->queryRecords($type, $order_by, $sort);
+        return $this->queryRecords($type, $order_by, $sort);
     }
 
     public function getRecordsPaginated($type, $order_by = 'created_at', $sort = 'desc', $per_page = 20)
     {
-        $this->queryRecords($type, $order_by, $sort, $per_page);
+        return $this->queryRecords($type, $order_by, $sort, $per_page);
     }
 
     protected function queryRecords($type, $order_by = 'created_at', $sort = 'desc', $per_page = AccountProtocol::PER_PAGE)
@@ -107,10 +108,13 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
         }
         $query = $query->orderBy($order_by, $sort);
 
+        if (!empty($this->user_id)) {
+            $query = $query->where('user_id', $this->user_id);
+        }
+
         if (is_null($per_page)) {
             return $query->get();
         }
-
         return $query->paginate($per_page);
     }
 
@@ -119,7 +123,7 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
     {
         $record_model = $this->getAccountRecordModel();
 
-        if($record_model::where(['resource_type' => $resource_type, 'resource_id' => $resource_id])->first()){
+        if ($record_model::where(['resource_type' => $resource_type, 'resource_id' => $resource_id])->first()) {
             throw new \Exception('重复处理账单');
         }
 
