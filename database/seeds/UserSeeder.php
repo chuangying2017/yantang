@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Access\User\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder {
@@ -12,15 +13,46 @@ class UserSeeder extends Seeder {
      */
     public function run()
     {
-        try {
-            DB::connection('mysql_testing')->table('users')->insert([
-                'id' => 1,
+
+        if (env('DB_DRIVER') == 'mysql')
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        if (env('DB_DRIVER') == 'mysql')
+            DB::table('users')->truncate();
+        elseif (env('DB_DRIVER') == 'sqlite')
+            DB::statement("DELETE FROM " . 'users');
+        else //For PostgreSQL or anything else
+            DB::statement("TRUNCATE TABLE " . 'users' . " CASCADE");
+
+        //Add the master administrator, user id of 1
+        $users = [
+            [
+                'username' => 'Admin Istrator',
+                'email' => 'admin@admin.com',
                 'phone' => '12345678910',
+                'password' => bcrypt('123456'),
+                'confirmation_code' => md5(uniqid(mt_rand(), true)),
+                'confirmed' => true,
                 'status' => 1,
-                'confirmed' => 1
-            ]);
-        } catch (\Exception $e) {
-            echo 'skip user seeder';
-        }
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+            [
+                'username' => 'Default User',
+                'email' => 'user@user.com',
+                'phone' => '12345678911',
+                'password' => bcrypt('123456'),
+                'confirmation_code' => md5(uniqid(mt_rand(), true)),
+                'confirmed' => true,
+                'status' => 1,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+        ];
+
+        DB::table('users')->insert($users);
+
+        if (env('DB_DRIVER') == 'mysql')
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
