@@ -48,10 +48,10 @@ class Provider extends AbstractProvider implements ProviderInterface {
     {
         return [
             'appid' => $this->clientId,
-            'redirect_uri' => config('services.weixin.redirect.' . \Request::input(['role'], 'user')),
+            'redirect_uri' => $this->redirectUrl . '?role=' . \Request::input('role'),
             'response_type' => 'code',
             'scope' => $this->formatScopes($this->scopes, $this->scopeSeparator),
-            'state' => $state,
+            'state' => $state
         ];
     }
 
