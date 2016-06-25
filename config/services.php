@@ -71,7 +71,7 @@ return [
         'client_id' => env('WECHAT_APPID'),
         'client_secret' => env('WECHAT_APPSECRET'),
         'redirect' => env('WECHAT_REDIRECT_URL'),
-        'base_redirect' => env('WEIXIN_BASE_REDIRECT_URL'),
+        'auth_base_uri' => 'https://open.weixin.qq.com/connect/oauth2/authorize',
     ],
 
     'pingxx' => [
