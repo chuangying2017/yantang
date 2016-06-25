@@ -14,6 +14,7 @@ use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Requests\Subscribe\PreorderProductRequest;
 use App\Repositories\Subscribe\PreorderOrder\PreorderOrderRepositoryContract;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderOrderTransformer;
+use App\Services\Subscribe\PreorderProtocol;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -35,6 +36,7 @@ class PreorderController extends Controller
     public function index()
     {
         $preorder = $this->preorder->byUserId($this->user_id);
+        $preorder->load(['product', 'product.sku', 'district']);
         return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
     }
 
@@ -88,11 +90,25 @@ class PreorderController extends Controller
     }
 
 
-    public function update(PreorderRequest $request, $preorder_id)
+    public function update(Request $request, $preorder_id)
     {
         //status 订奶状态 pause 暂停 normal配送中
-//        $input = $request->only(['status']);
-//        $preorder = $this->preorder->update($input, $preorder_id);
-//        return $this->response->item($preorder, new PreorderTransformer())->setStatusCode(201);
+        $input = $request->only(['status']);
+        $preorder_model = $this->preorder->byId($preorder_id);
+        if (empty($preorder_model)) {
+            $this->response->errorInternal('修改的订奶配置不存在');
+        }
+        if ($input['status'] != PreorderProtocol::STATUS_OF_NORMAL && $input['status'] != PreorderProtocol::STATUS_OF_PAUSE) {
+            $this->response->errorInternal('操作只能为停止配送或者恢复配送');
+        }
+        try {
+            \DB::beginTransaction();
+            $preorder_model = PreorderService::updateStatus($input, $preorder_id);
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            $this->response->errorInternal($e->getMessage());
+        }
+        return $this->response->item($preorder_model, new PreorderTransformer())->setStatusCode(201);
     }
 }

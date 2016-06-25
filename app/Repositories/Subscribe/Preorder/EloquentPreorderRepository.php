@@ -28,9 +28,33 @@ class EloquentPreorderRepository implements PreorderRepositoryContract
         return Preorder::where('user_id', $user_id)->first();
     }
 
-    public function byStationId($station_id)
+    public function byStationId($station_id, $status, $pre_page)
     {
-        return Preorder::where('station_id', $station_id)->first();
+        $query = Preorder::where('station_id', $station_id);
+        switch ($status) {
+            case PreorderProtocol::STATUS_OF_UNTREATED:
+                $query = $query->where('status', '=', PreorderProtocol::STATUS_OF_UNTREATED)->with('user');
+                break;
+            case PreorderProtocol::STATUS_OF_NO_STAFF:
+                $query = $query->where('status', '=', PreorderProtocol::STATUS_OF_NO_STAFF)->with('user');
+                break;
+            case PreorderProtocol::STATUS_OF_NORMAL:
+                $query = $query->where('status', '=', PreorderProtocol::STATUS_OF_NORMAL)->with('user');
+                break;
+            case PreorderProtocol::STATUS_OF_NOT_ENOUGH:
+                $query = $query->where('charge_status', '=', PreorderProtocol::STATUS_OF_NOT_ENOUGH)->with('user');
+                break;
+            default:
+                break;
+        }
+        $query = $query->where('status', '!=', PreorderProtocol::STATUS_OF_REJECT);
+
+        if (!empty($pre_page)) {
+            $query = $query->paginate($pre_page);
+        } else {
+            $query = $query->get();
+        }
+        return $query;
     }
 
     public function update($input, $preorder_id)

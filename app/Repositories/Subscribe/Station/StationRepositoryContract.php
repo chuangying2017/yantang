@@ -62,5 +62,5 @@ interface StationRepositoryContract
 
     public function allStationBillings($begin_time, $end_time);
 
-    public function SearchInfo($keyword, $district_id, $per_page);
+    public function SearchInfo($keyword, $district_id, $per_page, $with = []);
 }

@@ -10,6 +10,7 @@ use App\Repositories\Subscribe\Station\StationRepositoryContract;
 use Illuminate\Http\Request;
 use App\Api\V1\Requests\Subscribe\StationRequest;
 use Auth;
+use DB;
 
 class StaffsController extends Controller
 {
