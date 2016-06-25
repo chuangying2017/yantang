@@ -11,13 +11,15 @@ class EloquentStaffRepository implements StaffRepositoryContract
     {
         $query = StationStaffs::query();
         if (!empty($station_id)) {
-            $query->find($station_id);
+            $query = $query->where('station_id', $station_id);
         }
         if (!empty($order_by) && !empty($sort)) {
             $query = $query->orderBy($order_by, $sort);
         }
         if (!empty($per_page)) {
             $query = $query->paginate($per_page);
+        } else {
+            $query = $query->get();
         }
         return $query;
     }
@@ -50,7 +52,7 @@ class EloquentStaffRepository implements StaffRepositoryContract
 
     public function destroy($id)
     {
-        return StationStaffs::destroy($id);
+        return StationStaffs::destroy(to_array($id));
     }
 
     public function byUserId($user_id, $with_order = false)

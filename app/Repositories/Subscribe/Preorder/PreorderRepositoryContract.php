@@ -16,7 +16,7 @@ interface PreorderRepositoryContract
      */
     public function byUserId($user_id);
 
-    public function byStationId($station_id);
+    public function byStationId($station_id, $status, $pre_page);
 
     public function update($input, $preorder_id);
 

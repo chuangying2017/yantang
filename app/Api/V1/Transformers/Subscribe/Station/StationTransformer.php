@@ -13,6 +13,8 @@ class StationTransformer extends TransformerAbstract
             'name' => $station->name,
             'desc' => $station->desc,
             'address' => $station->address,
+            'district_id' => $station->district_id,
+            'user_id' => $station->user_id,
             'tel' => $station->tel,
             'phone' => $station->phone,
             'director' => $station->director,
@@ -21,7 +23,10 @@ class StationTransformer extends TransformerAbstract
             'latitude' => display_coordinate($station->latitude),
             'status' => $station->status,
         ];
-        
+        if (!empty($station->district)) {
+            $data['district_name'] = $station->district->name;
+        };
+
         return $data;
     }
 

@@ -34,7 +34,7 @@ class AdminStationController extends Controller
         $district_id = $request->input('district_id', null);
         $keyword = $request->input('keyword', null);
         $paginate = $request->input('paginate', self::STATION_PER_PAGE);
-        $station = $this->station->SearchInfo($keyword, $district_id, $paginate);
+        $station = $this->station->SearchInfo($keyword, $district_id, $paginate, ['district']);
 
         return $this->response->paginator($station, new StationTransformer());
     }

@@ -48,8 +48,8 @@ class TopUpController extends Controller
         $charge_billing = $preorderBilling->create($amount);
         $preorderBilling->setId($charge_billing->id);
         $pingxxPayService = $pingxxPayService->setChannel(BillingProtocol::BILLING_CHANNEL_OF_PREORDER_BILLING);
-        $return = $pingxxPayService->pay($preorderBilling);
-        return $this->response->array($return);
+        $charge = $pingxxPayService->pay($preorderBilling);
+        return $this->response->array(['data' => $charge]);
     }
-    
+
 }

@@ -31,7 +31,6 @@ class AdminStationRequest extends Request
             'name' => 'required',
             'director' => 'required',
             'address' => 'required',
-            'cover_image' => 'required',
             'longitude' => 'required',
             'latitude' => 'required',
         ];

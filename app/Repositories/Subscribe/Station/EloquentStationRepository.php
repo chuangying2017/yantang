@@ -46,7 +46,7 @@ class EloquentStationRepository implements StationRepositoryContract
                 }]);
                 break;
             default:
-                $query = Station::query();
+                $query = Station::with(['preorder']);
                 break;
         }
         $query = $query->where('status', '!=', PreorderProtocol::STATUS_OF_REJECT);
@@ -108,7 +108,7 @@ class EloquentStationRepository implements StationRepositoryContract
         return $query;
     }
 
-    public function SearchInfo($keyword, $district_id, $per_page)
+    public function SearchInfo($keyword, $district_id, $per_page, $with = [])
     {
         $query = Station::query();
         if (!empty($keyword)) {
@@ -119,6 +119,9 @@ class EloquentStationRepository implements StationRepositoryContract
         }
         if (!empty($district_id)) {
             $query = $query->where('district_id', $district_id);
+        }
+        if (!empty($with)) {
+            $query = $query->with($with);
         }
         if (!empty($per_page)) {
             $query = $query->paginate($per_page);

@@ -6,28 +6,18 @@ use App\Services\Subscribe\PreorderProtocol;
 
 class StationPreorderTransformer extends TransformerAbstract
 {
-    protected $availableIncludes = ['search_type'];
 
     public function transform(Station $station)
     {
-        $this->setInclude();
+        $this->setDefaultIncludes(['preorder']);
+        $menus = PreorderProtocol::stationPreorderMenus();
+
         $data = [
             'id' => (int)$station->id,
-            'user' => $station->preorder->user->name,
-            'status' => $station->preorder->status,
-            'charge_status' => $station->preorder->charge_status,
-            'status_name' => PreorderProtocol::preorderStatusName($station->preorder->status, $station->preorder->charge_status),
-            'preorder_id' => $station->preorder->id,
+            'menus' => $menus,
         ];
 
         return $data;
-    }
-
-    public function includeSearchType()
-    {
-        $menus = PreorderProtocol::stationPreorderMenus();
-
-        return $this->array(['menus' => $menus]);
     }
 
 }

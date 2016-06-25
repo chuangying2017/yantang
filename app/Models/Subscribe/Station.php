@@ -1,5 +1,6 @@
 <?php namespace App\Models\Subscribe;
 
+use App\Models\District;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -34,5 +35,10 @@ class Station extends Model
     public function preorderOrder()
     {
         return $this->hasManyThrough(PreorderOrder::class, Preorder::class, 'station_id', 'preorder_id');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
     }
 }

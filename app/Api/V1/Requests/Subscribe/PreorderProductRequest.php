@@ -23,7 +23,7 @@ class PreorderProductRequest extends Request
     /**
      * Get the validation rules that apply to the request.
      *
-     * weekdays {"1":{"daytime":1,"skus":{"1":{"sku_name":"a","count":3},"2":{"sku_name":"b","count":5}}},"2":{"daytime":0,"skus":{"1":{"sku_name":"a","count":3},"2":{"sku_name":"b","count":5}}}}
+     * weekdays {"1":{"daytime":1,"skus":{"1":{"sku_name":"a","count":3, "price"=> 1000},"2":{"sku_name":"b","count":5,"price"=> 2000}}},"2":{"daytime":0,"skus":{"1":{"sku_name":"a","count":3,"price"=> 1000},"2":{"sku_name":"b","count":5,"price"=> 2000}}}}
      *
      * @return array
      */
