@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CampaignApiTest extends TestCase {
 
-    use DatabaseTransactions;
+//    use DatabaseTransactions;
 
     /** @test */
     public function it_can_create_campaign()

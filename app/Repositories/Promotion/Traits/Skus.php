@@ -34,7 +34,7 @@ trait Skus {
 
     public function getSku($promotion_id)
     {
-        return PromotionSku::find($promotion_id);
+        return PromotionSku::query()->where('promotion_id', $promotion_id)->pluck('product_sku_id')->all();
     }
 
 }

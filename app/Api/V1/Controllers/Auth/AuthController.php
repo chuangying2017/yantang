@@ -67,13 +67,13 @@ class AuthController extends Controller {
      */
     public function loginThirdParty(ThirdPartyRequest $request, $provider)
     {
-//        try {
+        try {
             $user = $this->auth->loginThirdParty($request->all(), $provider);
 
             return $this->response->item($user, new UserLoginTransformer());
-//        } catch (\Exception $e) {
-//            $this->response->errorUnauthorized($e->getMessage());
-//        }
+        } catch (\Exception $e) {
+            $this->response->errorUnauthorized($e->getMessage());
+        }
     }
 
     public function loginThirdPartyUrl(Request $request, $provider)

@@ -51,6 +51,7 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Events\Order\OrderIsPaid' => [
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
+            'App\Listeners\Product\DecreaseProductSkuStock',
         ],
 
         'App\Events\Order\OrderIsCreated' => [
@@ -58,7 +59,7 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
         'App\Events\Order\OrderIsCancel' => [
-
+            'App\Listeners\Product\IncreaseProductSkuStock',
         ],
 
         'App\Events\Order\OrderIsDone' => [

@@ -40,6 +40,9 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
      */
     private $memoRepo;
 
+    protected $detail_relations = ['skus', 'address', 'billings'];
+    protected $lists_relations = ['skus'];
+
 
     /**
      * ClientOrderRepositoryAbstract constructor.
@@ -86,7 +89,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
             'pay_status' => OrderProtocol::PAID_STATUS_OF_UNPAID,
             'status' => OrderProtocol::STATUS_OF_UNPAID,
             'pay_type' => OrderProtocol::PAY_TYPE_OF_ONLINE,
-            'deliver_type' => OrderProtocol::getDeliverType($this->type)
+            'deliver_type' => OrderProtocol::getDeliverType($this->type),
         ]);
 
         $order->skus = $this->orderSkuRepo->createOrderSkus($order, $data['skus']);
@@ -94,6 +97,8 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         $order->billings = $this->createOrderBilling($order);
         $order->promotions = $this->createOrderPromotion($order['id'], $data['promotion']);
         $order->memo = $this->createOrderMemo($order['id'], array_get($data, 'memo', ''));
+        $order->special = $this->attachOrderSpecialCampaign($order, $data['special_campaign']);
+
         DB::commit();
 
         return $order;
@@ -160,7 +165,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         }
 
         if ($with_detail) {
-            $order = $order->load('skus', 'address', 'billings');
+            $order = $order->load($this->detail_relations);
         }
 
         return $order;
@@ -172,7 +177,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         if (!is_null($status)) {
             $query = $query->where('status', $status);
         }
-        return $query->with('skus')->orderBy($order_by, $sort)->get();
+        return $query->with($this->lists_relations)->orderBy($order_by, $sort)->get();
     }
 
     public function getPaginatedOrders($status = null, $order_by = 'created_at', $sort = 'desc', $per_page = OrderProtocol::ORDER_PER_PAGE)
@@ -181,7 +186,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         if (!is_null($status)) {
             $query = $query->where('status', $status);
         }
-        return $query->with('skus')->orderBy($order_by, $sort)->paginate($per_page);
+        return $query->with($this->lists_relations)->orderBy($order_by, $sort)->paginate($per_page);
     }
 
     public function updateOrderStatusAsPaid($order_id, $pay_channel)
@@ -228,5 +233,15 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         event(new OrderIsCancel($order));
 
         return $order;
+    }
+
+    private function attachOrderSpecialCampaign(Order $order, $special_campaign)
+    {
+        if (is_null($special_campaign)) {
+            return $order;
+        }
+        return $order->special()->create(
+            array_only($special_campaign, ['campaign_id', 'campaign_name'])
+        );
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CampaignOrderTest extends TestCase {
 
-//    use DatabaseTransactions;
+    use DatabaseTransactions;
 
     /** @test */
     public function it_can_create_a_campaign_order()
@@ -22,8 +22,7 @@ class CampaignOrderTest extends TestCase {
 
         $this->json('post', 'campaigns/orders',
             [
-                'product_skus' => $product_skus,
-                'channel' => $channel
+                'campaign' => 1,
             ],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );

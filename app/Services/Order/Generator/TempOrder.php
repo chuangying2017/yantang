@@ -16,6 +16,7 @@ class TempOrder implements PromotionAbleItemContract {
     protected $products_amount = 0;
     protected $discount_amount = 0;
 
+    protected $special_campaign;
     protected $request_promotion;
 
     public function __construct($user_id, $skus, $address = null)
@@ -40,7 +41,8 @@ class TempOrder implements PromotionAbleItemContract {
             'pay_amount' => $this->getPayAmount(),
             'express_fee' => $this->express_fee,
             'promotion' => $this->promotion,
-            'error' => $this->error
+            'error' => $this->error,
+            'special_campaign' => $this->special_campaign
         ];
     }
 
@@ -463,5 +465,21 @@ class TempOrder implements PromotionAbleItemContract {
     public function getCarts()
     {
         return $this->carts;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpecialCampaign()
+    {
+        return $this->special_campaign;
+    }
+
+    /**
+     * @param mixed $special_campaign
+     */
+    public function setSpecialCampaign($special_campaign)
+    {
+        $this->special_campaign = $special_campaign;
     }
 }

@@ -5,12 +5,14 @@ use App\Repositories\Cart\CartRepositoryContract;
 use App\Repositories\Order\CampaignOrderRepository;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\MallClientOrderRepository;
+use App\Repositories\Promotion\Campaign\EloquentCampaignRepository;
 use App\Services\Order\Generator\CalExpressFee;
 use App\Services\Order\Generator\CalSkuAmount;
 use App\Services\Order\Generator\CheckCampaign;
 use App\Services\Order\Generator\CheckCoupon;
 use App\Services\Order\Generator\GetOrderAddress;
 use App\Services\Order\Generator\GetSkuInfo;
+use App\Services\Order\Generator\GetSpecialCampaign;
 use App\Services\Order\Generator\GetUserInfo;
 use App\Services\Order\Generator\SaveTempOrder;
 use App\Services\Order\Generator\TempOrder;
@@ -39,11 +41,10 @@ class OrderGenerator implements OrderGeneratorContract {
      */
     public function buy($user_id, $skus, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN)
     {
-        if ($type == OrderProtocol::ORDER_TYPE_OF_CAMPAIGN) {
-            return $this->campaignOrder($user_id, $skus);
+        if ($type == OrderProtocol::ORDER_TYPE_OF_MALL_MAIN) {
+            return $this->mallOrder($user_id, $skus);
         }
 
-        return $this->mallOrder($user_id, $skus);
     }
 
     /**
@@ -66,18 +67,37 @@ class OrderGenerator implements OrderGeneratorContract {
         return $this->buy($user_id, $skus, $address_id);
     }
 
-    protected function campaignOrder($user_id, $skus)
+    public function buySpecialCampaign($user_id, $campaign_id, EloquentCampaignRepository $campaignRepo)
+    {
+        $product_skus_ids = $campaignRepo->getSku($campaign_id);
+        $skus = [];
+        foreach ($product_skus_ids as $product_sku_id) {
+            $skus[] = ['product_sku_id' => $product_sku_id, 'quantity' => 1];
+        }
+
+        if (!count($skus)) {
+            throw new \Exception('活动商品不存在, 请求错误');
+        }
+
+        return $this->campaignOrder($user_id, $skus, $campaign_id);
+    }
+
+    protected function campaignOrder($user_id, $skus, $campaign_id)
     {
         $config = [
             GetSkuInfo::class,
             GetUserInfo::class,
             CalSkuAmount::class,
+            GetSpecialCampaign::class,
             SaveTempOrder::class,
         ];
 
         $handler = $this->getOrderGenerateHandler($config);
 
-        $temp_order = $handler->handle(new TempOrder($user_id, $skus));
+        $temp_order = new TempOrder($user_id, $skus);
+        $temp_order->setSpecialCampaign($campaign_id);
+
+        $temp_order = $handler->handle($temp_order);
 
         if ($temp_order->getError()) {
             throw new \Exception($temp_order->getError());

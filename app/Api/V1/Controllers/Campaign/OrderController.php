@@ -2,8 +2,10 @@
 
 namespace App\Api\V1\Controllers\Campaign;
 
+use App\Api\V1\Requests\Campaign\CampaignOrderRequest;
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Repositories\Order\CampaignOrderRepository;
+use App\Repositories\Promotion\Campaign\EloquentCampaignRepository;
 use App\Services\Order\Checkout\OrderCheckoutService;
 use App\Services\Order\OrderGenerator;
 use App\Services\Order\OrderManageContract;
@@ -49,13 +51,13 @@ class OrderController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout, Request $request)
+    public function store(OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout, EloquentCampaignRepository $campaignRepo, CampaignOrderRequest $request)
     {
         try {
-            $skus = $request->input(['product_skus']);
+            $campaign_id = $request->input(['campaign']);
             $pay_channel = $request->input('channel') ?: PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
 
-            $order = $orderGenerator->buy(access()->id(), $skus, OrderProtocol::ORDER_TYPE_OF_CAMPAIGN);
+            $order = $orderGenerator->buySpecialCampaign(access()->id(), $campaign_id, $campaignRepo);
 
             $charge = $orderCheckout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 

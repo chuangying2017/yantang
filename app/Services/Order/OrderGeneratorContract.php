@@ -1,5 +1,6 @@
 <?php namespace App\Services\Order;
 use App\Repositories\Order\ClientOrderRepositoryContract;
+use App\Repositories\Promotion\Campaign\EloquentCampaignRepository;
 
 interface OrderGeneratorContract {
 
@@ -12,6 +13,8 @@ interface OrderGeneratorContract {
     public function useCoupon($temp_order_id, $coupon_id);
 
     public function buyCart($user_id, $cart_ids, $address_id);
+
+    public function buySpecialCampaign($user_id, $campaign_id, EloquentCampaignRepository $campaignRepo);
 
     public function setOrderRepo(ClientOrderRepositoryContract $orderRepo);
 }
