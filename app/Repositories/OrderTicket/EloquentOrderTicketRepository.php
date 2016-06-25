@@ -4,10 +4,11 @@ use App\Models\Order\Order;
 use App\Models\Order\OrderPromotion;
 use App\Models\OrderTicket;
 use App\Repositories\NoGenerator;
+use App\Repositories\Product\ProductProtocol;
 use App\Services\Order\OrderProtocol;
 use Carbon\Carbon;
 
-class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
+class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, OrderTicketStatementRepoContract {
 
     public function createOrderTicket(Order $order)
     {
@@ -24,12 +25,19 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
         ]);
     }
 
-    public function getOrderTicketsOfUser($user_id, $status = OrderProtocol::ORDER_TICKET_STATUS_OF_OK)
+
+    public function getOrderTicketsOfUser($user_id, $status = OrderProtocol::ORDER_TICKET_STATUS_OF_OK, $per_page = OrderTicketProtocol::TICKET_PER_PAGE)
     {
         $query = OrderTicket::where('user_id', $user_id);
+
         if ($status) {
             $query = $query->where('status', $status);
         }
+
+        if ($per_page) {
+            return $query->paginate(OrderTicketProtocol::TICKET_PER_PAGE);
+        }
+
         return $query->get();
     }
 
@@ -46,7 +54,6 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
         if ($with_detail) {
             $ticket->load(['skus', 'exchange']);
         }
-
 
 
         return $ticket;
@@ -72,7 +79,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
         return OrderTicket::where('order_id', $order_id)->first();
     }
 
-    public function getOrderTicketsOfStore($store_id, $start_at = null, $end_at = null)
+    public function getOrderTicketsOfStore($store_id, $start_at = null, $end_at = null, $per_page = OrderTicketProtocol::TICKET_PER_PAGE)
     {
         $query = OrderTicket::where('store_id', $store_id);
         if (!is_null($start_at)) {
@@ -83,6 +90,25 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract {
             $query = $query->where('exchange_at', '<=', $start_at);
         }
 
-        return $query->paginate(OrderTicketProtocol::TICKET_PER_PAGE);
+        if ($per_page) {
+            return $query->paginate(OrderTicketProtocol::TICKET_PER_PAGE);
+        }
+
+        return $query->get();
+    }
+
+    public function getStoreOrderTicketsWithProducts($store_id, $time_before)
+    {
+        return OrderTicket::query()->with(['skus' => function ($query) {
+            $query->where('type', '!=', ProductProtocol::TYPE_OF_MIX)->select(['order_id', 'price', 'quantity', 'product_id', 'product_sku_id']);
+        }])->where('status', OrderTicketProtocol::STATUS_OF_USED)
+            ->where('check', OrderTicketProtocol::CHECK_STATUS_OF_PENDING)
+            ->where('exchange_at', '<=', $time_before)
+            ->get(['id', 'order_id', 'store_id']);
+    }
+
+    public function updateOrderTicketsAsChecked($order_ticket_ids)
+    {
+        OrderTicket::query()->whereIn('id', $order_ticket_ids)->update(['check' => OrderTicketProtocol::CHECK_STATUS_OF_HANDLED]);
     }
 }

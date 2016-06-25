@@ -59,7 +59,7 @@ class OrderController extends Controller {
 
             $charge = $orderCheckout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 
-            return $this->response->array(['data' => $charge]);
+            return $this->response->item($order, new ClientOrderTransformer())->setMeta(['charge' => $charge])->setStatusCode(201);;
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }

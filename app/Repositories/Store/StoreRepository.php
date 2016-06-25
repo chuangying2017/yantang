@@ -94,6 +94,7 @@ class StoreRepository implements StoreRepositoryContract {
 
     public function getAllActive()
     {
+        #todo 缓存;
         return Store::where('active', 1)->get();
     }
 

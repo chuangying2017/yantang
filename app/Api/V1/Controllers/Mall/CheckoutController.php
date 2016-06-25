@@ -53,7 +53,7 @@ class CheckoutController extends Controller {
      */
     public function store(Request $request, $order_id)
     {
-        $pay_channel = $request->input('channel');
+        $pay_channel = $request->input('channel', PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT);
 
         $order = $this->orderRepo->getOrder($order_id);
 

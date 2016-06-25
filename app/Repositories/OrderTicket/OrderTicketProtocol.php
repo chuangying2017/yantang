@@ -7,4 +7,8 @@ class OrderTicketProtocol {
     const STATUS_OF_USED = 'used';
     const STATUS_OF_EXPIRED = 'expired';
 
+    const CHECK_STATUS_OF_HANDLED = 1;
+    const CHECK_STATUS_OF_PENDING = 0;
+
+
 }

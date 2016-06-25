@@ -3,6 +3,7 @@
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\OrderTicket;
+use App\Repositories\Product\ProductProtocol;
 use League\Fractal\TransformerAbstract;
 
 class OrderTicketTransformer extends TransformerAbstract {
@@ -31,7 +32,7 @@ class OrderTicketTransformer extends TransformerAbstract {
     public function includeSkus(OrderTicket $ticket)
     {
         foreach ($ticket->skus as $key => $sku) {
-            if (!($sku['pay_amount'] == 0 && $sku['discount_amount'] == 0)) {
+            if ($sku['type'] == ProductProtocol::TYPE_OF_MIX) {
                 unset($ticket->skus[$key]);
             }
         }

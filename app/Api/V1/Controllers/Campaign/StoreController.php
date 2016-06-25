@@ -69,4 +69,11 @@ class StoreController extends Controller {
         $this->response->errorBadRequest('绑定失败');
     }
 
+    public function index()
+    {
+        $stores = $this->storeRepo->getAllActive();
+
+        return $this->response->collection($stores, new StoreTransformer());
+    }
+
 }

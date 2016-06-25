@@ -77,6 +77,14 @@ class EventServiceProvider extends ServiceProvider {
 
         ],
 
+        'App\Events\Order\OrderTicketIsExchange' => [
+
+        ],
+
+        'App\Events\Store\StoreStatementConfirm' => [
+
+        ],
+
 
 //        'App\Services\Orders\Event\OrderRequest' => [
 //

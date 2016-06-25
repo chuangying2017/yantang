@@ -1,7 +1,7 @@
 <?php namespace App\Services\OrderTicket;
 
+use App\Events\Order\OrderTicketIsExchange;
 use App\Repositories\Order\CampaignOrderRepository;
-use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\Promotion\OrderPromotionRepositoryContract;
 use App\Repositories\OrderTicket\OrderTicketProtocol;
 use App\Repositories\OrderTicket\OrderTicketRepositoryContract;
@@ -52,14 +52,14 @@ class OrderTicketManageService implements OrderTicketManageContract {
 
     public function exchange($ticket_no, $store_id)
     {
-        $order_ticket = $this->ticketRepo->getOrderTicket($ticket_no, false);
+        $order_ticket = $this->ticketRepo->getOrderTicket($ticket_no, true);
 
         if (!$this->checkTicket($order_ticket)) {
             throw new \Exception('兑换失败,兑换券已失效或过期');
         }
 
         $order_ticket = $this->ticketRepo->updateOrderStatusAsUsed($ticket_no, $store_id);
-        #todo 添加对账
+        event(new OrderTicketIsExchange($order_ticket));
 
         return $order_ticket;
     }

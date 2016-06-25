@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Order\Sku;
 
 use App\Models\Order\OrderSku;
+use App\Repositories\Product\ProductProtocol;
 use App\Repositories\Product\Sku\ProductMixRepositoryContract;
 use App\Services\Order\OrderProtocol;
 
@@ -12,16 +13,16 @@ class EloquentOrderSkuRepository implements OrderSkuRepositoryContract {
         $order_skus = [];
         if ($order['order_type'] == OrderProtocol::ORDER_TYPE_OF_CAMPAIGN) {
             foreach ($data as $temp_order_sku) {
-                $this->createMixSku($order_id, $temp_order_sku);
+                $order_skus = array_merge($order_skus, $this->createMixSku($order_id, $temp_order_sku));
             }
         } else {
             foreach ($data as $temp_order_sku) {
                 $order_sku = $this->saveOrderSku($order_id, $temp_order_sku);
                 $order_skus[] = $order_sku;
             }
-
-            return $order_skus;
         }
+
+        return $order_skus;
     }
 
     public function getOrderSkus($order_id)
@@ -42,22 +43,27 @@ class EloquentOrderSkuRepository implements OrderSkuRepositoryContract {
             'price' => $temp_order_sku['price'],
             'discount_amount' => array_get($temp_order_sku, 'discount_amount', 0),
             'pay_amount' => $temp_order_sku['pay_amount'],
-            'attr' => $temp_order_sku['attr'] ?: ''
+            'attr' => $temp_order_sku['attr'] ?: '',
+            'type' => array_get($temp_order_sku, 'type', ProductProtocol::TYPE_OF_ENTITY),
         ]);
     }
 
 
-    protected function createMixSku($order_id, $temp_order_sku)
+    protected function createMixSku($order_id, $temp_order_mix_sku)
     {
-        $mix_skus = app()->make(ProductMixRepositoryContract::class)->getMixSkus($temp_order_sku['id']);
+        $order_skus = [];
+        $mix_skus = app()->make(ProductMixRepositoryContract::class)->getMixSkus($temp_order_mix_sku['id']);
 
         foreach ($mix_skus as $sku) {
             $sku['discount_amount'] = 0;
             $sku['pay_amount'] = 0;
             $sku['quantity'] = $sku['pivot']['quantity'];
-            $this->saveOrderSku($order_id, $sku);
+            $sku['price'] = $sku['settle_price'];
+            $order_skus[] = $this->saveOrderSku($order_id, $sku);
         }
 
-        $this->saveOrderSku($order_id, $temp_order_sku);
+        $temp_order_mix_sku['type'] = ProductProtocol::TYPE_OF_MIX;
+        $order_skus[] = $this->saveOrderSku($order_id, $temp_order_mix_sku);
+        return $order_skus;
     }
 }

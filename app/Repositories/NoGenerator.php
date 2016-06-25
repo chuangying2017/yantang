@@ -1,9 +1,14 @@
 <?php namespace App\Repositories;
+use Carbon\Carbon;
+
 class NoGenerator {
 
     const ORDER_PREFIX = '10';
     const ORDER_BILLING_PREFIX = '11';
     const ORDER_TICKET_PREFIX = '12';
+
+    const ORDER_TICKET_STATEMENT_PREFIX = '31';
+    const STATION_STATEMENT_PREFIX = '32';
 
     const LENGTH_OF_ORDER_BILLING_NO = 21;
     const LENGTH_OF_ORDER_NO = 21;
@@ -16,6 +21,11 @@ class NoGenerator {
     public static function generateOrderNo()
     {
         return self::ORDER_PREFIX . self::generate_no();
+    }
+
+    public static function generateStoreStatementNo($store_id)
+    {
+        return date('Ymd') . $store_id;
     }
 
     public static function generateOrderBillingNo()

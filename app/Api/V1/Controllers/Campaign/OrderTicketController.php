@@ -40,7 +40,7 @@ class OrderTicketController extends Controller {
     {
         $tickets = $this->ticketRepo->getOrderTicketsOfUser($this->user_id);
 
-        return $this->response->collection($tickets, new OrderTicketTransformer());
+        return $this->response->paginator($tickets, new OrderTicketTransformer());
     }
 
 

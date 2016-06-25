@@ -160,7 +160,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         }
 
         if ($with_detail) {
-            $order = $order->load('skus', 'address', 'billings', 'order_promotion');
+            $order = $order->load('skus', 'address', 'billings');
         }
 
         return $order;

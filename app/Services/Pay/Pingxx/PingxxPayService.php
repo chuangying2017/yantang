@@ -86,6 +86,7 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
     {
         if ($this->checkChargeIsPaid($charge)) {
             $payment = $this->paymentRepository->getPayment($this->paymentRepository->getChargePayment($charge));
+
             if ($payment['paid']) {
                 return true;
             }
