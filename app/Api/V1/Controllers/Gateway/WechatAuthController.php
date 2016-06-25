@@ -30,7 +30,7 @@ class WechatAuthController extends Controller {
             throw new \Exception('role' . $role . ' 不存在', 401);
         }
 
-        return redirect()->to($redirects[$role]);
+        return redirect()->to($redirects[$role] . '?code=' . $request->input('code'));
     }
 
 
