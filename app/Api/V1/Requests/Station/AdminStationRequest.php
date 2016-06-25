@@ -29,7 +29,6 @@ class AdminStationRequest extends Request
     {
         return [
             'name' => 'required',
-            'desc' => 'required',
             'director' => 'required',
             'address' => 'required',
             'cover_image' => 'required',

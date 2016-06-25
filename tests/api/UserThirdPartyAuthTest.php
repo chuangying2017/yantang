@@ -16,8 +16,10 @@ class UserThirdPartyAuthTest extends TestCase {
     public function it_get_weixin_oauth_redirect_url()
     {
         $this->setProvider('weixin');
-        $this->oauthUrl();
+
+        $url =  $this->oauthUrl();
         $this->dumpResponse();
+        return $url;
     }
 
     /** @test */
@@ -26,10 +28,11 @@ class UserThirdPartyAuthTest extends TestCase {
         $this->setProvider('weixin');
 
         // need setup
-        $this->oauth_code = '041h1AiN19GDFY0knmhN1UWyiN1h1Aij';
+        $this->oauth_code = '0312bRTx1KO1w30SdGUx1BBOTx12bRTh';
 
         $this->oathRegister();
     }
+
 
     public function oathRegister()
     {
@@ -40,6 +43,7 @@ class UserThirdPartyAuthTest extends TestCase {
         $this->json('post', '/auth/login/' . $this->provider, $request_data);
         $this->dumpResponse();
 
+        $this->assertResponseStatus(200);
 
         $this->seeJsonStructure(['data' => ['token', 'roles' => []]]);
 
@@ -53,6 +57,8 @@ class UserThirdPartyAuthTest extends TestCase {
         $this->seeJsonStructure(['data' => ['url']]);
 
         $this->assertResponseOk();
+
+        return $this->getResponseData('data.url');
     }
 
     protected function setProvider($provider)

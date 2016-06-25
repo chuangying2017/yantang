@@ -127,8 +127,12 @@ class Provider extends AbstractProvider implements ProviderInterface {
      */
     protected function parseAccessToken($body)
     {
-
         $jsonArray = json_decode($body, true);
+
+        if (isset($jsonArray['errcode'])) {
+            throw new \Exception($jsonArray['errmsg'], $jsonArray['errcode']);
+        }
+
         $this->openId = $jsonArray['openid'];
 
         return $jsonArray['access_token'];
