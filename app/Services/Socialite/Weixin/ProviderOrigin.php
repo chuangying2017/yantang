@@ -2,46 +2,31 @@
 
 namespace App\Services\Socialite\Weixin;
 
+use App\Services\Socialite\ApiStateless;
+use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
-use SocialiteProviders\Manager\OAuth2\AbstractProvider;
-use SocialiteProviders\Manager\OAuth2\User;
+use Laravel\Socialite\Two\User;
 
-class Provider extends AbstractProvider implements ProviderInterface
-{
-    /**
-     * Unique Provider Identifier.
-     */
-    const IDENTIFIER = 'WEIXIN';
+class ProviderOrigin extends AbstractProvider implements ProviderInterface {
+
+    use ApiStateless;
 
     /**
-     * @var string
+     * {@inheritdoc}.
      */
     protected $openId;
 
     /**
      * {@inheritdoc}.
      */
-    protected $scopes = ['snsapi_login'];
-
-    /**
-     * set Open Id.
-     *
-     * @param string $openId
-     */
-    public function setOpenId($openId)
-    {
-        $this->openId = $openId;
-    }
+    protected $scopes = ['snsapi_userinfo'];
 
     /**
      * {@inheritdoc}.
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase($this->getConfig(
-            'auth_base_uri',
-            'https://open.weixin.qq.com/connect/oauth2/authorize'
-        ), $state);
+        return $this->buildAuthUrlFromBase('https://open.weixin.qq.com/connect/oauth2/authorize', $state);
     }
 
     /**
@@ -49,9 +34,11 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function buildAuthUrlFromBase($url, $state)
     {
+//        $session = $this->request->getSession();
+
         $query = http_build_query($this->getCodeFields($state), '', '&', $this->encodingType);
 
-        return $url.'?'.$query.'#wechat_redirect';
+        return $url . '?' . $query . '#wechat_redirect';
     }
 
     /**
@@ -64,8 +51,13 @@ class Provider extends AbstractProvider implements ProviderInterface
             'redirect_uri' => $this->redirectUrl . '?role=' . \Request::input('role'),
             'response_type' => 'code',
             'scope' => $this->formatScopes($this->scopes, $this->scopeSeparator),
-            'state' => $state,
+            'state' => $state
         ];
+    }
+
+    protected function getRedirectUrl()
+    {
+
     }
 
     /**
@@ -99,10 +91,11 @@ class Provider extends AbstractProvider implements ProviderInterface
     {
         return (new User())->setRaw($user)->map([
             'id' => $user['openid'],
-            'nickname' => $user['nickname'],
             'union_id' => array_get($user, 'unionid', null),
+            'nickname' => $user['nickname'],
             'avatar' => $user['headimgurl'],
-            'name' => null, 'email' => null,
+            'name' => null,
+            'email' => null,
         ]);
     }
 
@@ -120,27 +113,45 @@ class Provider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}.
      */
-    public function getAccessTokenResponse($code)
+    public function getAccessToken($code)
     {
         $response = $this->getHttpClient()->get($this->getTokenUrl(), [
             'query' => $this->getTokenFields($code),
         ]);
 
-        $this->credentialsResponseBody = json_decode($response->getBody(), true);
-
-        if (isset($this->credentialsResponseBody['errcode'])) {
-            throw new \Exception($this->credentialsResponseBody['errmsg'], $this->credentialsResponseBody['errcode']);
-        }
-
-
-        $this->openId = $this->credentialsResponseBody['openid'];
-
-        return $this->credentialsResponseBody;
+        return $this->parseAccessToken($response->getBody()->getContents());
     }
 
-    public static function additionalConfigKeys()
+    /**
+     * {@inheritdoc}.
+     */
+    protected function parseAccessToken($body)
     {
-        return ['auth_base_uri'];
+        $jsonArray = json_decode($body, true);
+
+        if (isset($jsonArray['errcode'])) {
+            throw new \Exception($jsonArray['errmsg'], $jsonArray['errcode']);
+        }
+
+        $this->openId = $jsonArray['openid'];
+
+        return $jsonArray['access_token'];
+    }
+
+    /**
+     * @param mixed $response
+     *
+     * @return string
+     */
+    protected function removeCallback($response)
+    {
+        if (strpos($response, 'callback') !== false) {
+            $lpos = strpos($response, '(');
+            $rpos = strrpos($response, ')');
+            $response = substr($response, $lpos + 1, $rpos - $lpos - 1);
+        }
+
+        return $response;
     }
 
     /**
@@ -152,4 +163,6 @@ class Provider extends AbstractProvider implements ProviderInterface
     {
         return \Request::input('code');
     }
+
+
 }

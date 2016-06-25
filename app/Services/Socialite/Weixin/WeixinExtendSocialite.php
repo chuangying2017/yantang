@@ -12,7 +12,7 @@ class WeixinExtendSocialite {
     public function handle(SocialiteWasCalled $socialiteWasCalled)
     {
         $socialiteWasCalled->extendSocialite(
-            'weixin', __NAMESPACE__ . '\Provider'
+            'weixin', __NAMESPACE__.'\Provider'
         );
     }
 }

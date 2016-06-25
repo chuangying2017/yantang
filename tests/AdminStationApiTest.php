@@ -52,7 +52,6 @@ class AdminStationApiTest extends TestCase
 
         $this->dumpResponse();
 
-        $this->assertResponseStatus(200);
     }
 
     /** @test */

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CampaignOrderTest extends TestCase {
 
-    use DatabaseTransactions;
+//    use DatabaseTransactions;
 
     /** @test */
     public function it_can_create_a_campaign_order()
@@ -14,7 +14,7 @@ class CampaignOrderTest extends TestCase {
         $product_skus = [
             [
                 'quantity' => 1,
-                'product_sku_id' => 2
+                'product_sku_id' => 1
             ]
         ];
         $channel = 'wx_pub_qr';
@@ -77,14 +77,7 @@ class CampaignOrderTest extends TestCase {
 
         //模拟付款
         $pay_url = "http://sissi.pingxx.com/notify.php?ch_id=" . $charge['id'];
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $pay_url);
-        curl_setopt($ch, CURLOPT_HEADER, TRUE);
-        curl_setopt($ch, CURLOPT_NOBODY, TRUE); // remove body
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        $head = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $this->getUrl($pay_url);
 
         $this->json('POST', '/campaigns/orders/' . $order['order_no'] . '/checkout', [], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
         $charge = $this->getResponseData('data');

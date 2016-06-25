@@ -197,7 +197,9 @@ return [
         Baum\Providers\BaumServiceProvider::class,
         Toplan\PhpSms\PhpSmsServiceProvider::class,
         Toplan\Sms\SmsManagerServiceProvider::class,
-        SocialiteProviders\Manager\ServiceProvider::class,
+
+        \SocialiteProviders\Manager\ServiceProvider::class,
+
         Overtrue\LaravelWechat\ServiceProvider::class,
     ],
 
