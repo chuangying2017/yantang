@@ -88,7 +88,7 @@ class PreorderProtocol
             if ($week_key > 0 && $key == 0) {
                 return $value;
             }
-            if ($key >= $week_key) {
+            if ($key > $week_key) {
                 return $value;
             }
         });

@@ -70,11 +70,11 @@ $api->version('v1', function ($api) {
             //订奶客户端
             $api->group(['namespace' => 'Preorder'], function ($api) {
                 $api->get('subscribe/stations', 'PreorderController@stations');
-                $api->get('subscribe/user_amount', 'PreorderController@userAmount'); //获取用户余额
                 $api->get('subscribe/preorder_record', 'PreorderController@preorderRecord'); //获取送奶记录
-                $api->get('subscribe/recharge_record', 'PreorderController@rechargeRecord'); //获取充值记录
                 $api->resource('subscribe/preorders', 'PreorderController');
                 $api->resource('subscribe/preorder_product', 'PreorderProductController');
+                $api->get('subscribe/user_amount', 'TopUpController@userAmount'); //获取用户余额
+                $api->get('subscribe/topup', 'TopUpController@rechargeRecord'); //获取充值记录
                 $api->post('subscribe/pay_confirm', 'TopUpController@payConfirm');
                 $api->resource('subscribe/topup', 'TopUpController');
             });

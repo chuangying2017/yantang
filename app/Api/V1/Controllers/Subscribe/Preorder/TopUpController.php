@@ -13,20 +13,33 @@ use Illuminate\Http\Request;
 use App\Services\Client\Account\WalletService;
 use Log;
 use PreorderService;
+use App\Repositories\Client\Account\Wallet\WalletRepositoryContract;
+use App\Api\V1\Transformers\Subscribe\Preorder\WalletRecordTransformer;
 
 class TopUpController extends Controller
 {
+    const PER_PAGE = 10;
+
     public function __construct()
     {
 
     }
 
-    public function index()
+    public function index(Request $request, WalletRepositoryContract $walletRepo)
     {
-        PreorderService::settle();
-//        $user_id = access()->id();
-//        $charge_billing = ChargeBilling::where('user_id', $user_id);
-//        return $this->response->item($charge_billing, new ChargeBillingTransformer);
+        $per_page = $request->input('paginate', self::PER_PAGE);
+        $user_id = access()->id();
+        $walletRepo = $walletRepo->setUserId($user_id);
+        $wallet = $walletRepo->getRecordsPaginated(BillingProtocol::BILLING_TYPE_OF_RECHARGE_BILLING, 'created_at', 'desc', $per_page);
+        return $this->response->paginator($wallet, new WalletRecordTransformer());
+    }
+
+    public function userAmount(WalletRepositoryContract $walletRepo)
+    {
+        $user_id = access()->id();
+        $walletRepo = $walletRepo->setUserId($user_id);
+        $amount = $walletRepo->getAmount();
+        return $this->response->array(['data' => ['amount' => $amount]]);
     }
 
     public function store(TopUpRequest $request, PreorderBilling $preorderBilling, PingxxPayService $pingxxPayService)
@@ -38,20 +51,5 @@ class TopUpController extends Controller
         $return = $pingxxPayService->pay($preorderBilling);
         return $this->response->array($return);
     }
-
-    public function payConfirm(Request $request, PaymentRepositoryContract $paymentRepo, WalletService $walletService, PreorderBilling $preorderBilling)
-    {
-        $input = $request->all();
-        if (!empty($input) && $input['type'] == "charge.succeeded") {
-            $payment_no = $input['id'];
-            $transaction_no = $input['data']['transaction_no'];
-            $payment = $paymentRepo->setPaymentAsPaid($payment_no, $transaction_no);
-            $charge_billing = ChargeBilling::where('billing_no', $input['billing_no'])->first();
-            $preorderBilling->setId($charge_billing->id);
-            $walletService->pay($preorderBilling);
-        } else {
-            //todo 出错写入日志
-        }
-
-    }
+    
 }

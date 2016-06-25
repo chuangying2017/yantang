@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Subscribe\Preorder;
 
 use App\Models\Subscribe\Preorder;
+use App\Models\Subscribe\StaffPreorder;
 use Carbon\Carbon;
 use App\Services\Subscribe\PreorderProtocol;
 
@@ -79,5 +80,13 @@ class EloquentPreorderRepository implements PreorderRepositoryContract
         }
 
         return $query;
+    }
+
+    public function getOrderStaffId($preorder_id)
+    {
+
+        $staff_order_relation = StaffPreorder::where('preorder_id', $preorder_id)->firstOrFail();
+
+        return $staff_order_relation->staff_id;
     }
 }

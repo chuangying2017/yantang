@@ -12,7 +12,7 @@ class WalletRecordTransformer extends TransformerAbstract
         $data = [
             'id' => $walletRecord->id,
             'user_id' => $walletRecord->user_id,
-            'amount' => $walletRecord->amount,
+            'amount' => display_price($walletRecord->amount),
             'income' => $walletRecord->income,
             'resource_type' => $walletRecord->resource_type,
             'resource_id' => $walletRecord->resource_id,

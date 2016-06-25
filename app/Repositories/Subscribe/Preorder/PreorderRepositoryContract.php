@@ -24,4 +24,6 @@ interface PreorderRepositoryContract
 
     public function searchInfo($per_page, $order_no, $begin_time, $end_time, $phone, $status);
 
+    public function getOrderStaffId($preorder_id);
+
 }

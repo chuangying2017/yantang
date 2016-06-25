@@ -15,5 +15,7 @@ interface StaffWeeklyRepositoryContract
 
     public function byStaffId($staff_id, $week_of_year, $column);
 
-    public function getOneDayDelivery($week_of_year, $week_name);
+    public function getOneDayDelivery($week_of_year, $week_name, $tomorrow_column);
+
+    public function getUserOneDayDelivery($preorder_id, $week_of_year, $week_name);
 }

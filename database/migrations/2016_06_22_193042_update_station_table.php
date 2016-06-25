@@ -13,7 +13,7 @@ class UpdateStationTable extends Migration
     public function up()
     {
         Schema::table('station', function (Blueprint $table) {
-            $table->integer('district_id')->nullable()->after('name');
+            $table->integer('user_id')->nullable()->change();
         });
     }
 
@@ -25,7 +25,7 @@ class UpdateStationTable extends Migration
     public function down()
     {
         Schema::table('station', function (Blueprint $table) {
-            $table->dropColumn('district_id');
+            $table->dropColumn('user_id');
         });
     }
 }
