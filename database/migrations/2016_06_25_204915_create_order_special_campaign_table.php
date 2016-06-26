@@ -16,6 +16,7 @@ class CreateOrderSpecialCampaignTable extends Migration {
             $table->integer('order_id')->primary()->index();
             $table->string('campaign_name');
             $table->string('campaign_id');
+            $table->string('campaign_cover_image');
             $table->timestamps();
         });
     }

@@ -28,7 +28,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, Or
 
     public function getOrderTicketsOfUser($user_id, $status = OrderProtocol::ORDER_TICKET_STATUS_OF_OK, $per_page = OrderTicketProtocol::TICKET_PER_PAGE)
     {
-        $query = OrderTicket::where('user_id', $user_id);
+        $query = OrderTicket::query()->with('campaign')->where('user_id', $user_id);
 
         if ($status) {
             $query = $query->where('status', $status);
@@ -46,13 +46,13 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, Or
         if ($ticket_no instanceof OrderTicket) {
             $ticket = $ticket_no;
         } else if (NoGenerator::isOrderTicketNo($ticket_no)) {
-            $ticket = OrderTicket::where('ticket_no', $ticket_no)->firstOrFail();
+            $ticket = OrderTicket::query()->where('ticket_no', $ticket_no)->firstOrFail();
         } else {
-            $ticket = OrderTicket::findOrFail($ticket_no);
+            $ticket = OrderTicket::query()->findOrFail($ticket_no);
         }
 
         if ($with_detail) {
-            $ticket->load(['skus', 'exchange']);
+            $ticket->load(['skus', 'exchange', 'campaign']);
         }
 
 
@@ -81,7 +81,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, Or
 
     public function getOrderTicketsOfStore($store_id, $start_at = null, $end_at = null, $per_page = OrderTicketProtocol::TICKET_PER_PAGE)
     {
-        $query = OrderTicket::where('store_id', $store_id);
+        $query = OrderTicket::query()->with('campaign')->where('store_id', $store_id);
         if (!is_null($start_at)) {
             $query = $query->where('exchange_at', '>=', $start_at);
         }

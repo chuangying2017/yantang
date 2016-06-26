@@ -10,7 +10,7 @@ class OrderTicketTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'exchange', 'order'];
+    protected $availableIncludes = ['skus', 'exchange', 'order', 'campaign'];
 
     public function transform(OrderTicket $ticket)
     {
@@ -42,6 +42,11 @@ class OrderTicketTransformer extends TransformerAbstract {
     public function includeExchange(OrderTicket $ticket)
     {
         return $this->item($ticket->exchange, new StoreTransformer(), true);
+    }
+
+    public function includeCampaign(OrderTicket $ticket)
+    {
+        return $this->item($ticket->campaign, new OrderSpecialCampaignTransformer(), true);
     }
 
     public function includeOrder(OrderTicket $ticket)

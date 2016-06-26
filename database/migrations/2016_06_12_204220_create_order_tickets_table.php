@@ -16,7 +16,6 @@ class CreateOrderTicketsTable extends Migration {
             $table->increments('id');
             $table->integer('order_id')->index();
             $table->integer('user_id')->index();
-            $table->integer('campaign_id')->index();
             $table->integer('store_id')->default(0)->index();
             $table->string('ticket_no', 45)->index();
             $table->string('status', 45)->index();

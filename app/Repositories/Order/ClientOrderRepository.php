@@ -241,7 +241,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
             return $order;
         }
         return $order->special()->create(
-            array_only($special_campaign, ['campaign_id', 'campaign_name'])
+            array_only($special_campaign, ['campaign_id', 'campaign_name', 'campaign_cover_image'])
         );
     }
 }

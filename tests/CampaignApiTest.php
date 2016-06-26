@@ -35,6 +35,8 @@ class CampaignApiTest extends TestCase {
 
         $this->seeInDatabase('promotion_skus', ['promotion_id' => $result['data']['id'], 'product_sku_id' => $sku_id]);
         $this->seeInDatabase('promotion_info', ['promotion_id' => $result['data']['id']]);
+
+
     }
 
     /** @test */

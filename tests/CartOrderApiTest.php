@@ -90,7 +90,7 @@ class CartOrderApiTest extends TestCase {
         $charge = $this->getResponseData('data');
 
         $this->json('post', 'gateway/pingxx/paid',
-            $charge,
+            ['data' => ['object' => $charge]],
             []
         );
 

@@ -11,22 +11,16 @@ class CampaignOrderTest extends TestCase {
     /** @test */
     public function it_can_create_a_campaign_order()
     {
-        $product_skus = [
-            [
-                'quantity' => 1,
-                'product_sku_id' => 1
-            ]
-        ];
-        $channel = 'wx_pub_qr';
         $user_id = 1;
 
         $this->json('post', 'campaigns/orders',
             [
                 'campaign' => 1,
+                'channel' => 'wx_pub_qr'
             ],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
-        $this->dumpResponse();
+//        $this->dumpResponse();
 
         $this->assertResponseStatus(201);
 
@@ -70,7 +64,9 @@ class CampaignOrderTest extends TestCase {
 
         $order = $this->it_can_create_a_campaign_order();
 
-        $this->json('POST', '/campaigns/orders/' . $order['order_no'] . '/checkout', [], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+        $this->json('POST', '/campaigns/orders/' . $order['order_no'] . '/checkout', ['channel' => 'wx_pub_qr'], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+
+        $this->assertResponseOk();
 
         $charge = $this->getResponseData('data');
 
@@ -78,10 +74,12 @@ class CampaignOrderTest extends TestCase {
         $pay_url = "http://sissi.pingxx.com/notify.php?ch_id=" . $charge['id'];
         $this->getUrl($pay_url);
 
-        $this->json('POST', '/campaigns/orders/' . $order['order_no'] . '/checkout', [], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+        $this->json('POST', '/campaigns/orders/' . $order['order_no'] . '/checkout', ['channel' => 'wx_pub_qr'], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
         $charge = $this->getResponseData('data');
+
+
         $this->json('post', 'gateway/pingxx/paid',
-            $charge,
+            ['data' => ['object' => $charge]],
             []
         );
 
@@ -89,6 +87,7 @@ class CampaignOrderTest extends TestCase {
 
         $this->seeInDatabase('orders', ['order_no' => $order['order_no'], 'pay_status' => \App\Services\Order\OrderProtocol::PAID_STATUS_OF_PAID, 'status' => \App\Services\Order\OrderProtocol::STATUS_OF_SHIPPED]);
         $this->seeInDatabase('order_tickets', ['order_id' => $order['id'], 'status' => 'ok']);
+        $this->seeInDatabase('order_special_campaign', ['order_id' => $order['id']]);
 
         return $order;
     }

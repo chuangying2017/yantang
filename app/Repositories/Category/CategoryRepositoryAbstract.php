@@ -13,10 +13,10 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
         $this->init();
     }
 
-    public function create($name, $desc, $cover_image, $index, $pid = null)
+    public function create($name, $desc, $cover_image, $priority, $pid = null)
     {
         $model = $this->getModel();
-        $cat = $model::create(compact('name', 'desc', 'cover_image', 'index', 'pid'));
+        $cat = $model::create(compact('name', 'desc', 'cover_image', 'priority', 'pid'));
 
         if ($pid) {
             $this->makeChild($this->get($pid), $cat);
@@ -25,10 +25,10 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
         return $cat;
     }
 
-    public function update($cat_id, $name, $desc, $cover_image, $index, $pid = null)
+    public function update($cat_id, $name, $desc, $cover_image, $priority, $pid = null)
     {
         $cat = $this->get($cat_id);
-        $cat->fill(compact('name', 'desc', 'cover_image', 'index', 'pid'))->save();
+        $cat->fill(compact('name', 'desc', 'cover_image', 'priority', 'pid'))->save();
 
         if ($pid) {
             $this->makeChild($this->get($pid), $cat);
@@ -46,7 +46,7 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
     public function getAll()
     {
         $model = $this->getModel();
-        return $model::orderBy('index', 'asc')->get();
+        return $model::orderBy('priority', 'asc')->get();
     }
 
     public function get($cat_id)
