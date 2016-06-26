@@ -6,7 +6,9 @@ interface PreorderAssignRepositoryContract {
 
     public function createAssign($order_id, $station_id);
 
-    public function updateAssignStatus($order_id);
+    public function updateAssignAsConfirm($order_id);
+
+    public function updateAssignAsReject($order_id, $memo = null);
 
     public function updateAssignStation($order_id, $station_id);
 

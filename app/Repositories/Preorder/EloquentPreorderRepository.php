@@ -4,11 +4,11 @@ use App\Models\Subscribe\Preorder;
 use App\Repositories\NoGenerator;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\Product\PreorderSkusRepositoryContract;
-use App\Repositories\Station\StationProtocol;
+use App\Repositories\Station\StationPreorderRepositoryContract;
 use Carbon\Carbon;
 use App\Services\Subscribe\PreorderProtocol;
 
-class EloquentPreorderRepository implements PreorderRepositoryContract {
+class EloquentPreorderRepository implements PreorderRepositoryContract, StationPreorderRepositoryContract {
 
     public function createPreorder($data)
     {
@@ -34,32 +34,46 @@ class EloquentPreorderRepository implements PreorderRepositoryContract {
         return app()->make(PreorderSkusRepositoryContract::class)->createPreorderProducts($order['id'], $product_skus);
     }
 
-
-    public function updatePreorder($preorder_id, $start_time = null, $end_time = null, $product_skus = null)
+    public function updatePreorder($preorder_id, $start_time = null, $end_time = null, $product_skus = null, $station_id = null)
     {
         $order = $this->get($preorder_id);
+
+        
+
     }
 
     public function getPaginatedByUser($user_id, $status)
     {
-        // TODO: Implement getPaginatedByUser() method.
+        return $this->queryOrders(['user_id' => $user_id], $status);
     }
 
-    public function getPaginatedByStation($station_id, $status, $per_page = StationProtocol::STATION_PER_PAGE)
-    {
-        // TODO: Implement getPaginatedByStation() method.
-    }
-
-    public function getPaginatedByStaff($staff_id, $status, $per_page = StationProtocol::STATION_PER_PAGE)
-    {
-
-    }
-
-    protected function queryOrders($owner, $status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc')
+    protected function queryOrders($owner, $status = null, $charge_status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc')
     {
         $query = Preorder::query()->where($owner);
 
+        if (!is_null($status)) {
+            $query->where('status', $status);
+        }
 
+        if (!is_null($charge_status)) {
+            $query->where('charge_status', $charge_status);
+        }
+
+        if (!is_null($start_time)) {
+            $query->where('end_time', '>=', $start_time);
+        }
+
+        if (!is_null($end_time)) {
+            $query->where('start_time', '<=', $end_time);
+        }
+
+        $query->orderBy($orderBy, $sort);
+
+        if (!is_null($per_page)) {
+            return $query->paginate($per_page);
+        }
+
+        return $query->get();
     }
 
     public function get($preorder_id, $with_detail = false)
@@ -82,5 +96,61 @@ class EloquentPreorderRepository implements PreorderRepositoryContract {
     public function deletePreorder($preorder_id)
     {
         return Preorder::destroy($preorder_id);
+    }
+
+    public function getPreordersOfStation($station_id, $staff_id = null, $status = null, $charge_status = null, $start_time = null, $end_time = null, $order_by = 'created_at', $sort = 'desc', $per_page = PreorderProtocol::PREORDER_PER_PAGE)
+    {
+        $owner = is_null($staff_id) ? compact('station_id') : compact('station_id', 'staff_id');
+        return $this->queryOrders($owner, $status, $charge_status, $start_time, $end_time, $per_page, $order_by, $sort);
+    }
+
+    public function getTodayPreordersOfStation($station_id, $staff_id = null, $daytime = null, $per_page = null)
+    {
+        $orders = $this->getPreordersOfStation($station_id, $staff_id, PreorderProtocol::ORDER_STATUS_OF_PENDING, PreorderProtocol::CHARGE_STATUS_OF_OK, Carbon::today(), Carbon::today(), 'priority', 'asc', $per_page);
+
+        $orders->load(['skus' => function ($query) use ($daytime) {
+            if ($daytime) {
+                $query->where('weekday', Carbon::today()->dayOfWeek)->where('daytime', $daytime);
+            }
+            $query->where('weekday', Carbon::today()->dayOfWeek);
+        }]);
+
+        return $orders;
+    }
+
+    public function updatePreorderPriority($staff_id, $preorder_priority)
+    {
+        // TODO: Implement updatePreorderPriority() method.
+    }
+
+
+    public function updatePreorderChargeStatus($order_id, $charge_status)
+    {
+        $order = $this->get($order_id);
+        $order->charge_status = $charge_status;
+        $order->save();
+        return $order;
+    }
+
+    public function updatePreorderStatus($order_id, $status)
+    {
+        $order = $this->get($order_id);
+        $order->status = $status;
+        $order->save();
+        return $order;
+    }
+
+    public function updatePreorderAssign($order_id, $station_id = null, $staff_id = null)
+    {
+        $order = $this->get($order_id);
+        if (!is_null($station_id)) {
+            $order->station_id = $station_id;
+            $order->status = PreorderProtocol::ORDER_STATUS_OF_READY;
+        }
+        if (!is_null($staff_id)) {
+            $order->staff_id = $staff_id;
+        }
+        $order->save();
+        return $order;
     }
 }

@@ -4,14 +4,10 @@ use App\Services\Subscribe\PreorderProtocol;
 
 interface StationPreorderRepositoryContract {
 
-    public function getAllPaginatedByStation($station_id, $per_page = PreorderProtocol::PREORDER_PER_PAGE);
+    public function getPreordersOfStation($station_id, $staff_id = null, $status = null, $charge_status = null, $start_time = null, $end_time = null, $order_by = 'created_at', $sort = 'desc', $per_page = PreorderProtocol::PREORDER_PER_PAGE);
 
-    public function getAllNotDisposeByStation($station_id, $status = null);
+    public function getTodayPreordersOfStation($station_id, $staff_id = null, $daytime = null, $per_page = null);
 
-    public function getAllPendingPaginatedByStation($station_id, $per_page = PreorderProtocol::PREORDER_PER_PAGE);
-
-    public function getAllDonePaginatedByStation($station_id, $per_page = PreorderProtocol::PREORDER_PER_PAGE);
-
-    public function getAllFeaturePaginatedByStation($station_id, $per_page = PreorderProtocol::PREORDER_PER_PAGE);
-
+    public function updatePreorderPriority($staff_id, $preorder_priority);
+    
 }

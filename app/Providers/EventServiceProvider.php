@@ -87,6 +87,37 @@ class EventServiceProvider extends ServiceProvider {
 
         ],
 
+        /**
+         * 订奶订单
+         */
+
+        'App\Events\Preorder\ChargeBillingIsPaid' => [
+            'App\Listeners\Preorder\SetPreorderAsCharged',
+        ],
+
+        'App\Events\Preorder\PaidPreorderBillingFail' => [
+            'App\Listeners\Preorder\SetPreorderAsOut',
+        ],
+
+        /**
+         * 订奶订单分配
+         */
+        'App\Events\Preorder\AssignIsCreate' => [
+
+        ],
+
+        'App\Events\Preorder\AssignIsConfirm' => [
+            'App\Listeners\Preorder\SetPreorderAsPending'
+        ],
+
+        'App\Events\Preorder\StaffAssignIsCreate' => [
+            'App\Listeners\Preorder\IncreaseStaffWeeklySkus'
+        ],
+
+        'App\Events\Preorder\AssignIsReject' => [
+
+        ],
+
 
 //        'App\Services\Orders\Event\OrderRequest' => [
 //

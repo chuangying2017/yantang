@@ -2,7 +2,7 @@
 namespace App\Api\V1\Controllers\Subscribe;
 
 use App\Api\V1\Transformers\Subscribe\ProductSkuTransformer;
-use App\Repositories\Product\ProductSubscribeRepositoryContract;
+use App\Repositories\Product\Sku\SubscribeSkuRepositoryContract;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -10,17 +10,17 @@ use App\Http\Controllers\Controller;
 class ProductController extends Controller {
 
     /**
-     * @var ProductSubscribeRepositoryContract
+     * @var SubscribeSkuRepositoryContract
      */
-    private $productSubscribeRepositoryContract;
+    private $skuRepo;
 
     /**
      * ProductController constructor.
-     * @param ProductSubscribeRepositoryContract $productSubscribeRepositoryContract
+     * @param SubscribeSkuRepositoryContract $productSubscribeRepositoryContract
      */
-    public function __construct(ProductSubscribeRepositoryContract $productSubscribeRepositoryContract)
+    public function __construct(SubscribeSkuRepositoryContract $skuRepo)
     {
-        $this->productSubscribeRepositoryContract = $productSubscribeRepositoryContract;
+        $this->skuRepo = $skuRepo;
     }
 
     /**
@@ -30,7 +30,7 @@ class ProductController extends Controller {
      */
     public function index()
     {
-        $product_skus = $this->productSubscribeRepositoryContract->getAllSubscribedProducts();
+        $product_skus = $this->skuRepo->getAllSubscribedProductSkus();
 
         return $this->response->collection($product_skus, new ProductSkuTransformer());
     }

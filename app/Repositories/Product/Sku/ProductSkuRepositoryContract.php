@@ -1,6 +1,6 @@
 <?php namespace App\Repositories\Product\Sku;
 
-interface ProductSkuRepositoryContract {
+interface ProductSkuRepositoryContract{
 
     public function createSku($sku_data, $product_id);
 

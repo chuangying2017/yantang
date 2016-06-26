@@ -2,9 +2,11 @@
 
 use App\Models\Product\Product;
 use App\Models\Product\ProductSku;
+use App\Repositories\Category\CategoryProtocol;
 use App\Repositories\Product\ProductProtocol;
+use App\Repositories\Product\Sku\SubscribeSkuRepositoryContract;
 
-class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract, ProductMixRepositoryContract {
+class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract, ProductMixRepositoryContract, SubscribeSkuRepositoryContract {
 
     public function createSku($sku_data, $product_id)
     {
@@ -191,4 +193,11 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
             $sku->mix()->sync($mix_sku_data);
         }
     }
+
+    public function getAllSubscribedProductSkus()
+    {
+        $subscribe_product_ids = \DB::table('product_category')->where('cat_id', CategoryProtocol::ID_OF_SUBSCRIBE_GROUP)->pluck('product_id');
+        return ProductSku::query()->whereIn('product_id', $subscribe_product_ids)->get();
+    }
+
 }

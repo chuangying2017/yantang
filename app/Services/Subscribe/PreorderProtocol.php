@@ -7,10 +7,11 @@ class PreorderProtocol
     const PREORDER_PER_PAGE = 20;
 
     //status对应的值
+    const ORDER_STATUS_OF_ASSIGNING = 'assigning';
     const ORDER_STATUS_OF_PENDING = 'pending';
     const ORDER_STATUS_OF_DONE = 'done';
     const ORDER_STATUS_OF_READY = 'ready';
-    const ORDER_STATUS_OF_FEATURE = 'feature';
+    const ORDER_STATUS_OF_FUTURE = 'future';
 
     //charge_status 对应的值
     const CHARGE_STATUS_OF_NULL = 0;

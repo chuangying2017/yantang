@@ -80,17 +80,32 @@ class Access {
 
     public function storeId()
     {
-        return $this->app->make(StoreRepositoryContract::class)->getStoreIdByUser($this->id());
+        return $this->store()->id;
+    }
+
+    public function store()
+    {
+        return $this->app->make(StoreRepositoryContract::class)->getStoreByUser($this->id());
+    }
+
+    public function staff()
+    {
+        return $this->app->make(StaffRepositoryContract::class)->getStaffByUser($this->id());
     }
 
     public function staffId()
     {
-        return $this->app->make(StaffRepositoryContract::class)->getStaffIdByUser($this->id());
+        return $this->staff()->id;
+    }
+
+    public function station()
+    {
+        return $this->app->make(StationRepositoryContract::class)->getStationByUser($this->id());
     }
 
     public function stationId()
     {
-        return $this->app->make(StationRepositoryContract::class)->getStationIdByUser($this->id());
+        return $this->station()->id;
     }
 
     public function getProviderId($provider = 'weixin')
