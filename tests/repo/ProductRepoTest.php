@@ -18,7 +18,7 @@ class ProductRepoTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_store_and_update_product()
+    public function it_can_store_a_mix_product()
     {
         $product_data = $this->getCreateInput();
 
@@ -27,6 +27,26 @@ class ProductRepoTest extends TestCase {
         $product = $productRepo->createProduct($product_data);
 
         $this->seeInDatabase('product_skus', ['product_id' => $product['id'], 'type' => \App\Repositories\Product\ProductProtocol::TYPE_OF_MIX]);
+
+
+//        $this->assertInstanceOf(\App\Models\Product\Product::class, $product);
+//
+//        $productRepo->updateProduct($product['id'], $this->getUpdateInput());
+//
+//        $this->assertInstanceOf(\App\Models\Product\Product::class, $product);
+
+    }
+
+    /** @test */
+    public function it_can_store_a_mall_product()
+    {
+        $product_data = $this->getMallProduct();
+
+        $productRepo = $this->getRepo();
+
+        $product = $productRepo->createProduct($product_data);
+
+        $this->seeInDatabase('product_skus', ['product_id' => $product['id'], 'type' => \App\Repositories\Product\ProductProtocol::TYPE_OF_ENTITY]);
 
 
 //        $this->assertInstanceOf(\App\Models\Product\Product::class, $product);
@@ -55,7 +75,7 @@ class ProductRepoTest extends TestCase {
     public function it_return_a_product()
     {
         $productRepo = $this->getRepo();
-        $productRepo->getProduct(10);
+//        $productRepo->getProduct(10);
     }
 
     /** @test */
@@ -147,6 +167,54 @@ class ProductRepoTest extends TestCase {
 //                    ]
 //                ]
 //            ]
+        ];
+    }
+
+
+
+    private function getMallProduct()
+    {
+        return [
+            "cat_id" => 1,
+            "merchant_id" => 1,
+            "title" => "燕塘 原味酸奶饮品 300ml/盒 ",
+            "sub_title" => "",
+            "digest" => "简介",
+            "cover_image" => "http://7xp47i.com1.z0.glb.clouddn.com/pd-info-1.jpg",
+            "brand_id" => 7,
+            "detail" => '<p><img src="http://7xp47i.com1.z0.glb.clouddn.com/pd-info-1.jpg"></img></p>',
+            "type" => "entity",
+            "image_ids" => [
+                1,
+                2,
+                3
+            ],
+            "group_ids" => [
+
+            ],
+            "with_invoice" => 0,
+            "with_care" => 0,
+            "tags" => "酸奶，原味，200ml，盒装",
+            "open_time" => "2016-05-01",
+            "end_time" => "2016-06-01",
+            "skus" => [
+                [
+                    "name" => "燕塘 原味酸奶饮品 200ml/盒",
+                    "cover_image" => "http://7xp47i.com1.z0.glb.clouddn.com/pd-info-1.jpg",
+                    "display_price" => 500,
+                    "price" => 400,
+                    "express_fee" => 0,
+                    "bar_code" => "3213923298",
+                    "stock" => 10,
+                    "income_price" => 350,
+                    "settle_price" => 380,
+                    "attr_value_ids" => [
+
+                    ],
+                    "mix_skus" => [
+                    ]
+                ]
+            ]
         ];
     }
 

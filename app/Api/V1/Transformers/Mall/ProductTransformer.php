@@ -33,7 +33,7 @@ class ProductTransformer extends TransformerAbstract {
 
     public function includeSkus(Product $product)
     {
-        return $this->collection($product->skus, new ProductSkuTransformer(), true);
+        return $this->item($product->skus->first(), new ProductSkuTransformer(), true);
     }
 
 }
