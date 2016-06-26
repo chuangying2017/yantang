@@ -4,11 +4,11 @@ use App\Models\Pay\PingxxPayment;
 use App\Repositories\Pay\ChargeRepositoryContract;
 use App\Repositories\Pay\PaymentRepositoryContract;
 use App\Services\Pay\Pingxx\PingxxProtocol;
+use Carbon\Carbon;
 use Pingpp\Charge;
 use Pingpp\Pingpp;
 
-class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentRepositoryContract
-{
+class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentRepositoryContract {
 
     public function __construct()
     {
@@ -32,7 +32,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
             "app" => ["id" => config('services.pingxx.app_id')],
             "subject" => config('app.name') . '订单',
             "body" => $payment_no,
-            "extra" => self::getExtraData($channel),
+            "extra" => self::getExtraData($channel, $payment_no),
         ]);
     }
 
@@ -145,8 +145,14 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
     public function setPaymentAsPaid($payment_no, $transaction_no)
     {
         $payment = $this->getPayment($payment_no);
+
+        if ($payment->paid) {
+            return $payment;
+        }
+
         $payment->transaction_no = $transaction_no;
-        $payment->paid = true;
+        $payment->paid = 1;
+        $payment->pay_at = Carbon::now();
         $payment->save();
         return $payment;
     }
@@ -184,21 +190,19 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
             ->first();
     }
 
-    public function chargeIsPaid($charge_id)
-    {
-        $charge = $this->getCharge($charge_id);
-
-        if (config('services.pingxx.live')) {
-            return $charge->paid && $charge->livemode;
-        }
-
-        return $charge->paid;
-    }
 
     public function getChargeTransaction($charge_id)
     {
         $charge = $this->getCharge($charge_id);
 
         return $charge->transaction_no;
+    }
+
+
+    public function getChargePayment($charge_id)
+    {
+        $charge = $this->getCharge($charge_id);
+
+        return $charge->order_no;
     }
 }

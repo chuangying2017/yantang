@@ -1,6 +1,7 @@
 <?php namespace App\Http\Requests\Backend\Access\User;
 
 use App\Http\Requests\Request;
+use App\Repositories\Backend\AccessProtocol;
 
 /**
  * Class DeleteUserRequest
@@ -15,7 +16,7 @@ class DeleteUserRequest extends Request {
      */
     public function authorize()
     {
-        return access()->can('delete-users');
+        return access()->hasRole(AccessProtocol::ROLE_OF_SUPERVISOR);
     }
 
     /**

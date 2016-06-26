@@ -88,7 +88,7 @@ class EloquentRoleRepository implements RoleRepositoryContract {
 				$role->attachPermissions($permissions);
 			}
 
-			return true;
+			return $role;
 		}
 
 		throw new GeneralException("There was a problem creating this role. Please try again.");
@@ -142,7 +142,7 @@ class EloquentRoleRepository implements RoleRepositoryContract {
 				$role->attachPermissions($permissions);
 			}
 
-			return true;
+			return $role;
 		}
 
 		throw new GeneralException('There was a problem updating this role. Please try again.');

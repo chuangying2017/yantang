@@ -8,8 +8,10 @@ class EloquentClientRepository implements ClientRepositoryContract {
 
     public function createClient($user_id, $extra_data)
     {
-        return Client::updateOrCreate(
-            ['user_id' => $user_id],
+        return Client::query()->updateOrCreate(
+            [
+                'user_id' => $user_id
+            ],
             [
                 'user_id' => $user_id,
                 'nickname' => array_get($extra_data, 'nickname', Str::random(8)),
@@ -20,8 +22,10 @@ class EloquentClientRepository implements ClientRepositoryContract {
 
     public function updateClient($user_id, $client_data)
     {
-        return Client::updateOrCreate(
-            ['user_id' => $user_id],
+        return Client::query()->updateOrCreate(
+            [
+                'user_id' => $user_id
+            ],
             [
                 'user_id' => $user_id,
                 'nickname' => array_get($client_data, 'nickname', Str::random(8)),

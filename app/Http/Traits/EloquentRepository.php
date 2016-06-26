@@ -63,7 +63,8 @@ trait EloquentRepository
 
     public function destroy($id)
     {
-        $station = Station::findOrFail($id);
-        $station->delete();
+        $query = app($this->moder());
+        $query = $query->findOrFail($id);
+        $query->delete();
     }
 }

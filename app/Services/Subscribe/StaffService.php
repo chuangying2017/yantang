@@ -74,9 +74,11 @@ class StaffService
         $dt = Carbon::parse(Carbon::now());
         $week_of_year = $dt->weekOfYear;
         $day_of_week = $dt->dayOfWeek;
-        $preorder = $this->preorderRepo->byId($preorder_id, ['staffPreorder.staff']);
+        $preorder = $this->preorderRepo->byId($preorder_id);
         if ($is_delete) {
-            return $this->staffWeeklyRepo->pause($week_of_year, $preorder_id, $preorder->staffPreorder->staff->id, $day_of_week);
+            $staff_id = $this->preorderRepo->getOrderStaffId($preorder_id);
+            $this->staffWeeklyRepo->pause($week_of_year, $preorder_id, $staff_id, $day_of_week);
+            return 1;
         }
         $week_array = PreorderProtocol::weekPauseName($day_of_week);
         $preorder->load('product', 'product.sku', 'station');
@@ -85,20 +87,20 @@ class StaffService
         foreach ($preorder->product as $product) {
             if (array_key_exists($product->weekday, $week_array)) {
                 $update_week_array[] = $week_array[$product->weekday];
-                $data[$week_array[$product->weekday]] = json_encode([
+                $data[$week_array[$product->weekday]] = [
                     'daytime' => $product->daytime,
                     'station' => $preorder->station->name,
                     'phone' => $preorder->phone,
                     'address' => $preorder->address,
                     'staff' => $preorder->staffPreorder->staff->name,
                     'sku' => $product->sku,
-                ]);
+                ];
             }
         }
         //其余的置空
         $other_weekday = array_diff($week_array, $update_week_array);
         foreach ($other_weekday as $value) {
-            $data[$value] = json_encode([]);
+            $data[$value] = null;
         }
         return $this->staffWeeklyRepo->updateByOther($week_of_year, $preorder_id, $preorder->staffPreorder->staff->id, $data);
     }

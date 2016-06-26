@@ -3,7 +3,10 @@
 
 use App\Services\Order\OrderProtocol;
 
-class MallClientOrderRepository extends ClientOrderRepositoryAbstract {
+class MallClientOrderRepository extends ClientOrderRepository {
+
+    protected $detail_relations = ['skus', 'address', 'billings', 'deliver', 'memo'];
+    protected $lists_relations = ['skus'];
 
     protected function setOrderType()
     {

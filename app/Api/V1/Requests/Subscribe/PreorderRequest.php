@@ -33,11 +33,8 @@ class PreorderRequest extends Request
             ];
         }
         return [
-            'name' => 'required',
             'phone' => 'required',
             'address' => 'required',
-            'area' => 'required',
-            'station_id' => 'required',
         ];
     }
 }

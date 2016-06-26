@@ -14,7 +14,6 @@ class CreateOrderDeliverTable extends Migration {
     {
         Schema::create('order_deliver', function (Blueprint $table) {
             $table->integer('order_id')->unsigned()->primary();
-            $table->foreign('order_id')->references('id')->on('orders');
             $table->string('company_id', 45);
             $table->string('company_name');
             $table->string('post_no');
@@ -31,9 +30,6 @@ class CreateOrderDeliverTable extends Migration {
      */
     public function down()
     {
-        Schema::table('order_deliver', function (Blueprint $table) {
-            $table->dropForeign('order_deliver_order_id_foreign');
-        });
         Schema::drop('order_deliver');
     }
 }

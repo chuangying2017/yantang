@@ -2,12 +2,12 @@
 
 namespace App\Api\V1\Controllers\Admin\Campaign;
 
+use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Campaign\StoreTransformer;
 use App\Repositories\Store\StoreRepositoryContract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class StoreController extends Controller {
 
@@ -47,8 +47,9 @@ class StoreController extends Controller {
     public function store(Request $request)
     {
         $store = $this->storeRepo->createStore($request->all());
+        $store['bind_token'] = generate_bind_token($store['id']);
 
-        return $this->response->created()->setContent(['data' => $store->toArray()]);
+        return $this->response->item($store, new StoreTransformer())->setStatusCode(201);
     }
 
     /**

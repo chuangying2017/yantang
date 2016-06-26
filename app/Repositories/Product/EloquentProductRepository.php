@@ -16,6 +16,7 @@ use App\Repositories\Product\Editor\SetPrice;
 use App\Repositories\Product\Editor\UpdateInfo;
 use App\Repositories\Product\Editor\UpdateMeta;
 use App\Repositories\Product\Editor\UpdateProductSku;
+use App\Repositories\Product\Sku\ProductMixRepositoryContract;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 use App\Repositories\Search\Item\ProductSearchRepository;
 use Carbon\Carbon;
@@ -124,9 +125,9 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
 
     public function getProduct($product_id, $with_detail = true)
     {
-        $product = Product::find($product_id);
+        $product = Product::findOrFail($product_id);
         if ($with_detail) {
-            $product = $product->load('skus', 'cats', 'brand', 'meta', 'info');
+            $product = $product->load('skus', 'cats', 'brand', 'groups', 'meta', 'info');
         }
         return $product;
     }
@@ -142,7 +143,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
         return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat), null, $per_page);
     }
 
-    protected function queryProducts($order_by = 'created_at', $sort = 'desc', $status = null, $brand = null, $cats = null, $type = null, $per_page = null, $with_time = true)
+    protected function queryProducts($order_by = 'created_at', $sort = 'desc', $status = null, $brand = null, $cats = null, $type = null, $per_page = null, $with_time = false)
     {
         $query = Product::query();
 
@@ -159,10 +160,11 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
         }
 
         if ($cats) {
-            $query = $query->whereHas('cats', function ($query) use ($cats) {
-                $query->whereIn('cat_id', to_array($cats));
+            $query = $query->join('product_category', function ($join) use ($cats) {
+                $join->whereIn('cat_id', to_array($cats));
             });
         }
+
 
         if ($type) {
             $query = $query->where('type', $type);
@@ -172,7 +174,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
             $query = $query->where('status', $status);
         }
 
-        $query = $query->orderBy($order_by, $sort);
+        $query = $query->orderBy('priority', 'desc')->orderBy($order_by, $sort);
 
         if ($per_page) {
             return $query->paginate($per_page);
@@ -203,6 +205,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
     {
         $products = $this->queryProducts('created_at', 'asc', $status, null, CategoryProtocol::ID_OF_SUBSCRIBE_GROUP, null, null, $with_time);
         $products->load('skus');
+
         if ($expend) {
             $skus = null;
             foreach ($products as $product) {
@@ -212,7 +215,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
                     $skus->merge($product->skus);
                 }
             }
-            return $skus;
+            return $skus ? $skus : new Collection();
         }
 
         return $products;
@@ -242,4 +245,6 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
     {
         return Product::where('brand_id', $brand_id)->pluck('id');
     }
+
+
 }

@@ -48,7 +48,8 @@ class EloquentCartRepository implements CartRepositoryContract {
         } else {
             $cart = new Cart([
                 'product_sku_id' => $product_sku_id,
-                'quantity' => $quantity
+                'quantity' => $quantity,
+                'user_id' => access()->id()
             ]);
         }
 

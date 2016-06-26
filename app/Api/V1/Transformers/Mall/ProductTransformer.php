@@ -8,11 +8,13 @@ class ProductTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus'];
+    protected $availableIncludes = ['skus', 'brand', 'info'];
 
     public function transform(Product $product)
     {
-        return [
+        $this->setInclude($product);
+
+        $data = [
             'id' => $product['id'],
             'brand' => ['id' => $product['brand_id']],
             'product_no' => $product['product_no'],
@@ -25,12 +27,37 @@ class ProductTransformer extends TransformerAbstract {
             'type' => $product['type'],
             'open_time' => $product['open_time'],
             'end_time' => $product['end_time'],
+            'priority' => $product['priority']
         ];
+
+        if ($product->relationLoaded('meta')) {
+            $meta = $product['meta'];
+            $data['favs'] = $meta['favs'];
+            $data['sales'] = $meta['sales'];
+            $data['stock'] = $meta['stock'];
+        }
+
+        return $data;
     }
 
     public function includeSkus(Product $product)
     {
-        return $this->collection($product->skus, new ProductSkuTransformer(), true);
+        return $this->item($product->skus->first(), new ProductSkuTransformer(), true);
+    }
+
+    public function includeBrand(Product $product)
+    {
+        return $this->item($product->brand, new ProductSkuTransformer(), true);
+    }
+
+    public function includeInfo(Product $product)
+    {
+        return $this->item($product->info, new ProductInfoTransformer(), true);
+    }
+
+    public function includeMeta(Product $product)
+    {
+        return $this->item($product->meta, new ProductMetaTransformer(), true);
     }
 
 }

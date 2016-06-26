@@ -46,6 +46,7 @@ class OrderCheckoutService implements OrderCheckoutContract {
 
     protected function payWithPingxx($order_id, $pay_channel)
     {
+
         $billing = $this->billingRepo->getBillingOfType($order_id, OrderProtocol::BILLING_TYPE_OF_MONEY);
 
         if (!$billing) {
@@ -64,7 +65,7 @@ class OrderCheckoutService implements OrderCheckoutContract {
             return false;
         }
 
-        $billing = $this->billingRepo->getBilling($payment['payment_no']);
+        $billing = $this->billingRepo->getBilling($payment['billing_id']);
 
         if ($this->orderBillingService->setID($billing)->isPaid()) {
             return $billing;

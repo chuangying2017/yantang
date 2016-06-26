@@ -15,7 +15,6 @@ class CreateAddressesTable extends Migration {
         Schema::create('addresses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
             $table->string('name');
             $table->string('phone', 15);
             $table->string('tel', 15);
@@ -39,9 +38,6 @@ class CreateAddressesTable extends Migration {
      */
     public function down()
     {
-        Schema::table('addresses', function (Blueprint $table) {
-            $table->dropForeign('addresses_user_id_foreign');
-        });
         Schema::drop('addresses');
     }
 }

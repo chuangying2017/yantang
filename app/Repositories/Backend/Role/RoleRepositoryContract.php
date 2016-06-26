@@ -38,7 +38,7 @@ interface RoleRepositoryContract {
 	/**
 	 * @param $id
 	 * @param $input
-	 * @return mixed
+	 * @return Role
 	 */
 	public function update($id, $input);
 

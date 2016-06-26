@@ -2,7 +2,7 @@
 
 return [
 
-    'name' => '东方丽人',
+    'name' => '燕塘优鲜达',
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -170,7 +170,8 @@ return [
         App\Providers\ApiServiceProvider::class,
         App\Providers\ClientServiceProvider::class,
         App\Providers\OrderServiceProvider::class,
-
+        App\Providers\UserServiceProvider::class,
+        App\Providers\PromotionServiceProvider::class,
 
 
         App\Services\Product\Providers\ProductServiceProvider::class,
@@ -196,7 +197,9 @@ return [
         Baum\Providers\BaumServiceProvider::class,
         Toplan\PhpSms\PhpSmsServiceProvider::class,
         Toplan\Sms\SmsManagerServiceProvider::class,
-        SocialiteProviders\Manager\ServiceProvider::class,
+
+        \SocialiteProviders\Manager\ServiceProvider::class,
+
         Overtrue\LaravelWechat\ServiceProvider::class,
     ],
 

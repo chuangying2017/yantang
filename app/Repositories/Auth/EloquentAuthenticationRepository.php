@@ -141,10 +141,10 @@ class EloquentAuthenticationRepository implements AuthenticationContract {
         }
 
         if (isset($scopes)) {
-            return $this->socialite->driver($provider)->scopes($scopes)->redirect()->getTargetUrl();
+            return $this->socialite->driver($provider)->scopes($scopes)->stateless()->redirect()->getTargetUrl();
         }
 
-        return $this->socialite->driver($provider)->redirect()->getTargetUrl();
+        return $this->socialite->driver($provider)->stateless()->redirect()->getTargetUrl();
     }
 
     /**
@@ -153,7 +153,7 @@ class EloquentAuthenticationRepository implements AuthenticationContract {
      */
     public function getSocialUser($provider)
     {
-        return $this->socialite->driver($provider)->user();
+        return $this->socialite->driver($provider)->stateless()->user();
     }
 
     /**

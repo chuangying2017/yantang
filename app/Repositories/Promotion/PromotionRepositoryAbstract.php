@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Promotion;
 
+use App\Models\Promotion\PromotionDetail;
 use App\Models\Promotion\UserPromotion;
 use App\Repositories\Promotion\Rule\RuleRepositoryContract;
 use App\Services\Order\OrderProtocol;
@@ -34,7 +35,9 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     {
         $promotion = $this->fillPromotion(null, $data);
 
-        $this->syncRules($promotion, $data['rules']);
+        if (isset($data['rules'])) {
+            $this->syncRules($promotion, $data['rules']);
+        }
 
         $this->attachRelation($promotion['id'], $data);
 
@@ -47,7 +50,8 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
 
         $promotion_data = [
             'name' => array_get($data, 'name'),
-            'desc' => array_get($data, 'desc'),
+            'desc' => array_get($data, 'desc', ''),
+            'cover_image' => array_get($data, 'cover_image', ''),
             'start_time' => array_get($data, 'start_time', Carbon::now()),
             'end_time' => array_get($data, 'end_time', Carbon::today()->addYears(10)),
             'active' => array_get($data, 'active', 1),
@@ -83,7 +87,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     public function getAll($not_over_time = true)
     {
         $model = $this->getModel();
-        $query = $model::newQuery();
+        $query = $model::query();
         if ($not_over_time) {
             $query = $query->effect();
         }
@@ -93,7 +97,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     public function getAllPaginated($not_over_time = true)
     {
         $model = $this->getModel();
-        $query = $model::newQuery();
+        $query = $model::query();
         if ($not_over_time) {
             $query = $query->effect();
         }

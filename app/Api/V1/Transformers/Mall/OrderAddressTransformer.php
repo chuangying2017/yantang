@@ -1,10 +1,11 @@
 <?php namespace App\Api\V1\Transformers\Mall;
 
+use App\Models\Order\OrderAddress;
 use League\Fractal\TransformerAbstract;
 
 class OrderAddressTransformer extends TransformerAbstract {
 
-    public function transform(OrderAddressTransformer $address)
+    public function transform(OrderAddress $address)
     {
         return [
             'order' => [

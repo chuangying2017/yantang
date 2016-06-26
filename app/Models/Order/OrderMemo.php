@@ -10,4 +10,6 @@ class OrderMemo extends Model {
 
     protected $guarded = ['id'];
 
+    protected $primaryKey = 'order_id';
+
 }

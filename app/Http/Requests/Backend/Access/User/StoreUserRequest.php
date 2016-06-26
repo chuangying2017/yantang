@@ -1,6 +1,7 @@
 <?php namespace App\Http\Requests\Backend\Access\User;
 
 use App\Http\Requests\Request;
+use App\Repositories\Backend\AccessProtocol;
 
 /**
  * Class StoreUserRequest
@@ -15,7 +16,7 @@ class StoreUserRequest extends Request {
      */
     public function authorize()
     {
-        return access()->can('create-users');
+        return access()->hasRole(AccessProtocol::ROLE_OF_SUPERVISOR);
     }
 
     /**
@@ -27,7 +28,7 @@ class StoreUserRequest extends Request {
     {
         return [
             'name'					=>  'required',
-            'email'					=>	'required|email|unique:users',
+            'phone'					=>	'required|unique:users',
             'password'				=>	'required|alpha_num|min:6|confirmed',
             'password_confirmation'	=>	'required|alpha_num|min:6',
         ];

@@ -1,15 +1,18 @@
 <?php namespace App\Api\V1\Transformers\Mall;
 
+use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\Client\Cart;
 use League\Fractal\TransformerAbstract;
 
 class CartTransformer extends TransformerAbstract {
 
+    use SetInclude;
+
     protected $availableIncludes = ['sku'];
 
     public function transform(Cart $cart)
     {
-        $this->setDefaultIncludes('sku');
+        $this->setInclude($cart);
 
         return [
             'id' => $cart['id'],
@@ -20,6 +23,6 @@ class CartTransformer extends TransformerAbstract {
 
     public function includeSku(Cart $cart)
     {
-        return $this->collection($cart->sku, new ProductSkuTransformer(), true);
+        return $this->item($cart->sku, new ProductSkuTransformer(), true);
     }
 }

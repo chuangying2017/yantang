@@ -20,6 +20,10 @@ class SetAttributes extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)
     {
+        if (!isset($product_data['attr'])) {
+            $product_data['attr'] = '';
+        }
+
         $product_data['attr'] = $this->encodeAttr($product_data['attr']);
 
         foreach ($product_data['skus'] as $key => $sku) {

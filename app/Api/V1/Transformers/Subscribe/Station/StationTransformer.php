@@ -13,6 +13,8 @@ class StationTransformer extends TransformerAbstract
             'name' => $station->name,
             'desc' => $station->desc,
             'address' => $station->address,
+            'district_id' => $station->district_id,
+            'user_id' => $station->user_id,
             'tel' => $station->tel,
             'phone' => $station->phone,
             'director' => $station->director,
@@ -21,10 +23,10 @@ class StationTransformer extends TransformerAbstract
             'latitude' => display_coordinate($station->latitude),
             'status' => $station->status,
         ];
+        if (!empty($station->district)) {
+            $data['district_name'] = $station->district->name;
+        };
 
-        if (isset($station->show_bind_url) && $station->show_bind_url) {
-            $data['mete']['bind_url'] = url('bind_station', ['station_id' => $station->id]);
-        }
         return $data;
     }
 

@@ -18,6 +18,12 @@ interface StoreRepositoryContract {
 
     public function getStore($store_id, $with_user = true);
 
+    public function getBindToken($store_id);
+
+    public function getStoreByUser($user_id);
+
+    public function getStoreIdByUser($user_id);
+
     public function getAll();
 
     public function getAllActive();

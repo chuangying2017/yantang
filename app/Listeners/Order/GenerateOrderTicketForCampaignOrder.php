@@ -34,7 +34,6 @@ class GenerateOrderTicketForCampaignOrder {
     public function handle(OrderIsPaid $event)
     {
         $order = $event->order;
-
         if ($order['order_type'] == OrderProtocol::ORDER_TYPE_OF_CAMPAIGN) {
             $this->orderTicketManage->createTicket($order);
         }

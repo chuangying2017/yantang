@@ -6,6 +6,7 @@ use App\Models\Order\OrderAddress;
 use App\Models\Order\OrderDeliver;
 use App\Models\Order\OrderMemo;
 use App\Models\Order\OrderSku;
+use App\Models\Order\SpecialCampaign;
 
 trait OrderRelation {
 
@@ -38,6 +39,12 @@ trait OrderRelation {
     {
         return $this->hasOne(OrderDeliver::class, 'order_id', 'id');
     }
+
+    public function special()
+    {
+        return $this->hasOne(SpecialCampaign::class, 'order_id', 'id');
+    }
+
 
 
 

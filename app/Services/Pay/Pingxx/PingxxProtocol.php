@@ -102,7 +102,7 @@ class PingxxProtocol {
     }
 
 
-    public static function agent($agent, $channel = null)
+    public static function agent($agent = self::AGENT_OF_MOBILE, $channel = null)
     {
         switch ($agent) {
             case self::AGENT_OF_PC:

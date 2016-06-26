@@ -29,7 +29,6 @@ class GetSkuInfo extends GenerateHandlerAbstract {
     {
         $request_sku_info = array_pluck($temp_order->getSkus(), 'quantity', 'product_sku_id');
         $skus = $this->skuRepo->getSkus(array_keys($request_sku_info));
-
         $stock_ok = true;
         foreach ($skus as $key => $sku) {
             $skus[$key]['quantity'] = $request_sku_info[$sku['id']];

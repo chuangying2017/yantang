@@ -1,8 +1,10 @@
 <?php namespace App\Repositories\Product\Sku;
 
+use App\Models\Product\Product;
 use App\Models\Product\ProductSku;
+use App\Repositories\Product\ProductProtocol;
 
-class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract {
+class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract, ProductMixRepositoryContract {
 
     public function createSku($sku_data, $product_id)
     {
@@ -39,11 +41,17 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
                 'bar_code' => $sku_data['bar_code'],
                 'stock' => $sku_data['stock'],
                 'attr' => array_get($sku_data, 'attr', ''),
+                'type' => array_get($sku_data, 'type', ProductProtocol::TYPE_OF_ENTITY),
             ]);
+
+        if ($this->isMixProductSku($sku_data)) {
+            $sku->type = ProductProtocol::TYPE_OF_MIX;
+        }
+
         $sku->save();
 
-        if (count(array_get($sku_data, 'sku_ids', [])) > 0) {
-            $sku->mix()->sync($sku_data['sku_ids']);
+        if ($this->isMixProductSku($sku_data)) {
+            $this->attachMixSku($sku_data, $sku);
         }
 
         if (count(array_get($sku_data, 'attr_value_ids', [])) > 0) {
@@ -51,7 +59,6 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
         }
 
         return $sku;
-
     }
 
     public function deleteSku($product_sku_id)
@@ -106,7 +113,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
 
     public function getSkus($sku_ids)
     {
-        return ProductSku::find($sku_ids);
+        return ProductSku::findOrFail($sku_ids);
     }
 
     public function increaseStock($product_sku_id, $quantity = 1)
@@ -140,5 +147,48 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
     public function enoughStock($product_sku_id, $quantity)
     {
         return $this->getStock($product_sku_id) > $quantity;
+    }
+
+
+    /**
+     * @return ProductSku
+     */
+    public function getAllMixAbleProductSku()
+    {
+        return Product::where('type', ProductProtocol::TYPE_OF_ENTITY)->skus()->get();
+    }
+
+
+    public function getMixSkus($mix_sku_id)
+    {
+        $sku = $this->getSkus($mix_sku_id);
+        $sku->load('mix');
+
+        return $sku->mix;
+    }
+
+    /**
+     * @param $sku_data
+     * @return bool
+     */
+    protected function isMixProductSku($sku_data)
+    {
+        return count(array_get($sku_data, 'mix_skus', [])) > 0;
+    }
+
+    /**
+     * @param $sku_data
+     * @param $mix_sku_data
+     * @param $sku
+     */
+    protected function attachMixSku($sku_data, $sku)
+    {
+        $mix_sku_data = [];
+        foreach ($sku_data['mix_skus'] as $mix_sku) {
+            $mix_sku_data[$mix_sku['sku_id']] = ['quantity' => $mix_sku['quantity']];
+        }
+        if (count($mix_sku_data)) {
+            $sku->mix()->sync($mix_sku_data);
+        }
     }
 }

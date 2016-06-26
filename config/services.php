@@ -70,8 +70,8 @@ return [
     'weixin' => [
         'client_id' => env('WECHAT_APPID'),
         'client_secret' => env('WECHAT_APPSECRET'),
-        'redirect' => env('WEIXIN_REDIRECT_URI'),
-        'base_redirect' => env('WEIXIN_BASE_REDIRECT_URL'),
+        'redirect' => env('WECHAT_REDIRECT_URL'),
+        'auth_base_uri' => 'https://open.weixin.qq.com/connect/oauth2/authorize',
     ],
 
     'pingxx' => [
@@ -82,6 +82,7 @@ return [
         'mobile_cancel' => env('PAYMENT_MOBILE_CANCEL_URL'),
         'pc_success' => env('PAYMENT_PC_SUCCESS_URL'),
         'pc_cancel' => env('PAYMENT_PC_CANCEL_URL'),
+        'pub_key_path' => app_path('Repositories/Pay/Pingxx') . '/pingpp_rsa_public_key.pem',
     ],
 
     'search' => [

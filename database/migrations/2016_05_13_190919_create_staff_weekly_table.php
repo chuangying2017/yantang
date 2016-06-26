@@ -14,7 +14,6 @@ class CreateStaffWeeklyTable extends Migration
     {
         Schema::create('staff_weekly', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('week_id', 8);
             $table->integer('staff_id')->unsigned();
             $table->integer('station_id')->unsigned();
             $table->string('mon')->nullable();

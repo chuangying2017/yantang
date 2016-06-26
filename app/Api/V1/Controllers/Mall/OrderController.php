@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Mall;
 
+use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\MallClientOrderRepository;
@@ -10,7 +11,6 @@ use App\Services\Order\OrderManageContract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class OrderController extends Controller {
 
@@ -35,7 +35,7 @@ class OrderController extends Controller {
      */
     public function index()
     {
-        $orders = $this->clientOrderRepo->getAllOrders();
+        $orders = $this->clientOrderRepo->getPaginatedOrders();
 
         return $this->response->paginator($orders, new ClientOrderTransformer());
     }
@@ -47,18 +47,19 @@ class OrderController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrderGenerator $orderGenerator, Request $request)
     {
         try {
             $temp_order_id = $request->input(['temp_order_id']);
 
-            $order = app()->make(OrderGenerator::class)->confirm($temp_order_id);
+            $order = $orderGenerator->confirm($temp_order_id);
 
-            return $this->response->item($order, new ClientOrderTransformer());
+            return $this->response->item($order, new ClientOrderTransformer())->setStatusCode(201);
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -80,8 +81,10 @@ class OrderController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(OrderManageContract $orderManage, Request $request, $id)
     {
-        app()->make(OrderManageContract::class)->orderCancel($id, $request->input('memo'));
+        $orderManage->orderCancel($id, $request->input('memo'));
+
+        return $this->response->noContent();
     }
 }

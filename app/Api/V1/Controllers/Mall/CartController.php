@@ -2,12 +2,12 @@
 
 namespace App\Api\V1\Controllers\Mall;
 
+use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\CartTransformer;
 use App\Repositories\Cart\CartRepositoryContract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class CartController extends Controller {
 
@@ -51,7 +51,7 @@ class CartController extends Controller {
         );
 
         if ($cart) {
-            return $this->response->created();
+            return $this->response->item($cart, new CartTransformer())->setStatusCode(201);
         }
 
         $this->response->error('库存不足或其他错误原因,无法添加到购物车', 400);

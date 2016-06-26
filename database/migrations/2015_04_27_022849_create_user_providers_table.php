@@ -23,7 +23,6 @@ class CreateUserProvidersTable extends Migration {
 			$table->string('avatar')->nullable();
 			$table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
         });
 	}
 
@@ -34,9 +33,6 @@ class CreateUserProvidersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('user_providers', function (Blueprint $table) {
-			$table->dropForeign('user_providers_user_id_foreign');
-		});
 		Schema::drop('user_providers');
 	}
 

@@ -7,8 +7,8 @@ interface AdminOrderRepositoryContract {
 
     public function getOrder($order_no);
 
-    public function getAllOrders($status, $order_by = 'created_at', $sort = 'desc');
+    public function getAllOrders($status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc');
 
-    public function getPaginatedOrders($status, $order_by = 'created_at', $sort = 'desc', $per_page = OrderProtocol::ORDER_PER_PAGE);
+    public function getPaginatedOrders($status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc', $per_page = OrderProtocol::ORDER_PER_PAGE);
 
 }

@@ -2,31 +2,33 @@
 
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 
-class TempOrder implements PromotionAbleItemContract{
+class TempOrder implements PromotionAbleItemContract {
 
+    protected $carts;
     protected $temp_order_id;
     protected $address;
     protected $total_amount;
-    protected $sku_amount;
     protected $express_fee = 0;
     protected $user;
     protected $skus;
     protected $promotion;
     protected $error;
-    protected $product_amount = 0;
-    protected $discount_amount;
+    protected $products_amount = 0;
+    protected $discount_amount = 0;
 
+    protected $special_campaign;
     protected $request_promotion;
 
     public function __construct($user_id, $skus, $address = null)
     {
         $this->setUser($user_id);
         $this->setSkus($skus);
+        $this->setCarts();
         $this->setAddress($address);
         $this->setTempOrderId('temp_' . generate_no());
     }
 
-    public function get()
+    public function toArray()
     {
         return [
             'temp_order_id' => $this->temp_order_id,
@@ -34,10 +36,13 @@ class TempOrder implements PromotionAbleItemContract{
             'skus' => $this->skus,
             'address' => $this->address,
             'total_amount' => $this->total_amount,
-            'product_amount' => $this->product_amount,
+            'products_amount' => $this->products_amount,
             'discount_amount' => $this->discount_amount,
+            'pay_amount' => $this->getPayAmount(),
             'express_fee' => $this->express_fee,
-            'promotion' => $this->promotion
+            'promotion' => $this->promotion,
+            'error' => $this->error,
+            'special_campaign' => $this->special_campaign
         ];
     }
 
@@ -119,11 +124,6 @@ class TempOrder implements PromotionAbleItemContract{
     public function setSkus($skus)
     {
         $this->skus = $skus;
-        $product_amount = 0;
-        foreach($skus as $sku) {
-            $product_amount = bcadd($sku['price'], $product_amount, 0);
-        }
-        $this->setProductAmount($product_amount);
     }
 
     /**
@@ -145,17 +145,19 @@ class TempOrder implements PromotionAbleItemContract{
     /**
      * @return mixed
      */
-    public function getSkuAmount()
+    public function getSkuAmount($sku_key)
     {
-        return $this->sku_amount;
+        return $this->skus[$sku_key]['total_amount'];
     }
 
     /**
      * @param mixed $sku_amount
      */
-    public function setSkuAmount($sku_amount)
+    public function setSkuAmount($sku_key, $sku_amount)
     {
-        $this->sku_amount = $sku_amount;
+        $this->skus[$sku_key]['total_amount'] = $sku_amount;
+        $this->skus[$sku_key]['discount_amount'] = 0;
+        $this->skus[$sku_key]['pay_amount'] = $sku_amount;
     }
 
     /**
@@ -189,12 +191,17 @@ class TempOrder implements PromotionAbleItemContract{
         }
     }
 
-    /**
-     * @param mixed $product_amount
-     */
-    public function setProductAmount($product_amount)
+    public function getError()
     {
-        $this->product_amount = $product_amount;
+        return $this->error;
+    }
+
+    /**
+     * @param mixed $products_amount
+     */
+    public function setProductsAmount($products_amount)
+    {
+        $this->products_amount = $products_amount;
     }
 
     /**
@@ -421,5 +428,58 @@ class TempOrder implements PromotionAbleItemContract{
     public function getRequestPromotion()
     {
         return $this->request_promotion;
+    }
+
+    public function get()
+    {
+        // TODO: Implement get() method.
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPayAmount()
+    {
+        return bcsub($this->total_amount, $this->discount_amount, 0);
+    }
+
+    /**
+     * @param mixed $carts
+     * @return TempOrder
+     */
+    protected function setCarts()
+    {
+        $carts = [];
+        foreach ($this->skus as $sku) {
+            $carts[] = array_get($sku, 'cart_id', null);
+        }
+        if (count($carts)) {
+            $this->carts = $carts;
+        }
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarts()
+    {
+        return $this->carts;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpecialCampaign()
+    {
+        return $this->special_campaign;
+    }
+
+    /**
+     * @param mixed $special_campaign
+     */
+    public function setSpecialCampaign($special_campaign)
+    {
+        $this->special_campaign = $special_campaign;
     }
 }

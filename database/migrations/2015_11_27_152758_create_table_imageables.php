@@ -15,7 +15,6 @@ class CreateTableImageables extends Migration {
         Schema::create('imageables', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('image_id')->unsigned()->index();
-            $table->foreign('image_id')->references('id')->on('images');
             $table->integer('imageable_id')->unsigned()->index();
             $table->string('imageable_type')->index();
         });
@@ -28,9 +27,6 @@ class CreateTableImageables extends Migration {
      */
     public function down()
     {
-        Schema::table('imageables', function (Blueprint $table) {
-            $table->dropForeign('imageables_image_id_foreign');
-        });
         Schema::drop('imageables');
     }
 }

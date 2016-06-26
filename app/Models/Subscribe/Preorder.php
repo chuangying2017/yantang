@@ -1,5 +1,6 @@
 <?php namespace App\Models\Subscribe;
 
+use App\Models\District;
 use Illuminate\Database\Eloquent\Model;
 
 class Preorder extends Model
@@ -32,5 +33,15 @@ class Preorder extends Model
     public function station()
     {
         return $this->belongsTo('App\Models\Subscribe\Station');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
+
+    public function weekly()
+    {
+        return $this->hasMany(StaffWeekly::class);
     }
 }

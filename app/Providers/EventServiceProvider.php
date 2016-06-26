@@ -10,8 +10,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
  * Class EventServiceProvider
  * @package App\Providers
  */
-class EventServiceProvider extends ServiceProvider
-{
+class EventServiceProvider extends ServiceProvider {
 
     /**
      * The event listener mappings for the application.
@@ -32,16 +31,35 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\Auth\UserLoggedInHandler',
         ],
 
+        'App\Events\Auth\UserRegister' => [
+            'App\Listeners\Auth\CreateClientForUser',
+            'App\Listeners\Auth\CreateWalletForUser',
+            'App\Listeners\Auth\CreateCreditsWalletForUser'
+        ],
+
         'App\Events\Auth\UserLoggedOut' => [
             'App\Listeners\Auth\UserLoggedOutHandler',
         ],
 
-        'App\Events\Order\OrderIsCancel' => [
+        'App\Services\Pay\Events\PingxxPaymentIsPaid' => [
+            'App\Listeners\Order\SetOrderMainBillingAsPaid',
+        ],
 
+        'App\Events\Order\MainBillingIsPaid' => [
+            'App\Listeners\Order\SetOrderAsPaid',
         ],
 
         'App\Events\Order\OrderIsPaid' => [
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
+            'App\Listeners\Product\DecreaseProductSkuStock',
+        ],
+
+        'App\Events\Order\OrderIsCreated' => [
+            'App\Listeners\Order\RemoveCheckoutCartItems',
+        ],
+
+        'App\Events\Order\OrderIsCancel' => [
+            'App\Listeners\Product\IncreaseProductSkuStock',
         ],
 
         'App\Events\Order\OrderIsDone' => [
@@ -52,7 +70,19 @@ class EventServiceProvider extends ServiceProvider
 
         ],
 
+        'App\Events\Order\OrderIsDeliverDone' => [
+
+        ],
+
         'App\Events\Order\OrderIsRefund' => [
+
+        ],
+
+        'App\Events\Order\OrderTicketIsExchange' => [
+
+        ],
+
+        'App\Events\Store\StoreStatementConfirm' => [
 
         ],
 

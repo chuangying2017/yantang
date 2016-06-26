@@ -2,6 +2,7 @@
 
 
 use App\Models\Access\User\Traits\UserAccess;
+use App\Models\Client\Client;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Access\User\Traits\Attribute\UserAttribute;

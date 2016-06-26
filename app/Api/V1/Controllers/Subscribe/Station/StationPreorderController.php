@@ -9,7 +9,6 @@ use App\Repositories\Subscribe\Station\StationRepositoryContract;
 use Illuminate\Http\Request;
 use Auth;
 use App\Api\V1\Transformers\Subscribe\Station\StationPreorderTransformer;
-use App\Repositories\Subscribe\StaffPreorder\StaffPreorderRepositoryContract;
 use App\Api\V1\Transformers\Subscribe\Station\StaffPreorderTransformer;
 use App\Api\V1\Requests\Subscribe\PreorderRequest;
 use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
@@ -34,19 +33,23 @@ class StationPreorderController extends Controller
     /**
      * 查看服务部下订单列表
      */
-    public function index(Request $request)
+    public function index(Request $request, PreorderRepositoryContract $preorderRepo)
     {
         $user_id = $this->user_id;
-        $type = $request->input('type', null);
+        $type = $request->input('status', null);
+        $pre_page = $request->input('pre_page', self::PER_PAGE);
+        $station = $this->station->getByUserId($user_id);
+        if (!$station) {
+            $this->response->errorInternal("该会员不属于服务部");
+        }
+        $preorder = $preorderRepo->byStationId($station->id, $type, $pre_page);
 
-        $station = $this->station->preorder($user_id, $type, self::PER_PAGE);
-
-        return $this->response->item($station, new StationPreorderTransformer());
+        return $this->response->paginator($preorder, new PreorderTransformer());
     }
 
     public function store(Request $request)
     {
-        $input = $request->only(['preorder_id', 'staff_id', 'index']);
+        $input = $request->only(['preorder_id', 'staff_id']);
         if (empty($input['index'])) {
             $input['index'] = 0;
         }

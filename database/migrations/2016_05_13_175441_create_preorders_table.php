@@ -20,11 +20,8 @@ class CreatePreordersTable extends Migration
             $table->string('name');
             $table->string('phone', 11);
             $table->string('address');
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
             $table->dateTime('pause_time'); //暂停时间
             $table->dateTime('restart_time');
-            $table->tinyInteger('daytime')->default(0);
             $table->string('status', 32)->default(0);
             $table->string('charge_status', 32)->default(0);
             $table->timestamps();

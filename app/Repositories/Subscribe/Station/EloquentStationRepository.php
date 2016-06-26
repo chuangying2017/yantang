@@ -46,7 +46,7 @@ class EloquentStationRepository implements StationRepositoryContract
                 }]);
                 break;
             default:
-                $query = Station::query();
+                $query = Station::with(['preorder']);
                 break;
         }
         $query = $query->where('status', '!=', PreorderProtocol::STATUS_OF_REJECT);
@@ -64,14 +64,9 @@ class EloquentStationRepository implements StationRepositoryContract
     public function bindStation($station_id, $user_id)
     {
         $station = Station::findOrFail($station_id);
-        if (!empty($station->user_id)) {
-            if ($station->user_id == $user_id) {
-                throw \Exception('该服务部已经绑定,无须重新绑定');
-            } else {
-                throw \Exception('该服务部已经绑定其他人,绑定不成功');
-            }
-        }
         $station->user_id = $user_id;
+        $station->save();
+        return $station;
     }
 
     public function create($input)
@@ -110,6 +105,30 @@ class EloquentStationRepository implements StationRepositoryContract
             ->whereHas('preorderOrder.orderBillings', function ($query) use ($begin_time, $end_time) {
                 $query->where('created_at', '>=', $begin_time)->where('created_at', '<=', $end_time);
             })->get();
+        return $query;
+    }
+
+    public function SearchInfo($keyword, $district_id, $per_page, $with = [])
+    {
+        $query = Station::query();
+        if (!empty($keyword)) {
+            $query = Station::where(function ($query) use ($keyword) {
+                $query->where('director', 'like', '%' . $keyword . '%')->orwhere('name', 'like', '%' . $keyword . '%')
+                    ->orwhere('phone', $keyword)->orwhere('tel', $keyword);
+            });
+        }
+        if (!empty($district_id)) {
+            $query = $query->where('district_id', $district_id);
+        }
+        if (!empty($with)) {
+            $query = $query->with($with);
+        }
+        if (!empty($per_page)) {
+            $query = $query->paginate($per_page);
+        } else {
+            $query = $query->get();
+        }
+
         return $query;
     }
 

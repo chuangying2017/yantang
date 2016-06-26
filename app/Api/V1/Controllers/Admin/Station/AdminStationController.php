@@ -17,7 +17,7 @@ class AdminStationController extends Controller
     protected $staff;
     protected $station;
     protected $station_id;
-    const STATION_PER_PAGE = 10;
+    const STATION_PER_PAGE = 20;
 
     public function __construct(StaffRepositoryContract $staffs, StationRepositoryContract $station)
     {
@@ -31,26 +31,24 @@ class AdminStationController extends Controller
      */
     public function index(Request $request)
     {
-        $name = $request->input('name', '');
+        $district_id = $request->input('district_id', null);
+        $keyword = $request->input('keyword', null);
         $paginate = $request->input('paginate', self::STATION_PER_PAGE);
-        $where = [
-            ['field' => 'name', 'value' => $name, 'compare_type' => '=']
-        ];
-        $station = $this->station->Paginated($paginate, $where);
+        $station = $this->station->SearchInfo($keyword, $district_id, $paginate, ['district']);
 
-        return $this->response->item($station, new StationTransformer());
+        return $this->response->paginator($station, new StationTransformer());
     }
 
     public function store(AdminStationRequest $request)
     {
-        $input = $request->only(['name', 'desc', 'user_id', 'address', 'tel', 'director', 'phone', 'cover_image', 'longitude', 'latitude', 'status']);
+        $input = $request->only(['name', 'desc', 'user_id', 'address', 'district_id', 'tel', 'director', 'phone', 'cover_image', 'longitude', 'latitude', 'status']);
         $station = $this->station->create($input);
         return $this->response->item($station, new StationTransformer())->setStatusCode(201);
     }
 
     public function update(AdminStationRequest $request, $id)
     {
-        $input = $request->only(['name', 'desc', 'user_id', 'address', 'tel', 'phone', 'cover_image', 'longitude', 'latitude']);
+        $input = $request->only(['name', 'desc', 'user_id', 'address', 'district_id', 'tel', 'phone', 'cover_image', 'longitude', 'latitude']);
         $station = $this->station->update($input, $id);
         return $this->response->item($station, new StationTransformer())->setStatusCode(201);
     }
@@ -59,7 +57,6 @@ class AdminStationController extends Controller
     {
         try {
             $station = $this->station->show($id);
-            $station->show_bind_url = true;
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }

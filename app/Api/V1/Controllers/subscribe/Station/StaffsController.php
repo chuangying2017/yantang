@@ -10,6 +10,7 @@ use App\Repositories\Subscribe\Station\StationRepositoryContract;
 use Illuminate\Http\Request;
 use App\Api\V1\Requests\Subscribe\StationRequest;
 use Auth;
+use DB;
 
 class StaffsController extends Controller
 {
@@ -19,7 +20,8 @@ class StaffsController extends Controller
     public function __construct(StaffRepositoryContract $staffs, StationRepositoryContract $station)
     {
         $this->staffs = $staffs;
-        $this->station_id = $station->getByUserId(access()->id())->id;
+        $station = $station->getByUserId(access()->id());
+        $this->station_id = $station['id'];
     }
 
     /**
@@ -68,6 +70,25 @@ class StaffsController extends Controller
         return $this->response->item($staffs, new StaffsTransformer());
     }
 
+    public function bindStaff(Request $request)
+    {
+        $staff_id = $request->input('staff_id', null);
+        $user_id = access()->id();
+
+        $staffs = $this->staffs->show($staff_id);
+        if (!empty($staffs->user_id)) {
+            if ($staffs->user_id == $user_id) {
+                $this->response->errorInternal('该配送员已经绑定,无须重新绑定');
+            } else {
+                $this->response->errorInternal('该配送员已经绑定其他人,绑定不成功');
+            }
+        }
+
+        $staffs = $this->staffs->bindStaff($staff_id, $user_id);
+
+        return $this->response->item($staffs, new StaffsTransformer());
+    }
+
     public function destroy($id)
     {
         try {
@@ -81,4 +102,6 @@ class StaffsController extends Controller
 
         return $this->response->noContent();
     }
+
+
 }

@@ -1,12 +1,18 @@
 <?php namespace App\Services\Order;
 
+use App\Events\Order\OrderIsCreated;
+use App\Repositories\Cart\CartRepositoryContract;
+use App\Repositories\Order\CampaignOrderRepository;
 use App\Repositories\Order\ClientOrderRepositoryContract;
+use App\Repositories\Order\MallClientOrderRepository;
+use App\Repositories\Promotion\Campaign\EloquentCampaignRepository;
 use App\Services\Order\Generator\CalExpressFee;
 use App\Services\Order\Generator\CalSkuAmount;
 use App\Services\Order\Generator\CheckCampaign;
 use App\Services\Order\Generator\CheckCoupon;
 use App\Services\Order\Generator\GetOrderAddress;
 use App\Services\Order\Generator\GetSkuInfo;
+use App\Services\Order\Generator\GetSpecialCampaign;
 use App\Services\Order\Generator\GetUserInfo;
 use App\Services\Order\Generator\SaveTempOrder;
 use App\Services\Order\Generator\TempOrder;
@@ -22,14 +28,6 @@ class OrderGenerator implements OrderGeneratorContract {
      */
     private $orderRepo;
 
-    /**
-     * OrderGenerator constructor.
-     * @param ClientOrderRepositoryContract $orderRepo
-     */
-    public function __construct(ClientOrderRepositoryContract $orderRepo)
-    {
-        $this->orderRepo = $orderRepo;
-    }
 
     /**
      * @param $user_id
@@ -41,13 +39,47 @@ class OrderGenerator implements OrderGeneratorContract {
      *  ]
      * ]
      */
-    public function buy($user_id, $skus, $address = null, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN, $promotion_id = null)
+    public function buy($user_id, $skus, $type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN)
     {
-        if ($type == OrderProtocol::ORDER_TYPE_OF_CAMPAIGN) {
-            return $this->campaignOrder($user_id, $skus, $promotion_id);
+        if ($type == OrderProtocol::ORDER_TYPE_OF_MALL_MAIN) {
+            return $this->mallOrder($user_id, $skus);
         }
 
-        return $this->mallOrder($user_id, $skus, $address);
+    }
+
+    /**
+     * @param $user_id
+     * @param $cart_ids
+     * @param $address_id
+     * @return TempOrder
+     */
+    public function buyCart($user_id, $cart_ids)
+    {
+        $carts = app(CartRepositoryContract::class)->getMany($cart_ids, false);
+        $skus = [];
+        foreach ($carts as $cart) {
+            $skus[] = [
+                'cart_id' => $cart['id'],
+                'product_sku_id' => $cart['product_sku_id'],
+                'quantity' => $cart['quantity']
+            ];
+        }
+        return $this->buy($user_id, $skus);
+    }
+
+    public function buySpecialCampaign($user_id, $campaign_id, EloquentCampaignRepository $campaignRepo)
+    {
+        $product_skus_ids = $campaignRepo->getSku($campaign_id);
+        $skus = [];
+        foreach ($product_skus_ids as $product_sku_id) {
+            $skus[] = ['product_sku_id' => $product_sku_id, 'quantity' => 1];
+        }
+
+        if (!count($skus)) {
+            throw new \Exception('活动商品不存在, 请求错误');
+        }
+
+        return $this->campaignOrder($user_id, $skus, $campaign_id);
     }
 
     protected function campaignOrder($user_id, $skus, $campaign_id)
@@ -56,24 +88,32 @@ class OrderGenerator implements OrderGeneratorContract {
             GetSkuInfo::class,
             GetUserInfo::class,
             CalSkuAmount::class,
-            UseCampaign::class,
+            GetSpecialCampaign::class,
             SaveTempOrder::class,
         ];
+
         $handler = $this->getOrderGenerateHandler($config);
 
         $temp_order = new TempOrder($user_id, $skus);
-        $temp_order->setRequestPromotion($campaign_id);
+        $temp_order->setSpecialCampaign($campaign_id);
+
         $temp_order = $handler->handle($temp_order);
 
-        return $temp_order;
+        if ($temp_order->getError()) {
+            throw new \Exception($temp_order->getError());
+        }
+
+        $this->setOrderRepo(app()->make(CampaignOrderRepository::class));
+        $order = $this->orderRepo->createOrder($temp_order->toArray());
+
+        return $order;
     }
 
-    protected function mallOrder($user_id, $skus, $address)
+    protected function mallOrder($user_id, $skus)
     {
         $config = [
             GetSkuInfo::class,
             GetUserInfo::class,
-            GetOrderAddress::class,
             CalExpressFee::class,
             CalSkuAmount::class,
             CheckCampaign::class,
@@ -82,11 +122,9 @@ class OrderGenerator implements OrderGeneratorContract {
         ];
         $handler = $this->getOrderGenerateHandler($config);
 
-        $temp_order = $handler->handle(new TempOrder($user_id, $skus, $address));
+        $temp_order = $handler->handle(new TempOrder($user_id, $skus));
 
-        $order = $this->orderRepo->createOrder($temp_order);
-
-        return $order;
+        return $temp_order;
     }
 
 
@@ -97,11 +135,23 @@ class OrderGenerator implements OrderGeneratorContract {
             throw new \Exception('下单超时');
         }
 
-        $order = $this->orderRepo->createOrder($temp_order);
+        if ($temp_order->getError()) {
+            throw new \Exception($temp_order->getError());
+        }
+
+        $this->setOrderRepo(app()->make(MallClientOrderRepository::class));
+        $order = $this->orderRepo->createOrder($temp_order->toArray());
+
+        event(new OrderIsCreated($temp_order));
 
         return $order;
     }
 
+    /**
+     * @param $temp_order_id
+     * @param $coupon_id
+     * @return TempOrder
+     */
     public function useCoupon($temp_order_id, $coupon_id)
     {
         #todo 传输coupon值
@@ -128,12 +178,27 @@ class OrderGenerator implements OrderGeneratorContract {
         return $temp_order;
     }
 
-    protected function saveTempOrder(TempOrder $temp_order)
+
+    public function setOrderRepo(ClientOrderRepositoryContract $orderRepo)
     {
-        $temp_order_id = $temp_order->getTempOrderId();
-        if (Cache::has($temp_order_id)) {
-            Cache::forget($temp_order_id);
-            Cache::put($temp_order_id, $temp_order, 30);
-        }
+        $this->orderRepo = $orderRepo;
+    }
+
+    public function setAddress($temp_order_id, $address)
+    {
+        $temp_order = $this->getTempOrder($temp_order_id);
+
+        $temp_order->setAddress($address);
+
+        $config = [
+            GetOrderAddress::class,
+            SaveTempOrder::class,
+        ];
+
+        $handler = $this->getOrderGenerateHandler($config);
+
+        $temp_order = $handler->handle($temp_order);
+
+        return $temp_order;
     }
 }

@@ -38,22 +38,28 @@ class StationController extends Controller
 
     public function bindStation(Request $request)
     {
+        $user_id = access()->id();
         $station_id = $request->input('station_id', null);
-        if (empty($station_id)) {
-            $this->response->noContent();
+        $station = $this->station->show($station_id);
+        if (!empty($station->user_id)) {
+            if ($station->user_id == $user_id) {
+                $this->response->errorInternal('该服务部已经绑定,无须重新绑定');
+            } else {
+                $this->response->errorInternal('该服务部已经绑定其他人,绑定不成功');
+            }
         }
         try {
-            $user_id = access()->id();
-            $this->station->bindStation($station_id, $user_id);
+            $station = $this->station->bindStation($station_id, $user_id);
         } catch (\Exception $e) {
             $this->response->errorInternal($e->getMessage());
         }
+        return $this->response->item($station, new StationTransformer());
     }
 
     public function claimGoods(Request $request)
     {
         $query_day = $request->input('date', Carbon::now());
-        $query_day = '2016-06-06';
+//        $query_day = '2016-06-06';
         $data = StationService::claimGoods($query_day);
         return $this->response->array($data);
     }

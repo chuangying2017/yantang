@@ -7,6 +7,9 @@ class SubscribeProtocol
     const STATEMENTS_STATUS_OF_PENDING = 'pending';
     const STATEMENTS_STATUS_OF_ERROR = 'error';
 
+    const PRE_ORDER_BILLINGS_NO_PREFIX = 'prebil';
+    const PRE_ORDER_BILLINGS_STATUS_OF_PAID = 'paid';
+    const PRE_ORDER_BILLINGS_STATUS_NOT_PAID = 'not_paid';
 
     public static function statements_status($key = null)
     {
