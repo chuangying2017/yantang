@@ -3,13 +3,11 @@
 
 class PreorderProtocol
 {
+
     //status对应的值
-    const STATUS_OF_UNTREATED = 'untreated';
-    const STATUS_OF_NOT_SET = 'not_set';
-    const STATUS_OF_NO_STAFF = 'no_staff';
-    const STATUS_OF_NORMAL = 'normal';
-    const STATUS_OF_PAUSE = 'pause';
-    const STATUS_OF_REJECT = 'reject';
+    const ORDER_STATUS_OF_PENDING = 'pending';
+    const ORDER_STATUS_OF_DONE = 'done';
+    const ORDER_STATUS_OF_READY = 'ready';
 
     //charge_status 对应的值
     const CHARGE_STATUS_OF_NULL = 0;

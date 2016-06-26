@@ -1,7 +1,7 @@
 <?php namespace App\Api\V1\Transformers\Subscribe\Preorder;
 
 use League\Fractal\TransformerAbstract;
-use App\Models\Subscribe\ChargeBilling;
+use App\Models\Billing\ChargeBilling;
 
 class ChargeBillingTransformer extends TransformerAbstract
 {

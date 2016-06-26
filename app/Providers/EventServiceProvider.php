@@ -43,6 +43,7 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Services\Pay\Events\PingxxPaymentIsPaid' => [
             'App\Listeners\Order\SetOrderMainBillingAsPaid',
+            'App\Listeners\Subscribe\SetChargeBillingAsPaid',
         ],
 
         'App\Events\Order\MainBillingIsPaid' => [

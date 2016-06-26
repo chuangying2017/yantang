@@ -6,11 +6,11 @@ use Carbon\Carbon;
 use App\Repositories\Subscribe\StaffWeekly\StaffWeeklyRepositoryContract;
 use App\Repositories\Subscribe\PreorderOrder\PreorderOrderRepositoryContract;
 use App\Models\Subscribe\PreorderOrderProducts;
-use App\Models\Subscribe\PreorderOrderBillings;
+use App\Models\Billing\PreorderBilling;
 use App\Services\Subscribe\SubscribeProtocol;
 use App\Services\Client\Account\WalletService;
 use App\Services\Billing\PreorderOrderBilling;
-use App\Services\Billing\PreorderBilling;
+use App\Services\Billing\ChargeBillingService;
 use App\Services\Billing\BillingProtocol;
 use Log;
 
@@ -34,7 +34,7 @@ class PreorderService
 
 
     public function __construct(StationRepositoryContract $stationRepo, PreorderRepositoryContract $preorderRepo,
-                                StaffService $staffService, StaffWeeklyRepositoryContract $staffWeeklyRepo, PreorderBilling $preorderBilling,
+                                StaffService $staffService, StaffWeeklyRepositoryContract $staffWeeklyRepo, ChargeBillingService $preorderBilling,
                                 PreorderOrderRepositoryContract $preorderOrderRepo, WalletService $walletService, PreorderOrderBilling $preorderOrderBilling)
     {
         $this->stationRepo = $stationRepo;

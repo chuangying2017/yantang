@@ -30,4 +30,6 @@ abstract class BillingAbstract implements BillingContract {
     {
         return $this->billing['pay_type'];
     }
+
+
 }

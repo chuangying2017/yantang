@@ -1,29 +1,22 @@
 <?php namespace App\Repositories\Preorder;
 
 
-interface PreorderRepositoryContract
-{
+use App\Repositories\Station\StationProtocol;
 
-    /**
-     * @param $input
-     * @return mixed
-     */
-    public function create($input);
+interface PreorderRepositoryContract {
 
-    /**
-     * @param int $user_id
-     * @return mixed
-     */
-    public function byUserId($user_id);
+    public function createPreorder($data);
 
-    public function byStationId($station_id, $status, $pre_page);
+    public function updatePreorder($data);
 
-    public function update($input, $preorder_id);
+    public function getPaginatedByUser($user_id, $status);
 
-    public function byId($preorder_id, $with = []);
+    public function getPaginatedByStation($station_id, $status, $per_page = StationProtocol::STATION_PER_PAGE);
 
-    public function searchInfo($per_page, $order_no, $begin_time, $end_time, $phone, $status);
+    public function getPaginatedByStaff($staff_id, $status, $per_page = StationProtocol::STATION_PER_PAGE);
 
-    public function getOrderStaffId($preorder_id);
+    public function get($preorder_id, $with_detail);
+
+    public function deletePreorder($preorder_id);
 
 }

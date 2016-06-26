@@ -1,9 +1,8 @@
 <?php namespace App\Repositories\Billing;
 
-use App\Events\Order\MainBillingIsPaid;
 use App\Models\Billing\OrderBilling;
 use App\Repositories\NoGenerator;
-use App\Services\Order\OrderProtocol;
+use App\Services\Billing\BillingProtocol;
 
 class OrderBillingRepository implements BillingRepositoryContract {
 
@@ -16,20 +15,20 @@ class OrderBillingRepository implements BillingRepositoryContract {
             'order_id' => $order_id,
             'amount' => $amount,
             'pay_type' => $this->getPayType(),
-            'status' => OrderProtocol::PAID_STATUS_OF_UNPAID
+            'status' => BillingProtocol::STATUS_OF_UNPAID
         ]);
     }
 
-    public function updateAsPaid($billing_no, $pay_channel)
+    public function updateAsPaid($billing_no, $pay_channel = nall)
     {
         $billing = $this->getBilling($billing_no);
 
-        if ($billing['status'] == OrderProtocol::PAID_STATUS_OF_PAID) {
+        if ($billing['status'] == BillingProtocol::STATUS_OF_PAID) {
             return $billing;
         }
 
         $billing->pay_channel = $pay_channel;
-        $billing->status = OrderProtocol::PAID_STATUS_OF_PAID;
+        $billing->status = BillingProtocol::STATUS_OF_PAID;
         $billing->save();
 
         return $billing;
@@ -48,7 +47,7 @@ class OrderBillingRepository implements BillingRepositoryContract {
         return OrderBilling::find($billing_no);
     }
 
-    public function getBillingOfType($order_id, $pay_type = OrderProtocol::BILLING_TYPE_OF_MONEY)
+    public function getBillingOfType($order_id, $pay_type = BillingProtocol::BILLING_TYPE_OF_MONEY)
     {
         return OrderBilling::order($order_id)->where('pay_type', $pay_type)->first();
     }
@@ -73,5 +72,13 @@ class OrderBillingRepository implements BillingRepositoryContract {
             throw new \Exception('订单账单类型错误');
         }
         return $this->pay_type;
+    }
+
+    public function getBillingPaginated($order_id, $status = null, $per_page = BillingProtocol::BILLING_PER_PAGE)
+    {
+        if (is_null($status)) {
+            return OrderBilling::order($order_id)->paginate($per_page);
+        }
+        return OrderBilling::order($order_id)->where('status', $status)->paginate($per_page);
     }
 }

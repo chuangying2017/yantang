@@ -27,7 +27,6 @@ $api->group(['namespace' => 'Campaign'], function ($api) {
             $api->post('/{store_id}/bind', 'StoreController@postBind')->name('api.store.bind');
             $api->resource('statements', 'StoreStatementController');
             $api->resource('tickets', 'StoreTicketController');
-
         });
 
     });

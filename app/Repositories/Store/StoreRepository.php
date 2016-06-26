@@ -8,7 +8,6 @@ class StoreRepository implements StoreRepositoryContract {
     {
         return Store::create([
             'name' => $store_data['name'],
-            'user_id' => 0,
             'address' => $store_data['address'],
             'cover_image' => $store_data['cover_image'],
             'director' => $store_data['director'],
@@ -114,4 +113,5 @@ class StoreRepository implements StoreRepositoryContract {
     {
         return generate_bind_token($store_id);
     }
+
 }

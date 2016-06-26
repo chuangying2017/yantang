@@ -1,5 +1,6 @@
 <?php namespace App\Models\Subscribe;
 
+use App\Models\Billing\PreorderBilling;
 use Illuminate\Database\Eloquent\Model;
 
 class PreorderOrder extends Model
@@ -26,7 +27,7 @@ class PreorderOrder extends Model
 
     public function orderBillings()
     {
-        return $this->hasMany(PreorderOrderBillings::class, 'preorder_order_id');
+        return $this->hasMany(PreorderBilling::class, 'preorder_order_id');
     }
 
 }

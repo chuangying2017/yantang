@@ -1,6 +1,6 @@
 <?php namespace App\Services\Billing;
 
-use App\Models\Subscribe\PreorderOrderBillings;
+use App\Models\Billing\PreorderBilling;
 use App\Services\Subscribe\SubscribeProtocol;
 
 class PreorderOrderBilling implements BillingContract
@@ -18,7 +18,7 @@ class PreorderOrderBilling implements BillingContract
             'amount' => $amount,
             'status' => $status,
         ];
-        $preorder_order_billing = PreorderOrderBillings::create($input);
+        $preorder_order_billing = PreorderBilling::create($input);
         $this->preorder_order_billing = $preorder_order_billing;
         $this->id = $preorder_order_billing->id;
         return $this;
@@ -31,18 +31,18 @@ class PreorderOrderBilling implements BillingContract
 
     public function getOrderNo()
     {
-        return empty($this->preorder_order_billing) ? PreorderOrderBillings::find($this->id)->billing_no : $this->preorder_order_billing->billing_no;
+        return empty($this->preorder_order_billing) ? PreorderBilling::find($this->id)->billing_no : $this->preorder_order_billing->billing_no;
     }
 
     public function isPaid()
     {
-        $status = empty($this->preorder_order_billing) ? PreorderOrderBillings::find($this->id)->status : $this->preorder_order_billing->status;
+        $status = empty($this->preorder_order_billing) ? PreorderBilling::find($this->id)->status : $this->preorder_order_billing->status;
         return $status == SubscribeProtocol::PRE_ORDER_BILLINGS_STATUS_OF_PAID ? true : false;
     }
 
     public function getAmount()
     {
-        return empty($this->preorder_order_billing) ? PreorderOrderBillings::find($this->id)->amount : $this->preorder_order_billing->amount;
+        return empty($this->preorder_order_billing) ? PreorderBilling::find($this->id)->amount : $this->preorder_order_billing->amount;
     }
 
     public function getType()
@@ -52,12 +52,12 @@ class PreorderOrderBilling implements BillingContract
 
     public function getPayer()
     {
-        return empty($this->preorder_order_billing) ? PreorderOrderBillings::find($this->id)->user_id : $this->preorder_order_billing->user_id;
+        return empty($this->preorder_order_billing) ? PreorderBilling::find($this->id)->user_id : $this->preorder_order_billing->user_id;
     }
 
     public function setPaid()
     {
-        return PreorderOrderBillings::find($this->id)->update(['status' => SubscribeProtocol::PRE_ORDER_BILLINGS_STATUS_OF_PAID]);
+        return PreorderBilling::find($this->id)->update(['status' => SubscribeProtocol::PRE_ORDER_BILLINGS_STATUS_OF_PAID]);
     }
 
     public function setID($billing_id)

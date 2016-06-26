@@ -33,6 +33,7 @@ $api->group(['namespace' => 'Subscribe'], function ($api) {
     //用户订奶
     $api->group(['prefix' => 'subscribe'], function ($api) {
 
+        $api->get('preorders', 'PreorderController@index');
         $api->get('stations', 'StationController@index');
         $api->get('products', 'ProductController@index');
 

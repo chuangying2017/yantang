@@ -6,4 +6,7 @@ class StationProtocol {
     const STATUS_OF_STAFF_BIND  = 1 ;
     const STATUS_OF_STAFF_BANNED  = 2 ;
 
+    const STATION_PER_PAGE = 20;
+    const STAFF_PER_PAGE = 20;
+
 }
