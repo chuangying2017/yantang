@@ -1,6 +1,6 @@
 <?php namespace App\Repositories\Subscribe\Staff;
 
-use App\Models\Subscribe\StationStaffs;
+use App\Models\Subscribe\StationStaff;
 use Carbon\Carbon;
 use Pheanstalk\Exception;
 use App\Services\Subscribe\PreorderProtocol;
@@ -9,7 +9,7 @@ class EloquentStaffRepository implements StaffRepositoryContract
 {
     public function getStaffPaginated($station_id, $per_page, $order_by = 'id', $sort = 'asc')
     {
-        $query = StationStaffs::query();
+        $query = StationStaff::query();
         if (!empty($station_id)) {
             $query = $query->where('station_id', $station_id);
         }
@@ -27,12 +27,12 @@ class EloquentStaffRepository implements StaffRepositoryContract
     public function create($input)
     {
         $input['staff_no'] = uniqid('stf_');
-        return StationStaffs::create($input);
+        return StationStaff::create($input);
     }
 
     public function update($id, $input, $station_id)
     {
-        $query = StationStaffs::find('id', $id);
+        $query = StationStaff::find('id', $id);
         if ($query->station_id != $station_id) {
             throw new \Exception('该配送员不属于当前服务部');
         }
@@ -43,7 +43,7 @@ class EloquentStaffRepository implements StaffRepositoryContract
     public function show($id)
     {
         try {
-            return StationStaffs::findOrFail($id);
+            return StationStaff::findOrFail($id);
         } catch (\Exception $e) {
             throw new Exception('该配送员不存在');
         }
@@ -52,12 +52,12 @@ class EloquentStaffRepository implements StaffRepositoryContract
 
     public function destroy($id)
     {
-        return StationStaffs::destroy(to_array($id));
+        return StationStaff::destroy(to_array($id));
     }
 
     public function byUserId($user_id, $with_order = false)
     {
-        $staff = StationStaffs::where('user_id', '=', $user_id)->first();
+        $staff = StationStaff::where('user_id', '=', $user_id)->first();
         if ($with_order) {
             $status = PreorderProtocol::STATUS_OF_NORMAL;
             $charge_status = PreorderProtocol::STATUS_OF_ENOUGH;
@@ -71,7 +71,7 @@ class EloquentStaffRepository implements StaffRepositoryContract
 
     public function bindStaff($staff_id = null, $user_id = null)
     {
-        $staff = StationStaffs::findOrFail($staff_id);
+        $staff = StationStaff::findOrFail($staff_id);
         $staff->user_id = $user_id;
         $staff->save();
         return $staff;

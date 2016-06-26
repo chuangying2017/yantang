@@ -1,13 +1,13 @@
 <?php namespace App\Api\V1\Transformers\Subscribe\Station;
 
 use League\Fractal\TransformerAbstract;
-use App\Models\Subscribe\StationStaffs;
+use App\Models\Subscribe\StationStaff;
 use App\Services\Subscribe\PreorderProtocol;
 
 class StaffsDataTransformer extends TransformerAbstract
 {
 
-    public function transform(StationStaffs $staffs)
+    public function transform(StationStaff $staffs)
     {
         $data = [];
 

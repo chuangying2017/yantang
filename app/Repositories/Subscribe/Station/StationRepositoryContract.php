@@ -3,64 +3,29 @@
 
 interface StationRepositoryContract
 {
-    /**
-     * @param int $user_id
-     * @return mixed
-     */
-    public function getByUserId($user_id);
+    public function createStation($station_data);
 
-    /**
-     * @param int $id
-     * @return mixed
-     */
-    public function getInfoById($id);
+    public function updateStation($station_id, $station_data);
 
-    /**
-     * @param int $station_id
-     * @param int $user_id
-     * @return mixed
-     */
-    public function bindStation($station_id, $user_id);
+    public function bindUser($station_id, $user_id);
 
-    /**
-     * @param $per_page 0不分页
-     * @param array $where where条件数组 [['field'=>'part_id_card', 'value'=>$input['id_card'], 'compare_type'=>'=']]
-     * @param string $order_by
-     * @param string $sort
-     * @return mixed
-     */
-    public function Paginated($per_page, $where, $order_by = 'id', $sort = 'asc');
+    public function unbindUser($station_id, $user_id);
 
-    /**
-     * @param $input
-     * @return mixed
-     */
-    public function create($input);
+    public function updateAsActive($station_ids);
 
-    /**
-     * @param $id
-     * @param $input
-     * @return mixed
-     */
-    public function update($input, $id);
+    public function updateAsUnActive($station_ids);
 
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function show($id);
+    public function deleteStation($station_id);
 
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function destroy($id);
+    public function getStation($station_id, $with_user = true);
 
-    public function preorder($user_id, $type, $pre_page);
+    public function getBindToken($station_id);
 
-    public function weekly($user_id, $week_of_year);
+    public function getStationByUser($user_id);
 
-    public function allStationBillings($begin_time, $end_time);
+    public function getStationIdByUser($user_id);
 
-    public function SearchInfo($keyword, $district_id, $per_page, $with = []);
+    public function getAll();
+
+    public function getAllActive();
 }

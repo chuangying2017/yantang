@@ -1,135 +1,123 @@
 <?php namespace App\Repositories\Subscribe\Station;
 
 use App\Models\Subscribe\Station;
-use App\Http\Traits\EloquentRepository;
-use App\Services\Subscribe\PreorderProtocol;
+use DB;
 
-class EloquentStationRepository implements StationRepositoryContract
-{
+class EloquentStationRepository implements StationRepositoryContract {
 
-    use EloquentRepository;
-
-    public function moder()
+    public function createStation($station_data)
     {
-        return 'App\Models\Subscribe\Station';
+        return Station::create([
+            'name' => $station_data['name'],
+            'district_id' => $station_data['district_id'],
+            'desc' => array_get($station_data, 'desc', ''),
+            'tel' => array_get($station_data, 'tel', ''),
+            'address' => $station_data['address'],
+            'cover_image' => $station_data['cover_image'],
+            'director' => $station_data['director'],
+            'phone' => $station_data['phone'],
+            'longitude' => $station_data['longitude'],
+            'latitude' => $station_data['latitude'],
+            'active' => 1
+        ]);
     }
 
-    public function getByUserId($user_id)
+    public function updateStation($station_id, $station_data)
     {
-        return Station::where('user_id', $user_id)->first();
-    }
-
-    public function preorder($user_id, $type, $pre_page)
-    {
-        if (empty($user_id)) {
-            return false;
-        }
-        switch ($type) {
-            case PreorderProtocol::STATUS_OF_UNTREATED:
-                $query = Station::with(['preorder' => function ($query) {
-                    $query->where('status', '=', PreorderProtocol::STATUS_OF_UNTREATED)->with('user');
-                }]);
-                break;
-            case PreorderProtocol::STATUS_OF_NO_STAFF:
-                $query = Station::with(['preorder' => function ($query) {
-                    $query->where('status', '=', PreorderProtocol::STATUS_OF_NO_STAFF)->with('user');
-                }]);
-                break;
-            case PreorderProtocol::STATUS_OF_NORMAL:
-                $query = Station::with(['preorder' => function ($query) {
-                    $query->where('status', '=', PreorderProtocol::STATUS_OF_NORMAL)->with('user');
-                }]);
-                break;
-            case PreorderProtocol::STATUS_OF_NOT_ENOUGH:
-                $query = Station::with(['preorder' => function ($query) {
-                    $query->where('charge_status', '=', PreorderProtocol::STATUS_OF_NOT_ENOUGH)->with('user');
-                }]);
-                break;
-            default:
-                $query = Station::with(['preorder']);
-                break;
-        }
-        $query = $query->where('status', '!=', PreorderProtocol::STATUS_OF_REJECT);
-        $query = $query->where('user_id', $user_id);
-
-        if (!empty($pre_page)) {
-            $query = $query->paginate($pre_page);
-        } else {
-            $query = $query->get();
-        }
-
-        return $query;
-    }
-
-    public function bindStation($station_id, $user_id)
-    {
-        $station = Station::findOrFail($station_id);
-        $station->user_id = $user_id;
+        $station = $this->getStation($station_id);
+        $station->fill(array_only($station_data, [
+            'name',
+            'district_id',
+            'tel',
+            'address',
+            'cover_image',
+            'director',
+            'phone',
+            'longitude',
+            'latitude',
+            'active'
+        ]));
         $station->save();
+
         return $station;
     }
 
-    public function create($input)
+    public function bindUser($station_id, $user_id)
     {
-        $input['status'] = empty($input['status']) ? 0 : $input['status'];
-        $input['longitude'] = store_coordinate($input['longitude']);
-        $input['latitude'] = store_coordinate($input['latitude']);
-        return Station::create($input);
-    }
-
-    public function update($id, $input)
-    {
-        return Station::find($id)->fill($input)->save();
-    }
-
-    public function show($id)
-    {
-        try {
-            return Station::findOrFail($id);
-        } catch (\Exception $e) {
-            throw new \Exception('该服务部不存在');
-        }
-    }
-
-    public function weekly($user_id, $week_of_year)
-    {
-        $query = Station::where('user_id', $user_id)->with(['weekly' => function ($query) use ($week_of_year) {
-            $query->where('week_of_year', $week_of_year);
-        }])->first();
-        return $query;
-    }
-
-    public function allStationBillings($begin_time, $end_time)
-    {
-        $query = Station::with('preorderOrder')->with('preorderOrder.product')->with('preorderOrder.orderBillings')
-            ->whereHas('preorderOrder.orderBillings', function ($query) use ($begin_time, $end_time) {
-                $query->where('created_at', '>=', $begin_time)->where('created_at', '<=', $end_time);
-            })->get();
-        return $query;
-    }
-
-    public function SearchInfo($keyword, $district_id, $per_page, $with = [])
-    {
-        $query = Station::query();
-        if (!empty($keyword)) {
-            $query = Station::where(function ($query) use ($keyword) {
-                $query->where('director', 'like', '%' . $keyword . '%')->orwhere('name', 'like', '%' . $keyword . '%')
-                    ->orwhere('phone', $keyword)->orwhere('tel', $keyword);
-            });
-        }
-        if (!empty($district_id)) {
-            $query = $query->where('district_id', $district_id);
-        }
-        if (!empty($with)) {
-            $query = $query->with($with);
-        }
-        if (!empty($per_page)) {
-            $query = $query->paginate($per_page);
-        } else {
-            $query = $query->get();
+        $user_relate = \DB::table('station_user')
+            ->where('user_id', $user_id)
+            ->first();
+        if ($user_relate) {
+            throw new \Exception('用户不能绑定多个服务部');
         }
 
-        return $query;
+        return \DB::table('station_user')->insert([
+            'station_id' => $station_id,
+            'user_id' => $user_id
+        ]);
+    }
+
+    public function updateAsActive($station_ids)
+    {
+        return Station::whereIn('id', to_array($station_ids))->update(['active' => 1]);
+    }
+
+    public function updateAsUnActive($station_ids)
+    {
+        return Station::whereIn('id', to_array($station_ids))->update(['active' => 0]);
+    }
+
+    public function deleteStation($station_id)
+    {
+        return Station::destroy($station_id);
+    }
+
+    public function getStation($station_id, $with_user = true)
+    {
+        if ($with_user) {
+            return Station::with('user')->find($station_id);
+        }
+        return Station::find($station_id);
+    }
+
+    public function getStationByUser($user_id)
+    {
+        $relate = \DB::table('station_id')
+            ->where('user_id', $user_id)
+            ->first();
+        if (!$relate) {
+            throw new \Exception('用户未绑定服务部', 403);
+        }
+
+        return $this->getStation($relate->station_id);
+    }
+
+    public function getAll()
+    {
+        return Station::get();
+    }
+
+    public function getAllActive()
+    {
+        #todo 缓存;
+        return Station::where('active', 1)->get();
+    }
+
+    public function unbindUser($station_id, $user_id)
+    {
+        DB::table('station_user')->where('station_id', $station_id)->where('user_id', $user_id)->delete();
+    }
+
+    public function getStationIdByUser($user_id)
+    {
+        $station = $this->getStationByUser($user_id);
+
+        return $station['id'];
+    }
+
+    public function getBindToken($station_id)
+    {
+        return generate_bind_token($station_id);
     }
 
 }

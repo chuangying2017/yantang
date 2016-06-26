@@ -89,5 +89,13 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
         });
 
 
+        /**
+         * 总部管理服务部
+         */
+        $api->group(['namespace' => 'Station'], function ($api) {
+            $api->resource('stations', 'StationController');
+        });
+
+
     });
 });

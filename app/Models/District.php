@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class District extends Model
 {
-    protected $table = 'district';
+    protected $table = 'districts';
 
     protected $guarded = ['id'];
 

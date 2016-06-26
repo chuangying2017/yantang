@@ -1,4 +1,4 @@
-<?php namespace App\Api\V1\Controllers\Admin\Subcribe;
+<?php namespace App\Api\V1\Controllers\Admin\Subscribe;
 
 use App\Api\V1\Controllers\Controller;
 use Illuminate\Http\Request;

@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStoreTable extends Migration
-{
+class CreateStoreTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -14,7 +14,6 @@ class CreateStoreTable extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
             $table->string('store_no')->nullable();
             $table->string('name');
             $table->string('address');
