@@ -11,7 +11,7 @@ class Station extends Model {
 
     protected $guarded = ['id'];
 
-    protected $table = 'station';
+    protected $table = 'stations';
 
     public function preorder()
     {
@@ -20,7 +20,7 @@ class Station extends Model {
 
     public function user()
     {
-        return $this->belongsToMany(User::class, 'station_user', 'store_id', 'user_id');
+        return $this->belongsToMany(User::class, 'station_user', 'station_id', 'user_id');
     }
 
     public function staffs()

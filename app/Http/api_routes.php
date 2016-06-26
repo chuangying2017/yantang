@@ -29,33 +29,16 @@ $api->version('v1', function ($api) {
          */
         require_once(__DIR__ . '/../Api/V1/Routes/admin_api.php');
 
+        /**
+         * 订奶
+         */
+        require_once(__DIR__ . '/../Api/V1/Routes/subscribe_api.php');
+
 
         /**
          * Gateway
          */
-
-
-        $api->group(['namespace' => 'Gateway', 'prefix' => 'gateway'], function ($api) {
-
-            $api->group(['prefix' => 'pingxx'], function ($api) {
-                $api->post('paid', 'PingxxNotifyController@paid');
-                $api->post('refund', 'PingxxNotifyController@refund');
-                $api->post('transfer', 'PingxxNotifyController@transfer');
-                $api->post('summary', 'PingxxNotifyController@summary');
-            });
-
-            $api->group(['prefix' => 'qiniu'], function ($api) {
-                $api->post('callback', 'QiniuNotifyController@store')->name('qiniu.callback');
-            });
-
-            $api->group(['prefix' => 'auth'], function ($api) {
-                $api->get('weixin', 'WechatAuthController@redirect');
-            });
-
-        });
-
-
-
+        require_once(__DIR__ . '/../Api/V1/Routes/gateway_api.php');
 
     });
 

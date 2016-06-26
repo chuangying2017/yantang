@@ -1,5 +1,7 @@
 <?php namespace App\Services\Access;
 
+use App\Repositories\Station\Staff\StaffRepositoryContract;
+use App\Repositories\Station\StationRepositoryContract;
 use App\Repositories\Store\StoreRepositoryContract;
 use JWTAuth;
 
@@ -79,6 +81,16 @@ class Access {
     public function storeId()
     {
         return $this->app->make(StoreRepositoryContract::class)->getStoreIdByUser($this->id());
+    }
+
+    public function staffId()
+    {
+        return $this->app->make(StaffRepositoryContract::class)->getStaffIdByUser($this->id());
+    }
+
+    public function stationId()
+    {
+        return $this->app->make(StationRepositoryContract::class)->getStationIdByUser($this->id());
     }
 
     public function getProviderId($provider = 'weixin')

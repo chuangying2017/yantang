@@ -3,18 +3,18 @@
 namespace App\Api\V1\Requests\Station;
 
 use App\Http\Requests\Request;
-use App\Repositories\Station\StationRepositoryContract;
+use App\Repositories\Station\Staff\StaffRepositoryContract;
 
-class BindStationRequest extends Request {
+class BindStaffRequest extends Request {
 
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize(StationRepositoryContract $stationRepo)
+    public function authorize(StaffRepositoryContract $staffRepo)
     {
-        return $stationRepo->getBindToken($this->route()->getParameter('station_id')) == $this->input('bind_token');
+        return $staffRepo->getBindToken($this->route()->getParameter('staff_id')) == $this->input('bind_token');
     }
 
     /**

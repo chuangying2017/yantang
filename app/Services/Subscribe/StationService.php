@@ -2,7 +2,7 @@
 
 use App\Services\Subscribe\PreorderProtocol;
 use Carbon\Carbon;
-use App\Repositories\Subscribe\Station\StationRepositoryContract;
+use App\Repositories\Station\StationRepositoryContract;
 
 /**
  * Class Access

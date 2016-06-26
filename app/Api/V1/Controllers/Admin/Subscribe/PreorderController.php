@@ -1,7 +1,7 @@
 <?php namespace App\Api\V1\Controllers\Admin\Subscribe;
 
 use App\Api\V1\Controllers\Controller;
-use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
+use App\Repositories\Preorder\PreorderRepositoryContract;
 use Illuminate\Http\Request;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Services\Subscribe\PreorderProtocol;

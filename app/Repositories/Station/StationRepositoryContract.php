@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Subscribe\Station;
+<?php namespace App\Repositories\Station;
 
 
 interface StationRepositoryContract

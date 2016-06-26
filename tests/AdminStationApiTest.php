@@ -4,9 +4,9 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class AdminStationApiTest extends TestCase
-{
-//    use DatabaseTransactions;
+class AdminStationApiTest extends TestCase {
+
+    use DatabaseTransactions;
 
     /** @test */
     public function it_can_create_a_station()
@@ -28,14 +28,15 @@ class AdminStationApiTest extends TestCase
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
 
-        $this->dumpResponse();
-
         $this->assertResponseStatus(201);
+
+        return $this->getResponseData('data');
     }
 
     /** @test */
     public function it_can_get_station_list()
     {
+        $this->it_can_create_a_station();
         $user_id = 1;
         $district_id = 1;
         $per_page = 10;
@@ -54,19 +55,4 @@ class AdminStationApiTest extends TestCase
 
     }
 
-    /** @test */
-    public function it_can_bind_station()
-    {
-        $user_id = 1;
-        $this->json('get', 'stations/bind_station',
-            [
-                'station_id' => '2',
-            ],
-            ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
-        );
-
-        $this->dumpResponse();
-
-        $this->assertResponseStatus(201);
-    }
 }

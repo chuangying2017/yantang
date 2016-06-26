@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Subscribe\Preorder;
+<?php namespace App\Repositories\Preorder;
 
 
 interface PreorderRepositoryContract

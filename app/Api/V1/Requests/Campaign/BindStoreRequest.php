@@ -3,6 +3,7 @@
 namespace App\Api\V1\Requests\Campaign;
 
 use App\Http\Requests\Request;
+use App\Repositories\Store\StoreRepositoryContract;
 
 class BindStoreRequest extends Request {
 
@@ -11,9 +12,9 @@ class BindStoreRequest extends Request {
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(StoreRepositoryContract $storeRepo)
     {
-        return check_bind_token($this->route()->getParameter('store_id'), $this->input('bind_token'));
+        return $storeRepo->getBindToken($this->route()->getParameter('store_id')) == $this->input('bind_token');
     }
 
     /**

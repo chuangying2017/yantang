@@ -53,54 +53,21 @@ class SubscribeServiceProvider extends ServiceProvider
     public function registerBindings()
     {
         $this->app->bind(
-            \App\Repositories\Subscribe\Staff\StaffRepositoryContract::class,
-            \App\Repositories\Subscribe\Staff\EloquentStaffRepository::class
+            \App\Repositories\Station\Staff\StaffRepositoryContract::class,
+            \App\Repositories\Station\Staff\EloquentStaffRepository::class
         );
 
         $this->app->bind(
-            \App\Repositories\Subscribe\Station\StationRepositoryContract::class,
-            \App\Repositories\Subscribe\Station\EloquentStationRepository::class
+            \App\Repositories\Station\StationRepositoryContract::class,
+            \App\Repositories\Station\EloquentStationRepository::class
         );
 
         $this->app->bind(
-            \App\Repositories\Subscribe\Address\AddressRepositoryContract::class,
-            \App\Repositories\Subscribe\Address\EloquentAddressRepository::class
+            \App\Repositories\Preorder\PreorderRepositoryContract::class,
+            \App\Repositories\Preorder\EloquentPreorderRepository::class
         );
 
-        $this->app->bind(
-            \App\Repositories\Subscribe\Preorder\PreorderRepositoryContract::class,
-            \App\Repositories\Subscribe\Preorder\EloquentPreorderRepository::class
-        );
 
-        $this->app->bind(
-            \App\Repositories\Subscribe\PreorderProduct\PreorderProductRepositoryContract::class,
-            \App\Repositories\Subscribe\PreorderProduct\EloquentPreorderProductRepository::class
-        );
-
-        $this->app->bind(
-            \App\Repositories\Subscribe\PreorderProductSku\PreorderProductSkuRepositoryContract::class,
-            \App\Repositories\Subscribe\PreorderProductSku\EloquentPreorderProductSkuRepository::class
-        );
-
-        $this->app->bind(
-            \App\Repositories\Subscribe\StaffPreorder\StaffPreorderRepositoryContract::class,
-            \App\Repositories\Subscribe\StaffPreorder\EloquentStaffPreorderRepository::class
-        );
-
-        $this->app->bind(
-            \App\Repositories\Subscribe\StaffWeekly\StaffWeeklyRepositoryContract::class,
-            \App\Repositories\Subscribe\StaffWeekly\EloquentStaffWeeklyRepository::class
-        );
-
-        $this->app->bind(
-            \App\Repositories\Subscribe\PreorderOrder\PreorderOrderRepositoryContract::class,
-            \App\Repositories\Subscribe\PreorderOrder\EloquentPreorderOrderRepository::class
-        );
-
-        $this->app->bind(
-            \App\Repositories\Subscribe\Statements\StatementsRepositoryContract::class,
-            \App\Repositories\Subscribe\Statements\EloquentStatementsRepository::class
-        );
     }
 
 }

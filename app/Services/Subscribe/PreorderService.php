@@ -1,7 +1,7 @@
 <?php namespace App\Services\Subscribe;
 
-use App\Repositories\Subscribe\Station\StationRepositoryContract;
-use App\Repositories\Subscribe\Preorder\PreorderRepositoryContract;
+use App\Repositories\Station\StationRepositoryContract;
+use App\Repositories\Preorder\PreorderRepositoryContract;
 use Carbon\Carbon;
 use App\Repositories\Subscribe\StaffWeekly\StaffWeeklyRepositoryContract;
 use App\Repositories\Subscribe\PreorderOrder\PreorderOrderRepositoryContract;

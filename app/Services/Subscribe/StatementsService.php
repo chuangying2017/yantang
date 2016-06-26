@@ -1,7 +1,7 @@
 <?php namespace App\Services\Subscribe;
 
 use App\Repositories\Subscribe\Statements\StatementsRepositoryContract;
-use App\Repositories\Subscribe\Station\StationRepositoryContract;
+use App\Repositories\Station\StationRepositoryContract;
 use Carbon\Carbon;
 use App\Services\Subscribe\SubscribeProtocol;
 use App\Models\Subscribe\StatementsProduct;

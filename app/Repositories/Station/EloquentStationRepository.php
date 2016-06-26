@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Subscribe\Station;
+<?php namespace App\Repositories\Station;
 
 use App\Models\Subscribe\Station;
 use DB;
@@ -82,7 +82,7 @@ class EloquentStationRepository implements StationRepositoryContract {
 
     public function getStationByUser($user_id)
     {
-        $relate = \DB::table('station_id')
+        $relate = \DB::table('station_user')
             ->where('user_id', $user_id)
             ->first();
         if (!$relate) {

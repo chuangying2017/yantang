@@ -5,7 +5,7 @@ namespace App\Api\V1\Controllers\Subscribe;
 
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
-use App\Repositories\Subscribe\Station\StationRepositoryContract;
+use App\Repositories\Station\StationRepositoryContract;
 use App\Api\V1\Requests\Station\BindStationRequest;
 
 class StationController extends Controller {
@@ -35,10 +35,10 @@ class StationController extends Controller {
             $station = $this->stationRepo->getStationByUser(access()->id());
 
             return $this->response->item($station, new StationTransformer());
-        } catch (\Exception $e) {
-            $this->response->error($e->getMessage(), $e->getCode());
-        }
 
+        } catch (\Exception $e) {
+            $this->response->error($e->getMessage(), 403);
+        }
     }
 
     /**
