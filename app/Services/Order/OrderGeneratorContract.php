@@ -12,7 +12,7 @@ interface OrderGeneratorContract {
 
     public function useCoupon($temp_order_id, $coupon_id);
 
-    public function buyCart($user_id, $cart_ids, $address_id);
+    public function buyCart($user_id, $cart_ids);
 
     public function buySpecialCampaign($user_id, $campaign_id, EloquentCampaignRepository $campaignRepo);
 

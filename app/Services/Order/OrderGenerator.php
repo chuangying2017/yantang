@@ -53,7 +53,7 @@ class OrderGenerator implements OrderGeneratorContract {
      * @param $address_id
      * @return TempOrder
      */
-    public function buyCart($user_id, $cart_ids, $address_id)
+    public function buyCart($user_id, $cart_ids)
     {
         $carts = app(CartRepositoryContract::class)->getMany($cart_ids, false);
         $skus = [];
@@ -64,7 +64,7 @@ class OrderGenerator implements OrderGeneratorContract {
                 'quantity' => $cart['quantity']
             ];
         }
-        return $this->buy($user_id, $skus, $address_id);
+        return $this->buy($user_id, $skus);
     }
 
     public function buySpecialCampaign($user_id, $campaign_id, EloquentCampaignRepository $campaignRepo)

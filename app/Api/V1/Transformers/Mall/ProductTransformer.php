@@ -27,6 +27,7 @@ class ProductTransformer extends TransformerAbstract {
             'type' => $product['type'],
             'open_time' => $product['open_time'],
             'end_time' => $product['end_time'],
+            'priority' => $product['priority']
         ];
 
         if ($product->relationLoaded('meta')) {

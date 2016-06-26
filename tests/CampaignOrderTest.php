@@ -80,7 +80,7 @@ class CampaignOrderTest extends TestCase {
 
         $this->json('POST', '/campaigns/orders/' . $order['order_no'] . '/checkout', [], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
         $charge = $this->getResponseData('data');
-        $this->json('post', 'pingxx/paid',
+        $this->json('post', 'gateway/pingxx/paid',
             $charge,
             []
         );

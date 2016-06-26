@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CartOrderApiTest extends TestCase {
 
-//    use DatabaseTransactions;
+    use DatabaseTransactions;
 
     /** @test */
     public function ite_can_create_a_cart_order()
@@ -50,10 +50,14 @@ class CartOrderApiTest extends TestCase {
         return $order['data'];
     }
 
+    /** @test */
     public function it_can_add_a_sku_to_cart()
     {
         $user_id = 1;
-        $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 100], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+        $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 2], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+
+        $this->dumpResponse();
+
         $result = $this->getResponseData();
         $this->assertResponseStatus(201);
         return $result['data']['id'];
@@ -85,7 +89,7 @@ class CartOrderApiTest extends TestCase {
 
         $charge = $this->getResponseData('data');
 
-        $this->json('post', 'pingxx/paid',
+        $this->json('post', 'gateway/pingxx/paid',
             $charge,
             []
         );

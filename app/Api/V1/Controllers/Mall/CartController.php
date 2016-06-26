@@ -51,7 +51,7 @@ class CartController extends Controller {
         );
 
         if ($cart) {
-            return $this->response->created()->setContent(['data' => $cart->toArray()]);
+            return $this->response->item($cart, new CartTransformer())->setStatusCode(201);
         }
 
         $this->response->error('库存不足或其他错误原因,无法添加到购物车', 400);
