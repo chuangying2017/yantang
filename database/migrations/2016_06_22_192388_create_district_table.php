@@ -12,9 +12,10 @@ class CreateDistrictTable extends Migration
      */
     public function up()
     {
-        Schema::create('district', function (Blueprint $table) {
+        Schema::create('districts', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->tinyInteger('active')->default(1);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ class CreateDistrictTable extends Migration
      */
     public function down()
     {
-        Schema::drop('district');
+        Schema::drop('districts');
     }
 }

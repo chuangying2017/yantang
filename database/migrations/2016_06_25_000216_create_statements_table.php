@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStoreStatementsTable extends Migration {
+class CreateStatementsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,9 +12,11 @@ class CreateStoreStatementsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('store_statements', function (Blueprint $table) {
+        Schema::create('statements', function (Blueprint $table) {
             $table->string('statement_no');
-            $table->integer('store_id')->unsigned();
+            $table->integer('merchant_id')->unsigned();
+            $table->tinyInteger('year');
+            $table->tinyInteger('month');
             $table->integer('settle_amount');
             $table->integer('service_amount');
             $table->integer('total_amount');
@@ -30,7 +32,7 @@ class CreateStoreStatementsTable extends Migration {
             $table->timestamps();
 
             $table->primary('statement_no');
-            $table->index(['statement_no', 'store_id', 'status']);
+            $table->index(['statement_no', 'merchant_id', 'status']);
         });
     }
 
@@ -41,6 +43,6 @@ class CreateStoreStatementsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('store_statements');
+        Schema::drop('statements');
     }
 }

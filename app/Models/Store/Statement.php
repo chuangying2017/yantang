@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Statement extends Model {
 
-    protected $table = 'order_ticket_statements';
+    protected $table = 'store_statements';
 
     protected $guarded = [];
 

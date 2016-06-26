@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStationStaffsTable extends Migration
-{
+class CreateStationStaffsTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -19,6 +19,7 @@ class CreateStationStaffsTable extends Migration
             $table->string('staff_no', 64);
             $table->string('name');
             $table->string('phone');
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

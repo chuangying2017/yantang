@@ -12,4 +12,7 @@ class BillingProtocol
     const BILLING_TYPE_OF_PREORDER_ORDER_BILLING = PreorderOrderBillings::class;
     const BILLING_CHANNEL_OF_PREORDER_BILLING = 'wx';
 
+
+    const STATUS_OF_UNPAID = 'unpaid';
+    const STATUS_OF_PAID = 'paid';
 }

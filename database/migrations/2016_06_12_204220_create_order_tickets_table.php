@@ -21,6 +21,7 @@ class CreateOrderTicketsTable extends Migration {
             $table->string('ticket_no', 45)->index();
             $table->string('status', 45)->index();
             $table->dateTime('exchange_at')->nullable();
+            $table->tinyInteger('checkout')->default(0);
             $table->timestamps();
         });
     }

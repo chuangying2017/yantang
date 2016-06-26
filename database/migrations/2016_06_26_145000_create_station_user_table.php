@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTypeToProductSkusTable extends Migration
-{
+class CreateStationUserTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -12,8 +12,10 @@ class AddTypeToProductSkusTable extends Migration
      */
     public function up()
     {
-        Schema::table('product_skus', function (Blueprint $table) {
-            $table->string('type')->default('entity');
+        Schema::create('station_user', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned();
+            $table->integer('station_id')->unsigned();
+            $table->timestamps();
         });
     }
 
@@ -24,8 +26,6 @@ class AddTypeToProductSkusTable extends Migration
      */
     public function down()
     {
-        Schema::table('product_skus', function (Blueprint $table) {
-            $table->dropColumn('type');
-        });
+        Schema::drop('station_user');
     }
 }

@@ -15,6 +15,7 @@ class CreatePromotionsTable extends Migration {
         Schema::create('promotions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('cover_image');
             $table->string('desc');
             $table->dateTime('start_time');
             $table->dateTime('end_time');

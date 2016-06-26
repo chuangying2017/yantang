@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePreRechargeTable extends Migration
-{
+class CreateOrderSpecialCampaignTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -12,9 +12,10 @@ class CreatePreRechargeTable extends Migration
      */
     public function up()
     {
-        Schema::create('pre_recharge', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('amount');
+        Schema::create('order_special_campaign', function (Blueprint $table) {
+            $table->integer('order_id')->primary()->index();
+            $table->string('campaign_name');
+            $table->string('campaign_id');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ class CreatePreRechargeTable extends Migration
      */
     public function down()
     {
-        Schema::drop('pre_recharge');
+        Schema::drop('order_special_campaign');
     }
 }

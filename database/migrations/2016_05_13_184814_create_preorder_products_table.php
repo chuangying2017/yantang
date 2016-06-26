@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePreorderProductsTable extends Migration
-{
+class CreatePreorderProductsTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -17,6 +17,12 @@ class CreatePreorderProductsTable extends Migration
             $table->integer('preorder_id')->unsigned();
             $table->tinyInteger('weekday');
             $table->tinyInteger('daytime');
+            $table->integer('product_sku_id')->unsigned();
+            $table->integer('product_id')->unsigned();
+            $table->string('name');
+            $table->smallInteger('quantity');
+            $table->integer('price');
+            $table->integer('total_amount');
             $table->timestamps();
         });
     }

@@ -12,8 +12,16 @@ class PreorderProtocol
     const STATUS_OF_REJECT = 'reject';
 
     //charge_status 对应的值
-    const STATUS_OF_NOT_ENOUGH = 'not_enough';
-    const STATUS_OF_ENOUGH = 'enough';
+    const CHARGE_STATUS_OF_NULL = 0;
+    const CHARGE_STATUS_OF_OK = 1;
+    const CHARGE_STATUS_OF_NOT_ENOUGH = 2;
+
+    //status对应的值
+    const ASSIGN_STATUS_OF_UNTREATED = 'untreated';
+    const ASSIGN_STATUS_OF_NOT_SET = 'not_set';
+    const ASSIGN_STATUS_OF_NO_STAFF = 'no_staff';
+    const ASSIGN_STATUS_OF_CONFIRM = 'confirm';
+    const ASSIGN_STATUS_OF_REJECT = 'reject';
 
     const DAYTIME_OF_AM = 0;
     const DAYTIME_OF_PM = 1;
@@ -28,7 +36,6 @@ class PreorderProtocol
             self::STATUS_OF_NORMAL => '正常状态',
             self::STATUS_OF_PAUSE => '暂停',
             self::STATUS_OF_REJECT => '已拒绝',
-            self::STATUS_OF_NOT_ENOUGH => '余额不足',
         ];
 
         return is_null($key) ? $message : $message[$key];
@@ -49,7 +56,6 @@ class PreorderProtocol
         $message = [
             self::STATUS_OF_UNTREATED => '未处理',
             self::STATUS_OF_NORMAL => '正常状态',
-            self::STATUS_OF_NOT_ENOUGH => '余额不足',
         ];
 
         return is_null($key) ? $message : $message[$key];

@@ -16,7 +16,7 @@ class CreateCategoriesTable extends Migration {
             $table->increments('id');
             $table->string('type', 11)->index(); // 类型:主,品牌,促销...
             $table->string('name');
-            $table->smallInteger('index')->default(1);
+            $table->smallInteger('priority')->default(0);
             $table->integer('pid')->nullable(); //parent id
             $table->integer('lid')->nullable();
             $table->integer('rid')->nullable();
