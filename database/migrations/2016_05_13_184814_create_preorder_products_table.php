@@ -12,7 +12,7 @@ class CreatePreorderProductsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('preorder_products', function (Blueprint $table) {
+        Schema::create('preorder_skus', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('preorder_id')->unsigned();
             $table->tinyInteger('weekday');
@@ -24,6 +24,7 @@ class CreatePreorderProductsTable extends Migration {
             $table->integer('price');
             $table->integer('total_amount');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -34,6 +35,6 @@ class CreatePreorderProductsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('preorder_products');
+        Schema::drop('preorder_skus');
     }
 }

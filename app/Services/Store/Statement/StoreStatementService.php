@@ -47,7 +47,6 @@ class StoreStatementService implements StoreStatementServiceContract {
         $tickets = $this->ticketRepo->getStoreOrderTicketsWithProducts($store_id, $this->getTime());
 
         $settle_amount = 0;
-        $service_amount = 0;
         $product_skus_info = [];
         foreach ($tickets as $key => $ticket) {
             foreach ($ticket['skus'] as $sku) {
@@ -67,13 +66,20 @@ class StoreStatementService implements StoreStatementServiceContract {
             }
         }
 
-        #todo calculate service fee & amount
+        $service_amount = $this->calSettleAmount($settle_amount, $product_skus_info);
 
         $statement = $this->statementRepo->createStatement($store_id, $settle_amount, $service_amount, $product_skus_info);
 
         $this->ticketRepo->updateOrderTicketsAsChecked(array_pluck($tickets, 'id'));
 
         return $statement;
+    }
+
+    public function calSettleAmount($settle_amount, $product_skus)
+    {
+        #todo calculate service fee & amount
+
+        return 0;
     }
 
     protected function getTime()

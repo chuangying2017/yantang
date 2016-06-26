@@ -1,16 +1,14 @@
 <?php namespace App\Api\V1\Transformers\Campaign;
 
-use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\OrderTicket;
-use App\Repositories\Product\ProductProtocol;
 use League\Fractal\TransformerAbstract;
 
-class OrderTicketTransformer extends TransformerAbstract {
+class StoreTicketTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'exchange', 'order', 'campaign'];
+    protected $availableIncludes = ['skus', 'campaign'];
 
     public function transform(OrderTicket $ticket)
     {
@@ -25,7 +23,8 @@ class OrderTicketTransformer extends TransformerAbstract {
                 'id' => $ticket['order_id']
             ],
             'ticket_no' => $ticket['ticket_no'],
-            'status' => $ticket['status']
+            'status' => $ticket['status'],
+            'settle_amount' => $ticket->skus->sum('total_amount')
         ];
     }
 
@@ -34,19 +33,10 @@ class OrderTicketTransformer extends TransformerAbstract {
         return $this->collection($ticket->skus, new OrderTicketSkuTransformer(), true);
     }
 
-    public function includeExchange(OrderTicket $ticket)
-    {
-        return $this->item($ticket->exchange, new StoreTransformer(), true);
-    }
-
     public function includeCampaign(OrderTicket $ticket)
     {
         return $this->item($ticket->campaign, new OrderSpecialCampaignTransformer(), true);
     }
 
-    public function includeOrder(OrderTicket $ticket)
-    {
-        return $this->item($ticket->order, new ClientOrderTransformer(), true);
-    }
 
 }

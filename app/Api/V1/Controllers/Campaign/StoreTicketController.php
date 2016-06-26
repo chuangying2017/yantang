@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Campaign;
 
-use App\Api\V1\Transformers\Campaign\OrderTicketTransformer;
+use App\Api\V1\Transformers\Campaign\StoreTicketTransformer;
 use App\Repositories\OrderTicket\OrderTicketRepositoryContract;
 use App\Services\OrderTicket\OrderTicketManageContract;
 use Illuminate\Http\Request;
@@ -41,7 +41,7 @@ class StoreTicketController extends Controller {
     {
         $ticket = $this->orderTIcketRepo->getOrderTicket($ticket_no, true);
 
-        return $this->response->item($ticket, new OrderTicketTransformer());
+        return $this->response->item($ticket, new StoreTicketTransformer());
     }
 
 
@@ -56,7 +56,7 @@ class StoreTicketController extends Controller {
     {
         $order_ticket = $this->orderTicketManage->exchange($ticket_no, access()->storeId());
 
-        return $this->response->item($order_ticket, new OrderTicketTransformer());
+        return $this->response->item($order_ticket, new StoreTicketTransformer());
     }
 
 }

@@ -1,20 +1,14 @@
 <?php namespace App\Api\V1\Transformers\Subscribe\Station;
 
+use App\Models\Subscribe\Preorder;
 use League\Fractal\TransformerAbstract;
-use App\Models\Subscribe\Station;
-use App\Services\Subscribe\PreorderProtocol;
 
-class StationPreorderTransformer extends TransformerAbstract
-{
+class StationPreorderTransformer extends TransformerAbstract {
 
-    public function transform(Station $station)
+    public function transform(Preorder $order)
     {
-        $this->setDefaultIncludes(['preorder']);
-        $menus = PreorderProtocol::stationPreorderMenus();
-
         $data = [
-            'id' => (int)$station->id,
-            'menus' => $menus,
+
         ];
 
         return $data;

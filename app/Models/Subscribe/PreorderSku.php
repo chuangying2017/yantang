@@ -2,11 +2,10 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class PreorderOrderProducts extends Model
+class PreorderSku extends Model
 {
-
     protected $guarded = ['id'];
 
-    protected $table = 'preorder_order_products';
+    protected $table = 'preorder_skus';
 
 }

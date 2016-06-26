@@ -8,6 +8,7 @@ class NoGenerator {
     const ORDER_BILLING_PREFIX = '11';
     const ORDER_TICKET_PREFIX = '12';
 
+    const PREORDER_PREFIX = '20';
     const CHARGE_BILLING_PREFIX = '21';
     const PREORDER_BILLING_PREFIX = '22';
 
@@ -16,6 +17,7 @@ class NoGenerator {
 
     const LENGTH_OF_ORDER_BILLING_NO = 21;
     const LENGTH_OF_ORDER_NO = 21;
+    const LENGTH_OF_PREORDER_NO = 21;
     const LENGTH_OF_CHARGE_BILLING_NO = 21;
     const LENGTH_OF_PREORDER_BILLING_NO = 21;
 
@@ -47,6 +49,11 @@ class NoGenerator {
     public static function generatePreorderBillingNo()
     {
         return self::PREORDER_BILLING_PREFIX . self::generate_no();
+    }
+
+    public static function generatePreorderNo()
+    {
+        return self::PREORDER_PREFIX . self::generate_no();
     }
 
     public static function generateOrderTicketNo($order_no = null)

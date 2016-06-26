@@ -41,7 +41,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, Or
         return $query->get();
     }
 
-    public function getOrderTicket($ticket_no, $with_detail = false)
+    public function getOrderTicket($ticket_no, $with_detail = false, $with_mix = false)
     {
         if ($ticket_no instanceof OrderTicket) {
             $ticket = $ticket_no;
@@ -52,7 +52,12 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, Or
         }
 
         if ($with_detail) {
-            $ticket->load(['skus', 'exchange', 'campaign']);
+            if ($with_mix) {
+                $ticket->load(['skus', 'exchange', 'campaign']);
+            }
+            $ticket->load(['skus' => function ($query) {
+                $query->where('type', '!=', ProductProtocol::TYPE_OF_MIX);
+            }, 'exchange', 'campaign']);
         }
 
 
@@ -81,7 +86,9 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, Or
 
     public function getOrderTicketsOfStore($store_id, $start_at = null, $end_at = null, $per_page = OrderTicketProtocol::TICKET_PER_PAGE)
     {
-        $query = OrderTicket::query()->with('campaign')->where('store_id', $store_id);
+        $query = OrderTicket::query()->with(['campaign', 'skus' => function ($query) {
+            $query->where('type', '!=', ProductProtocol::TYPE_OF_MIX);
+        }])->where('store_id', $store_id);
         if (!is_null($start_at)) {
             $query = $query->where('exchange_at', '>=', $start_at);
         }

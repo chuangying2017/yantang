@@ -23,6 +23,8 @@ class CreatePreorderOrderBillingsTable extends Migration {
             $table->string('status', 45)->default('unpaid');
             $table->dateTime('pay_at');
             $table->timestamps();
+
+            $table->index(['user_id', 'station_id','staff_id', 'status', 'billing_no']);
         });
     }
 

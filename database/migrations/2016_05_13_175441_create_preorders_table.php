@@ -21,11 +21,16 @@ class CreatePreordersTable extends Migration {
             $table->integer('district_id');
             $table->string('address');
             $table->string('status', 32);
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
             $table->tinyInteger('charge_status')->default(0);
             $table->integer('station_id')->unsigned();
             $table->integer('staff_id')->unsigned();
             $table->mediumInteger('staff_priority')->default(0);
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->index(['user_id', 'start_time', 'end_time', 'status', 'order_no']);
         });
     }
 
