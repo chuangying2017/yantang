@@ -16,6 +16,11 @@ class ChargeBillingRepository implements BillingRepositoryContract {
         ]);
     }
 
+	/**
+     * @param $billing_no
+     * @param null $pay_channel
+     * @return ChargeBilling
+     */
     public function updateAsPaid($billing_no, $pay_channel = null)
     {
         $billing = $this->getBilling($billing_no);

@@ -1,8 +1,8 @@
 <?php namespace App\Repositories\Station;
 
 
-interface StationRepositoryContract
-{
+interface StationRepositoryContract {
+
     public function createStation($station_data);
 
     public function updateStation($station_id, $station_data);
@@ -25,7 +25,7 @@ interface StationRepositoryContract
 
     public function getStationIdByUser($user_id);
 
-    public function getAll();
+    public function getAll($only_id = false);
 
-    public function getAllActive();
+    public function getAllActive($only_id = false);
 }

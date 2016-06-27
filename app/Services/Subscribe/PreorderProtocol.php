@@ -8,10 +8,8 @@ class PreorderProtocol
 
     //status对应的值
     const ORDER_STATUS_OF_ASSIGNING = 'assigning';
-    const ORDER_STATUS_OF_PENDING = 'pending';
+    const ORDER_STATUS_OF_SHIPPING = 'shipping';
     const ORDER_STATUS_OF_DONE = 'done';
-    const ORDER_STATUS_OF_READY = 'ready';
-    const ORDER_STATUS_OF_FUTURE = 'future';
 
     //charge_status 对应的值
     const CHARGE_STATUS_OF_NULL = 0;
@@ -20,10 +18,9 @@ class PreorderProtocol
 
     //status对应的值
     const ASSIGN_STATUS_OF_UNTREATED = 'untreated';
-    const ASSIGN_STATUS_OF_NOT_SET = 'not_set';
-    const ASSIGN_STATUS_OF_NO_STAFF = 'no_staff';
     const ASSIGN_STATUS_OF_CONFIRM = 'confirm';
     const ASSIGN_STATUS_OF_REJECT = 'reject';
+    const DAYS_OF_ASSIGN_DISPOSE = 2;
 
     const DAYTIME_OF_AM = 0;
     const DAYTIME_OF_PM = 1;

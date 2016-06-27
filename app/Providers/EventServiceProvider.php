@@ -92,6 +92,7 @@ class EventServiceProvider extends ServiceProvider {
          */
 
         'App\Events\Preorder\ChargeBillingIsPaid' => [
+            'App\Listeners\Preorder\RechargeWallet',
             'App\Listeners\Preorder\SetPreorderAsCharged',
         ],
 

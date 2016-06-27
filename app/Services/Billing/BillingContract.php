@@ -7,7 +7,6 @@
 interface BillingContract
 {
 
-
     public function getID();
 
     public function getOrderNo();

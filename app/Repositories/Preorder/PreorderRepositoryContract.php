@@ -1,8 +1,6 @@
 <?php namespace App\Repositories\Preorder;
 
 
-use App\Repositories\Station\StationProtocol;
-
 interface PreorderRepositoryContract {
 
     public function createPreorder($data);

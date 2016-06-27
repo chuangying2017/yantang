@@ -92,15 +92,22 @@ class EloquentStationRepository implements StationRepositoryContract {
         return $this->getStation($relate->station_id);
     }
 
-    public function getAll()
+    public function getAll($only_id = false)
     {
-        return Station::get();
+        if ($only_id) {
+            return Station::query()->pluck('id')->all();
+        }
+        return Station::query()->get();
     }
 
-    public function getAllActive()
+    public function getAllActive($only_id = false)
     {
         #todo 缓存;
-        return Station::where('active', 1)->get();
+
+        if ($only_id) {
+            return Station::query()->where('active', 1)->pluck('id')->all();
+        }
+        return Station::query()->where('active', 1)->get();
     }
 
     public function unbindUser($station_id, $user_id)

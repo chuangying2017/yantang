@@ -41,6 +41,17 @@ class CartOrderController extends Controller {
         return $this->response->array(['data' => $temp_order->toArray()]);
     }
 
+    public function show(Request $request, $temp_order_id)
+    {
+        $temp_order = $this->orderGenerator->getTempOrder($temp_order_id);
+
+        if(!$temp_order) {
+            throw new \Exception('订单过期', 404);
+        }
+
+        return $this->response->array(['data' => $temp_order->toArray()]);
+    }
+
 
     /**
      * Update the specified resource in storage.

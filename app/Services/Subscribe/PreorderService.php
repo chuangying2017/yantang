@@ -9,7 +9,7 @@ use App\Models\Subscribe\PreorderOrderProducts;
 use App\Models\Billing\PreorderBilling;
 use App\Services\Subscribe\SubscribeProtocol;
 use App\Services\Client\Account\WalletService;
-use App\Services\Billing\PreorderOrderBilling;
+use App\Services\Billing\PreorderBillingService;
 use App\Services\Billing\ChargeBillingService;
 use App\Services\Billing\BillingProtocol;
 use Log;
@@ -35,7 +35,7 @@ class PreorderService
 
     public function __construct(StationRepositoryContract $stationRepo, PreorderRepositoryContract $preorderRepo,
                                 StaffService $staffService, StaffWeeklyRepositoryContract $staffWeeklyRepo, ChargeBillingService $preorderBilling,
-                                PreorderOrderRepositoryContract $preorderOrderRepo, WalletService $walletService, PreorderOrderBilling $preorderOrderBilling)
+                                PreorderOrderRepositoryContract $preorderOrderRepo, WalletService $walletService, PreorderBillingService $preorderOrderBilling)
     {
         $this->stationRepo = $stationRepo;
         $this->preorderRepo = $preorderRepo;

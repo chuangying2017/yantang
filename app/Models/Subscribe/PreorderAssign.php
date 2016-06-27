@@ -9,4 +9,6 @@ class PreorderAssign extends Model {
     protected $table = 'preorder_assign';
 
     protected $guarded = [];
+
+    protected $primaryKey = 'preorder_id';
 }

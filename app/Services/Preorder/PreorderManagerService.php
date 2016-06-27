@@ -1,8 +1,10 @@
 <?php namespace App\Services\Preorder;
 
 use App\Events\Preorder\AssignIsConfirm;
+use App\Models\Subscribe\PreorderSku;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
+use App\Repositories\Preorder\Product\PreorderSkusRepositoryContract;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 use Carbon\Carbon;
 
@@ -20,6 +22,10 @@ class PreorderManagerService implements PreorderManageServiceContract {
      * @var ProductSkuRepositoryContract
      */
     private $skuRepo;
+    /**
+     * @var PreorderSkusRepositoryContract
+     */
+    private $orderSkuRepo;
 
 
     /**
@@ -31,21 +37,26 @@ class PreorderManagerService implements PreorderManageServiceContract {
     public function __construct(
         PreorderRepositoryContract $orderRepo,
         PreorderAssignRepositoryContract $assignRepo,
-        ProductSkuRepositoryContract $skuRepo
+        ProductSkuRepositoryContract $skuRepo,
+        PreorderSkusRepositoryContract $orderSkuRepo
     )
     {
         $this->orderRepo = $orderRepo;
         $this->assignRepo = $assignRepo;
         $this->skuRepo = $skuRepo;
+        $this->orderSkuRepo = $orderSkuRepo;
     }
 
     public function init($order_id, $weekdays_product_skus, $start_time, $end_time = null)
     {
-        $assign = $this->assignRepo->get($order_id);
+        $order = $this->orderRepo->get($order_id);
+        $assign = $this->assignRepo->get($order['id']);
 
         $product_skus = $this->getProductSkus($weekdays_product_skus);
 
-        $order = $this->orderRepo->updatePreorder($order_id, $start_time, $this->getEndTime($start_time, $end_time), $product_skus, $assign['station_id']);
+        $order = $this->orderRepo->updatePreorder($order, $start_time, $this->getEndTime($start_time, $end_time), $product_skus, $assign['station_id']);
+
+        $this->assignRepo->updateAssignAsConfirm($order_id);
 
         event(new AssignIsConfirm($order));
 
@@ -54,6 +65,14 @@ class PreorderManagerService implements PreorderManageServiceContract {
 
     protected function getProductSkus($weekdays_product_skus)
     {
+        if (is_null($weekdays_product_skus)) {
+            return null;
+        }
+
+        if ($weekdays_product_skus instanceof PreorderSku) {
+            return $weekdays_product_skus->toArray();
+        }
+
         $sku_ids = [];
         foreach ($weekdays_product_skus as $weekday_product_skus) {
             foreach ($weekday_product_skus['product_skus'] as $weekday_product_sku) {
@@ -68,21 +87,28 @@ class PreorderManagerService implements PreorderManageServiceContract {
             throw new \Exception('订购商品不存在');
         }
 
-        foreach ($weekdays_product_skus as $weekday_key => $weekday_product_skus) {
-            foreach ($weekday_product_skus['product_skus'] as $product_sku_key => $weekday_product_sku) {
+        $order_skus = [];
+        foreach ($weekdays_product_skus as $weekday_product_skus) {
+            foreach ($weekday_product_skus['product_skus'] as $weekday_product_sku) {
                 foreach ($skus as $sku) {
                     if ($weekday_product_sku['product_sku_id'] == $sku['id']) {
                         if (!is_numeric($sku['subscribe_price']) || !($sku['subscribe_price'] > 0)) {
                             throw new \Exception('商品' . $sku['name'] . $sku['id'] . ' 不能订购');
                         }
-                        $weekdays_product_skus[$weekday_key]['product_skus'][$product_sku_key]['name'] = $sku['name'];
-                        $weekdays_product_skus[$weekday_key]['product_skus'][$product_sku_key]['price'] = $sku['subscribe_price'];
+                        $order_skus[] = [
+                            'product_sku_id' => $weekday_product_sku['product_sku_id'],
+                            'quantity' => $weekday_product_sku['quantity'],
+                            'name' => $weekday_product_sku['name'],
+                            'price' => $weekday_product_sku['subscribe_price'],
+                            'cover_image' => $weekday_product_sku['cover_image'],
+                            'total_amount' => $weekday_product_sku['quantity'] * $weekday_product_sku['subscribe_price']
+                        ];
                     }
                 }
             }
         }
 
-        return $weekdays_product_skus;
+        return $order_skus;
     }
 
     protected function getEndTime($start_time, $end_time)
@@ -97,24 +123,57 @@ class PreorderManagerService implements PreorderManageServiceContract {
         return Carbon::createFromFormat('Y-m-d', strtotime($start_time))->addYear(10);
     }
 
-    public function change($order_id, $product_skus, $start_time = null, $end_time = null)
+    public function change($order_id, $weekdays_product_skus = null, $start_time = null, $end_time = null)
     {
         $old_order = $this->orderRepo->get($order_id);
+        $now = Carbon::now();
 
+        //未开始订单,直接修改
+        if ($old_order['start_time'] > $now) {
+            $order = $this->orderRepo->updatePreorder($order_id, $start_time, $end_time, $this->getProductSkus($weekdays_product_skus));
+        } else if ($old_order['end_time'] < $now) {
+            //已结束订单,创建新订单
+            if (is_null($weekdays_product_skus)) {
+                $weekdays_product_skus = $this->orderSkuRepo->getAll($old_order['id']);
+            }
+            $this->createAndInitOrder($old_order, $start_time, $end_time, $weekdays_product_skus);
+        } else {
+            //进行中订单
 
+            //修改进行中订单的结束时间
+            $old_order_end_time = is_null($start_time) ? Carbon::today() : $start_time;
+            $this->orderRepo->updatePreorder($order_id, null, $old_order_end_time);
 
-        $order = $this->orderRepo->updatePreorder($order_id, $start_time, $this->getEndTime($start_time, $end_time), $product_skus, $assign['station_id']);
+            //商品修改,创建新订单
+            if (!is_null($weekdays_product_skus)) {
+                $this->createAndInitOrder($old_order, $old_order_end_time, $this->getEndTime($start_time, $end_time), $weekdays_product_skus);
+            }
+
+            //短暂修改,克隆现有订单为将来订单
+            if (!is_null($end_time)) {
+                $this->createAndInitOrder($old_order, $start_time, $end_time, $weekdays_product_skus);
+            }
+        }
     }
 
-    protected function orderIsPending($order)
+    protected function createAndInitOrder($old_order, $start_time, $end_time, $weekdays_product_skus)
     {
-        $now = Carbon::now();
-        return $order['start_time'] > $now && $order['end_time'] < $now
+        $new_order = $this->orderRepo->createPreorder(array_only($old_order, [
+            'user_id',
+            'name',
+            'phone',
+            'district_id',
+            'address',
+            'station_id'
+        ]));
+        return $this->init($new_order, $weekdays_product_skus, $start_time, $end_time);
     }
 
     public function pause($order_id, $pause_time, $restart_time = null)
     {
-        // TODO: Implement pause() method.
+        $order = $this->orderRepo->get($order_id);
+
+        $this->orderRepo->updatePreorder($order_id, null, $pause_time, $restart_time);
     }
 
 }

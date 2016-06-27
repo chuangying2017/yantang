@@ -2,6 +2,7 @@
 
 use App\Repositories\Client\Account\AccountRepositoryContract;
 use App\Services\Billing\BillingContract;
+use App\Services\Pay\Exception\MultiChargeException;
 use App\Services\Pay\Exception\NotEnoughException;
 use App\Services\Pay\PayableContract;
 use App\Services\Pay\RechargeableContract;
@@ -59,7 +60,11 @@ abstract class AccountService implements PayableContract, RechargeableContract, 
 
     public function recharge(BillingContract $billing)
     {
-        $this->validRecharge($billing);
+        try {
+            $this->validRecharge($billing);
+        } catch (MultiChargeException $e) {
+            return true;
+        }
 
         $pay_amount = $this->transAmount($billing->getAmount());
 

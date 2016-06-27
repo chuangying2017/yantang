@@ -8,6 +8,11 @@ use Carbon\Carbon;
 
 class PreorderBillingRepository implements BillingRepositoryContract, StationBillingRepositoryContract {
 
+	/**
+     * @param $amount
+     * @param $ids
+     * @return PreorderBilling
+     */
     public function createBilling($amount, $ids)
     {
         return PreorderBilling::create([

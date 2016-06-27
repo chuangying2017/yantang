@@ -20,6 +20,7 @@ class CreatePreorderProductsTable extends Migration {
             $table->integer('product_sku_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->string('name');
+            $table->string('cover_image');
             $table->smallInteger('quantity');
             $table->integer('price');
             $table->integer('total_amount');
