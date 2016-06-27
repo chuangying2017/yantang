@@ -1,8 +1,9 @@
 <?php namespace App\Repositories\Store;
 
 use App\Models\Store;
+use App\Repositories\Statement\MerchantRepositoryContract;
 
-class StoreRepository implements StoreRepositoryContract {
+class StoreRepository implements StoreRepositoryContract, MerchantRepositoryContract {
 
     public function createStore($store_data)
     {
@@ -86,15 +87,20 @@ class StoreRepository implements StoreRepositoryContract {
         return $this->getStore($relate->store_id);
     }
 
-    public function getAll()
+    public function getAll($only_ids = false)
     {
-        return Store::get();
+        if ($only_ids) {
+            return Store::query()->pluck('id')->all();
+        }
+        return Store::query()->get();
     }
 
-    public function getAllActive()
+    public function getAllActive($only_ids = false)
     {
-        #todo 缓存;
-        return Store::where('active', 1)->get();
+        if ($only_ids) {
+            return Store::query()->where('active', 1)->pluck('id')->all();
+        }
+        return Store::query()->where('active', 1)->get();
     }
 
     public function unbindUser($store_id, $user_id)

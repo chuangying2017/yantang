@@ -121,7 +121,7 @@ class EloquentProductRepository implements ProductRepositoryContract {
     {
         $product = Product::findOrFail($product_id);
         if ($with_detail) {
-            $product = $product->load('skus', 'cats', 'brand', 'groups', 'meta', 'info');
+            $product = $product->load('skus', 'cats', 'brand', 'groups', 'meta', 'info', 'images');
         }
         return $product;
     }

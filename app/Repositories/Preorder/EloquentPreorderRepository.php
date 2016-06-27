@@ -6,7 +6,7 @@ use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\Product\PreorderSkusRepositoryContract;
 use App\Repositories\Station\StationPreorderRepositoryContract;
 use Carbon\Carbon;
-use App\Services\Subscribe\PreorderProtocol;
+use App\Services\Preorder\PreorderProtocol;
 
 class EloquentPreorderRepository implements PreorderRepositoryContract, StationPreorderRepositoryContract {
 

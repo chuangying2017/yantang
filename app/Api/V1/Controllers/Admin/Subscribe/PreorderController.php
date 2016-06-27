@@ -4,7 +4,7 @@ use App\Api\V1\Controllers\Controller;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use Illuminate\Http\Request;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
-use App\Services\Subscribe\PreorderProtocol;
+use App\Services\Preorder\PreorderProtocol;
 use StaffService;
 
 class PreorderController extends Controller

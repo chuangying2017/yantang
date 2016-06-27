@@ -15,16 +15,16 @@ class CreatePreorderOrderBillingsTable extends Migration {
         Schema::create('preorder_billings', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('station_id')->unsigned();
+            $table->integer('station_id')->unsigned()->index();
             $table->integer('staff_id')->unsigned();
             $table->integer('preorder_id')->unsigned();
             $table->string('billing_no');
             $table->integer('amount');
-            $table->string('status', 45)->default('unpaid');
-            $table->dateTime('pay_at');
+            $table->string('status', 45)->default('unpaid')->index();
+            $table->dateTime('pay_at')->index();
+            $table->tinyInteger('checkout')->default(0);
             $table->timestamps();
 
-            $table->index(['user_id', 'station_id','staff_id', 'status', 'billing_no']);
         });
     }
 

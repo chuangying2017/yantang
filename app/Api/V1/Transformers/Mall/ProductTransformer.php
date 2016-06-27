@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Transformers\Mall;
 
+use App\Api\V1\Transformers\ImageTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\Product\Product;
 use League\Fractal\TransformerAbstract;
@@ -8,7 +9,7 @@ class ProductTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'brand', 'info'];
+    protected $availableIncludes = ['skus', 'brand', 'info', 'images'];
 
     public function transform(Product $product)
     {
@@ -58,6 +59,11 @@ class ProductTransformer extends TransformerAbstract {
     public function includeMeta(Product $product)
     {
         return $this->item($product->meta, new ProductMetaTransformer(), true);
+    }
+
+    public function includeImages(Product $product)
+    {
+        return $this->collection($product->images, new ImageTransformer(), true);
     }
 
 }

@@ -27,7 +27,9 @@ class CreateStatementsTable extends Migration {
             $table->string('system_operator')->nullable();
             $table->string('system_memo')->nullable();
             $table->string('system_confirm_at')->nullable();
-            $table->string('system_statue')->default(0);
+            $table->string('system_status')->default(0);
+
+            $table->tinyInteger('type');
 
             $table->timestamps();
 

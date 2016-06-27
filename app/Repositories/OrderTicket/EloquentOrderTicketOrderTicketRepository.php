@@ -5,10 +5,12 @@ use App\Models\Order\OrderPromotion;
 use App\Models\OrderTicket;
 use App\Repositories\NoGenerator;
 use App\Repositories\Product\ProductProtocol;
+use App\Repositories\Statement\StatementAbleBillingRepoContract;
 use App\Services\Order\OrderProtocol;
+use App\Services\Statement\StatementProtocol;
 use Carbon\Carbon;
 
-class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, OrderTicketStatementRepoContract {
+class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, StatementAbleBillingRepoContract {
 
     public function createOrderTicket(Order $order)
     {
@@ -104,18 +106,18 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, Or
         return $query->get();
     }
 
-    public function getStoreOrderTicketsWithProducts($store_id, $time_before)
+    public function getBillingWithProducts($store_id, $time_before)
     {
         return OrderTicket::query()->with(['skus' => function ($query) {
-            $query->where('type', '!=', ProductProtocol::TYPE_OF_MIX)->select(['order_id', 'price', 'quantity', 'product_id', 'product_sku_id']);
+            $query->where('type', '!=', ProductProtocol::TYPE_OF_MIX)->select(['id', 'order_id', 'price', 'quantity', 'product_id', 'product_sku_id' , 'name', 'cover_image']);
         }])->where('status', OrderTicketProtocol::STATUS_OF_USED)
-            ->where('check', OrderTicketProtocol::CHECK_STATUS_OF_PENDING)
+            ->where('check', StatementProtocol::CHECK_STATUS_OF_PENDING)
             ->where('exchange_at', '<=', $time_before)
             ->get(['id', 'order_id', 'store_id']);
     }
 
-    public function updateOrderTicketsAsChecked($order_ticket_ids)
+    public function updateBillingAsCheckout($order_ticket_ids)
     {
-        OrderTicket::query()->whereIn('id', $order_ticket_ids)->update(['check' => OrderTicketProtocol::CHECK_STATUS_OF_HANDLED]);
+        return OrderTicket::whereIn('id', $order_ticket_ids)->update(['checkout' => StatementProtocol::CHECK_STATUS_OF_HANDLED]);
     }
 }

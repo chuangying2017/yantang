@@ -2,7 +2,7 @@
 
 use League\Fractal\TransformerAbstract;
 use App\Models\Subscribe\Preorder;
-use App\Services\Subscribe\PreorderProtocol;
+use App\Services\Preorder\PreorderProtocol;
 
 class PreorderTransformer extends TransformerAbstract {
 

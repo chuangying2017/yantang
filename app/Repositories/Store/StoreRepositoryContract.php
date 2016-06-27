@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Store;
 
+
 interface StoreRepositoryContract {
 
     public function createStore($store_data);
@@ -24,7 +25,7 @@ interface StoreRepositoryContract {
 
     public function getStoreIdByUser($user_id);
 
-    public function getAll();
+    public function getAll($only_ids = false);
 
-    public function getAllActive();
+    public function getAllActive($only_ids = false);
 }

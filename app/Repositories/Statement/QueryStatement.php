@@ -9,20 +9,20 @@
 namespace App\Repositories\Store\Statement;
 
 
-use App\Models\Store\Statement;
+use App\Models\Statement\StoreStatement;
 
 trait QueryStatement {
 
-    protected function queryStatements($year, $month = null, $store_id = null, $status = null, $per_page = null)
+    protected function queryStatements($year, $month = null, $merchant_id = null, $status = null, $per_page = null)
     {
-        $query = Statement::query()->where('year', $year);
+        $query = StoreStatement::query()->where('year', $year);
 
         if (!is_null($month)) {
             $query->where('month', $month);
         }
 
-        if (!is_null($store_id)) {
-            $query->where('store_id', $store_id);
+        if (!is_null($merchant_id)) {
+            $query->where('merchant_id', $merchant_id);
         }
 
         if (!is_null($status)) {

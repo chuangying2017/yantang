@@ -2,13 +2,15 @@
 
 use App\Models\Billing\PreorderBilling;
 use App\Repositories\NoGenerator;
+use App\Repositories\Statement\StatementAbleBillingRepoContract;
 use App\Repositories\Station\StationBillingRepositoryContract;
 use App\Services\Billing\BillingProtocol;
+use App\Services\Statement\StatementProtocol;
 use Carbon\Carbon;
 
-class PreorderBillingRepository implements BillingRepositoryContract, StationBillingRepositoryContract {
+class PreorderBillingRepository implements BillingRepositoryContract, StationBillingRepositoryContract, StatementAbleBillingRepoContract {
 
-	/**
+    /**
      * @param $amount
      * @param $ids
      * @return PreorderBilling
@@ -100,5 +102,20 @@ class PreorderBillingRepository implements BillingRepositoryContract, StationBil
     public function getBillingsByStaffPaginated($staff_id, $status = null, $start_time = null, $end_time = null, $per_page = BillingProtocol::BILLING_PER_PAGE)
     {
         return $this->queryBillings(['staff_id' => $staff_id], $start_time, $per_page, $start_time, $end_time);
+    }
+
+    public function getBillingWithProducts($store_id, $time_before)
+    {
+        return PreorderBilling::query()->with(['skus' => function ($query) {
+            $query->select(['id', 'preorder_id', 'price', 'quantity', 'product_id', 'product_sku_id', 'name', 'cover_image']);
+        }])->where('status', BillingProtocol::STATUS_OF_PAID)
+            ->where('check', StatementProtocol::CHECK_STATUS_OF_PENDING)
+            ->where('pay_at', '<=', $time_before)
+            ->get(['id', 'order_id', 'store_id']);
+    }
+
+    public function updateBillingAsCheckout($billing_ids)
+    {
+        return PreorderBilling::whereIn('id', $billing_ids)->update(['checkout' => StatementProtocol::CHECK_STATUS_OF_HANDLED]);
     }
 }

@@ -78,9 +78,11 @@ class PreorderSettleService implements PreorderSettleServiceContract {
                 $settle_amount += $this->getSkuSettleAmount($deliver_sku);
                 $billing_sku_relate_ids[] = $deliver_sku['id'];
             }
+            //生成账单
             $billing = $this->billingRepo->createBilling($settle_amount, $entity_ids);
             $billing->skus()->attach($billing_sku_relate_ids);
             try {
+                //支付账单
                 if ($this->wallet->pay($this->preorderBillingService->setID($billing))) {
                     $this->billingRepo->updateAsPaid($billing);
                 }

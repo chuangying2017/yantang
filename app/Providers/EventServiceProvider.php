@@ -83,7 +83,14 @@ class EventServiceProvider extends ServiceProvider {
 
         ],
 
-        'App\Events\Store\StoreStatementConfirm' => [
+        /**
+         * 对账
+         */
+        'App\Events\Statement\StatementConfirm' => [
+
+        ],
+
+        'App\Events\Statement\StatementError' => [
 
         ],
 

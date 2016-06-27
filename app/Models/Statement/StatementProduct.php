@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StatementProduct extends Model {
 
-    protected $table = 'ot_statement_products';
+    protected $table = 'statement_products';
 
     protected $guarded = ['id'];
 

@@ -1,7 +1,7 @@
 <?php namespace App\Repositories\Preorder\Assign;
 
 use App\Models\Subscribe\PreorderAssign;
-use App\Services\Subscribe\PreorderProtocol;
+use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 
 class PreorderAssignRepository implements PreorderAssignRepositoryContract {

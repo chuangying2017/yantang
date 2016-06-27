@@ -1,9 +1,10 @@
 <?php namespace App\Repositories\Station;
 
 use App\Models\Subscribe\Station;
+use App\Repositories\Statement\MerchantRepositoryContract;
 use DB;
 
-class EloquentStationRepository implements StationRepositoryContract {
+class EloquentStationRepository implements StationRepositoryContract, MerchantRepositoryContract {
 
     public function createStation($station_data)
     {

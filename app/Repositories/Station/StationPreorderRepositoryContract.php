@@ -1,6 +1,6 @@
 <?php namespace App\Repositories\Station;
 
-use App\Services\Subscribe\PreorderProtocol;
+use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 
 interface StationPreorderRepositoryContract {

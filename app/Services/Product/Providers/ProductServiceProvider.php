@@ -33,6 +33,11 @@ class ProductServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
+            \App\Repositories\Product\Sku\ProductSkuRepositoryContract::class,
+            \App\Repositories\Product\Sku\EloquentProductSkuRepository::class
+        );
+
+        $this->app->bind(
             \App\Repositories\Product\Sku\ProductSkuStockRepositoryContract::class,
             \App\Repositories\Product\Sku\EloquentProductSkuRepository::class
         );
