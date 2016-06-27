@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePreordersTable extends Migration
-{
+class CreatePreordersTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -15,16 +15,22 @@ class CreatePreordersTable extends Migration
         Schema::create('preorders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('station_id')->unsigned();
             $table->string('order_no');
             $table->string('name');
-            $table->string('phone', 11);
+            $table->string('phone', 32);
+            $table->integer('district_id');
             $table->string('address');
-            $table->dateTime('pause_time'); //暂停时间
-            $table->dateTime('restart_time');
-            $table->string('status', 32)->default(0);
-            $table->string('charge_status', 32)->default(0);
+            $table->string('status', 32);
+            $table->date('start_time');
+            $table->date('end_time');
+            $table->tinyInteger('charge_status')->default(0);
+            $table->integer('station_id')->unsigned();
+            $table->integer('staff_id')->unsigned();
+            $table->mediumInteger('staff_priority')->default(0);
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->index(['user_id', 'start_time', 'end_time', 'status', 'order_no']);
         });
     }
 

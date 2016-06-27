@@ -6,7 +6,7 @@ class EloquentAddressRepository implements AddressRepositoryContract {
 
     public function getAddress($address_id)
     {
-        if($address_id instanceof Address) {
+        if ($address_id instanceof Address) {
             return $address_id;
         }
 
@@ -20,7 +20,9 @@ class EloquentAddressRepository implements AddressRepositoryContract {
 
     public function addAddress($data)
     {
-        $address = Address::create($this->filterData($data));
+        $address = Address::create(
+            array_merge(['user_id' => access()->id()], $this->filterData($data))
+        );
         $this->checkIsPrimary($data, $address['id']);
         return $address;
     }

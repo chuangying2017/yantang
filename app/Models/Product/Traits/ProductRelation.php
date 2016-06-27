@@ -9,6 +9,7 @@
 namespace App\Models\Product\Traits;
 
 
+use App\Models\Image;
 use App\Models\Product\Brand;
 use App\Models\Merchant;
 use App\Models\Product\CategoryAbstract;
@@ -52,6 +53,11 @@ trait ProductRelation {
     public function groups()
     {
         return $this->belongsToMany(CategoryAbstract::class, 'product_category', 'product_id', 'cat_id')->withPivot('type')->wherePivot('type', CategoryProtocol::TYPE_OF_GROUP);
+    }
+
+    public function images()
+    {
+        return $this->morphToMany(Image::class, 'imageable');
     }
 
 }

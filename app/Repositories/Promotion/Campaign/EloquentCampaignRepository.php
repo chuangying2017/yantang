@@ -30,7 +30,7 @@ class EloquentCampaignRepository extends PromotionRepositoryAbstract implements 
     {
         $campaign = $promotion_id instanceof Campaign ? $promotion_id : Campaign::findOrFail($promotion_id);
         if ($with_detail) {
-            $campaign->load(['detail', 'skus']);
+            $campaign->load(['detail', 'skus.sku']);
         }
 
         return $campaign;

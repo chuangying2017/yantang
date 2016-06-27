@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChargeBillingsTable extends Migration
-{
+class CreateChargeBillingsTable extends Migration {
+
     /**
      * Run the migrations.
      *
@@ -12,14 +12,14 @@ class CreateChargeBillingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('charge_billing', function (Blueprint $table) {
+        Schema::create('charge_billings', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('pay_channel');
             $table->string('billing_no');
             $table->integer('amount');
+            $table->string('pay_channel');
             $table->dateTime('pay_at');
-            $table->integer('status')->default(0);
+            $table->string('status', 24)->default('unpaid');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateChargeBillingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('charge_billing');
+        Schema::drop('charge_billings');
     }
 }

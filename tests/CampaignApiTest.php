@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CampaignApiTest extends TestCase {
 
-//    use DatabaseTransactions;
+    use DatabaseTransactions;
 
     /** @test */
     public function it_can_create_campaign()
@@ -27,7 +27,7 @@ class CampaignApiTest extends TestCase {
         $this->json('post', 'admin/campaigns',
             $data,
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
-        $this->dumpResponse();
+//        $this->dumpResponse();
 
         $this->assertResponseStatus(201);
 
@@ -35,6 +35,43 @@ class CampaignApiTest extends TestCase {
 
         $this->seeInDatabase('promotion_skus', ['promotion_id' => $result['data']['id'], 'product_sku_id' => $sku_id]);
         $this->seeInDatabase('promotion_info', ['promotion_id' => $result['data']['id']]);
+
+
+        return $result['data'];
+    }
+
+    /** @test */
+    public function it_can_update_a_campaign()
+    {
+        $user_id = 1;
+        $sku_id = 2;
+        $data = [
+            'name' => '优惠购',
+            'cover_image' => 'adada',
+            'desc' => '描述',
+            'detail' => '详细描述',
+            'start_time' => '2016-06-01',
+            'end_time' => '2016-12-01',
+            'active' => 1,
+            'product_sku' => $sku_id
+        ];
+
+        $campaign = $this->it_can_create_campaign();
+
+        $this->json('put', 'admin/campaigns/' . $campaign['id'],
+            $data,
+            ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+
+        $this->dumpResponse();
+
+        $this->assertResponseStatus(200);
+
+        $result = $this->getResponseData();
+
+        $this->seeInDatabase('promotion_skus', ['promotion_id' => $result['data']['id'], 'product_sku_id' => $sku_id]);
+        $this->seeInDatabase('promotion_info', ['promotion_id' => $result['data']['id']]);
+
+
     }
 
     /** @test */
@@ -56,7 +93,10 @@ class CampaignApiTest extends TestCase {
     public function it_can_get_a_campaign()
     {
         $user_id = 1;
-        $campaign_id = 5;
+
+        $campaign = $this->it_can_create_campaign();
+
+        $campaign_id = $campaign['id'];
         $this->json('get', 'campaigns/campaigns/' . $campaign_id, [],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );

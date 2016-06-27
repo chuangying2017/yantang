@@ -40,13 +40,18 @@ class CheckoutController extends Controller {
      */
     public function store(CampaignOrderRepository $orderRepo, OrderCheckoutService $checkoutService, Request $request, $order_no)
     {
-        $pay_channel = $request->input('channel') ?: PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
+        try {
+            $pay_channel = $request->input('channel') ?: PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
 
-        $order = $orderRepo->getOrder($order_no);
+            $order = $orderRepo->getOrder($order_no);
 
-        $charge = $checkoutService->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
+            $charge = $checkoutService->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 
-        return $this->response->array(['data' => $charge]);
+            return $this->response->array(['data' => $charge]);
+        } catch (\Exception $e) {
+            $this->response->error($e->getMessage(), 400);
+        }
+
     }
 
     /**

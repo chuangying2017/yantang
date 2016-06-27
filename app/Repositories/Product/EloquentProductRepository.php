@@ -1,9 +1,6 @@
 <?php namespace App\Repositories\Product;
 
-use App\Models\Product\Brand;
 use App\Models\Product\Product;
-use App\Models\Product\ProductSku;
-use App\Repositories\Category\CategoryProtocol;
 use App\Repositories\Product\Editor\AttachInfo;
 use App\Repositories\Product\Editor\AttachMeta;
 use App\Repositories\Product\Editor\AttachProductSku;
@@ -13,17 +10,15 @@ use App\Repositories\Product\Editor\FillProduct;
 use App\Repositories\Product\Editor\SetProductSku;
 use App\Repositories\Product\Editor\SetStatus;
 use App\Repositories\Product\Editor\SetPrice;
+use App\Repositories\Product\Editor\UpdateImages;
 use App\Repositories\Product\Editor\UpdateInfo;
 use App\Repositories\Product\Editor\UpdateMeta;
 use App\Repositories\Product\Editor\UpdateProductSku;
-use App\Repositories\Product\Sku\ProductMixRepositoryContract;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 use App\Repositories\Search\Item\ProductSearchRepository;
 use Carbon\Carbon;
-use EasyWeChat\User\Group;
-use Illuminate\Database\Eloquent\Collection;
 
-class EloquentProductRepository implements ProductRepositoryContract, ProductSubscribeRepositoryContract, ProductIdListContract {
+class EloquentProductRepository implements ProductRepositoryContract {
 
     /**
      * @var ProductSkuRepositoryContract
@@ -67,6 +62,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
             FillProduct::class,
             AttachInfo::class,
             AttachMeta::class,
+            UpdateImages::class,
             RelateProduct::class,
             AttachProductSku::class,
         ];
@@ -84,6 +80,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
             FillProduct::class,
             UpdateInfo::class,
             UpdateMeta::class,
+            UpdateImages::class,
             RelateProduct::class,
             UpdateProductSku::class,
         ];
@@ -127,7 +124,7 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
     {
         $product = Product::findOrFail($product_id);
         if ($with_detail) {
-            $product = $product->load('skus', 'cats', 'brand', 'groups', 'meta', 'info');
+            $product = $product->load('skus', 'cats', 'brand', 'groups', 'meta', 'info', 'images');
         }
         return $product;
     }
@@ -199,51 +196,6 @@ class EloquentProductRepository implements ProductRepositoryContract, ProductSub
     public function search($keyword, $options = [])
     {
         return (new ProductSearchRepository($this))->get($keyword);
-    }
-
-    public function getAllSubscribedProducts($status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $with_time = true, $expend = true)
-    {
-        $products = $this->queryProducts('created_at', 'asc', $status, null, CategoryProtocol::ID_OF_SUBSCRIBE_GROUP, null, null, $with_time);
-        $products->load('skus');
-
-        if ($expend) {
-            $skus = null;
-            foreach ($products as $product) {
-                if (is_null($skus)) {
-                    $skus = $product->skus;
-                } else {
-                    $skus->merge($product->skus);
-                }
-            }
-            return $skus ? $skus : new Collection();
-        }
-
-        return $products;
-    }
-
-    public function setProductsStopSubscribe($product_id)
-    {
-        return Product::whereIn('id', to_array($product_id))->update(['end_time' => Carbon::now()]);
-    }
-
-    public function setProductsStartSubscribe($product_id)
-    {
-        return Product::whereIn('id', to_array($product_id))->update(['end_time' => Carbon::now()->addYears(10)]);
-    }
-
-    public function listsOfGroup($group_id)
-    {
-        return \DB::table('product_category')->where('cat_id', $group_id)->pluck('product_id');
-    }
-
-    public function listsOfCategory($cat_id)
-    {
-        return \DB::table('product_category')->where('cat_id', $cat_id)->pluck('product_id');
-    }
-
-    public function listsOfBrand($brand_id)
-    {
-        return Product::where('brand_id', $brand_id)->pluck('id');
     }
 
 

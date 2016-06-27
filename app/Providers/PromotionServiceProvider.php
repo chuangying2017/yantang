@@ -30,14 +30,11 @@ class PromotionServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
-        \App\Repositories\OrderTicket\OrderTicketRepositoryContract::class,
-        \App\Repositories\OrderTicket\EloquentOrderTicketRepository::class
-    );
-
-        $this->app->bind(
-            \App\Repositories\OrderTicket\OrderTicketStatementRepoContract::class,
+            \App\Repositories\OrderTicket\OrderTicketRepositoryContract::class,
             \App\Repositories\OrderTicket\EloquentOrderTicketRepository::class
         );
+
+
 
         $this->app->bind(
             \App\Services\OrderTicket\OrderTicketManageContract::class,
@@ -76,13 +73,13 @@ class PromotionServiceProvider extends ServiceProvider {
 
 
         $this->app->bind(
-            \App\Repositories\Store\Statement\StoreStatementRepositoryContract::class,
-            \App\Repositories\Store\Statement\StoreStatementRepository::class
+            \App\Repositories\Store\Statement\StatementRepositoryContract::class,
+            \App\Repositories\Store\Statement\StatementRepository::class
         );
 
         $this->app->bind(
-            \App\Services\Store\Statement\StoreStatementServiceContract::class,
-            \App\Services\Store\Statement\StoreStatementService::class
+            \App\Services\Statement\StatementServiceAbstract::class,
+            \App\Services\Statement\StatementService::class
         );
 
 

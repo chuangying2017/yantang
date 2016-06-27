@@ -23,7 +23,12 @@ class GetSpecialCampaign extends GenerateHandlerAbstract {
     {
         $campaign = $this->campaignRepo->get($temp_order->getSpecialCampaign(), false);
 
-        $temp_order->setSpecialCampaign(['campaign_id' => $campaign['id'], 'campaign_name' => $campaign['name']]);
+        $temp_order->setSpecialCampaign(
+            [
+                'campaign_id' => $campaign['id'],
+                'campaign_name' => $campaign['name'],
+                'campaign_cover_image' => $campaign['cover_image'],
+            ]);
         return $this->next($temp_order);
     }
 }

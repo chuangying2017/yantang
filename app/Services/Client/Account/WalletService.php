@@ -3,6 +3,7 @@
 use App\Repositories\Client\Account\Wallet\WalletRepositoryContract;
 use App\Services\Billing\BillingContract;
 use App\Services\Billing\BillingProtocol;
+use App\Services\Pay\Exception\MultiChargeException;
 use App\Services\Pay\Exception\WrongChargeBillingException;
 
 class WalletService extends AccountService {
@@ -25,6 +26,10 @@ class WalletService extends AccountService {
     {
         if ($billing->getType() !== BillingProtocol::BILLING_TYPE_OF_RECHARGE_BILLING) {
             throw new WrongChargeBillingException();
+        }
+
+        if ($this->account->getRecord($billing->getID(), $billing->getType())) {
+            throw new MultiChargeException();
         }
     }
 

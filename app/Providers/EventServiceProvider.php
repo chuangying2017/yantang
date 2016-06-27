@@ -43,6 +43,7 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Services\Pay\Events\PingxxPaymentIsPaid' => [
             'App\Listeners\Order\SetOrderMainBillingAsPaid',
+            'App\Listeners\Subscribe\SetChargeBillingAsPaid',
         ],
 
         'App\Events\Order\MainBillingIsPaid' => [
@@ -82,7 +83,46 @@ class EventServiceProvider extends ServiceProvider {
 
         ],
 
-        'App\Events\Store\StoreStatementConfirm' => [
+        /**
+         * 对账
+         */
+        'App\Events\Statement\StatementConfirm' => [
+
+        ],
+
+        'App\Events\Statement\StatementError' => [
+
+        ],
+
+        /**
+         * 订奶订单
+         */
+
+        'App\Events\Preorder\ChargeBillingIsPaid' => [
+            'App\Listeners\Preorder\RechargeWallet',
+            'App\Listeners\Preorder\SetPreorderAsCharged',
+        ],
+
+        'App\Events\Preorder\PaidPreorderBillingFail' => [
+            'App\Listeners\Preorder\SetPreorderAsOut',
+        ],
+
+        /**
+         * 订奶订单分配
+         */
+        'App\Events\Preorder\AssignIsCreate' => [
+
+        ],
+
+        'App\Events\Preorder\AssignIsConfirm' => [
+            'App\Listeners\Preorder\SetPreorderAsPending'
+        ],
+
+        'App\Events\Preorder\StaffAssignIsCreate' => [
+            'App\Listeners\Preorder\IncreaseStaffWeeklySkus'
+        ],
+
+        'App\Events\Preorder\AssignIsReject' => [
 
         ],
 

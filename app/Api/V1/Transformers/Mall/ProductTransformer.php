@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Transformers\Mall;
 
+use App\Api\V1\Transformers\ImageTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\Product\Product;
 use League\Fractal\TransformerAbstract;
@@ -35,6 +36,12 @@ class ProductTransformer extends TransformerAbstract {
             $data['favs'] = $meta['favs'];
             $data['sales'] = $meta['sales'];
             $data['stock'] = $meta['stock'];
+        }
+
+        if ($product->relationLoaded('images')) {
+            $data['images'] = array_map(function ($media_id) {
+                return config('filesystems.disks.qiniu.domains.custom') . $media_id;
+            }, $product->images->pluck('media_id')->all());
         }
 
         return $data;

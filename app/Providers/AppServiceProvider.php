@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
+
     }
 
     /**
@@ -27,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(
+            \App\Repositories\Image\ImageRepositoryContract::class,
+            \App\Repositories\Image\QiniuImageRepository::class
+        );
     }
 }

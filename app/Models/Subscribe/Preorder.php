@@ -1,10 +1,12 @@
 <?php namespace App\Models\Subscribe;
 
+use App\Models\Access\User\User;
+use App\Models\Billing\PreorderBilling;
 use App\Models\District;
+use EasyWeChat\Staff\Staff;
 use Illuminate\Database\Eloquent\Model;
 
-class Preorder extends Model
-{
+class Preorder extends Model {
 
     protected $guarded = ['id'];
 
@@ -12,36 +14,36 @@ class Preorder extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\Access\User\User');
+        return $this->belongsTo(User::class);
     }
 
-    public function product()
+    public function skus()
     {
-        return $this->hasMany('App\Models\Subscribe\PreorderProduct');
+        return $this->hasMany(PreorderSku::class);
     }
 
-    public function staffPreorder()
+    public function assign()
     {
-        return $this->hasOne('App\Models\Subscribe\StaffPreorder');
+        return $this->hasOne(PreorderAssign::class);
     }
 
-    public function preorderOrder()
+    public function billings()
     {
-        return $this->hasOne(PreorderOrder::class, 'preorder_id');
+        return $this->hasOne(PreorderBilling::class, 'preorder_id', 'id');
     }
 
     public function station()
     {
-        return $this->belongsTo('App\Models\Subscribe\Station');
+        return $this->belongsTo(Station::class, 'id', 'station_id');
     }
 
-    public function district()
+    public function staff()
     {
-        return $this->belongsTo(District::class);
+        return $this->belongsTo(Staff::class, 'id', 'staff_id');
     }
 
-    public function weekly()
+    public function District()
     {
-        return $this->hasMany(StaffWeekly::class);
+        return $this->hasMany(District::class);
     }
 }

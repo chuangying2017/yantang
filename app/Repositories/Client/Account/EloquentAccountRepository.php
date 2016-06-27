@@ -3,8 +3,7 @@
 use App\Services\Client\Account\AccountProtocol;
 use Exception;
 
-abstract class EloquentAccountRepository implements AccountRepositoryContract
-{
+abstract class EloquentAccountRepository implements AccountRepositoryContract {
 
     /**
      * type; cash or credit
@@ -118,6 +117,11 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract
         return $query->paginate($per_page);
     }
 
+    public function getRecord($billing_id, $billing_type)
+    {
+        $record_model = $this->getAccountRecordModel();
+        return $record_model->where('resource_type', $billing_type)->where('resource_id', $billing_id)->first();
+    }
 
     protected function createRecord($amount, $resource_type, $resource_id, $type)
     {

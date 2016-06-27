@@ -130,13 +130,13 @@ class OrderGenerator implements OrderGeneratorContract {
 
     public function confirm($temp_order_id)
     {
-        $temp_order = $this->getTempOrder($temp_order_id);
+        $temp_order = $this->pullTempOrder($temp_order_id);
         if (!$temp_order) {
             throw new \Exception('下单超时');
         }
 
         if ($temp_order->getError()) {
-            throw new \Exception($temp_order->getError());
+            throw new \Exception(json_encode($temp_order->getError()));
         }
 
         $this->setOrderRepo(app()->make(MallClientOrderRepository::class));
@@ -161,7 +161,7 @@ class OrderGenerator implements OrderGeneratorContract {
         ];
         $handler = $this->getOrderGenerateHandler($config);
 
-        $temp_order = $this->getTempOrder($temp_order_id);
+        $temp_order = $this->pullTempOrder($temp_order_id);
 
         $temp_order = $handler->handle($temp_order);
 
@@ -172,12 +172,17 @@ class OrderGenerator implements OrderGeneratorContract {
      * @param $temp_order_id
      * @return mixed
      */
-    protected function getTempOrder($temp_order_id)
+    protected function pullTempOrder($temp_order_id)
     {
         $temp_order = Cache::pull($temp_order_id);
         return $temp_order;
     }
 
+    public function getTempOrder($temp_order_id)
+    {
+        $temp_order = Cache::get($temp_order_id);
+        return $temp_order;
+    }
 
     public function setOrderRepo(ClientOrderRepositoryContract $orderRepo)
     {
@@ -186,7 +191,7 @@ class OrderGenerator implements OrderGeneratorContract {
 
     public function setAddress($temp_order_id, $address)
     {
-        $temp_order = $this->getTempOrder($temp_order_id);
+        $temp_order = $this->pullTempOrder($temp_order_id);
 
         $temp_order->setAddress($address);
 

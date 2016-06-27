@@ -13,6 +13,6 @@ class PromotionSku extends Model {
 
     public function sku()
     {
-        return $this->belongsTo(ProductSku::class, 'id', 'product_sku_id');
+        return $this->belongsTo(ProductSku::class, 'product_sku_id', 'id');
     }
 }

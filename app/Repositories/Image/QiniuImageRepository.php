@@ -35,7 +35,7 @@ class QiniuImageRepository implements ImageRepositoryContract {
      */
     public function create($data)
     {
-        $image_data = array_only($data, ['media_id', 'filename', 'imageinfo']);
+        $image_data = array_only($data, ['media_id', 'filename', 'imageinfo', 'url']);
         $image_data['url'] = config('filesystems.disks.qiniu.domains.custom') . $image_data['media_id'];
 
         return Image::create($image_data);

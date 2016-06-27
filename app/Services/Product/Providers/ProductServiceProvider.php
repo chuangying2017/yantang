@@ -28,8 +28,8 @@ class ProductServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
-            \App\Repositories\Product\ProductSubscribeRepositoryContract::class,
-            \App\Repositories\Product\EloquentProductRepository::class
+            \App\Repositories\Product\Sku\SubscribeSkuRepositoryContract::class,
+            \App\Repositories\Product\Sku\EloquentProductSkuRepository::class
         );
 
         $this->app->bind(

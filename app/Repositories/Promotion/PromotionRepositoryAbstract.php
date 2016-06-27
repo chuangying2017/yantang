@@ -110,7 +110,10 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     public function update($promotion_id, $data)
     {
         $promotion = $this->fillPromotion($promotion_id, $data);
-        $this->syncRules($promotion, $data['rules'], false);
+
+        if(isset($data['rules'])) {
+            $this->syncRules($promotion, $data['rules'], false);
+        }
 
         $this->updateRelation($promotion_id, $data);
 

@@ -10,7 +10,7 @@ class OrderTicketTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'exchange', 'order'];
+    protected $availableIncludes = ['skus', 'exchange', 'order', 'campaign'];
 
     public function transform(OrderTicket $ticket)
     {
@@ -31,17 +31,17 @@ class OrderTicketTransformer extends TransformerAbstract {
 
     public function includeSkus(OrderTicket $ticket)
     {
-        foreach ($ticket->skus as $key => $sku) {
-            if ($sku['type'] == ProductProtocol::TYPE_OF_MIX) {
-                unset($ticket->skus[$key]);
-            }
-        }
         return $this->collection($ticket->skus, new OrderTicketSkuTransformer(), true);
     }
 
     public function includeExchange(OrderTicket $ticket)
     {
         return $this->item($ticket->exchange, new StoreTransformer(), true);
+    }
+
+    public function includeCampaign(OrderTicket $ticket)
+    {
+        return $this->item($ticket->campaign, new OrderSpecialCampaignTransformer(), true);
     }
 
     public function includeOrder(OrderTicket $ticket)

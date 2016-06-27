@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Transformers\Admin\Order;
 
+use App\Api\V1\Transformers\Campaign\OrderSpecialCampaignTransformer;
 use App\Api\V1\Transformers\Mall\AdminOrderBillingTransformer;
 use App\Api\V1\Transformers\Mall\OrderSkuTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
@@ -10,7 +11,7 @@ class AdminSpecialOrderTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'billings'];
+    protected $availableIncludes = ['skus', 'billings', 'special'];
 
     public function transform(Order $order)
     {
@@ -47,6 +48,10 @@ class AdminSpecialOrderTransformer extends TransformerAbstract {
         return $this->collection($order['billings'], new AdminOrderBillingTransformer(), true);
     }
 
+    public function includeSpecial(Order $order)
+    {
+        return $this->item($order->special, new OrderSpecialCampaignTransformer(), true);
+    }
 
 
 }

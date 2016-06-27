@@ -12,6 +12,8 @@ interface AccountRepositoryContract {
 
     public function getAllRecords($type = null, $order_by = 'created_at', $sort = 'desc');
 
+    public function getRecord($billing_id, $type);
+
     public function getRecordsPaginated($type, $order_by = 'created_at', $sort = 'desc', $per_page);
 
 	/**

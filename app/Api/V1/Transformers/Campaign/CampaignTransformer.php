@@ -16,12 +16,16 @@ class CampaignTransformer extends TransformerAbstract {
             'end_at' => $campaign['end_at'],
         ];
 
-        if (isset($campaign['detail'])) {
+        if ($campaign->relationLoaded('detail')) {
             $data['detail'] = $campaign['detail']['detail'];
         }
 
-        if (isset($campaign['skus'])) {
-            $data['product_sku'] = $campaign['skus']['product_sku_id'];
+        if ($campaign->relationLoaded('skus')) {
+            $data['product_sku'] = [
+                'id' => $campaign['skus']['sku']['id'],
+                'name' => $campaign['skus']['sku']['name'],
+                'price' => $campaign['skus']['sku']['price'],
+            ];
         }
 
         return $data;

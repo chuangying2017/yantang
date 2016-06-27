@@ -2,16 +2,12 @@
 
 use League\Fractal\TransformerAbstract;
 use App\Models\Subscribe\Preorder;
-use App\Services\Subscribe\PreorderProtocol;
+use App\Services\Preorder\PreorderProtocol;
 
-class PreorderTransformer extends TransformerAbstract
-{
+class PreorderTransformer extends TransformerAbstract {
 
     public function transform(Preorder $preorder)
     {
-        if (isset($preorder->show_product_and_sku) && $preorder->show_product_and_sku) {
-            $this->setDefaultIncludes(['product']);
-        }
         $data = [
             'id' => $preorder->id,
             'name' => $preorder->name,
@@ -29,20 +25,13 @@ class PreorderTransformer extends TransformerAbstract
             'created_at' => $preorder->created_at,
             'updated_at' => $preorder->updated_at,
         ];
-        if (!empty($preorder->district->name)) {
-            $data['district_name'] = $preorder->district->name;
-        }
-        if (!empty($preorder->station->name)) {
-            $data['station'] = $preorder->station;
-        }
 
         return $data;
     }
 
-    public function includeProduct(Preorder $preorder)
+    public function includeSkus(Preorder $preorder)
     {
-        $product = $preorder->product;
-        return $this->collection($product, new PreorderProductTransformer());
+        return $this->collection($preorder->skus, new PreorderSkuTransformer());
     }
 
 }

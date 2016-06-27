@@ -172,6 +172,7 @@ return [
         App\Providers\OrderServiceProvider::class,
         App\Providers\UserServiceProvider::class,
         App\Providers\PromotionServiceProvider::class,
+        App\Providers\StatementServiceProvider::class,
 
 
         App\Services\Product\Providers\ProductServiceProvider::class,

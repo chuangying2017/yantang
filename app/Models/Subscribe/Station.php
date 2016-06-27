@@ -1,40 +1,31 @@
 <?php namespace App\Models\Subscribe;
 
+use App\Models\Access\User\User;
 use App\Models\District;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Station extends Model
-{
+class Station extends Model {
+
     use SoftDeletes;
 
     protected $guarded = ['id'];
 
-    protected $table = 'station';
+    protected $table = 'stations';
 
     public function preorder()
     {
         return $this->hasMany(Preorder::class);
     }
 
-    public function staffPreorders()
+    public function user()
     {
-        return $this->hasMany(StaffPreorder::class, 'station_id');
+        return $this->belongsToMany(User::class, 'station_user', 'station_id', 'user_id');
     }
 
-    public function staff()
+    public function staffs()
     {
-        return $this->hasMany(StationStaffs::class);
-    }
-
-    public function weekly()
-    {
-        return $this->hasMany(StaffWeekly::class);
-    }
-
-    public function preorderOrder()
-    {
-        return $this->hasManyThrough(PreorderOrder::class, Preorder::class, 'station_id', 'preorder_id');
+        return $this->hasMany(StationStaff::class);
     }
 
     public function district()

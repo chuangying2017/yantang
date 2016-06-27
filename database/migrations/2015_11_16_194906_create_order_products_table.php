@@ -26,6 +26,7 @@ class CreateOrderProductsTable extends Migration {
             $table->string('name');
             $table->string('cover_image');
             $table->string('attr', 1024);
+            $table->string('type')->default('entity');
             $table->smallInteger('return_quantity')->default(0);
             $table->softDeletes();
             $table->timestamps();

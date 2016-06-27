@@ -33,9 +33,14 @@ class StoreController extends Controller {
      */
     public function info()
     {
-        $store = $this->storeRepo->getStoreByUser(access()->id());
+        try {
+            $store = $this->storeRepo->getStoreByUser(access()->id());
 
-        return $this->response->item($store, new StoreTransformer());
+            return $this->response->item($store, new StoreTransformer());
+        } catch(\Exception $e) {
+            $this->response->error($e->getMessage(), $e->getCode());
+        }
+
     }
 
     /**
@@ -46,10 +51,15 @@ class StoreController extends Controller {
      */
     public function getBind(BindStoreRequest $request, $store_id)
     {
-        $store = $this->storeRepo->getStore($store_id);
-        $store['bind_token'] = $this->storeRepo->getBindToken($store_id);
+        try {
+            $store = $this->storeRepo->getStore($store_id);
+            $store['bind_token'] = $this->storeRepo->getBindToken($store_id);
 
-        return $this->response->item($store, new StoreTransformer());
+            return $this->response->item($store, new StoreTransformer());
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
+
     }
 
     /**

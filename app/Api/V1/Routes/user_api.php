@@ -12,8 +12,9 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
         $api->get('auth/password/change', 'PasswordController@getChangePassword');
         $api->post('auth/password/change', 'PasswordController@postChangePassword')->name('password.change');
 
-        $api->get('user/info', ['uses' => 'UserController@getUserInfo', 'as' => 'user.info']);
-        $api->put('user/info', ['uses' => 'UserController@updateUserInfo', 'as' => 'update.user.info']);
+        $api->get('users/info', ['uses' => 'UserController@getUserInfo', 'as' => 'user.info']);
+        $api->put('users/info', ['uses' => 'UserController@updateUserInfo', 'as' => 'update.user.info']);
+
     });
 
     /**
@@ -31,4 +32,14 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
      */
     $api->post('auth/sms/send-code', 'SmsController@postSendCode')->name('auth.sms.send');
     $api->get('auth/sms/debug', 'SmsController@getInfo')->name('auth.sms.debug');
+});
+
+
+$api->group(['namespace' => 'Client'], function () use ($api) {
+
+    $api->group(['middleware' => 'api.auth'], function ($api) {
+        $api->resource('users/address', 'AddressController');
+        $api->get('images/token', 'ImageController@token');
+    });
+
 });

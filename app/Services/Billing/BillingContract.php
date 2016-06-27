@@ -7,8 +7,6 @@
 interface BillingContract
 {
 
-//    public function create($amount);
-
     public function getID();
 
     public function getOrderNo();
@@ -22,7 +20,5 @@ interface BillingContract
     public function getPayer();
 
     public function setID($billing_id);
-
-//    public function setPaid($pay_type, $pay_channel);
 
 }

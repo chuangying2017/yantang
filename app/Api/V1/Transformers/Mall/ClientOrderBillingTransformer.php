@@ -18,7 +18,7 @@ class ClientOrderBillingTransformer extends TransformerAbstract {
             'status' => $billing['status'],
             'refund_flag' => false,
         ];
-        if ($billing[$billing['refund_amount'] > 0]) {
+        if ($billing['refund_amount'] > 0) {
             $data['refund_flag'] = true;
             $data['refund_amount'] = $billing['refund_amount'];
         }
