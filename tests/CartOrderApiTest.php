@@ -40,20 +40,43 @@ class CartOrderApiTest extends TestCase {
 
         $this->assertResponseOk();
 
-
         $this->json('post', 'mall/orders', ['temp_order_id' => $temp_order_id], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
-        $order = $this->getResponseData();
+        $order = $this->getResponseData('data');
 
         $this->assertResponseStatus(201);
 
-        $this->json('get', 'mall/orders', [], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+        return $order;
+    }
 
-        $this->dump();
+    /** @test */
+    public function it_can_get_get_mall_orders_lists()
+    {
+        $this->ite_can_create_a_cart_order();
+
+        $user_id = 1;
+        $this->json('get', 'mall/orders', [], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
         $this->assertResponseStatus(200);
 
-        return $order['data'];
+    }
+
+    /** @test */
+    public function it_can_get_get_mall_orders_detail()
+    {
+        $order = $this->ite_can_create_a_cart_order();
+
+        $user_id = 1;
+        $this->json('get', 'mall/orders/' . $order['order_no'],
+            [],
+            ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+
+        $this->assertResponseStatus(200);
+
+        $this->seeJsonStructure(['data' => ['skus', 'address']]);
+
+//        $this->dumpResponse();
+
     }
 
     /** @test */

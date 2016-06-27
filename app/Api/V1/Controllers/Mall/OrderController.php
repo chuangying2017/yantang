@@ -4,8 +4,6 @@ use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\MallClientOrderRepository;
-use App\Repositories\Order\MallClientOrderRepositoryAbstract;
-use App\Services\Order\Checkout\OrderCheckoutContract;
 use App\Services\Order\OrderGenerator;
 use App\Services\Order\OrderManageContract;
 use Illuminate\Http\Request;
@@ -69,8 +67,7 @@ class OrderController extends Controller {
      */
     public function show($order_no)
     {
-        $order = $this->clientOrderRepo->getOrder($order_no);
-
+        $order = $this->clientOrderRepo->getOrder($order_no, true);
         return $this->response->item($order, new ClientOrderTransformer());
     }
 

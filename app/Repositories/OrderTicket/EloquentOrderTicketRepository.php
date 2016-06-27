@@ -88,15 +88,13 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, St
 
     public function getOrderTicketsOfStore($store_id, $start_at = null, $end_at = null, $per_page = OrderTicketProtocol::TICKET_PER_PAGE)
     {
-        $query = OrderTicket::query()->with(['campaign', 'skus' => function ($query) {
-            $query->where('type', '!=', ProductProtocol::TYPE_OF_MIX);
-        }])->where('store_id', $store_id);
+        $query = OrderTicket::query()->with(['campaign'])->where('store_id', $store_id);
         if (!is_null($start_at)) {
             $query = $query->where('exchange_at', '>=', $start_at);
         }
 
         if (!is_null($end_at)) {
-            $query = $query->where('exchange_at', '<=', $start_at);
+            $query = $query->where('exchange_at', '<=', $end_at);
         }
 
         if ($per_page) {

@@ -47,7 +47,7 @@ class ClientOrderTransformer extends TransformerAbstract {
 
     public function includeBillings(Order $order)
     {
-        return $this->collection($order['billings'], new ClientOrderBillingTransformer(), true);
+        return $this->collection($order->billings, new ClientOrderBillingTransformer(), true);
     }
 
     public function includeDeliver(Order $order)

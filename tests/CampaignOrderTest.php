@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CampaignOrderTest extends TestCase {
 
-    use DatabaseTransactions;
+//    use DatabaseTransactions;
 
     /** @test */
     public function it_can_create_a_campaign_order()

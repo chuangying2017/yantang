@@ -26,7 +26,7 @@ class EloquentCartRepository implements CartRepositoryContract {
 
     public function getAll($with_sku = true)
     {
-        if($with_sku) {
+        if ($with_sku) {
             return Cart::with('sku')->get();
         }
         return Cart::get();
@@ -77,7 +77,7 @@ class EloquentCartRepository implements CartRepositoryContract {
     public function updateQuantity($cart_id, $quantity)
     {
         $cart = Cart::query()->findOrFail($cart_id);
-        $cart->quantity = $quantity;
+        $cart->quantity += $quantity;
         $cart->save();
         return $cart;
     }

@@ -36,10 +36,13 @@ class StoreExchangeController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $start_at = $request->input('start_at') ?: null;
+        $end_at = $request->input('end_at') ?: null;
+
         $store = $this->storeRepo->getStoreByUser(access()->id());
-        $order_tickets = $this->orderTicketRepo->getOrderTicketsOfStore($store['id']);
+        $order_tickets = $this->orderTicketRepo->getOrderTicketsOfStore($store['id'], $start_at, $end_at);
         return $this->response->paginator($order_tickets, new OrderTicketTransformer());
     }
 
