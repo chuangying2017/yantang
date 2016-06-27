@@ -10,6 +10,7 @@ use App\Repositories\Product\Editor\FillProduct;
 use App\Repositories\Product\Editor\SetProductSku;
 use App\Repositories\Product\Editor\SetStatus;
 use App\Repositories\Product\Editor\SetPrice;
+use App\Repositories\Product\Editor\UpdateImages;
 use App\Repositories\Product\Editor\UpdateInfo;
 use App\Repositories\Product\Editor\UpdateMeta;
 use App\Repositories\Product\Editor\UpdateProductSku;
@@ -61,6 +62,7 @@ class EloquentProductRepository implements ProductRepositoryContract {
             FillProduct::class,
             AttachInfo::class,
             AttachMeta::class,
+            UpdateImages::class,
             RelateProduct::class,
             AttachProductSku::class,
         ];
@@ -78,6 +80,7 @@ class EloquentProductRepository implements ProductRepositoryContract {
             FillProduct::class,
             UpdateInfo::class,
             UpdateMeta::class,
+            UpdateImages::class,
             RelateProduct::class,
             UpdateProductSku::class,
         ];

@@ -15,7 +15,6 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
         $api->get('users/info', ['uses' => 'UserController@getUserInfo', 'as' => 'user.info']);
         $api->put('users/info', ['uses' => 'UserController@updateUserInfo', 'as' => 'update.user.info']);
 
-        $api->resource('users/address', 'Client\AddressController');
     });
 
     /**
@@ -33,4 +32,14 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
      */
     $api->post('auth/sms/send-code', 'SmsController@postSendCode')->name('auth.sms.send');
     $api->get('auth/sms/debug', 'SmsController@getInfo')->name('auth.sms.debug');
+});
+
+
+$api->group(['namespace' => 'Client'], function () use ($api) {
+
+    $api->group(['middleware' => 'api.auth'], function ($api) {
+        $api->resource('users/address', 'AddressController');
+        $api->get('images/token', 'ImageController@token');
+    });
+
 });

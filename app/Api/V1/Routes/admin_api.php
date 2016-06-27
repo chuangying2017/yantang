@@ -9,6 +9,7 @@
 $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
 
     $api->group(['middleware' => 'api.auth'], function ($api) {
+
         $api->group(['namespace' => 'Access', 'prefix' => 'access'], function ($api) {
 
             $api->resource('users', 'UserController');
@@ -96,6 +97,12 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
             $api->resource('stations', 'StationController');
         });
 
+
+        /**
+         * 通用接口
+         */
+        $api->get('images/token', 'Image\ImageController@token');
+        $api->get('images', 'Image\ImageController@index');
 
     });
 });

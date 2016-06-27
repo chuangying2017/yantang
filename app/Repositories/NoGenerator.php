@@ -20,6 +20,7 @@ class NoGenerator {
     const LENGTH_OF_PREORDER_NO = 21;
     const LENGTH_OF_CHARGE_BILLING_NO = 21;
     const LENGTH_OF_PREORDER_BILLING_NO = 21;
+    const LENGTH_OF_ORDER_TICKET_NO = 15;
 
     private static function generate_no()
     {
@@ -63,17 +64,17 @@ class NoGenerator {
 
     public static function isOrderNo($order_no)
     {
-        return strlen($order_no) == 21;
+        return strlen($order_no) == self::LENGTH_OF_ORDER_NO;
     }
 
     public static function isOrderBillingNo($billing_no)
     {
-        return strlen($billing_no) == 21;
+        return strlen($billing_no) == self::LENGTH_OF_ORDER_BILLING_NO;
     }
 
     public static function isOrderTicketNo($no)
     {
-        return strlen($no) == 23;
+        return strlen($no) == self::LENGTH_OF_ORDER_TICKET_NO;
     }
 
 }

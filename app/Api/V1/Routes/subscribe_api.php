@@ -23,7 +23,7 @@ $api->group(['namespace' => 'Subscribe'], function ($api) {
             $api->get('info', 'StationController@info');
             $api->get('/{station_id}/bind', 'StationController@getBind')->name('api.station.check.bind.get');
             $api->post('/{station_id}/bind', 'StationController@postBind')->name('api.station.bind');
-            $api->resource('statements', 'StationStatementController');
+//            $api->resource('statements', 'StationStatementController');
             $api->resource('staffs', 'StationStaffController');
         });
 

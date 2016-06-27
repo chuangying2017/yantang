@@ -27,9 +27,9 @@ class EloquentCartRepository implements CartRepositoryContract {
     public function getAll($with_sku = true)
     {
         if($with_sku) {
-            return Cart::get();
+            return Cart::with('sku')->get();
         }
-        return Cart::with('sku')->get();
+        return Cart::get();
     }
 
     public function getMany($cart_ids, $with_sku = true)

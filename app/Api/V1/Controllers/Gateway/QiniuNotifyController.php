@@ -22,6 +22,7 @@ class QiniuNotifyController extends Controller {
         $data = $request->all();
         $media_id = $request->input('media_id') . '-' . date('YmdHis') . mt_rand(1, 9999);
         $data['media_id'] = $media_id;
+        $data['url'] = config('filesystems.disks.qiniu.domains.custom') . $data['media_id'];
         $imageRepo->create($data);
 
         return response()->json([

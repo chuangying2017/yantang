@@ -47,6 +47,12 @@ class CartOrderApiTest extends TestCase {
 
         $this->assertResponseStatus(201);
 
+        $this->json('get', 'mall/orders', [], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+
+        $this->dump();
+
+        $this->assertResponseStatus(200);
+
         return $order['data'];
     }
 

@@ -97,8 +97,8 @@ class CampaignOrderTest extends TestCase {
     {
         $order = $this->it_can_paid_a_campaign_order();
 
-        $ticket = \App\Models\OrderTicket::where('order_id', $order['id'])->first();
 
+        $ticket = \App\Models\OrderTicket::where('order_id', $order['id'])->first();
         $user_id = 1;
 
         $this->json('GET', 'campaigns/tickets/' . $ticket['ticket_no'],
@@ -106,8 +106,25 @@ class CampaignOrderTest extends TestCase {
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
 
+
         $this->dumpResponse();
         $this->assertResponseOk();
 
+    }
+
+    /** @test */
+    public function it_can_get_order_ticket_lists()
+    {
+        $order = $this->it_can_paid_a_campaign_order();
+
+        $user_id = 1;
+
+        $this->json('GET', 'campaigns/tickets',
+            [],
+            ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
+        );
+
+        $this->assertResponseOk();
+        $this->seeJsonStructure(['data' => [['campaign' => ['cover_image', 'name']]]]);
     }
 }

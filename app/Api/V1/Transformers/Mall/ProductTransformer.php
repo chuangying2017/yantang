@@ -9,7 +9,7 @@ class ProductTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'brand', 'info', 'images'];
+    protected $availableIncludes = ['skus', 'brand', 'info'];
 
     public function transform(Product $product)
     {
@@ -38,6 +38,12 @@ class ProductTransformer extends TransformerAbstract {
             $data['stock'] = $meta['stock'];
         }
 
+        if ($product->relationLoaded('images')) {
+            $data['images'] = array_map(function ($media_id) {
+                return config('filesystems.disks.qiniu.domains.custom') . $media_id;
+            }, $product->images->pluck('media_id')->all());
+        }
+
         return $data;
     }
 
@@ -59,11 +65,6 @@ class ProductTransformer extends TransformerAbstract {
     public function includeMeta(Product $product)
     {
         return $this->item($product->meta, new ProductMetaTransformer(), true);
-    }
-
-    public function includeImages(Product $product)
-    {
-        return $this->collection($product->images, new ImageTransformer(), true);
     }
 
 }
