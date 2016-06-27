@@ -12,8 +12,10 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
         $api->get('auth/password/change', 'PasswordController@getChangePassword');
         $api->post('auth/password/change', 'PasswordController@postChangePassword')->name('password.change');
 
-        $api->get('user/info', ['uses' => 'UserController@getUserInfo', 'as' => 'user.info']);
-        $api->put('user/info', ['uses' => 'UserController@updateUserInfo', 'as' => 'update.user.info']);
+        $api->get('users/info', ['uses' => 'UserController@getUserInfo', 'as' => 'user.info']);
+        $api->put('users/info', ['uses' => 'UserController@updateUserInfo', 'as' => 'update.user.info']);
+
+        $api->resource('users/address', 'Client\AddressController');
     });
 
     /**

@@ -38,7 +38,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $order = $this->get($preorder_id);
 
-        
+
 
     }
 
