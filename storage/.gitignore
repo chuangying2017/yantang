@@ -1,0 +1,5 @@
+*
+debugbar/
+database.sqlite
+!.gitignore
+

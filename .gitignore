@@ -1,4 +1,3 @@
-/Envoy.blade.php
 /vendor
 /node_modules
 /public/storage
@@ -11,21 +10,16 @@ Homestead.json
 /*.sublime-workspace
 .idea
 .project
-_ide_helper.php
-composer.phar
 error.log
 Todo.rtf
 /public/assets/bower_components
 /public/js/vendor
 Envoy.blade.php
 _ide_helper.php
-composer.phar
 composer.lock
 app/config/packages/bugsnag/
 .DS_Store
-/storage
 /public/build/
-bootstrap/cache
 *.out
 .phpstorm.meta.php
 _ide_helper_models.php
