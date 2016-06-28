@@ -82,7 +82,7 @@ class GroupController extends Controller {
         $name = $request->input('name');
         $desc = $request->input('desc') ?: "";
         $cover_image = $request->input('cover_image');
-        $priority = $request->input('priority');
+        $priority = $request->input('priority') ?: 0;
         $pid = $request->input('pid') ?: null;
         $group = $this->groupRepositoryContract->update($id, $name, $desc, $cover_image, $priority, $pid);
 

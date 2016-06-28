@@ -13,7 +13,7 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
         $this->init();
     }
 
-    public function create($name, $desc, $cover_image, $priority, $pid = null)
+    public function create($name, $desc, $cover_image, $priority = 0, $pid = null)
     {
         $model = $this->getModel();
         $cat = $model::create(compact('name', 'desc', 'cover_image', 'priority', 'pid'));

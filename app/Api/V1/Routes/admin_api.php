@@ -62,7 +62,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
                 $api->resource('attributes', 'AttributeController');
                 $api->resource('attributes.values', 'AttributeValueController');
                 $api->resource('brands', 'BrandController');
-                $api->resource('groups', 'BrandController');
+                $api->resource('groups', 'GroupController');
                 $api->resource('cats', 'CategoryController');
                 $api->resource('mix-skus', 'ProductMixController', ['only' => ['index']]);
                 $api->resource('/', 'ProductController');
