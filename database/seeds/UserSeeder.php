@@ -17,9 +17,10 @@ class UserSeeder extends Seeder {
         if (env('DB_DRIVER') == 'mysql')
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        if (env('DB_DRIVER') == 'mysql')
+        if (env('DB_DRIVER') == 'mysql') {
             DB::table('users')->truncate();
-        elseif (env('DB_DRIVER') == 'sqlite')
+            DB::table('user_providers')->truncate();
+        } elseif (env('DB_DRIVER') == 'sqlite')
             DB::statement("DELETE FROM " . 'users');
         else //For PostgreSQL or anything else
             DB::statement("TRUNCATE TABLE " . 'users' . " CASCADE");

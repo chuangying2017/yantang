@@ -6,7 +6,7 @@ use App\Models\Product\Traits\CategoryRelation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Baum\Node;
 
-abstract class CategoryAbstract extends Node {
+class CategoryAbstract extends Node {
 
     use SoftDeletes, CategoryRelation;
 
