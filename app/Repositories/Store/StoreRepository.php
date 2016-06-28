@@ -1,7 +1,9 @@
 <?php namespace App\Repositories\Store;
 
 use App\Models\Store;
+use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Statement\MerchantRepositoryContract;
+use DB;
 
 class StoreRepository implements StoreRepositoryContract, MerchantRepositoryContract {
 
@@ -46,10 +48,15 @@ class StoreRepository implements StoreRepositoryContract, MerchantRepositoryCont
             throw new \Exception('用户不能绑定多个商店');
         }
 
-        return \DB::table('store_user')->insert([
+        \DB::table('store_user')->insert([
             'store_id' => $store_id,
             'user_id' => $user_id
         ]);
+
+        access()->addRole(AccessProtocol::ROLE_OF_STORE);
+
+        return true;
+
     }
 
     public function updateAsActive($store_ids)
@@ -105,7 +112,10 @@ class StoreRepository implements StoreRepositoryContract, MerchantRepositoryCont
 
     public function unbindUser($store_id, $user_id)
     {
-        return DB::table('store_user')->where('store_id', $store_id)->where('user_id', $user_id)->delete();
+        DB::table('store_user')->where('store_id', $store_id)->where('user_id', $user_id)->delete();
+        access()->removeRole(AccessProtocol::ROLE_OF_STORE);
+
+        return true;
     }
 
     public function getStoreIdByUser($user_id)

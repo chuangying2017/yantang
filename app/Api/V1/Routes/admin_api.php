@@ -6,9 +6,10 @@
  * Admin
  *
  */
-$api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
+$api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.auth'], function ($api) {
 
-    $api->group(['middleware' => 'api.auth'], function ($api) {
+    $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_SUPERVISOR]], function ($api) {
+
 
         $api->group(['namespace' => 'Access', 'prefix' => 'access'], function ($api) {
 
@@ -47,7 +48,6 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
             });
         });
 
-
         $api->group(['namespace' => 'Client'], function ($api) {
             $api->group(['prefix' => 'clients'], function ($api) {
                 $api->resource('groups.users', 'GroupUserController');
@@ -56,7 +56,6 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
                 $api->resource('members', 'MemberController', ['except' => ['show', 'edit']]);
             });
         });
-
 
         $api->group(['namespace' => 'Product'], function ($api) {
             $api->group(['prefix' => 'products'], function ($api) {
@@ -69,6 +68,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
                 $api->resource('/', 'ProductController');
             });
         });
+
 
         /**
          * Mall Orders
@@ -83,26 +83,27 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin'], function ($api) {
             });
         });
 
-
-        $api->group(['namespace' => 'Campaign'], function ($api) {
-            $api->resource('store', 'StoreController');
-            $api->resource('campaigns', 'CampaignController');
-        });
-
-
-        /**
-         * 总部管理服务部
-         */
-        $api->group(['namespace' => 'Station'], function ($api) {
-            $api->resource('stations', 'StationController');
-        });
-
-
-        /**
-         * 通用接口
-         */
-        $api->get('images/token', 'Image\ImageController@token');
-        $api->get('images', 'Image\ImageController@index');
-
     });
+
+
+    $api->group(['namespace' => 'Campaign'], function ($api) {
+        $api->resource('store', 'StoreController');
+        $api->resource('campaigns', 'CampaignController');
+    });
+
+
+    /**
+     * 总部管理服务部
+     */
+    $api->group(['namespace' => 'Station'], function ($api) {
+        $api->resource('stations', 'StationController');
+    });
+
+
+    /**
+     * 通用接口
+     */
+    $api->get('images/token', 'Image\ImageController@token');
+    $api->get('images', 'Image\ImageController@index');
+
 });

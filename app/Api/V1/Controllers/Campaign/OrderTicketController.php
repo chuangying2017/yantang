@@ -36,13 +36,14 @@ class OrderTicketController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = $this->ticketRepo->getOrderTicketsOfUser($this->user_id);
+        $status = $request->input('status') ?: null;
+
+        $tickets = $this->ticketRepo->getOrderTicketsOfUser($this->user_id, $status);
 
         return $this->response->paginator($tickets, new OrderTicketTransformer());
     }
-
 
     /**
      * Display the specified resource.

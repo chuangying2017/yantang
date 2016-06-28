@@ -25,7 +25,8 @@ class OrderTicketTransformer extends TransformerAbstract {
                 'id' => $ticket['order_id']
             ],
             'ticket_no' => $ticket['ticket_no'],
-            'status' => $ticket['status']
+            'status' => $ticket['status'],
+            'exchange_at' => $ticket['exchange_at'],
         ];
     }
 

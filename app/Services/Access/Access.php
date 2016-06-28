@@ -1,5 +1,7 @@
 <?php namespace App\Services\Access;
 
+use App\Models\Access\Role\Role;
+use App\Models\Access\User\User;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
 use App\Repositories\Store\StoreRepositoryContract;
@@ -28,8 +30,9 @@ class Access {
         $this->app = $app;
     }
 
+
     /**
-     * Get the currently authenticated user or null.
+     * @return User
      */
     public function user()
     {
@@ -127,6 +130,40 @@ class Access {
             return $user->hasRole($role);
 
         return false;
+    }
+
+    public function addRole($role)
+    {
+        $user = $this->user();
+
+        if (is_object($role) || is_array($role)) {
+            $role_id = $role['id'];
+        } else if (is_numeric($role)) {
+            $role_id = $role;
+        } else {
+            $role_id = Role::query()->where('name', $role)->pluck('id')->first();
+        }
+
+        if (!$user->hasRole($role_id)) {
+            $user->attachRole($role_id);
+        }
+    }
+
+    public function removeRole($role)
+    {
+        $user = $this->user();
+
+        if (is_object($role) || is_array($role)) {
+            $role_id = $role['id'];
+        } else if (is_numeric($role)) {
+            $role_id = $role;
+        } else {
+            $role_id = Role::query()->where('name', $role)->pluck('id')->first();
+        }
+
+        if ($user->hasRole($role_id)) {
+            $user->detachRole($role_id);
+        }
     }
 
     /**

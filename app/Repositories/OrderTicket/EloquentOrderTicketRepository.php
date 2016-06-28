@@ -32,8 +32,8 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, St
     {
         $query = OrderTicket::query()->with('campaign')->where('user_id', $user_id);
 
-        if ($status) {
-            $query = $query->where('status', $status);
+        if (OrderProtocol::validOrderTicketStatus($status)) {
+            $query->where('status', $status);
         }
 
         if ($per_page) {
@@ -107,7 +107,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, St
     public function getBillingWithProducts($store_id, $time_before)
     {
         return OrderTicket::query()->with(['skus' => function ($query) {
-            $query->where('type', '!=', ProductProtocol::TYPE_OF_MIX)->select(['id', 'order_id', 'price', 'quantity', 'product_id', 'product_sku_id' , 'name', 'cover_image']);
+            $query->where('type', '!=', ProductProtocol::TYPE_OF_MIX)->select(['id', 'order_id', 'price', 'quantity', 'product_id', 'product_sku_id', 'name', 'cover_image']);
         }])->where('status', OrderTicketProtocol::STATUS_OF_USED)
             ->where('check', StatementProtocol::CHECK_STATUS_OF_PENDING)
             ->where('exchange_at', '<=', $time_before)

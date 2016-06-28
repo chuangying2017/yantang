@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Station;
 
 use App\Models\Subscribe\Station;
+use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Statement\MerchantRepositoryContract;
 use DB;
 
@@ -52,10 +53,14 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
             throw new \Exception('用户不能绑定多个服务部');
         }
 
-        return \DB::table('station_user')->insert([
+        \DB::table('station_user')->insert([
             'station_id' => $station_id,
             'user_id' => $user_id
         ]);
+
+        access()->addRole(AccessProtocol::ROLE_OF_STATION);
+
+        return true;
     }
 
     public function updateAsActive($station_ids)
@@ -114,6 +119,10 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
     public function unbindUser($station_id, $user_id)
     {
         DB::table('station_user')->where('station_id', $station_id)->where('user_id', $user_id)->delete();
+
+        access()->removeRole(AccessProtocol::ROLE_OF_STATION);
+
+        return true;
     }
 
     public function getStationIdByUser($user_id)

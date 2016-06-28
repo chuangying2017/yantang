@@ -32,7 +32,7 @@ class GroupController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function priority()
     {
         $groups = $this->groupRepositoryContract->getAll();
 
@@ -48,11 +48,11 @@ class GroupController extends Controller {
     public function store(CategoryRequest $request)
     {
         $name = $request->input('name');
-        $desc = $request->input('desc');
-        $cover_image = $request->input('cover_image');
-        $index = $request->input('index');
+        $desc = $request->input('desc') ?: '';
+        $cover_image = $request->input('cover_image') ?: '';
+        $priority = $request->input('priority') ?: 0;
         $pid = $request->input('pid') ?: null;
-        $group = $this->groupRepositoryContract->create($name, $desc, $cover_image, $index, $pid);
+        $group = $this->groupRepositoryContract->create($name, $desc, $cover_image, $priority, $pid);
 
         return $this->response->item($group, new GroupTransformer());
     }
@@ -80,11 +80,11 @@ class GroupController extends Controller {
     public function update(Request $request, $id)
     {
         $name = $request->input('name');
-        $desc = $request->input('desc');
+        $desc = $request->input('desc') ?: "";
         $cover_image = $request->input('cover_image');
-        $index = $request->input('index');
+        $priority = $request->input('priority');
         $pid = $request->input('pid') ?: null;
-        $group = $this->groupRepositoryContract->update($id, $name, $desc, $cover_image, $index, $pid);
+        $group = $this->groupRepositoryContract->update($id, $name, $desc, $cover_image, $priority, $pid);
 
         return $this->response->item($group, new GroupTransformer());
     }

@@ -63,7 +63,6 @@ class StationApiTest extends TestCase {
 
         $result = $this->getResponseData();
 
-
         $this->assertEquals($station['id'], $result['data']['id']);
     }
 }

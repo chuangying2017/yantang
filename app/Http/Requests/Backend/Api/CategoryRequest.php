@@ -13,7 +13,6 @@ class CategoryRequest extends Request {
      */
     public function authorize()
     {
-        #todo @troy auth
         return true;
     }
 
@@ -28,10 +27,10 @@ class CategoryRequest extends Request {
 
         if ($this->isMethod('POST') || $this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $rules = [
-//                'name' => 'required|unique:categories,name',
-                'pid'  => 'sometimes|exists:categories,id'
+                'name' => 'required',
+                'pid' => 'sometimes|exists:categories,id'
             ];
-            if(is_null($this->input('pid')) || $this->input('pid') == 0) {
+            if (is_null($this->input('pid')) || $this->input('pid') == 0) {
                 $rules['pid'] = '';
             }
         }

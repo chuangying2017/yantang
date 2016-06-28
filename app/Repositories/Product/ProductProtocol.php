@@ -16,11 +16,6 @@ final class ProductProtocol {
      */
     const CODE_SKU_NOT_AFFORD = "4001";
     const CODE_SKU_AFFORD_OK = "2000";
-    /**
-     *
-     */
-    const MSG_SKU_NOT_AFFORD = "商品库存不足";
-    const MSG_SKU_AFFORD_OK = "sku afford ok";
 
     const VAR_PRODUCT_STATUS_UP = 'up'; //上架, 在售
     const VAR_PRODUCT_STATUS_DOWN = 'down'; // 下架
@@ -29,15 +24,6 @@ final class ProductProtocol {
     const VAR_PRODUCT_OPEN_STATUS_NOW = 'now'; // 立马开售
     const VAR_PRODUCT_OPEN_STATUS_FIXED = 'fixed'; // 固定时间开售
 
-    public static function groups($group_id = null)
-    {
-        $data = [
-            1 => '国际品牌',
-            2 => '国货精品'
-        ];
-
-
-    }
 
     public static function saleStatus($status = null, $key = false)
     {

@@ -61,6 +61,39 @@ class OrderProtocol {
         return self::DELIVER_TYPE_OF_EXPRESS;
     }
 
+    public static function validOrderTicketStatus($status)
+    {
+        return in_array($status, [
+            self::ORDER_TICKET_STATUS_OF_OK,
+            self::ORDER_TICKET_STATUS_OF_OVERTIME,
+            self::ORDER_TICKET_STATUS_OF_USED
+        ]);
+    }
+
+    public static function validOrderStatus($status)
+    {
+        return in_array($status, [
+            self::STATUS_OF_UNPAID,
+            self::STATUS_OF_PAYMENT_VERIFY,
+            self::STATUS_OF_PAID,
+            self::STATUS_OF_INFO_VERIFY,
+            self::STATUS_OF_CANCEL,
+            self::STATUS_OF_BACKLOG,
+            self::STATUS_OF_SHIPPING,
+            self::STATUS_OF_SHIPPED,
+            self::STATUS_OF_DONE,
+        ]);
+    }
+
+    public static function validOrderPaidStatus($status)
+    {
+        return in_array($status, [
+            self::PAID_STATUS_OF_PAID,
+            self::PAID_STATUS_OF_UNPAID,
+            self::PAID_STATUS_OF_PARTIAL
+        ]);
+    }
+
 
     public static function statusIs($need_status, $current_status)
     {

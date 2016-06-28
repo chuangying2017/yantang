@@ -302,21 +302,21 @@ class PermissionTableSeeder extends Seeder {
 
 
         /**
-         * Agent Permission
+         * 服务部权限
          */
+
         $permission_model = config('access.permission');
-        $access_agent = new $permission_model;
-        $access_agent->name = 'access-agent-backend';
-        $access_agent->display_name = '查看代理商后台';
-        $access_agent->system = true;
-        $access_agent->group_id = 0;
-        $access_agent->sort = 1;
-        $access_agent->created_at = Carbon::now();
-        $access_agent->updated_at = Carbon::now();
-        $access_agent->save();
+        $deletePermissions = new $permission_model;
+        $deletePermissions->name = 'delete-permissions';
+        $deletePermissions->display_name = 'Delete Permissions';
+        $deletePermissions->system = true;
+        $deletePermissions->group_id = 4;
+        $deletePermissions->sort = 7;
+        $deletePermissions->created_at = Carbon::now();
+        $deletePermissions->updated_at = Carbon::now();
+        $deletePermissions->save();
 
 
-        DB::table(config('access.permission_role_table'))->insert(['permission_id' => $access_agent->id, 'role_id' => 4]);
 
 		if(env('DB_DRIVER') == 'mysql')
 			DB::statement('SET FOREIGN_KEY_CHECKS=1;');

@@ -39,7 +39,7 @@ class UserController extends Controller {
      */
     public function getUserInfo()
     {
-        $user_info = $this->userRepo->getUserInfo(access()->user());
+        $user_info = $this->userRepo->getUserInfo(access()->user(), true, true);
         return $this->response->item($user_info, new UserInfoTransformer());
     }
 

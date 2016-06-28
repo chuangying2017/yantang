@@ -38,7 +38,50 @@ class RoleTableSeeder extends Seeder {
         $user->updated_at = Carbon::now();
         $user->save();
 
+        //id = 3
+        $role_model = config('access.role');
+        $user = new $role_model;
+        $user->name = 'Station';
+        $user->sort = 2;
+        $user->created_at = Carbon::now();
+        $user->updated_at = Carbon::now();
+        $user->save();
 
+        //id = 4
+        $role_model = config('access.role');
+        $user = new $role_model;
+        $user->name = 'Store';
+        $user->sort = 4;
+        $user->created_at = Carbon::now();
+        $user->updated_at = Carbon::now();
+        $user->save();
+
+        //id = 5
+        $role_model = config('access.role');
+        $user = new $role_model;
+        $user->name = 'Staff';
+        $user->sort = 5;
+        $user->created_at = Carbon::now();
+        $user->updated_at = Carbon::now();
+        $user->save();
+
+        //id = 6
+        $role_model = config('access.role');
+        $user = new $role_model;
+        $user->name = 'StationAdmin';
+        $user->sort = 6;
+        $user->created_at = Carbon::now();
+        $user->updated_at = Carbon::now();
+        $user->save();
+
+        //id = 7
+        $role_model = config('access.role');
+        $user = new $role_model;
+        $user->name = 'StoreAdmin';
+        $user->sort = 7;
+        $user->created_at = Carbon::now();
+        $user->updated_at = Carbon::now();
+        $user->save();
 
 
         if (env('DB_DRIVER') == 'mysql')

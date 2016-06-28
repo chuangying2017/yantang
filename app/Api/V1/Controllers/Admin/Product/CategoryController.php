@@ -11,8 +11,8 @@ use App\Http\Requests;
 use App\API\V1\Controllers\Controller;
 
 
-class CategoryController extends Controller
-{
+class CategoryController extends Controller {
+
     /**
      * @var CategoryRepositoryContract
      */
@@ -48,11 +48,11 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $name = $request->input('name');
-        $desc = $request->input('desc');
+        $desc = $request->input('desc') ?: '';
         $cover_image = $request->input('cover_image');
-        $index = $request->input('index');
+        $priority = $request->input('priority');
         $pid = $request->input('pid') ?: null;
-        $category = $this->categoryRepositoryContract->create($name, $desc, $cover_image, $index, $pid);
+        $category = $this->categoryRepositoryContract->create($name, $desc, $cover_image, $priority, $pid);
 
         return $this->response->item($category, new CategoryTransformer());
     }
@@ -80,11 +80,11 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $name = $request->input('name');
-        $desc = $request->input('desc');
+        $desc = $request->input('desc') ?: '';
         $cover_image = $request->input('cover_image');
-        $index = $request->input('index');
+        $priority = $request->input('priority');
         $pid = $request->input('pid') ?: null;
-        $category = $this->categoryRepositoryContract->update($id, $name, $desc, $cover_image, $index, $pid);
+        $category = $this->categoryRepositoryContract->update($id, $name, $desc, $cover_image, $priority, $pid);
 
         return $this->response->item($category, new CategoryTransformer());
     }

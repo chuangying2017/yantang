@@ -74,6 +74,21 @@ class StaffController extends Controller {
         $this->response->errorBadRequest('绑定失败');
     }
 
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function postUnBind(BindStaffRequest $request, $staff_id)
+    {
+        $success = $this->staffRepo->unbindUser($staff_id, access()->id());
+
+        return $this->response->noContent();
+    }
+
+
     public function index($station_id)
     {
         $staffs = $this->staffRepo->getAllActive($station_id);

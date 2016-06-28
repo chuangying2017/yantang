@@ -63,7 +63,8 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
 
         $user->attachRole($this->role->getDefaultUserRole());
 
-        $user->confirmed = $user['phone'] ? 1 : 0;
+//        $user->confirmed = $user['phone'] ? 1 : 0;
+        $user->confirmed = 1;
 
         event(new UserRegister($user, $data));
 
