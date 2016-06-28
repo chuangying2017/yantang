@@ -2,5 +2,6 @@
 
 interface PreorderAssignServiceContact {
 
-    public function assign($longitude, $latitude);
+    public function assign($longitude, $latitude, $district_id);
+
 }

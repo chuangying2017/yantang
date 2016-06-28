@@ -28,4 +28,6 @@ interface StationRepositoryContract {
     public function getAll($only_id = false);
 
     public function getAllActive($only_id = false);
+
+    public function getByDistrict($district);
 }

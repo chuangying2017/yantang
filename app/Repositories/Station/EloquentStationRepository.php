@@ -137,4 +137,9 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
         return generate_bind_token($station_id);
     }
 
+    public function getByDistrict($district_id)
+    {
+        return Station::query()->where('district_id', $district_id)->get(['id', 'name', 'longitude', 'latitude']);
+    }
+
 }
