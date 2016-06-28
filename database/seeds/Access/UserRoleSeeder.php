@@ -18,12 +18,12 @@ class UserRoleSeeder extends Seeder {
 			DB::statement("TRUNCATE TABLE ".config('access.assigned_roles_table')." CASCADE");
 
 		//Attach admin role to admin user
-		$user_model = config('auth.model');
+		$user_model = \App\Models\Access\User\User::class;
 		$user_model = new $user_model;
 		$user_model::first()->attachRole(1);
 
 //		Attach user role to general user
-		$user_model = config('auth.model');
+		$user_model = \App\Models\Access\User\User::class;
 		$user_model = new $user_model;
 		$user_model::find(2)->attachRole(2);
 
