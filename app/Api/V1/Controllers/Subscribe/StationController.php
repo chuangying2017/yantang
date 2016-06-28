@@ -72,6 +72,20 @@ class StationController extends Controller {
         $this->response->errorBadRequest('绑定失败');
     }
 
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function postUnBind(BindStationRequest $request, $station_id)
+    {
+        $success = $this->stationRepo->unbindUser($station_id, access()->id());
+
+        $this->response->noContent('绑定失败');
+    }
+
     public function index()
     {
         $stations = $this->stationRepo->getAllActive();

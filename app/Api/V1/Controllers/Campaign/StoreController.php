@@ -79,11 +79,28 @@ class StoreController extends Controller {
         $this->response->errorBadRequest('绑定失败');
     }
 
+
+     /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function postUnBind(BindStoreRequest $request, $store_id)
+    {
+        $success = $this->storeRepo->unbindUser($store_id, access()->id());
+
+        $this->response->noContent('绑定失败');
+    }
+
+
     public function index()
     {
         $stores = $this->storeRepo->getAllActive();
 
         return $this->response->collection($stores, new StoreTransformer());
     }
+
+
 
 }

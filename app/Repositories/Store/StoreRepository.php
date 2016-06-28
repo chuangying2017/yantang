@@ -105,7 +105,7 @@ class StoreRepository implements StoreRepositoryContract, MerchantRepositoryCont
 
     public function unbindUser($store_id, $user_id)
     {
-        DB::table('store_user')->where('store_id', $store_id)->where('user_id', $user_id)->delete();
+        return DB::table('store_user')->where('store_id', $store_id)->where('user_id', $user_id)->delete();
     }
 
     public function getStoreIdByUser($user_id)
