@@ -23,7 +23,6 @@ class AdminStationStaffTest extends TestCase {
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
 
-        $this->dumpResponse();
         $this->assertResponseStatus(201);
 
         return $this->getResponseData('data');
@@ -68,10 +67,7 @@ class AdminStationStaffTest extends TestCase {
             ['Authorization' => 'Bearer ' . $token]
         );
 
-        $this->dumpResponse();
-
         $this->assertResponseOk();
-
 
         $this->json('POST', $url,
             ['bind_token' => generate_bind_token($station['id'])],
@@ -86,9 +82,43 @@ class AdminStationStaffTest extends TestCase {
 
         $result = $this->getResponseData();
 
-
         $this->assertEquals($station['id'], $result['data']['id']);
 
         return $station;
+    }
+
+
+    /** @test */
+    public function it_can_bind_user_to_staff()
+    {
+        $user_id = 1;
+        $token = $this->getToken($user_id);
+
+        $staff = $this->it_can_create_a_staff();
+
+        $url = 'stations/staffs/' . $staff['id'] . '/bind';
+        $response = $this->json('get', $url,
+            ['bind_token' => generate_bind_token($staff['id'])],
+            ['Authorization' => 'Bearer ' . $token]
+        );
+
+
+        $this->assertResponseOk();
+
+        $this->json('POST', $url,
+            ['bind_token' => generate_bind_token($staff['id'])],
+            ['Authorization' => 'Bearer ' . $token]
+        );
+
+
+        $this->assertResponseStatus(201);
+
+        $this->json('GET', 'stations/staffs/info', [], ['Authorization' => 'Bearer ' . $token]);
+
+        $result = $this->getResponseData();
+
+        $this->assertEquals($staff['id'], $result['data']['id']);
+
+        return $staff;
     }
 }

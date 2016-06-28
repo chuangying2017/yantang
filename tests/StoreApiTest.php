@@ -100,6 +100,7 @@ class StoreApiTest extends TestCase {
             ['bind_token' => generate_bind_token($store['id'])],
             ['Authorization' => 'Bearer ' . $token]
         );
+
         $this->assertResponseStatus(201);
 
         $this->json('GET', 'store/info', [], ['Authorization' => 'Bearer ' . $token]);

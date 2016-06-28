@@ -50,7 +50,7 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
             ->where('user_id', $user_id)
             ->first();
         if ($user_relate) {
-            throw new \Exception('用户不能绑定多个服务部');
+            throw new \Exception('用户不能绑定多个服务部', 400);
         }
 
         \DB::table('station_user')->insert([

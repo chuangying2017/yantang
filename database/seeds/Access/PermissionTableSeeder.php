@@ -305,16 +305,6 @@ class PermissionTableSeeder extends Seeder {
          * 服务部权限
          */
 
-        $permission_model = config('access.permission');
-        $deletePermissions = new $permission_model;
-        $deletePermissions->name = 'delete-permissions';
-        $deletePermissions->display_name = 'Delete Permissions';
-        $deletePermissions->system = true;
-        $deletePermissions->group_id = 4;
-        $deletePermissions->sort = 7;
-        $deletePermissions->created_at = Carbon::now();
-        $deletePermissions->updated_at = Carbon::now();
-        $deletePermissions->save();
 
 
 

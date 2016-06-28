@@ -19,16 +19,17 @@ $api->group(['namespace' => 'Campaign', 'middleware' => 'api.auth'], function ($
 
     $api->group(['prefix' => 'store'], function ($api) {
 
-        $api->get('/{store_id}/bind', 'StoreController@getBind')->name('api.store.check.bind.get');
-        $api->post('/{store_id}/bind', 'StoreController@postBind')->name('api.store.bind');
-
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STATION]], function ($api) {
             $api->resource('exchange', 'StoreExchangeController');
             $api->get('info', 'StoreController@info');
-            $api->post('/{store_id}/unbind', 'StoreController@postUnBind')->name('api.store.unbind');
             $api->resource('statements', 'StoreStatementController');
             $api->resource('tickets', 'StoreTicketController');
+            $api->post('/{store_id}/unbind', 'StoreController@postUnBind')->name('api.store.unbind');
         });
+
+        $api->get('/{store_id}/bind', 'StoreController@getBind')->name('api.store.check.bind.get');
+        $api->post('/{store_id}/bind', 'StoreController@postBind')->name('api.store.bind');
+
     });
 
 });

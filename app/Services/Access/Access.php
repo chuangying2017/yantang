@@ -136,6 +136,7 @@ class Access {
     {
         $user = $this->user();
 
+
         if (is_object($role) || is_array($role)) {
             $role_id = $role['id'];
         } else if (is_numeric($role)) {

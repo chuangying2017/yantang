@@ -55,9 +55,7 @@ class StationApiTest extends TestCase {
             ['Authorization' => 'Bearer ' . $token]
         );
 
-
         $this->assertResponseStatus(201);
-
 
         $this->json('GET', 'stations/info', [], ['Authorization' => 'Bearer ' . $token]);
 

@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Station\Staff;
 
 use App\Models\Subscribe\StationStaff;
+use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Station\StationProtocol;
 
 class EloquentStaffRepository implements StaffRepositoryContract {
@@ -42,6 +43,8 @@ class EloquentStaffRepository implements StaffRepositoryContract {
         $staff->status = StationProtocol::STATUS_OF_STAFF_BIND;
         $staff->save();
 
+        access()->addRole(AccessProtocol::ROLE_OF_STAFF);
+
         return $staff;
     }
 
@@ -57,6 +60,7 @@ class EloquentStaffRepository implements StaffRepositoryContract {
 
     public function deleteStaff($staff_id)
     {
+
         return StationStaff::destroy($staff_id);
     }
 
@@ -76,7 +80,7 @@ class EloquentStaffRepository implements StaffRepositoryContract {
 
     public function getStaffByUser($user_id, $throw_error = false)
     {
-        if($throw_error) {
+        if ($throw_error) {
             return StationStaff::query()->where('user_id', $user_id)->firstOrFail();
         }
 
@@ -124,6 +128,8 @@ class EloquentStaffRepository implements StaffRepositoryContract {
         $staff->user_id = 0;
         $staff->status = StationProtocol::STATUS_OF_STAFF_UN_BIND;
         $staff->save();
+
+        access()->removeRole(AccessProtocol::ROLE_OF_STAFF);
 
         return $staff;
     }
