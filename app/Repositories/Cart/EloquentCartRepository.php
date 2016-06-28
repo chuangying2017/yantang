@@ -76,7 +76,7 @@ class EloquentCartRepository implements CartRepositoryContract {
 
     public function updateQuantity($cart_id, $quantity)
     {
-        $cart = Cart::query()->findOrFail($cart_id);
+        $cart = Cart::query()->find($cart_id);
         $cart->quantity += $quantity;
         $cart->save();
         return $cart;

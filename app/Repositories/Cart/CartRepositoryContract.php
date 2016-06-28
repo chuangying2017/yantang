@@ -12,7 +12,7 @@ interface CartRepositoryContract {
 
     public function addMany($cart_data);
 
-    public function updateQuantity($cart_id, $quantity);
+    public function updateQuantity($product_sku_id, $quantity);
 
     public function deleteOne($cart_id);
 

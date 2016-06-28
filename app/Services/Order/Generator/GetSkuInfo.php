@@ -34,7 +34,7 @@ class GetSkuInfo extends GenerateHandlerAbstract {
             $skus[$key]['quantity'] = $request_sku_info[$sku['id']];
             if (!$this->productSkuStockRepo->enoughStock($sku['id'], $skus[$key]['quantity'])) {
                 $skus[$key]['stock_enough'] = false;
-                $temp_order->setError('商品 ID:' . $skus['id'] . ' ' . $sku['name'] . '库存不足');
+                $temp_order->setError('商品 ID:' . $sku['id'] . ' ' . $sku['name'] . '库存不足');
             }
         }
 
