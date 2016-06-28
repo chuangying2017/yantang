@@ -22,10 +22,10 @@ class UserRoleSeeder extends Seeder {
 		$user_model = new $user_model;
 		$user_model::first()->attachRole(1);
 
-		//Attach user role to general user
-//		$user_model = config('auth.model');
-//		$user_model = new $user_model;
-//		$user_model::find(2)->attachRole(2);
+//		Attach user role to general user
+		$user_model = config('auth.model');
+		$user_model = new $user_model;
+		$user_model::find(2)->attachRole(2);
 
 		if(env('DB_DRIVER') == 'mysql')
 			DB::statement('SET FOREIGN_KEY_CHECKS=1;');

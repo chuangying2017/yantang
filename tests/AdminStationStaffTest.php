@@ -110,7 +110,6 @@ class AdminStationStaffTest extends TestCase {
             ['Authorization' => 'Bearer ' . $token]
         );
 
-
         $this->assertResponseStatus(201);
 
         $this->json('GET', 'stations/staffs/info', [], ['Authorization' => 'Bearer ' . $token]);
