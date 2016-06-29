@@ -15,17 +15,18 @@ class CategoryApiTest extends TestCase {
 
         $data = [
             'name' => '鲜奶',
-            'pid' => null,
+            'pid' => 1,
             'cover_image' => 'asdaa',
             'desc' => '鲜奶',
             'priority' => 23,
         ];
 
-        $this->json('post', 'admin/products/groups',
+        $this->json('post', 'admin/products/cats',
             $data,
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
 
+        $this->dump();
         $this->assertResponseStatus(200);
     }
 
