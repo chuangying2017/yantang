@@ -31,12 +31,17 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->resource('staffs', 'StationStaffController');
 
             $api->post('/{station_id}/unbind', 'StationController@postUnBind')->name('api.station.unbind');
+
+            $api->put('preorders/{order_id}/pause', 'StationPreorderController@pause');
+            $api->resource('preorders', 'StationPreorderController');
+
         });
 
         $api->get('products', 'ProductController@index');
 
         $api->get('/{station_id}/bind', 'StationController@getBind')->name('api.station.check.bind.get');
         $api->post('/{station_id}/bind', 'StationController@postBind')->name('api.station.bind');
+
 
     });
 
@@ -46,6 +51,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
         $api->resource('preorders', 'PreorderController');
         $api->get('stations', 'StationController@index');
         $api->get('products', 'ProductController@index');
+        $api->get('districts', 'DistrictController@index');
 
     });
 });

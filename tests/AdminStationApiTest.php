@@ -9,6 +9,22 @@ class AdminStationApiTest extends TestCase {
     use DatabaseTransactions;
 
     /** @test */
+    public function it_can_get_districts()
+    {
+        $this->json('post', 'admin/districts',
+            ['name' => '天河'],
+            $this->getAuthHeader()
+        );
+        $this->assertResponseStatus(201);
+
+        $this->json('get', 'admin/districts',
+            [],
+            $this->getAuthHeader()
+        );
+        $this->assertResponseStatus(200);
+    }
+
+    /** @test */
     public function it_can_create_a_station()
     {
         $user_id = 1;

@@ -8,7 +8,6 @@ use App\Models\Subscribe\Preorder;
 
 class PreorderTransformer extends TransformerAbstract {
 
-
     use SetInclude;
 
     protected $availableIncludes = ['skus', 'station', 'staff', 'billings'];

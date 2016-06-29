@@ -5,9 +5,7 @@ interface PreorderRepositoryContract {
 
     public function createPreorder($data);
 
-    public function updatePreorderByUser($order_id, $data);
-
-    public function updatePreorder($order_id, $start_time = null, $end_time = null, $product_skus = null, $station_id = null);
+    public function updatePreorder($order_id, $data);
 
     public function updatePreorderChargeStatus($order_id, $charge_status);
 

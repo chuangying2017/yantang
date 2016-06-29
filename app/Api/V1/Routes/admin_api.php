@@ -10,7 +10,6 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
 
     $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_SUPERVISOR]], function ($api) {
 
-
         $api->group(['namespace' => 'Access', 'prefix' => 'access'], function ($api) {
 
             $api->resource('users', 'UserController');
@@ -97,6 +96,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
      */
     $api->group(['namespace' => 'Station'], function ($api) {
         $api->resource('stations', 'StationController');
+        $api->resource('districts', 'DistrictController');
     });
 
 

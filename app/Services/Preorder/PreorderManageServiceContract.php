@@ -3,7 +3,7 @@ interface PreorderManageServiceContract {
 
     public function init($preorder_id, $product_skus, $start_time, $end_time = null);
 
-    public function change($preorder_id, $product_skus, $start_time = null, $end_time = null);
+    public function change($preorder_id, $product_skus = null, $start_time = null, $end_time = null);
 
     public function pause($preorder_id, $pause_time, $restart_time = null);
 

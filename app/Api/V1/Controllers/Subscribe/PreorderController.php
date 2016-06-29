@@ -95,7 +95,7 @@ class PreorderController extends Controller {
         $data['station_id'] = $station['id'];
 
         try {
-            $order = $this->preorderRepo->updatePreorderByUser($order_id, $data);
+            $order = $this->preorderRepo->updatePreorder($order_id, $data);
         } catch (\Exception $e) {
             $this->response->error($e->getMessage(), 400);
         }

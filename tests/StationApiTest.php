@@ -31,6 +31,9 @@ class StationApiTest extends TestCase {
     }
 
 
+
+
+
     /** @test */
     public function it_can_bind_user_to_station()
     {

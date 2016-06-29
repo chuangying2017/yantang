@@ -6,12 +6,14 @@ use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Repositories\Preorder\Product\PreorderSkusRepositoryContract;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
+use App\Repositories\Station\StationPreorderRepositoryContract;
+use App\Repositories\Station\StationRepositoryContract;
 use Carbon\Carbon;
 
 class PreorderManagerService implements PreorderManageServiceContract {
 
     /**
-     * @var PreorderRepositoryContract
+     * @var StationPreorderRepositoryContract
      */
     private $orderRepo;
     /**
@@ -35,7 +37,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
      * @param ProductSkuRepositoryContract $skuRepo
      */
     public function __construct(
-        PreorderRepositoryContract $orderRepo,
+        StationPreorderRepositoryContract $orderRepo,
         PreorderAssignRepositoryContract $assignRepo,
         ProductSkuRepositoryContract $skuRepo,
         PreorderSkusRepositoryContract $orderSkuRepo
@@ -54,7 +56,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
 
         $product_skus = $this->getProductSkus($weekdays_product_skus);
 
-        $order = $this->orderRepo->updatePreorder($order, $start_time, $this->getEndTime($start_time, $end_time), $product_skus, $assign['station_id']);
+        $order = $this->orderRepo->updatePreorderByStation($order, $start_time, $this->getEndTime($start_time, $end_time), $product_skus, $assign['station_id']);
 
         $this->assignRepo->updateAssignAsConfirm($order_id);
 
@@ -130,7 +132,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
 
         //未开始订单,直接修改
         if ($old_order['start_time'] > $now) {
-            $order = $this->orderRepo->updatePreorder($order_id, $start_time, $end_time, $this->getProductSkus($weekdays_product_skus));
+            $order = $this->orderRepo->updatePreorderByStation($order_id, $start_time, $end_time, $this->getProductSkus($weekdays_product_skus));
         } else if ($old_order['end_time'] < $now) {
             //已结束订单,创建新订单
             if (is_null($weekdays_product_skus)) {
@@ -142,7 +144,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
 
             //修改进行中订单的结束时间
             $old_order_end_time = is_null($start_time) ? Carbon::today() : $start_time;
-            $this->orderRepo->updatePreorder($order_id, null, $old_order_end_time);
+            $this->orderRepo->updatePreorderByStation($order_id, null, $old_order_end_time);
 
             //商品修改,创建新订单
             if (!is_null($weekdays_product_skus)) {
@@ -173,7 +175,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
     {
         $order = $this->orderRepo->get($order_id);
 
-        $this->orderRepo->updatePreorder($order_id, null, $pause_time, $restart_time);
+        $this->orderRepo->updatePreorderByStation($order, null, $pause_time, $restart_time);
     }
 
 }

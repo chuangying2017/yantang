@@ -15,6 +15,7 @@ class CreateDistrictTable extends Migration
         Schema::create('districts', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('station_count')->default(0);
             $table->tinyInteger('active')->default(1);
             $table->timestamps();
         });
