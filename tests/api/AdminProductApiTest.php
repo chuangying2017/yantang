@@ -22,9 +22,11 @@ class AdminProductApiTest extends TestCase {
     public function it_return_a_product()
     {
         $product_id = 1;
-        $this->json('get', '/admin/products/' . $product_id);
+        $this->json('get', '/admin/products/' . $product_id,[], $this->getAuthHeader());
 
-        $this->dumpResponse();
+        $this->dump();
+
+        $this->assertResponseOk();
     }
 
     /** @test */

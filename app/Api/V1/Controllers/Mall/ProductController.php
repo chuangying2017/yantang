@@ -61,4 +61,5 @@ class ProductController extends Controller {
         return $this->response->item($product, new ProductTransformer());
     }
 
+
 }
