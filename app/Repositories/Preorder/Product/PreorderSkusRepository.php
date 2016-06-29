@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Preorder\Product;
 
+use App\Models\Subscribe\Preorder;
 use App\Models\Subscribe\PreorderSku;
 
 class PreorderSkusRepository implements PreorderSkusRepositoryContract {
@@ -11,12 +12,17 @@ class PreorderSkusRepository implements PreorderSkusRepositoryContract {
 
     public function createPreorderProducts($order_id, $product_skus)
     {
+        if ($order_id instanceof Preorder) {
+            $order_id = $order_id['id'];
+        }
+        $order_skus = [];
         foreach ($product_skus as $key => $product_sku) {
-            $product_skus[$key] = array_only($product_sku, ['product_sku_id', 'name', 'price', 'quantity', 'total_amount']);
-            $product_skus[$key]['preorder_id'] = $order_id;
+            $product_sku = array_only($product_sku, ['product_sku_id', 'name', 'price', 'quantity', 'total_amount', 'weekday', 'daytime']);
+            $product_sku['preorder_id'] = $order_id;
+            $order_skus[] = PreorderSku::create($product_sku);
         }
 
-        return PreorderSku::insert($product_skus);
+        return $order_skus;
     }
 
     public function deletePreorderProducts($order_id)
