@@ -11,5 +11,7 @@ interface PreorderManageServiceContract {
 
     public function needCharge($user_id);
 
+    public function stationDailyInfo($station_id, $day = null, $daytime = null);
+
 
 }

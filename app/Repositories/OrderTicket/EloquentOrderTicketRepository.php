@@ -109,7 +109,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, St
         return OrderTicket::query()->with(['skus' => function ($query) {
             $query->where('type', '!=', ProductProtocol::TYPE_OF_MIX)->select(['id', 'order_id', 'price', 'quantity', 'product_id', 'product_sku_id', 'name', 'cover_image']);
         }])->where('status', OrderTicketProtocol::STATUS_OF_USED)
-            ->where('check', StatementProtocol::CHECK_STATUS_OF_PENDING)
+            ->where('checkout', StatementProtocol::CHECK_STATUS_OF_PENDING)
             ->where('exchange_at', '<=', $time_before)
             ->get(['id', 'order_id', 'store_id']);
     }

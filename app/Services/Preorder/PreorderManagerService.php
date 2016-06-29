@@ -214,4 +214,30 @@ class PreorderManagerService implements PreorderManageServiceContract {
             }
         }
     }
+
+    public function stationDailyInfo($station_id, $day = null, $daytime = null)
+    {
+        $day = is_null($day) ? Carbon::today() : Carbon::createFromFormat('Y-m-d', $day);
+        $orders = $this->orderRepo->getDayPreorderWithProductsByStation($station_id, $day, $daytime);
+        $product_skus_info = [];
+        foreach ($orders as $key => $order) {
+            if (!count($order['skus'])) {
+                continue;
+            }
+            foreach ($order['skus'] as $sku) {
+                $sku_key = $sku['product_sku_id'];
+                if (isset($product_skus_info[$sku_key])) {
+                    $product_skus_info[$sku_key]['quantity'] += $sku['quantity'];
+                } else {
+                    $product_skus_info[$sku_key]['product_id'] = $sku['product_id'];
+                    $product_skus_info[$sku_key]['product_sku_id'] = $sku['product_sku_id'];
+                    $product_skus_info[$sku_key]['quantity'] = $sku['quantity'];
+                    $product_skus_info[$sku_key]['name'] = $sku['name'];
+                    $product_skus_info[$sku_key]['cover_image'] = $sku['cover_image'];
+                }
+            }
+        }
+
+        return $product_skus_info;
+    }
 }

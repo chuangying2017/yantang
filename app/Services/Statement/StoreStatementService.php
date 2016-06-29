@@ -14,6 +14,6 @@ class StoreStatementService extends StatementServiceAbstract {
 
     protected function setCheckDay()
     {
-        return $this->check_day = 15;
+        return $this->check_day = 30;
     }
 }

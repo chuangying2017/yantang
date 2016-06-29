@@ -6,6 +6,7 @@ use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Station\StationPreorderRepositoryContract;
+use App\Services\Preorder\PreorderManagerService;
 use App\Services\Preorder\PreorderManageServiceContract;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
@@ -29,6 +30,19 @@ class StationPreorderController extends Controller {
     {
         $this->orderRepo = $orderRepo;
     }
+
+    public function info(PreorderManagerService $preorderManager, Request $request)
+    {
+
+        $day = $request->input('day');
+        $daytime = $request->input('daytime');
+
+        $daily_info = $preorderManager->stationDailyInfo(access()->stationId(), $day, $daytime);
+
+        return $this->response->array(['data' => $daily_info]);
+
+    }
+
 
     public function index(Request $request)
     {

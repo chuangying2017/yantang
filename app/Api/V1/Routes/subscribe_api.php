@@ -27,7 +27,10 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STATION]], function ($api) {
 
             $api->get('info', 'StationController@info');
-            $api->resource('statements', 'StatementController', ['only' => ['index', 'show', 'update']]);
+
+            $api->get('preorders/info', 'StationPreorderController@info');
+
+            $api->resource('statements', 'StationStatementController', ['only' => ['index', 'show', 'update']]);
             //管理配送员
             $api->resource('staffs', 'StationStaffController');
 

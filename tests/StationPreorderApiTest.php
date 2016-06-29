@@ -20,6 +20,17 @@ class StationPreorderApiTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_get_station_daily_summary()
+    {
+        $this->json('get', 'stations/preorders/info', [
+            'day' => '2016-06-30',
+            'daytime' => 1,
+        ], $this->getAuthHeader());
+
+        $this->dump();
+    }
+
+    /** @test */
     public function it_can_reject_a_order()
     {
         $order_id = 1;

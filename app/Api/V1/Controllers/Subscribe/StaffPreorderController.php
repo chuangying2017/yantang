@@ -28,8 +28,8 @@ class StaffPreorderController extends Controller {
 
     public function index(Request $request)
     {
-        $day = $request->input('day') ?: null;
-        $daytime = $request->input('daytime') ?: null;
+        $day = $request->input('day');
+        $daytime = $request->input('daytime');
         $orders = $this->orderRepo->getDayPreordersOfStaff(access()->staffId(), $day, $daytime);
 
         return $this->response->collection($orders, new StaffPreorderTransformer());
