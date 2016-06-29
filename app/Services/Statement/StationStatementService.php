@@ -1,7 +1,7 @@
 <?php namespace App\Services\Statement;
 use App\Repositories\Billing\PreorderBillingRepository;
 use App\Repositories\Station\EloquentStationRepository;
-use App\Repositories\Store\Statement\StationStatementRepository;
+use App\Repositories\Statement\StationStatementRepository;
 
 class StationStatementService extends  StatementServiceAbstract{
 

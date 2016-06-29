@@ -1,4 +1,4 @@
-<?php namespace App\Repositories\Store\Statement;
+<?php namespace App\Repositories\Statement;
 
 use App\Models\Statement\StationStatement;
 

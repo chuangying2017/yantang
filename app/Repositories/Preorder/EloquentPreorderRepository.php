@@ -89,9 +89,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $query = Preorder::query();
 
+
         if (!is_null($user_id)) {
             $query->where('user_id', $user_id);
         }
+
 
         if (!is_null($station_id)) {
             $query->where('station_id', $station_id);
@@ -101,6 +103,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($staff_id)) {
             $query->where('staff_id', $staff_id);
         }
+
 
         if (PreorderProtocol::validOrderStatus($status)) {
             $query->where('status', $status);
@@ -165,17 +168,18 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $this->queryOrders(null, $station_id, $staff_id, $status, $charge_status, $start_time, $end_time, $per_page, $order_by, $sort);
     }
 
-    public function getDayPreordersOfStation($station_id, $day = null, $daytime = null)
+    public function getDayPreordersOfStation($station_id, $day = null, $daytime = null, $per_page = null)
     {
-        $start_time = is_null($day) ? Carbon::today() : $day;
-        $end_time = is_null($day) ? Carbon::today() : $day;
-        $orders = $this->getPreordersOfStation($station_id, null, PreorderProtocol::ORDER_STATUS_OF_SHIPPING, PreorderProtocol::CHARGE_STATUS_OF_OK, $start_time, $end_time);
+        $start_time = is_null($day) ? Carbon::today() : ($day instanceof Carbon ? $day : Carbon::createFromFormat('Y-m-d', $day));
+        $end_time = $start_time;
 
-        $orders->load(['skus' => function ($query) use ($daytime) {
+        $orders = $this->getPreordersOfStation($station_id, null, PreorderProtocol::ORDER_STATUS_OF_SHIPPING, PreorderProtocol::CHARGE_STATUS_OF_OK, $start_time, $end_time, 'created_at', 'desc', $per_page);
+
+        $orders->load(['skus' => function ($query) use ($start_time, $daytime) {
             if ($daytime) {
-                $query->where('weekday', Carbon::today()->dayOfWeek)->where('daytime', $daytime);
+                $query->where('weekday', $start_time->dayOfWeek)->where('daytime', $daytime);
             }
-            $query->where('weekday', Carbon::today()->dayOfWeek);
+            $query->where('weekday', $start_time->dayOfWeek);
         }]);
 
         return $orders;
@@ -237,7 +241,9 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $start_time = is_null($day) ? Carbon::today() : $day;
         $end_time = is_null($day) ? Carbon::today() : $day;
-        $orders = $this->getPreordersOfStation(null, $staff_id, PreorderProtocol::ORDER_STATUS_OF_SHIPPING, PreorderProtocol::CHARGE_STATUS_OF_OK, $start_time, $end_time, 'priority', 'asc', $per_page);
+
+        $orders = $this->getPreordersOfStation(null, $staff_id, PreorderProtocol::ORDER_STATUS_OF_SHIPPING, PreorderProtocol::CHARGE_STATUS_OF_OK, $start_time, $end_time, 'staff_priority', 'asc', $per_page);
+
 
         $orders->load(['skus' => function ($query) use ($daytime) {
             if ($daytime) {
@@ -245,6 +251,12 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             }
             $query->where('weekday', Carbon::today()->dayOfWeek);
         }]);
+
+        foreach ($orders as $key => $order) {
+            if (!count($order->skus)) {
+                unset($orders[$key]);
+            }
+        }
 
         return $orders;
     }

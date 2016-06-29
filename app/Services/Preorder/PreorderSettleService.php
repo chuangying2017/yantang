@@ -62,7 +62,7 @@ class PreorderSettleService implements PreorderSettleServiceContract {
 
     protected function settleStation($station_id)
     {
-        $orders = $this->stationPreorderRepo->getDayPreordersOfStation($station_id, null, Carbon::yesterday());
+        $orders = $this->stationPreorderRepo->getDayPreordersOfStation($station_id, Carbon::yesterday());
         $orders = $this->filterNotDeliverOrders($orders, $station_id);
 
         foreach ($orders as $order) {
@@ -70,25 +70,35 @@ class PreorderSettleService implements PreorderSettleServiceContract {
             $billing_sku_relate_ids = [];
             $entity_ids = [
                 'user_id' => $order['user_id'],
-                'preorder_id' => $order['preorder_id'],
+                'preorder_id' => $order['id'],
                 'station_id' => $order['station_id'],
                 'staff_id' => $order['staff_id'],
             ];
+
+            if (!count($order['skus'])) {
+                continue;
+            }
+
             foreach ($order['skus'] as $deliver_sku) {
                 $settle_amount += $this->getSkuSettleAmount($deliver_sku);
                 $billing_sku_relate_ids[] = $deliver_sku['id'];
             }
+
             //生成账单
             $billing = $this->billingRepo->createBilling($settle_amount, $entity_ids);
             $billing->skus()->attach($billing_sku_relate_ids);
+
             try {
                 //支付账单
-                if ($this->wallet->pay($this->preorderBillingService->setID($billing))) {
-                    $this->billingRepo->updateAsPaid($billing);
+                $this->preorderBillingService->setID($billing);
+                if ($this->wallet->setPayer($this->preorderBillingService->getPayer())->pay($this->preorderBillingService)) {
+                    $billing = $this->billingRepo->updateAsPaid($billing);
                 }
             } catch (NotEnoughException $e) {
                 event(new PaidPreorderBillingFail($billing));
             }
+
+            return $billing;
         }
     }
 

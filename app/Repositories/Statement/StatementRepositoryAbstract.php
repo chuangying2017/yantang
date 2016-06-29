@@ -1,7 +1,8 @@
-<?php namespace App\Repositories\Store\Statement;
+<?php namespace App\Repositories\Statement;
 
 use App\Models\Statement\StatementAbstract;
-use App\Repositories\Statement\StatementRepositoryContract;
+use App\Models\Statement\StatementProduct;
+use App\Models\Statement\StationStatement;
 use App\Repositories\NoGenerator;
 use App\Services\Statement\StatementProtocol;
 use Carbon\Carbon;
@@ -20,7 +21,7 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
         $this->setModel();
     }
 
-    public function getAllStatements($year, $month, $status = null)
+    public function getAllStatements($year, $month = null, $status = null)
     {
         return $this->queryStatements($year, $month, null, $status);
     }
@@ -32,8 +33,7 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
 
     public function createStatement($merchant_id, $settle_amount, $service_amount, $product_skus_info)
     {
-        $now = Carbon::now();
-        $state = $this->getStatementByTime($now->year, $now->month, $merchant_id);
+        $state = $this->getStatementByTime(Carbon::today()->year, Carbon::today()->month, $merchant_id);
 
         if ($state) {
             return $state;
@@ -44,16 +44,16 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
         $statement_model = $this->getModel();
 
         $statement = $statement_model::create([
-            'statement_no' => NoGenerator::generateStoreStatementNo($merchant_id),
-            'year' => $now->year,
-            'month' => $now->month,
+            'statement_no' => NoGenerator::generateStoreStatementNo($merchant_id, $this->getModel()),
+            'year' => Carbon::today()->year,
+            'month' => Carbon::today()->month,
             'merchant_id' => $merchant_id,
             'settle_amount' => $settle_amount,
             'service_amount' => $service_amount,
             'status' => StatementProtocol::STATEMENT_STATUS_OF_PENDING,
         ]);
 
-        $this->setStatementDetail($statement['statement_no'], $product_skus_info);
+        $this->setStatementDetail($statement, $product_skus_info);
 
         \DB::commit();
 
@@ -84,11 +84,12 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
 
     public function getStatement($statement_no, $with_detail = false)
     {
+
         $statement_model = $this->getModel();
         if ($statement_no instanceof $statement_model) {
             $statement = $statement_no;
         } else {
-            $statement = $this->model->query()->findOrFail($statement_no);
+            $statement = $statement_model::query()->findOrFail($statement_no);
         }
 
         if ($with_detail) {
@@ -100,7 +101,8 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
 
     public function getStatementByTime($year, $month, $merchant_id)
     {
-        return $this->model->query()
+        $model = $this->getModel();
+        return $model::query()
             ->where('year', $year)
             ->where('month', $month)
             ->where('merchant_id', $merchant_id)
@@ -109,17 +111,14 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
 
     public function getStatementDetail($statement_no)
     {
-        $statement_model = $this->getModel();
-        return $statement_model::where('statement_no', $statement_no)->get();
+        return StatementProduct::query()->where('statement_no', $statement_no)->get();
     }
 
     public function setStatementDetail($statement, $product_skus_info)
     {
         foreach ($product_skus_info as $product_sku) {
-            $statement_model = $this->getModel();
-            $statement_model::create([
+            StatementProduct::create([
                 'statement_no' => $statement['statement_no'],
-                'merchant_id' => $statement['merchant_id'],
                 'product_id' => $product_sku['product_id'],
                 'product_sku_id' => $product_sku['product_sku_id'],
                 'price' => $product_sku['price'],

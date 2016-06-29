@@ -5,7 +5,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class StationStatement extends StatementAbstract {
 
-
     protected $attributes = [
         'type' => StatementProtocol::TYPE_OF_STATION
     ];

@@ -1,5 +1,7 @@
 <?php namespace App\Repositories;
 
+use App\Models\Statement\StationStatement;
+use App\Models\Subscribe\Station;
 use Carbon\Carbon;
 
 class NoGenerator {
@@ -32,9 +34,13 @@ class NoGenerator {
         return self::ORDER_PREFIX . self::generate_no();
     }
 
-    public static function generateStoreStatementNo($store_id)
+    public static function generateStoreStatementNo($merchant_id, $model = null)
     {
-        return date('Ymd') . $store_id;
+        if ($model == StationStatement::class) {
+            return date('Ymd') . '01' . $merchant_id;
+        } else {
+            return date('Ymd') . '02' . $merchant_id;
+        }
     }
 
     public static function generateOrderBillingNo()

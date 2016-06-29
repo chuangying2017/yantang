@@ -5,8 +5,8 @@ use Guzzle\Http\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StationStaff extends Model
-{
+class StationStaff extends Model {
+
     use SoftDeletes;
 
     protected $guarded = ['id'];
@@ -22,7 +22,5 @@ class StationStaff extends Model
     {
         return $this->belongsTo(Client::class, 'user_id', 'user_id');
     }
-
-
 
 }

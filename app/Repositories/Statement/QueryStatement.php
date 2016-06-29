@@ -6,16 +6,15 @@
  * Time: 10:55 AM
  */
 
-namespace App\Repositories\Store\Statement;
+namespace App\Repositories\Statement;
 
-
-use App\Models\Statement\StoreStatement;
 
 trait QueryStatement {
 
     protected function queryStatements($year, $month = null, $merchant_id = null, $status = null, $per_page = null)
     {
-        $query = StoreStatement::query()->where('year', $year);
+        $model = $this->getModel();
+        $query = $model::query()->where('year', $year);
 
         if (!is_null($month)) {
             $query->where('month', $month);

@@ -15,7 +15,7 @@ class CreateStatementsTable extends Migration {
         Schema::create('statements', function (Blueprint $table) {
             $table->string('statement_no');
             $table->integer('merchant_id')->unsigned();
-            $table->tinyInteger('year');
+            $table->string('year', 4);
             $table->tinyInteger('month');
             $table->integer('settle_amount');
             $table->integer('service_amount');

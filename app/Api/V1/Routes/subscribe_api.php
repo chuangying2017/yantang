@@ -11,6 +11,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STAFF]], function ($api) {
             $api->get('info', 'StaffController@info');
+            $api->resource('preorders', 'StaffPreorderController', ['only' => ['index', 'show']]);
             $api->post('/{staff_id}/unbind', 'StaffController@postUnBind')->name('api.staff.unbind');
         });
 
@@ -26,14 +27,16 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STATION]], function ($api) {
 
             $api->get('info', 'StationController@info');
-            $api->resource('statements', 'StatementController');
+            $api->resource('statements', 'StatementController', ['only' => ['index', 'show', 'update']]);
             //管理配送员
             $api->resource('staffs', 'StationStaffController');
+
 
             $api->post('/{station_id}/unbind', 'StationController@postUnBind')->name('api.station.unbind');
 
             $api->put('preorders/{order_id}/reject', 'StationPreorderController@reject');
             $api->put('preorders/{order_id}/pause', 'StationPreorderController@pause');
+            $api->resource('preorders/{order_id}/assign', 'StationAssignController', ['only' => ['store', 'delete']]);
             $api->resource('preorders', 'StationPreorderController');
 
         });

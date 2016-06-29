@@ -139,6 +139,37 @@ class StationPreorderApiTest extends TestCase {
 
     }
 
+    /** @test */
+    public function it_can_assign_a_staff_to_preorder()
+    {
+        $order_id = 2;
+
+        $this->json('post', 'stations/preorders/' . $order_id . '/assign',
+            [
+                'staff' => 1
+            ],
+            $this->getAuthHeader()
+        );
+
+
+        $this->assertResponseStatus(201);
+
+    }
+
+    /** @test */
+    public function it_can_cancel_assign_a_staff_to_preorder()
+    {
+        $order_id = 2;
+
+        $this->json('delete', 'stations/preorders/' . $order_id . '/assign',
+            [],
+            $this->getAuthHeader()
+        );
+
+        $this->assertResponseStatus(204);
+
+    }
+
 
     /** @test */
     public function it_can_bind_user_to_station()

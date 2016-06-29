@@ -10,7 +10,14 @@ class PreorderSkuTransformer extends TransformerAbstract {
         $data = [
             'id' => $sku->id,
             'preorder' => ['id' => $sku->preorder_id],
-//            'skus' => $this->setProductSku($sku->skus),
+            'skus' => [
+                'id' => $sku->product_sku_id,
+                'name' => $sku->name,
+                'cover_image' => $sku->cover_image,
+                'quantity' => $sku->quantity,
+                'price' => $sku->price,
+                'total_amount' => $sku->total_amount,
+            ],
             'weekday' => $sku->weeday,
             'daytime' => $sku->daytime,
             'created_at' => $sku->created_at,
@@ -20,20 +27,4 @@ class PreorderSkuTransformer extends TransformerAbstract {
         return $data;
     }
 
-    protected function setProductSku($skus)
-    {
-        $data = [];
-        foreach ($skus as $sku) {
-            $data[] = [
-                'id' => $sku->product_sku_id,
-                'name' => $sku->name,
-                'cover_image' => $sku->cover_image,
-                'quantity' => $sku->quantity,
-                'price' => $sku->price,
-                'total_amount' => $sku->total_amount,
-            ];
-        }
-
-        return $data;
-    }
 }

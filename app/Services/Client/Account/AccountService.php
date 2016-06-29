@@ -40,6 +40,10 @@ abstract class AccountService implements PayableContract, RechargeableContract, 
     {
         $pay_amount = $this->transAmount($billing->getAmount());
 
+        if($billing->isPaid()) {
+            return 'paid';
+        }
+
         if (!$this->enough($pay_amount)) {
             throw new NotEnoughException();
         }

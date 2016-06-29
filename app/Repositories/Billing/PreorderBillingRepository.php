@@ -17,6 +17,13 @@ class PreorderBillingRepository implements BillingRepositoryContract, StationBil
      */
     public function createBilling($amount, $ids)
     {
+        $billing = PreorderBilling::query()->where($ids)->first();
+
+        //每天结算一次
+        if ($billing['created_at'] > Carbon::today()) {
+            return $billing;
+        }
+
         return PreorderBilling::create([
             'billing_no' => NoGenerator::generatePreorderBillingNo(),
             'amount' => $amount,
@@ -31,7 +38,6 @@ class PreorderBillingRepository implements BillingRepositoryContract, StationBil
     public function updateAsPaid($billing_no, $pay_channel = null)
     {
         $billing = $this->getBilling($billing_no);
-
         if ($billing['status'] == BillingProtocol::STATUS_OF_PAID) {
             return $billing;
         }
@@ -109,9 +115,9 @@ class PreorderBillingRepository implements BillingRepositoryContract, StationBil
         return PreorderBilling::query()->with(['skus' => function ($query) {
             $query->select(['id', 'preorder_id', 'price', 'quantity', 'product_id', 'product_sku_id', 'name', 'cover_image']);
         }])->where('status', BillingProtocol::STATUS_OF_PAID)
-            ->where('check', StatementProtocol::CHECK_STATUS_OF_PENDING)
+            ->where('checkout', StatementProtocol::CHECK_STATUS_OF_PENDING)
             ->where('pay_at', '<=', $time_before)
-            ->get(['id', 'order_id', 'store_id']);
+            ->get(['id', 'preorder_id', 'station_id', 'amount']);
     }
 
     public function updateBillingAsCheckout($billing_ids)

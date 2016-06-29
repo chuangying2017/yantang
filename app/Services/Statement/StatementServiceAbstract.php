@@ -3,7 +3,7 @@
 use App\Events\Statement\StatementConfirm;
 use App\Repositories\Statement\MerchantRepositoryContract;
 use App\Repositories\Statement\StatementAbleBillingRepoContract;
-use App\Repositories\Store\Statement\StatementRepositoryAbstract;
+use App\Repositories\Statement\StatementRepositoryAbstract;
 use Carbon\Carbon;
 
 abstract class StatementServiceAbstract {
@@ -57,7 +57,7 @@ abstract class StatementServiceAbstract {
             foreach ($billing['skus'] as $sku) {
                 $sku_key = $sku['product_sku_id'];
                 $sku_total_amount = $sku['price'] * $sku['quantity'];
-                if (!isset($product_skus_info[$sku_key])) {
+                if (isset($product_skus_info[$sku_key])) {
                     $product_skus_info[$sku_key]['quantity'] += $sku['quantity'];
                     $product_skus_info[$sku_key]['total_amount'] += $sku_total_amount;
                 } else {
@@ -72,6 +72,8 @@ abstract class StatementServiceAbstract {
         }
 
         $service_amount = $this->calServiceAmount($settle_amount, $product_skus_info);
+
+        $statement = $this->statementRepo->getStatementByTime(Carbon::today()->year, Carbon::today()->month, $merchant_id);
 
         $statement = $this->statementRepo->createStatement($merchant_id, $settle_amount, $service_amount, $product_skus_info);
 
