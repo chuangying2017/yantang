@@ -120,8 +120,8 @@ class PreorderBillingRepository implements BillingRepositoryContract, StationBil
             ->get(['id', 'preorder_id', 'station_id', 'amount']);
     }
 
-    public function updateBillingAsCheckout($billing_ids)
+    public function updateBillingAsCheckout($billing_ids, $statement_no)
     {
-        return PreorderBilling::whereIn('id', $billing_ids)->update(['checkout' => StatementProtocol::CHECK_STATUS_OF_HANDLED]);
+        return PreorderBilling::whereIn('id', $billing_ids)->update(['checkout' => StatementProtocol::CHECK_STATUS_OF_HANDLED, 'statement_no' => $statement_no]);
     }
 }

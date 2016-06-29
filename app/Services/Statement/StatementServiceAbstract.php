@@ -36,6 +36,7 @@ abstract class StatementServiceAbstract {
         $this->statementRepo = $statementRepo;
         $this->billingRepo = $billingRepo;
         $this->merchantRepo = $merchantRepo;
+        $this->setCheckDay();
     }
 
     public function generateStatements()
@@ -71,13 +72,12 @@ abstract class StatementServiceAbstract {
             }
         }
 
-        $service_amount = $this->calServiceAmount($settle_amount, $product_skus_info);
 
-        $statement = $this->statementRepo->getStatementByTime(Carbon::today()->year, Carbon::today()->month, $merchant_id);
+        $service_amount = $this->calServiceAmount($settle_amount, $product_skus_info);
 
         $statement = $this->statementRepo->createStatement($merchant_id, $settle_amount, $service_amount, $product_skus_info);
 
-        $this->billingRepo->updateBillingAsCheckout(array_pluck($billings, 'id'));
+        $this->billingRepo->updateBillingAsCheckout(array_pluck($billings, 'id'), $statement['statement_no']);
 
         return $statement;
     }

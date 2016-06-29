@@ -117,7 +117,7 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
     public function setStatementDetail($statement, $product_skus_info)
     {
         foreach ($product_skus_info as $product_sku) {
-            StatementProduct::create([
+            $statement_sku = StatementProduct::create([
                 'statement_no' => $statement['statement_no'],
                 'product_id' => $product_sku['product_id'],
                 'product_sku_id' => $product_sku['product_sku_id'],

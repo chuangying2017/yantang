@@ -11,7 +11,6 @@ class StationStatementApiTest extends TestCase {
     /** @test */
     public function it_can_get_stations_statements()
     {
-
         $this->it_can_settle_station_statement();
 
         $this->json('get', 'stations/statements',
@@ -25,7 +24,6 @@ class StationStatementApiTest extends TestCase {
     /** @test */
     public function it_can_get_a_statement_detail()
     {
-
         $this->it_can_settle_station_statement();
         $this->json('get', 'stations/statements/' . 20160630011,
             [],
@@ -34,7 +32,7 @@ class StationStatementApiTest extends TestCase {
 
         $this->assertResponseOk();
 
-//        $this->seeJsonStructure(['data' => ['skus']]);
+        $this->seeJsonStructure(['data' => ['skus', 'settle_amount', 'service_amount']]);
     }
 
 
@@ -43,7 +41,9 @@ class StationStatementApiTest extends TestCase {
     {
         app()->make(\App\Services\Statement\StationStatementService::class)->generateStatements();
 
-        $this->seeInDatabase('statements', ['merchant_id' => 1, 'type' => \App\Services\Statement\StatementProtocol::TYPE_OF_STATION, 'settle_amount' => 800, 'year' => 2016, 'month' => 6]);
+        $this->seeInDatabase('statements', ['merchant_id' => 1, 'type' => \App\Services\Statement\StatementProtocol::TYPE_OF_STATION, 'settle_amount' => 82400, 'year' => 2016, 'month' => 6]);
+        $this->seeInDatabase('statement_products', ['statement_no' => '20160630011','product_sku_id' => 2, 'quantity' => 2]);
+        $this->seeInDatabase('statement_products', ['statement_no' => '20160630011','product_sku_id' => 3, 'quantity' => 6]);
     }
 
     /** @test */
@@ -59,7 +59,6 @@ class StationStatementApiTest extends TestCase {
         $this->assertResponseOk();
 
         $this->seeInDatabase('statements', ['merchant_id' => 1, 'status' => \App\Services\Statement\StatementProtocol::STATEMENT_STATUS_OF_OK]);
-
     }
 
 

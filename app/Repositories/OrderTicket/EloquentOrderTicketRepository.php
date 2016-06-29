@@ -114,8 +114,8 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, St
             ->get(['id', 'order_id', 'store_id']);
     }
 
-    public function updateBillingAsCheckout($order_ticket_ids)
+    public function updateBillingAsCheckout($order_ticket_ids, $statement_no)
     {
-        return OrderTicket::whereIn('id', $order_ticket_ids)->update(['checkout' => StatementProtocol::CHECK_STATUS_OF_HANDLED]);
+        return OrderTicket::whereIn('id', $order_ticket_ids)->update(['checkout' => StatementProtocol::CHECK_STATUS_OF_HANDLED, 'statement_no' => $statement_no]);
     }
 }

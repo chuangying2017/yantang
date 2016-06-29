@@ -2,6 +2,7 @@
 
 namespace App\Api\V1\Controllers\Subscribe;
 
+use App\Api\V1\Transformers\Statement\StationStatementTransformer;
 use App\Repositories\Statement\StationStatementRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -32,19 +33,18 @@ class StatementController extends Controller {
         $month = $request->input('month') ?: Carbon::today()->month;
         $statements = $this->statementRepo->getAllStatements($year, $month, $status);
 
-        return $statements;
+        return $this->response->collection($statements, new StationStatementTransformer());
     }
 
     public function show(Request $request, $statement_no)
     {
         $statement = $this->statementRepo->getStatement($statement_no, true);
 
-        return $statement;
+        return $this->response->item($statement, new StationStatementTransformer());
     }
 
     public function update(Request $request, $statement_no)
     {
-
         $confirm = $request->input('confirm') === 0 ? 0 : 1;
 
         if ($confirm) {
@@ -53,7 +53,7 @@ class StatementController extends Controller {
             $statement = $this->statementRepo->updateStatementAsError($statement_no, $request->input('memo') ?: '');
         }
 
-        return $statement;
+        return $this->response->item($statement, new StationStatementTransformer());
     }
 
 }

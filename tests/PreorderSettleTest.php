@@ -26,15 +26,15 @@ class PreorderSettleTest extends TestCase {
             'user_id' => 1,
             'staff_id' => 1,
             'station_id' => 1,
-            'amount' => 800
+            'amount' => 81600
         ]);
 
         $this->seeInDatabase('wallet', [
             'user_id' => 1,
-            'amount' => 100000 - 800
+            'amount' => 100000 - 81600
         ]);
 
-        $this->seeInDatabase('wallet_records', ['resource_type' => \App\Models\Billing\PreorderBilling::class, 'amount' => 800]);
+        $this->seeInDatabase('wallet_records', ['resource_type' => \App\Models\Billing\PreorderBilling::class, 'amount' => 81600]);
     }
 
 

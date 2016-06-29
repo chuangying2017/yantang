@@ -1,7 +1,7 @@
 <?php namespace App\Services\Statement;
 
 use App\Repositories\OrderTicket\EloquentOrderTicketRepository;
-use App\Repositories\Store\Statement\StoreStatementRepository;
+use App\Repositories\Statement\StoreStatementRepository;
 use App\Repositories\Store\StoreRepository;
 
 class StoreStatementService extends StatementServiceAbstract {
@@ -14,6 +14,6 @@ class StoreStatementService extends StatementServiceAbstract {
 
     protected function setCheckDay()
     {
-        return 15;
+        return $this->check_day = 15;
     }
 }

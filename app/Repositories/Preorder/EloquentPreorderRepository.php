@@ -260,4 +260,41 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         return $orders;
     }
+
+    public function getDayPreorderWithProductsByStation($station_id, $day, $daytime = null)
+    {
+        $query_day = ($day instanceof Carbon) ? $day : Carbon::createFromFormat('Y-m-d', $day);
+
+        return Preorder::query()
+            ->with(['skus' => function ($query) use ($query_day, $daytime) {
+                if ($daytime) {
+                    $query->where('weekday', $query_day->dayOfWeek)->where('daytime', $daytime);
+                } else {
+                    $query->where('weekday', $query_day->dayOfWeek);
+                }
+            }])
+            ->where('station_id', $station_id)
+            ->where('status', PreorderProtocol::ORDER_STATUS_OF_SHIPPING)//发发货中
+            ->where('charge_status', PreorderProtocol::CHARGE_STATUS_OF_OK)//已充值
+            ->where('start_time', '<=', $day)
+            ->where('end_time', '>=', $day)//有效期内
+            ->get(['id', 'user_id', 'station_id', 'staff_id']);
+    }
+
+    public function getDayPreorderWithProductsOfStaff($staff_id, $day, $daytime = null)
+    {
+        $query_day = ($day instanceof Carbon) ? $day : Carbon::createFromFormat('Y-m-d', $day);
+        return Preorder::query()
+            ->where('staff_id', $staff_id)
+            ->where('status', PreorderProtocol::ORDER_STATUS_OF_SHIPPING)//发发货中
+            ->where('charge_status', PreorderProtocol::CHARGE_STATUS_OF_OK)//已充值
+            ->where('start_time', '<=', $day)
+            ->where('end_time', '>=', $day)//有效期内
+            ->whereHas('skus', function ($query) use ($query_day, $daytime) {
+                if ($daytime) {
+                    $query->where('weekday', Carbon::today()->dayOfWeek)->where('daytime', $daytime);
+                }
+                $query->where('weekday', Carbon::today()->dayOfWeek);
+            })->get();
+    }
 }

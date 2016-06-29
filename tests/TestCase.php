@@ -23,7 +23,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
     protected function dumpResponse()
     {
-        var_dump($this->getResponseData());
+        print_r($this->getResponseData());
     }
 
     protected function getResponseData($key = null)

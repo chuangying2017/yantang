@@ -62,7 +62,7 @@ class PreorderSettleService implements PreorderSettleServiceContract {
 
     protected function settleStation($station_id)
     {
-        $orders = $this->stationPreorderRepo->getDayPreordersOfStation($station_id, Carbon::yesterday());
+        $orders = $this->stationPreorderRepo->getDayPreorderWithProductsByStation($station_id, Carbon::yesterday());
         $orders = $this->filterNotDeliverOrders($orders, $station_id);
 
         foreach ($orders as $order) {

@@ -1,9 +1,10 @@
 <?php namespace App\Services\Statement;
+
 use App\Repositories\Billing\PreorderBillingRepository;
 use App\Repositories\Station\EloquentStationRepository;
 use App\Repositories\Statement\StationStatementRepository;
 
-class StationStatementService extends  StatementServiceAbstract{
+class StationStatementService extends StatementServiceAbstract {
 
     public function __construct(StationStatementRepository $statementRepo, PreorderBillingRepository $billingRepo, EloquentStationRepository $merchantRepo)
     {
@@ -13,6 +14,6 @@ class StationStatementService extends  StatementServiceAbstract{
 
     protected function setCheckDay()
     {
-        return 15;
+        return $this->check_day = 30;
     }
 }

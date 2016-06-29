@@ -15,7 +15,6 @@ class CreateStatementsProductsTable extends Migration {
         Schema::create('statement_products', function (Blueprint $table) {
             $table->increments('id');
             $table->string('statement_no');
-            $table->integer('store_id');
             $table->integer('product_id');
             $table->integer('product_sku_id');
             $table->integer('price');
