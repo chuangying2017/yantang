@@ -76,5 +76,10 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         return $content;
     }
 
+    public function getAuthHeader($user_id = 1)
+    {
+        return ['Authorization' => 'Bearer ' . $this->getToken($user_id)];
+    }
+
 
 }

@@ -33,6 +33,17 @@ class SubscribeServiceProvider extends ServiceProvider {
             \App\Repositories\Preorder\EloquentPreorderRepository::class
         );
 
+        $this->app->bind(
+            \App\Services\Preorder\PreorderAssignServiceContact::class,
+            \App\Services\Preorder\PreorderAssignService::class
+        );
+
+
+        $this->app->bind(
+            \App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract::class,
+            \App\Repositories\Preorder\Assign\PreorderAssignRepository::class
+        );
+
 
     }
 

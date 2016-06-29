@@ -27,6 +27,14 @@ class DatabaseSeeder extends Seeder {
         $this->call(GroupSeeder::class);
         $this->call(UserSeeder::class);
 
+
+        /**
+         * 测试数据
+         */
+        $this->call(DistrictSeeder::class);
+        $this->call(StationSeeder::class);
+
+
         if (env('DB_DRIVER') == 'mysql')
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 

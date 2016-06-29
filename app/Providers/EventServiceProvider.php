@@ -107,6 +107,9 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Preorder\SetPreorderAsOut',
         ],
 
+        'App\Events\Preorder\PreorderIsCancel' => [
+        ],
+
         /**
          * 订奶订单分配
          */

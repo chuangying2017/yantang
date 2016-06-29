@@ -9,6 +9,6 @@ interface StationPreorderRepositoryContract {
 
     public function getDayPreordersOfStation($station_id, $staff_id = null, $day = null, $daytime = null, $per_page = null);
 
-    public function updatePreorderPriority($staff_id, $preorder_priority);
+    public function updatePreorderPriority($order_id, $staff_id, $preorder_priority);
 
 }

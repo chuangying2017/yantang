@@ -18,6 +18,7 @@ class StationTransformer extends TransformerAbstract {
             'phone' => $station['phone'],
             'longitude' => $station['longitude'],
             'latitude' => $station['latitude'],
+            'geo' => $station['geo'],
             'active' => $station['active'],
         ];
         if (isset($station['bind_token'])) {

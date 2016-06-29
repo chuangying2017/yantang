@@ -29,7 +29,7 @@ class Preorder extends Model {
 
     public function billings()
     {
-        return $this->hasOne(PreorderBilling::class, 'preorder_id', 'id');
+        return $this->hasMany(PreorderBilling::class, 'preorder_id', 'id');
     }
 
     public function station()

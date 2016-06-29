@@ -23,4 +23,6 @@ class StationStaff extends Model
         return $this->belongsTo(Client::class, 'user_id', 'user_id');
     }
 
+
+
 }

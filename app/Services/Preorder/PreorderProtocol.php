@@ -1,8 +1,7 @@
 <?php namespace App\Services\Preorder;
 
 
-class PreorderProtocol
-{
+class PreorderProtocol {
 
     const PREORDER_PER_PAGE = 20;
 
@@ -10,6 +9,7 @@ class PreorderProtocol
     const ORDER_STATUS_OF_ASSIGNING = 'assigning';
     const ORDER_STATUS_OF_SHIPPING = 'shipping';
     const ORDER_STATUS_OF_DONE = 'done';
+    const ORDER_STATUS_OF_CANCEL = 'cancel';
 
     //charge_status 对应的值
     const CHARGE_STATUS_OF_NULL = 0;
@@ -26,10 +26,32 @@ class PreorderProtocol
     const DAYTIME_OF_PM = 1;
 
 
+    public static function validOrderStatus($status)
+    {
+        return in_array($status, [
+            self::ORDER_STATUS_OF_SHIPPING,
+            self::ORDER_STATUS_OF_ASSIGNING,
+            self::ORDER_STATUS_OF_DONE,
+            self::ORDER_STATUS_OF_CANCEL,
+        ]);
+    }
+
+    public static function validChargeStatus($status)
+    {
+        return in_array($status, [
+            self::CHARGE_STATUS_OF_NULL,
+            self::CHARGE_STATUS_OF_NOT_ENOUGH,
+            self::CHARGE_STATUS_OF_OK
+        ]);
+    }
+
     public static function status($key = null)
     {
         $message = [
-
+            self::ORDER_STATUS_OF_SHIPPING => '配送中',
+            self::ORDER_STATUS_OF_ASSIGNING => '分配服务部中',
+            self::ORDER_STATUS_OF_DONE => '已完成',
+            self::ORDER_STATUS_OF_CANCEL => '已结束',
         ];
 
         return is_null($key) ? $message : $message[$key];

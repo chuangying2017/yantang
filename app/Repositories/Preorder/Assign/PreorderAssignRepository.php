@@ -1,5 +1,8 @@
 <?php namespace App\Repositories\Preorder\Assign;
 
+use App\Events\Preorder\AssignIsConfirm;
+use App\Events\Preorder\AssignIsCreate;
+use App\Events\Preorder\AssignIsReject;
 use App\Models\Subscribe\PreorderAssign;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
@@ -16,12 +19,16 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
 
     public function createAssign($order_id, $station_id)
     {
-        return PreorderAssign::create([
+        $assign = PreorderAssign::create([
             'preorder_id' => $order_id,
             'station_id' => $station_id,
             'status' => PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED,
             'time_before' => Carbon::now()->addDays(PreorderProtocol::DAYS_OF_ASSIGN_DISPOSE)
         ]);
+
+        event(new AssignIsCreate($assign));
+
+        return $assign;
     }
 
     public function updateAssignAsConfirm($order_id)
@@ -30,6 +37,8 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
         $assign->status = PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM;
         $assign->confirm_at = Carbon::now();
         $assign->save();
+
+        event(new AssignIsConfirm($assign));
 
         return $assign;
     }
@@ -40,6 +49,8 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
         $assign->status = PreorderProtocol::ASSIGN_STATUS_OF_REJECT;
         $assign->memo = $memo;
         $assign->save();
+
+        event(new AssignIsReject($assign));
 
         return $assign;
     }

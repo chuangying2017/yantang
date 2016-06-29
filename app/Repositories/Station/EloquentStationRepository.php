@@ -20,6 +20,7 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
             'phone' => $station_data['phone'],
             'longitude' => $station_data['longitude'],
             'latitude' => $station_data['latitude'],
+            'geo' => $station_data['geo'],
             'active' => 1
         ]);
     }
@@ -139,7 +140,7 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
 
     public function getByDistrict($district_id)
     {
-        return Station::query()->where('district_id', $district_id)->get(['id', 'name', 'longitude', 'latitude']);
+        return Station::query()->where('district_id', $district_id)->get(['id', 'name', 'longitude', 'latitude', 'geo']);
     }
 
 }

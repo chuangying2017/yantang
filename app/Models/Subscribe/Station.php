@@ -13,6 +13,18 @@ class Station extends Model {
 
     protected $table = 'stations';
 
+    public function setGeoAttribute($geo)
+    {
+        if (is_array($geo)) {
+            $this->attributes['geo'] = json_encode($geo);
+        }
+    }
+
+    public function getGeoAttribute()
+    {
+        return json_decode($this->attributes['geo'], true);
+    }
+
     public function preorder()
     {
         return $this->hasMany(Preorder::class);

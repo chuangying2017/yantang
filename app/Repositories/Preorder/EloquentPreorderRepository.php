@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Preorder;
 
+use App\Events\Preorder\PreorderIsCancel;
 use App\Models\Subscribe\Preorder;
 use App\Repositories\NoGenerator;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
@@ -20,11 +21,29 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             'district_id' => $data['district_id'],
             'address' => $data['address'],
             'station_id' => $data['station_id'],
-            'status' => PreorderProtocol::ORDER_STATUS_OF_SHIPPING,
+            'status' => PreorderProtocol::ORDER_STATUS_OF_ASSIGNING,
             'charge_status' => PreorderProtocol::CHARGE_STATUS_OF_NULL,
         ]);
 
         $order->assign = app()->make(PreorderAssignRepositoryContract::class)->createAssign($order['id'], $data['station_id']);
+
+        return $order;
+    }
+
+    public function updatePreorderByUser($order_id, $data)
+    {
+        $order = $this->get($order_id);
+
+        if ($order['status'] !== PreorderProtocol::ORDER_STATUS_OF_ASSIGNING) {
+            throw new \Exception('订单无法修改', 400);
+        }
+
+        $order['name'] = $data['name'];
+        $order['phone'] = $data['phone'];
+        $order['district_id'] = $data['district_id'];
+        $order['address'] = $data['address'];
+        $order['station_id'] = $data['station_id'];
+        $order->save();
 
         return $order;
     }
@@ -56,7 +75,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $order;
     }
 
-    public function getPaginatedByUser($user_id, $status)
+    public function getPaginatedByUser($user_id, $status = null)
     {
         return $this->queryOrders(['user_id' => $user_id], $status);
     }
@@ -65,7 +84,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $query = Preorder::query()->where($owner);
 
-        if (!is_null($status)) {
+        if (PreorderProtocol::validOrderStatus($status)) {
             $query->where('status', $status);
         }
 
@@ -90,6 +109,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
+    /**
+     * @param $preorder_id
+     * @param bool|false $with_detail
+     * @return Preorder
+     */
     public function get($preorder_id, $with_detail = false)
     {
         if ($preorder_id instanceof $preorder_id) {
@@ -109,7 +133,13 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function deletePreorder($preorder_id)
     {
-        return Preorder::destroy($preorder_id);
+        $order = $this->get($preorder_id);
+        $order->status = PreorderProtocol::ORDER_STATUS_OF_CANCEL;
+        $order->save();
+
+        event(new PreorderIsCancel($order));
+
+        return $order;
     }
 
     public function getPreordersOfStation($station_id, $staff_id = null, $status = null, $charge_status = null, $start_time = null, $end_time = null, $order_by = 'created_at', $sort = 'desc', $per_page = PreorderProtocol::PREORDER_PER_PAGE)
@@ -134,9 +164,18 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $orders;
     }
 
-    public function updatePreorderPriority($staff_id, $preorder_priority)
+    public function updatePreorderPriority($order_id, $staff_id, $preorder_priority)
     {
-        // TODO: Implement updatePreorderPriority() method.
+        $order = $this->get($order_id);
+
+        if ($order['staff_id'] !== $staff_id) {
+            throw new \Exception('没有权限修改', 403);
+        }
+
+        $order->staff_priority = $preorder_priority;
+        $order->save();
+
+        return $order;
     }
 
 
@@ -169,5 +208,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $order->save();
         return $order;
     }
+
 
 }

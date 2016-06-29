@@ -21,17 +21,16 @@ class StationAssignTest extends TestCase {
             [23.158830, 113.326858],
         ];
 
-        $inside = [
-            23.159558, 113.328137
-        ];
-        $out_side = [23.159711, 113.333818];
 
 
         $assign = new  \App\Services\Preorder\PreorderAssignService(new \App\Repositories\Station\EloquentStationRepository());
 
+        // 中国广东省广州市天河区红英小学
+        $inside = [23.157195, 113.330319];
         $result = $assign->inSide($inside[0], $inside[1], $geo);
         $this->assertTrue($result);
 
+        $out_side = [23.159711, 113.333818];
         $result = $assign->inSide($out_side[0], $out_side[1], $geo);
         $this->assertFalse($result);
 

@@ -1,29 +1,37 @@
 <?php namespace App\Api\V1\Transformers\Subscribe\Preorder;
 
+use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
+use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
+use App\Api\V1\Transformers\Traits\SetInclude;
 use League\Fractal\TransformerAbstract;
 use App\Models\Subscribe\Preorder;
-use App\Services\Preorder\PreorderProtocol;
 
 class PreorderTransformer extends TransformerAbstract {
 
+
+    use SetInclude;
+
+    protected $availableIncludes = ['skus', 'station', 'staff', 'billings'];
+
     public function transform(Preorder $preorder)
     {
+        $this->setInclude($preorder);
+
         $data = [
             'id' => $preorder->id,
             'name' => $preorder->name,
-            'user_id' => $preorder->user_id,
+            'user' => ['id' => $preorder->user_id],
+            'order_no' => $preorder->order_no,
             'phone' => $preorder->phone,
             'address' => $preorder->address,
-            'station_id' => $preorder->station_id,
-            'district_id' => $preorder->district_id,
-            'order_no' => $preorder->order_no,
-            'pause_time' => $preorder->pause_time,
-            'restart_time' => $preorder->restart_time,
+            'station' => ['id' => $preorder->station_id],
+            'staff' => ['id' => $preorder->staff_id],
+            'district' => ['id' => $preorder->district_id],
             'status' => $preorder->status,
-            'status_name' => PreorderProtocol::preorderStatusName($preorder->status, $preorder->charge_status),
             'charge_status' => $preorder->charge_status,
+            'start_time' => $preorder->start_time,
+            'end_time' => $preorder->end_time,
             'created_at' => $preorder->created_at,
-            'updated_at' => $preorder->updated_at,
         ];
 
         return $data;
@@ -31,7 +39,22 @@ class PreorderTransformer extends TransformerAbstract {
 
     public function includeSkus(Preorder $preorder)
     {
-        return $this->collection($preorder->skus, new PreorderSkuTransformer());
+        return $this->collection($preorder->skus, new PreorderSkuTransformer(), true);
+    }
+
+    public function includeBillings(Preorder $preorder)
+    {
+        return $this->collection($preorder->billings, new PreorderBillingTransformer(), true);
+    }
+
+    public function includeStaff(Preorder $preorder)
+    {
+        return $this->item($preorder->staff, new StaffTransformer(), true);
+    }
+
+    public function includeStation(Preorder $preorder)
+    {
+        return $this->item($preorder->station, new StationTransformer(), true);
     }
 
 }

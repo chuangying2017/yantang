@@ -28,12 +28,15 @@ class PreorderAssignService implements PreorderAssignServiceContact {
      */
     public function assign($longitude, $latitude, $district_id)
     {
-        $stations = $this->stationRepo->getByDistrict($district_id);
 
-        if (count($stations)) {
+        $stations = $this->stationRepo->getByDistrict($district_id);
+        if (!count($stations)) {
             return null;
         }
 
+        /**
+         * 顺时针遍服务范围点,若点在服务范围点向量左边则不在服务范围内
+         */
         $available_stations = $this->filterAvailable($longitude, $latitude, $stations);
         if (!count($available_stations)) {
             return null;
@@ -50,6 +53,12 @@ class PreorderAssignService implements PreorderAssignServiceContact {
     public function inSide($longitude, $latitude, $geo)
     {
         $geo_count = count($geo);
+
+        if (!$geo_count) {
+            return false;
+        }
+
+
         for ($point_index = 0; $point_index < $geo_count; $point_index++) {
             $start_point = $geo[$point_index];
             $end_point = (($point_index + 1) == $geo_count) ? $geo[0] : $geo[$point_index + 1];

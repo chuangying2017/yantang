@@ -6,23 +6,22 @@ use App\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class AssignIsCreate extends Event
+class PreorderIsCancel extends Event
 {
     use SerializesModels;
     /**
      * @var
      */
-    public $assign;
+    public $order;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($assign)
+    public function __construct($order)
     {
-        //
-        $this->assign = $assign;
+        $this->order = $order;
     }
 
     /**

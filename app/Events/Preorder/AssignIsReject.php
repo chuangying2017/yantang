@@ -9,15 +9,20 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class AssignIsReject extends Event
 {
     use SerializesModels;
+    /**
+     * @var
+     */
+    public $assign;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($assign)
     {
         //
+        $this->assign = $assign;
     }
 
     /**

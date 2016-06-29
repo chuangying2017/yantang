@@ -26,7 +26,7 @@ class StationStaffTest extends TestCase
                 ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
             );
         }
-        $this->dumpResponse();
+//        $this->dumpResponse();
 
         $this->assertResponseOk();
     }
@@ -46,10 +46,9 @@ class StationStaffTest extends TestCase
             ['Authorization' => 'Bearer ' . $token]
         );
 
-        $this->dumpResponse();
+//        $this->dumpResponse();
 
         $this->assertResponseOk();
-
 
         $this->json('POST', $url,
             ['bind_token' => generate_bind_token($staff['id'])],
