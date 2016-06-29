@@ -61,51 +61,5 @@ class PreorderApiTest extends TestCase {
         $this->assertResponseStatus(201);
     }
 
-    protected function getSkusData()
-    {
-        return [
-            [
-                'weekday' => 0,
-                'day_time' => 0,
-                'skus' => [
-                    [
-                        'product_sku_id' => 2,
-                        'quantity' => 1
-                    ],
-                    [
-                        'product_sku_id' => 3,
-                        'quantity' => 2
-                    ]
-                ]
-            ],
-            [
-                'weekday' => 0,
-                'day_time' => 1,
-                'skus' => [
-                    [
-                        'product_sku_id' => 2,
-                        'quantity' => 1
-                    ],
-                    [
-                        'product_sku_id' => 3,
-                        'quantity' => 2
-                    ]
-                ]
-            ],
-            [
-                'weekday' => 5,
-                'day_time' => 0,
-                'skus' => [
-                    [
-                        'product_sku_id' => 2,
-                        'quantity' => 1
-                    ],
-                    [
-                        'product_sku_id' => 3,
-                        'quantity' => 2
-                    ]
-                ]
-            ],
-        ];
-    }
+
 }

@@ -10,7 +10,7 @@ class ImageApiTest extends TestCase {
     public function it_can_get_a_upload_token()
     {
         $user_id = 1;
-        $this->json('get', 'images/token',
+        $this->json('get', 'admin/images/token',
             [],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );

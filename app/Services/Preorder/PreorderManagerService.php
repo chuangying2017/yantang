@@ -59,6 +59,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
         $order = $this->orderRepo->updatePreorderByStation($order, $start_time, $this->getEndTime($start_time, $end_time), $product_skus, $assign['station_id']);
 
         $this->assignRepo->updateAssignAsConfirm($order_id);
+        $this->orderRepo->updatePreorderStatus($order_id, PreorderProtocol::ORDER_STATUS_OF_SHIPPING);
 
         event(new AssignIsConfirm($order));
 
@@ -77,7 +78,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
 
         $sku_ids = [];
         foreach ($weekdays_product_skus as $weekday_product_skus) {
-            foreach ($weekday_product_skus['product_skus'] as $weekday_product_sku) {
+            foreach ($weekday_product_skus['skus'] as $weekday_product_sku) {
                 if (!in_array($weekday_product_sku['product_sku_id'], $sku_ids)) {
                     array_push($sku_ids, $weekday_product_sku['product_sku_id']);
                 }
@@ -91,19 +92,21 @@ class PreorderManagerService implements PreorderManageServiceContract {
 
         $order_skus = [];
         foreach ($weekdays_product_skus as $weekday_product_skus) {
-            foreach ($weekday_product_skus['product_skus'] as $weekday_product_sku) {
+            foreach ($weekday_product_skus['skus'] as $weekday_product_sku) {
                 foreach ($skus as $sku) {
                     if ($weekday_product_sku['product_sku_id'] == $sku['id']) {
                         if (!is_numeric($sku['subscribe_price']) || !($sku['subscribe_price'] > 0)) {
                             throw new \Exception('商品' . $sku['name'] . $sku['id'] . ' 不能订购');
                         }
                         $order_skus[] = [
+                            'weekday' => $weekday_product_skus['weekday'],
+                            'daytime' => $weekday_product_skus['daytime'],
                             'product_sku_id' => $weekday_product_sku['product_sku_id'],
                             'quantity' => $weekday_product_sku['quantity'],
-                            'name' => $weekday_product_sku['name'],
-                            'price' => $weekday_product_sku['subscribe_price'],
-                            'cover_image' => $weekday_product_sku['cover_image'],
-                            'total_amount' => $weekday_product_sku['quantity'] * $weekday_product_sku['subscribe_price']
+                            'name' => $sku['name'],
+                            'price' => $sku['subscribe_price'],
+                            'cover_image' => $sku['cover_image'],
+                            'total_amount' => $weekday_product_sku['quantity'] * $sku['subscribe_price']
                         ];
                     }
                 }
@@ -116,7 +119,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
     protected function getEndTime($start_time, $end_time)
     {
         if (!is_null($end_time)) {
-            if ($end_time > $start_time) {
+            if ($end_time < $start_time) {
                 throw new \Exception('结束时间不能早于开始时间');
             }
             return $end_time;

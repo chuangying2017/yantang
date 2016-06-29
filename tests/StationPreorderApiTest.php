@@ -39,17 +39,28 @@ class StationPreorderApiTest extends TestCase {
         $order_id = 2;
 
         $data = [
-            'start_time' => '2016-06-01',
-            'end_time' => '2016-07-01'
+            'start_time' => '2016-07-01',
+            'end_time' => '2016-08-01',
+            'product_skus' => $this->getSkusData()
         ];
 
-        $this->json('put', 'stations/preorders/' . $order_id . '/reject',
-            ['memo' => 'baba'],
+        $this->json('put', 'stations/preorders/' . $order_id,
+            $data,
             $this->getAuthHeader()
         );
 
+//        $this->dump();
+
         $this->assertResponseOk();
-        $this->seeInDatabase('preorder_assign', ['preorder_id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_REJECT]);
+        $this->seeInDatabase('preorders', ['id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING]);
+        $this->seeInDatabase('preorder_assign', ['preorder_id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 5, 'daytime' => 0, 'product_sku_id' => 2, 'quantity' => 1]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 5, 'daytime' => 0, 'product_sku_id' => 3, 'quantity' => 2]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 0, 'product_sku_id' => 2, 'quantity' => 1]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 0, 'product_sku_id' => 3, 'quantity' => 2]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 2, 'quantity' => 1]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 3, 'quantity' => 2]);
+
     }
 
     /** @test */
@@ -80,6 +91,56 @@ class StationPreorderApiTest extends TestCase {
         $result = $this->getResponseData();
 
         $this->assertEquals($station_id, $result['data']['id']);
+    }
+
+
+
+    protected function getSkusData()
+    {
+        return [
+            [
+                'weekday' => 0,
+                'daytime' => 0,
+                'skus' => [
+                    [
+                        'product_sku_id' => 2,
+                        'quantity' => 1
+                    ],
+                    [
+                        'product_sku_id' => 3,
+                        'quantity' => 2
+                    ]
+                ]
+            ],
+            [
+                'weekday' => 0,
+                'daytime' => 1,
+                'skus' => [
+                    [
+                        'product_sku_id' => 2,
+                        'quantity' => 1
+                    ],
+                    [
+                        'product_sku_id' => 3,
+                        'quantity' => 2
+                    ]
+                ]
+            ],
+            [
+                'weekday' => 5,
+                'daytime' => 0,
+                'skus' => [
+                    [
+                        'product_sku_id' => 2,
+                        'quantity' => 1
+                    ],
+                    [
+                        'product_sku_id' => 3,
+                        'quantity' => 2
+                    ]
+                ]
+            ],
+        ];
     }
 }
 

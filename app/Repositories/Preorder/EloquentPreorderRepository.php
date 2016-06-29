@@ -64,13 +64,13 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $order->station_id = $station_id;
         }
 
-        if (!is_null($product_skus)) {
-            $preorder_sku = app()->make(PreorderSkusRepositoryContract::class);
-            $preorder_sku->deletePreorderProducts($order_id);
-            $order->skus = $preorder_sku->createPreorderProducts($order_id, $preorder_sku);
-        }
-
         $order->save();
+
+        if (!is_null($product_skus)) {
+            $preorder_sku_repo = app()->make(PreorderSkusRepositoryContract::class);
+            $preorder_sku_repo->deletePreorderProducts($order_id);
+            $order->skus = $preorder_sku_repo->createPreorderProducts($order_id, $product_skus);
+        }
 
         return $order;
     }

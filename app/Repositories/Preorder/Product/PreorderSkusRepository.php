@@ -15,6 +15,7 @@ class PreorderSkusRepository implements PreorderSkusRepositoryContract {
             $product_skus[$key] = array_only($product_sku, ['product_sku_id', 'name', 'price', 'quantity', 'total_amount']);
             $product_skus[$key]['preorder_id'] = $order_id;
         }
+
         return PreorderSku::insert($product_skus);
     }
 
