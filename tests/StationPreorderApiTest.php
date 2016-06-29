@@ -30,6 +30,7 @@ class StationPreorderApiTest extends TestCase {
         );
 
         $this->assertResponseOk();
+        $this->seeInDatabase('preorder_assign', ['preorder_id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_REJECT]);
     }
 
     /** @test */
