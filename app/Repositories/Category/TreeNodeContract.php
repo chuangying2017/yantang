@@ -1,5 +1,5 @@
 <?php namespace App\Repositories\Category;
-interface TreeNodeaContract {
+interface TreeNodeContract {
 
     public function makeChild($parent_node, $child_node);
 
