@@ -32,6 +32,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
             $api->post('/{station_id}/unbind', 'StationController@postUnBind')->name('api.station.unbind');
 
+            $api->put('preorders/{order_id}/reject', 'StationPreorderController@reject');
             $api->put('preorders/{order_id}/pause', 'StationPreorderController@pause');
             $api->resource('preorders', 'StationPreorderController');
 

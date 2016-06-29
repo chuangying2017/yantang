@@ -54,7 +54,15 @@ class SubscribeServiceProvider extends ServiceProvider {
             \App\Repositories\Station\District\DistrictRepository::class
         );
 
+        $this->app->bind(
+            \App\Services\Preorder\PreorderManageServiceContract::class,
+            \App\Services\Preorder\PreorderManagerService::class
+        );
 
+        $this->app->bind(
+            \App\Repositories\Preorder\Product\PreorderSkusRepositoryContract::class,
+            \App\Repositories\Preorder\Product\PreorderSkusRepository::class
+        );
     }
 
 }

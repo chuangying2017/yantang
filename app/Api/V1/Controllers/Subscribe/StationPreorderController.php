@@ -85,11 +85,12 @@ class StationPreorderController extends Controller {
 
     public function reject(Request $request, PreorderAssignRepositoryContract $assign, $order_id)
     {
-        $memo = $request->input('memo');
 
-        $assign->updateAssignAsReject($order_id, $memo);
+        $memo = $request->input('memo') ?: '';
 
-        return $this->response->noContent();
+        $assign = $assign->updateAssignAsReject($order_id, $memo);
+
+        return $this->response->array(['data' => $assign['preorder_id']]);
     }
 
 

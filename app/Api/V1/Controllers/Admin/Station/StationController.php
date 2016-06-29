@@ -4,6 +4,7 @@ namespace App\Api\V1\Controllers\Admin\Station;
 
 
 use App\Api\V1\Controllers\Controller;
+use App\Api\V1\Requests\Admin\CreateStationRequest;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
@@ -47,7 +48,7 @@ class StationController extends Controller {
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateStationRequest $request)
     {
         $station = $this->stationRepo->createStation($request->all());
         $station['bind_token'] = generate_bind_token($station['id']);
@@ -75,7 +76,7 @@ class StationController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateStationRequest $request, $id)
     {
         $station = $this->stationRepo->updateStation($id, $request->all());
 

@@ -24,9 +24,12 @@ class StationPreorderApiTest extends TestCase {
     {
         $order_id = 1;
 
+        $this->json('put', 'stations/preorders/' . $order_id . '/reject',
+            ['memo' => 'baba'],
+            $this->getAuthHeader()
+        );
 
-
-
+        $this->assertResponseOk();
     }
 
     /** @test */

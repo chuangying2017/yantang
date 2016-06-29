@@ -46,6 +46,11 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     public function updateAssignAsReject($order_id, $memo = null)
     {
         $assign = $this->get($order_id);
+
+        if ($assign->status == PreorderProtocol::ASSIGN_STATUS_OF_REJECT) {
+            return $assign;
+        }
+
         $assign->status = PreorderProtocol::ASSIGN_STATUS_OF_REJECT;
         $assign->memo = $memo;
         $assign->save();
