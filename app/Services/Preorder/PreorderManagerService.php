@@ -178,4 +178,30 @@ class PreorderManagerService implements PreorderManageServiceContract {
         $this->orderRepo->updatePreorderByStation($order, null, $pause_time, $restart_time);
     }
 
+    public function charged($user_id)
+    {
+        $orders = $this->orderRepo->getAllByUser($user_id, PreorderProtocol::ORDER_STATUS_OF_SHIPPING, Carbon::now());
+        if (count($orders)) {
+            foreach ($orders as $order) {
+                $this->orderRepo->updatePreorderChargeStatus($order['id'], PreorderProtocol::CHARGE_STATUS_OF_OK);
+            }
+        }
+
+        $orders = $this->orderRepo->getAllByUser($user_id, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
+        if (count($orders)) {
+            foreach ($orders as $order) {
+                $this->orderRepo->updatePreorderChargeStatus($order['id'], PreorderProtocol::CHARGE_STATUS_OF_OK);
+            }
+        }
+    }
+
+    public function needCharge($user_id)
+    {
+        $orders = $this->orderRepo->getAllByUser($user_id, PreorderProtocol::ORDER_STATUS_OF_SHIPPING, Carbon::now());
+        if (count($orders)) {
+            foreach ($orders as $order) {
+                $this->orderRepo->updatePreorderChargeStatus($order['id'], PreorderProtocol::CHARGE_STATUS_OF_NOT_ENOUGH);
+            }
+        }
+    }
 }

@@ -28,7 +28,7 @@ class WalletService extends AccountService {
             throw new WrongChargeBillingException();
         }
 
-        if ($this->account->getRecord($billing->getID(), $billing->getType())) {
+        if ($this->account->setUserId($billing->getPayer())->getRecord($billing->getID(), $billing->getType())) {
             throw new MultiChargeException();
         }
     }

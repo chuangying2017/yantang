@@ -7,4 +7,9 @@ interface PreorderManageServiceContract {
 
     public function pause($preorder_id, $pause_time, $restart_time = null);
 
+    public function charged($user_id);
+
+    public function needCharge($user_id);
+
+
 }

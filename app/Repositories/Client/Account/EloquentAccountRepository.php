@@ -120,7 +120,7 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
     public function getRecord($billing_id, $billing_type)
     {
         $record_model = $this->getAccountRecordModel();
-        return $record_model->where('resource_type', $billing_type)->where('resource_id', $billing_id)->first();
+        return $record_model::where('resource_type', $billing_type)->where('resource_id', $billing_id)->first();
     }
 
     protected function createRecord($amount, $resource_type, $resource_id, $type)

@@ -39,6 +39,7 @@ $api->group(['namespace' => 'Client'], function () use ($api) {
 
     $api->group(['middleware' => 'api.auth'], function ($api) {
         $api->resource('users/address', 'AddressController');
+        $api->resource('users/recharge', 'ChargeController');
         $api->get('images/token', 'ImageController@token');
     });
 

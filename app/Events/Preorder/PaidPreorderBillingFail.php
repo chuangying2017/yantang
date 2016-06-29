@@ -9,15 +9,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class PaidPreorderBillingFail extends Event
 {
     use SerializesModels;
+    /**
+     * @var
+     */
+    public $billing;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($billing)
     {
-        //
+        $this->billing = $billing;
     }
 
     /**

@@ -8,6 +8,15 @@ class PreorderApiTest extends TestCase {
 
     use DatabaseTransactions;
 
+
+    /** @test */
+    public function it_can_get_preorders_list()
+    {
+        $this->json('get', 'subscribe/preorders', [], $this->getAuthHeader());
+
+        $this->assertResponseOk();
+    }
+
     /** @test */
     public function it_can_check_station_when_create_a_preorder()
     {

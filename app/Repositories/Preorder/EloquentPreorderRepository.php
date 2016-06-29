@@ -75,9 +75,14 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $order;
     }
 
-    public function getPaginatedByUser($user_id, $status = null)
+    public function getPaginatedByUser($user_id, $status = null, $start_time = null, $end_time = null, $per_page = PreorderProtocol::PREORDER_PER_PAGE)
     {
-        return $this->queryOrders($user_id, null, null, $status);
+        return $this->queryOrders($user_id, null, null, $status, null, $start_time, $end_time, PreorderProtocol::PREORDER_PER_PAGE);
+    }
+
+    public function getAllByUser($user_id, $status = null, $start_time = null, $end_time = null)
+    {
+        return $this->queryOrders($user_id, null, null, $status, null, $start_time, $end_time);
     }
 
     protected function queryOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $charge_status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc')
@@ -129,7 +134,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
      */
     public function get($preorder_id, $with_detail = false)
     {
-        if ($preorder_id instanceof $preorder_id) {
+        if ($preorder_id instanceof Preorder) {
             $order = $preorder_id;
         } else if (strlen($preorder_id) == NoGenerator::LENGTH_OF_PREORDER_NO) {
             $order = Preorder::query()->where('order_no', $preorder_id)->firstOrFail();

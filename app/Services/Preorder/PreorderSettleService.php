@@ -89,7 +89,6 @@ class PreorderSettleService implements PreorderSettleServiceContract {
             } catch (NotEnoughException $e) {
                 event(new PaidPreorderBillingFail($billing));
             }
-
         }
     }
 

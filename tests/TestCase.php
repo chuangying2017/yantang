@@ -31,7 +31,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         $content = json_decode($this->response->getContent(), true);
 
         if ($key) {
-            return array_get($content, 'data');
+            return array_get($content, $key);
         }
         return $content;
     }
