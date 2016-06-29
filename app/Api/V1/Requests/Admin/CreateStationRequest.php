@@ -25,7 +25,7 @@ class CreateStationRequest extends Request {
     {
         return [
             'name' => 'required',
-            'district_id' => 'required',
+            'district_id' => 'required|exists:districts,id',
             'address' => 'required',
             'cover_image' => 'required',
             'director' => 'required',

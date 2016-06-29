@@ -34,6 +34,25 @@ class StationPreorderApiTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_confirm_and_update_a_preorder()
+    {
+        $order_id = 2;
+
+        $data = [
+            'start_time' => '2016-06-01',
+            'end_time' => '2016-07-01'
+        ];
+
+        $this->json('put', 'stations/preorders/' . $order_id . '/reject',
+            ['memo' => 'baba'],
+            $this->getAuthHeader()
+        );
+
+        $this->assertResponseOk();
+        $this->seeInDatabase('preorder_assign', ['preorder_id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_REJECT]);
+    }
+
+    /** @test */
     public function it_can_bind_user_to_station()
     {
         $user_id = 1;

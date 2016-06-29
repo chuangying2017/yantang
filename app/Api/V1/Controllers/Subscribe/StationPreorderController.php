@@ -8,6 +8,8 @@ use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Station\StationPreorderRepositoryContract;
 use App\Services\Preorder\PreorderManageServiceContract;
 use App\Services\Preorder\PreorderProtocol;
+use Carbon\Carbon;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -40,11 +42,9 @@ class StationPreorderController extends Controller {
         return $this->response->paginator($orders, new PreorderTransformer());
     }
 
-
     public function notConfirm()
     {
         $orders = $this->orderRepo->getPreordersOfStationNotConfirm(access()->stationId());
-
         return $this->response->collection($orders, new PreorderTransformer());
     }
 
@@ -62,6 +62,10 @@ class StationPreorderController extends Controller {
         $start_time = $request->input('start_time') ?: null;
         $end_time = $request->input('end_time') ?: null;
 
+        if ($start_time < Carbon::now()) {
+            throw new StoreResourceFailedException('开始时间不能早于当前时间');
+        }
+
         $order = $this->orderRepo->get($order_id);
 
         if ($order['status'] == PreorderProtocol::ORDER_STATUS_OF_ASSIGNING) {
@@ -77,6 +81,10 @@ class StationPreorderController extends Controller {
     {
         $stop_time = $request->input('stop_time');
         $restart_time = $request->input('restart_time') ?: null;
+
+        if ($stop_time < Carbon::now()) {
+            throw new StoreResourceFailedException('暂停时间不能早于当前时间');
+        }
 
         $order = $preorderManageService->pause($order_id, $stop_time, $restart_time);
 

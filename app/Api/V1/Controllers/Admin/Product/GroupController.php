@@ -32,7 +32,7 @@ class GroupController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function priority()
+    public function index()
     {
         $groups = $this->groupRepositoryContract->getAll();
 

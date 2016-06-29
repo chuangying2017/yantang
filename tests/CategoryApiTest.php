@@ -25,9 +25,8 @@ class CategoryApiTest extends TestCase {
             $data,
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
-        $this->dump();
 
-        $this->assertResponseStatus(201);
+        $this->assertResponseStatus(200);
     }
 
 
