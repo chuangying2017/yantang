@@ -52,14 +52,15 @@ class PreorderManagerService implements PreorderManageServiceContract {
     public function init($order_id, $weekdays_product_skus, $start_time, $end_time = null)
     {
         $order = $this->orderRepo->get($order_id);
+
         $assign = $this->assignRepo->get($order['id']);
 
         $product_skus = $this->getProductSkus($weekdays_product_skus);
 
         $order = $this->orderRepo->updatePreorderByStation($order, $start_time, $this->getEndTime($start_time, $end_time), $product_skus, $assign['station_id']);
 
-        $this->assignRepo->updateAssignAsConfirm($order_id);
-        $this->orderRepo->updatePreorderStatus($order_id, PreorderProtocol::ORDER_STATUS_OF_SHIPPING);
+        $this->assignRepo->updateAssignAsConfirm($order['id']);
+        $this->orderRepo->updatePreorderStatus($order['id'], PreorderProtocol::ORDER_STATUS_OF_SHIPPING);
 
         event(new AssignIsConfirm($order));
 
@@ -133,6 +134,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
         $old_order = $this->orderRepo->get($order_id);
         $now = Carbon::now();
 
+
         //未开始订单,直接修改
         if ($old_order['start_time'] > $now) {
             $order = $this->orderRepo->updatePreorderByStation($order_id, $start_time, $end_time, $this->getProductSkus($weekdays_product_skus));
@@ -141,36 +143,41 @@ class PreorderManagerService implements PreorderManageServiceContract {
             if (is_null($weekdays_product_skus)) {
                 $weekdays_product_skus = $this->orderSkuRepo->getAll($old_order['id']);
             }
-            $this->createAndInitOrder($old_order, $start_time, $end_time, $weekdays_product_skus);
+            $order = $this->createAndInitOrder($old_order, $start_time, $end_time, $weekdays_product_skus);
         } else {
             //进行中订单
 
             //修改进行中订单的结束时间
-            $old_order_end_time = is_null($start_time) ? Carbon::today() : $start_time;
+            $old_order_end_time = is_null($start_time) ? Carbon::today() : Carbon::createFromFormat('Y-m-d', $start_time)->subDay();
+
             $this->orderRepo->updatePreorderByStation($order_id, null, $old_order_end_time);
 
             //商品修改,创建新订单
             if (!is_null($weekdays_product_skus)) {
-                $this->createAndInitOrder($old_order, $old_order_end_time, $this->getEndTime($start_time, $end_time), $weekdays_product_skus);
+                $new_order_start_time = is_null($start_time) ? Carbon::tomorrow() : $start_time;
+                $order = $this->createAndInitOrder($old_order, $new_order_start_time, $this->getEndTime($start_time, $end_time), $weekdays_product_skus);
             }
 
             //短暂修改,克隆现有订单为将来订单
             if (!is_null($end_time)) {
-                $this->createAndInitOrder($old_order, $start_time, $end_time, $weekdays_product_skus);
+                $order = $this->createAndInitOrder($old_order, $start_time, $end_time, $weekdays_product_skus);
+                return $order;
             }
         }
+
+        return $order;
     }
 
     protected function createAndInitOrder($old_order, $start_time, $end_time, $weekdays_product_skus)
     {
-        $new_order = $this->orderRepo->createPreorder(array_only($old_order, [
-            'user_id',
-            'name',
-            'phone',
-            'district_id',
-            'address',
-            'station_id'
-        ]));
+        $new_order = $this->orderRepo->createPreorder([
+            'user_id' => $old_order['user_id'],
+            'name' => $old_order['name'],
+            'phone' => $old_order['phone'],
+            'district_id' => $old_order['district_id'],
+            'address' => $old_order['address'],
+            'station_id' => $old_order['station_id'],
+        ]);
         return $this->init($new_order, $weekdays_product_skus, $start_time, $end_time);
     }
 
@@ -178,7 +185,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
     {
         $order = $this->orderRepo->get($order_id);
 
-        $this->orderRepo->updatePreorderByStation($order, null, $pause_time, $restart_time);
+        return $this->change($order, null, $pause_time, $restart_time);
     }
 
     public function charged($user_id)

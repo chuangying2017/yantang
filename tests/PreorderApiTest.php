@@ -59,6 +59,18 @@ class PreorderApiTest extends TestCase {
         );
 
         $this->assertResponseStatus(201);
+
+        return $this->getResponseData('data');
+    }
+
+    /** @test */
+    public function it_can_get_a_preorder()
+    {
+        $order = $this->it_can_create_a_preorder();
+
+        $this->json('get', 'subscribe/preorders/' . $order['id'], [], $this->getAuthHeader());
+
+        $this->dump();
     }
 
 

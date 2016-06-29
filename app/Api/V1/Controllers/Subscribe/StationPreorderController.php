@@ -79,7 +79,7 @@ class StationPreorderController extends Controller {
 
     public function pause(Request $request, PreorderManageServiceContract $preorderManageService, $order_id)
     {
-        $stop_time = $request->input('stop_time');
+        $stop_time = $request->input('pause_time');
         $restart_time = $request->input('restart_time') ?: null;
 
         if ($stop_time < Carbon::now()) {

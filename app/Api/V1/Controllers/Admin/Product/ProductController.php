@@ -60,7 +60,7 @@ class ProductController extends Controller {
     {
         $product = $this->productRepositoryContract->createProduct($request->all());
 
-        return $this->response->created(null, ['data' => $product->toArray()]);
+        return $this->response->item($product, new ProductTransformer())->setStatusCode(201);
     }
 
     /**

@@ -3,8 +3,8 @@
 use App\Models\Access\User\User;
 use App\Models\Billing\PreorderBilling;
 use App\Models\District;
-use EasyWeChat\Staff\Staff;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Subscribe\StationStaff;
 
 class Preorder extends Model {
 
@@ -34,12 +34,12 @@ class Preorder extends Model {
 
     public function station()
     {
-        return $this->belongsTo(Station::class, 'id', 'station_id');
+        return $this->belongsTo(Station::class, 'station_id', 'id');
     }
 
     public function staff()
     {
-        return $this->belongsTo(Staff::class, 'id', 'staff_id');
+        return $this->belongsTo(StationStaff::class, 'staff_id', 'id');
     }
 
     public function District()

@@ -10,7 +10,7 @@ class PreorderTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'station', 'staff', 'billings'];
+    protected $availableIncludes = ['station', 'staff', 'billings'];
 
     public function transform(Preorder $preorder)
     {
@@ -33,12 +33,36 @@ class PreorderTransformer extends TransformerAbstract {
             'created_at' => $preorder->created_at,
         ];
 
+        if ($preorder->relationLoaded('skus')) {
+            $data['skus'] = $this->transformSkus($preorder);
+        }
+
         return $data;
     }
 
-    public function includeSkus(Preorder $preorder)
+    public function transformSkus(Preorder $preorder)
     {
-        return $this->collection($preorder->skus, new PreorderSkuTransformer(), true);
+        $data = [];
+
+        foreach ($preorder->skus as $sku) {
+            $data[intval($sku['weekday'])][intval($sku['daytime'])][] =
+                ['weekday' => $sku['weekday'],
+                    'daytime' => $sku['daytime'],
+                    'product_sku_id' => $sku['product_sku_id'],
+                    'name' => $sku['name'],
+                    'cover_image' => $sku['cover_image'],
+                    'quantity' => $sku['quantity'],
+                    'price' => display_price($sku['price']),
+                ];
+        }
+
+        for ($weekday = 0; $weekday < 7; $weekday++) {
+            for ($daytime = 0; $daytime <= 1; $daytime++) {
+                $full[$weekday][$daytime] = array_get($data, $weekday . '.' . $daytime, []);
+            }
+        }
+
+        return $full;
     }
 
     public function includeBillings(Preorder $preorder)

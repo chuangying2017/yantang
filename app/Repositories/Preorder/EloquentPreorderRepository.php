@@ -25,7 +25,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             'charge_status' => PreorderProtocol::CHARGE_STATUS_OF_NULL,
         ]);
 
-        $order->assign = app()->make(PreorderAssignRepositoryContract::class)->createAssign($order['id'], $data['station_id']);
+        app()->make(PreorderAssignRepositoryContract::class)->createAssign($order['id'], $data['station_id']);
 
         return $order;
     }

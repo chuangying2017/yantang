@@ -49,8 +49,6 @@ class StationPreorderApiTest extends TestCase {
             $this->getAuthHeader()
         );
 
-//        $this->dump();
-
         $this->assertResponseOk();
         $this->seeInDatabase('preorders', ['id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING]);
         $this->seeInDatabase('preorder_assign', ['preorder_id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM]);
@@ -61,21 +59,86 @@ class StationPreorderApiTest extends TestCase {
         $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 2, 'quantity' => 1]);
         $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 3, 'quantity' => 2]);
 
+        return $order_id;
     }
-    
+
+
     /** @test */
-    public function it_can_()
+    public function it_can_update_a_confirmed_preorder()
     {
-        
+        $order_id = 2;
+
+        $start_time = '2016-07-02';
+        $data = [
+            'start_time' => $start_time,
+            'end_time' => '2016-09-01',
+            'product_skus' => $this->getUpdateSkusData()
+        ];
+
+        $this->json('put', 'stations/preorders/' . $order_id,
+            $data,
+            $this->getAuthHeader()
+        );
+
+        $new_order = $this->getResponseData('data');
+
+        $this->assertResponseOk();
+
+        $this->seeInDatabase('preorders', ['id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING, 'end_time' => '2016-07-01']);
+        $this->seeInDatabase('preorder_assign', ['preorder_id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 5, 'daytime' => 0, 'product_sku_id' => 2, 'quantity' => 1]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 5, 'daytime' => 0, 'product_sku_id' => 3, 'quantity' => 2]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 0, 'product_sku_id' => 2, 'quantity' => 1]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 0, 'product_sku_id' => 3, 'quantity' => 2]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 2, 'quantity' => 1]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 3, 'quantity' => 2]);
+
+
+        $this->seeInDatabase('preorders', ['id' => $new_order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING, 'start_time' => $start_time]);
+        $this->seeInDatabase('preorder_assign', ['preorder_id' => $new_order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $new_order['id'], 'weekday' => 5, 'daytime' => 0, 'product_sku_id' => 2, 'quantity' => 1]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $new_order['id'], 'weekday' => 5, 'daytime' => 0, 'product_sku_id' => 3, 'quantity' => 2]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $new_order['id'], 'weekday' => 1, 'daytime' => 0, 'product_sku_id' => 2, 'quantity' => 3]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $new_order['id'], 'weekday' => 1, 'daytime' => 0, 'product_sku_id' => 3, 'quantity' => 2]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $new_order['id'], 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 2, 'quantity' => 1]);
+        $this->seeInDatabase('preorder_skus', ['preorder_id' => $new_order['id'], 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 3, 'quantity' => 2]);
+
+        return $order_id;
+    }
+
+    /** @test */
+    public function it_can_get_a_preorder()
+    {
+        $order_id = $this->it_can_confirm_and_update_a_preorder();
+        $this->json('get', 'stations/preorders/' . $order_id, [], $this->getAuthHeader());
+
+        $this->assertResponseOk();
+        $this->seeJsonStructure(['data' => ['skus']]);
+
     }
 
     /** @test */
     public function it_can_pause_a_preorder()
     {
-        
+        $order_id = 2;
+
+        $data = [
+            'pause_time' => '2016-07-02',
+            'restart_time' => '2016-07-04'
+        ];
+
+        $this->json('put', 'stations/preorders/' . $order_id . '/pause',
+            $data,
+            $this->getAuthHeader()
+        );
+
+        $this->assertResponseOk();
+
+
+        $this->seeInDatabase('preorders', ['id' => $order_id, 'end_time' => '2016-07-01']);
+
     }
-    
-    
+
 
     /** @test */
     public function it_can_bind_user_to_station()
@@ -155,5 +218,54 @@ class StationPreorderApiTest extends TestCase {
             ],
         ];
     }
+
+    protected function getUpdateSkusData()
+    {
+        return [
+            [
+                'weekday' => 1,
+                'daytime' => 0,
+                'skus' => [
+                    [
+                        'product_sku_id' => 2,
+                        'quantity' => 3
+                    ],
+                    [
+                        'product_sku_id' => 3,
+                        'quantity' => 2
+                    ]
+                ]
+            ],
+            [
+                'weekday' => 0,
+                'daytime' => 1,
+                'skus' => [
+                    [
+                        'product_sku_id' => 2,
+                        'quantity' => 1
+                    ],
+                    [
+                        'product_sku_id' => 3,
+                        'quantity' => 2
+                    ]
+                ]
+            ],
+            [
+                'weekday' => 5,
+                'daytime' => 0,
+                'skus' => [
+                    [
+                        'product_sku_id' => 2,
+                        'quantity' => 1
+                    ],
+                    [
+                        'product_sku_id' => 3,
+                        'quantity' => 2
+                    ]
+                ]
+            ],
+        ];
+    }
+
 }
 
