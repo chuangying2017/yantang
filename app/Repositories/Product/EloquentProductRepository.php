@@ -167,11 +167,17 @@ class EloquentProductRepository implements ProductRepositoryContract {
             $query = $query->where('type', $type);
         }
 
+
         if ($status) {
-            $query = $query->where('status', $status);
+            $query->where('status', $status);
         }
 
-        $query = $query->orderBy('priority', 'desc')->orderBy($order_by, $sort);
+        $query->orderBy('priority', 'desc');
+        if(!is_null($order_by)) {
+            $query->orderBy($order_by, $sort);
+        }
+
+
 
         if ($per_page) {
             return $query->paginate($per_page);

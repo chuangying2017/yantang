@@ -12,9 +12,10 @@ class AdminProductApiTest extends TestCase {
         $query = [
             'brand' => 7,
         ];
-        $this->json('get', '/admin/products', $query);
+        $this->json('get', '/admin/products', $query, $this->getAuthHeader());
 
         $this->dumpResponse();
+        $this->assertResponseOk();
     }
 
     /** @test */
