@@ -17,6 +17,8 @@ class Station extends Model {
     {
         if (is_array($geo)) {
             $this->attributes['geo'] = json_encode($geo);
+        } else {
+            $this->attributes['geo'] = $geo;
         }
     }
 
