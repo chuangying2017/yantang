@@ -16,6 +16,8 @@ class Image extends Model {
 
     protected $primaryKey = 'media_id';
 
+    public $incrementing = false;
+
     public function products()
     {
         return $this->morphedByMany(Product::class, 'imageable');

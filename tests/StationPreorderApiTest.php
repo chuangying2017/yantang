@@ -62,6 +62,20 @@ class StationPreorderApiTest extends TestCase {
         $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 3, 'quantity' => 2]);
 
     }
+    
+    /** @test */
+    public function it_can_()
+    {
+        
+    }
+
+    /** @test */
+    public function it_can_pause_a_preorder()
+    {
+        
+    }
+    
+    
 
     /** @test */
     public function it_can_bind_user_to_station()
@@ -92,7 +106,6 @@ class StationPreorderApiTest extends TestCase {
 
         $this->assertEquals($station_id, $result['data']['id']);
     }
-
 
 
     protected function getSkusData()

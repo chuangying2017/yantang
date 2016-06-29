@@ -10,7 +10,7 @@ class ImageTransformer extends TransformerAbstract {
         return [
             'media_id' => $image['media_id'],
             'filename' => $image['filename'],
-            'imageinfo' => $image['imageinfo'],
+            'imageinfo' => json_decode($image['imageinfo'], true),
             'url' => $image['url']
         ];
     }
