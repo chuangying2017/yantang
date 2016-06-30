@@ -10,7 +10,7 @@ class PreorderTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['station', 'staff', 'billings'];
+    protected $availableIncludes = ['station', 'staff', 'billings', 'assign'];
 
     public function transform(Preorder $preorder)
     {
@@ -81,6 +81,11 @@ class PreorderTransformer extends TransformerAbstract {
     public function includeStation(Preorder $preorder)
     {
         return $this->item($preorder->station, new StationTransformer(), true);
+    }
+
+    public function includeAssign(Preorder $preorder)
+    {
+        return $this->item($preorder->assign, new PreorderAssignTransformer(), true);
     }
 
 }

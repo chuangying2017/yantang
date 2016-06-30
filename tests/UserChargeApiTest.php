@@ -42,5 +42,13 @@ class UserChargeApiTest extends TestCase {
         $this->seeInDatabase('preorders', ['user_id' => $user_id, 'charge_status' => 1]);
     }
 
+    /** @test */
+    public function it_can_get_billings_lists()
+    {
+        $this->json('get', 'users/recharge', ['status' => 'paid'], $this->getAuthHeader());
+
+        $this->assertResponseOk();
+    }
+
 
 }

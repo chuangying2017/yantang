@@ -302,21 +302,26 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $query = Preorder::query();
 
+
         if (!is_null($order_no)) {
             $query->where('order_no', $order_no);
         }
+
 
         if (!is_null($phone)) {
             $query->where('phone', $phone);
         }
 
-        if (PreorderProtocol::validOrderStatus($order_status)) {
+
+
+        if (PreorderProtocol::validOrderStatus($order_status) === true) {
             $query->where('status', $order_status);
         }
 
-        if (PreorderProtocol::validChargeStatus($charge_status)) {
+        if (PreorderProtocol::validChargeStatus($charge_status) === true) {
             $query->where('charge_status', $charge_status);
         }
+
 
         if (!is_null($start_time)) {
             $query->where('end_time', '>=', $start_time);

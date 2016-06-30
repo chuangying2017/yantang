@@ -114,7 +114,7 @@ class EventServiceProvider extends ServiceProvider {
          * 订奶订单分配
          */
         'App\Events\Preorder\AssignIsCreate' => [
-
+            'App\Listeners\Preorder\SetStationForPreorder'
         ],
 
         'App\Events\Preorder\AssignIsConfirm' => [

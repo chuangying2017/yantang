@@ -80,6 +80,11 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->group(['prefix' => 'special'], function ($api) {
                 $api->resource('orders', 'SpecialOrderController', ['only' => ['index', 'show', 'update']]);
             });
+
+            $api->group(['prefix' => 'subscribe'], function ($api) {
+                $api->resource('orders', 'PreorderController', ['only' => ['index', 'show', 'update']]);
+            });
+
         });
 
         $api->group(['namespace' => 'Statement', 'prefix' => 'statements'], function ($api) {

@@ -53,9 +53,9 @@ class ChargeBillingRepository implements BillingRepositoryContract {
     public function getAllBilling($user_id, $status = null)
     {
         if (is_null($status)) {
-            return ChargeBilling::query()->where('user_id')->get();
+            return ChargeBilling::query()->where('user_id', $user_id)->get();
         }
-        return ChargeBilling::query()->where('user_id')->where('status', $status)->get();
+        return ChargeBilling::query()->where('user_id', $user_id)->where('status', $status)->get();
     }
 
     public function getBillingOfType($user_id, $pay_type)

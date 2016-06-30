@@ -28,6 +28,9 @@ class PreorderProtocol {
 
     public static function validOrderStatus($status)
     {
+        if(is_null($status)) {
+            return false;
+        }
         return in_array($status, [
             self::ORDER_STATUS_OF_SHIPPING,
             self::ORDER_STATUS_OF_ASSIGNING,
@@ -38,6 +41,10 @@ class PreorderProtocol {
 
     public static function validChargeStatus($status)
     {
+        if(is_null($status)) {
+            return false;
+        }
+
         return in_array($status, [
             self::CHARGE_STATUS_OF_NULL,
             self::CHARGE_STATUS_OF_NOT_ENOUGH,

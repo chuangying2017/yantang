@@ -19,7 +19,7 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
         if ($order_id instanceof PreorderAssign) {
             return $order_id;
         }
-        return PreorderAssign::query()->findOrFail($order_id);
+        return PreorderAssign::query()->find($order_id);
     }
 
     public function createAssign($order_id, $station_id)
@@ -76,8 +76,8 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
         $assign->station_id = $station_id;
         $assign->status = PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED;
         $assign->time_before = Carbon::now()->addDays(PreorderProtocol::DAYS_OF_ASSIGN_DISPOSE);
-        $assign->save();
 
+        $assign->save();
         return $assign;
     }
 

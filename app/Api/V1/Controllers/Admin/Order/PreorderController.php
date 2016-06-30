@@ -1,6 +1,7 @@
 <?php namespace App\Api\V1\Controllers\Admin\Order;
 
 use App\Api\V1\Controllers\Controller;
+use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use Illuminate\Http\Request;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
@@ -20,26 +21,33 @@ class PreorderController extends Controller {
     public function index(Request $request)
     {
         $order_no = $request->input('order_no', null);
+        $phone = $request->input('phone', null);
         $start_time = $request->input('start_time', null);
         $end_time = $request->input('end_time', null);
-        $keyword = $request->input('keyword', null);
         $status = $request->input('status', null);
         $charge_status = $request->input('charge_status', null);
-        $preorder = $this->preorderRepo->searchInfo($per_page, $order_no, $start_time, $end_time, $phone, $status);
-        return $this->response->paginator($preorder, new PreorderTransformer());
+
+        $orders = $this->preorderRepo->getAllPaginated($order_no, $phone, $status, $charge_status, $start_time, $end_time);
+        $orders->load('assign');
+
+        return $this->response->paginator($orders, new PreorderTransformer());
     }
 
-    public function allotStation(Request $request)
+    public function show($order_id)
     {
-        $preorder_id = $request->input('preorder_id');
-        $input = $request->only('station_id');
-        $preorder = $this->preorderRepo->byId($preorder_id);
-        if ($preorder->status != PreorderProtocol::STATUS_OF_REJECT) {
-            $this->response->errorInternal('该订单状态无法重新分配服务部');
-        }
+        $order = $this->preorderRepo->get($order_id, true);
 
-        $preorder = $this->preorderRepo->update($input, $preorder_id);
-
-        return $this->response->item($preorder, new PreorderTransformer());
+        return $this->response->paginator($order, new PreorderTransformer());
     }
+
+    public function update(Request $request, $order_id, PreorderAssignRepositoryContract $assignRepo)
+    {
+        $station_id = $request->input('station');
+
+        $assign = $assignRepo->createAssign($order_id, $station_id);
+
+        return $this->response->array(['data' => $assign]);
+    }
+
+
 }

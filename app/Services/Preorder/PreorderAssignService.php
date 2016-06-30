@@ -1,5 +1,6 @@
 <?php namespace App\Services\Preorder;
 
+use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
 
 class PreorderAssignService implements PreorderAssignServiceContact {
@@ -8,15 +9,20 @@ class PreorderAssignService implements PreorderAssignServiceContact {
      * @var StationRepositoryContract
      */
     private $stationRepo;
+    /**
+     * @var PreorderAssignRepositoryContract
+     */
+    private $preorderAssignRepo;
 
 
     /**
      * PreorderAssignService constructor.
      * @param StationRepositoryContract $stationRepo
      */
-    public function __construct(StationRepositoryContract $stationRepo)
+    public function __construct(StationRepositoryContract $stationRepo, PreorderAssignRepositoryContract $preorderAssignRepo)
     {
         $this->stationRepo = $stationRepo;
+        $this->preorderAssignRepo = $preorderAssignRepo;
     }
 
     /**

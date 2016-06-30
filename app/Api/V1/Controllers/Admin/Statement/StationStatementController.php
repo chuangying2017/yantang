@@ -10,8 +10,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class StationStatementController extends Controller
-{
+class StationStatementController extends Controller {
 
 
     /**
@@ -45,16 +44,4 @@ class StationStatementController extends Controller
         return $this->response->item($statement, new StationStatementTransformer());
     }
 
-    public function update(Request $request, $statement_no)
-    {
-        $confirm = $request->input('confirm') === 0 ? 0 : 1;
-
-        if ($confirm) {
-            $statement = $this->statementRepo->updateStatementAsOK($statement_no);
-        } else {
-            $statement = $this->statementRepo->updateStatementAsError($statement_no, $request->input('memo') ?: '');
-        }
-
-        return $this->response->item($statement, new StationStatementTransformer());
-    }
 }
