@@ -22,22 +22,38 @@ class AccountProtocol {
     const ACCOUNT_TYPE_UNFROZEN = 'unfrozen';
     const ACCOUNT_TYPE_WITHDRAW = 'withdraw';
     const ACCOUNT_TYPE_REFUND = 'refund';
+
+    public static function accountRecordType($key = null)
+    {
+        $data = [
+            self::ACCOUNT_TYPE_USE => '使用',
+            self::ACCOUNT_TYPE_RECHARGE => '充值',
+            self::ACCOUNT_TYPE_FROZEN => '冻结',
+            self::ACCOUNT_TYPE_FROZEN_USE => 'frozen_use',
+            self::ACCOUNT_TYPE_UNFROZEN => '解冻',
+            self::ACCOUNT_TYPE_WITHDRAW => '提现',
+            self::ACCOUNT_TYPE_REFUND => '退回'];
+
+        return is_null($key) ? $data : array_get($data, $key, self::ACCOUNT_TYPE_USE);
+    }
+
+
     const ACCOUNT_NOT_ENOUGH = '余额不足';
 
     const ACCOUNT_AMOUNT_MAIN_NAME = 'amount';
     const ACCOUNT_AMOUNT_FROZEN_NAME = 'frozen_amount';
     const ACCOUNT_AMOUNT_USED_NAME = 'used_amount';
 
-    const ACCOUNT_INCOME =1;
-    const ACCOUNT_OUTCOME =0;
-    const ACCOUNT_FROZEN_USE =2;
+    const ACCOUNT_INCOME = 1;
+    const ACCOUNT_OUTCOME = 0;
+    const ACCOUNT_FROZEN_USE = 2;
 
     const ACCOUNT_RECORD_STATUS_OF_OK = 1;
     const ACCOUNT_RECORD_STATUS_OF_CANCEL = 0;
 
     public static function getFlow($type)
     {
-        if(in_array($type, [
+        if (in_array($type, [
             self::ACCOUNT_TYPE_USE,
             self::ACCOUNT_TYPE_FROZEN,
             self::ACCOUNT_TYPE_WITHDRAW,
@@ -45,7 +61,7 @@ class AccountProtocol {
             return self::ACCOUNT_OUTCOME;
         }
 
-        if(in_array($type, [
+        if (in_array($type, [
             self::ACCOUNT_TYPE_RECHARGE,
             self::ACCOUNT_TYPE_UNFROZEN,
             self::ACCOUNT_TYPE_REFUND,
@@ -53,7 +69,7 @@ class AccountProtocol {
             return self::ACCOUNT_INCOME;
         }
 
-        if(in_array($type, [
+        if (in_array($type, [
             self::ACCOUNT_TYPE_FROZEN_USE
         ])) {
             return self::ACCOUNT_FROZEN_USE;

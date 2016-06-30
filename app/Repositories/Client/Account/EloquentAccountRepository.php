@@ -93,7 +93,7 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
         return $this->queryRecords($type, $order_by, $sort);
     }
 
-    public function getRecordsPaginated($type, $order_by = 'created_at', $sort = 'desc', $per_page = 20)
+    public function getRecordsPaginated($type, $order_by = 'created_at', $sort = 'desc', $per_page = AccountProtocol::PER_PAGE)
     {
         return $this->queryRecords($type, $order_by, $sort, $per_page);
     }
