@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Product\Sku;
 
 use App\Models\Product\Product;
+use App\Models\Product\ProductMeta;
 use App\Models\Product\ProductSku;
 use App\Repositories\Category\CategoryProtocol;
 use App\Repositories\Product\ProductProtocol;
@@ -124,6 +125,12 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
         $sku->stock = $sku->stock + $quantity;
         $sku->save();
 
+        $meta = ProductMeta::where('product_id', $sku->product_id)->first();
+        if ($meta) {
+            $meta->stock += $quantity;
+            $meta->save();
+        }
+
         return $sku;
     }
 
@@ -136,6 +143,13 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
         $sku->stock = $sku->stock - $quantity;
         $sku->sales = $sku->sales + $quantity;
         $sku->save();
+
+        $meta = ProductMeta::where('product_id', $sku->product_id)->first();
+        if ($meta) {
+            $meta->sales += $quantity;
+            $meta->stock -= $quantity;
+            $meta->save();
+        }
 
         return $sku;
     }
