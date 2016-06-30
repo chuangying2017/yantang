@@ -11,12 +11,14 @@ class StoreStatementTest extends TestCase {
     /** @test */
     public function it_can_get_store_statements()
     {
-        $this->it_can_settle_store_statement();
+//        $this->it_can_settle_store_statement();
 
         $this->json('get', 'store/statements',
             [],
             $this->getAuthHeader()
         );
+
+        $this->dump();
 
         $this->assertResponseOk();
     }
@@ -24,8 +26,8 @@ class StoreStatementTest extends TestCase {
     /** @test */
     public function it_can_get_a_statement_detail()
     {
-        $this->it_can_settle_store_statement();
-        $this->json('get', 'store/statements/' . 20160630011,
+//        $this->it_can_settle_store_statement();
+        $this->json('get', 'store/statements/' . 20160630021,
             [],
             $this->getAuthHeader()
         );
