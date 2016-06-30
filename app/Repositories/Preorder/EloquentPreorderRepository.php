@@ -26,7 +26,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         ]);
 
 
-
         app()->make(PreorderAssignRepositoryContract::class)->createAssign($order['id'], $data['station_id']);
 
         return $order;
@@ -299,10 +298,14 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             })->get();
     }
 
-    public function getAllPaginated($order_no = null, $phone = null, $order_status = null, $charge_status = null, $start_time = null, $end_time = null)
+    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $charge_status = null, $start_time = null, $end_time = null)
     {
         $query = Preorder::query();
 
+
+        if (!is_null($station_id)) {
+            $query->where('station_id', $station_id);
+        }
 
         if (!is_null($order_no)) {
             $query->where('order_no', $order_no);

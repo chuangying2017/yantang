@@ -50,6 +50,7 @@ abstract class StatementServiceAbstract {
 
     public function generateMerchantStatement($merchant_id)
     {
+
         $billings = $this->billingRepo->getBillingWithProducts($merchant_id, $this->getTime());
 
         $settle_amount = 0;

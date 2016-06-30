@@ -8,4 +8,6 @@ class StationStatementRepository extends StatementRepositoryAbstract {
     {
         $this->model = StationStatement::class;
     }
+
+
 }

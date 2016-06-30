@@ -25,9 +25,10 @@ class PreorderController extends Controller {
         $start_time = $request->input('start_time', null);
         $end_time = $request->input('end_time', null);
         $status = $request->input('status', null);
+        $station_id = $request->input('station_id', null);
         $charge_status = $request->input('charge_status', null);
 
-        $orders = $this->preorderRepo->getAllPaginated($order_no, $phone, $status, $charge_status, $start_time, $end_time);
+        $orders = $this->preorderRepo->getAllPaginated($station_id, $order_no, $phone, $status, $charge_status, $start_time, $end_time);
         $orders->load('assign');
 
         return $this->response->paginator($orders, new PreorderTransformer());

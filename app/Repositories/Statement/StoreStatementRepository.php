@@ -9,4 +9,5 @@ class StoreStatementRepository extends StatementRepositoryAbstract {
     {
         return $this->model = StoreStatement::class;
     }
+
 }
