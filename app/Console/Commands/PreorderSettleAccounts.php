@@ -2,12 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Services\Preorder\PreorderSettleServiceContract;
 use Illuminate\Console\Command;
-use App\Services\Subscribe\PreorderService;
+use App\Services\Preorder\PreorderSettleService;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
-class PreorderSettleAccounts extends Command
-{
+class PreorderSettleAccounts extends Command {
+
     use DispatchesJobs;
     /**
      * The name and signature of the console command.
@@ -22,11 +23,20 @@ class PreorderSettleAccounts extends Command
      * @var string
      */
     protected $description = 'preorder settle accounts by everyday';
+    /**
+     * @var PreorderSettleServiceContract
+     */
+    private $settleService;
 
 
-    public function __construct()
+    /**
+     * PreorderSettleAccounts constructor.
+     * @param PreorderSettleServiceContract $settleService
+     */
+    public function __construct(PreorderSettleServiceContract $settleService)
     {
         parent::__construct();
+        $this->settleService = $settleService;
     }
 
     /**
@@ -36,6 +46,6 @@ class PreorderSettleAccounts extends Command
      */
     public function handle()
     {
-        PreorderService::settle();
+        $this->settleService->settle();
     }
 }

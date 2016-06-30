@@ -12,13 +12,10 @@ class Kernel extends ConsoleKernel {
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\Inspire',
-        'App\Console\Commands\CheckAgentOrder',
-        'App\Console\Commands\InitSearch',
-        'App\Console\Commands\DeleteProductContentTest',
-        'App\Console\Commands\CheckOrderSkuProduct',
-        'App\Console\Commands\SetOrderDoneIfOverTime',
-        'App\Console\Commands\TransformerMakeCommand',
+        'App\Console\Commands\StoreSettleStatement',
+        'App\Console\Commands\StationSettleStatement',
+        'App\Console\Commands\SettlePreorder',
+
     ];
 
     /**
@@ -29,6 +26,6 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('orders:done')->everyFiveMinutes();
+
     }
 }
