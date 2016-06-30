@@ -69,7 +69,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
 
     protected function getProductSkus($weekdays_product_skus)
     {
-        if (is_null($weekdays_product_skus)) {
+        if (is_null($weekdays_product_skus) || !count($weekdays_product_skus)) {
             return null;
         }
 
