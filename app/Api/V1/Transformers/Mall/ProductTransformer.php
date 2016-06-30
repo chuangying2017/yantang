@@ -69,12 +69,12 @@ class ProductTransformer extends TransformerAbstract {
 
     public function includeCats(Product $product)
     {
-        return $this->item($product->cats, new CatTransformer(), true);
+        return $this->item($product->cats->first(), new CatTransformer(), true);
     }
 
     public function includeGroups(Product $product)
     {
-        return $this->item($product->groups, new GroupTransformer(), true);
+        return $this->collection($product->groups, new GroupTransformer(), true);
     }
 
 }
