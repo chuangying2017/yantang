@@ -129,13 +129,13 @@ class EloquentProductRepository implements ProductRepositoryContract {
         return $product;
     }
 
-    public function getAllProducts($brand = null, $cat = null, $group = null, $type = null, $status = null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP)
+    public function getAllProducts($brand = null, $cat = null, $group = null, $type = null, $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $order_by = 'created_at', $sort = 'desc')
     {
         return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat), $type);
     }
 
 
-    public function getProductsPaginated($brand = null, $cat = null, $group = null, $type = null, $status = null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $per_page = ProductProtocol::PRODUCT_PER_PAGE)
+    public function getProductsPaginated($brand = null, $cat = null, $group = null, $type = null, $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $order_by = 'created_at', $sort = 'desc', $per_page = ProductProtocol::PRODUCT_PER_PAGE)
     {
         return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat), $type, $per_page);
     }

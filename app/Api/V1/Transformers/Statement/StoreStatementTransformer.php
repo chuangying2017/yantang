@@ -13,7 +13,7 @@ class StoreStatementTransformer extends TransformerAbstract {
 
         return [
             'statement_no' => $statement['statement_no'],
-            'station_id' => $statement['merchant_id'],
+            'store_id' => $statement['merchant_id'],
             'year' => $statement['year'],
             'month' => $statement['month'],
             'settle_amount' => display_price($statement['settle_amount']),
