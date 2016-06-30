@@ -16,7 +16,7 @@ class SetPrice extends EditorAbstract {
             $product_data['skus'][$key]['settle_price'] = store_price(array_get($sku, 'settle_price', 0));
 
             if (is_null($this->price) || $this->price > $sku['price']) {
-                $this->price = $sku['price'];
+                $this->price = store_price($sku['price']);
             }
         }
 

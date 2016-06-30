@@ -12,11 +12,11 @@ class ChargeBillingRepository implements BillingRepositoryContract {
         return ChargeBilling::create([
             'user_id' => $user_id,
             'billing_no' => NoGenerator::generateChargeBillingNo(),
-            'amount' => $amount
+            'amount' => store_price($amount)
         ]);
     }
 
-	/**
+    /**
      * @param $billing_no
      * @param null $pay_channel
      * @return ChargeBilling
