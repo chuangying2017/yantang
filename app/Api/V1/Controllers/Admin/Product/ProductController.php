@@ -47,7 +47,6 @@ class ProductController extends Controller {
         } else {
             $products = $this->productRepositoryContract->getProductsPaginated($brand, $cat, $group, $type, $status);
         }
-
         return $this->response->paginator($products, new ProductTransformer());
     }
 

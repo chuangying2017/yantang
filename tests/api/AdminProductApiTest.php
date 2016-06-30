@@ -10,7 +10,7 @@ class AdminProductApiTest extends TestCase {
     public function it_return_a_products_list()
     {
         $query = [
-            'brand' => 7,
+            'status' => 'up',
         ];
         $this->json('get', '/admin/products', $query, $this->getAuthHeader());
 
