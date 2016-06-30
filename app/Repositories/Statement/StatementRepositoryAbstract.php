@@ -122,6 +122,7 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
                 'product_id' => $product_sku['product_id'],
                 'product_sku_id' => $product_sku['product_sku_id'],
                 'price' => $product_sku['price'],
+                'name' => $product_sku['name'],
                 'quantity' => $product_sku['quantity'],
                 'total_amount' => $product_sku['total_amount'],
                 'service_fee' => array_get($product_sku, 'service_fee', 0),
