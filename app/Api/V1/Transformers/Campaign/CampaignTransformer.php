@@ -24,7 +24,7 @@ class CampaignTransformer extends TransformerAbstract {
             $data['product_sku'] = [
                 'id' => $campaign['skus']['sku']['id'],
                 'name' => $campaign['skus']['sku']['name'],
-                'price' => $campaign['skus']['sku']['price'],
+                'price' => display_price($campaign['skus']['sku']['price']),
             ];
         }
 
