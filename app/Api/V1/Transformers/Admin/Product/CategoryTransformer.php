@@ -7,7 +7,7 @@ use League\Fractal\TransformerAbstract;
 
 class CategoryTransformer extends TransformerAbstract {
 
-    public function transform(Collection $category)
+    public function transform($category)
     {
         return $category->toArray();
     }

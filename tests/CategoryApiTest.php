@@ -15,7 +15,7 @@ class CategoryApiTest extends TestCase {
 
         $data = [
             'name' => '鲜奶',
-            'pid' => 1,
+            'pid' => null,
             'cover_image' => 'asdaa',
             'desc' => '鲜奶',
             'priority' => 23,

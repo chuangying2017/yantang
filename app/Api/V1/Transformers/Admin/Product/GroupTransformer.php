@@ -7,7 +7,7 @@ use League\Fractal\TransformerAbstract;
 
 class GroupTransformer extends TransformerAbstract {
 
-    public function transform(Collection $group)
+    public function transform($group)
     {
         return $group->toArray();
     }
