@@ -104,10 +104,15 @@ class ProductController extends Controller {
         return $this->response->noContent();
     }
 
-    public function updateStatus(Request $request)
+    public function down($product_id)
     {
+        $product = $this->productRepositoryContract->updateProductAsDown($product_id);
+        return $this->response->item($product, new ProductTransformer());
+    }
 
-
-
+    public function up($product_id)
+    {
+        $product = $this->productRepositoryContract->updateProductAsUp($product_id);
+        return $this->response->item($product, new ProductTransformer());
     }
 }

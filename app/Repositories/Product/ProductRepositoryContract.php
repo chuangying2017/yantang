@@ -8,6 +8,10 @@ interface ProductRepositoryContract extends SearchableContract {
 
     public function updateProduct($product_id, $product_data);
 
+    public function updateProductAsUp($product_id);
+
+    public function updateProductAsDown($product_id);
+
     public function getProduct($product_id, $with_detail = true);
 
     public function getAllProducts($brand = null, $cat = null, $group = null, $type = null, $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $order_by = 'created_at', $sort = 'desc');

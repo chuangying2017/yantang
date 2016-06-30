@@ -129,13 +129,13 @@ class EloquentProductRepository implements ProductRepositoryContract {
         return $product;
     }
 
-    public function getAllProducts($brand = null, $cat = null, $group = null, $type= null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP)
+    public function getAllProducts($brand = null, $cat = null, $group = null, $type = null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP)
     {
         return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat), $type);
     }
 
 
-    public function getProductsPaginated($brand = null, $cat = null, $group = null, $type= null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $per_page = ProductProtocol::PRODUCT_PER_PAGE)
+    public function getProductsPaginated($brand = null, $cat = null, $group = null, $type = null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $per_page = ProductProtocol::PRODUCT_PER_PAGE)
     {
         return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat), $type, $per_page);
     }
@@ -173,10 +173,9 @@ class EloquentProductRepository implements ProductRepositoryContract {
         }
 
         $query->orderBy('priority', 'desc');
-        if(!is_null($order_by)) {
+        if (!is_null($order_by)) {
             $query->orderBy($order_by, $sort);
         }
-
 
 
         if ($per_page) {
@@ -205,4 +204,31 @@ class EloquentProductRepository implements ProductRepositoryContract {
     }
 
 
+    public function updateProductAsUp($product_id)
+    {
+        $product = $this->getProduct($product_id, false);
+
+        if ($product->status == ProductProtocol::VAR_PRODUCT_STATUS_UP) {
+            return $product;
+        }
+
+        $product->status = ProductProtocol::VAR_PRODUCT_STATUS_UP;
+        $product->save();
+
+        return $product;
+    }
+
+    public function updateProductAsDown($product_id)
+    {
+        $product = $this->getProduct($product_id, false);
+
+        if ($product->status == ProductProtocol::VAR_PRODUCT_STATUS_DOWN) {
+            return $product;
+        }
+
+        $product->status = ProductProtocol::VAR_PRODUCT_STATUS_DOWN;
+        $product->save();
+
+        return $product;
+    }
 }

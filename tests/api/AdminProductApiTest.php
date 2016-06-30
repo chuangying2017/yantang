@@ -19,12 +19,25 @@ class AdminProductApiTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_up_or_down_a_product()
+    {
+        $product_id = 1;
+        $this->json('put', 'admin/products/' . $product_id . '/up', [], $this->getAuthHeader());
+
+        $this->seeInDatabase('products', ['id' => $product_id, 'status' => \App\Repositories\Product\ProductProtocol::VAR_PRODUCT_STATUS_UP]);
+
+        $this->json('put', 'admin/products/' . $product_id . '/down', [], $this->getAuthHeader());
+
+        $this->seeInDatabase('products', ['id' => $product_id, 'status' => \App\Repositories\Product\ProductProtocol::VAR_PRODUCT_STATUS_DOWN]);
+    }
+
+    /** @test */
     public function it_return_a_product()
     {
         $product_id = 1;
-        $this->json('get', '/admin/products/' . $product_id,[], $this->getAuthHeader());
+        $this->json('get', '/admin/products/' . $product_id, [], $this->getAuthHeader());
 
-        $this->seeJsonStructure(['data' =>  ['images', 'skus', 'cats', 'groups', 'brand']]);
+        $this->seeJsonStructure(['data' => ['images', 'skus', 'cats', 'groups', 'brand']]);
         $this->assertResponseOk();
     }
 
