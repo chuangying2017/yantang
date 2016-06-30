@@ -12,7 +12,7 @@ class ClientOrderBillingTransformer extends TransformerAbstract {
             'order' => [
                 'id' => $billing['order_id']
             ],
-            'amount' => $billing['amount'],
+            'amount' => display_price($billing['amount']),
             'pay_type' => $billing['pay_type'],
             'pay_channel' => $billing['pay_channel'],
             'status' => $billing['status'],

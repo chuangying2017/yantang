@@ -14,9 +14,9 @@ class OrderSkuTransformer extends TransformerAbstract {
                 'product_id' => $sku['product_id']
             ],
             'quantity' => $sku['quantity'],
-            'price' => $sku['price'],
-            'discount_amount' => $sku['discount_amount'],
-            'pay_amount' => $sku['pay_amount'],
+            'price' => display_price($sku['price']),
+            'discount_amount' => display_price($sku['discount_amount']),
+            'pay_amount' => display_price($sku['pay_amount']),
             'name' => $sku['name'],
             'cover_image' => $sku['cover_image'],
             'attr' => $sku['attr'],
