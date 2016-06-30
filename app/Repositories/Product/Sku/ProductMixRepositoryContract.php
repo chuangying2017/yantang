@@ -6,5 +6,6 @@ interface ProductMixRepositoryContract {
     public function getMixSkus($mix_sku_id);
 
 
+    public function getMixProducts();
 
 }

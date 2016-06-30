@@ -19,6 +19,14 @@ class AdminProductApiTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_get_all_mix_products()
+    {
+        $this->json('get', 'admin/products/mix-products', [], $this->getAuthHeader());
+
+        $this->dump();
+    }
+
+    /** @test */
     public function it_can_up_or_down_a_product()
     {
         $product_id = 1;

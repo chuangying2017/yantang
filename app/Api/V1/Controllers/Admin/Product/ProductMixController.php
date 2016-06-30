@@ -3,6 +3,7 @@
 namespace App\Api\V1\Controllers\Admin\Product;
 
 use App\Api\V1\Transformers\Admin\Product\ProductSkuTransformer;
+use App\Api\V1\Transformers\Admin\Product\ProductTransformer;
 use App\Repositories\Product\Sku\ProductMixRepositoryContract;
 use Illuminate\Http\Request;
 
@@ -30,10 +31,19 @@ class ProductMixController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function skus()
     {
         $skus = $this->productMixRepo->getAllMixAbleProductSku();
 
         return $this->response->collection($skus, new ProductSkuTransformer());
     }
+
+    public function products()
+    {
+        $products = $this->productMixRepo->getMixProducts();
+
+        return $this->response->collection($products, new ProductTransformer());
+    }
+
+
 }

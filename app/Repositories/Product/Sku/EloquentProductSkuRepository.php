@@ -214,4 +214,8 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
         return ProductSku::query()->whereIn('product_id', $subscribe_product_ids)->get();
     }
 
+    public function getMixProducts()
+    {
+        return Product::with('skus')->where('type', ProductProtocol::TYPE_OF_MIX)->get();
+    }
 }
