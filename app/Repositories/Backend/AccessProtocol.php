@@ -12,7 +12,7 @@ class AccessProtocol {
     const ROLE_OF_STAFF = 'Staff';
     const ROLE_OF_MALL = 'Mall';
     const ROLE_OF_FINANCE= 'Finance';
-    const ROLE_OF_USER = 'user';
+    const ROLE_OF_USER = 'User';
 
 //    const ROLE_ID_OF_SUPERVISOR = 1;
 //    const ROLE_ID_OF_CLIENT = 2;

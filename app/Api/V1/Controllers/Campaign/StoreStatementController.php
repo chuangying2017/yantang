@@ -30,8 +30,7 @@ class StoreStatementController extends Controller {
     {
         $year = $request->input('year') ?: Carbon::today()->year;
         $status = $request->input('status') ?: null;
-        $month = $request->input('month') ?: Carbon::today()->month;
-        $statements = $this->statementRepo->getAllStatements($year, $month, $status);
+        $statements = $this->statementRepo->getAllStatementsOfMerchant(access()->storeId(), $year, $status);
 
         return $this->response->collection($statements, new StoreStatementTransformer());
     }

@@ -68,7 +68,7 @@ abstract class StatementServiceAbstract {
                     $product_skus_info[$sku_key]['quantity'] = $sku['quantity'];
                     $product_skus_info[$sku_key]['total_amount'] = $sku_total_amount;
                 }
-                $settle_amount = bcadd($settle_amount, $sku_total_amount);
+                $settle_amount = $settle_amount + $sku_total_amount;
             }
         }
 

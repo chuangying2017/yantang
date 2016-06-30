@@ -18,7 +18,7 @@ class StationStatementApiTest extends TestCase {
             $this->getAuthHeader()
         );
 
-        $this->dump();
+//        $this->dump();
 
         $this->assertResponseOk();
     }

@@ -84,7 +84,6 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
 
     public function getStatement($statement_no, $with_detail = false)
     {
-
         $statement_model = $this->getModel();
         if ($statement_no instanceof $statement_model) {
             $statement = $statement_no;

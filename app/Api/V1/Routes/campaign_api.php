@@ -10,7 +10,7 @@ $api->group(['namespace' => 'Campaign', 'middleware' => 'api.auth'], function ($
         $api->group(['middleware' => 'api.auth'], function ($api) {
 
             $api->resource('orders', 'OrderController');
-            $api->resource('orders.checkout', 'CheckoutController', ['only' => ['index', 'store']]);
+            $api->resource('orders.checkout', 'CheckoutController', ['only' => ['index', 'store', 'show']]);
             $api->resource('tickets', 'OrderTicketController');
             $api->resource('campaigns', 'CampaignController');
             $api->resource('stores', 'StoreController@index');
