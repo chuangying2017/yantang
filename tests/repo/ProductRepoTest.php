@@ -122,9 +122,9 @@ class ProductRepoTest extends TestCase {
             "detail" => '<p><img src="http://7xp47i.com1.z0.glb.clouddn.com/pd-info-1.jpg"></img></p>',
             "type" => "mix",
             "image_ids" => [
-                1,
-                2,
-                3
+                'asdadadassa',
+                'asdadasdas',
+                'asdadasad'
             ],
             "group_ids" => [
 

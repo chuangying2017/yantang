@@ -26,7 +26,7 @@ class ProductTransformer extends TransformerAbstract {
             'sub_title' => $product['sub_title'],
             'digest' => $product['digest'],
             'cover_image' => $product['cover_image'],
-            'price' => $product['price'],
+            'price' => display_price($product['price']),
             'status' => $product['status'],
             'type' => $product['type'],
             'open_time' => $product['open_time'],

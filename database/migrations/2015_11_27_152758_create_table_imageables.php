@@ -13,7 +13,7 @@ class CreateTableImageables extends Migration {
     public function up()
     {
         Schema::create('imageables', function (Blueprint $table) {
-            $table->integer('image_id')->unsigned()->index();
+            $table->string('image_id')->unsigned()->index();
             $table->integer('imageable_id')->unsigned()->index();
             $table->string('imageable_type')->index();
         });
