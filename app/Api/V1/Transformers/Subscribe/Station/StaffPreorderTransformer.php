@@ -9,7 +9,6 @@ class StaffPreorderTransformer extends TransformerAbstract {
 
     public function transform(Preorder $order)
     {
-
         $data = [
             'id' => $order->id,
             'skus' => $this->getSkus($order),
@@ -28,20 +27,27 @@ class StaffPreorderTransformer extends TransformerAbstract {
         return $data;
     }
 
-    public function getSkus(Preorder $order)
+    public function getSkus(Preorder $preorder)
     {
-        $skus = [];
-        foreach ($order->skus as $sku) {
-            $skus[] = [
-                'name' => $sku['name'],
-                'cover_image' => $sku['cover_image'],
-                'price' => $sku['price'],
-                'quantity' => $sku['quantity'],
-                'total_amount' => $sku['total_amount'],
-            ];
+        $data = [];
+        foreach ($preorder->skus as $sku) {
+            $data[intval($sku['daytime'])][] =
+                [
+                    'weekday' => $sku['weekday'],
+                    'daytime' => $sku['daytime'],
+                    'product_sku_id' => $sku['product_sku_id'],
+                    'name' => $sku['name'],
+                    'cover_image' => $sku['cover_image'],
+                    'quantity' => $sku['quantity'],
+                    'price' => display_price($sku['price']),
+                ];
         }
 
-        return $skus;
+        for ($daytime = 0; $daytime <= 1; $daytime++) {
+            $full[$daytime] = array_get($data, $daytime, []);
+        }
+
+        return $full;
     }
 
 }

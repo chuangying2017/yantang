@@ -7,7 +7,7 @@
 $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function ($api) {
 
     //配送员端
-    $api->group(['prefix' => 'stations/staffs'], function ($api) {
+    $api->group(['prefix' => 'staffs'], function ($api) {
 
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STAFF]], function ($api) {
             $api->get('info', 'StaffController@info');
@@ -32,6 +32,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
             $api->resource('statements', 'StationStatementController', ['only' => ['index', 'show', 'update']]);
             //管理配送员
+            $api->get('staffs/{staff_id}/preorders', 'StationStaffController@orders');
             $api->resource('staffs', 'StationStaffController');
 
 

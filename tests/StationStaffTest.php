@@ -10,6 +10,16 @@ class StationStaffTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
+    public function it_can_get_staffs_daily_orders_lists()
+    {
+        $staff_id = 1;
+
+        $this->json('get', 'stations/staffs/' .$staff_id . '/preorders', [], $this->getAuthHeader());
+
+        $this->dump();
+    }
+
+    /** @test */
     public function it_can_get_a_staff_info()
     {
         $user_id = 1;
