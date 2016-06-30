@@ -129,8 +129,8 @@ class EloquentUserRepository implements UserContract {
 
         if ($user->update(array_only($input, ['username', 'phone', 'email', 'password']))) {
             //For whatever reason this just wont work in the above call, so a second is needed for now
-            $user->status = isset($input['status']) ? 1 : 0;
-            $user->confirmed = isset($input['confirmed']) ? 1 : 0;
+            $user->status = 1;
+            $user->confirmed = 1;
             $user->save();
 
             $this->checkUserRolesCount($roles);
