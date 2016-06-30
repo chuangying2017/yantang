@@ -33,6 +33,6 @@ class SetStationForPreorder {
     public function handle(AssignIsCreate $event)
     {
         $assign = $event->assign;
-        $this->preorderRepo->updatePreorderAssign($assign, $assign->station_id, $assign->staff_id);
+        $this->preorderRepo->updatePreorderAssign($assign->preorder_id, $assign->station_id, $assign->staff_id);
     }
 }

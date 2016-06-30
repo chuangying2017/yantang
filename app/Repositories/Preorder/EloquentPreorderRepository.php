@@ -145,6 +145,8 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $order = Preorder::query()->findOrFail($preorder_id);
         }
 
+        $order->load('skus', 'billings', 'station', 'staff', 'user');
+
         if ($with_detail) {
             $order->load('skus', 'billings', 'station', 'staff', 'user');
         }
@@ -221,7 +223,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $order = $this->get($order_id);
         if (!is_null($station_id)) {
             $order->station_id = $station_id;
-            $order->status = PreorderProtocol::ORDER_STATUS_OF_SHIPPING;
         }
         if (!is_null($staff_id)) {
             $order->staff_id = $staff_id;
@@ -311,7 +312,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($phone)) {
             $query->where('phone', $phone);
         }
-
 
 
         if (PreorderProtocol::validOrderStatus($order_status) === true) {

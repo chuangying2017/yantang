@@ -12,6 +12,8 @@ class PreorderAssign extends Model {
 
     protected $primaryKey = 'preorder_id';
 
+    public $incrementing = false;
+
     public function preorder()
     {
         return $this->belongsTo(Preorder::class, 'preorder_id', 'id');

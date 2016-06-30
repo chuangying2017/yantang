@@ -58,6 +58,7 @@ class PreorderApiTest extends TestCase {
             $this->getAuthHeader()
         );
 
+
         $this->assertResponseStatus(201);
 
         return $this->getResponseData('data');
@@ -70,7 +71,8 @@ class PreorderApiTest extends TestCase {
 
         $this->json('get', 'subscribe/preorders/' . $order['id'], [], $this->getAuthHeader());
 
-        $this->dump();
+        $this->seeJsonStructure(['data' => ['skus']]);
+        $this->assertResponseOk();
     }
 
 
