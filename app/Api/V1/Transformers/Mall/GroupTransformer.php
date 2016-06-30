@@ -5,7 +5,7 @@ use League\Fractal\TransformerAbstract;
 
 class GroupTransformer extends TransformerAbstract {
 
-    public function transform(Group $group)
+    public function transform($group)
     {
         return [
             'id' => $group['id'],

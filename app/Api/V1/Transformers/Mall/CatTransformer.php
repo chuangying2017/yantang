@@ -6,7 +6,7 @@ use League\Fractal\TransformerAbstract;
 
 class CatTransformer extends TransformerAbstract {
 
-    public function transform(CategoryAbstract $group)
+    public function transform($group)
     {
         return [
             'id' => $group['id'],
