@@ -39,8 +39,33 @@ class AdminUserApiTest extends TestCase {
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
 
-        $this->dumpResponse();
         $this->assertResponseStatus(201);
+
+        return $this->getResponseData('data');
+    }
+
+    /** @test */
+    public function it_can_update_a_user()
+    {
+        $user = $this->it_can_create_a_user();
+
+        $data = [
+            'username' => '门店管理专员 Will',
+            'phone' => '13277548383',
+            'password' => '1234',
+            'password_confirmation' => '1234',
+            'assignees_roles' => [3]
+        ];
+
+        $this->json('put', 'admin/access/users/' . $user['id'],
+            $data,
+            ['Authorization' => 'Bearer ' . $this->getToken()]
+        );
+
+        $this->assertResponseStatus(200);
+
+        $this->seeInDatabase('users', ['phone' => 13277548383, 'id' => $user['id']]);
+
     }
 
     /** @test */

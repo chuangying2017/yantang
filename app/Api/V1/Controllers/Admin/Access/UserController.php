@@ -65,6 +65,7 @@ class UserController extends Controller {
             $request->only('assignees_roles'),
             $request->only('permission_user')
         );
+
         return $this->response->item($user, new UserTransformer());
     }
 

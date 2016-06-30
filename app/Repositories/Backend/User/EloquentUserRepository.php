@@ -45,7 +45,7 @@ class EloquentUserRepository implements UserContract {
         else
             $user = User::withTrashed()->find($id);
 
-        if ( ! is_null($user)) return $user;
+        if (!is_null($user)) return $user;
 
         throw new GeneralException('That user does not exist.');
     }
@@ -92,6 +92,7 @@ class EloquentUserRepository implements UserContract {
     public function create($input, $roles, $permissions)
     {
         $user = $this->createUserStub($input);
+        $this->checkUserByPhone($input, $user);
 
         if ($user->save()) {
             //User Created, Validate Roles
@@ -123,9 +124,9 @@ class EloquentUserRepository implements UserContract {
     public function update($id, $input, $roles, $permissions)
     {
         $user = $this->findOrThrowException($id);
-        $this->checkUserByEmail($input, $user);
+        $this->checkUserByPhone($input, $user);
 
-        if ($user->update($input)) {
+        if ($user->update(array_only($input, ['username', 'phone', 'email', 'password']))) {
             //For whatever reason this just wont work in the above call, so a second is needed for now
             $user->status = isset($input['status']) ? 1 : 0;
             $user->confirmed = isset($input['confirmed']) ? 1 : 0;
@@ -327,6 +328,21 @@ class EloquentUserRepository implements UserContract {
     public function findUserByPhone($phone)
     {
         return User::where('phone', $phone)->first();
+    }
+
+    /**
+     * @param $input
+     * @param $user
+     * @throws GeneralException
+     */
+    private function checkUserByPhone($input, $user)
+    {
+        //Figure out if email is not the same
+        if ($user->phone != $input['phone']) {
+            //Check to see if email exists
+            if (User::where('phone', '=', $input['phone'])->first())
+                throw new GeneralException('该电话用户已存在.');
+        }
     }
 
 }

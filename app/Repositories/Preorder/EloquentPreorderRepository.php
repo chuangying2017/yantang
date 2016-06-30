@@ -145,8 +145,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $order = Preorder::query()->findOrFail($preorder_id);
         }
 
-        $order->load('skus', 'billings', 'station', 'staff', 'user');
-
         if ($with_detail) {
             $order->load('skus', 'billings', 'station', 'staff', 'user');
         }
