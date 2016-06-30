@@ -59,7 +59,7 @@ class EloquentUserRepository implements UserContract {
      */
     public function getUsersPaginated($per_page, $status = 1, $order_by = 'id', $sort = 'asc')
     {
-        return User::with('roles')->where('status', $status)->orderBy($order_by, $sort)->paginate($per_page);
+        return User::with('roles')->where('status', $status)->whereNotNull('password')->orderBy($order_by, $sort)->paginate($per_page);
     }
 
     /**
@@ -78,7 +78,7 @@ class EloquentUserRepository implements UserContract {
      */
     public function getAllUsers($order_by = 'id', $sort = 'asc')
     {
-        return User::orderBy($order_by, $sort)->get();
+        return User::orderBy($order_by, $sort)->whereNotNull('password')->get();
     }
 
     /**

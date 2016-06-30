@@ -42,5 +42,4 @@ class StaffPreorderController extends Controller {
         return $this->response->item($order, new PreorderTransformer());
     }
 
-
 }
