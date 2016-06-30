@@ -10,8 +10,9 @@ class AccessProtocol {
     const ROLE_OF_STATION = 'Station';
     const ROLE_OF_STORE = 'Store';
     const ROLE_OF_STAFF = 'Staff';
-    const ROLE_OF_STATION_ADMIN = 'StationAdmin';
-    const ROLE_OF_STORE_ADMIN = 'StoreAdmin';
+    const ROLE_OF_MALL = 'Mall';
+    const ROLE_OF_FINANCE= 'Finance';
+    const ROLE_OF_USER = 'user';
 
 //    const ROLE_ID_OF_SUPERVISOR = 1;
 //    const ROLE_ID_OF_CLIENT = 2;
