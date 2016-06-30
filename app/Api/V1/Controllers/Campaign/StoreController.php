@@ -37,7 +37,7 @@ class StoreController extends Controller {
             $store = $this->storeRepo->getStoreByUser(access()->id());
 
             return $this->response->item($store, new StoreTransformer());
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->response->error($e->getMessage(), $e->getCode());
         }
 
@@ -80,7 +80,7 @@ class StoreController extends Controller {
     }
 
 
-     /**
+    /**
      * Display the specified resource.
      *
      * @param  int $id
@@ -100,7 +100,6 @@ class StoreController extends Controller {
 
         return $this->response->collection($stores, new StoreTransformer());
     }
-
 
 
 }

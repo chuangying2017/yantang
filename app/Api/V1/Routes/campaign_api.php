@@ -19,7 +19,7 @@ $api->group(['namespace' => 'Campaign', 'middleware' => 'api.auth'], function ($
 
     $api->group(['prefix' => 'store'], function ($api) {
 
-        $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STATION]], function ($api) {
+        $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STORE]], function ($api) {
             $api->resource('exchange', 'StoreExchangeController');
             $api->get('info', 'StoreController@info');
             $api->resource('statements', 'StoreStatementController', ['only' => ['index', 'show', 'update']]);
