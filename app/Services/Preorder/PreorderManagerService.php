@@ -154,6 +154,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
             $old_order_end_time = is_null($start_time) ? Carbon::today() : Carbon::createFromFormat('Y-m-d', $start_time)->subDay();
 
             $order = $this->orderRepo->updatePreorderByStation($order_id, null, $old_order_end_time);
+            $this->orderRepo->updatePreorderStatus($order_id, PreorderProtocol::ORDER_STATUS_OF_CANCEL);
 
             //商品修改,创建新订单
             if (!is_null($weekdays_product_skus)) {
