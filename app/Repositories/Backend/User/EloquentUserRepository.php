@@ -5,6 +5,7 @@ use App\Exceptions\GeneralException;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
 use App\Repositories\Auth\AuthenticationContract;
 use App\Exceptions\Backend\Access\User\UserNeedsRolesException;
+use Dingo\Api\Exception\StoreResourceFailedException;
 
 /**
  * Class EloquentUserRepository
@@ -92,7 +93,7 @@ class EloquentUserRepository implements UserContract {
     public function create($input, $roles, $permissions)
     {
         $user = $this->createUserStub($input);
-        $this->checkUserByPhone($input, $user);
+        $this->checkExistUserByPhone($input, $user);
 
         if ($user->save()) {
             //User Created, Validate Roles
@@ -343,6 +344,13 @@ class EloquentUserRepository implements UserContract {
             if (User::where('phone', '=', $input['phone'])->first())
                 throw new GeneralException('该电话用户已存在.');
         }
+    }
+
+    private function checkExistUserByPhone($input, $user)
+    {
+        //Check to see if phone exists
+        if (User::where('phone', '=', $input['phone'])->first())
+            throw new StoreResourceFailedException('该电话用户已存在.');
     }
 
 }

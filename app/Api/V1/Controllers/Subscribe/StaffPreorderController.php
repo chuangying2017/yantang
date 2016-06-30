@@ -6,6 +6,7 @@ use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffPreorderTransformer;
 use App\Repositories\Station\StationPreorderRepositoryContract;
+use App\Services\Preorder\PreorderManagerService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -24,6 +25,16 @@ class StaffPreorderController extends Controller {
     public function __construct(StationPreorderRepositoryContract $orderRepo)
     {
         $this->orderRepo = $orderRepo;
+    }
+
+    public function info(PreorderManagerService $preorderManager, Request $request)
+    {
+        $day = $request->input('day');
+        $daytime = $request->input('daytime');
+
+        $daily_info = $preorderManager->staffDailyInfo(access()->staffId(), $day, $daytime);
+
+        return $this->response->array(['data' => array_values($daily_info)]);
     }
 
     public function index(Request $request)

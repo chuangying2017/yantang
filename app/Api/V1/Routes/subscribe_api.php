@@ -11,6 +11,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STAFF]], function ($api) {
             $api->get('info', 'StaffController@info');
+            $api->get('preorders/info', 'StaffPreorderController@info');
             $api->resource('preorders', 'StaffPreorderController', ['only' => ['index', 'show']]);
             $api->post('/{staff_id}/unbind', 'StaffController@postUnBind')->name('api.staff.unbind');
         });

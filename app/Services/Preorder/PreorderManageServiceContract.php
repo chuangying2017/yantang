@@ -13,5 +13,7 @@ interface PreorderManageServiceContract {
 
     public function stationDailyInfo($station_id, $day = null, $daytime = null);
 
+    public function staffDailyInfo($staff_id, $day = null, $daytime = null);
+
 
 }

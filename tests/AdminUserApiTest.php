@@ -45,6 +45,14 @@ class AdminUserApiTest extends TestCase {
     }
 
     /** @test */
+    public function it_will_prevent_same_phone()
+    {
+        $this->it_can_create_a_user();
+
+        $this->it_can_create_a_user();
+    }
+
+    /** @test */
     public function it_can_update_a_user()
     {
         $user = $this->it_can_create_a_user();

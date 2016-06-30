@@ -117,7 +117,6 @@ class PreorderManagerService implements PreorderManageServiceContract {
         }
 
 
-
         return $order_skus;
     }
 
@@ -223,6 +222,12 @@ class PreorderManagerService implements PreorderManageServiceContract {
     {
         $day = is_null($day) ? Carbon::today() : Carbon::createFromFormat('Y-m-d', $day);
         $orders = $this->orderRepo->getDayPreorderWithProductsByStation($station_id, $day, $daytime);
+
+        return $this->transformOrder($orders);
+    }
+
+    protected function transformOrder($orders)
+    {
         $product_skus_info = [];
         foreach ($orders as $key => $order) {
             if (!count($order['skus'])) {
@@ -243,5 +248,13 @@ class PreorderManagerService implements PreorderManageServiceContract {
         }
 
         return $product_skus_info;
+    }
+
+    public function staffDailyInfo($staff_id, $day = null, $daytime = null)
+    {
+        $day = is_null($day) ? Carbon::today() : Carbon::createFromFormat('Y-m-d', $day);
+        $orders = $this->orderRepo->getDayPreorderWithProductsOfStaff($staff_id, $day, $daytime);
+
+        return $this->transformOrder($orders);
     }
 }

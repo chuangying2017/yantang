@@ -31,7 +31,8 @@ class AdminProductApiTest extends TestCase {
     /** @test */
     public function it_return_subscribe_products()
     {
-        $this->json('get', '/stations/products');
+
+        $this->json('get', '/stations/products', [], $this->getAuthHeader());
 
         $this->dumpResponse();
     }

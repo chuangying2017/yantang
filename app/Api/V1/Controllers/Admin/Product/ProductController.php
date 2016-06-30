@@ -103,4 +103,11 @@ class ProductController extends Controller {
 
         return $this->response->noContent();
     }
+
+    public function updateStatus(Request $request)
+    {
+
+
+
+    }
 }
