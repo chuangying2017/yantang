@@ -297,4 +297,36 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
                 $query->where('weekday', Carbon::today()->dayOfWeek);
             })->get();
     }
+
+    public function getAllPaginated($order_no = null, $phone = null, $order_status = null, $charge_status = null, $start_time = null, $end_time = null)
+    {
+        $query = Preorder::query();
+
+        if (!is_null($order_no)) {
+            $query->where('order_no', $order_no);
+        }
+
+        if (!is_null($phone)) {
+            $query->where('phone', $phone);
+        }
+
+        if (PreorderProtocol::validOrderStatus($order_status)) {
+            $query->where('status', $order_status);
+        }
+
+        if (PreorderProtocol::validChargeStatus($charge_status)) {
+            $query->where('charge_status', $charge_status);
+        }
+
+        if (!is_null($start_time)) {
+            $query->where('end_time', '>=', $start_time);
+        }
+
+        if (!is_null($end_time)) {
+            $query->where('start_time', '<=', $end_time);
+        }
+
+
+        return $query->paginate(PreorderProtocol::PREORDER_PER_PAGE);
+    }
 }

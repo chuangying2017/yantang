@@ -25,6 +25,8 @@ class AdminStationStaffTest extends TestCase {
 
         $this->assertResponseStatus(201);
 
+        $this->echoJson();
+
         return $this->getResponseData('data');
     }
 
@@ -102,8 +104,9 @@ class AdminStationStaffTest extends TestCase {
             ['Authorization' => 'Bearer ' . $token]
         );
 
-
         $this->assertResponseOk();
+
+        $this->echoJson();
 
         $this->json('POST', $url,
             ['bind_token' => generate_bind_token($staff['id'])],

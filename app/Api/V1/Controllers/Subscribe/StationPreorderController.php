@@ -39,10 +39,8 @@ class StationPreorderController extends Controller {
 
         $daily_info = $preorderManager->stationDailyInfo(access()->stationId(), $day, $daytime);
 
-        return $this->response->array(['data' => $daily_info]);
-
+        return $this->response->array(['data' => array_values($daily_info)]);
     }
-
 
     public function index(Request $request)
     {
@@ -76,7 +74,7 @@ class StationPreorderController extends Controller {
         $start_time = $request->input('start_time') ?: null;
         $end_time = $request->input('end_time') ?: null;
 
-        if ($start_time < Carbon::now()) {
+        if ($start_time < Carbon::today()) {
             throw new StoreResourceFailedException('开始时间不能早于当前时间');
         }
 
@@ -107,7 +105,6 @@ class StationPreorderController extends Controller {
 
     public function reject(Request $request, PreorderAssignRepositoryContract $assign, $order_id)
     {
-
         $memo = $request->input('memo') ?: '';
 
         $assign = $assign->updateAssignAsReject($order_id, $memo);

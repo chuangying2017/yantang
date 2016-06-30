@@ -95,24 +95,28 @@ class PreorderManagerService implements PreorderManageServiceContract {
         foreach ($weekdays_product_skus as $weekday_product_skus) {
             foreach ($weekday_product_skus['skus'] as $weekday_product_sku) {
                 foreach ($skus as $sku) {
-                    if ($weekday_product_sku['product_sku_id'] == $sku['id']) {
-                        if (!is_numeric($sku['subscribe_price']) || !($sku['subscribe_price'] > 0)) {
-                            throw new \Exception('商品' . $sku['name'] . $sku['id'] . ' 不能订购');
+                    if ($weekday_product_sku['quantity'] > 0) {
+                        if ($weekday_product_sku['product_sku_id'] == $sku['id']) {
+                            if (!is_numeric($sku['subscribe_price']) || !($sku['subscribe_price'] > 0)) {
+                                throw new \Exception('商品' . $sku['name'] . $sku['id'] . ' 不能订购');
+                            }
+                            $order_skus[] = [
+                                'weekday' => $weekday_product_skus['weekday'],
+                                'daytime' => $weekday_product_skus['daytime'],
+                                'product_sku_id' => $weekday_product_sku['product_sku_id'],
+                                'quantity' => $weekday_product_sku['quantity'],
+                                'name' => $sku['name'],
+                                'price' => $sku['subscribe_price'],
+                                'cover_image' => $sku['cover_image'],
+                                'total_amount' => $weekday_product_sku['quantity'] * $sku['subscribe_price']
+                            ];
                         }
-                        $order_skus[] = [
-                            'weekday' => $weekday_product_skus['weekday'],
-                            'daytime' => $weekday_product_skus['daytime'],
-                            'product_sku_id' => $weekday_product_sku['product_sku_id'],
-                            'quantity' => $weekday_product_sku['quantity'],
-                            'name' => $sku['name'],
-                            'price' => $sku['subscribe_price'],
-                            'cover_image' => $sku['cover_image'],
-                            'total_amount' => $weekday_product_sku['quantity'] * $sku['subscribe_price']
-                        ];
                     }
                 }
             }
         }
+
+
 
         return $order_skus;
     }

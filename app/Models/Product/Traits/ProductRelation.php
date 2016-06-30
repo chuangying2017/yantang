@@ -12,7 +12,9 @@ namespace App\Models\Product\Traits;
 use App\Models\Image;
 use App\Models\Product\Brand;
 use App\Models\Merchant;
+use App\Models\Product\Category;
 use App\Models\Product\CategoryAbstract;
+use App\Models\Product\Group;
 use App\Models\Product\ProductInfo;
 use App\Models\Product\ProductSku;
 use App\Models\Product\ProductMeta;
@@ -47,12 +49,12 @@ trait ProductRelation {
 
     public function cats()
     {
-        return $this->belongsToMany(CategoryAbstract::class, 'product_category', 'product_id', 'cat_id')->withPivot('type')->wherePivot('type', CategoryProtocol::TYPE_OF_MAIN);
+        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'cat_id');
     }
 
     public function groups()
     {
-        return $this->belongsToMany(CategoryAbstract::class, 'product_category', 'product_id', 'cat_id')->withPivot('type')->wherePivot('type', CategoryProtocol::TYPE_OF_GROUP);
+        return $this->belongsToMany(Group::class, 'product_category', 'product_id', 'cat_id');
     }
 
     public function images()

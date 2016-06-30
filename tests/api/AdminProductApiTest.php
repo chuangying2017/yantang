@@ -24,8 +24,7 @@ class AdminProductApiTest extends TestCase {
         $product_id = 1;
         $this->json('get', '/admin/products/' . $product_id,[], $this->getAuthHeader());
 
-        $this->dump();
-
+        $this->seeJsonStructure(['data' =>  ['images', 'skus', 'cats', 'groups', 'brand']]);
         $this->assertResponseOk();
     }
 

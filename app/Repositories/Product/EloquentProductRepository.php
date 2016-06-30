@@ -122,27 +122,27 @@ class EloquentProductRepository implements ProductRepositoryContract {
 
     public function getProduct($product_id, $with_detail = true)
     {
-        $product = Product::findOrFail($product_id);
+        $product = Product::query()->findOrFail($product_id);
         if ($with_detail) {
             $product = $product->load('skus', 'cats', 'brand', 'groups', 'meta', 'info', 'images');
         }
         return $product;
     }
 
-    public function getAllProducts($brand = null, $cat = null, $group = null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP)
+    public function getAllProducts($brand = null, $cat = null, $group = null, $type= null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP)
     {
-        return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat));
+        return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat), $type);
     }
 
 
-    public function getProductsPaginated($brand = null, $cat = null, $group = null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $per_page = ProductProtocol::PRODUCT_PER_PAGE)
+    public function getProductsPaginated($brand = null, $cat = null, $group = null, $type= null, $order_by = 'created_at', $sort = 'desc', $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $per_page = ProductProtocol::PRODUCT_PER_PAGE)
     {
-        return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat), null, $per_page);
+        return $this->queryProducts($order_by, $sort, $status, $brand, merge_array($group, $cat), $type, $per_page);
     }
 
     protected function queryProducts($order_by = 'created_at', $sort = 'desc', $status = null, $brand = null, $cats = null, $type = null, $per_page = null, $with_time = false)
     {
-        $query = Product::query();
+        $query = Product::with('meta');
 
         if ($with_time) {
             $query = $query->where(function ($query) {

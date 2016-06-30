@@ -9,6 +9,11 @@ use Carbon\Carbon;
 
 class PreorderAssignRepository implements PreorderAssignRepositoryContract {
 
+
+    /**
+     * @param $order_id
+     * @return PreorderAssign
+     */
     public function get($order_id)
     {
         if ($order_id instanceof PreorderAssign) {
@@ -19,6 +24,7 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
 
     public function createAssign($order_id, $station_id)
     {
+        PreorderAssign::query()->where('preorder_id', $order_id)->delete();
         $assign = PreorderAssign::create([
             'preorder_id' => $order_id,
             'station_id' => $station_id,

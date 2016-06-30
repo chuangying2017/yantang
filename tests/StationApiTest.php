@@ -48,7 +48,7 @@ class StationApiTest extends TestCase {
             ['Authorization' => 'Bearer ' . $token]
         );
 
-        $this->dumpResponse();
+        $this->echoJson();
 
         $this->assertResponseOk();
 
@@ -57,6 +57,8 @@ class StationApiTest extends TestCase {
             ['bind_token' => generate_bind_token($station['id'])],
             ['Authorization' => 'Bearer ' . $token]
         );
+
+//        $this->dump();
 
         $this->assertResponseStatus(201);
 

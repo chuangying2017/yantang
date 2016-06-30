@@ -38,13 +38,14 @@ class ProductController extends Controller {
         $brand = $request->input('brand');
         $cat = $request->input('cat');
         $group = $request->input('group');
-        $status = $request->input('status') ?: null;
+        $status = $request->input('status');
+        $type = $request->input('type');
 
         $keyword = $request->input('keyword');
         if ($keyword) {
-            $products = $this->productRepositoryContract->search($keyword, compact('brand', 'cat', 'group', 'status'));
+            $products = $this->productRepositoryContract->search($keyword, compact('brand', 'cat', 'group', 'status', 'type'));
         } else {
-            $products = $this->productRepositoryContract->getProductsPaginated($brand, $cat, $group, $status);
+            $products = $this->productRepositoryContract->getProductsPaginated($brand, $cat, $group, $type, $status);
         }
 
         return $this->response->paginator($products, new ProductTransformer());

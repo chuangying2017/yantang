@@ -10,9 +10,9 @@ interface ProductRepositoryContract extends SearchableContract {
 
     public function getProduct($product_id, $with_detail = true);
 
-    public function getAllProducts($brand = null, $cat = null, $group = null, $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $order_by = 'created_at', $sort = 'desc');
+    public function getAllProducts($brand = null, $cat = null, $group = null, $type = null, $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $order_by = 'created_at', $sort = 'desc');
 
-    public function getProductsPaginated($brand = null, $cat = null, $group = null, $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $order_by = 'created_at', $sort = 'desc', $per_page = ProductProtocol::PRODUCT_PER_PAGE);
+    public function getProductsPaginated($brand = null, $cat = null, $group = null, $type = null, $status = ProductProtocol::VAR_PRODUCT_STATUS_UP, $order_by = 'created_at', $sort = 'desc', $per_page = ProductProtocol::PRODUCT_PER_PAGE);
 
     public function deleteProduct($product_id);
 

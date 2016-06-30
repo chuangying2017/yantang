@@ -4,6 +4,7 @@ namespace App\Api\V1\Controllers\Mall;
 
 use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\ProductTransformer;
+use App\Repositories\Product\ProductProtocol;
 use App\Repositories\Product\ProductRepositoryContract;
 use Illuminate\Http\Request;
 
@@ -41,7 +42,7 @@ class ProductController extends Controller {
         if ($keyword) {
             $products = $this->productRepo->search($keyword, compact('brand', 'cat', 'group', 'status'));
         } else {
-            $products = $this->productRepo->getProductsPaginated($brand, $cat, $group);
+            $products = $this->productRepo->getProductsPaginated($brand, $cat, $group, ProductProtocol::TYPE_OF_ENTITY);
         }
 
         return $this->response->paginator($products, new ProductTransformer());

@@ -2,11 +2,12 @@
 
 
 use App\Models\Product\Group;
+use Illuminate\Database\Eloquent\Collection;
 use League\Fractal\TransformerAbstract;
 
 class GroupTransformer extends TransformerAbstract {
 
-    public function transform(Group $group)
+    public function transform(Collection $group)
     {
         return $group->toArray();
     }

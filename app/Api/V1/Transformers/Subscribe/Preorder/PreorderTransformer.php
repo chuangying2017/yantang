@@ -56,8 +56,11 @@ class PreorderTransformer extends TransformerAbstract {
                 ];
         }
 
-        for ($weekday = 0; $weekday < 7; $weekday++) {
+        for ($weekday = 1; $weekday <= 7; $weekday++) {
             for ($daytime = 0; $daytime <= 1; $daytime++) {
+                if ($weekday == 7) {
+                    $weekday = 0;
+                }
                 $full[$weekday][$daytime] = array_get($data, $weekday . '.' . $daytime, []);
             }
         }

@@ -9,7 +9,7 @@ class ProductTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'brand', 'info'];
+    protected $availableIncludes = ['skus', 'brand', 'info', 'cats', 'groups'];
 
     public function transform(Product $product)
     {
@@ -65,6 +65,16 @@ class ProductTransformer extends TransformerAbstract {
     public function includeMeta(Product $product)
     {
         return $this->item($product->meta, new ProductMetaTransformer(), true);
+    }
+
+    public function includeCats(Product $product)
+    {
+        return $this->item($product->cats, new CatTransformer(), true);
+    }
+
+    public function includeGroups(Product $product)
+    {
+        return $this->item($product->groups, new GroupTransformer(), true);
     }
 
 }

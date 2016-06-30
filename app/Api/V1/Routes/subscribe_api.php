@@ -48,8 +48,6 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
         $api->get('/{station_id}/bind', 'StationController@getBind')->name('api.station.check.bind.get');
         $api->post('/{station_id}/bind', 'StationController@postBind')->name('api.station.bind');
-
-
     });
 
     //用户订奶

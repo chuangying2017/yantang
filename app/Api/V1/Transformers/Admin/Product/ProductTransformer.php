@@ -11,7 +11,7 @@ class ProductTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'brand', 'info', 'meta'];
+    protected $availableIncludes = ['skus', 'brand', 'info', 'meta', 'cats', 'groups'];
 
 
     public function transform(Product $product)
@@ -36,6 +36,12 @@ class ProductTransformer extends TransformerAbstract {
             'updated_at' => $product['updated_at'],
         ];
 
+        if ($product->relationLoaded('images')) {
+            $data['images'] = array_map(function ($media_id) {
+                return config('filesystems.disks.qiniu.domains.custom') . $media_id;
+            }, $product->images->pluck('media_id')->all());
+        }
+
         return $data;
     }
 
@@ -57,6 +63,16 @@ class ProductTransformer extends TransformerAbstract {
     public function includeMeta(Product $product)
     {
         return $this->item($product->meta, new ProductMetaTransformer(), true);
+    }
+
+    public function includeCats(Product $product)
+    {
+        return $this->item($product->cats, new CategoryTransformer(), true);
+    }
+
+    public function includeGroups(Product $product)
+    {
+        return $this->item($product->groups, new GroupTransformer(), true);
     }
 
 }

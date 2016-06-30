@@ -84,7 +84,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
 
         $api->group(['namespace' => 'Statement', 'prefix' => 'statements'], function ($api) {
             $api->resource('store', 'StoreStatementController', ['only' => ['index', 'show']]);
-            $api->resource('station', 'StationStatementController', ['only' => ['index', 'show']]);
+            $api->resource('stations', 'StationStatementController', ['only' => ['index', 'show']]);
         });
     });
 

@@ -15,6 +15,8 @@ class AdminStationApiTest extends TestCase {
             ['name' => '天河'],
             $this->getAuthHeader()
         );
+//        $this->dump();
+
         $this->assertResponseStatus(201);
 
         $this->json('get', 'admin/districts',
@@ -43,6 +45,30 @@ class AdminStationApiTest extends TestCase {
         );
 
         $this->assertResponseStatus(201);
+
+        return $this->getResponseData('data');
+    }
+
+    /** @test */
+    public function it_can_update_a_station()
+    {
+        $station = $this->it_can_create_a_station();
+        $this->json('put', 'admin/stations/' . $station['id'],
+            [
+                'name' => '服务部' . mt_rand(),
+                'address' => '服务部地址' . mt_rand(),
+                'director' => '服务部负责人' . mt_rand(),
+                'district_id' => 1,
+                'geo' => [1231],
+                'cover_image' => '11111',
+                'phone' => mt_rand(10000000000, 19999999999),
+                'longitude' => mt_rand(110000, 999999) / 10000,
+                'latitude' => mt_rand(110000, 999999) / 10000,
+            ],
+            $this->getAuthHeader()
+        );
+
+        $this->assertResponseStatus(200);
 
         return $this->getResponseData('data');
     }

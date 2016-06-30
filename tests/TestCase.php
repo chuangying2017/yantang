@@ -26,6 +26,11 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         print_r($this->getResponseData());
     }
 
+    public function echoJson()
+    {
+        echo $this->response->getContent();
+    }
+
     protected function getResponseData($key = null)
     {
         $content = json_decode($this->response->getContent(), true);

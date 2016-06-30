@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AdminUserApiTest extends TestCase {
 
+    use DatabaseTransactions;
+
     /** @test */
     public function it_can_get_all_users()
     {
@@ -53,5 +55,20 @@ class AdminUserApiTest extends TestCase {
 
         $this->dumpResponse();
         $this->assertResponseStatus(200);
+    }
+
+    /** @test */
+    public function it_can_create_a_role()
+    {
+        $this->json('post', 'admin/access/roles',
+            [
+                'name' => 'test1',
+                'associated-permissions' => 'none',
+                'permissions' => ''
+            ],
+            $this->getAuthHeader()
+        );
+
+        $this->assertResponseStatus(201);
     }
 }
