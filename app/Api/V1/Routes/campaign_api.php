@@ -22,7 +22,7 @@ $api->group(['namespace' => 'Campaign', 'middleware' => 'api.auth'], function ($
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STATION]], function ($api) {
             $api->resource('exchange', 'StoreExchangeController');
             $api->get('info', 'StoreController@info');
-            $api->resource('statements', 'StoreStatementController', ['only' => ['index', 'store', 'update']]);
+            $api->resource('statements', 'StoreStatementController', ['only' => ['index', 'show', 'update']]);
             $api->resource('tickets', 'StoreTicketController');
             $api->post('/{store_id}/unbind', 'StoreController@postUnBind')->name('api.store.unbind');
         });
