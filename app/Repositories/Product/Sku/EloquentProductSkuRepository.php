@@ -157,7 +157,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
      */
     public function getAllMixAbleProductSku()
     {
-        return Product::where('type', ProductProtocol::TYPE_OF_ENTITY)->skus()->get();
+        return ProductSku::query()->where('type', ProductProtocol::TYPE_OF_ENTITY)->get();
     }
 
 
