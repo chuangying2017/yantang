@@ -111,6 +111,7 @@ class EloquentOrderTicketRepository implements OrderTicketRepositoryContract, St
         }])->where('status', OrderTicketProtocol::STATUS_OF_USED)
             ->where('checkout', StatementProtocol::CHECK_STATUS_OF_PENDING)
             ->where('exchange_at', '<=', $time_before)
+            ->where('store_id', $store_id)
             ->get(['id', 'order_id', 'store_id']);
     }
 

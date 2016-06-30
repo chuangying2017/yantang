@@ -110,13 +110,14 @@ class PreorderBillingRepository implements BillingRepositoryContract, StationBil
         return $this->queryBillings(['staff_id' => $staff_id], $start_time, $per_page, $start_time, $end_time);
     }
 
-    public function getBillingWithProducts($store_id, $time_before)
+    public function getBillingWithProducts($station_id, $time_before)
     {
         return PreorderBilling::query()->with(['skus' => function ($query) {
             $query->select(['id', 'preorder_id', 'price', 'quantity', 'product_id', 'product_sku_id', 'name', 'cover_image']);
         }])->where('status', BillingProtocol::STATUS_OF_PAID)
             ->where('checkout', StatementProtocol::CHECK_STATUS_OF_PENDING)
             ->where('pay_at', '<=', $time_before)
+            ->where('station_id', $station_id)
             ->get(['id', 'preorder_id', 'station_id', 'amount']);
     }
 
