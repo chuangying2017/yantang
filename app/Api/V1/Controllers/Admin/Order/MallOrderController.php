@@ -5,6 +5,7 @@ namespace App\Api\V1\Controllers\Admin\Order;
 use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Admin\Order\AdminMallOrderTransformer;
 use App\Repositories\Order\MallAdminOrderRepository;
+use App\Services\Order\OrderManageService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -64,10 +65,11 @@ class MallOrderController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $order_no)
+    public function update(Request $request, $order_no, OrderManageService $orderManager)
     {
-        $status =$request->input('status');
-        $order = $this->orderRepo->updateOrderStatus($order_no, $status);
+        $company = $request->input('company');
+        $post_no = $request->input('post_no');
+        $order = $orderManager->orderDeliver($order_no, $company, $post_no);
 
         return $this->response->item($order, new AdminMallOrderTransformer());
     }

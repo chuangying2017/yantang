@@ -50,6 +50,7 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
             'merchant_id' => $merchant_id,
             'settle_amount' => $settle_amount,
             'service_amount' => $service_amount,
+            'total_amount' => $settle_amount + $service_amount,
             'status' => StatementProtocol::STATEMENT_STATUS_OF_PENDING,
         ]);
 

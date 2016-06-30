@@ -64,6 +64,7 @@ abstract class StatementServiceAbstract {
                     $product_skus_info[$sku_key]['total_amount'] += $sku_total_amount;
                 } else {
                     $product_skus_info[$sku_key]['product_id'] = $sku['product_id'];
+                    $product_skus_info[$sku_key]['name'] = $sku['name'];
                     $product_skus_info[$sku_key]['product_sku_id'] = $sku['product_sku_id'];
                     $product_skus_info[$sku_key]['price'] = $sku['price'];
                     $product_skus_info[$sku_key]['quantity'] = $sku['quantity'];
@@ -72,7 +73,6 @@ abstract class StatementServiceAbstract {
                 $settle_amount = $settle_amount + $sku_total_amount;
             }
         }
-
 
         $service_amount = $this->calServiceAmount($settle_amount, $product_skus_info);
 

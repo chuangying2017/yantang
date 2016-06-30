@@ -17,6 +17,7 @@ class CreateStatementsProductsTable extends Migration {
             $table->string('statement_no');
             $table->integer('product_id');
             $table->integer('product_sku_id');
+            $table->string('name');
             $table->integer('price');
             $table->integer('service_fee');
             $table->integer('quantity');
