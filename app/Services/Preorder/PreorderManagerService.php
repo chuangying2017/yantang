@@ -153,7 +153,7 @@ class PreorderManagerService implements PreorderManageServiceContract {
             //修改进行中订单的结束时间
             $old_order_end_time = is_null($start_time) ? Carbon::today() : Carbon::createFromFormat('Y-m-d', $start_time)->subDay();
 
-            $this->orderRepo->updatePreorderByStation($order_id, null, $old_order_end_time);
+            $order = $this->orderRepo->updatePreorderByStation($order_id, null, $old_order_end_time);
 
             //商品修改,创建新订单
             if (!is_null($weekdays_product_skus)) {
