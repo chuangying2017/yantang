@@ -14,6 +14,7 @@ class PreorderApiTest extends TestCase {
     {
         $this->json('get', 'subscribe/preorders', [], $this->getAuthHeader());
 
+        $this->dump();
         $this->assertResponseOk();
     }
 
