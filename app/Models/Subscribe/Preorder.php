@@ -4,9 +4,11 @@ use App\Models\Access\User\User;
 use App\Models\Billing\PreorderBilling;
 use App\Models\District;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Subscribe\StationStaff;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Preorder extends Model {
+
+    use SoftDeletes;
 
     protected $guarded = ['id'];
 
