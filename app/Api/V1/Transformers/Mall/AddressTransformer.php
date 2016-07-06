@@ -7,7 +7,7 @@ class AddressTransformer extends TransformerAbstract {
 
     public function transform(Address $address)
     {
-        return [
+        $data = [
             'id' => $address['id'],
             'name' => $address['name'],
             'user' => ['id' => $address['user_id']],
@@ -21,5 +21,15 @@ class AddressTransformer extends TransformerAbstract {
             'index' => $address['index'],
             'is_primary' => $address['is_primary']
         ];
+
+        if ($address->relationLoaded('info')) {
+            $data['longitude'] = $address['longitude'];
+            $data['latitude'] = $address['latitude'];
+            $data['station_id'] = $address['station_id'];
+        }
+
+        return $data;
     }
+
+
 }

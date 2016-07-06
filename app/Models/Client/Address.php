@@ -20,5 +20,9 @@ class Address extends Model {
         return $this->belongsTo(User::class);
     }
 
+    public function info()
+    {
+        return $this->hasOne(AddressInfo::class, 'address_id', 'id');
+    }
 
 }

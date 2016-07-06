@@ -12,6 +12,8 @@ interface DistrictRepositoryContract {
 
     public function get($id);
 
+    public function getIdByName($name);
+
     public function increase($id, $count);
 
     public function decrease($id, $count);

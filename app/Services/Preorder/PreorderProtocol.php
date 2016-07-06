@@ -16,6 +16,12 @@ class PreorderProtocol {
     const CHARGE_STATUS_OF_OK = 1;
     const CHARGE_STATUS_OF_NOT_ENOUGH = 2;
 
+    //配送周期类型
+    const WEEKDAY_TYPE_OF_ALL = 'all';
+    const WEEKDAY_TYPE_OF_WORKDAY = 'workday';
+    const WEEKDAY_TYPE_OF_WEEKEND = 'weekend';
+
+
     //status对应的值
     const ASSIGN_STATUS_OF_UNTREATED = 'untreated';
     const ASSIGN_STATUS_OF_CONFIRM = 'confirm';
@@ -28,7 +34,7 @@ class PreorderProtocol {
 
     public static function validOrderStatus($status)
     {
-        if(is_null($status)) {
+        if (is_null($status)) {
             return false;
         }
         return in_array($status, [
@@ -41,7 +47,7 @@ class PreorderProtocol {
 
     public static function validChargeStatus($status)
     {
-        if(is_null($status)) {
+        if (is_null($status)) {
             return false;
         }
 

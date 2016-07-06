@@ -68,7 +68,6 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
 
     protected function setOrderType()
     {
-
     }
 
     /**

@@ -55,7 +55,6 @@ class PreorderController extends Controller {
         }
 
         $data['station_id'] = $station['id'];
-
         $order = $this->preorderRepo->createPreorder($data);
 
         return $this->response->item($order, new PreorderTransformer())->setStatusCode(201);

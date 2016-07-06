@@ -56,6 +56,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
     $api->group(['prefix' => 'subscribe'], function ($api) {
 
         $api->resource('preorders', 'PreorderController');
+        $api->resource('address', 'AddressController');
         $api->get('stations', 'StationController@index');
         $api->get('products', 'ProductController@index');
         $api->get('districts', 'DistrictController@index');

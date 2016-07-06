@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Address;
 
 use App\Models\Client\Address;
+use App\Models\Client\AddressInfo;
 
 class EloquentAddressRepository implements AddressRepositoryContract {
 
@@ -24,6 +25,8 @@ class EloquentAddressRepository implements AddressRepositoryContract {
             array_merge(['user_id' => access()->id()], $this->filterData($data))
         );
         $this->checkIsPrimary($data, $address['id']);
+        $address = $this->checkIsSubscribe($data, $address);
+
         return $address;
     }
 
@@ -49,10 +52,37 @@ class EloquentAddressRepository implements AddressRepositoryContract {
         }
     }
 
+    protected function checkIsSubscribe($data, $address)
+    {
+        if (array_get($data, 'station_id', false)) {
+            $address['is_subscribe'] = 1;
+            $address->save();
+            $this->attachAddressInfo($data, $address['id']);
+            $address->load('info');
+
+            return $address;
+        }
+        return $address;
+    }
+
+    protected function attachAddressInfo($data, $address_id)
+    {
+        return AddressInfo::query()->updateOrCreate(
+            ['address_id' => $address_id],
+            [
+                'address_id' => $address_id,
+                'longitude' => $data['longitude'],
+                'latitude' => $data['latitude'],
+                'station_id' => $data['station_id'],
+            ]
+        );
+    }
+
     public function updateAddress($address_id, $data)
     {
         $address = Address::query()->where('id', $address_id)->update($this->filterData($data));
         $this->checkIsPrimary($data, $address['id']);
+        $address = $this->checkIsSubscribe($data, $address);
         return $address;
     }
 
@@ -78,5 +108,10 @@ class EloquentAddressRepository implements AddressRepositoryContract {
             $address->save();
         }
         Address::query()->where('id', $address_id)->update(['is_primary' => 1]);
+    }
+
+    public function getAllSubscribeAddress()
+    {
+        return Address::with('info')->where('is_subscribe', 1)->get();
     }
 }

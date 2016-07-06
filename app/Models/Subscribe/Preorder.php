@@ -44,8 +44,14 @@ class Preorder extends Model {
         return $this->belongsTo(StationStaff::class, 'staff_id', 'id');
     }
 
-    public function District()
+    public function district()
     {
         return $this->hasMany(District::class);
     }
+
+    public function counter()
+    {
+        return $this->hasMany(PreorderSkuCounter::class, 'preorder_id', 'id');
+    }
+
 }
