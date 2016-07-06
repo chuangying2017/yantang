@@ -13,6 +13,8 @@ interface PreorderRepositoryContract {
 
     public function updatePreorderStatus($order_id, $status);
 
+    public function updatePreorderStatusByOrder($order_id, $status);
+
     public function updatePreorderAssign($order_id, $station_id = null, $staff_id = null);
 
     public function getPaginatedByUser($user_id, $status = null, $start_time = null, $end_time = null, $per_page = PreorderProtocol::PREORDER_PER_PAGE);

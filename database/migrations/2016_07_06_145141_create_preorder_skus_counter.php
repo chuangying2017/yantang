@@ -18,8 +18,8 @@ class CreatePreorderSkusCounter extends Migration {
             $table->integer('order_id');
             $table->integer('product_id');
             $table->integer('product_sku_id')->index();
-            $table->integer('total_count');
-            $table->integer('used_count');
+            $table->integer('total');
+            $table->integer('remain');
             $table->tinyInteger('per_day');
             $table->timestamps();
         });

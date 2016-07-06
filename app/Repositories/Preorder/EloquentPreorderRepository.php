@@ -15,16 +15,17 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $order = Preorder::create([
             'user_id' => $data['user_id'],
-            'order_no' => NoGenerator::generatePreorderNo(),
+            'order_id' => $data['order_id'],
             'name' => $data['name'],
             'phone' => $data['phone'],
-            'district_id' => $data['district_id'],
             'address' => $data['address'],
             'station_id' => $data['station_id'],
-            'status' => PreorderProtocol::ORDER_STATUS_OF_ASSIGNING,
-            'charge_status' => PreorderProtocol::CHARGE_STATUS_OF_NULL,
+            'start_time' => $data['start_time'],
+            'end_time' => $data['end_time'],
+            'weekday_type' => $data['weekday_type'],
+            'daytime' => $data['daytime'],
+            'status' => PreorderProtocol::ORDER_STATUS_OF_UNPAID,
         ]);
-
 
         app()->make(PreorderAssignRepositoryContract::class)->createAssign($order['id'], $data['station_id']);
 
@@ -336,5 +337,10 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
 
         return $query->paginate(PreorderProtocol::PREORDER_PER_PAGE);
+    }
+
+    public function updatePreorderStatusByOrder($order_id, $status)
+    {
+        return Preorder::query()->where('order_id', $order_id)->update(['status' => $status]);
     }
 }

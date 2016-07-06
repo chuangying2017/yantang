@@ -6,6 +6,7 @@ class PreorderProtocol {
     const PREORDER_PER_PAGE = 20;
 
     //status对应的值
+    const ORDER_STATUS_OF_UNPAID = 'unpaid';
     const ORDER_STATUS_OF_ASSIGNING = 'assigning';
     const ORDER_STATUS_OF_SHIPPING = 'shipping';
     const ORDER_STATUS_OF_DONE = 'done';

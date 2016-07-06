@@ -21,7 +21,7 @@ class Preorder extends Model {
 
     public function skus()
     {
-        return $this->hasMany(PreorderSku::class);
+        return $this->hasMany(PreorderSku::class, 'order_id', 'order_id');
     }
 
     public function assign()

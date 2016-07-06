@@ -5,6 +5,7 @@ use App\Repositories\Cart\CartRepositoryContract;
 use App\Repositories\Order\CampaignOrderRepository;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\MallClientOrderRepository;
+use App\Repositories\Order\PreorderOrderRepository;
 use App\Repositories\Promotion\Campaign\EloquentCampaignRepository;
 use App\Services\Order\Generator\CalExpressFee;
 use App\Services\Order\Generator\CalSkuAmount;
@@ -15,6 +16,7 @@ use App\Services\Order\Generator\GetSkuInfo;
 use App\Services\Order\Generator\GetSpecialCampaign;
 use App\Services\Order\Generator\GetUserInfo;
 use App\Services\Order\Generator\SaveTempOrder;
+use App\Services\Order\Generator\SetPreorderInfo;
 use App\Services\Order\Generator\TempOrder;
 use App\Services\Order\Generator\UseCampaign;
 use App\Services\Order\Generator\UseCoupon;
@@ -205,5 +207,37 @@ class OrderGenerator implements OrderGeneratorContract {
         $temp_order = $handler->handle($temp_order);
 
         return $temp_order;
+    }
+
+    public function subscribe($user_id, $skus, $weekday_type, $daytime, $start_time)
+    {
+        $config = [
+            GetSkuInfo::class,
+            GetUserInfo::class,
+            GetOrderAddress::class,
+            SetPreorderInfo::class,
+            CalSkuAmount::class,
+            SaveTempOrder::class,
+        ];
+
+        $handler = $this->getOrderGenerateHandler($config);
+
+        $temp_order = new TempOrder($user_id, $skus);
+        $temp_order->setPreorder([
+            'weekday_type' => $weekday_type,
+            'daytime' => $daytime,
+            'start_time' => $start_time
+        ]);
+
+        $temp_order = $handler->handle($temp_order);
+
+        if ($temp_order->getError()) {
+            throw new \Exception($temp_order->getError());
+        }
+
+        $this->setOrderRepo(app()->make(PreorderOrderRepository::class));
+        $order = $this->orderRepo->createOrder($temp_order->toArray());
+
+        return $order;
     }
 }
