@@ -15,6 +15,7 @@ class AddWeekdayTypeToPreordersTable extends Migration {
         Schema::table('preorders', function (Blueprint $table) {
             $table->string('weekday_type');
             $table->tinyInteger('daytime');
+            $table->integer('order_id');
         });
     }
 
@@ -28,6 +29,7 @@ class AddWeekdayTypeToPreordersTable extends Migration {
         Schema::table('preorders', function (Blueprint $table) {
             $table->dropColumn('weekday_type');
             $table->dropColumn('daytime');
+            $table->dropColumn('order_id');
         });
     }
 }

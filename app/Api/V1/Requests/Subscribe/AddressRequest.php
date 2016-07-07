@@ -28,7 +28,7 @@ class AddressRequest extends Request {
     {
         return [
             'name' => 'required',
-            'district' => 'required',
+            'district_id' => 'required',
             'detail' => 'required',
             'longitude' => 'required',
             'latitude' => 'required',

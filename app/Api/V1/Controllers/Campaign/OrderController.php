@@ -39,7 +39,7 @@ class OrderController extends Controller {
      */
     public function index()
     {
-        $orders = $this->orderRepo->getAllOrders();
+        $orders = $this->orderRepo->getPaginatedOrders();
 
         return $this->response->paginator($orders, new ClientOrderTransformer());
     }

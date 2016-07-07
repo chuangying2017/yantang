@@ -15,7 +15,7 @@ interface OrderGeneratorContract {
 
     public function buyCart($user_id, $cart_ids);
 
-    public function subscribe($user_id, $skus, $weekday_type, $daytime, $start_time);
+    public function subscribe($user_id, $skus, $weekday_type, $daytime, $start_time, $address_id);
 
     public function buySpecialCampaign($user_id, $campaign_id, EloquentCampaignRepository $campaignRepo);
 

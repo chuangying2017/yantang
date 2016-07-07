@@ -55,7 +55,8 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
     //用户订奶
     $api->group(['prefix' => 'subscribe'], function ($api) {
 
-        $api->resource('preorders', 'PreorderController');
+        $api->resource('orders', 'OrderController');
+        $api->resource('orders.checkout', 'CheckoutController');
         $api->resource('address', 'AddressController');
         $api->get('stations', 'StationController@index');
         $api->get('products', 'ProductController@index');

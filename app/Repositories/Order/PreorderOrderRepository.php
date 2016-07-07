@@ -50,8 +50,8 @@ class PreorderOrderRepository extends ClientOrderRepository {
         foreach ($preorder_data['skus'] as $preorder_sku_key => $sku_counter) {
             foreach ($order->skus as $order_sku) {
                 if ($order_sku['product_sku_id'] == $sku_counter['product_sku_id']) {
-                    $preorder['skus'][$preorder_sku_key]['order_sku_id'] = $order_sku['id'];
-                    $preorder['skus'][$preorder_sku_key]['order_id'] = $order['id'];
+                    $preorder_data['skus'][$preorder_sku_key]['order_sku_id'] = $order_sku['id'];
+                    $preorder_data['skus'][$preorder_sku_key]['order_id'] = $order['id'];
                 }
             }
         }

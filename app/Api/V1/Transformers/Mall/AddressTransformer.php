@@ -21,11 +21,10 @@ class AddressTransformer extends TransformerAbstract {
             'index' => $address['index'],
             'is_primary' => $address['is_primary']
         ];
-
         if ($address->relationLoaded('info')) {
-            $data['longitude'] = $address['longitude'];
-            $data['latitude'] = $address['latitude'];
-            $data['station_id'] = $address['station_id'];
+            $data['longitude'] = $address['info']['longitude'];
+            $data['latitude'] = $address['info']['latitude'];
+            $data['station_id'] = $address['info']['station_id'];
         }
 
         return $data;

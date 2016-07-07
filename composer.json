@@ -64,7 +64,8 @@
     },
     "autoload-dev": {
         "classmap": [
-            "tests/TestCase.php"
+            "tests/TestCase.php",
+            "tests/SubscribeAddressApiTest.php"
         ]
     },
     "scripts": {

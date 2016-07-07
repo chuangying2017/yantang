@@ -209,7 +209,7 @@ class OrderGenerator implements OrderGeneratorContract {
         return $temp_order;
     }
 
-    public function subscribe($user_id, $skus, $weekday_type, $daytime, $start_time)
+    public function subscribe($user_id, $skus, $weekday_type, $daytime, $start_time, $address_id)
     {
         $config = [
             GetSkuInfo::class,
@@ -227,7 +227,8 @@ class OrderGenerator implements OrderGeneratorContract {
             'weekday_type' => $weekday_type,
             'daytime' => $daytime,
             'start_time' => $start_time
-        ]);
+        ])->setAddress($address_id);
+
 
         $temp_order = $handler->handle($temp_order);
 

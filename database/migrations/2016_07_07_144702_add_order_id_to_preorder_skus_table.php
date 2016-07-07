@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePreorderSkusCounter extends Migration {
+class AddOrderIdToPreorderSkusTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,16 +12,11 @@ class CreatePreorderSkusCounter extends Migration {
      */
     public function up()
     {
-        Schema::create('preorder_sku_counter', function (Blueprint $table) {
+        Schema::table('preorder_skus', function (Blueprint $table) {
             $table->integer('order_sku_id')->index();
-            $table->integer('preorder_id')->index();
-            $table->integer('order_id');
-            $table->integer('product_id');
-            $table->integer('product_sku_id')->index();
+            $table->integer('order_id')->index();
             $table->integer('total');
             $table->integer('remain');
-            $table->tinyInteger('per_day');
-            $table->timestamps();
         });
     }
 
@@ -32,6 +27,11 @@ class CreatePreorderSkusCounter extends Migration {
      */
     public function down()
     {
-        Schema::drop('preorder_sku_counter');
+        Schema::table('preorder_skus', function (Blueprint $table) {
+            $table->dropColumn('order_sku_id');
+            $table->dropColumn('order_id');
+            $table->dropColumn('total');
+            $table->dropColumn('remain');
+        });
     }
 }

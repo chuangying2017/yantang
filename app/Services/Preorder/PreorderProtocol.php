@@ -61,30 +61,27 @@ class PreorderProtocol {
 
     public static function status($key = null)
     {
-        $message = [
+        $data = [
+            self::ORDER_STATUS_OF_UNPAID => '未支付',
             self::ORDER_STATUS_OF_SHIPPING => '配送中',
             self::ORDER_STATUS_OF_ASSIGNING => '分配服务部中',
             self::ORDER_STATUS_OF_DONE => '已完成',
             self::ORDER_STATUS_OF_CANCEL => '已结束',
         ];
 
-        return is_null($key) ? $message : $message[$key];
+        return is_null($key) ? $data : $data[$key];
     }
 
 
-    public static function weekName($key = null)
+    public static function weekdayType($key = null)
     {
-        $array = [
-            0 => 'sun',
-            1 => 'mon',
-            2 => 'tue',
-            3 => 'wed',
-            4 => 'thu',
-            5 => 'fri',
-            6 => 'sat',
+        $data = [
+            self::WEEKDAY_TYPE_OF_ALL => '每天',
+            self::WEEKDAY_TYPE_OF_WORKDAY => '工作日',
+            self::WEEKDAY_TYPE_OF_WEEKEND => '周末',
         ];
 
-        return is_null($key) ? $array : $array[$key];
+        return is_null($key) ? $data : $data[$key];
     }
 
 }
