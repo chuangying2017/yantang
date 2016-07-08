@@ -36,7 +36,8 @@ class AddressController extends Controller {
 
     public function store(AddressRequest $request, PreorderAssignServiceContact $assignService, DistrictRepositoryContract $districtRepo)
     {
-        $district = $districtRepo->get($request->input('district_id'));
+        $district_id = $request->input('district_id');
+        $district = $districtRepo->get($district_id);
 
         $data = [
             'name' => $request->input('name'),
@@ -46,6 +47,7 @@ class AddressController extends Controller {
             'district' => $district['name'],
             'detail' => $request->input('detail'),
             'zip' => '',
+            'district_id' => $district_id,
             'longitude' => $request->input('longitude'),
             'latitude' => $request->input('latitude'),
         ];

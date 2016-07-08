@@ -74,6 +74,7 @@ class EloquentAddressRepository implements AddressRepositoryContract {
                 'longitude' => $data['longitude'],
                 'latitude' => $data['latitude'],
                 'station_id' => $data['station_id'],
+                'district_id' => $data['district_id'],
             ]
         );
     }

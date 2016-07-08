@@ -14,6 +14,7 @@ class SetPreorderInfo extends GenerateHandlerAbstract {
         $preorder['name'] = $address['name'];
         $preorder['phone'] = $address['phone'];
         $preorder['address'] = $address['district'] . $address['detail'];
+        $preorder['district_id'] = $address['info']['district_id'];
 
         $temp_order = $this->setPreorderSkusAndCalEndTime($temp_order, $preorder);
 

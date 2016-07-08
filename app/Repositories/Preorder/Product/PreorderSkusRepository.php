@@ -10,7 +10,7 @@ class PreorderSkusRepository implements PreorderSkusRepositoryContract {
         return PreorderSku::query()->where('order_id', $order_id)->get();
     }
 
-    public function createPreorderProducts($product_skus)
+    public function createPreorderProducts($order_id, $product_skus)
     {
         $order_skus = [];
         foreach ($product_skus as $key => $product_sku) {
@@ -27,6 +27,8 @@ class PreorderSkusRepository implements PreorderSkusRepositoryContract {
                 'quantity',
                 'total_amount'
             ]);
+            $product_sku['preorder_id'] = $order_id;
+            $product_sku['per_day'] = $product_sku['quantity'];
             $order_skus[] = PreorderSku::create($product_sku);
         }
 
@@ -40,6 +42,7 @@ class PreorderSkusRepository implements PreorderSkusRepositoryContract {
 
     public function decrement($id, $quantity)
     {
-        return PreorderSku::query()->find($id)->decrement('remain', $quantity);
+        $sku = PreorderSku::query()->find($id);
+        return $sku->decrement('remain', $quantity);
     }
 }

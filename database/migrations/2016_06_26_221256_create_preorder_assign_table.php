@@ -16,7 +16,7 @@ class CreatePreorderAssignTable extends Migration {
             $table->integer('preorder_id')->unsigned();
             $table->integer('station_id')->unsigned();
             $table->integer('staff_id')->unsigned();
-            $table->integer('status');
+            $table->string('status', 32);
             $table->dateTime('time_before');
             $table->dateTime('confirm_at')->nullable();
             $table->string('memo')->nullable();

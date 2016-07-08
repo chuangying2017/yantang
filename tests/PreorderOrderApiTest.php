@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class PreorderOrderApiTest extends SubscribeAddressApiTest {
+class PreorderOrderApiTest extends TestCase {
 
     use DatabaseTransactions;
 
@@ -47,7 +47,31 @@ class PreorderOrderApiTest extends SubscribeAddressApiTest {
 
         $this->assertResponseStatus(202);
 
-        $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
+        $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING, 'district_id' => 1]);
 
+    }
+
+    /** @test */
+    public function it_can_create_a_subscribe_address()
+    {
+        $inside = [23.157195, 113.330319];
+        $data = [
+            'name' => 'asda',
+            'phone' => '13232313123',
+            'detail' => 'asdad',
+            'longitude' => $inside[0],
+            'latitude' => $inside[1],
+            'district_id' => 1
+        ];
+        $this->json('post', 'subscribe/address',
+            $data,
+            $this->getAuthHeader()
+        );
+
+        $this->seeInDatabase('addresses', ['name' => 'asda', 'is_subscribe' => 1]);
+
+        $this->assertResponseStatus(201);
+
+        return $this->getResponseData('data');
     }
 }

@@ -56,7 +56,7 @@ class PreorderOrderRepository extends ClientOrderRepository {
             }
         }
 
-        $preorder->skus = app()->make(PreorderSkusRepositoryContract::class)->createPreorderProducts($preorder_data['skus']);
+        $preorder->skus = app()->make(PreorderSkusRepositoryContract::class)->createPreorderProducts($preorder['id'], $preorder_data['skus']);
 
         return $preorder;
     }

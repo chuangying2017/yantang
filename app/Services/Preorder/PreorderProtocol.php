@@ -26,11 +26,17 @@ class PreorderProtocol {
     //status对应的值
     const ASSIGN_STATUS_OF_UNTREATED = 'untreated';
     const ASSIGN_STATUS_OF_CONFIRM = 'confirm';
+    const ASSIGN_STATUS_OF_ASSIGNED = 'assign';
     const ASSIGN_STATUS_OF_REJECT = 'reject';
     const DAYS_OF_ASSIGN_DISPOSE = 2;
 
     const DAYTIME_OF_AM = 0;
     const DAYTIME_OF_PM = 1;
+
+    //Deliver
+    const PREORDER_DELIVER_STATUS_OF_NEED_CONFIRM = 0;
+    const PREORDER_DELIVER_STATUS_OF_OK = 1;
+    const PREORDER_DELIVER_STATUS_OF_ERROR = 2;
 
 
     public static function validOrderStatus($status)

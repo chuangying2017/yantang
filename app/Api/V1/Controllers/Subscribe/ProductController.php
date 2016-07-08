@@ -30,9 +30,8 @@ class ProductController extends Controller {
      */
     public function index()
     {
-        $product_skus = $this->skuRepo->getAllSubscribedProductSkus();
-
-        return $this->response->collection($product_skus, new ProductSkuTransformer());
+        $products = $this->skuRepo->getAllSubscribedProducts();
+        return $this->response->collection($products, new ProductSkuTransformer());
     }
 
 }

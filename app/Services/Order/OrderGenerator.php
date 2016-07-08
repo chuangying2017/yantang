@@ -233,7 +233,7 @@ class OrderGenerator implements OrderGeneratorContract {
         $temp_order = $handler->handle($temp_order);
 
         if ($temp_order->getError()) {
-            throw new \Exception($temp_order->getError());
+            throw new \Exception(json_encode($temp_order->getError(), JSON_UNESCAPED_UNICODE));
         }
 
         $this->setOrderRepo(app()->make(PreorderOrderRepository::class));

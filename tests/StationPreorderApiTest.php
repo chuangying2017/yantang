@@ -11,16 +11,16 @@ class StationPreorderApiTest extends TestCase {
     /** @test */
     public function it_can_get_All_subscribe_able_products()
     {
-        $this->json('get', 'stations/products', [], $this->getAuthHeader());
+        $this->json('get', 'subscribe/products', [], $this->getAuthHeader());
 
-        echo $this->response->getContent();
+        $this->seeJsonStructure(['data' => [['cat' => ['id']]]]);
     }
 
     /** @test */
-    public function ite_can_get_all_not_confirm_orders_of_station()
+    public function it_can_get_all_not_confirm_orders_of_station()
     {
         $this->json('get', 'stations/preorders',
-            [],
+            ['status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING],
             $this->getAuthHeader()
         );
 
@@ -30,10 +30,26 @@ class StationPreorderApiTest extends TestCase {
     /** @test */
     public function it_can_get_station_daily_summary()
     {
+        $this->it_can_confirm_a_preorder();
+
         $this->json('get', 'stations/preorders/info', [
-            'day' => '2016-06-30',
-            'daytime' => 1,
+            'day' => '2016-07-8',
+            'daytime' => 0,
         ], $this->getAuthHeader());
+
+        $this->echoJson();
+
+    }
+
+    /** @test */
+    public function it_can_get_station_preorders()
+    {
+        $this->it_can_confirm_a_preorder();
+
+        $this->json('get', 'stations/preorders',
+            [],
+            $this->getAuthHeader()
+        );
 
         $this->echoJson();
     }
@@ -41,14 +57,14 @@ class StationPreorderApiTest extends TestCase {
     /** @test */
     public function it_can_reject_a_order()
     {
-        $order_id = 1;
+        $order_id = 15;
 
         $this->json('put', 'stations/preorders/' . $order_id . '/reject',
             ['memo' => 'baba'],
             $this->getAuthHeader()
         );
-
         $this->assertResponseOk();
+
         $this->seeInDatabase('preorder_assign', ['preorder_id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_REJECT]);
 
         $this->seeInDatabase('preorders', ['id' => $order_id, 'station_id' => 0]);
@@ -56,30 +72,22 @@ class StationPreorderApiTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_confirm_and_update_a_preorder()
+    public function it_can_confirm_a_preorder()
     {
-        $order_id = 2;
+        $order_id = 15;
 
-        $data = [
-            'start_time' => '2016-07-01',
-            'end_time' => '2016-08-01',
-            'product_skus' => $this->getSkusData()
-        ];
 
-        $this->json('put', 'stations/preorders/' . $order_id,
-            $data,
+        $this->json('put', 'stations/preorders/' . $order_id . '/confirm',
+            [],
             $this->getAuthHeader()
         );
 
         $this->assertResponseOk();
+
+        $this->it_can_assign_a_staff_to_preorder();
+
         $this->seeInDatabase('preorders', ['id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING]);
         $this->seeInDatabase('preorder_assign', ['preorder_id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM]);
-//        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 5, 'daytime' => 0, 'product_sku_id' => 2, 'quantity' => 1]);
-//        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 5, 'daytime' => 0, 'product_sku_id' => 3, 'quantity' => 2]);
-//        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 0, 'product_sku_id' => 2, 'quantity' => 1]);
-//        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 0, 'product_sku_id' => 3, 'quantity' => 2]);
-//        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 2, 'quantity' => 1]);
-//        $this->seeInDatabase('preorder_skus', ['preorder_id' => $order_id, 'weekday' => 0, 'daytime' => 1, 'product_sku_id' => 3, 'quantity' => 2]);
 
         return $order_id;
     }
@@ -142,11 +150,11 @@ class StationPreorderApiTest extends TestCase {
     /** @test */
     public function it_can_pause_a_preorder()
     {
-        $order_id = 2;
+        $this->it_can_confirm_a_preorder();
+        $order_id = 15;
 
         $data = [
-            'pause_time' => '2016-07-02',
-            'restart_time' => '2016-07-04'
+            'pause_time' => '2016-07-12'
         ];
 
         $this->json('put', 'stations/preorders/' . $order_id . '/pause',
@@ -156,15 +164,36 @@ class StationPreorderApiTest extends TestCase {
 
         $this->assertResponseOk();
 
+        $this->seeInDatabase('preorders', ['id' => $order_id, 'pause_time' => '2016-07-12']);
+//        $this->seeInDatabase('preorders', ['id' => $order_id, 'restart_time' => '2016-07-14']);
 
-        $this->seeInDatabase('preorders', ['id' => $order_id, 'end_time' => '2016-07-01']);
+    }
 
+    /** @test */
+    public function it_can_restart_a_preorder()
+    {
+        $this->it_can_confirm_a_preorder();
+        $this->it_can_pause_a_preorder();
+        $order_id = 15;
+
+        $data = [
+            'restart_time' => '2016-07-14'
+        ];
+
+        $this->json('put', 'stations/preorders/' . $order_id . '/restart',
+            $data,
+            $this->getAuthHeader()
+        );
+
+        $this->assertResponseOk();
+
+        $this->seeInDatabase('preorders', ['id' => $order_id, 'restart_time' => '2016-07-14']);
     }
 
     /** @test */
     public function it_can_assign_a_staff_to_preorder()
     {
-        $order_id = 2;
+        $order_id = 15;
 
         $this->json('post', 'stations/preorders/' . $order_id . '/assign',
             [
@@ -173,15 +202,13 @@ class StationPreorderApiTest extends TestCase {
             $this->getAuthHeader()
         );
 
-
         $this->assertResponseStatus(201);
-
     }
 
     /** @test */
     public function it_can_cancel_assign_a_staff_to_preorder()
     {
-        $order_id = 2;
+        $order_id = 15;
 
         $this->json('delete', 'stations/preorders/' . $order_id . '/assign',
             [],
@@ -189,7 +216,6 @@ class StationPreorderApiTest extends TestCase {
         );
 
         $this->assertResponseStatus(204);
-
     }
 
 

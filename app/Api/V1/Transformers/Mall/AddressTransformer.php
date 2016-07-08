@@ -25,6 +25,7 @@ class AddressTransformer extends TransformerAbstract {
             $data['longitude'] = $address['info']['longitude'];
             $data['latitude'] = $address['info']['latitude'];
             $data['station_id'] = $address['info']['station_id'];
+            $data['district_id'] = $address['info']['district_id'];
         }
 
         return $data;

@@ -14,6 +14,7 @@ class CreateAddressInfoTable extends Migration {
     {
         Schema::create('address_info', function (Blueprint $table) {
             $table->integer('address_id')->primary();
+            $table->integer('district_id');
             $table->string('longitude', 45);
             $table->string('latitude', 45);
             $table->integer('station_id')->default(0);

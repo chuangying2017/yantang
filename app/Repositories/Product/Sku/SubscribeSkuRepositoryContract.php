@@ -2,6 +2,6 @@
 
 interface SubscribeSkuRepositoryContract {
 
-    public function getAllSubscribedProductSkus();
+    public function getAllSubscribedProducts();
 
 }

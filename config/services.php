@@ -87,6 +87,10 @@ return [
 
     'search' => [
         'root' => env('SEARCH_ROOT_PATH')
+    ],
+
+    'subscribe' => [
+        'pause_days' => env('SUBSCRIBE_PAUSE_DAYS', 2),
     ]
 
 ];

@@ -40,13 +40,14 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->post('/{station_id}/unbind', 'StationController@postUnBind')->name('api.station.unbind');
 
             $api->put('preorders/{order_id}/reject', 'StationPreorderController@reject');
+            $api->put('preorders/{order_id}/confirm', 'StationPreorderController@confirm');
             $api->put('preorders/{order_id}/pause', 'StationPreorderController@pause');
-            $api->resource('preorders/{order_id}/assign', 'StationAssignController', ['only' => ['store', 'delete']]);
-            $api->resource('preorders', 'StationPreorderController');
+            $api->put('preorders/{order_id}/restart', 'StationPreorderController@restart');
+            $api->resource('preorders/{order_id}/assign', 'StationAssignController', ['only' => ['store', 'destroy']]);
 
+            $api->resource('preorders', 'StationPreorderController');
         });
 
-        $api->get('products', 'ProductController@index');
 
         $api->get('/{station_id}/bind', 'StationController@getBind')->name('api.station.check.bind.get');
         $api->post('/{station_id}/bind', 'StationController@postBind')->name('api.station.bind');
@@ -61,6 +62,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
         $api->get('stations', 'StationController@index');
         $api->get('products', 'ProductController@index');
         $api->get('districts', 'DistrictController@index');
+        $api->get('products', 'ProductController@index');
 
     });
 });
