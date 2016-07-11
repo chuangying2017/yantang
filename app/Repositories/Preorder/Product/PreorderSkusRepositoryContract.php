@@ -8,4 +8,7 @@ interface PreorderSkusRepositoryContract {
 
     public function deletePreorderProducts($order_id);
 
+    public function decrement($id, $quantity);
+
+
 }

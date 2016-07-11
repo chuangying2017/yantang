@@ -28,10 +28,12 @@ class GetSkuInfo extends GenerateHandlerAbstract {
     public function handle(TempOrder $temp_order)
     {
         $request_sku_info = array_pluck($temp_order->getSkus(), 'quantity', 'product_sku_id');
+        $request_sku_subscribe_info = array_pluck($temp_order->getSkus(), 'per_day', 'product_sku_id');
         $skus = $this->skuRepo->getSkus(array_keys($request_sku_info));
         $stock_ok = true;
         foreach ($skus as $key => $sku) {
             $skus[$key]['quantity'] = $request_sku_info[$sku['id']];
+            $skus[$key]['per_day'] = $request_sku_subscribe_info[$sku['id']];
             if (!$this->productSkuStockRepo->enoughStock($sku['id'], $skus[$key]['quantity'])) {
                 $skus[$key]['stock_enough'] = false;
                 $temp_order->setError('商品 ID:' . $sku['id'] . ' ' . $sku['name'] . '库存不足');

@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Preorder\Assign;
 
+use App\Events\Preorder\AssignIsAssigned;
 use App\Events\Preorder\AssignIsConfirm;
 use App\Events\Preorder\AssignIsCreate;
 use App\Events\Preorder\AssignIsReject;
@@ -8,7 +9,6 @@ use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 
 class PreorderAssignRepository implements PreorderAssignRepositoryContract {
-
 
     /**
      * @param $order_id
@@ -86,6 +86,8 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
         $assign = $this->get($order_id);
         $assign->staff_id = $staff_id;
         $assign->save();
+
+        event(new AssignIsAssigned($assign));
 
         return $assign;
     }

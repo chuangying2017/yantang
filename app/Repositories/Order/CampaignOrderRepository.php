@@ -1,11 +1,36 @@
 <?php namespace App\Repositories\Order;
 
+use App\Models\Order\Order;
 use App\Services\Order\OrderProtocol;
 
 class CampaignOrderRepository extends ClientOrderRepository {
 
     protected $detail_relations = ['skus', 'billings', 'special', 'memo'];
     protected $lists_relations = ['skus', 'special'];
+
+
+    /**
+     * @param $data
+     */
+    public function createOrder($data)
+    {
+        $order = parent::createOrder($data);
+        $order->special = $this->attachOrderSpecialCampaign($order, $data['special_campaign']);
+
+        return $order;
+    }
+
+
+    private function attachOrderSpecialCampaign(Order $order, $special_campaign)
+    {
+        if (is_null($special_campaign)) {
+            return $order;
+        }
+        return $order->special()->create(
+            array_only($special_campaign, ['campaign_id', 'campaign_name', 'campaign_cover_image'])
+        );
+    }
+
 
     protected function setOrderType()
     {

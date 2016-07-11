@@ -1,11 +1,10 @@
 <?php namespace App\Services\Preorder;
 
 use App\Events\Preorder\PaidPreorderBillingFail;
-use App\Repositories\Billing\PreorderBillingRepository;
+use App\Repositories\Preorder\Deliver\PreorderDeliverRepositoryContract;
+use App\Repositories\Preorder\Product\PreorderSkusRepositoryContract;
 use App\Repositories\Station\StationPreorderRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
-use App\Services\Billing\PreorderBillingService;
-use App\Services\Client\Account\WalletService;
 use App\Services\Pay\Exception\NotEnoughException;
 use Carbon\Carbon;
 
@@ -16,95 +15,78 @@ class PreorderSettleService implements PreorderSettleServiceContract {
      */
     private $stationPreorderRepo;
     /**
-     * @var PreorderBillingRepository
+     * @var PreorderDeliverRepositoryContract
      */
-    private $billingRepo;
-    /**
-     * @var WalletService
-     */
-    private $wallet;
-    /**
-     * @var PreorderBillingService
-     */
-    private $preorderBillingService;
+    private $deliverRepo;
+
     /**
      * @var StationRepositoryContract
      */
     private $stationRepo;
+    /**
+     * @var PreorderSkusRepositoryContract
+     */
+    private $skuRepo;
 
     /**
      * PreorderSettleService constructor.
      * @param StationPreorderRepositoryContract $stationPreorderRepo
-     * @param PreorderBillingRepository $billingRepo
+     * @param PreorderDeliverRepositoryContract $deliverRepo
      */
     public function __construct(
         StationPreorderRepositoryContract $stationPreorderRepo,
-        PreorderBillingRepository $billingRepo,
-        WalletService $wallet,
-        PreorderBillingService $preorderBillingService,
-        StationRepositoryContract $stationRepo
+        PreorderDeliverRepositoryContract $deliverRepo,
+        StationRepositoryContract $stationRepo,
+        PreorderSkusRepositoryContract $skuRepo
     )
     {
         $this->stationPreorderRepo = $stationPreorderRepo;
-        $this->billingRepo = $billingRepo;
-        $this->wallet = $wallet;
-        $this->preorderBillingService = $preorderBillingService;
+        $this->deliverRepo = $deliverRepo;
         $this->stationRepo = $stationRepo;
+        $this->skuRepo = $skuRepo;
     }
 
     public function settle()
     {
         $station_ids = $this->stationRepo->getAll(true);
         foreach ($station_ids as $station_id) {
+            \DB::beginTransaction();
             $this->settleStation($station_id);
+            \DB::commit();
         }
     }
 
     protected function settleStation($station_id)
     {
         $orders = $this->stationPreorderRepo->getDayPreorderWithProductsByStation($station_id, Carbon::yesterday());
+
         $orders = $this->filterNotDeliverOrders($orders, $station_id);
 
         foreach ($orders as $order) {
-            $settle_amount = 0;
-            $billing_sku_relate_ids = [];
-            $entity_ids = [
+            $deliver_sku_relate_ids = [];
+            $data = [
                 'user_id' => $order['user_id'],
                 'preorder_id' => $order['id'],
                 'station_id' => $order['station_id'],
                 'staff_id' => $order['staff_id'],
+                'deliver_at' => Carbon::yesterday()
             ];
 
-            if (!count($order['skus'])) {
+            if (!count($order['skus']) || !$this->deliverRepo->getRecentDeliver($order['id'], Carbon::yesterday())) {
                 continue;
             }
 
             foreach ($order['skus'] as $deliver_sku) {
-                $settle_amount += $this->getSkuSettleAmount($deliver_sku);
-                $billing_sku_relate_ids[] = $deliver_sku['id'];
+                $sku_deliver_quantity = ($deliver_sku['quantity'] > $deliver_sku['remain']) ? $deliver_sku['remain'] : $deliver_sku['quantity'];
+
+                $deliver_sku_relate_ids[$deliver_sku['id']] = ['quantity' => $sku_deliver_quantity];
+                $this->skuRepo->decrement($deliver_sku['id'], $sku_deliver_quantity);
             }
-
-            //生成账单
-            $billing = $this->billingRepo->createBilling($settle_amount, $entity_ids);
-            $billing->skus()->attach($billing_sku_relate_ids);
-
-            try {
-                //支付账单
-                $this->preorderBillingService->setID($billing);
-                if ($this->wallet->setPayer($this->preorderBillingService->getPayer())->pay($this->preorderBillingService)) {
-                    $billing = $this->billingRepo->updateAsPaid($billing);
-                }
-            } catch (NotEnoughException $e) {
-                event(new PaidPreorderBillingFail($billing));
-            }
-
-            return $billing;
+            //生成发货记录
+            $deliver = $this->deliverRepo->createDeliver($data);
+            $deliver = $this->deliverRepo->updateAsSuccess($deliver);
+            $deliver->skus()->attach($deliver_sku_relate_ids);
         }
-    }
-
-    protected function getSkuSettleAmount($sku)
-    {
-        return $sku['total_amount'];
     }
 
     protected function filterNotDeliverOrders($orders, $station_id)

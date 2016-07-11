@@ -5,6 +5,8 @@ interface AddressRepositoryContract {
 
     public function getAllAddress();
 
+    public function getAllSubscribeAddress();
+
     public function addAddress($data);
 
     public function updateAddress($address_id, $data);

@@ -52,4 +52,9 @@ class DistrictRepository implements DistrictRepositoryContract {
 
         return $district;
     }
+
+    public function getIdByName($name)
+    {
+        return District::query()->where('name', $name)->pluck('id')->first();
+    }
 }

@@ -3,6 +3,7 @@
 use App\Models\Access\User\User;
 use App\Models\Billing\PreorderBilling;
 use App\Models\District;
+use App\Models\Order\Order;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,7 +22,12 @@ class Preorder extends Model {
 
     public function skus()
     {
-        return $this->hasMany(PreorderSku::class);
+        return $this->hasMany(PreorderSku::class, 'order_id', 'order_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
     public function assign()
@@ -29,9 +35,9 @@ class Preorder extends Model {
         return $this->hasOne(PreorderAssign::class);
     }
 
-    public function billings()
+    public function deliver()
     {
-        return $this->hasMany(PreorderBilling::class, 'preorder_id', 'id');
+        return $this->hasMany(PreorderDeliver::class, 'preorder_id', 'id');
     }
 
     public function station()
@@ -44,8 +50,14 @@ class Preorder extends Model {
         return $this->belongsTo(StationStaff::class, 'staff_id', 'id');
     }
 
-    public function District()
+    public function district()
     {
         return $this->hasMany(District::class);
     }
+
+    public function counter()
+    {
+        return $this->hasMany(PreorderSkuCounter::class, 'preorder_id', 'id');
+    }
+
 }

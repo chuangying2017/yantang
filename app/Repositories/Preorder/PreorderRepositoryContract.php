@@ -9,9 +9,11 @@ interface PreorderRepositoryContract {
 
     public function updatePreorder($order_id, $data);
 
-    public function updatePreorderChargeStatus($order_id, $charge_status);
+    public function updatePreorderTime($order_id, $pause_time = null, $restart_time = null);
 
     public function updatePreorderStatus($order_id, $status);
+
+    public function updatePreorderStatusByOrder($order_id, $status);
 
     public function updatePreorderAssign($order_id, $station_id = null, $staff_id = null);
 
@@ -19,7 +21,9 @@ interface PreorderRepositoryContract {
 
     public function getAllByUser($user_id, $status = null, $start_time = null, $end_time = null);
 
-    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $charge_status = null, $start_time = null, $end_time = null);
+    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null);
+
+    public function getByOrder($origin_order_id, $date = null);
 
     public function get($order_id, $with_detail = false);
 

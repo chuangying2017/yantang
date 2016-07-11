@@ -1,6 +1,7 @@
 <?php namespace App\Services\Statement;
 
 use App\Events\Statement\StatementConfirm;
+use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 use App\Repositories\Statement\MerchantRepositoryContract;
 use App\Repositories\Statement\StatementAbleBillingRepoContract;
 use App\Repositories\Statement\StatementRepositoryAbstract;
@@ -26,17 +27,27 @@ abstract class StatementServiceAbstract {
 
     //结算日
     protected $check_day;
+    /**
+     * @var ProductSkuRepositoryContract
+     */
+    private $skuRepo;
 
     /**
      * StoreStatementService constructor.
      * @param StatementRepositoryAbstract $statementRepo
      */
-    public function __construct(StatementRepositoryAbstract $statementRepo, StatementAbleBillingRepoContract $billingRepo, MerchantRepositoryContract $merchantRepo)
+    public function __construct(
+        StatementRepositoryAbstract $statementRepo,
+        StatementAbleBillingRepoContract $billingRepo,
+        MerchantRepositoryContract $merchantRepo,
+        ProductSkuRepositoryContract $skuRepo
+    )
     {
         $this->statementRepo = $statementRepo;
         $this->billingRepo = $billingRepo;
         $this->merchantRepo = $merchantRepo;
         $this->setCheckDay();
+        $this->skuRepo = $skuRepo;
     }
 
     public function generateStatements()
@@ -53,24 +64,34 @@ abstract class StatementServiceAbstract {
 
         $billings = $this->billingRepo->getBillingWithProducts($merchant_id, $this->getTime());
 
-        $settle_amount = 0;
         $product_skus_info = [];
         foreach ($billings as $key => $billing) {
             foreach ($billing['skus'] as $sku) {
                 $sku_key = $sku['product_sku_id'];
-                $sku_total_amount = $sku['price'] * $sku['quantity'];
+                if (!isset($sku['quantity'])) {
+                    $sku['quantity'] = $sku['pivot']['quantity'];
+                }
                 if (isset($product_skus_info[$sku_key])) {
                     $product_skus_info[$sku_key]['quantity'] += $sku['quantity'];
-                    $product_skus_info[$sku_key]['total_amount'] += $sku_total_amount;
                 } else {
                     $product_skus_info[$sku_key]['product_id'] = $sku['product_id'];
                     $product_skus_info[$sku_key]['name'] = $sku['name'];
                     $product_skus_info[$sku_key]['product_sku_id'] = $sku['product_sku_id'];
-                    $product_skus_info[$sku_key]['price'] = $sku['price'];
                     $product_skus_info[$sku_key]['quantity'] = $sku['quantity'];
-                    $product_skus_info[$sku_key]['total_amount'] = $sku_total_amount;
                 }
-                $settle_amount = $settle_amount + $sku_total_amount;
+            }
+        }
+
+        $settle_amount = 0;
+        $product_skus = $this->skuRepo->getSkus(array_keys($product_skus_info));
+        foreach ($product_skus_info as $key => $product_sku_info) {
+            foreach ($product_skus as $product_sku) {
+                if ($product_sku['id'] == $product_sku_info['product_sku_id']) {
+                    $product_skus_info[$key]['price'] = $product_sku['settle_price'];
+                    $product_skus_info[$key]['total_amount'] = $product_sku_info['quantity'] * $product_sku['settle_price'];
+                    $settle_amount += $product_skus_info[$key]['total_amount'];
+                    continue;
+                }
             }
         }
 

@@ -68,7 +68,6 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
 
     protected function setOrderType()
     {
-
     }
 
     /**
@@ -97,7 +96,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         $order->billings = $this->createOrderBilling($order);
         $order->promotions = $this->createOrderPromotion($order['id'], $data['promotion']);
         $order->memo = $this->createOrderMemo($order['id'], array_get($data, 'memo', ''));
-        $order->special = $this->attachOrderSpecialCampaign($order, $data['special_campaign']);
+
 
         DB::commit();
 
@@ -235,13 +234,4 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         return $order;
     }
 
-    private function attachOrderSpecialCampaign(Order $order, $special_campaign)
-    {
-        if (is_null($special_campaign)) {
-            return $order;
-        }
-        return $order->special()->create(
-            array_only($special_campaign, ['campaign_id', 'campaign_name', 'campaign_cover_image'])
-        );
-    }
 }

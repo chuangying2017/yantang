@@ -7,8 +7,7 @@ use App\Api\V1\Requests\Request;
  * Class RegisterRequest
  * @package App\Api\V1\Requests\Frontend\Access
  */
-class AddressRequest extends Request
-{
+class AddressRequest extends Request {
 
     /**
      * Determine if the user is authorized to make this request.
@@ -29,8 +28,10 @@ class AddressRequest extends Request
     {
         return [
             'name' => 'required',
-            'district' => 'required',
+            'district_id' => 'required',
             'detail' => 'required',
+            'longitude' => 'required',
+            'latitude' => 'required',
         ];
     }
 }

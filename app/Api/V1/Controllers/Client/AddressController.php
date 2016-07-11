@@ -31,7 +31,6 @@ class AddressController extends Controller {
     public function index()
     {
         $addresses = $this->addressRepo->getAllAddress();
-
         return $this->response->collection($addresses, new AddressTransformer());
     }
 

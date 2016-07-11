@@ -10,6 +10,7 @@ namespace App\Models\Product\Traits;
 
 
 use App\Models\Product\AttributeValue;
+use App\Models\Product\Category;
 use App\Models\Product\Product;
 use App\Models\Product\ProductSku;
 
@@ -29,6 +30,7 @@ trait ProductSkuRelation {
     {
         return $this->belongsToMany(ProductSku::class, 'product_mix_sku', 'product_sku_id', 'product_sku_mix_id')->withPivot('quantity');
     }
+
 
 
 }

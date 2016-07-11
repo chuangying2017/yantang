@@ -7,5 +7,4 @@ trait BindUser {
         return parent::newQuery()->where('user_id', access()->id());
     }
 
-
 }

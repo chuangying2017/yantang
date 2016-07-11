@@ -53,6 +53,7 @@ class EventServiceProvider extends ServiceProvider {
         'App\Events\Order\OrderIsPaid' => [
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
             'App\Listeners\Product\DecreaseProductSkuStock',
+            'App\Listeners\Preorder\SetPreorderAsPaid',
         ],
 
         'App\Events\Order\OrderIsCreated' => [
@@ -100,7 +101,7 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Events\Preorder\ChargeBillingIsPaid' => [
             'App\Listeners\Preorder\RechargeWallet',
-            'App\Listeners\Preorder\SetPreorderAsCharged',
+//            'App\Listeners\Preorder\SetPreorderAsCharged',
         ],
 
         'App\Events\Preorder\PaidPreorderBillingFail' => [
@@ -118,6 +119,10 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
         'App\Events\Preorder\AssignIsConfirm' => [
+
+        ],
+
+        'App\Events\Preorder\AssignIsAssigned' => [
             'App\Listeners\Preorder\SetPreorderAsPending'
         ],
 

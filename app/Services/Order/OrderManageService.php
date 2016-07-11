@@ -1,5 +1,6 @@
 <?php namespace App\Services\Order;
 
+use App\Events\Order\OrderIsCancel;
 use App\Events\Order\OrderIsPaid;
 use App\Repositories\Billing\OrderBillingRepository;
 use App\Repositories\Order\ClientOrderRepository;
