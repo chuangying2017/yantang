@@ -30,7 +30,7 @@ class StaffPreorderApiTest extends TestCase {
 
         $this->json('get', 'staffs/preorders/' . $order_id, [], $this->getAuthHeader(2));
 
-        $this->echoJson();
+        $this->dumpResponse();
 
         $this->assertResponseOk();
     }

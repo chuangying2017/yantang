@@ -11,7 +11,7 @@ class StoreStatementTest extends TestCase {
     /** @test */
     public function it_can_get_store_statements()
     {
-//        $this->it_can_settle_store_statement();
+        $this->it_can_settle_store_statement();
 
         $this->json('get', 'store/statements',
             [],

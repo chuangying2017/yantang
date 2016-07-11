@@ -18,7 +18,6 @@ class StationStatementApiTest extends TestCase {
             $this->getAuthHeader()
         );
 
-        $this->dump();
 
         $this->assertResponseOk();
     }
@@ -27,12 +26,15 @@ class StationStatementApiTest extends TestCase {
     public function it_can_get_a_statement_detail()
     {
         $this->it_can_settle_station_statement();
-        $this->json('get', 'stations/statements/' . 20160630011,
+        $statement_no = $this->getStatementNo();
+        $this->json('get', 'stations/statements/' . $statement_no,
             [],
             $this->getAuthHeader()
         );
 
         $this->assertResponseOk();
+
+        $this->dumpResponse();
 
         $this->seeJsonStructure(['data' => ['skus', 'settle_amount', 'service_amount']]);
     }
@@ -42,10 +44,11 @@ class StationStatementApiTest extends TestCase {
     public function it_can_settle_station_statement()
     {
         app()->make(\App\Services\Statement\StationStatementService::class)->generateStatements();
-
-        $this->seeInDatabase('statements', ['merchant_id' => 1, 'type' => \App\Services\Statement\StatementProtocol::TYPE_OF_STATION, 'settle_amount' => 82400, 'year' => 2016, 'month' => 6]);
-        $this->seeInDatabase('statement_products', ['statement_no' => '20160630011','product_sku_id' => 2, 'quantity' => 2]);
-        $this->seeInDatabase('statement_products', ['statement_no' => '20160630011','product_sku_id' => 3, 'quantity' => 6]);
+        $merchant_id = 1;
+        $statement_no = $this->getStatementNo($merchant_id);
+        $this->seeInDatabase('statements', ['merchant_id' => $merchant_id, 'type' => \App\Services\Statement\StatementProtocol::TYPE_OF_STATION, 'settle_amount' => 154280, 'year' => 2016, 'month' => \Carbon\Carbon::today()->month]);
+        $this->seeInDatabase('statement_products', ['statement_no' => $statement_no, 'product_sku_id' => 2, 'quantity' => 4]);
+        $this->seeInDatabase('statement_products', ['statement_no' => $statement_no, 'product_sku_id' => 3, 'quantity' => 6]);
     }
 
     /** @test */
@@ -53,14 +56,14 @@ class StationStatementApiTest extends TestCase {
     {
         $this->it_can_settle_station_statement();
 
-        $this->json('put', 'stations/statements/' . 20160630011,
+        $this->json('put', 'stations/statements/' . $this->getStatementNo(),
             [],
             $this->getAuthHeader()
         );
 
         $this->assertResponseOk();
 
-        $this->seeInDatabase('statements', ['merchant_id' => 1, 'status' => \App\Services\Statement\StatementProtocol::STATEMENT_STATUS_OF_OK]);
+        $this->seeInDatabase('statements', ['statement_no' => $this->getStatementNo(), 'status' => \App\Services\Statement\StatementProtocol::STATEMENT_STATUS_OF_OK]);
     }
 
 
@@ -69,16 +72,24 @@ class StationStatementApiTest extends TestCase {
     {
         $this->it_can_settle_station_statement();
 
-        $this->json('put', 'stations/statements/' . 20160630011,
+        $this->json('put', 'stations/statements/' . $this->getStatementNo(),
             ['confirm' => 0, 'memo' => '不对'],
             $this->getAuthHeader()
         );
 
         $this->assertResponseOk();
 
-        $this->seeInDatabase('statements', ['merchant_id' => 1, 'status' => \App\Services\Statement\StatementProtocol::STATEMENT_STATUS_OF_ERROR, 'memo' => '不对']);
+        $this->seeInDatabase('statements', ['statement_no' => $this->getStatementNo(), 'status' => \App\Services\Statement\StatementProtocol::STATEMENT_STATUS_OF_ERROR, 'memo' => '不对']);
 
     }
 
+    /**
+     * @return string
+     */
+    protected function getStatementNo($merchant_id = 1)
+    {
+        $statement_no = date('Ymd') . '01' . $merchant_id;
+        return $statement_no;
+    }
 
 }
