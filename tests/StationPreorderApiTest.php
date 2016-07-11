@@ -24,21 +24,23 @@ class StationPreorderApiTest extends TestCase {
             $this->getAuthHeader()
         );
 
+        $this->echoJson();
+
         $this->assertResponseOk();
     }
 
     /** @test */
     public function it_can_get_station_daily_summary()
     {
-        $this->it_can_confirm_a_preorder();
+//        $this->it_can_confirm_a_preorder();
 
-        $this->json('get', 'stations/preorders/info', [
-            'day' => '2016-07-8',
+        $date = '2016-07-11';
+        $this->json('get', 'stations/preorders/daily', [
+            'day' => $date,
             'daytime' => 0,
         ], $this->getAuthHeader());
 
         $this->echoJson();
-
     }
 
     /** @test */
@@ -51,7 +53,7 @@ class StationPreorderApiTest extends TestCase {
             $this->getAuthHeader()
         );
 
-        $this->echoJson();
+        $this->dump();
     }
 
     /** @test */
@@ -82,8 +84,11 @@ class StationPreorderApiTest extends TestCase {
             $this->getAuthHeader()
         );
 
+        $this->seeInDatabase('preorders', ['id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
+
         $this->assertResponseOk();
 
+        //分配配送员
         $this->it_can_assign_a_staff_to_preorder();
 
         $this->seeInDatabase('preorders', ['id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING]);
@@ -147,48 +152,7 @@ class StationPreorderApiTest extends TestCase {
 
     }
 
-    /** @test */
-    public function it_can_pause_a_preorder()
-    {
-        $this->it_can_confirm_a_preorder();
-        $order_id = 15;
 
-        $data = [
-            'pause_time' => '2016-07-12'
-        ];
-
-        $this->json('put', 'stations/preorders/' . $order_id . '/pause',
-            $data,
-            $this->getAuthHeader()
-        );
-
-        $this->assertResponseOk();
-
-        $this->seeInDatabase('preorders', ['id' => $order_id, 'pause_time' => '2016-07-12']);
-//        $this->seeInDatabase('preorders', ['id' => $order_id, 'restart_time' => '2016-07-14']);
-
-    }
-
-    /** @test */
-    public function it_can_restart_a_preorder()
-    {
-        $this->it_can_confirm_a_preorder();
-        $this->it_can_pause_a_preorder();
-        $order_id = 15;
-
-        $data = [
-            'restart_time' => '2016-07-14'
-        ];
-
-        $this->json('put', 'stations/preorders/' . $order_id . '/restart',
-            $data,
-            $this->getAuthHeader()
-        );
-
-        $this->assertResponseOk();
-
-        $this->seeInDatabase('preorders', ['id' => $order_id, 'restart_time' => '2016-07-14']);
-    }
 
     /** @test */
     public function it_can_assign_a_staff_to_preorder()

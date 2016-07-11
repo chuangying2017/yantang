@@ -108,7 +108,7 @@ class StationStaffController extends Controller {
 
         $this->checkAuth($id);
 
-        $orders = $preorderRepo->getDayPreordersOfStaff($id, $day, $daytime);
+        $orders = $preorderRepo->getPreordersOfStaff($id, $day, $daytime);
 
         return $this->response->collection($orders, new StaffPreorderTransformer());
     }

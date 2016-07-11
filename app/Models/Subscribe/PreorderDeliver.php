@@ -12,7 +12,7 @@ class PreorderDeliver extends Model {
 
     public function skus()
     {
-        return $this->belongsToMany(PreorderSku::class, 'deliver_preorder_skus', 'preorder_deliver_id', 'preorder_sku_id')->withPivot('quantity');
+        return $this->belongsToMany(PreorderSku::class, 'deliver_preorder_skus', 'preorder_deliver_id', 'preorder_sku_id')->withPivot(['quantity']);
     }
 
 }

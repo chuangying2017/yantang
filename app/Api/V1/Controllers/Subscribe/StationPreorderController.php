@@ -27,14 +27,14 @@ class StationPreorderController extends Controller {
         $this->orderRepo = $orderRepo;
     }
 
-    public function info(PreorderManageServiceContract $preorderManager, Request $request)
+    public function daily(Request $request)
     {
         $day = $request->input('day');
         $daytime = $request->input('daytime');
 
-        $daily_info = $preorderManager->stationDailyInfo(access()->stationId(), $day, $daytime);
+        $orders = $this->orderRepo->getDayPreorderWithProductsByStation(access()->stationId(), $day, $daytime);
 
-        return $this->response->array(['data' => array_values($daily_info)]);
+        return $this->response->array(['date' => array_values($this->transformOrder($orders))]);
     }
 
     public function index(Request $request)
@@ -48,28 +48,9 @@ class StationPreorderController extends Controller {
         return $this->response->paginator($orders, new PreorderTransformer());
     }
 
-
     public function show($order_id)
     {
         $order = $this->orderRepo->get($order_id, true);
-
-        return $this->response->item($order, new PreorderTransformer());
-    }
-
-    public function pause(Request $request, PreorderManageServiceContract $preorderManageService, $order_id)
-    {
-        $stop_time = $request->input('pause_time');
-        $restart_time = $request->input('restart_time') ?: null;
-
-        $order = $preorderManageService->pause($order_id, $stop_time, $restart_time);
-        return $this->response->item($order, new PreorderTransformer());
-    }
-
-    public function restart(Request $request, PreorderManageServiceContract $preorderManageService, $order_id)
-    {
-        $restart_time = $request->input('restart_time');
-
-        $order = $preorderManageService->restart($order_id, $restart_time);
 
         return $this->response->item($order, new PreorderTransformer());
     }
@@ -88,6 +69,31 @@ class StationPreorderController extends Controller {
         $assign = $assign->updateAssignAsReject($order_id, $memo);
 
         return $this->response->array(['data' => $assign['preorder_id']]);
+    }
+
+
+    protected function transformOrder($orders)
+    {
+        $product_skus_info = [];
+        foreach ($orders as $key => $order) {
+            if (!count($order['skus'])) {
+                continue;
+            }
+            foreach ($order['skus'] as $sku) {
+                $sku_key = $sku['product_sku_id'];
+                if (isset($product_skus_info[$sku_key])) {
+                    $product_skus_info[$sku_key]['quantity'] += $sku['quantity'];
+                } else {
+                    $product_skus_info[$sku_key]['product_id'] = $sku['product_id'];
+                    $product_skus_info[$sku_key]['product_sku_id'] = $sku['product_sku_id'];
+                    $product_skus_info[$sku_key]['quantity'] = $sku['quantity'];
+                    $product_skus_info[$sku_key]['name'] = $sku['name'];
+                    $product_skus_info[$sku_key]['cover_image'] = $sku['cover_image'];
+                }
+            }
+        }
+
+        return $product_skus_info;
     }
 
 

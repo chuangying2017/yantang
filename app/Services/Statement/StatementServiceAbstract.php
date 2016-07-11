@@ -68,13 +68,15 @@ abstract class StatementServiceAbstract {
         foreach ($billings as $key => $billing) {
             foreach ($billing['skus'] as $sku) {
                 $sku_key = $sku['product_sku_id'];
+                if (!isset($sku['quantity'])) {
+                    $sku['quantity'] = $sku['pivot']['quantity'];
+                }
                 if (isset($product_skus_info[$sku_key])) {
                     $product_skus_info[$sku_key]['quantity'] += $sku['quantity'];
                 } else {
                     $product_skus_info[$sku_key]['product_id'] = $sku['product_id'];
                     $product_skus_info[$sku_key]['name'] = $sku['name'];
                     $product_skus_info[$sku_key]['product_sku_id'] = $sku['product_sku_id'];
-                    $product_skus_info[$sku_key]['price'] = $sku['price'];
                     $product_skus_info[$sku_key]['quantity'] = $sku['quantity'];
                 }
             }
@@ -82,11 +84,12 @@ abstract class StatementServiceAbstract {
 
         $settle_amount = 0;
         $product_skus = $this->skuRepo->getSkus(array_keys($product_skus_info));
-        foreach ($product_skus_info as $product_sku_info) {
+        foreach ($product_skus_info as $key => $product_sku_info) {
             foreach ($product_skus as $product_sku) {
                 if ($product_sku['id'] == $product_sku_info['product_sku_id']) {
-                    $product_sku_info['total_amount'] = $product_sku_info['quantity'] * $product_sku['settle_price'];
-                    $settle_amount += $product_sku_info['total_amount'];
+                    $product_skus_info[$key]['price'] = $product_sku['settle_price'];
+                    $product_skus_info[$key]['total_amount'] = $product_sku_info['quantity'] * $product_sku['settle_price'];
+                    $settle_amount += $product_skus_info[$key]['total_amount'];
                     continue;
                 }
             }

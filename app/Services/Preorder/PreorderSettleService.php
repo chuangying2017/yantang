@@ -69,26 +69,23 @@ class PreorderSettleService implements PreorderSettleServiceContract {
                 'preorder_id' => $order['id'],
                 'station_id' => $order['station_id'],
                 'staff_id' => $order['staff_id'],
+                'deliver_at' => Carbon::yesterday()
             ];
 
-            if (!count($order['skus'])) {
+            if (!count($order['skus']) || !$this->deliverRepo->getRecentDeliver($order['id'], Carbon::yesterday())) {
                 continue;
             }
 
             foreach ($order['skus'] as $deliver_sku) {
                 $sku_deliver_quantity = ($deliver_sku['quantity'] > $deliver_sku['remain']) ? $deliver_sku['remain'] : $deliver_sku['quantity'];
 
-                $deliver_sku_relate_ids[] = [
-                    $deliver_sku['id'] => ['quantity' => $sku_deliver_quantity]
-                ];
+                $deliver_sku_relate_ids[$deliver_sku['id']] = ['quantity' => $sku_deliver_quantity];
                 $this->skuRepo->decrement($deliver_sku['id'], $sku_deliver_quantity);
             }
-
             //生成发货记录
             $deliver = $this->deliverRepo->createDeliver($data);
+            $deliver = $this->deliverRepo->updateAsSuccess($deliver);
             $deliver->skus()->attach($deliver_sku_relate_ids);
-
-            return $deliver;
         }
     }
 

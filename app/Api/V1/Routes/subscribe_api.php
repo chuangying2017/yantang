@@ -11,7 +11,9 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STAFF]], function ($api) {
             $api->get('info', 'StaffController@info');
-            $api->get('preorders/info', 'StaffPreorderController@info');
+            $api->get('preorders/daily', 'StaffPreorderController@daily');
+            $api->put('preorders/{order_id}/pause', 'StaffPreorderController@pause');
+            $api->put('preorders/{order_id}/restart', 'StaffPreorderController@restart');
             $api->resource('preorders', 'StaffPreorderController', ['only' => ['index', 'show']]);
             $api->post('/{staff_id}/unbind', 'StaffController@postUnBind')->name('api.staff.unbind');
         });
@@ -29,7 +31,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
             $api->get('info', 'StationController@info');
 
-            $api->get('preorders/info', 'StationPreorderController@info');
+            $api->get('preorders/daily', 'StationPreorderController@daily');
 
             $api->resource('statements', 'StationStatementController', ['only' => ['index', 'show', 'update']]);
             //管理配送员
@@ -41,8 +43,6 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
             $api->put('preorders/{order_id}/reject', 'StationPreorderController@reject');
             $api->put('preorders/{order_id}/confirm', 'StationPreorderController@confirm');
-            $api->put('preorders/{order_id}/pause', 'StationPreorderController@pause');
-            $api->put('preorders/{order_id}/restart', 'StationPreorderController@restart');
             $api->resource('preorders/{order_id}/assign', 'StationAssignController', ['only' => ['store', 'destroy']]);
 
             $api->resource('preorders', 'StationPreorderController');

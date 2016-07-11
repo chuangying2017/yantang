@@ -65,21 +65,17 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $query = Preorder::query();
 
-
         if (!is_null($user_id)) {
             $query->where('user_id', $user_id);
         }
-
 
         if (!is_null($station_id)) {
             $query->where('station_id', $station_id);
         }
 
-
         if (!is_null($staff_id)) {
             $query->where('staff_id', $staff_id);
         }
-
 
         if (PreorderProtocol::validOrderStatus($status)) {
             $query->where('status', $status);
@@ -118,7 +114,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         }
 
         if ($with_detail) {
-            $order->load('skus', 'billings', 'station', 'staff', 'user');
+            $order->load('skus', 'deliver', 'station', 'staff', 'user', 'order');
         }
 
         return $order;
@@ -202,80 +198,76 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $this->queryOrders(null, $station_id, null, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
     }
 
-
-    public function getDayPreordersOfStaff($staff_id = null, $day = null, $daytime = null, $per_page = null)
+    public function getPreordersOfStaff($staff_id, $status = null, $date = null, $daytime = null, $per_page = null)
     {
-        $start_time = is_null($day) ? Carbon::today() : $day;
-        $end_time = is_null($day) ? Carbon::today() : $day;
-
-        $orders = $this->getPreordersOfStation(null, $staff_id, PreorderProtocol::ORDER_STATUS_OF_SHIPPING, $start_time, $end_time, 'staff_priority', 'asc', $per_page);
-
-
-        $orders->load(['skus' => function ($query) use ($daytime) {
-            if ($daytime) {
-                $query->where('weekday', Carbon::today()->dayOfWeek)->where('daytime', $daytime);
-            }
-            $query->where('weekday', Carbon::today()->dayOfWeek);
-        }]);
-
-        foreach ($orders as $key => $order) {
-            if (!count($order->skus)) {
-                unset($orders[$key]);
-            }
-        }
+        $orders = $this->queryOrders(null, null, $staff_id, $status, null, null, $per_page, 'staff_priority', 'asc');
+        $orders->load('skus');
 
         return $orders;
     }
 
-    public function getDayPreorderWithProductsByStation($station_id, $day, $daytime = null)
+    public function getDayPreorderWithProductsByStation($station_id, $date, $daytime = null)
     {
-        $query_day = ($day instanceof Carbon) ? $day : Carbon::createFromFormat('Y-m-d', $day);
+        $query_date = ($date instanceof Carbon) ? $date : Carbon::createFromFormat('Y-m-d', $date);
 
         $query = Preorder::query()
             ->with(['skus' => function ($query) {
                 $query->where('remain', '>', 0);
             }])
             ->where('station_id', $station_id)
-            ->where('status', PreorderProtocol::ORDER_STATUS_OF_SHIPPING)//发发货中
-            ->where('start_time', '<=', $query_day);
+            ->where('status', PreorderProtocol::ORDER_STATUS_OF_SHIPPING)//发货中
+            ->where('start_time', '<=', $query_date)
+            ->where(function ($query) use ($query_date) {
+                //非暂停中
+                $query->whereNull('pause_time')->orWhere('pause_time', '>', $query_date)
+                    ->orWhere(function ($query) use ($query_date) {
+                        $query->whereNotNull('restart_time')->where('restart_time', '<=', $query_date);
+                    });
+            });
 
         if (!is_null($daytime)) {
             $query->where('daytime', $daytime);
         }
 
-        if ($query_day->isWeekend()) {
+        if ($query_date->isWeekend()) {
             $query->where('weekday_type', PreorderProtocol::WEEKDAY_TYPE_OF_ALL);
         }
 
         return $query->get();
     }
 
-    public function getDayPreorderWithProductsOfStaff($staff_id, $day, $daytime = null)
+    public function getDayPreorderWithProductsOfStaff($staff_id, $date, $daytime = null)
     {
-        $query_day = ($day instanceof Carbon) ? $day : Carbon::createFromFormat('Y-m-d', $day);
+        $query_date = ($date instanceof Carbon) ? $date : Carbon::createFromFormat('Y-m-d', $date);
         $query = Preorder::query()
             ->with(['skus' => function ($query) {
                 $query->where('remain', '>', 0);
             }])
             ->where('staff_id', $staff_id)
             ->where('status', PreorderProtocol::ORDER_STATUS_OF_SHIPPING)//发发货中
-            ->where('start_time', '<=', $query_day);
+            ->where('start_time', '<=', $query_date)
+            ->where(function ($query) use ($query_date) {
+                //非暂停中
+                $query->whereNull('pause_time')->orWhere('pause_time', '>', $query_date)
+                    ->orWhere(function ($query) use ($query_date) {
+                        $query->whereNotNull('restart_time')->where('restart_time', '<=', $query_date);
+                    });
+            });
 
         if (!is_null($daytime)) {
             $query->where('daytime', $daytime);
         }
 
-        if ($query_day->isWeekend()) {
+        if ($query_date->isWeekend()) {
             $query->where('weekday_type', PreorderProtocol::WEEKDAY_TYPE_OF_ALL);
         }
 
         return $query->get();
     }
 
-    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $charge_status = null, $start_time = null, $end_time = null)
+    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null)
     {
         $query = Preorder::query();
-
 
         if (!is_null($station_id)) {
             $query->where('station_id', $station_id);
@@ -285,29 +277,21 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $query->where('order_no', $order_no);
         }
 
-
         if (!is_null($phone)) {
             $query->where('phone', $phone);
         }
-
 
         if (PreorderProtocol::validOrderStatus($order_status) === true) {
             $query->where('status', $order_status);
         }
 
-        if (PreorderProtocol::validChargeStatus($charge_status) === true) {
-            $query->where('charge_status', $charge_status);
-        }
-
-
         if (!is_null($start_time)) {
-            $query->where('end_time', '>=', $start_time);
+            $query->where('start_time', '>=', $start_time);
         }
 
         if (!is_null($end_time)) {
             $query->where('start_time', '<=', $end_time);
         }
-
 
         return $query->paginate(PreorderProtocol::PREORDER_PER_PAGE);
     }

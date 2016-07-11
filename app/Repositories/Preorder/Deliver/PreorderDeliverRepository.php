@@ -14,6 +14,7 @@ class PreorderDeliverRepository implements PreorderDeliverRepositoryContract, St
             'station_id',
             'staff_id',
             'preorder_id',
+            'deliver_at'
         ]));
     }
 
@@ -28,6 +29,9 @@ class PreorderDeliverRepository implements PreorderDeliverRepositoryContract, St
 
     public function get($deliver_id)
     {
+        if ($deliver_id instanceof PreorderDeliver) {
+            return $deliver_id;
+        }
         return PreorderDeliver::query()->findOrFail($deliver_id);
     }
 
@@ -43,7 +47,7 @@ class PreorderDeliverRepository implements PreorderDeliverRepositoryContract, St
     public function getBillingWithProducts($station_id, $time_before)
     {
         return PreorderDeliver::query()->with(['skus' => function ($query) {
-            $query->select(['id', 'preorder_id', 'product_id', 'product_sku_id', 'name', 'cover_image', 'pivot_quantity as quantity']);
+            $query->select(['id', 'preorder_id', 'product_id', 'product_sku_id', 'name', 'cover_image']);
         }])->where('status', PreorderProtocol::PREORDER_DELIVER_STATUS_OF_OK)
             ->where('checkout', StatementProtocol::CHECK_STATUS_OF_PENDING)
             ->where('deliver_at', '<=', $time_before)
@@ -54,5 +58,16 @@ class PreorderDeliverRepository implements PreorderDeliverRepositoryContract, St
     public function updateBillingAsCheckout($deliver_ids, $statement_no)
     {
         return PreorderDeliver::whereIn('id', $deliver_ids)->update(['checkout' => StatementProtocol::CHECK_STATUS_OF_HANDLED, 'statement_no' => $statement_no]);
+    }
+
+    public function getRecentDeliver($preorder_id, $deliver_at)
+    {
+        $deliver = PreorderDeliver::query()->where('preorder_id', $preorder_id)->orderBy('created_at', 'desc')->first();
+
+        if ($deliver && $deliver['deliver_at'] >= $deliver_at) {
+            return false;
+        }
+
+        return $deliver;
     }
 }

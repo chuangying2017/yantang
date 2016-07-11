@@ -91,6 +91,7 @@ return [
 
     'subscribe' => [
         'pause_days' => env('SUBSCRIBE_PAUSE_DAYS', 2),
-    ]
+    ],
+
 
 ];

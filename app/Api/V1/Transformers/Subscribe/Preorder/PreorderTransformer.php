@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Transformers\Subscribe\Preorder;
 
+use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
@@ -10,7 +11,7 @@ class PreorderTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'station', 'staff', 'billings', 'assign'];
+    protected $availableIncludes = ['skus', 'station', 'staff', 'deliver', 'assign', 'order'];
 
     public function transform(Preorder $preorder)
     {
@@ -36,6 +37,11 @@ class PreorderTransformer extends TransformerAbstract {
         return $data;
     }
 
+    public function includeOrder(Preorder $preorder)
+    {
+        return $this->item($preorder->order, new ClientOrderTransformer(), true);
+    }
+
     public function includeSkus(Preorder $preorder)
     {
         return $this->collection($preorder->skus, new PreorderSkuTransformer(), true);
@@ -44,6 +50,11 @@ class PreorderTransformer extends TransformerAbstract {
     public function includeBillings(Preorder $preorder)
     {
         return $this->collection($preorder->billings, new PreorderBillingTransformer(), true);
+    }
+
+    public function includeDeliver(Preorder $preorder)
+    {
+        return $this->collection($preorder->deliver, new PreorderDeliverTransformer(), true);
     }
 
     public function includeStaff(Preorder $preorder)

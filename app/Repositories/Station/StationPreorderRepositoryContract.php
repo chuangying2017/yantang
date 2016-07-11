@@ -9,11 +9,11 @@ interface StationPreorderRepositoryContract extends PreorderRepositoryContract {
 
     public function getPreordersOfStationNotConfirm($station_id);
 
-    public function getDayPreorderWithProductsByStation($station_id, $day, $day_time = null);
+    public function getDayPreorderWithProductsByStation($station_id, $date, $day_time = null);
 
-    public function getDayPreordersOfStaff($staff_id = null, $day = null, $daytime = null, $per_page = null);
+    public function getPreordersOfStaff($staff_id, $status = null, $date = null, $daytime = null, $per_page = null);
 
-    public function getDayPreorderWithProductsOfStaff($staff_id, $day, $day_time = null);
+    public function getDayPreorderWithProductsOfStaff($staff_id, $date, $day_time = null);
 
     public function updatePreorderPriority($order_id, $staff_id, $preorder_priority);
 }
