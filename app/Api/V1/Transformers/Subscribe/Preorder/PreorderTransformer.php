@@ -28,7 +28,7 @@ class PreorderTransformer extends TransformerAbstract {
             'staff' => ['id' => $preorder->staff_id],
             'status' => $preorder->status,
             'start_time' => $preorder->start_time,
-            'pause_time' => $preorder->start_time,
+            'pause_time' => $preorder->pause_time,
             'restart_time' => $preorder->restart_time,
             'created_at' => $preorder->created_at,
         ];
