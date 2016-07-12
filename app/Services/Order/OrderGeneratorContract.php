@@ -17,6 +17,8 @@ interface OrderGeneratorContract {
 
     public function subscribe($user_id, $skus, $weekday_type, $daytime, $start_time, $address_id);
 
+    public function  confirmSubscribe($temp_order_id);
+
     public function buySpecialCampaign($user_id, $campaign_id, EloquentCampaignRepository $campaignRepo);
 
     public function setOrderRepo(ClientOrderRepositoryContract $orderRepo);

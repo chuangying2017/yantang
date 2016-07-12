@@ -10,7 +10,7 @@ class DistrictTransformer extends TransformerAbstract {
         return [
             'id' => $district['id'],
             'name' => $district['name'],
-            'station_count' => $district['station_count'],
+            'station_count' => $district['station_count'] ? : 0,
         ];
     }
 

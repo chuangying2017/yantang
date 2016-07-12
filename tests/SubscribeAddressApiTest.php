@@ -63,4 +63,14 @@ class SubscribeAddressApiTest extends TestCase {
         return $this->getResponseData('data');
     }
 
+    /** @test */
+    public function it_can_get_district_lists()
+    {
+        $this->json('get', 'subscribe/districts', [], $this->getAuthHeader());
+
+        $this->echoJson();
+        $this->assertResponseOk();
+        $this->seeJsonStructure(['data' => [['id', 'name', 'station_count']]]);
+    }
+
 }

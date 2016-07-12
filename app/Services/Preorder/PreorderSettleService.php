@@ -76,6 +76,9 @@ class PreorderSettleService implements PreorderSettleServiceContract {
                 continue;
             }
 
+
+            #todo 完成订单
+
             foreach ($order['skus'] as $deliver_sku) {
                 $sku_deliver_quantity = ($deliver_sku['quantity'] > $deliver_sku['remain']) ? $deliver_sku['remain'] : $deliver_sku['quantity'];
 

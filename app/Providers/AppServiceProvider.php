@@ -7,8 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use XS;
 use XSDocument;
 
-class AppServiceProvider extends ServiceProvider
-{
+class AppServiceProvider extends ServiceProvider {
 
     /**
      * Bootstrap any application services.
@@ -30,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Repositories\Image\ImageRepositoryContract::class,
             \App\Repositories\Image\QiniuImageRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Comment\CommentRepositoryContract::class,
+            \App\Repositories\Comment\EloquentCommentRepository::class
         );
     }
 }

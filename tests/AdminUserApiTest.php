@@ -18,7 +18,8 @@ class AdminUserApiTest extends TestCase {
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
 
-        $this->dump();
+        $this->echoJson();
+        $this->assertResponseOk();
     }
 
     /** @test */
@@ -40,6 +41,7 @@ class AdminUserApiTest extends TestCase {
         );
 
         $this->assertResponseStatus(201);
+        $this->echoJson();
 
         return $this->getResponseData('data');
     }
@@ -71,6 +73,7 @@ class AdminUserApiTest extends TestCase {
         );
 
         $this->assertResponseStatus(200);
+        $this->dumpResponse();
 
         $this->seeInDatabase('users', ['phone' => 13277548383, 'id' => $user['id']]);
 
@@ -86,21 +89,24 @@ class AdminUserApiTest extends TestCase {
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
 
-        $this->dumpResponse();
+        $this->echoJson();
         $this->assertResponseStatus(200);
     }
 
     /** @test */
     public function it_can_create_a_role()
     {
+        $role_data = [
+            'name' => 'test1',
+            'associated-permissions' => 'none',
+            'permissions' => ''
+        ];
+        echo json_encode($role_data);
         $this->json('post', 'admin/access/roles',
-            [
-                'name' => 'test1',
-                'associated-permissions' => 'none',
-                'permissions' => ''
-            ],
+            $role_data,
             $this->getAuthHeader()
         );
+        $this->echoJson();
 
         $this->assertResponseStatus(201);
     }

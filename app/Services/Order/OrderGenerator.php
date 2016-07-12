@@ -236,6 +236,21 @@ class OrderGenerator implements OrderGeneratorContract {
             throw new \Exception(json_encode($temp_order->getError(), JSON_UNESCAPED_UNICODE));
         }
 
+        return $temp_order;
+    }
+
+    public function confirmSubscribe($temp_order_id)
+    {
+        $temp_order = $this->pullTempOrder($temp_order_id);
+
+        if (!$temp_order) {
+            throw new \Exception('下单超时');
+        }
+
+        if ($temp_order->getError()) {
+            throw new \Exception(json_encode($temp_order->getError()));
+        }
+
         $this->setOrderRepo(app()->make(PreorderOrderRepository::class));
         $order = $this->orderRepo->createOrder($temp_order->toArray());
 

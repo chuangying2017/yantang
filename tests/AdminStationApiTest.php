@@ -15,7 +15,6 @@ class AdminStationApiTest extends TestCase {
             ['name' => '天河'],
             $this->getAuthHeader()
         );
-//        $this->dump();
 
         $this->assertResponseStatus(201);
 
@@ -23,6 +22,7 @@ class AdminStationApiTest extends TestCase {
             [],
             $this->getAuthHeader()
         );
+
         $this->assertResponseStatus(200);
     }
 
@@ -92,7 +92,6 @@ class AdminStationApiTest extends TestCase {
         );
 
         $this->dumpResponse();
-
     }
 
 }

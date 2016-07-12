@@ -40,22 +40,36 @@ class OrderController extends Controller {
 
     public function store(SubscribeOrderRequest $request, OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout)
     {
-//        try {
+        try {
             $skus = $request->input('skus');
             $weekday_type = $request->input('weekday_type');
             $daytime = $request->input('daytime');
             $start_time = $request->input('start_time');
             $address_id = $request->input('address_id');
+
+            $temp_order = $orderGenerator->subscribe(access()->id(), $skus, $weekday_type, $daytime, $start_time, $address_id);
+
+            return $this->response->array(['data' => $temp_order->toArray()]);
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
+    }
+
+    public function confirm($temp_order_id, Request $request, OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout)
+    {
+
+        try {
+
             $pay_channel = $request->input('channel') ?: PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
 
-            $order = $orderGenerator->subscribe(access()->id(), $skus, $weekday_type, $daytime, $start_time, $address_id);
+            $order = $orderGenerator->confirmSubscribe($temp_order_id);
 
             $charge = $orderCheckout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 
             return $this->response->item($order, new ClientOrderTransformer())->setMeta(['charge' => $charge])->setStatusCode(201);;
-//        } catch (\Exception $e) {
-//            $this->response->errorBadRequest($e->getMessage());
-//        }
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
     }
 
     /**

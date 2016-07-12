@@ -68,6 +68,7 @@ class SubscribeServiceProvider extends ServiceProvider {
             \App\Repositories\Preorder\Deliver\PreorderDeliverRepositoryContract::class,
             \App\Repositories\Preorder\Deliver\PreorderDeliverRepository::class
         );
+
     }
 
 }

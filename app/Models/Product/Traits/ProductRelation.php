@@ -9,6 +9,7 @@
 namespace App\Models\Product\Traits;
 
 
+use App\Models\Comment;
 use App\Models\Image;
 use App\Models\Product\Brand;
 use App\Models\Merchant;
@@ -60,6 +61,11 @@ trait ProductRelation {
     public function images()
     {
         return $this->morphToMany(Image::class, 'imageable');
+    }
+
+    public function comments()
+    {
+        return $this->morphToMany(Comment::class, 'commentable');
     }
 
 }

@@ -9,7 +9,7 @@ class PreorderOrderApiTest extends TestCase {
     use DatabaseTransactions;
 
     /** @test */
-    public function it_can_create_a_preorder_order()
+    public function it_can_create_a_preorder_temp_order()
     {
         $address = $this->it_can_create_a_subscribe_address();
         $data = [
@@ -26,6 +26,25 @@ class PreorderOrderApiTest extends TestCase {
         ];
 
         $this->json('post', 'subscribe/orders', $data, $this->getAuthHeader());
+
+        $this->assertResponseStatus(200);
+
+//        $this->echoJson();
+
+        return $this->getResponseData('data.temp_order_id');
+    }
+
+    /** @test */
+    public function it_can_create_a_preorder_order()
+    {
+        $temp_order_id = $this->it_can_create_a_preorder_temp_order();
+        $data = [
+            'channel' => 'wx_pub_qr'
+        ];
+
+        $this->json('put', 'subscribe/orders/' . $temp_order_id . '/confirm', $data, $this->getAuthHeader());
+
+        $this->echoJson();
 
         $this->assertResponseStatus(201);
 
@@ -74,4 +93,5 @@ class PreorderOrderApiTest extends TestCase {
 
         return $this->getResponseData('data');
     }
+
 }

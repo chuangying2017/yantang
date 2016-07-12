@@ -2,6 +2,7 @@
 
 use App\Models\Access\User\User;
 use App\Models\Billing\OrderBilling;
+use App\Models\Comment;
 use App\Models\Order\OrderAddress;
 use App\Models\Order\OrderDeliver;
 use App\Models\Order\OrderMemo;
@@ -45,7 +46,10 @@ trait OrderRelation {
         return $this->hasOne(OrderSpecialCampaign::class, 'order_id', 'id');
     }
 
-
+    public function comments()
+    {
+        return $this->morphToMany(Comment::class, 'commentable');
+    }
 
 
 }

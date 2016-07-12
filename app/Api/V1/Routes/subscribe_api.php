@@ -56,6 +56,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
     //用户订奶
     $api->group(['prefix' => 'subscribe'], function ($api) {
 
+        $api->put('orders/{temp_order}/confirm', 'OrderController@confirm');
         $api->resource('orders', 'OrderController');
         $api->resource('orders.checkout', 'CheckoutController');
         $api->resource('address', 'AddressController');
