@@ -1,11 +1,10 @@
 <?php namespace App\Services\Preorder;
 
-use App\Events\Preorder\PaidPreorderBillingFail;
+use App\Events\Preorder\PreorderSkusOut;
 use App\Repositories\Preorder\Deliver\PreorderDeliverRepositoryContract;
 use App\Repositories\Preorder\Product\PreorderSkusRepositoryContract;
 use App\Repositories\Station\StationPreorderRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
-use App\Services\Pay\Exception\NotEnoughException;
 use Carbon\Carbon;
 
 class PreorderSettleService implements PreorderSettleServiceContract {
@@ -76,14 +75,18 @@ class PreorderSettleService implements PreorderSettleServiceContract {
                 continue;
             }
 
-
-            #todo 完成订单
-
+            $out_sku = 0;
             foreach ($order['skus'] as $deliver_sku) {
                 $sku_deliver_quantity = ($deliver_sku['quantity'] > $deliver_sku['remain']) ? $deliver_sku['remain'] : $deliver_sku['quantity'];
-
+                if ($sku_deliver_quantity == $deliver_sku['remain']) {
+                    $out_sku++;
+                }
                 $deliver_sku_relate_ids[$deliver_sku['id']] = ['quantity' => $sku_deliver_quantity];
                 $this->skuRepo->decrement($deliver_sku['id'], $sku_deliver_quantity);
+            }
+
+            if ($out_sku == count($order['skus'])) {
+                event(new PreorderSkusOut($order));
             }
             //生成发货记录
             $deliver = $this->deliverRepo->createDeliver($data);

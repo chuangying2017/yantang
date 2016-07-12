@@ -198,7 +198,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $order;
     }
 
-
     public function getPreordersOfStationNotConfirm($station_id)
     {
         return $this->queryOrders(null, $station_id, null, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);

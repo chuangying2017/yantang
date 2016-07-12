@@ -108,7 +108,8 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Preorder\SetPreorderAsOut',
         ],
 
-        'App\Events\Preorder\PreorderIsCancel' => [
+        'App\Events\Preorder\PreorderSkusOut' => [
+            'App\Listeners\Preorder\SetPreorderAsDone',
         ],
 
         /**
