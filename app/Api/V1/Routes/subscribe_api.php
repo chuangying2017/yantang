@@ -58,12 +58,12 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
         $api->put('orders/{temp_order}/confirm', 'OrderController@confirm');
         $api->resource('orders', 'OrderController');
+        $api->resource('preorders', 'PreorderController');
         $api->resource('orders.checkout', 'CheckoutController');
         $api->resource('address', 'AddressController');
         $api->get('stations', 'StationController@index');
         $api->get('products', 'ProductController@index');
         $api->get('districts', 'DistrictController@index');
-        $api->get('products', 'ProductController@index');
 
     });
 });

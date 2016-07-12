@@ -53,12 +53,18 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getPaginatedByUser($user_id, $status = null, $start_time = null, $end_time = null, $per_page = PreorderProtocol::PREORDER_PER_PAGE)
     {
-        return $this->queryOrders($user_id, null, null, $status, $start_time, $end_time, PreorderProtocol::PREORDER_PER_PAGE);
+        $orders = $this->queryOrders($user_id, null, null, $status, $start_time, $end_time, PreorderProtocol::PREORDER_PER_PAGE);
+        $orders->load('skus');
+
+        return $orders;
     }
 
     public function getAllByUser($user_id, $status = null, $start_time = null, $end_time = null)
     {
-        return $this->queryOrders($user_id, null, null, $status, $start_time, $end_time);
+        $orders = $this->queryOrders($user_id, null, null, $status, $start_time, $end_time);
+        $orders->load('skus');
+
+        return $orders;
     }
 
     protected function queryOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc')

@@ -26,9 +26,10 @@ class PreorderTransformer extends TransformerAbstract {
             'address' => $preorder->address,
             'station' => ['id' => $preorder->station_id],
             'staff' => ['id' => $preorder->staff_id],
-//            'district' => ['id' => $preorder->district_id],
             'status' => $preorder->status,
             'start_time' => $preorder->start_time,
+            'pause_time' => $preorder->start_time,
+            'restart_time' => $preorder->restart_time,
             'created_at' => $preorder->created_at,
         ];
 
