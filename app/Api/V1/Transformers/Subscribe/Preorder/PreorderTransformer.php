@@ -4,6 +4,7 @@ use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
+use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 use App\Models\Subscribe\Preorder;
 
@@ -31,9 +32,21 @@ class PreorderTransformer extends TransformerAbstract {
             'pause_time' => $preorder->pause_time,
             'restart_time' => $preorder->restart_time,
             'created_at' => $preorder->created_at,
+            'pause_status' => $this->isPause($preorder)
         ];
 
         return $data;
+    }
+
+    protected function isPause($preorder)
+    {
+        if (!is_null($preorder['pause_time']) && $preorder['pause_time'] <= Carbon::today()) {
+            if (is_null($preorder['restart_time']) || $preorder['restart_time'] > Carbon::today()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function includeOrder(Preorder $preorder)
