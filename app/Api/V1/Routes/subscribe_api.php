@@ -58,6 +58,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
         $api->put('orders/{temp_order}/confirm', 'OrderController@confirm');
         $api->resource('orders', 'OrderController');
+        $api->get('preorders/{order_id}/deliver', 'PreorderController@deliver');
         $api->resource('preorders', 'PreorderController');
         $api->resource('orders.checkout', 'CheckoutController');
         $api->resource('address', 'AddressController');

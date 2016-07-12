@@ -70,4 +70,9 @@ class PreorderDeliverRepository implements PreorderDeliverRepositoryContract, St
 
         return $deliver;
     }
+
+    public function getByPreorderPaginated($preorder_id, $per_page = 20)
+    {
+        return PreorderDeliver::with('skus')->where('preorder_id', $preorder_id)->paginate($per_page);
+    }
 }

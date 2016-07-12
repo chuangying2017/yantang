@@ -120,7 +120,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         }
 
         if ($with_detail) {
-            $order->load('skus', 'deliver', 'deliver.skus', 'station', 'staff', 'user', 'order');
+            $order->load('skus', 'station', 'staff', 'user', 'order');
         }
 
         return $order;

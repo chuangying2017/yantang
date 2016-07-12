@@ -25,4 +25,18 @@ class PreorderApiTEst extends TestCase {
         $this->assertResponseOk();
         $this->echoJson();
     }
+
+    /** @test */
+    public function it_can_get_preorder_deliver_lists()
+    {
+        $preorder_id = 15;
+        $this->json('get', 'subscribe/preorders/' . $preorder_id . '/deliver', [], $this->getAuthHeader());
+
+
+        $this->assertResponseOk();
+
+        $this->echoJson();
+
+        $this->seeJsonStructure(['data' => [['skus']]]);
+    }
 }
