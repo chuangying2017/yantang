@@ -188,6 +188,9 @@ class EventServiceProvider extends ServiceProvider {
 //
 //        ],
 
+        'App\Services\Comments\Event\CommentIsCreated' => [
+
+        ],
 
     ];
 

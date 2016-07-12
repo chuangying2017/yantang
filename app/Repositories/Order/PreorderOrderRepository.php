@@ -7,8 +7,8 @@ use App\Services\Order\OrderProtocol;
 
 class PreorderOrderRepository extends ClientOrderRepository {
 
-    protected $detail_relations = ['skus', 'skus.counter', 'address', 'billings'];
-    protected $lists_relations = ['skus', 'skus.counter'];
+    protected $detail_relations = ['skus', 'address', 'billings'];
+    protected $lists_relations = ['skus'];
 
     protected function setOrderType()
     {
