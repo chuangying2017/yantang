@@ -11,6 +11,7 @@ class AdminProductApiTest extends TestCase {
     {
         $query = [
             'status' => 'up',
+            'keyword' => '牛奶'
         ];
         $this->json('get', '/admin/products', $query, $this->getAuthHeader());
 
@@ -58,4 +59,11 @@ class AdminProductApiTest extends TestCase {
         $this->dumpResponse();
     }
 
+    /** @test */
+    public function it_can_get_all_comments()
+    {
+        $this->json('get', '/admin/preorders/comments', [], $this->getAuthHeader());
+
+        $this->dump();
+    }
 }

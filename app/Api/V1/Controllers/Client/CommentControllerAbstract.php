@@ -37,8 +37,8 @@ abstract class CommentControllerAbstract extends Controller {
 
     public function index(Request $request)
     {
-        $order_by = $request->input('order_by');
-        $sort = $request->input('sort');
+        $order_by = $request->input('order_by', 'created_at');
+        $sort = $request->input('sort', 'desc');
         $comments = $this->commentRepo->getAllPaginated($this->getType(), $order_by, $sort);
 
         return $this->response->paginator($comments, new CommentTransformer());

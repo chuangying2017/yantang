@@ -23,7 +23,7 @@ class ProductSearchRepository implements SearchRepositoryContract {
      */
     public function __construct(ProductRepositoryContract $productRepo)
     {
-        $this->xs = new XS(env('SEARCH_APP_NAME'));
+        $this->xs = new XS(config('services.search.name'));
         $this->productRepo = $productRepo;
     }
 
@@ -70,13 +70,7 @@ class ProductSearchRepository implements SearchRepositoryContract {
             return 1;
         };
 
-        $data = [
-            'id' => $product['id'], // 此字段为主键，必须指定
-            'title' => $product['title'],
-            'cover_image' => $product['cover_image'],
-            'desc' => $product['desc'],
-            'price' => $product['price'],
-        ];
+        $data = $this->transform($product);
 
         // 创建文档对象
         $doc = new XSDocument;
@@ -92,13 +86,7 @@ class ProductSearchRepository implements SearchRepositoryContract {
             return 1;
         };
 
-        $data = [
-            'id' => $product['id'], // 此字段为主键，必须指定
-            'title' => $product['title'],
-            'cover_image' => $product['cover_image'],
-            'desc' => $product['desc'],
-            'price' => $product['price'],
-        ];
+        $data = $this->transform($product);
 
         // 创建文档对象
         $doc = new XSDocument;
@@ -123,5 +111,12 @@ class ProductSearchRepository implements SearchRepositoryContract {
     public function hot($limit = 6)
     {
         return $this->getSearch()->getHotQuery($limit);
+    }
+
+    protected function transform($product){
+        return [
+            'id' => $product['id'], // 此字段为主键，必须指定
+            'title' => $product['title'],
+        ];
     }
 }

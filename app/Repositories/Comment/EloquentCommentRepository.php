@@ -26,6 +26,7 @@ class EloquentCommentRepository implements CommentRepositoryContract {
         ]);
 
         $commentable = $this->getCommentAble($commentable_type);
+
         $comment->$commentable()->attach($commentable_id);
 
         if (count($image_ids)) {

@@ -22,6 +22,22 @@ class StaffPreorderApiTest extends TestCase {
         $this->assertResponseOk();
     }
 
+    /** @test */
+    public function it_can_get_staff_preorder_lists()
+    {
+        $this->json('get', 'staffs/preorders/daily',
+            [
+                'date' => '2016-07-11'
+            ],
+            $this->getAuthHeader(2));
+
+        $this->echoJson();
+
+        $this->seeJsonStructure(['meta' => ['summary']]);
+
+        $this->assertResponseOk();
+    }
+
 
     /** @test */
     public function it_can_show_staff_preorder_detail()

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Product\Product;
+use App\Repositories\Search\Item\ProductSearchRepository;
 use App\Services\Product\Search\Facades\ProductSearch;
 use Illuminate\Console\Command;
 
@@ -39,6 +40,6 @@ class InitSearch extends Command {
      */
     public function handle()
     {
-        ProductSearch::build();
+        app()->make(ProductSearchRepository::class)->init();
     }
 }

@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\StoreSettleStatement',
         'App\Console\Commands\StationSettleStatement',
         'App\Console\Commands\SettlePreorder',
+        'App\Console\Commands\InitSearch',
+        
 
     ];
 

@@ -102,6 +102,11 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
         $api->resource('campaigns', 'CampaignController');
     });
 
+    $api->group(['namespace' => 'Subscribe'], function ($api) {
+        $api->resource('preorders/comments', 'CommentController');
+    });
+
+
 
     /**
      * 总部管理服务部

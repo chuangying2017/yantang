@@ -86,7 +86,8 @@ return [
     ],
 
     'search' => [
-        'root' => env('SEARCH_ROOT_PATH')
+        'root' => env('SEARCH_ROOT_PATH'),
+        'name' => env('SEARCH_APP_NAME')
     ],
 
     'subscribe' => [
