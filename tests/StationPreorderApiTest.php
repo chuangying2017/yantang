@@ -16,6 +16,7 @@ class StationPreorderApiTest extends TestCase {
         $this->seeJsonStructure(['data' => [['cat' => ['id']]]]);
     }
 
+
     /** @test */
     public function it_can_get_all_not_confirm_orders_of_station()
     {
@@ -36,8 +37,8 @@ class StationPreorderApiTest extends TestCase {
 
         $date = '2016-07-11';
         $this->json('get', 'stations/preorders/daily', [
-            'day' => $date,
-            'daytime' => 0,
+            'date' => $date,
+//            'daytime' => 0,
         ], $this->getAuthHeader());
 
         $this->echoJson();
@@ -151,7 +152,6 @@ class StationPreorderApiTest extends TestCase {
         $this->seeJsonStructure(['data' => ['skus']]);
 
     }
-
 
 
     /** @test */

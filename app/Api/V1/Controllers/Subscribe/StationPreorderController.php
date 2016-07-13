@@ -29,12 +29,12 @@ class StationPreorderController extends Controller {
 
     public function daily(Request $request)
     {
-        $day = $request->input('day');
+        $day = $request->input('date');
         $daytime = $request->input('daytime');
 
         $orders = $this->orderRepo->getDayPreorderWithProductsByStation(access()->stationId(), $day, $daytime);
 
-        return $this->response->array(['date' => array_values($this->transformOrder($orders))]);
+        return $this->response->array(['data' => array_values($this->transformOrder($orders))]);
     }
 
     public function index(Request $request)

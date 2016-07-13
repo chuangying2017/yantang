@@ -13,4 +13,5 @@ class PreorderCommentController extends CommentControllerAbstract {
     {
         $this->commentable_type = Preorder::class;
     }
+
 }

@@ -29,7 +29,7 @@ class StaffPreorderController extends Controller {
 
     public function daily(Request $request)
     {
-        $date = $request->input('day');
+        $date = $request->input('date');
         $daytime = $request->input('daytime');
 
         $orders = $this->orderRepo->getDayPreorderWithProductsOfStaff(access()->staffId(), $date, $daytime);
@@ -39,7 +39,7 @@ class StaffPreorderController extends Controller {
 
     public function index(Request $request)
     {
-        $date = $request->input('day') ?: null;
+        $date = $request->input('date') ?: null;
         $daytime = $request->input('daytime');
         $status = $request->input('status') ?: null;
 

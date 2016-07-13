@@ -103,7 +103,7 @@ class StationStaffController extends Controller {
 
     public function orders(Request $request, $id, StationPreorderRepositoryContract $preorderRepo)
     {
-        $day = $request->input('day');
+        $day = $request->input('date');
         $daytime = $request->input('daytime');
 
         $this->checkAuth($id);

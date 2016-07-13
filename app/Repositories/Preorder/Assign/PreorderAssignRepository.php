@@ -41,7 +41,6 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     {
         $assign = $this->get($order_id);
         $assign->status = PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM;
-        $assign->confirm_at = Carbon::now();
         $assign->save();
 
         event(new AssignIsConfirm($assign));
@@ -85,10 +84,11 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     {
         $assign = $this->get($order_id);
         $assign->staff_id = $staff_id;
+        $assign->confirm_at = Carbon::now();
         $assign->save();
 
         event(new AssignIsAssigned($assign));
-
+        
         return $assign;
     }
 
