@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ProductRepoTest extends TestCase {
 
-//    use DatabaseTransactions;
+    use DatabaseTransactions;
 
     protected $productRepo;
 

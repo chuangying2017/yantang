@@ -8,7 +8,12 @@ class RelateProduct extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)
     {
-        $product->groups()->sync(array_merge($product_data['cat_id'], array_get($product, 'group_ids', [])));
+        $product->groups()->sync(
+            array_merge(
+                to_array($product_data['cat_id']),
+                array_get($product, 'group_ids', [])
+            )
+        );
 
         return $this->next($product_data, $product);
     }
