@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AdminPreorderApiTest extends TestCase {
 
+    use DatabaseTransactions;
+
     /** @test */
     public function it_can_get_all_preorders()
     {
@@ -21,7 +23,19 @@ class AdminPreorderApiTest extends TestCase {
     /** @test */
     public function it_can_assign_new_station_for_preorder()
     {
-//        $this->json('put', ''])
+        $preorder_id = 15;
+        $station_id = 2;
 
+        $this->json('put', 'admin/subscribe/orders/' . $preorder_id,
+            [
+                'station' => $station_id
+            ],
+            $this->getAuthHeader());
+
+        $this->echoJson();
+
+        $this->assertResponseStatus(200);
+
+        $this->seeInDatabase('preorder_assign', ['preorder_id' => $preorder_id, 'station_id' => $station_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED]);
     }
 }

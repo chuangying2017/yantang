@@ -71,7 +71,7 @@ class PreorderSettleService implements PreorderSettleServiceContract {
                 'deliver_at' => Carbon::yesterday()
             ];
 
-            if (!count($order['skus']) || !$this->deliverRepo->getRecentDeliver($order['id'], Carbon::yesterday())) {
+            if (!count($order['skus']) || $this->deliverRepo->getRecentDeliver($order['id'], Carbon::yesterday())) {
                 continue;
             }
 

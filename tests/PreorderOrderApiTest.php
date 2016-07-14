@@ -27,7 +27,6 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->json('post', 'subscribe/orders', $data, $this->getAuthHeader());
 
-        $this->dump();
         $this->assertResponseStatus(200);
 
         $this->echoJson();
@@ -77,7 +76,7 @@ class PreorderOrderApiTest extends TestCase {
         $inside = [23.157195, 113.330319];
         $data = [
             'name' => 'asda',
-            'phone' => '13232313123',
+            'phone' => '13242992609',
             'detail' => 'asdad',
             'longitude' => $inside[0],
             'latitude' => $inside[1],

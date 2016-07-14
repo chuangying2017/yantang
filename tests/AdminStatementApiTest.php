@@ -11,6 +11,7 @@ class AdminStatementApiTest extends TestCase {
     {
         $this->json('get', 'admin/statements/store', [], $this->getAuthHeader());
 
+
         $this->seeJsonStructure(['data' => [['statement_no']]]);
     }
 }
