@@ -11,7 +11,7 @@ class RelateProduct extends EditorAbstract {
         $product->groups()->sync(
             array_merge(
                 to_array($product_data['cat_id']),
-                array_get($product, 'group_ids', [])
+                array_get($product_data, 'group_ids', [])
             )
         );
 

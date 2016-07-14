@@ -5,6 +5,10 @@ use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 
 class AttachProductSku extends EditorAbstract {
 
+	/**
+     * AttachProductSku constructor.
+     * @param ProductSkuRepositoryContract $productSkuRepository
+     */
     public function __construct(ProductSkuRepositoryContract $productSkuRepository)
     {
         $this->productSkuRepository = $productSkuRepository;

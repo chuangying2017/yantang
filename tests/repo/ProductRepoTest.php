@@ -27,6 +27,8 @@ class ProductRepoTest extends TestCase {
         $product = $productRepo->createProduct($product_data);
 
         $this->seeInDatabase('product_skus', ['product_id' => $product['id'], 'type' => \App\Repositories\Product\ProductProtocol::TYPE_OF_MIX]);
+        $this->seeInDatabase('product_category', ['product_id' => $product['id'], 'cat_id' => 1]);
+        $this->seeInDatabase('product_category', ['product_id' => $product['id'], 'cat_id' => 2]);
 
 //        $this->assertInstanceOf(\App\Models\Product\Product::class, $product);
 //
@@ -46,7 +48,6 @@ class ProductRepoTest extends TestCase {
         $product = $productRepo->createProduct($product_data);
 
         $this->seeInDatabase('product_skus', ['product_id' => $product['id'], 'type' => \App\Repositories\Product\ProductProtocol::TYPE_OF_ENTITY]);
-
 
 //        $this->assertInstanceOf(\App\Models\Product\Product::class, $product);
 //
@@ -112,7 +113,7 @@ class ProductRepoTest extends TestCase {
     private function getCreateInput()
     {
         return [
-            "cat_id" => 1,
+            "cat_id" => 2,
             "merchant_id" => 1,
             "title" => "燕塘 原味酸奶饮品 300ml/盒 ",
             "sub_title" => "",
@@ -127,7 +128,7 @@ class ProductRepoTest extends TestCase {
                 'asdadasad'
             ],
             "group_ids" => [
-
+                1
             ],
             "with_invoice" => 0,
             "with_care" => 0,
