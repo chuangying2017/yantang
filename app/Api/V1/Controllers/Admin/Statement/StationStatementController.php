@@ -47,7 +47,7 @@ class StationStatementController extends Controller {
         $statement = $this->statementRepo->getStatement($statement_no, true);
 
         $statement->load('station');
-
+        
         return $this->response->item($statement, new StationStatementTransformer());
     }
 

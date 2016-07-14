@@ -41,7 +41,7 @@ class AdminStatementApiTest extends TestCase {
     /** @test */
     public function it_can_get_admin_station_statements_detail()
     {
-        $this->json('get', 'admin/statements/stations/20160630013', [], $this->getAuthHeader());
+        $this->json('get', 'admin/statements/stations/20160711011', [], $this->getAuthHeader());
 
         $this->echoJson();
 //        $this->seeJsonStructure(['data' => [['statement_no']]]);

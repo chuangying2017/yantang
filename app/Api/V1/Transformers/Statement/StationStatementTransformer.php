@@ -8,12 +8,12 @@ class StationStatementTransformer extends TransformerAbstract {
 
     public function transform(StationStatement $statement)
     {
-        if($statement->relationLoaded('station')) {
+        if ($statement->relationLoaded('station')) {
             array_push($this->defaultIncludes, 'station');
         }
 
         if ($statement->relationLoaded('products')) {
-            $this->setDefaultIncludes(['skus']);
+            array_push($this->defaultIncludes, 'skus');
         }
 
         return [
@@ -43,7 +43,7 @@ class StationStatementTransformer extends TransformerAbstract {
 
     public function includeStation(StationStatement $statement)
     {
-        if(!$statement->station) {
+        if (!$statement->station) {
             return null;
         }
         return $this->item($statement->station, new StationTransformer(), true);

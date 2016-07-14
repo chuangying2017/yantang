@@ -12,9 +12,9 @@ class StoreStatementTransformer extends TransformerAbstract {
         if ($statement->relationLoaded('store')) {
             array_push($this->defaultIncludes, 'store');
         }
-
+        
         if ($statement->relationLoaded('products')) {
-            $this->setDefaultIncludes(['skus']);
+            array_push($this->defaultIncludes, 'skus');
         }
 
         return [
