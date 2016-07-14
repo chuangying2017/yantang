@@ -15,7 +15,7 @@ class OrderBilling extends Model {
 
     public function payment()
     {
-        return $this->morphToMany(PingxxPayment::class, 'billing');
+        return $this->morphMany(PingxxPayment::class, 'billing');
     }
 
     public function scopeOrder($query, $order_id)

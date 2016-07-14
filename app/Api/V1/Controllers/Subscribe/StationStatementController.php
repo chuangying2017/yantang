@@ -30,6 +30,7 @@ class StationStatementController extends Controller {
     {
         $year = $request->input('year') ?: Carbon::today()->year;
         $status = $request->input('status') ?: null;
+        
         $statements = $this->statementRepo->getAllStatementsOfMerchant(access()->stationId(), $year, $status);
 
         return $this->response->collection($statements, new StationStatementTransformer());

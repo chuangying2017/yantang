@@ -1,8 +1,10 @@
 <?php namespace App\Repositories\Statement;
 
+use App\Services\Statement\StatementProtocol;
+
 interface StatementRepositoryContract {
 
-    public function getAllStatements($year, $month, $status = null);
+    public function getAllStatements($year, $month, $status = null, $per_page = null);
 
     public function getAllStatementsOfMerchant($merchant_id, $year, $status = null);
 

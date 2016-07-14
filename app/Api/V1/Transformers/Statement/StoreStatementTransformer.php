@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Transformers\Statement;
 
+use App\Api\V1\Transformers\Campaign\StoreTransformer;
 use App\Models\Statement\StoreStatement;
 use League\Fractal\TransformerAbstract;
 
@@ -7,6 +8,11 @@ class StoreStatementTransformer extends TransformerAbstract {
 
     public function transform(StoreStatement $statement)
     {
+
+        if ($statement->relationLoaded('store')) {
+            array_push($this->defaultIncludes, 'store');
+        }
+
         if ($statement->relationLoaded('products')) {
             $this->setDefaultIncludes(['skus']);
         }
@@ -34,6 +40,14 @@ class StoreStatementTransformer extends TransformerAbstract {
     public function includeSkus(StoreStatement $statement)
     {
         return $this->collection($statement->products, new StatementSkuTransformer(), true);
+    }
+
+    public function includeStore($statement)
+    {
+        if (!$statement->store) {
+            return null;
+        }
+        return $this->item($statement->store, new StoreTransformer(), true);
     }
 
 }

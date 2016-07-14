@@ -53,7 +53,7 @@ class MallOrderController extends Controller {
     public function show($order_no)
     {
         $order = $this->orderRepo->getOrder($order_no, true);
-
+        
         return $this->response->item($order, new AdminMallOrderTransformer());
     }
 

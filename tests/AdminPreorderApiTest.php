@@ -21,6 +21,17 @@ class AdminPreorderApiTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_show_a_preorder_detail()
+    {
+        $this->json('get', 'admin/subscribe/orders/' . 15,
+            [],
+            $this->getAuthHeader());
+
+        $this->echoJson();
+
+    }
+
+    /** @test */
     public function it_can_assign_new_station_for_preorder()
     {
         $preorder_id = 15;

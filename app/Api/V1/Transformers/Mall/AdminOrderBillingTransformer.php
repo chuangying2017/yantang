@@ -8,6 +8,8 @@ class AdminOrderBillingTransformer extends TransformerAbstract {
 
     public function transform(OrderBilling $billing)
     {
+        $this->defaultIncludes = ['payment'];
+
         $data = [
             'billing_no' => $billing['billing_no'],
             'order' => [
@@ -19,7 +21,7 @@ class AdminOrderBillingTransformer extends TransformerAbstract {
             'status' => $billing['status'],
             'refund_flag' => false,
         ];
-        if ($billing[$billing['refund_amount'] > 0]) {
+        if ($billing['refund_amount'] > 0) {
             $data['refund_flag'] = true;
             $data['refund_amount'] = $billing['refund_amount'];
         }
@@ -29,7 +31,18 @@ class AdminOrderBillingTransformer extends TransformerAbstract {
 
     public function includePayment($billing)
     {
-        return $this->item($billing, new PingxxPaymentTransformer(), true);
+        if (!count($billing->payment)) {
+            return null;
+        }
+        $payments = $billing->payment->filter(function ($payment, $key) {
+            return $payment['paid'];
+        });
+
+        if(!count($payments)) {
+            return null;
+        }
+
+        return $this->item($payments->first(), new PingxxPaymentTransformer(), true);
     }
 
 }

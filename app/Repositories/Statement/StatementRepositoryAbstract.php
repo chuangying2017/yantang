@@ -21,9 +21,9 @@ abstract class StatementRepositoryAbstract implements StatementRepositoryContrac
         $this->setModel();
     }
 
-    public function getAllStatements($year, $month = null, $status = null)
+    public function getAllStatements($year, $month = null, $status = null, $per_page = null)
     {
-        return $this->queryStatements($year, $month, null, $status);
+        return $this->queryStatements($year, $month, null, $status, $per_page);
     }
 
     public function getAllStatementsOfMerchant($merchant_id, $year, $status = null)

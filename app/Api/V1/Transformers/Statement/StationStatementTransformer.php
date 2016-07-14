@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Transformers\Statement;
 
+use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Models\Statement\StationStatement;
 use League\Fractal\TransformerAbstract;
 
@@ -7,6 +8,10 @@ class StationStatementTransformer extends TransformerAbstract {
 
     public function transform(StationStatement $statement)
     {
+        if($statement->relationLoaded('station')) {
+            array_push($this->defaultIncludes, 'station');
+        }
+
         if ($statement->relationLoaded('products')) {
             $this->setDefaultIncludes(['skus']);
         }
@@ -34,6 +39,14 @@ class StationStatementTransformer extends TransformerAbstract {
     public function includeSkus(StationStatement $statement)
     {
         return $this->collection($statement->products, new StatementSkuTransformer(), true);
+    }
+
+    public function includeStation(StationStatement $statement)
+    {
+        if(!$statement->station) {
+            return null;
+        }
+        return $this->item($statement->station, new StationTransformer(), true);
     }
 
 }

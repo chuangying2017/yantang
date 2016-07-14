@@ -15,6 +15,7 @@ class StatementProtocol {
 
     const DATE_OF_STORE_CHECK_DAY = 30;
     const DATE_OF_STATION_CHECK_DAY = 30;
+    const PER_PAGE = 20;
 
     public static function getStoreCheckDay()
     {

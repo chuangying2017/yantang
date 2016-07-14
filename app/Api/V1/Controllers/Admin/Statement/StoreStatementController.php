@@ -5,6 +5,7 @@ namespace App\Api\V1\Controllers\Admin\Statement;
 use App\API\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Statement\StoreStatementTransformer;
 use App\Repositories\Statement\StoreStatementRepository;
+use App\Services\Statement\StatementProtocol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -31,14 +32,19 @@ class StoreStatementController extends Controller {
         $year = $request->input('year') ?: Carbon::today()->year;
         $status = $request->input('status') ?: null;
         $month = $request->input('month') ?: Carbon::today()->month;
-        $statements = $this->statementRepo->getAllStatements($year, $month, $status);
+        $per_page = $request->input('per_page') ?: StatementProtocol::PER_PAGE;
+        $statements = $this->statementRepo->getAllStatements($year, $month, $status, $per_page);
 
-        return $this->response->collection($statements, new StoreStatementTransformer());
+        $statements->load('store');
+
+        return $this->response->paginator($statements, new StoreStatementTransformer());
     }
 
     public function show(Request $request, $statement_no)
     {
         $statement = $this->statementRepo->getStatement($statement_no, true);
+
+        $statement->load('store');
 
         return $this->response->item($statement, new StoreStatementTransformer());
     }

@@ -37,7 +37,7 @@ class PreorderController extends Controller {
     {
         $order = $this->preorderRepo->get($order_id, true);
 
-        return $this->response->paginator($order, new PreorderTransformer());
+        return $this->response->item($order, new PreorderTransformer());
     }
 
     public function update(Request $request, $order_id, PreorderAssignRepositoryContract $assignRepo)

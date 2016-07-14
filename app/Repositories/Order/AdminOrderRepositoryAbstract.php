@@ -40,9 +40,9 @@ abstract class AdminOrderRepositoryAbstract implements AdminOrderRepositoryContr
 
         if ($with_detail) {
             if ($this->isMallOrder()) {
-                $order->load('skus', 'address', 'billings', 'billings.payment', 'order_promotion');
+                $order->load('skus', 'address', 'billings', 'billings.payment');
             } else {
-                $order->load('skus', 'billings', 'billings.payment', 'order_promotion');
+                $order->load('skus', 'billings', 'billings.payment');
             }
         }
 
