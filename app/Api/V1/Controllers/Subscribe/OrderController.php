@@ -5,6 +5,7 @@ namespace App\Api\V1\Controllers\Subscribe;
 use App\API\V1\Controllers\Controller;
 use App\Api\V1\Requests\SubscribeOrderRequest;
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
+use App\Api\V1\Transformers\TempOrderTransformer;
 use App\Repositories\Order\PreorderOrderRepository;
 use App\Services\Order\Checkout\OrderCheckoutService;
 use App\Services\Order\OrderGenerator;
@@ -41,15 +42,15 @@ class OrderController extends Controller {
     public function store(SubscribeOrderRequest $request, OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout)
     {
         try {
-            $skus = $request->input('skus');
-            $weekday_type = $request->input('weekday_type');
-            $daytime = $request->input('daytime');
-            $start_time = $request->input('start_time');
-            $address_id = $request->input('address_id');
+        $skus = $request->input('skus');
+        $weekday_type = $request->input('weekday_type');
+        $daytime = $request->input('daytime');
+        $start_time = $request->input('start_time');
+        $address_id = $request->input('address_id');
 
-            $temp_order = $orderGenerator->subscribe(access()->id(), $skus, $weekday_type, $daytime, $start_time, $address_id);
+        $temp_order = $orderGenerator->subscribe(access()->id(), $skus, $weekday_type, $daytime, $start_time, $address_id);
 
-            return $this->response->array(['data' => $temp_order->toArray()]);
+        return $this->response->item($temp_order, new TempOrderTransformer());
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }

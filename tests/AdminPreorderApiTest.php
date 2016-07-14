@@ -10,8 +10,10 @@ class AdminPreorderApiTest extends TestCase {
     public function it_can_get_all_preorders()
     {
         $this->json('get', 'admin/subscribe/orders',
-            ['station_id' => 1],
+            ['status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING],
             $this->getAuthHeader());
+
+        $this->echoJson();
 
         $this->seeJsonStructure(['data' => [['assign' => ['time_before']]]]);
     }

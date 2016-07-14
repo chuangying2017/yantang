@@ -12,7 +12,7 @@ class CalSkuAmount extends GenerateHandlerAbstract {
         }
 
         $temp_order->setProductsAmount($products_amount);
-
+        
         $temp_order->setTotalAmount(bcadd($products_amount, $temp_order->getExpressFee()));
 
         return $this->next($temp_order);

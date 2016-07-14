@@ -21,15 +21,16 @@ class PreorderOrderApiTest extends TestCase {
             'station_id' => 1,
             'daytime' => 0,
             'weekday_type' => 'all',
-            'start_time' => '2016-07-13',
+            'start_time' => '2016-07-16',
             'channel' => 'wx_pub_qr'
         ];
 
         $this->json('post', 'subscribe/orders', $data, $this->getAuthHeader());
 
+        $this->dump();
         $this->assertResponseStatus(200);
 
-//        $this->echoJson();
+        $this->echoJson();
 
         return $this->getResponseData('data.temp_order_id');
     }

@@ -196,7 +196,7 @@ class TempOrder implements PromotionAbleItemContract {
 
     public function getError()
     {
-        return $this->error;
+        return is_null($this->error) ? null : json_encode($this->error);
     }
 
     /**

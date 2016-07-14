@@ -3,6 +3,7 @@
 namespace App\Api\V1\Controllers\Mall;
 
 use App\API\V1\Controllers\Controller;
+use App\Api\V1\Transformers\TempOrderTransformer;
 use App\Services\Order\OrderGenerator;
 use Illuminate\Http\Request;
 
@@ -38,18 +39,18 @@ class CartOrderController extends Controller {
 
         $temp_order = $this->orderGenerator->buyCart(access()->id(), $cart_ids);
 
-        return $this->response->array(['data' => $temp_order->toArray()]);
+        return $this->response->item($temp_order, new TempOrderTransformer());
     }
 
     public function show(Request $request, $temp_order_id)
     {
         $temp_order = $this->orderGenerator->getTempOrder($temp_order_id);
 
-        if(!$temp_order) {
+        if (!$temp_order) {
             throw new \Exception('订单过期', 404);
         }
 
-        return $this->response->array(['data' => $temp_order->toArray()]);
+        return $this->response->item($temp_order, new TempOrderTransformer());
     }
 
 
@@ -65,13 +66,13 @@ class CartOrderController extends Controller {
         $address_id = $request->input('address') ?: null;
         if ($address_id) {
             $temp_order = $this->orderGenerator->setAddress($temp_order_id, $address_id);
-            return $this->response->array(['data' => $temp_order->toArray()]);
+            return $this->response->item($temp_order, new TempOrderTransformer());
         }
 
         $ticket_id = $request->input('ticket_id') ?: null;
         if ($ticket_id) {
             $temp_order = $this->orderGenerator->useCoupon($temp_order_id, $ticket_id);
-            return $this->response->array(['data' => $temp_order->toArray()]);
+            return $this->response->item($temp_order, new TempOrderTransformer());
         }
 
         $this->response->errorBadRequest();

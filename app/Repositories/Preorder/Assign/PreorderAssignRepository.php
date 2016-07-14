@@ -25,6 +25,7 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     public function createAssign($order_id, $station_id)
     {
         PreorderAssign::query()->where('preorder_id', $order_id)->delete();
+
         $assign = PreorderAssign::create([
             'preorder_id' => $order_id,
             'station_id' => $station_id,
@@ -85,10 +86,11 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
         $assign = $this->get($order_id);
         $assign->staff_id = $staff_id;
         $assign->confirm_at = Carbon::now();
+        $assign->status = PreorderProtocol::ASSIGN_STATUS_OF_ASSIGNED;
         $assign->save();
 
         event(new AssignIsAssigned($assign));
-        
+
         return $assign;
     }
 

@@ -38,7 +38,7 @@ class StationPreorderApiTest extends TestCase {
         $date = '2016-07-11';
         $this->json('get', 'stations/preorders/daily', [
             'date' => $date,
-//            'daytime' => 0,
+            'daytime' => 0,
         ], $this->getAuthHeader());
 
         $this->echoJson();
