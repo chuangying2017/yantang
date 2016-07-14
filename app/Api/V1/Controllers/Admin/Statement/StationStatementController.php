@@ -36,7 +36,7 @@ class StationStatementController extends Controller {
         $per_page = $request->input('per_page') ?: StatementProtocol::PER_PAGE;
 
         $statements = $this->statementRepo->getAllStatements($year, $month, $status, $per_page);
-        
+
         $statements->load('station');
 
         return $this->response->paginator($statements, new StationStatementTransformer());

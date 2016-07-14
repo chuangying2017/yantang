@@ -53,6 +53,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
                 $api->resource('groups', 'GroupController', ['except' => ['show', 'edit']]);
                 $api->resource('members.users', 'MemberUserController');
                 $api->resource('members', 'MemberController', ['except' => ['show', 'edit']]);
+                $api->resource('users', 'UserController');
             });
         });
 
