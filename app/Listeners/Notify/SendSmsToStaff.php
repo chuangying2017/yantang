@@ -13,13 +13,18 @@ use Toplan\PhpSms\Sms;
 class SendSmsToStaff {
 
     /**
+     * @var PreorderRepositoryContract
+     */
+    private $preorderRepo;
+    
+    /**
      * Create the event listener.
      *
-     * @return void
+     * @param PreorderRepositoryContract $preorderRepo
      */
-    public function __construct()
+    public function __construct(PreorderRepositoryContract $preorderRepo)
     {
-        //
+        $this->preorderRepo = $preorderRepo;
     }
 
     /**
@@ -33,11 +38,11 @@ class SendSmsToStaff {
         //
     }
 
-    public function assigned(AssignIsAssigned $event, PreorderRepositoryContract $preorderRepo)
+    public function assigned(AssignIsAssigned $event)
     {
         $assign = $event->assign;
 
-        $preorder = $preorderRepo->get($assign['preorder_id'], false);
+        $preorder = $this->preorderRepo->get($assign['preorder_id'], false);
 
         if ($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_SHIPPING) {
             try {
@@ -49,4 +54,6 @@ class SendSmsToStaff {
         }
 
     }
+
+
 }
