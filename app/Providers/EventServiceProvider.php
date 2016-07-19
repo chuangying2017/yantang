@@ -118,11 +118,12 @@ class EventServiceProvider extends ServiceProvider {
         'App\Events\Preorder\AssignIsCreate' => [
             'App\Listeners\Preorder\SetStationForPreorder',
 
-            'App\Listeners\Notify\SendSmsToStation@newOrder'
+            'App\Listeners\Notify\SendSmsToStation@newOrder',
+            'App\Listeners\Notify\SendTemplateToStation@newOrder'
         ],
 
         'App\Events\Preorder\AssignIsConfirm' => [
-
+            
         ],
 
         'App\Events\Preorder\AssignIsAssigned' => [
@@ -130,6 +131,9 @@ class EventServiceProvider extends ServiceProvider {
 
             'App\Listeners\Notify\SendSmsToClient@assigned',
             'App\Listeners\Notify\SendSmsToStaff@assigned',
+
+            'App\Listeners\Notify\SendTemplateToClient@assigned',
+            'App\Listeners\Notify\SendTemplateToStaff@assigned',
 
         ],
 

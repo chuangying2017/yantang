@@ -39,6 +39,7 @@ class MallOrderController extends Controller {
         $sort = $request->input('sort', 'desc');
 
         $orders = $this->orderRepo->getPaginatedOrders($status, $keyword, $order_by, $sort);
+        $orders->load('skus');
 
         return $this->response->paginator($orders, new AdminMallOrderTransformer());
     }
@@ -53,7 +54,7 @@ class MallOrderController extends Controller {
     public function show($order_no)
     {
         $order = $this->orderRepo->getOrder($order_no, true);
-        
+
         return $this->response->item($order, new AdminMallOrderTransformer());
     }
 

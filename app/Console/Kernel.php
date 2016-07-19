@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\StationSettleStatement',
         'App\Console\Commands\SettlePreorder',
         'App\Console\Commands\InitSearch',
-        
+
 
     ];
 
@@ -28,6 +28,6 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-
+        $schedule->command('preorder:settle')->dailyAt('1:00');
     }
 }

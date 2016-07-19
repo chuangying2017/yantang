@@ -21,7 +21,6 @@ class AssignIsAssigned extends Event
      */
     public function __construct($assign)
     {
-        //
         $this->assign = $assign;
     }
 

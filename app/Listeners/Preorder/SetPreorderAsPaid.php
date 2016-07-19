@@ -4,6 +4,7 @@ namespace App\Listeners\Preorder;
 
 use App\Events\Order\OrderIsPaid;
 use App\Repositories\Preorder\PreorderRepositoryContract;
+use App\Services\NotifyProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -43,7 +44,7 @@ class SetPreorderAsPaid {
 
             $phone = $preorder['station']['phone'];
 
-            $result = Sms::make()->to($phone)->content('您有新的订奶订单,请查看【燕塘优鲜达】')->send();
+            $result = Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_STATION_NEW_ORDER)->send();
         }
     }
 }
