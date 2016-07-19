@@ -4,6 +4,7 @@ namespace App\Listeners\Preorder;
 
 use App\Events\Preorder\AssignIsCreate;
 use App\Repositories\Preorder\PreorderRepositoryContract;
+use App\Services\NotifyProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -41,13 +42,17 @@ class SendSmsToStation {
 
         if ($preorder['status'] !== PreorderProtocol::ORDER_STATUS_OF_UNPAID) {
 
-            $preorder->load('station');
+            try {
+                $preorder->load('station');
 
-            $phone = $preorder['station']['phone'];
-            
-            $result = Sms::make()->to($phone)->content('您有新的订奶订单,请查看【燕塘优鲜达】')->send();
+                $phone = $preorder['station']['phone'];
+
+                $result = Sms::make()->to($phone)->content(NotifyProtocol::SMS_STATION_NEW_ORDER)->send();
+            } catch (\Exception $e) {
+                \Log::error($e);
+            }
+
         }
-
 
     }
 
