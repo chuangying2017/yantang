@@ -21,7 +21,7 @@ class PreorderOrderApiTest extends TestCase {
             'station_id' => 1,
             'daytime' => 0,
             'weekday_type' => 'all',
-            'start_time' => '2016-07-16',
+            'start_time' => '2016-07-24',
             'channel' => 'wx_pub_qr'
         ];
 
@@ -78,6 +78,7 @@ class PreorderOrderApiTest extends TestCase {
             'name' => 'asda',
             'phone' => '13242992609',
             'detail' => 'asdad',
+            'street' => '街道',
             'longitude' => $inside[0],
             'latitude' => $inside[1],
             'district_id' => 1

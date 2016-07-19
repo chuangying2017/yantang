@@ -28,6 +28,7 @@ class SubscribeAddressApiTest extends TestCase {
             'name' => 'asda',
             'phone' => 1,
             'detail' => 'asdad',
+            'street' => 'asdad',
             'longitude' => $out_side[0],
             'latitude' => $out_side[1],
             'district_id' => 1
@@ -46,7 +47,8 @@ class SubscribeAddressApiTest extends TestCase {
         $data = [
             'name' => 'asda',
             'phone' => 1,
-            'detail' => 'asdad',
+            'street' => '街道',
+            'detail' => 'adasd',
             'longitude' => $inside[0],
             'latitude' => $inside[1],
             'district_id' => 1

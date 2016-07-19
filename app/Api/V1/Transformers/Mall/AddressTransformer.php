@@ -15,6 +15,7 @@ class AddressTransformer extends TransformerAbstract {
             'province' => $address['province'],
             'city' => $address['city'],
             'district' => $address['district'],
+            'street' => $address['street'],
             'detail' => $address['detail'],
             'display_name' => $address['display_name'],
             'zip' => $address['zip'],

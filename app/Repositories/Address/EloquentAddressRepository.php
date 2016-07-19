@@ -38,6 +38,7 @@ class EloquentAddressRepository implements AddressRepositoryContract {
             'province',
             'city',
             'district',
+            'street',
             'detail',
             'zip',
             'display_name',

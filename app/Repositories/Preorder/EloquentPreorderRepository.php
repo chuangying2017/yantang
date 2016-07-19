@@ -18,6 +18,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             'order_id' => $data['order_id'],
             'name' => $data['name'],
             'phone' => $data['phone'],
+            'street' => $data['street'],
             'address' => $data['address'],
             'station_id' => $data['station_id'],
             'district_id' => $data['district_id'],

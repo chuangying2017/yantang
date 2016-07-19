@@ -13,6 +13,7 @@ class SetPreorderInfo extends GenerateHandlerAbstract {
         $preorder['station_id'] = $address['info']['station_id'];
         $preorder['name'] = $address['name'];
         $preorder['phone'] = $address['phone'];
+        $preorder['street'] = $address['street'];
         $preorder['address'] = $address['district'] . $address['detail'];
         $preorder['district_id'] = $address['info']['district_id'];
 

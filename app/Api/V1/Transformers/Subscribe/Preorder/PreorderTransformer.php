@@ -24,6 +24,7 @@ class PreorderTransformer extends TransformerAbstract {
             'user' => ['id' => $preorder->user_id],
             'order_no' => $preorder->order_no,
             'phone' => $preorder->phone,
+            'street' => $preorder->street,
             'address' => $preorder->address,
             'station' => ['id' => $preorder->station_id],
             'staff' => ['id' => $preorder->staff_id],
