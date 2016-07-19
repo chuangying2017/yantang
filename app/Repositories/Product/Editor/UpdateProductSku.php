@@ -5,6 +5,13 @@ use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 
 class UpdateProductSku extends EditorAbstract {
 
+    protected $productSkuRepository;
+
+
+	/**
+     * UpdateProductSku constructor.
+     * @param ProductSkuRepositoryContract $productSkuRepository
+     */
     public function __construct(ProductSkuRepositoryContract $productSkuRepository)
     {
         $this->productSkuRepository = $productSkuRepository;
@@ -12,10 +19,13 @@ class UpdateProductSku extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)
     {
-        $product->skus = $this->productSkuRepository->updateSkusOfProduct($product['id'], $product_data['skus']);
+        $this->productSkuRepository->updateSkusOfProduct($product['id'], $product_data['skus']);
 
+        $product->load('skus');
+        
         return $this->next($product_data, $product);
     }
+
 
 
 }

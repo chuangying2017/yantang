@@ -10,12 +10,10 @@ class AdminProductApiTest extends TestCase {
     public function it_return_a_products_list()
     {
         $query = [
-            'status' => 'up',
-            'keyword' => '牛奶'
+            'status' => 'up'
         ];
         $this->json('get', '/admin/products', $query, $this->getAuthHeader());
 
-        $this->dumpResponse();
         $this->assertResponseOk();
     }
 
