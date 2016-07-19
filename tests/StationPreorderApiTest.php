@@ -20,7 +20,7 @@ class StationPreorderApiTest extends TestCase {
     public function it_can_get_station_preorder_deliver_lists()
     {
         $this->json('get', 'stations/preorders/deliver', [
-            'date' => '2016-07-10 00:00:00'
+            'date' => '2016-07-10'
         ], $this->getAuthHeader());
 
         $this->echoJson();

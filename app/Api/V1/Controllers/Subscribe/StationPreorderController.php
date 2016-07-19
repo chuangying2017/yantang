@@ -61,6 +61,7 @@ class StationPreorderController extends Controller {
     public function deliver(Request $request, PreorderDeliverRepository $preorderDeliverRepo)
     {
         $date = $request->input('date') ?: Carbon::today();
+        $date = strlen($date) == 10 ? $date . ' 00:00:00' : $date;
 
         $delivers = $preorderDeliverRepo->getAll(access()->stationId(), $date);
 
