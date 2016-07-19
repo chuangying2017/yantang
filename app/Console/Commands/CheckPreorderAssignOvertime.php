@@ -2,9 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\Events\Preorder\PreordersNotHandleInTime;
+use App\Repositories\Preorder\PreorderRepositoryContract;
 use Illuminate\Console\Command;
 
 class CheckPreorderAssignOvertime extends Command {
+
+    /**
+     * @var PreorderRepositoryContract
+     */
+    private $preorderRepo;
 
     /**
      * The name and signature of the console command.
@@ -23,11 +30,12 @@ class CheckPreorderAssignOvertime extends Command {
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param PreorderRepositoryContract $preorderRepo
      */
-    public function __construct()
+    public function __construct(PreorderRepositoryContract $preorderRepo)
     {
         parent::__construct();
+        $this->preorderRepo = $preorderRepo;
     }
 
     /**
@@ -37,6 +45,11 @@ class CheckPreorderAssignOvertime extends Command {
      */
     public function handle()
     {
-        
+        $orders = $this->preorderRepo->getAllNotAssignOnTime();
+        if ($orders->first()) {
+            event(new PreordersNotHandleInTime());
+        }
     }
+
+
 }

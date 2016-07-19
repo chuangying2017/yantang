@@ -1,4 +1,4 @@
-<?php namespace App\Services;
+<?php namespace App\Services\Notify;
 class NotifyProtocol {
 
     const SMS_TO_STATION_NEW_ORDER = '您有新的订奶订单,请查看【燕塘优鲜达】';

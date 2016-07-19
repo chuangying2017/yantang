@@ -29,4 +29,8 @@ interface PreorderRepositoryContract {
 
     public function deletePreorder($order_id);
 
+    public function getAllNotAssignOnTime($station_id = null, $per_page = null);
+
+    public function getAllReject($station_id = null, $per_page = null);
+
 }

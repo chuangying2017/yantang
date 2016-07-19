@@ -6,8 +6,6 @@ use App\Events\Preorder\AssignIsCreate;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\NotifyProtocol;
 use App\Services\Preorder\PreorderProtocol;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Toplan\PhpSms\Sms;
 
 class SendSmsToStation {

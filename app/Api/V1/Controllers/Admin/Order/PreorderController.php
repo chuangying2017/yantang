@@ -49,5 +49,22 @@ class PreorderController extends Controller {
         return $this->response->array(['data' => $assign]);
     }
 
+    public function reject(Request $request)
+    {
+        $station_id = $request->input('station') ?: null;
+
+        $preorders = $this->preorderRepo->getAllReject($station_id, PreorderProtocol::PREORDER_PER_PAGE);
+
+        return $this->response->paginator($preorders, new PreorderTransformer());
+    }
+
+    public function overtime(Request $request)
+    {
+        $station_id = $request->input('station') ?: null;
+
+        $preorders = $this->preorderRepo->getAllNotAssignOnTime($station_id, PreorderProtocol::PREORDER_PER_PAGE);
+
+        return $this->response->paginator($preorders, new PreorderTransformer());
+    }
 
 }

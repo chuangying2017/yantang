@@ -336,4 +336,38 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         return $order;
     }
+
+    public function getAllNotAssignOnTime($station_id = null, $per_page = false)
+    {
+        $query = Preorder::with('assign')->whereHas('assign', function ($query) {
+            $query->where('status', PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED)->where('time_before', '<=', Carbon::now());
+        })->where('status', PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
+
+        if (!is_null($station_id)) {
+            $query->where('station_id', $station_id);
+        }
+
+        if (!is_null($per_page)) {
+            return $query->paginate($per_page);
+        }
+
+        return $query->get();
+    }
+
+    public function getAllReject($station_id = null, $per_page = null)
+    {
+        $query = Preorder::with('assign')->whereHas('assign', function ($query) {
+            $query->where('status', PreorderProtocol::ASSIGN_STATUS_OF_REJECT);
+        })->where('status', PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
+
+        if (!is_null($station_id)) {
+            $query->where('station_id', $station_id);
+        }
+
+        if (!is_null($per_page)) {
+            return $query->paginate($per_page);
+        }
+
+        return $query->get();
+    }
 }

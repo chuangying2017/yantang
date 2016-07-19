@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Backend\User;
 
+use App\Models\Access\Role\Role;
 use App\Models\Access\User\User;
 use App\Exceptions\GeneralException;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
@@ -353,4 +354,10 @@ class EloquentUserRepository implements UserContract {
             throw new StoreResourceFailedException('该电话用户已存在.');
     }
 
+    public function getAllUsersByRole($role)
+    {
+        return User::query()->whereHas('roles', function ($query) use ($role) {
+            $query->where('name', $role)->orWhere('id', $role);
+        })->get();
+    }
 }

@@ -86,6 +86,8 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             });
 
             $api->group(['prefix' => 'subscribe'], function ($api) {
+                $api->get('preorders/reject', 'PreorderController@reject');
+                $api->get('preorders/overtime', 'PreorderController@overtime');
                 $api->resource('orders', 'PreorderController', ['only' => ['index', 'show', 'update']]);
             });
 
@@ -106,7 +108,6 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
     $api->group(['namespace' => 'Subscribe'], function ($api) {
         $api->resource('preorders/comments', 'CommentController');
     });
-
 
 
     /**

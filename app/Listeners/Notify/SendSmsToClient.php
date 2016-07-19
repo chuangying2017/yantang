@@ -16,7 +16,7 @@ class SendSmsToClient {
      * @var PreorderRepositoryContract
      */
     private $preorderRepo;
-    
+
     /**
      * Create the event listener.
      *
@@ -44,8 +44,12 @@ class SendSmsToClient {
 
         $preorder = $this->preorderRepo->get($assign['preorder_id'], false);
 
-        if ($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_SHIPPING) {
-            Sms::make()->to($preorder['phone'])->content(NotifyProtocol::SMS_TO_CLIENT_PREORDER_IS_ASSIGNED)->send();
+        try {
+            if ($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_SHIPPING) {
+                Sms::make()->to($preorder['phone'])->content(NotifyProtocol::SMS_TO_CLIENT_PREORDER_IS_ASSIGNED)->send();
+            }
+        } catch (\Exception $e) {
+            \Log::error($e);
         }
 
     }

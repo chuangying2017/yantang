@@ -142,7 +142,7 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
         'App\Events\Preorder\PreordersNotHandleInTime' => [
-            'App\Listeners\Notify\SendSmsToAdmin@preorderHandleOvertime',
+            'App\Listeners\Notify\SendSmsToStationAdmin@preorderHandleOvertime',
         ],
 
 //        'App\Services\Orders\Event\OrderRequest' => [
