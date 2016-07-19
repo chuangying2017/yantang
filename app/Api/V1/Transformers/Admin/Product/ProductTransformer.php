@@ -37,11 +37,11 @@ class ProductTransformer extends TransformerAbstract {
         ];
 
         if ($product->relationLoaded('images')) {
+            $data['image_ids'] = $product->images->pluck('media_id')->all();
             $data['images'] = array_map(function ($media_id) {
                 return config('filesystems.disks.qiniu.domains.custom') . $media_id;
-            }, $product->images->pluck('media_id')->all());
+            }, $data['image_ids']);
         }
-
         return $data;
     }
 
@@ -72,7 +72,7 @@ class ProductTransformer extends TransformerAbstract {
 
     public function includeGroups(Product $product)
     {
-        return $this->item($product->groups, new GroupTransformer(), true);
+        return $this->collection($product->groups, new GroupTransformer(), true);
     }
 
 }
