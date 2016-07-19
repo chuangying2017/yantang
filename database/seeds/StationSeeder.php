@@ -16,7 +16,7 @@ class StationSeeder extends Seeder {
         \App\Models\Subscribe\Station::create([
             'id' => 1,
             'name' => '白云区服务点',
-            'district_id' => 1,
+            'district_id' => '440111',
             'geo' => json_encode([
                 [23.161885, 113.330456],
                 [23.160385, 113.331616],
@@ -31,6 +31,6 @@ class StationSeeder extends Seeder {
             'longitude' => 23.157195,
             'latitude' => 113.330319,
         ]);
-        
+
     }
 }

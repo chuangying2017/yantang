@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners\Preorder;
+namespace App\Listeners\Notify;
 
 use App\Events\Preorder\AssignIsCreate;
 use App\Repositories\Preorder\PreorderRepositoryContract;
@@ -11,7 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Toplan\PhpSms\Sms;
 
 class SendSmsToStation {
-
 
     /**
      * @var PreorderRepositoryContract
@@ -36,6 +35,11 @@ class SendSmsToStation {
      */
     public function handle(AssignIsCreate $event)
     {
+        //
+    }
+
+    public function newOrder(AssignIsCreate $event)
+    {
         $assign = $event->assign;
 
         $preorder = $this->preorderRepo->get($assign['preorder_id']);
@@ -53,7 +57,6 @@ class SendSmsToStation {
             }
 
         }
-
     }
 
 
