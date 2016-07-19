@@ -16,6 +16,17 @@ class StationPreorderApiTest extends TestCase {
         $this->seeJsonStructure(['data' => [['detail']]]);
     }
 
+    /** @test */
+    public function it_can_get_station_preorder_deliver_lists()
+    {
+        $this->json('get', 'stations/preorders/deliver', [
+            'date' => '2016-07-10 00:00:00'
+        ], $this->getAuthHeader());
+
+        $this->echoJson();
+        $this->assertResponseOk();
+    }
+
 
     /** @test */
     public function it_can_get_all_not_confirm_orders_of_station()

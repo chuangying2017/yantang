@@ -41,10 +41,10 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
             $api->post('/{station_id}/unbind', 'StationController@postUnBind')->name('api.station.unbind');
 
+            $api->get('preorders/deliver', 'StationPreorderController@deliver');
             $api->put('preorders/{order_id}/reject', 'StationPreorderController@reject');
             $api->put('preorders/{order_id}/confirm', 'StationPreorderController@confirm');
             $api->resource('preorders/{order_id}/assign', 'StationAssignController', ['only' => ['store', 'destroy']]);
-
             $api->resource('preorders', 'StationPreorderController');
         });
 

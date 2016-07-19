@@ -3,10 +3,13 @@
 namespace App\Api\V1\Controllers\Subscribe;
 
 use App\API\V1\Controllers\Controller;
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderDeliverTransformer;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
+use App\Repositories\Preorder\Deliver\PreorderDeliverRepository;
 use App\Repositories\Station\StationPreorderRepositoryContract;
 use App\Services\Preorder\PreorderManageServiceContract;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -53,6 +56,15 @@ class StationPreorderController extends Controller {
         $order = $this->orderRepo->get($order_id, true);
 
         return $this->response->item($order, new PreorderTransformer());
+    }
+
+    public function deliver(Request $request, PreorderDeliverRepository $preorderDeliverRepo)
+    {
+        $date = $request->input('date') ?: Carbon::today();
+
+        $delivers = $preorderDeliverRepo->getAll(access()->stationId(), $date);
+
+        return $this->response->collection($delivers, new PreorderDeliverTransformer());
     }
 
     public function confirm(Request $request, PreorderAssignRepositoryContract $assign, $order_id)

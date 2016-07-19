@@ -29,6 +29,4 @@ class OrderDeliverRepository {
         return $order_deliver;
     }
 
-
-
 }
