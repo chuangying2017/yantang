@@ -356,8 +356,7 @@ class EloquentUserRepository implements UserContract {
 
     public function getAllUsersByRole($role)
     {
-        return User::query()->whereHas('roles', function ($query) use ($role) {
-            $query->where('name', $role)->orWhere('id', $role);
-        })->get();
+        $role = Role::with('users')->where('name', $role)->orWhere('id', $role)->first();
+        return is_null($role) ? null : $role->users;
     }
 }
