@@ -34,7 +34,7 @@ class StaffPreorderController extends Controller {
 
         $orders = $this->orderRepo->getDayPreorderWithProductsOfStaff(access()->staffId(), $date, $daytime);
 
-        return $this->response->collection($orders, new PreorderTransformer())->setMeta(['summary' => $this->transformOrder($orders)]);
+        return $this->response->collection($orders, new PreorderTransformer())->setMeta(['summary' => array_values($this->transformOrder($orders))]);
     }
 
     public function index(Request $request)

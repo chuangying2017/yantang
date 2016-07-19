@@ -29,13 +29,15 @@ class StaffPreorderApiTest extends TestCase {
     {
         $this->json('get', 'staffs/preorders/daily',
             [
-                'date' => '2016-07-11'
+                'date' => '2016-07-19'
             ],
             $this->getAuthHeader(2));
 
         $this->echoJson();
 
         $this->seeJsonStructure(['meta' => ['summary']]);
+
+        $this->dumpResponse();
 
         $this->assertResponseOk();
     }

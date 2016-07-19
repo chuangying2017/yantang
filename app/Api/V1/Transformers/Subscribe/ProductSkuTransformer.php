@@ -14,6 +14,7 @@ class ProductSkuTransformer extends TransformerAbstract {
             'id' => $sku['id'],
             'name' => $sku['name'],
             'cover_image' => $sku['cover_image'],
+            'digest' => $product['digest'],
             'cat' => [
                 'id' => $cat['id'],
                 'name' => $cat['name']
