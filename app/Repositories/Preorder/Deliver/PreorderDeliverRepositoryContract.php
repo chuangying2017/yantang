@@ -26,6 +26,6 @@ interface PreorderDeliverRepositoryContract {
      */
     public function updateAsFail($deliver_id);
 
-    public function getAll($station_id, $date);
+    public function getAll($station_id, $start_time, $end_time);
 
 }

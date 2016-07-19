@@ -60,10 +60,11 @@ class StationPreorderController extends Controller {
 
     public function deliver(Request $request, PreorderDeliverRepository $preorderDeliverRepo)
     {
-        $date = $request->input('date') ?: Carbon::today();
-        $date = strlen($date) == 10 ? $date . ' 00:00:00' : $date;
+        $date = $request->input('date') ?: Carbon::yesterday()->toDateString();
+        $start_date = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
+        $end_date = $start_date->copy()->addDay()->subMinute(1);
 
-        $delivers = $preorderDeliverRepo->getAll(access()->stationId(), $date);
+        $delivers = $preorderDeliverRepo->getAll(access()->stationId(), $start_date, $end_date);
 
         return $this->response->collection($delivers, new PreorderDeliverTransformer());
     }

@@ -76,8 +76,11 @@ class PreorderDeliverRepository implements PreorderDeliverRepositoryContract, St
         return PreorderDeliver::with('skus')->where('preorder_id', $preorder_id)->paginate($per_page);
     }
 
-    public function getAll($station_id, $date)
+    public function getAll($station_id, $start_time, $end_time)
     {
-        return PreorderDeliver::with('skus', 'preorder')->where('station_id', $station_id)->where('deliver_at', $date)->get();
+        return PreorderDeliver::with('skus', 'preorder')->where('station_id', $station_id)
+            ->where('deliver_at', '>=', $start_time)
+            ->where('deliver_at', '<=', $end_time)
+            ->get();
     }
 }
