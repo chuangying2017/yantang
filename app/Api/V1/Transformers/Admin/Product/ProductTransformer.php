@@ -39,7 +39,10 @@ class ProductTransformer extends TransformerAbstract {
         if ($product->relationLoaded('images')) {
             $data['image_ids'] = $product->images->pluck('media_id')->all();
             $data['images'] = array_map(function ($media_id) {
-                return config('filesystems.disks.qiniu.domains.custom') . $media_id;
+                return [
+                    'media_id' => $media_id,
+                    'url' => config('filesystems.disks.qiniu.domains.custom') . $media_id
+                ];
             }, $data['image_ids']);
         }
         return $data;
