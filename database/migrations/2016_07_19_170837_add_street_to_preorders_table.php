@@ -13,7 +13,7 @@ class AddStreetToPreordersTable extends Migration
     public function up()
     {
         Schema::table('preorders', function (Blueprint $table) {
-            //
+            $table->string('street');
         });
     }
 
@@ -25,7 +25,7 @@ class AddStreetToPreordersTable extends Migration
     public function down()
     {
         Schema::table('preorders', function (Blueprint $table) {
-            //
+            $table->dropColumn('street');
         });
     }
 }
