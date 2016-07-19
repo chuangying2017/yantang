@@ -49,4 +49,18 @@ class AdminPreorderApiTest extends TestCase {
 
         $this->seeInDatabase('preorder_assign', ['preorder_id' => $preorder_id, 'station_id' => $station_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED]);
     }
+
+    /** @test */
+    public function it_can_get_all_not_handle_on_time_preorders()
+    {
+        $this->json('get', 'admin/subscribe/preorders/reject',
+            [
+
+            ],
+            $this->getAuthHeader());
+
+        $this->echoJson();
+
+        $this->assertResponseStatus(200);
+    }
 }

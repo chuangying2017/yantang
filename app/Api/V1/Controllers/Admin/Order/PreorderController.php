@@ -1,6 +1,7 @@
 <?php namespace App\Api\V1\Controllers\Admin\Order;
 
 use App\Api\V1\Controllers\Controller;
+use App\Api\V1\Requests\Admin\Preorders\UpdateAssignRequest;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class PreorderController extends Controller {
         return $this->response->item($order, new PreorderTransformer());
     }
 
-    public function update(Request $request, $order_id, PreorderAssignRepositoryContract $assignRepo)
+    public function update(UpdateAssignRequest $request, $order_id, PreorderAssignRepositoryContract $assignRepo)
     {
         $station_id = $request->input('station');
 
