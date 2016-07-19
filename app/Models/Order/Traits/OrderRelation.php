@@ -38,7 +38,7 @@ trait OrderRelation {
 
     public function deliver()
     {
-        return $this->hasOne(OrderDeliver::class, 'order_id', 'order_id');
+        return $this->hasOne(OrderDeliver::class, 'order_id', 'id');
     }
 
     public function special()
