@@ -19,6 +19,8 @@ class StaffPreorderApiTest extends TestCase {
 
         $this->echoJson();
 
+        $this->dumpResponse();
+
         $this->assertResponseOk();
     }
 

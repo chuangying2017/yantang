@@ -71,6 +71,13 @@ class OrderController extends Controller {
         return $this->response->item($order, new ClientOrderTransformer());
     }
 
+    public function update($order_id, Request $request, OrderManageContract $orderManage)
+    {
+        $order = $orderManage->orderDone($order_id);
+
+        return $this->response->item($order, new ClientOrderTransformer());
+    }
+
 
     /**
      * Remove the specified resource from storage.

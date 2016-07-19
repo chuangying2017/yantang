@@ -210,7 +210,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
 
     public function getAllSubscribedProducts()
     {
-        return Product::query()->with('skus', 'cats')->whereHas('groups', function ($query) {
+        return Product::query()->with('skus', 'cats', 'info')->whereHas('groups', function ($query) {
             $query->where('id', CategoryProtocol::ID_OF_SUBSCRIBE_GROUP);
         })->get();
     }

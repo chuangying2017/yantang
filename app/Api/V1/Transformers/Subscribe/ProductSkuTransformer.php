@@ -9,6 +9,7 @@ class ProductSkuTransformer extends TransformerAbstract {
     {
         $sku = $product->skus->first();
         $cat = $product->cats->first();
+        $info = $product->info;
         return [
             'id' => $sku['id'],
             'name' => $sku['name'],
@@ -19,6 +20,7 @@ class ProductSkuTransformer extends TransformerAbstract {
             ],
             'price' => display_price($sku['subscribe_price']),
             'attr' => json_decode($sku['attr'], true),
+            'detail' => $info['detail']
         ];
     }
 }

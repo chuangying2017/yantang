@@ -38,7 +38,7 @@ class CreatePingxxPaymentsTable extends Migration {
             $table->string('failure_msg')->nullable();
             $table->softDeletes();
             $table->timestamps();
-
+            
         });
     }
 

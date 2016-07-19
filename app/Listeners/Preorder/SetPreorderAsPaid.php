@@ -7,6 +7,7 @@ use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Preorder\PreorderProtocol;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Toplan\PhpSms\Sms;
 
 class SetPreorderAsPaid {
 
@@ -34,6 +35,15 @@ class SetPreorderAsPaid {
     public function handle(OrderIsPaid $event)
     {
         $order = $event->order;
-        $this->preorderRepo->updatePreorderStatusByOrder($order['id'], PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
+        $preorder = $this->preorderRepo->updatePreorderStatusByOrder($order['id'], PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
+
+        if ($preorder['status'] !== PreorderProtocol::ORDER_STATUS_OF_UNPAID) {
+
+            $preorder->load('station');
+
+            $phone = $preorder['station']['phone'];
+
+            $result = Sms::make()->to($phone)->content('您有新的订奶订单,请查看【燕塘优鲜达】')->send();
+        }
     }
 }

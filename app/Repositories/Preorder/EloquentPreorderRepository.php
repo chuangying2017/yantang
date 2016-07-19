@@ -303,7 +303,13 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function updatePreorderStatusByOrder($order_id, $status)
     {
-        return Preorder::query()->where('order_id', $order_id)->update(['status' => $status]);
+        $preorder = Preorder::query()->where('order_id', $order_id)->first();
+
+        $preorder['status'] = $status;
+
+        $preorder->save();
+
+        return $preorder;
     }
 
     public function getByOrder($origin_order_id, $date = null)
