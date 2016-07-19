@@ -7,6 +7,7 @@ use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffPreorderTransformer;
 use App\Repositories\Station\StationPreorderRepositoryContract;
 use App\Services\Preorder\PreorderManageServiceContract;
+use App\Services\Preorder\PreorderProtocol;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -43,9 +44,9 @@ class StaffPreorderController extends Controller {
         $daytime = $request->input('daytime');
         $status = $request->input('status') ?: null;
 
-        $orders = $this->orderRepo->getPreordersOfStaff(access()->staffId(), $status, $date, $daytime);
+        $orders = $this->orderRepo->getPreordersOfStaff(access()->staffId(), $status, $date, $daytime, PreorderProtocol::PREORDER_PER_PAGE);
 
-        return $this->response->collection($orders, new PreorderTransformer());
+        return $this->response->paginator($orders, new PreorderTransformer());
     }
 
     public function show($order_id)
