@@ -4,7 +4,7 @@ namespace App\Listeners\Notify;
 
 use App\Events\Preorder\AssignIsAssigned;
 use App\Repositories\Preorder\PreorderRepositoryContract;
-use App\Services\NotifyProtocol;
+use App\Services\Notify\NotifyProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;

@@ -4,7 +4,7 @@ namespace App\Listeners\Preorder;
 
 use App\Events\Preorder\AssignIsCreate;
 use App\Repositories\Preorder\PreorderRepositoryContract;
-use App\Services\NotifyProtocol;
+use App\Services\Notify\NotifyProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Toplan\PhpSms\Sms;
 
