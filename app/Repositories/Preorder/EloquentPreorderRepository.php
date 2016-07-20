@@ -54,10 +54,33 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getPaginatedByUser($user_id, $status = null, $start_time = null, $end_time = null, $per_page = PreorderProtocol::PREORDER_PER_PAGE)
     {
-        $orders = $this->queryOrders($user_id, null, null, $status, $start_time, $end_time, PreorderProtocol::PREORDER_PER_PAGE);
-        $orders->load('skus');
+        $query = Preorder::with('skus');
 
-        return $orders;
+        if (!is_null($user_id)) {
+            $query->where('user_id', $user_id);
+        }
+
+        if (PreorderProtocol::validOrderStatus($status)) {
+            $query->where('status', $status);
+        } else {
+            $query->where('status', '!=', PreorderProtocol::ORDER_STATUS_OF_UNPAID);
+        }
+
+        if (!is_null($start_time)) {
+            $query->where('end_time', '>=', $start_time);
+        }
+
+        if (!is_null($end_time)) {
+            $query->where('start_time', '<=', $end_time);
+        }
+
+        $query->orderBy('created_at', 'desc');
+
+        if (!is_null($per_page)) {
+            return $query->paginate($per_page);
+        }
+
+        return $query->get();
     }
 
     public function getAllByUser($user_id, $status = null, $start_time = null, $end_time = null)
@@ -86,6 +109,8 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if (PreorderProtocol::validOrderStatus($status)) {
             $query->where('status', $status);
+        } else {
+            $query->where('status', '!=', PreorderProtocol::ORDER_STATUS_OF_UNPAID);
         }
 
         if (!is_null($start_time)) {
