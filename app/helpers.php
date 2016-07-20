@@ -112,7 +112,7 @@ if (!function_exists('merge_array')) {
 
         foreach ($input_items as $input_item) {
             if (!is_null($input_item)) {
-                array_merge($items, to_array($input_item));
+                $items = array_merge($items, to_array($input_item));
             }
         }
 

@@ -9,7 +9,7 @@ class MallProductApiTest extends TestCase
     /** @test */
     public function it_can_get_products_lists()
     {
-        $this->json('GET', 'mall/products');
+        $this->json('GET', 'mall/products', ['cat' => 3]);
 
         $this->dumpResponse();
     }

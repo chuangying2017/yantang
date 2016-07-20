@@ -143,6 +143,7 @@ class EloquentProductRepository implements ProductRepositoryContract {
     {
         $query = Product::with('meta');
 
+
         if ($with_time) {
             $query = $query->where(function ($query) {
                 $now = Carbon::now();
@@ -152,15 +153,13 @@ class EloquentProductRepository implements ProductRepositoryContract {
         }
 
         if ($brand) {
-            $query = $query->where('brand_id', $brand);
+            $query->where('brand_id', $brand);
         }
 
         if ($cats) {
-            $query = $query->join('product_category', function ($join) use ($cats) {
-                $join->whereIn('cat_id', to_array($cats));
-            });
+            $cat_products_ids = \DB::table('product_category')->whereIn('cat_id', to_array($cats))->pluck('product_id');
+            $query->whereIn('id', $cat_products_ids);
         }
-
 
         if ($type) {
             $query = $query->where('type', $type);
