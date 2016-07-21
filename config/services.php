@@ -78,7 +78,7 @@ return [
             'store' => 'http://store.yt.weazm.com/auth/wechatAuth',
             'staff' => 'http://staff.yt.weazm.com/auth/wechatAuth',
             'admin' => 'http://admin.yt.weazm.com/auth/wechatAuth',
-            'test' => 'http://client.yt.weazm.com/#!/auth/wechatAuth'
+            'test' => 'http://client.yt.weazm.com/?#!/auth/wechatAuth'
         ]
     ],
 
