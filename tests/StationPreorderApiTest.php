@@ -13,6 +13,7 @@ class StationPreorderApiTest extends TestCase {
     {
         $this->json('get', 'subscribe/products', [], $this->getAuthHeader());
 
+        $this->dump();
         $this->seeJsonStructure(['data' => [['detail']]]);
     }
 
