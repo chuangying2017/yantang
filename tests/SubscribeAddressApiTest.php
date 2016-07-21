@@ -22,9 +22,9 @@ class SubscribeAddressApiTest extends TestCase {
     /** @test */
     public function it_can_check_station_when_create_a_subscribe_address()
     {
-        $this->it_can_create_a_station();
+        $this->it_can_create_another_station();
 
-        $out_side = [23.159711, 113.333818];
+        $out_side = [23.091847,113.306186];
 
         $data = [
             'name' => 'asda',
@@ -33,7 +33,7 @@ class SubscribeAddressApiTest extends TestCase {
             'street' => 'asdad',
             'longitude' => $out_side[0],
             'latitude' => $out_side[1],
-            'district_id' => 440103
+            'district_id' => 440105
         ];
         $this->json('post', 'subscribe/address',
             $data,
@@ -45,7 +45,12 @@ class SubscribeAddressApiTest extends TestCase {
     /** @test */
     public function it_can_create_a_subscribe_address()
     {
-        $inside = [23.157195, 113.330319];
+        $this->it_can_create_another_station();
+
+
+        $inside = [23.099075,113.291048];
+//        $out_side = [23.151668243459564, 113.32917949894649];
+
         $data = [
             'name' => 'asda',
             'phone' => 1,
@@ -53,7 +58,7 @@ class SubscribeAddressApiTest extends TestCase {
             'detail' => 'adasd',
             'longitude' => $inside[0],
             'latitude' => $inside[1],
-            'district_id' => 440103
+            'district_id' => 440105
         ];
         $this->json('post', 'subscribe/address',
             $data,
@@ -138,6 +143,35 @@ class SubscribeAddressApiTest extends TestCase {
         );
 
         $this->assertResponseStatus(201);
+
+        $this->seeInDatabase('stations', ['district_id' => 440103]);
+
+        return $this->getResponseData('data');
+    }
+
+    /** @test */
+    public function it_can_create_another_station()
+    {
+        $this->json('post', 'admin/stations',
+            [
+                'name' => '客村服务部',
+                'address' => '客村服务部地址',
+                'director' => '客村服务部负责人',
+                'district_id' => 440105,
+                'geo' => [
+                    [23.107875, 113.286599], [23.105901, 113.316039], [23.095796, 113.315180], [23.094848, 113.304537], [23.091049, 113.297671], [23.093673, 113.284236],
+                ],
+                'cover_image' => '11111',
+                'phone' => mt_rand(10000000000, 19999999999),
+                'longitude' => 23.095645,
+                'latitude' => 113.313213,
+            ],
+            $this->getAuthHeader()
+        );
+
+        $this->assertResponseStatus(201);
+
+        $this->seeInDatabase('stations', ['district_id' => 440105]);
 
         return $this->getResponseData('data');
     }

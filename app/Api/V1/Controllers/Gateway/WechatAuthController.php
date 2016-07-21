@@ -16,13 +16,7 @@ class WechatAuthController extends Controller {
      */
     public function redirect(Request $request)
     {
-        $redirects = [
-            'client' => 'http://client.yt.weazm.com/auth/wechatAuth',
-            'station' => 'http://station.yt.weazm.com/auth/wechatAuth',
-            'store' => 'http://store.yt.weazm.com/auth/wechatAuth',
-            'staff' => 'http://staff.yt.weazm.com/auth/wechatAuth',
-            'admin' => 'http://admin.yt.weazm.com/auth/wechatAuth',
-        ];
+        $redirects = config('services.weixin.redirect_urls');
 
         $role = $request->input('role');
 

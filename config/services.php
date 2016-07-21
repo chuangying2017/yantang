@@ -72,6 +72,14 @@ return [
         'client_secret' => env('WECHAT_APPSECRET'),
         'redirect' => env('WECHAT_REDIRECT_URL'),
         'auth_base_uri' => 'https://open.weixin.qq.com/connect/oauth2/authorize',
+        'redirect_urls' => [
+            'client' => 'http://client.yt.weazm.com/auth/wechatAuth',
+            'station' => 'http://station.yt.weazm.com/auth/wechatAuth',
+            'store' => 'http://store.yt.weazm.com/auth/wechatAuth',
+            'staff' => 'http://staff.yt.weazm.com/auth/wechatAuth',
+            'admin' => 'http://admin.yt.weazm.com/auth/wechatAuth',
+            'test' => 'http://client.yt.weazm.com/#!/auth/wechatAuth'
+        ]
     ],
 
     'pingxx' => [

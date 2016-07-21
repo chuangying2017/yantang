@@ -18,7 +18,7 @@ class UserThirdPartyAuthTest extends TestCase {
         $this->setProvider('weixin');
 
         $url = $this->oauthUrl();
-        $this->dumpResponse();
+        $this->echoJson();
         return $url;
     }
 
@@ -54,7 +54,8 @@ class UserThirdPartyAuthTest extends TestCase {
     protected function oauthUrl()
     {
 
-        $this->json('get', '/auth/login/' . $this->provider, ['role' => 'station']);
+        dd(config('services.weixin.redirect_urls'));
+        $this->json('get', '/auth/login/' . $this->provider, ['role' => 'test']);
 
         $this->dumpResponse();
 
