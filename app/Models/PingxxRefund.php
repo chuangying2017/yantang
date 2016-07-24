@@ -16,5 +16,4 @@ class PingxxRefund extends Model {
         return $this->belongsTo(PingxxPayment::class, 'pingxx_payment_id', 'id');
     }
 
-
 }

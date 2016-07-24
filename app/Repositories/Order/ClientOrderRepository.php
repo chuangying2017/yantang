@@ -22,23 +22,23 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
     /**
      * @var OrderSkuRepositoryContract
      */
-    private $orderSkuRepo;
+    protected $orderSkuRepo;
     /**
      * @var EloquentOrderAddressRepository
      */
-    private $orderAddressRepo;
+    protected $orderAddressRepo;
     /**
      * @var OrderBillingRepository
      */
-    private $orderBillingRepo;
+    protected $orderBillingRepo;
     /**
      * @var OrderPromotionRepositoryContract
      */
-    private $orderPromotionRepo;
+    protected $orderPromotionRepo;
     /**
      * @var OrderMemoRepository
      */
-    private $memoRepo;
+    protected $memoRepo;
 
     protected $detail_relations = ['skus', 'address', 'billings'];
     protected $lists_relations = ['skus'];
@@ -149,14 +149,19 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         return $order;
     }
 
+	/**
+     * @param $order_no
+     * @param bool $with_detail
+     * @return Order
+     */
     public function getOrder($order_no, $with_detail = false)
     {
         if ($order_no instanceof Order) {
             $order = $order_no;
         } else if (NoGenerator::isOrderNo($order_no)) {
-            $order = Order::where('order_no', $order_no)->first();
+            $order = Order::query()->where('order_no', $order_no)->first();
         } else {
-            $order = Order::find($order_no);
+            $order = Order::query()->find($order_no);
         }
 
         if (!$order) {

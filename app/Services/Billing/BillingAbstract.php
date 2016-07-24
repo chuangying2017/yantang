@@ -31,5 +31,14 @@ abstract class BillingAbstract implements BillingContract {
         return $this->billing['pay_type'];
     }
 
+    public function getRefundedAmount()
+    {
+        return $this->billing['return_amount'];
+    }
+
+    public function getPayment()
+    {
+        return $this->billing->payment()->first();
+    }
 
 }

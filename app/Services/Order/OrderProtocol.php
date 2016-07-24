@@ -15,15 +15,18 @@ class OrderProtocol {
 
     const PAID_STATUS_OF_UNPAID = 'unpaid';
     const PAID_STATUS_OF_PARTIAL = 'partial';
+    const PAID_STATUS_OF_PENDING = 'pending';
     const PAID_STATUS_OF_PAID = 'paid';
 
     const REFUND_STATUS_OF_APPLY = 'apply';
+    const REFUND_STATUS_OF_DEFAULT = 'none';
     const REFUND_STATUS_OF_REJECT = 'reject';
     const REFUND_STATUS_OF_APPROVE = 'approve';
     const REFUND_STATUS_OF_SHIPPING = 'shipping';
     const REFUND_STATUS_OF_SHIPPED = 'shipped';
+    const REFUND_STATUS_OF_REFUNDING = 'refunding';
     const REFUND_STATUS_OF_DONE = 'done';
-
+    const REFUND_STATUS_OF_FAIL = 'fail';
 
     //Billing
     const BILLING_TYPE_OF_MONEY = 'money';
@@ -32,7 +35,7 @@ class OrderProtocol {
     //Order Type
     const ORDER_TYPE_OF_MALL_MAIN = 0;
     const ORDER_TYPE_OF_MALL_CHILD = 1;
-    const ORDER_TYPE_OF_MALL_REFUND = 2;
+    const ORDER_TYPE_OF_REFUND = 2;
     const ORDER_TYPE_OF_CAMPAIGN = 3;
     const ORDER_TYPE_OF_SUBSCRIBE = 4;
 
@@ -95,6 +98,18 @@ class OrderProtocol {
         ]);
     }
 
+    public static function validStatusCanRefund($status, $refund_status)
+    {
+        return in_array($status, [
+            self::STATUS_OF_PAID,
+            self::STATUS_OF_SHIPPING,
+            self::STATUS_OF_SHIPPED,
+            self::STATUS_OF_DONE
+        ]) && in_array($refund_status, [
+            self::REFUND_STATUS_OF_DEFAULT,
+            self::REFUND_STATUS_OF_REJECT
+        ]);
+    }
 
     public static function statusIs($need_status, $current_status)
     {

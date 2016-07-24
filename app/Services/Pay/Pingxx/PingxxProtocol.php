@@ -155,5 +155,10 @@ class PingxxProtocol {
         return is_null($channel) ? $data : (isset($data[$channel]) ? $data[$channel] : null);
     }
 
+    public static function isSucceed($charge)
+    {
+        return $charge->succeed;
+    }
+
 }
 

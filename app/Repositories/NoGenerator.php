@@ -17,8 +17,11 @@ class NoGenerator {
     const ORDER_TICKET_STATEMENT_PREFIX = '31';
     const STATION_STATEMENT_PREFIX = '32';
 
+    const ORDER_REFUND_PREFIX = '40';
+
     const LENGTH_OF_ORDER_BILLING_NO = 21;
     const LENGTH_OF_ORDER_NO = 21;
+    const LENGTH_OF_REFUND_ORDER_NO = 21;
     const LENGTH_OF_PREORDER_NO = 21;
     const LENGTH_OF_CHARGE_BILLING_NO = 21;
     const LENGTH_OF_PREORDER_BILLING_NO = 21;
@@ -32,6 +35,11 @@ class NoGenerator {
     public static function generateOrderNo()
     {
         return self::ORDER_PREFIX . self::generate_no();
+    }
+
+    public static function generateRefundNo()
+    {
+        return self::ORDER_REFUND_PREFIX . self::generate_no();
     }
 
     public static function generateStoreStatementNo($merchant_id, $model = null)

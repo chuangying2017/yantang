@@ -1,4 +1,5 @@
 <?php namespace App\Repositories\Billing;
+
 use App\Services\Billing\BillingProtocol;
 
 interface BillingRepositoryContract {
@@ -14,6 +15,5 @@ interface BillingRepositoryContract {
     public function getBillingPaginated($entity_id, $status = null, $per_page = BillingProtocol::BILLING_PER_PAGE);
 
     public function getBillingOfType($order_id, $pay_type);
-
 
 }

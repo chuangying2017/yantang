@@ -3,6 +3,7 @@
 use App\Models\Pay\PingxxPayment;
 use App\Repositories\Pay\ChargeRepositoryContract;
 use App\Repositories\Pay\PaymentRepositoryContract;
+use App\Services\Pay\Events\PingxxPaymentIsFail;
 use App\Services\Pay\Pingxx\PingxxProtocol;
 use Carbon\Carbon;
 use Pingpp\Charge;
@@ -118,7 +119,10 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         return $extra;
     }
 
-
+    /**
+     * @param $charge_id
+     * @return Charge
+     */
     public function getCharge($charge_id)
     {
         return is_string($charge_id) ? Charge::retrieve($charge_id) : $charge_id;
@@ -204,5 +208,17 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         $charge = $this->getCharge($charge_id);
 
         return $charge->order_no;
+    }
+
+    public function setPaymentAsFail($payment_no, $failure_code, $failure_msg)
+    {
+        $payment = $this->getPayment($payment_no);
+        $payment->failure_code = $failure_code;
+        $payment->failure_msg = $failure_msg;
+        $payment->save();
+
+        event(new PingxxPaymentIsFail($payment));
+
+        return $payment;
     }
 }

@@ -24,6 +24,23 @@ class PingxxNotifyController extends Controller {
         $this->payService = $payService;
     }
 
+    protected function getEvent($key = null)
+    {
+        $event = json_decode(file_get_contents("php://input"), true);
+
+        return is_null($key) ? $event : array_get($event, $key);
+    }
+
+    protected function getType()
+    {
+        return $this->getEvent('type');
+    }
+
+    protected function getObject()
+    {
+        return $this->getEvent('data.object');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +48,7 @@ class PingxxNotifyController extends Controller {
      */
     public function paid(Request $request)
     {
-        $charge = json_decode(json_encode($request->input('data.object')));
+        $charge = $this->getObject();
 
         if ($this->payService->paid($charge)) {
             return $this->response->accepted();
@@ -47,6 +64,7 @@ class PingxxNotifyController extends Controller {
      */
     public function refund(Request $request)
     {
+        $refund = $this->getObject();
 
     }
 

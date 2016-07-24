@@ -20,4 +20,6 @@ class BillingProtocol {
 
     const BILLING_PER_PAGE = 20;
     const CHARGE_BILLING_PER_PAGE = 20;
+
+
 }

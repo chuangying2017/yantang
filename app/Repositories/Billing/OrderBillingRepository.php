@@ -19,7 +19,7 @@ class OrderBillingRepository implements BillingRepositoryContract {
         ]);
     }
 
-    public function updateAsPaid($billing_no, $pay_channel = nall)
+    public function updateAsPaid($billing_no, $pay_channel = null)
     {
         $billing = $this->getBilling($billing_no);
 

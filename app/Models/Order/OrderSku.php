@@ -21,4 +21,14 @@ class OrderSku extends Model {
         return $this->hasOne(PreorderSkuCounter::class, 'order_sku_id', 'id');
     }
 
+    public function refer()
+    {
+        return $this->belongsTo(OrderSku::class, 'id', 'origin_order_id');
+    }
+
+    public function refund()
+    {
+        return $this->hasOne(OrderSku::class, 'origin_order_id', 'id');
+    }
+
 }

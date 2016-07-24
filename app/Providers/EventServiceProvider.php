@@ -46,6 +46,19 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Subscribe\SetChargeBillingAsPaid',
         ],
 
+        'App\Services\Pay\Events\PingxxPaymentIsFail' => [
+
+        ],
+
+        'App\Services\Pay\Events\PingxxRefundPaymentIsSucceed' => [
+            'App\Listeners\Order\OrderRefundSucceed',
+        ],
+
+        'App\Services\Pay\Events\PingxxRefundPaymentIsFail' => [
+            'App\Listeners\Order\OrderRefundFail',
+        ],
+
+
         'App\Events\Order\MainBillingIsPaid' => [
             'App\Listeners\Order\SetOrderAsPaid',
         ],

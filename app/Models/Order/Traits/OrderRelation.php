@@ -3,6 +3,7 @@
 use App\Models\Access\User\User;
 use App\Models\Billing\OrderBilling;
 use App\Models\Comment;
+use App\Models\Order\Order;
 use App\Models\Order\OrderAddress;
 use App\Models\Order\OrderDeliver;
 use App\Models\Order\OrderMemo;
@@ -51,5 +52,14 @@ trait OrderRelation {
         return $this->morphToMany(Comment::class, 'commentable');
     }
 
+    public function refund()
+    {
+        return $this->belongsToMany(Order::class, 'return_order', 'order_id', 'return_order_id');
+    }
+
+    public function refer()
+    {
+        return $this->belongsToMany(Order::class, 'return_order', 'return_order_id', 'order_id');
+    }
 
 }

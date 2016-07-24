@@ -30,7 +30,6 @@ class OrderGenerator implements OrderGeneratorContract {
      */
     private $orderRepo;
 
-
     /**
      * @param $user_id
      * @param $skus

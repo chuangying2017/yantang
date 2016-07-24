@@ -4,8 +4,7 @@
  * Interface BillingContract
  * @package App\Services\Billing
  */
-interface BillingContract
-{
+interface BillingContract {
 
     public function getID();
 
@@ -19,6 +18,15 @@ interface BillingContract
 
     public function getPayer();
 
+	/**
+     * @param $billing_id
+     * @return $this
+     */
     public function setID($billing_id);
+
+    public function getRefundedAmount();
+
+    public function getPayment();
+
 
 }

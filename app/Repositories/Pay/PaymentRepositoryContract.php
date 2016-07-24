@@ -16,4 +16,6 @@ interface PaymentRepositoryContract {
 
     public function getPayType($payment_no);
 
+    public function setPaymentAsFail($payment_no, $failure_code, $failure_msg);
+
 }

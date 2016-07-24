@@ -5,8 +5,8 @@ interface ThirdPartyPayContract {
 
     public function checkPaymentPaid($payment);
 
-    public function checkChargeIsPaid($charge);
+    public function checkChargeIsPaid($refund);
 
-    public function paid($charge);
+    public function paid($refund);
 
 }

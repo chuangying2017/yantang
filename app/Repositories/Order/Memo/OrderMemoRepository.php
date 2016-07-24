@@ -21,7 +21,7 @@ class OrderMemoRepository {
 
     protected function createOrUpdateMemo($order_id, $memo, $name)
     {
-        $order_memo = OrderMemo::firstOrNew(['order_id' => $order_id]);
+        $order_memo = OrderMemo::query()->firstOrNew(['order_id' => $order_id]);
         $order_memo->$name = $memo;
         $order_memo->save();
         return $order_memo;
