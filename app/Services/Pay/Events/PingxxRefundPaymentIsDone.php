@@ -13,11 +13,11 @@ class PingxxRefundPaymentIsDone extends Event
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param $refund_payment
      */
-    public function __construct()
+    public function __construct($refund_payment)
     {
-        //
+        $this->refund_payment = $refund_payment;
     }
 
     /**
@@ -29,4 +29,9 @@ class PingxxRefundPaymentIsDone extends Event
     {
         return [];
     }
+
+    /**
+     * @var
+     */
+    public $refund_payment;
 }

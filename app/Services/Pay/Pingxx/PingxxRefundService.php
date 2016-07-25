@@ -2,7 +2,7 @@
 
 use App\Repositories\Pay\Pingxx\PingxxRefundPaymentRepository;
 use App\Services\Billing\RefundBillingContract;
-use App\Services\Pay\Events\PingxxRefundPaymentIsSucceed;
+use App\Services\Pay\Events\PingxxRefundPaymentIsDone;
 use App\Services\Pay\ThirdPartyRefundContract;
 
 class PingxxRefundService implements ThirdPartyRefundContract {
@@ -74,7 +74,7 @@ class PingxxRefundService implements ThirdPartyRefundContract {
 
             $payment = $this->paymentRepository->updateRefundPaymentAsDone($payment);
 
-            event(new PingxxRefundPaymentIsSucceed($payment));
+            event(new PingxxRefundPaymentIsDone($payment));
 
             return true;
         } else {
