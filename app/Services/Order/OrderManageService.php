@@ -52,7 +52,7 @@ class OrderManageService implements OrderManageContract {
     {
         $order = $this->orderRepositoryContract->getOrder($order_id, false);
 
-        if (!($order['refund_status']== OrderProtocol::REFUND_STATUS_OF_DEFAULT || $order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_REJECT)) {
+        if (!($order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_DEFAULT || $order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_REJECT)) {
             throw new \Exception('订单退款处理中,无法重复提交');
         }
 

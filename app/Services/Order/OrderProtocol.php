@@ -18,8 +18,8 @@ class OrderProtocol {
     const PAID_STATUS_OF_PENDING = 'pending';
     const PAID_STATUS_OF_PAID = 'paid';
 
-    const REFUND_STATUS_OF_APPLY = 'apply';
     const REFUND_STATUS_OF_DEFAULT = 'none';
+    const REFUND_STATUS_OF_APPLY = 'apply';
     const REFUND_STATUS_OF_REJECT = 'reject';
     const REFUND_STATUS_OF_APPROVE = 'approve';
     const REFUND_STATUS_OF_SHIPPING = 'shipping';
