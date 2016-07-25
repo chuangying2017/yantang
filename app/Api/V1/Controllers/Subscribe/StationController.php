@@ -83,7 +83,7 @@ class StationController extends Controller {
     {
         $success = $this->stationRepo->unbindUser($station_id, access()->id());
 
-        $this->response->noContent('绑定失败');
+        return $this->response->noContent();
     }
 
     public function index()

@@ -11,6 +11,8 @@ interface StationRepositoryContract {
 
     public function unbindUser($station_id, $user_id);
 
+    public function unbindAllUser($station_id);
+
     public function updateAsActive($station_ids);
 
     public function updateAsUnActive($station_ids);

@@ -143,4 +143,12 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
         return Station::query()->where('district_id', $district_id)->get(['id', 'name', 'longitude', 'latitude', 'geo']);
     }
 
+    public function unbindAllUser($station_id)
+    {
+        $user_ids = DB::table('station_user')->where('station_id', $station_id)->pluck('user_id');
+
+        foreach ($user_ids as $user_id) {
+            $this->unbindUser($station_id, $user_id);
+        }
+    }
 }

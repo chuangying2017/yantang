@@ -19,7 +19,7 @@ class StationPreorderController extends Controller {
     /**
      * @var StationPreorderRepositoryContract
      */
-    private $orderRepo;
+    protected $orderRepo;
 
     /**
      * StationPreorderController constructor.
@@ -45,8 +45,9 @@ class StationPreorderController extends Controller {
         $status = $request->input('status') ?: null;
         $start_time = $request->input('start_time') ?: null;
         $end_time = $request->input('end_time') ?: null;
+        $staff_id = $request->input('staff') ? : null;
 
-        $orders = $this->orderRepo->getPreordersOfStation(access()->stationId(), null, $status, $start_time, $end_time);
+        $orders = $this->orderRepo->getPreordersOfStation(access()->stationId(), $staff_id, $status, $start_time, $end_time);
 
         return $this->response->paginator($orders, new PreorderTransformer());
     }

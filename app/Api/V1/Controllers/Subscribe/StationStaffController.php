@@ -101,14 +101,15 @@ class StationStaffController extends Controller {
         return $this->response->noContent();
     }
 
-    public function orders(Request $request, $id, StationPreorderRepositoryContract $preorderRepo)
+    public function orders(Request $request, $staff_id, StationPreorderRepositoryContract $preorderRepo)
     {
-        $day = $request->input('date');
-        $daytime = $request->input('daytime');
+        $this->checkAuth($staff_id);
 
-        $this->checkAuth($id);
+        $status = $request->input('status') ?: null;
+        $start_time = $request->input('start_time') ?: null;
+        $end_time = $request->input('end_time') ?: null;
 
-        $orders = $preorderRepo->getPreordersOfStaff($id, $day, $daytime);
+        $orders = $this->orderRepo->getPreordersOfStation(access()->stationId(), $staff_id, $status, $start_time, $end_time);
 
         return $this->response->collection($orders, new StaffPreorderTransformer());
     }

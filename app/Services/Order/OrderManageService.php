@@ -53,7 +53,11 @@ class OrderManageService implements OrderManageContract {
     public function orderCancel($order_id, $memo = '', $order_skus_info = null)
     {
         $order = $this->orderRepositoryContract->getOrder($order_id, false);
-        
+
+        if (!($order['refund_status']== OrderProtocol::REFUND_STATUS_OF_DEFAULT || $order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_REJECT)) {
+            throw new \Exception('订单退款处理中,无法重复提交');
+        }
+
         //未支付,直接取消
         if ($order['pay_status'] == OrderProtocol::PAID_STATUS_OF_UNPAID) {
             return $this->orderRepositoryContract->updateOrderStatusAsCancel($order);

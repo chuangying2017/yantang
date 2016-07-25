@@ -141,8 +141,16 @@ class CartOrderApiTest extends TestCase {
             ],
             $this->getAuthHeader());
 
+        $this->assertResponseStatus(204);
+
         $this->seeInDatabase('orders', ['order_no' => $order['order_no'], 'refund_status' => \App\Services\Order\OrderProtocol::REFUND_STATUS_OF_REFUNDING]);
         $this->seeInDatabase('return_orders', ['order_id' => $order['id']]);
+
+        $this->json('delete', 'mall/orders/' . $order['order_no'],
+            [
+                'memo' => '改变主意'
+            ],
+            $this->getAuthHeader());
 
         $this->assertResponseStatus(204);
     }

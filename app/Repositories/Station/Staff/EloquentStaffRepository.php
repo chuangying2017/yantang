@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Station\Staff;
 
+use App\Models\Subscribe\Preorder;
 use App\Models\Subscribe\StationStaff;
 use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Station\StationProtocol;
@@ -21,10 +22,10 @@ class EloquentStaffRepository implements StaffRepositoryContract {
     {
         $staff = $this->getStaff($staff_id);
         $staff->fill(array_only($staff_data, [
-            'station_id',
             'name',
             'phone',
-            'status'
+            'status',
+            'user_id'
         ]));
         $staff->save();
 
@@ -60,6 +61,9 @@ class EloquentStaffRepository implements StaffRepositoryContract {
 
     public function deleteStaff($staff_id)
     {
+        if (Preorder::query()->where('staff_id', $staff_id)->first()) {
+            throw new \Exception('配送员有配送订单');
+        }
 
         return StationStaff::destroy($staff_id);
     }
