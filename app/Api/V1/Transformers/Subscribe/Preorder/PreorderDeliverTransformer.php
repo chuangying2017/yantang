@@ -23,8 +23,9 @@ class PreorderDeliverTransformer extends TransformerAbstract {
         if ($deliver->relationLoaded('preorder')) {
             $data['name'] = $deliver['preorder']['name'];
             $data['phone'] = $deliver['preorder']['phone'];
+            $data['order_no'] = $deliver['preorder']['order_no'];
         }
-        
+
         return $data;
     }
 

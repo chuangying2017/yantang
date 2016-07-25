@@ -58,7 +58,7 @@ class SubscribeAddressApiTest extends TestCase {
             'detail' => 'adasd',
             'longitude' => $inside[0],
             'latitude' => $inside[1],
-            'district_id' => 440105
+            'district_id' => 440103
         ];
         $this->json('post', 'subscribe/address',
             $data,

@@ -1,6 +1,5 @@
 <?php namespace App\Services\Order;
 
-use App\Events\Order\OrderIsCancel;
 use App\Events\Order\OrderIsPaid;
 use App\Repositories\Billing\OrderBillingRepository;
 use App\Repositories\Order\ClientOrderRepository;
@@ -8,7 +7,6 @@ use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\Deliver\OrderDeliverRepository;
 use App\Services\Billing\OrderBillingService;
 use App\Services\Order\Exceptions\BillingNotPaidException;
-use App\Services\Order\OrderProtocol;
 use App\Services\Order\Refund\OrderRefundService;
 use App\Services\Order\Refund\RefundOrderGenerator;
 

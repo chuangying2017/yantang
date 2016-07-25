@@ -16,6 +16,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $order = Preorder::create([
             'user_id' => $data['user_id'],
             'order_id' => $data['order_id'],
+            'order_no' => $data['order_no'],
             'name' => $data['name'],
             'phone' => $data['phone'],
             'street' => $data['street'],
@@ -330,9 +331,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     public function updatePreorderStatusByOrder($order_id, $status)
     {
         $preorder = Preorder::query()->where('order_id', $order_id)->first();
-
-        $preorder['status'] = $status;
-
+        $preorder->status = $status;
         $preorder->save();
 
         return $preorder;

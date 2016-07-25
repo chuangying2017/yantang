@@ -39,6 +39,7 @@ class IncreaseProductSkuStock {
     public function handle(OrderIsCancel $event)
     {
         $order = $event->order;
+        
         $order_skus = $this->orderSkuRepo->getOrderSkus($order['id']);
         foreach ($order_skus as $order_sku) {
             $this->stockRepo->increaseStock($order_sku['product_sku_id'], $order_sku['quantity']);

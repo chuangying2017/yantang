@@ -11,17 +11,17 @@ class PreorderOrderApiTest extends TestCase {
     /** @test */
     public function it_can_create_a_preorder_temp_order()
     {
-        $address = $this->it_can_create_a_subscribe_address();
+//        $address = $this->it_can_create_a_subscribe_address();
         $data = [
             'skus' => [
                 ['product_sku_id' => 2, 'quantity' => 60, 'per_day' => 2],
                 ['product_sku_id' => 3, 'quantity' => 90, 'per_day' => 3],
             ],
-            'address_id' => $address['id'],
+            'address_id' => 127,
             'station_id' => 1,
             'daytime' => 0,
             'weekday_type' => 'all',
-            'start_time' => '2016-07-24',
+            'start_time' => '2016-07-28',
             'channel' => 'wx_pub_qr'
         ];
 
@@ -44,7 +44,7 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->json('put', 'subscribe/orders/' . $temp_order_id . '/confirm', $data, $this->getAuthHeader());
 
-        $this->echoJson();
+//        $this->echoJson();
 
         $this->assertResponseStatus(201);
 
@@ -66,22 +66,30 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->assertResponseStatus(202);
 
-        $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING, 'district_id' => 1]);
+        $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => \App\Services\Order\OrderProtocol::STATUS_OF_PAID]);
 
+        $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
+
+        return $order;
     }
 
     /** @test */
     public function it_can_create_a_subscribe_address()
     {
-        $inside = [23.157195, 113.330319];
+//        $this->it_can_create_another_station();
+
+
+        $inside = [23.099075, 113.291048];
+//        $out_side = [23.151668243459564, 113.32917949894649];
+
         $data = [
             'name' => 'asda',
-            'phone' => '13242992609',
-            'detail' => 'asdad',
+            'phone' => 1,
             'street' => '街道',
+            'detail' => 'adasd',
             'longitude' => $inside[0],
             'latitude' => $inside[1],
-            'district_id' => 1
+            'district_id' => 440103
         ];
         $this->json('post', 'subscribe/address',
             $data,
@@ -93,6 +101,21 @@ class PreorderOrderApiTest extends TestCase {
         $this->assertResponseStatus(201);
 
         return $this->getResponseData('data');
+    }
+
+
+    /** @test */
+    public function it_can_create_a_order_and_refund()
+    {
+        $order = $this->it_can_create_a_preorder_order();
+
+        $this->json('delete', 'subscribe/orders/' . $order['order_no'],
+            [
+                'memo' => '后悔'
+            ], $this->getAuthHeader());
+
+//        $this->seeInDatabase('order_memo', ['order_id' => $order['id'], 'customer' => '后悔']);
+        $this->assertResponseStatus(204);
     }
 
 }

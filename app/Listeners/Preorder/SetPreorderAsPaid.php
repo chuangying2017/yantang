@@ -39,6 +39,7 @@ class SetPreorderAsPaid {
         $order = $event->order;
 
         if ($order['order_type'] == OrderProtocol::ORDER_TYPE_OF_SUBSCRIBE) {
+
             $preorder = $this->preorderRepo->updatePreorderStatusByOrder($order['id'], PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
 
             if ($preorder['status'] !== PreorderProtocol::ORDER_STATUS_OF_UNPAID) {
