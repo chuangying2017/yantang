@@ -44,7 +44,7 @@ class OrderRefundSucceed {
 
         $billing = $this->orderBillingRepo->updateAsPaid($payment['billing_id']);
 
-        $this->orderRepo->updateRefundAsSucceed($billing['order_id']);
+        $this->orderRepo->updateRefundAsRefunding($billing['order_id']);
     }
 
 }

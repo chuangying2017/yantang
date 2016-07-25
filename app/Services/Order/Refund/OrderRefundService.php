@@ -53,19 +53,19 @@ class OrderRefundService implements OrderRefundServiceContract {
     {
         $order = $this->orderRepo->getOrder($refund_order);
 
-        $order->load('refer.billings');
+        $refer_order = $order->refer->first();
+        $refer_order->load('billings');
 
         $pay_amount = $order['pay_amount'];
         $pingxx_refund_amount = $pay_amount;
         $refund_order_billing = null;
 
         //生成退款billings
-        foreach ($order['refer']['billings'] as $billing) {
+        foreach ($refer_order['billings'] as $billing) {
 
             if ($billing['pay_type'] == BillingProtocol::BILLING_TYPE_OF_MONEY) {
-
-                $pingxx_refund_amount = $pingxx_refund_amount > $billing['pay_amount'] ? $billing['pay_amount'] : $pingxx_refund_amount;
-                $refund_order_billing = $this->billingRepo->createBilling($pingxx_refund_amount, [
+                $pingxx_refund_amount = $pingxx_refund_amount > $billing['amount'] ? $billing['amount'] : $pingxx_refund_amount;
+                $refund_order_billing = $this->billingRepo->setType(BillingProtocol::BILLING_TYPE_OF_MONEY)->createBilling($pingxx_refund_amount, [
                     'order_id' => $order['id'],
                     'refer_billing_id' => $billing['id']
                 ]);
@@ -80,7 +80,7 @@ class OrderRefundService implements OrderRefundServiceContract {
             $this->refund->refund($this->billingService->setID($refund_order_billing));
         }
 
-        $this->orderRepo->updateRefundAsRefunding($order);
+        return $this->orderRepo->updateRefundAsRefunding($order['order_no']);
     }
 
 

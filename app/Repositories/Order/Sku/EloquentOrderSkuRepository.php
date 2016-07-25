@@ -63,7 +63,7 @@ class EloquentOrderSkuRepository implements OrderSkuRepositoryContract {
             'product_id' => $temp_order_sku['product_id'],
             'name' => $temp_order_sku['name'],
             'cover_image' => $temp_order_sku['cover_image'],
-            'quantity' => $temp_order_sku, 'quantity',
+            'quantity' => $temp_order_sku['quantity'],
             'price' => $temp_order_sku['price'],
             'discount_amount' => array_get($temp_order_sku, 'discount_amount', 0),
             'pay_amount' => $temp_order_sku['pay_amount'],

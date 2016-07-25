@@ -1,5 +1,5 @@
 <?php namespace App\Services\Pay;
-interface ThirdPartyRefundContract {
+interface ThirdPartyRefundContract extends RefundAbleContract{
 
     public function checkPaymentSucceed($payment);
 

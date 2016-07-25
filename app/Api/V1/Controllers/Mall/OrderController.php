@@ -87,8 +87,8 @@ class OrderController extends Controller {
      */
     public function destroy(OrderManageContract $orderManage, Request $request, $id)
     {
-        $orderManage->orderCancel($id, $request->input('memo'));
+        $order = $orderManage->orderCancel($id, $request->input('memo'), $request->input('order_skus'));
 
-        return $this->response->noContent();
+        return $this->response->item($order, new ClientOrderTransformer())->setStatusCode(204);
     }
 }

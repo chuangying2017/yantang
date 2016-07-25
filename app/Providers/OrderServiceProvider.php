@@ -60,6 +60,10 @@ class OrderServiceProvider extends ServiceProvider {
             \App\Repositories\Order\Promotion\OrderPromotionRepository::class
         );
 
+        $this->app->bind(
+            \App\Repositories\Order\Refund\RefundOrderRepositoryContract::class,
+            \App\Repositories\Order\RefundClientOrderRepository::class
+        );
     }
 
 

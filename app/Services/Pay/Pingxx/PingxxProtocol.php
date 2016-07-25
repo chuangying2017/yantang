@@ -15,6 +15,7 @@ class PingxxProtocol {
     const STATUS_OF_PAID = 'paid';
 
     const STATUS_OF_REFUND_SUCCESS = 'succeeded';
+    const STATUS_OF_REFUND_PENDING = 'pending';
 
     const PINGXX_APP_CHANNEL_ALIPAY = 'alipay';
     const PINGXX_APP_CHANNEL_WECHAT = 'wx';
@@ -156,6 +157,11 @@ class PingxxProtocol {
     }
 
     public static function isSucceed($charge)
+    {
+        return is_null($charge->failure_code);
+    }
+
+    public static function isDone($charge)
     {
         return $charge->succeed;
     }

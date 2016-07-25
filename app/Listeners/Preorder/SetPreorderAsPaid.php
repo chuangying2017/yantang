@@ -4,7 +4,8 @@ namespace App\Listeners\Preorder;
 
 use App\Events\Order\OrderIsPaid;
 use App\Repositories\Preorder\PreorderRepositoryContract;
-use App\Services\NotifyProtocol;
+use App\Services\Notify\NotifyProtocol;
+use App\Services\Order\OrderProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -36,15 +37,18 @@ class SetPreorderAsPaid {
     public function handle(OrderIsPaid $event)
     {
         $order = $event->order;
-        $preorder = $this->preorderRepo->updatePreorderStatusByOrder($order['id'], PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
 
-        if ($preorder['status'] !== PreorderProtocol::ORDER_STATUS_OF_UNPAID) {
+        if ($order['order_type'] == OrderProtocol::ORDER_TYPE_OF_SUBSCRIBE) {
+            $preorder = $this->preorderRepo->updatePreorderStatusByOrder($order['id'], PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
 
-            $preorder->load('station');
+            if ($preorder['status'] !== PreorderProtocol::ORDER_STATUS_OF_UNPAID) {
 
-            $phone = $preorder['station']['phone'];
+                $preorder->load('station');
 
-            $result = Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_STATION_NEW_ORDER)->send();
+                $phone = $preorder['station']['phone'];
+
+                $result = Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_STATION_NEW_ORDER)->send();
+            }
         }
     }
 }

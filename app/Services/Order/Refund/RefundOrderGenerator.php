@@ -20,6 +20,12 @@ class RefundOrderGenerator {
      */
     protected $orderRepo;
 
+    /**
+     * @param $order_no
+     * @param null $order_skus
+     * @param string $memo
+     * @return TempRefundOrder
+     */
     public function refund($order_no, $order_skus = null, $memo = '')
     {
         $config = [
@@ -31,9 +37,9 @@ class RefundOrderGenerator {
 
         $handler = $this->getOrderGenerateHandler($config);
 
-        $temp_refund = $handler->handle(new TempRefundOrder($order_no, $order_skus));
+        $temp_refund = $handler->handle(new TempRefundOrder($order_no, $order_skus, $memo));
 
-        return $temp_refund;
+        return $this->confirm($temp_refund->getTempOrderId());
     }
 
     public function confirm($temp_order_id)

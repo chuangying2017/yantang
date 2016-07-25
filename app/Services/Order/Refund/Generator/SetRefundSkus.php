@@ -36,9 +36,8 @@ class SetRefundSkus extends RefundGenerateHandlerAbstract {
                 $temp_order->setError('退货退款商品数量超出购买量');
                 return $temp_order;
             }
-
-            $order_skus[$key]['quantity'] += $refund_order_skus[$order_sku['id']];
-            $order_skus[$key]['pay_amount'] += $refund_order_skus[$order_sku['id']] * $order_sku['price'];
+            $order_skus[$key]['quantity'] = $refund_order_skus[$order_sku['id']];
+            $order_skus[$key]['pay_amount'] = $refund_order_skus[$order_sku['id']] * $order_sku['price'];
         }
 
         $temp_order->setRefundSkus($order_skus);
@@ -52,7 +51,7 @@ class SetRefundSkus extends RefundGenerateHandlerAbstract {
             $refund_order_skus = $refund_order_skus->toArray();
         }
 
-        return array_pluck($refund_order_skus, 'quantity', 'product_sku_id');
+        return array_pluck($refund_order_skus, 'quantity', 'id');
     }
 
 

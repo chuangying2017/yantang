@@ -48,7 +48,8 @@ class PingxxNotifyController extends Controller {
      */
     public function paid(Request $request)
     {
-        $charge = $this->getObject();
+        $charge = json_decode(json_encode($request->json('data.object')));
+//        $charge = $this->getObject();
 
         if ($this->payService->paid($charge)) {
             return $this->response->accepted();
@@ -65,7 +66,9 @@ class PingxxNotifyController extends Controller {
     public function refund(Request $request)
     {
         $refund = $this->getObject();
-
+        
+        
+        
     }
 
     /**

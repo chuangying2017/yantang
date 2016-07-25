@@ -7,7 +7,7 @@ interface RefundOrderRepositoryContract {
 
     public function updateRefundAsRefunding($order_no);
 
-    public function updateRefundAsSucceed($order_no);
+    public function updateRefundAsDone($order_no);
 
     public function updateRefundAsFail($order_no);
 

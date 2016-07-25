@@ -54,10 +54,13 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Order\OrderRefundSucceed',
         ],
 
+        'App\Services\Pay\Events\PingxxRefundPaymentIsDone' => [
+            'App\Listeners\Order\OrderRefundDone',
+        ],
+
         'App\Services\Pay\Events\PingxxRefundPaymentIsFail' => [
             'App\Listeners\Order\OrderRefundFail',
         ],
-
 
         'App\Events\Order\MainBillingIsPaid' => [
             'App\Listeners\Order\SetOrderAsPaid',

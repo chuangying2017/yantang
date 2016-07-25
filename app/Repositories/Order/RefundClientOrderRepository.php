@@ -67,7 +67,7 @@ class RefundClientOrderRepository extends ClientOrderRepository implements Refun
         return $this->updateRefundOrderStatus($order_no, OrderProtocol::REFUND_STATUS_OF_REFUNDING);
     }
 
-    public function updateRefundAsSucceed($order_no)
+    public function updateRefundAsDone($order_no)
     {
         return $this->updateRefundOrderStatus($order_no, OrderProtocol::REFUND_STATUS_OF_DONE);
     }
@@ -91,8 +91,10 @@ class RefundClientOrderRepository extends ClientOrderRepository implements Refun
     {
         $order = $this->getOrder($order_no);
         $order['status'] = $status;
-        $order->refer()->update(['refund_status' => $status]);
+
         $order->save();
+
+        $order->refer()->update(['refund_status' => $status]);
 
         return $order;
     }

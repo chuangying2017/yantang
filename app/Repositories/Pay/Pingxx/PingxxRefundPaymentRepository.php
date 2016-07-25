@@ -6,8 +6,9 @@ use App\Repositories\Pay\RefundRepositoryContract;
 use App\Services\Pay\Events\PingxxRefundPaymentIsFail;
 use App\Services\Pay\Events\PingxxRefundPaymentIsSucceed;
 use App\Services\Pay\Pingxx\PingxxProtocol;
+use Pingpp\Refund;
 
-class PingxxPaymentRefundPaymentRepository implements RefundRepositoryContract, RefundPaymentRepositoryContract {
+class PingxxRefundPaymentRepository implements RefundRepositoryContract, RefundPaymentRepositoryContract {
 
     /**
      * @var PingxxPaymentRepository
@@ -38,10 +39,13 @@ class PingxxPaymentRefundPaymentRepository implements RefundRepositoryContract, 
         $charge = $this->pingxxPayment->getCharge($charge_id);
 
         if (!is_null($refund_id)) {
-            return $charge->refunds->retrieve('$refund_id');
+            if($refund_id instanceof  Refund) {
+                return $refund_id;
+            }
+            return $charge->refunds->retrieve($refund_id);
         }
 
-        return $charge->refunds->all();
+        return $charge->refunds->all(['limit' => 1]);
     }
 
     public function getRefundTransaction($refund)
@@ -54,7 +58,7 @@ class PingxxPaymentRefundPaymentRepository implements RefundRepositoryContract, 
     {
         $refer_payment = $this->pingxxPayment->getPayment($payment);
 
-        $refund = $this->getRefund($refer_payment['charge_id']);
+        $refund = $this->createRefund($refer_payment['charge_id'], $amount);
 
         $refund_payment = new PingxxPaymentRefund([
             'pingxx_payment_id' => $refer_payment['id'],
@@ -64,9 +68,11 @@ class PingxxPaymentRefundPaymentRepository implements RefundRepositoryContract, 
             'succeed' => $refund->succeed,
             'amount' => $refund->amount,
             'status' => $refund->status,
+            'billing_id' => $billing_id,
+            'billing_type' => $refer_payment['billing_type']
         ]);
 
-        if (!PingxxProtocol::isSucceed($refund)) {
+        if (PingxxProtocol::isSucceed($refund)) {
             $refund_payment->fill([
                 'transaction_no' => $refund->transaction_no,
                 'time_succeed' => $refund->time_succeed,

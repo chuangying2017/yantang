@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OrderBilling extends Model {
 
     use SoftDeletes;
+    
     protected $table = 'order_billing';
 
     protected $guarded = ['id'];
@@ -21,6 +22,11 @@ class OrderBilling extends Model {
     public function scopeOrder($query, $order_id)
     {
         return $query->where('order_id', $order_id);
+    }
+
+    public function refer()
+    {
+        return $this->belongsTo(OrderBilling::class, 'refer_billing_id', 'id');
     }
 
 }

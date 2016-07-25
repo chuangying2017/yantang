@@ -16,7 +16,6 @@ class CreateRefundOrdersTable extends Migration {
             $table->integer('order_id')->unsigned()->index();
             $table->integer('return_order_id')->unsigned()->index();
             $table->string('operator', 45);
-            $table->timestamps();
         });
     }
 

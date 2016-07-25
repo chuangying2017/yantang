@@ -85,7 +85,7 @@ class CartOrderApiTest extends TestCase {
         $user_id = 1;
         $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 2], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
-        $this->dumpResponse();
+//        $this->dumpResponse();
 
         $result = $this->getResponseData();
         $this->assertResponseStatus(201);
@@ -93,7 +93,7 @@ class CartOrderApiTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_get_pingxx_paid_charge()
+    public function it_can_create_a_mall_order_and_pay_by_pingxx()
     {
         $user_id = 1;
         $order = $this->ite_can_create_a_cart_order();
@@ -126,6 +126,25 @@ class CartOrderApiTest extends TestCase {
         $this->seeInDatabase('orders', ['order_no' => $order['order_no'], 'pay_status' => \App\Services\Order\OrderProtocol::PAID_STATUS_OF_PAID, 'status' => \App\Services\Order\OrderProtocol::STATUS_OF_PAID]);
 
         $this->assertResponseStatus(202);
+
+        return $order;
+    }
+
+    /** @test */
+    public function it_can_cancel_a_mall_order()
+    {
+        $order = $this->it_can_create_a_mall_order_and_pay_by_pingxx();
+
+        $this->json('delete', 'mall/orders/' . $order['order_no'],
+            [
+                'memo' => '改变主意'
+            ],
+            $this->getAuthHeader());
+
+        $this->seeInDatabase('orders', ['order_no' => $order['order_no'], 'refund_status' => \App\Services\Order\OrderProtocol::REFUND_STATUS_OF_REFUNDING]);
+        $this->seeInDatabase('return_orders', ['order_id' => $order['id']]);
+
+        $this->assertResponseStatus(204);
     }
 
 }

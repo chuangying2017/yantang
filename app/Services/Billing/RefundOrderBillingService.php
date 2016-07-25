@@ -10,13 +10,13 @@ class RefundOrderBillingService extends OrderBillingService implements RefundBil
         parent::__construct($orderBillingRepo);
     }
 
-	/**
+    /**
      * @return OrderBilling
      */
     public function getReferBilling()
     {
-        return $this->billing->refer;
+        return app()->make(OrderBillingService::class)->setID($this->billing->refer);
     }
-    
-    
+
+
 }

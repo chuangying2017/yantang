@@ -27,13 +27,20 @@ class OrderBillingRepository implements BillingRepositoryContract {
             return $billing;
         }
 
-        $billing->pay_channel = $pay_channel;
+        if(!is_null($pay_channel)) {
+            $billing->pay_channel = $pay_channel;
+        }
+
         $billing->status = BillingProtocol::STATUS_OF_PAID;
         $billing->save();
 
         return $billing;
     }
 
+	/**
+     * @param $billing_no
+     * @return OrderBilling
+     */
     public function getBilling($billing_no)
     {
         if ($billing_no instanceof OrderBilling) {
@@ -41,10 +48,10 @@ class OrderBillingRepository implements BillingRepositoryContract {
         }
 
         if (strlen($billing_no) == NoGenerator::LENGTH_OF_ORDER_BILLING_NO) {
-            return OrderBilling::where('billing_no', $billing_no)->first();
+            return OrderBilling::query()->where('billing_no', $billing_no)->first();
         }
 
-        return OrderBilling::find($billing_no);
+        return OrderBilling::query()->find($billing_no);
     }
 
     public function getBillingOfType($order_id, $pay_type = BillingProtocol::BILLING_TYPE_OF_MONEY)

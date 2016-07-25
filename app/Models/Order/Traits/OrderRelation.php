@@ -54,12 +54,12 @@ trait OrderRelation {
 
     public function refund()
     {
-        return $this->belongsToMany(Order::class, 'return_order', 'order_id', 'return_order_id');
+        return $this->belongsToMany(Order::class, 'return_orders', 'order_id', 'return_order_id');
     }
 
     public function refer()
     {
-        return $this->belongsToMany(Order::class, 'return_order', 'return_order_id', 'order_id');
+        return $this->belongsToMany(Order::class, 'return_orders', 'return_order_id', 'order_id');
     }
 
 }

@@ -1,31 +1,23 @@
 <?php namespace App\Services\Pay\Pingxx;
 
-use App\Repositories\Pay\Pingxx\PingxxPaymentRefundPaymentRepository;
-use App\Services\Billing\BillingContract;
+use App\Repositories\Pay\Pingxx\PingxxRefundPaymentRepository;
 use App\Services\Billing\RefundBillingContract;
-use App\Services\Pay\RefundAbleContract;
+use App\Services\Pay\Events\PingxxRefundPaymentIsSucceed;
 use App\Services\Pay\ThirdPartyRefundContract;
 
-class PingxxRefundService implements RefundAbleContract, ThirdPartyRefundContract {
+class PingxxRefundService implements ThirdPartyRefundContract {
 
     /**
-     * @var BillingContract
-     */
-    private $billingContract;
-
-    /**
-     * @var PingxxPaymentRefundPaymentRepository
+     * @var PingxxRefundPaymentRepository
      */
     private $paymentRepository;
 
     /**
      * PingxxRefundService constructor.
-     * @param BillingContract $billingContract
-     * @param PingxxPaymentRefundPaymentRepository $paymentRepository
+     * @param PingxxRefundPaymentRepository $paymentRepository
      */
-    public function __construct(BillingContract $billingContract, PingxxPaymentRefundPaymentRepository $paymentRepository)
+    public function __construct(PingxxRefundPaymentRepository $paymentRepository)
     {
-        $this->billingContract = $billingContract;
         $this->paymentRepository = $paymentRepository;
     }
 
@@ -33,9 +25,7 @@ class PingxxRefundService implements RefundAbleContract, ThirdPartyRefundContrac
     {
         $refer_billing = $billing->getReferBilling();
 
-        $this->billingContract->setID($refer_billing);
-
-        $refundable_amount = $this->billingContract->getAmount() - $this->billingContract->getRefundedAmount();
+        $refundable_amount = $refer_billing->getAmount() - $refer_billing->getRefundedAmount();
 
         return ($refundable_amount >= $billing->getAmount());
     }
@@ -47,7 +37,7 @@ class PingxxRefundService implements RefundAbleContract, ThirdPartyRefundContrac
             $refer_billing = $billing->getReferBilling();
 
             $payment = $this->paymentRepository->createRefundPayment(
-                $this->billingContract->setID($refer_billing)->getPayment(),
+                $refer_billing->getPayment(),
                 $billing->getAmount(),
                 $billing->getID()
             );
@@ -60,17 +50,36 @@ class PingxxRefundService implements RefundAbleContract, ThirdPartyRefundContrac
 
     public function checkPaymentSucceed($payment)
     {
-        // TODO: Implement checkPaymentSucceed() method.
+        $payment = $this->paymentRepository->getRefundPayment($payment);
+        if ($payment['status'] == PingxxProtocol::STATUS_OF_REFUND_SUCCESS) {
+            return $payment;
+        }
+
+        return false;
     }
 
-    public function checkRefundChargeIsSucceed($charge)
+    public function checkRefundChargeIsSucceed($refund_charge)
     {
-        // TODO: Implement checkRefundChargeIsSucceed() method.
+        return $refund_charge->succeed;
     }
 
-    public function succeed($charge)
+    public function succeed($refund_charge)
     {
+        if ($this->checkRefundChargeIsSucceed($refund_charge)) {
 
+            $payment = $this->paymentRepository->getRefundPayment($refund_charge->order_no);
+            if ($payment['status'] == PingxxProtocol::STATUS_OF_REFUND_SUCCESS) {
+                return true;
+            }
+
+            $payment = $this->paymentRepository->updateRefundPaymentAsDone($payment);
+
+            event(new PingxxRefundPaymentIsSucceed($payment));
+
+            return true;
+        }
+
+        return false;
     }
 
 

@@ -42,15 +42,15 @@ class OrderController extends Controller {
     public function store(SubscribeOrderRequest $request, OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout)
     {
         try {
-        $skus = $request->input('skus');
-        $weekday_type = $request->input('weekday_type');
-        $daytime = $request->input('daytime');
-        $start_time = $request->input('start_time');
-        $address_id = $request->input('address_id');
+            $skus = $request->input('skus');
+            $weekday_type = $request->input('weekday_type');
+            $daytime = $request->input('daytime');
+            $start_time = $request->input('start_time');
+            $address_id = $request->input('address_id');
 
-        $temp_order = $orderGenerator->subscribe(access()->id(), $skus, $weekday_type, $daytime, $start_time, $address_id);
+            $temp_order = $orderGenerator->subscribe(access()->id(), $skus, $weekday_type, $daytime, $start_time, $address_id);
 
-        return $this->response->item($temp_order, new TempOrderTransformer());
+            return $this->response->item($temp_order, new TempOrderTransformer());
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
@@ -58,7 +58,6 @@ class OrderController extends Controller {
 
     public function confirm($temp_order_id, Request $request, OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout)
     {
-
         try {
 
             $pay_channel = $request->input('channel') ?: PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
@@ -94,7 +93,7 @@ class OrderController extends Controller {
      */
     public function destroy(OrderManageContract $orderManage, Request $request, $id)
     {
-        $orderManage->orderCancel($id, $request->input('memo'));
+        $orderManage->orderCancel($id, $request->input('memo'), $request->input('order_skus'));
 
         return $this->response->noContent();
     }

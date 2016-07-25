@@ -1,7 +1,7 @@
 <?php namespace App\Services\Order;
 interface OrderManageContract {
 
-    public function orderCancel($order_id, $memo);
+    public function orderCancel($order_id, $memo = '', $order_skus_info = null);
 
     public function orderPaid($order_id);
 
