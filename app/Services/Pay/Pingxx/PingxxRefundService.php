@@ -58,14 +58,14 @@ class PingxxRefundService implements ThirdPartyRefundContract {
         return false;
     }
 
-    public function checkRefundChargeIsSucceed($refund_charge)
+    public function checkRefundChargeIsDone($refund_charge)
     {
         return $refund_charge->succeed;
     }
 
     public function succeed($refund_charge)
     {
-        if ($this->checkRefundChargeIsSucceed($refund_charge)) {
+        if ($this->checkRefundChargeIsDone($refund_charge)) {
 
             $payment = $this->paymentRepository->getRefundPayment($refund_charge->order_no);
             if ($payment['status'] == PingxxProtocol::STATUS_OF_REFUND_SUCCESS) {
@@ -77,6 +77,10 @@ class PingxxRefundService implements ThirdPartyRefundContract {
             event(new PingxxRefundPaymentIsSucceed($payment));
 
             return true;
+        } else {
+            if (!PingxxProtocol::isSucceed($refund_charge)) {
+                $this->paymentRepository->updateRefundPaymentAsFail($refund_charge->order_no, $refund_charge->failure_code, $refund_charge->failure_msg);
+            }
         }
 
         return false;

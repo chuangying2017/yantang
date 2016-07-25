@@ -7,6 +7,7 @@ use App\Api\V1\Requests\Gateway\PingxxNotifyRequest as Request;
 
 use App\Http\Requests;
 use App\Services\Pay\Pingxx\PingxxPayService;
+use App\Services\Pay\Pingxx\PingxxRefundService;
 
 class PingxxNotifyController extends Controller {
 
@@ -63,12 +64,16 @@ class PingxxNotifyController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function refund(Request $request)
+    public function refund(Request $request, PingxxRefundService $refundService)
     {
-        $refund = $this->getObject();
-        
-        
-        
+        $refund = json_decode(json_encode($request->json('data.object')));
+
+        if ($refundService->succeed($refund)) {
+            return $this->response->accepted();
+
+        }
+
+        $this->response->error('refund fail', 500);
     }
 
     /**

@@ -114,7 +114,7 @@ class PreorderOrderApiTest extends TestCase {
                 'memo' => '后悔'
             ], $this->getAuthHeader());
 
-//        $this->seeInDatabase('order_memo', ['order_id' => $order['id'], 'customer' => '后悔']);
+        $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
         $this->assertResponseStatus(204);
     }
 
