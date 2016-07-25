@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Notify;
 
+use App\Events\Preorder\AssignIsReject;
 use App\Events\Preorder\PreordersNotHandleInTime;
 use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Backend\User\UserContract;
@@ -41,16 +42,31 @@ class SendSmsToStationAdmin {
 
     public function preorderHandleOvertime(PreordersNotHandleInTime $event)
     {
-        $admin = $this->getAdminStationPhone();
+        $this->sendMessage(NotifyProtocol::SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME);
+    }
 
-        if (!is_null($admin)) {
-            Sms::make()->to($admin['phone'])->content(NotifyProtocol::SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME);
+    public function orderAssignIsReject(AssignIsReject $event)
+    {
+        $this->sendMessage(NotifyProtocol::SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT);
+    }
 
-            return 1;
+    protected function sendMessage($message)
+    {
+        try {
+            $admin = $this->getAdminStationPhone();
+
+            if (!is_null($admin)) {
+                Sms::make()->to($admin['phone'])->content($message);
+                return 1;
+            }
+
+            \Log::error('服务部管理员不存在');
+            return 0;
+        } catch (\Exception $e) {
+            \Log::error($e);
+        } finally {
+            return 0;
         }
-
-        \Log::error('服务部管理员不存在');
-        return 0;
     }
 
     protected function getAdminStationPhone()

@@ -78,10 +78,10 @@ class StationPreorderApiTest extends TestCase {
             ['memo' => 'baba'],
             $this->getAuthHeader()
         );
+
         $this->assertResponseOk();
 
         $this->seeInDatabase('preorder_assign', ['preorder_id' => $order_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_REJECT]);
-
         $this->seeInDatabase('preorders', ['id' => $order_id, 'station_id' => 0]);
 
     }

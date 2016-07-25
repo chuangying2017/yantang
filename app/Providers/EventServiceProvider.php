@@ -155,7 +155,8 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
         'App\Events\Preorder\AssignIsReject' => [
-            'App\Listeners\Preorder\RemoveStationFromPreorder'
+            'App\Listeners\Preorder\RemoveStationFromPreorder',
+            'App\Listeners\Notify\SendSmsToStationAdmin@orderAssignIsReject',
         ],
 
         'App\Events\Preorder\PreordersNotHandleInTime' => [
