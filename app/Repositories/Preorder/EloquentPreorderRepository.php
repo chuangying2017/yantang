@@ -325,12 +325,14 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $query->where('start_time', '<=', $end_time);
         }
 
+        $query->orderBy('created_at', 'desc');
+
         return $query->paginate(PreorderProtocol::PREORDER_PER_PAGE);
     }
 
     public function updatePreorderStatusByOrder($order_id, $status)
     {
-        $preorder = Preorder::query()->where('order_id', $order_id)->first();
+        $preorder = Preorder::query()->where('order_id', $order_id)->firstOrFail();
         $preorder->status = $status;
         $preorder->save();
 

@@ -4,6 +4,7 @@ use App\Repositories\Billing\OrderBillingRepository;
 use App\Services\Billing\OrderBillingService;
 use App\Services\Order\OrderProtocol;
 use App\Services\Pay\Pingxx\PingxxPayService;
+use App\Services\Pay\ThirdPartyPayContract;
 
 class OrderCheckoutService implements OrderCheckoutContract {
 
@@ -14,7 +15,7 @@ class OrderCheckoutService implements OrderCheckoutContract {
     /**
      * @var PingxxPayService
      */
-    private $pingxxPayService;
+    private $payService;
     /**
      * @var OrderBillingService
      */
@@ -24,13 +25,13 @@ class OrderCheckoutService implements OrderCheckoutContract {
     /**
      * OrderCheckoutService constructor.
      * @param OrderBillingRepository $billingRepo
-     * @param PingxxPayService $pingxxPayService
+     * @param PingxxPayService $payService
      * @param OrderBillingService $orderBillingService
      */
-    public function __construct(OrderBillingRepository $billingRepo, PingxxPayService $pingxxPayService, OrderBillingService $orderBillingService)
+    public function __construct(OrderBillingRepository $billingRepo, PingxxPayService $payService, OrderBillingService $orderBillingService)
     {
         $this->billingRepo = $billingRepo;
-        $this->pingxxPayService = $pingxxPayService;
+        $this->payService = $payService;
         $this->orderBillingService = $orderBillingService;
     }
 
@@ -46,21 +47,20 @@ class OrderCheckoutService implements OrderCheckoutContract {
 
     protected function payWithPingxx($order_id, $pay_channel)
     {
-
         $billing = $this->billingRepo->getBillingOfType($order_id, OrderProtocol::BILLING_TYPE_OF_MONEY);
 
         if (!$billing) {
             throw new \Exception('订单无支付信息');
         }
 
-        $charge = $this->pingxxPayService->setChannel($pay_channel)->pay($this->orderBillingService->setID($billing));
+        $charge = $this->payService->setChannel($pay_channel)->pay($this->orderBillingService->setID($billing));
 
         return $charge;
     }
 
     public function billingPaid($payment_no)
     {
-        $payment = $this->pingxxPayService->checkPaymentPaid($payment_no);
+        $payment = $this->payService->checkPaymentPaid($payment_no);
         if (!$payment) {
             return false;
         }
@@ -75,4 +75,14 @@ class OrderCheckoutService implements OrderCheckoutContract {
     }
 
 
+    public function checkOrderIsPaid($order_id)
+    {
+        $billing = $this->billingRepo->getBillingOfType($order_id, OrderProtocol::BILLING_TYPE_OF_MONEY);
+
+        if (!$billing) {
+            return false;
+        }
+
+        return $this->orderBillingService->setID($billing)->isPaid(true);
+    }
 }

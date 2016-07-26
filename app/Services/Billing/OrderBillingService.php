@@ -1,6 +1,8 @@
 <?php namespace App\Services\Billing;
 
 use App\Repositories\Billing\OrderBillingRepository;
+use App\Services\Order\OrderProtocol;
+use App\Services\Pay\Pingxx\PingxxPayService;
 
 class OrderBillingService extends BillingAbstract {
 
@@ -38,6 +40,17 @@ class OrderBillingService extends BillingAbstract {
     public function getPayType()
     {
         return $this->billing['pay_type'];
+    }
+
+    public function isPaid($check_third_party = false)
+    {
+        $paid = $this->billing['status'] == OrderProtocol::PAID_STATUS_OF_PAID;
+
+        if (!$paid && $check_third_party) {
+            return app()->make(PingxxPayService::class)->checkBillingIsPaid($this->getID(), $this->getPayType());
+        }
+
+        return $paid;
     }
 
 }

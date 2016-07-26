@@ -141,10 +141,13 @@ class CartOrderApiTest extends TestCase {
             ],
             $this->getAuthHeader());
 
+
         $this->assertResponseStatus(204);
 
         $this->seeInDatabase('orders', ['order_no' => $order['order_no'], 'refund_status' => \App\Services\Order\OrderProtocol::REFUND_STATUS_OF_REFUNDING]);
         $this->seeInDatabase('return_orders', ['order_id' => $order['id']]);
+
+//        $this->setExpectedException(\Exception::class, '订单退款处理中,无法重复提交');
 
         $this->json('delete', 'mall/orders/' . $order['order_no'],
             [
@@ -152,7 +155,7 @@ class CartOrderApiTest extends TestCase {
             ],
             $this->getAuthHeader());
 
-        $this->assertResponseStatus(204);
+        $this->assertResponseStatus(500);
     }
 
 }

@@ -41,7 +41,9 @@ class OrderRefundDone {
         $refund_payment = $event->refund_payment;
 
         $billing = $this->orderBillingRepo->getBilling($refund_payment['billing_id']);
-
+        //原账单退款金额更新
+        $billing->refer()->update(['return_amount' => $billing['amount']]);
+        
         $this->orderRepo->updateRefundAsRefunding($billing['order_id']);
 
     }

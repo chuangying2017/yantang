@@ -4,7 +4,7 @@ interface PaymentRepositoryContract {
 
     public function createPayment($charge, $billing_id, $billing_type);
 
-    public function getPaymentByBilling($billing_id, $billing_type, $channel);
+    public function getPaymentByBilling($billing_id, $billing_type, $channel = null);
 
     public function setPaymentAsPaid($payment_no, $transaction_no);
 

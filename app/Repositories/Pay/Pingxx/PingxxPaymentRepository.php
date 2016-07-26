@@ -186,12 +186,25 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         return PingxxPayment::class;
     }
 
-    public function getPaymentByBilling($billing_id, $billing_type, $channel)
+	/**
+     * @param $billing_id
+     * @param $billing_type
+     * @param null $channel
+     * @return PingxxPayment
+     */
+    public function getPaymentByBilling($billing_id, $billing_type, $channel = null)
     {
-        return PingxxPayment::where('billing_id', $billing_id)
+        if (!is_null($channel)) {
+            return PingxxPayment::query()
+                ->where('billing_id', $billing_id)
+                ->where('billing_type', $billing_type)
+                ->where('channel', $channel)->first();
+        }
+
+        return PingxxPayment::query()
+            ->where('billing_id', $billing_id)
             ->where('billing_type', $billing_type)
-            ->where('channel', $channel)
-            ->first();
+            ->get();
     }
 
 

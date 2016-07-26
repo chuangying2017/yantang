@@ -47,16 +47,16 @@ class EventServiceProvider extends ServiceProvider {
         ],
 
         'App\Services\Pay\Events\PingxxPaymentIsFail' => [
-            
+
         ],
 
         'App\Services\Pay\Events\PingxxRefundPaymentIsSucceed' => [
             'App\Listeners\Order\OrderRefundSucceed',
-            'App\Listeners\Preorder\SetPreorderAsCancel',
         ],
 
         'App\Services\Pay\Events\PingxxRefundPaymentIsDone' => [
             'App\Listeners\Order\OrderRefundDone',
+            'App\Listeners\Billing\UpdateBillingRefundAmount'
         ],
 
         'App\Services\Pay\Events\PingxxRefundPaymentIsFail' => [
@@ -79,6 +79,7 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Events\Order\OrderIsCancel' => [
             'App\Listeners\Product\IncreaseProductSkuStock',
+            'App\Listeners\Preorder\SetPreorderAsCancel',
         ],
 
         'App\Events\Order\OrderIsDone' => [

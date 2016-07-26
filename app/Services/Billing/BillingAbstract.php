@@ -11,7 +11,7 @@ abstract class BillingAbstract implements BillingContract {
         return $this->billing['id'];
     }
 
-    public function isPaid()
+    public function isPaid($check = false)
     {
         return $this->billing['status'] == OrderProtocol::PAID_STATUS_OF_PAID;
     }

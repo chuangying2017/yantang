@@ -10,7 +10,7 @@ interface BillingContract {
 
     public function getOrderNo();
 
-    public function isPaid();
+    public function isPaid($check = false);
 
     public function getAmount();
 

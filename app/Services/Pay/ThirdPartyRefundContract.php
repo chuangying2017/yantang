@@ -3,8 +3,8 @@ interface ThirdPartyRefundContract extends RefundAbleContract{
 
     public function checkPaymentSucceed($payment);
 
-    public function checkRefundChargeIsDone($charge);
+    public function checkRefundChargeIsDone($refund);
 
-    public function succeed($charge);
+    public function succeed($refund);
 
 }

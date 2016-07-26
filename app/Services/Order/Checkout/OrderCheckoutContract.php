@@ -8,5 +8,7 @@ interface OrderCheckoutContract {
     public function checkout($order_id, $pay_type = OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel = null);
 
     public function billingPaid($payment_no);
+    
+    public function checkOrderIsPaid($order);
 
 }

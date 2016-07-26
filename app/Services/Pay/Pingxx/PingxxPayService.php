@@ -8,7 +8,7 @@ use App\Services\Pay\PayableContract;
 use App\Services\Pay\ThirdPartyPayContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class PingxxPayService implements PayableContract, ThirdPartyPayContract {
+class PingxxPayService implements ThirdPartyPayContract {
 
     protected $channel;
 
@@ -26,9 +26,14 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
         $this->paymentRepository = $paymentRepository;
     }
 
+    /**
+     * @param BillingContract $billing
+     * @return \Pingpp\Charge
+     * @throws \Exception
+     */
     public function pay(BillingContract $billing)
     {
-        if ($billing->isPaid()) {
+        if ($billing->isPaid(true)) {
             throw new \Exception('订单已支付,无需重复支付', 402);
         }
 
@@ -51,8 +56,8 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
     }
 
     /**
-     * @param mixed $channel
-     * @return PingxxPayService
+     * @param $channel
+     * @return PayableContract
      */
     public function setChannel($channel)
     {
@@ -122,4 +127,23 @@ class PingxxPayService implements PayableContract, ThirdPartyPayContract {
     }
 
 
+    public function checkBillingIsPaid($billing_id, $billing_type)
+    {
+        $payments = $this->paymentRepository->getPaymentByBilling($billing_id, $billing_type);
+
+        if (!count($payments)) {
+            return false;
+        }
+
+        foreach ($payments as $payment) {
+            if (!$this->checkPaymentPaid($payment)) {
+                $charge = $this->getChargeAndSetIfPaid($payment);
+                if ($this->checkChargeIsPaid($charge)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

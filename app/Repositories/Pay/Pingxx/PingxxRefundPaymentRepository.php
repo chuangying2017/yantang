@@ -80,6 +80,7 @@ class PingxxRefundPaymentRepository implements RefundRepositoryContract, RefundP
             $refund_payment->save();
 
             event(new PingxxRefundPaymentIsSucceed($refund_payment));
+            
         } else {
             $refund_payment->fill([
                 'failure_code' => $refund->failure_code,

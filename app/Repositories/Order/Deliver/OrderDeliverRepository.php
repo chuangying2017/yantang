@@ -7,7 +7,7 @@ class OrderDeliverRepository {
 
     public function createOrderDeliver($order_id, $company, $post_no)
     {
-        $order_deliver = OrderDeliver::findOrNew($order_id);
+        $order_deliver = OrderDeliver::query()->findOrNew($order_id);
         $order_deliver->order_id = $order_id;
         $order_deliver->company_name = $company;
         $order_deliver->post_no = $post_no;

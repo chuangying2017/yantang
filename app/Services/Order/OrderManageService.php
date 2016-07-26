@@ -6,6 +6,7 @@ use App\Repositories\Order\ClientOrderRepository;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\Deliver\OrderDeliverRepository;
 use App\Services\Billing\OrderBillingService;
+use App\Services\Order\Checkout\OrderCheckoutService;
 use App\Services\Order\Exceptions\BillingNotPaidException;
 use App\Services\Order\Refund\OrderRefundService;
 use App\Services\Order\Refund\RefundOrderGenerator;
@@ -58,7 +59,9 @@ class OrderManageService implements OrderManageContract {
 
         //未支付,直接取消
         if ($order['pay_status'] == OrderProtocol::PAID_STATUS_OF_UNPAID) {
-            return $this->orderRepositoryContract->updateOrderStatusAsCancel($order);
+            if (!app()->make(OrderCheckoutService::class)->checkOrderIsPaid($order['id'])) {
+                return $this->orderRepositoryContract->updateOrderStatusAsCancel($order);
+            }
         }
 
         //生成退款退货订单
@@ -66,6 +69,7 @@ class OrderManageService implements OrderManageContract {
         $refund_order = $refund_order_generator->refund($order_id, $order_skus_info, $memo);
 
         //未发货,直接退款
+        $order = $this->orderRepositoryContract->getOrder($order['id'], false);
         if ($order['status'] == OrderProtocol::STATUS_OF_PAID) {
             //执行退款
             app()->make(OrderRefundService::class)->refund($refund_order);
@@ -90,7 +94,7 @@ class OrderManageService implements OrderManageContract {
 
             $pay_channel = '';
             foreach ($billings as $billing) {
-                if (!$this->orderBillingService->setID($billing)->isPaid()) {
+                if (!$this->orderBillingService->setID($billing)->isPaid(true)) {
                     throw new BillingNotPaidException();
                 }
                 if ($this->orderBillingService->getPayType() == OrderProtocol::BILLING_TYPE_OF_MONEY) {
@@ -101,7 +105,6 @@ class OrderManageService implements OrderManageContract {
 
             return $order;
         } catch (BillingNotPaidException $e) {
-            #TODO:  重新检查billings支付状态
             throw $e;
         }
     }
