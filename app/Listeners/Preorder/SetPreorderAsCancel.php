@@ -35,8 +35,7 @@ class SetPreorderAsCancel {
         $order = $event->order;
         if ($order['order_type'] == OrderProtocol::ORDER_TYPE_OF_SUBSCRIBE) {
             
-            
-            
+
             $this->preorderRepo->updatePreorderStatusByOrder($order['id'], PreorderProtocol::ORDER_STATUS_OF_CANCEL);
         }
     }

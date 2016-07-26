@@ -336,6 +336,10 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $preorder->status = $status;
         $preorder->save();
 
+        if ($status == PreorderProtocol::ORDER_STATUS_OF_CANCEL) {
+            app()->make(PreorderAssignRepositoryContract::class)->deleteAssign($preorder['id']);
+        }
+
         return $preorder;
     }
 

@@ -16,4 +16,6 @@ interface PreorderAssignRepositoryContract {
 
     public function deleteAssignStaff($order_id);
 
+    public function deleteAssign($order_id);
+
 }
