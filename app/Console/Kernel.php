@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\StationSettleStatement',
         'App\Console\Commands\SettlePreorder',
         'App\Console\Commands\InitSearch',
-
+        'App\Console\Commands\CleanData',
 
     ];
 

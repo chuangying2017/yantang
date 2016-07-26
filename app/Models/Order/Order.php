@@ -11,6 +11,8 @@ class Order extends Model {
 
     use SoftDeletes, OrderRelation;
 
+    
+
     protected $table = 'orders';
 
     protected $guarded = ['id'];
