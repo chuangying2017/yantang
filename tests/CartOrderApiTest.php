@@ -82,10 +82,8 @@ class CartOrderApiTest extends TestCase {
     /** @test */
     public function it_can_add_a_sku_to_cart()
     {
-        $user_id = 1;
+        $user_id = 2;
         $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 2], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
-
-//        $this->dumpResponse();
 
         $result = $this->getResponseData();
         $this->assertResponseStatus(201);

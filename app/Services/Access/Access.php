@@ -32,10 +32,10 @@ class Access {
      * @param \Illuminate\Foundation\Application $app
      * @param Request $request
      */
-    public function __construct($app, Request $request)
+    public function __construct($app)
     {
         $this->app = $app;
-        $this->request = $request;
+        $this->request = $this->app->make(Request::class);
     }
 
 
@@ -79,8 +79,8 @@ class Access {
         }
 
         try {
-            $user = JWTAuth::setRequest($this->request)->authenticate();
-
+            $user = JWTAuth::setRequest($this->request)->parseToken()->authenticate();
+     
             return $user->id;
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return false;
