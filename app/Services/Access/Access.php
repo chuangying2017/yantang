@@ -5,6 +5,7 @@ use App\Models\Access\User\User;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
 use App\Repositories\Store\StoreRepositoryContract;
+use Illuminate\Http\Request;
 use JWTAuth;
 
 /**
@@ -21,13 +22,20 @@ class Access {
     public $app;
 
     /**
+     * @var Request
+     */
+    private $request;
+
+    /**
      * Create a new confide instance.
      *
      * @param \Illuminate\Foundation\Application $app
+     * @param Request $request
      */
-    public function __construct($app)
+    public function __construct($app, Request $request)
     {
         $this->app = $app;
+        $this->request = $request;
     }
 
 
@@ -37,7 +45,7 @@ class Access {
     public function user()
     {
         //从jwt token中获取用户
-        if (!JWTAuth::getToken()) {
+        if (!JWTAuth::setRequest($this->request)->getToken()) {
 
             if (auth('web')->check()) {
                 return auth('web')->user();
@@ -47,7 +55,7 @@ class Access {
         }
 
         try {
-            $user = JWTAuth::authenticate();
+            $user = JWTAuth::setRequest($this->request)->parseToken()->authenticate();
             return $user;
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return false;
@@ -62,7 +70,7 @@ class Access {
      */
     public function id()
     {
-        if (!JWTAuth::getToken()) {
+        if (!JWTAuth::setRequest($this->request)->getToken()) {
             if (auth('web')->check()) {
                 return auth('web')->id();
             }
@@ -71,7 +79,7 @@ class Access {
         }
 
         try {
-            $user = JWTAuth::authenticate();
+            $user = JWTAuth::setRequest($this->request)->authenticate();
 
             return $user->id;
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
@@ -126,7 +134,8 @@ class Access {
      */
     public function hasRole($role)
     {
-        if ($user = $this->user())
+        $user = $this->user();
+        if ($user)
             return $user->hasRole($role);
 
         return false;
@@ -238,4 +247,6 @@ class Access {
     {
         return $this->allowMultiple($permissions, $needsAll);
     }
+
+
 }
