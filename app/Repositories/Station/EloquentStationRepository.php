@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Station;
 
+use App\Models\Subscribe\Preorder;
 use App\Models\Subscribe\Station;
 use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Statement\MerchantRepositoryContract;
@@ -76,6 +77,10 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
 
     public function deleteStation($station_id)
     {
+        if (Preorder::query()->where('station_id', $station_id)->first()) {
+            throw new \Exception('服务部存在订单,无法删除');
+        }
+
         return Station::destroy($station_id);
     }
 
@@ -121,7 +126,7 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
     {
         DB::table('station_user')->where('station_id', $station_id)->where('user_id', $user_id)->delete();
 
-        access()->removeRole(AccessProtocol::ROLE_OF_STATION);
+        access()->removeRole(AccessProtocol::ROLE_OF_STATION, $user_id);
 
         return true;
     }

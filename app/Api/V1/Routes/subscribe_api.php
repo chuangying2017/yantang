@@ -36,6 +36,8 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->resource('statements', 'StationStatementController', ['only' => ['index', 'show', 'update']]);
             //管理配送员
             $api->get('staffs/{staff_id}/preorders', 'StationStaffController@orders');
+            $api->put('staffs/{staff_id}/preorders', 'StationStaffController@reassign');
+
             $api->resource('staffs', 'StationStaffController');
 
 

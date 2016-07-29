@@ -2,6 +2,7 @@
 
 use App\Models\Access\Role\Role;
 use App\Models\Access\User\User;
+use App\Repositories\Auth\User\EloquentUserRepository;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
 use App\Repositories\Store\StoreRepositoryContract;
@@ -80,7 +81,7 @@ class Access {
 
         try {
             $user = JWTAuth::setRequest($this->request)->parseToken()->authenticate();
-     
+
             return $user->id;
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return false;
@@ -141,10 +142,13 @@ class Access {
         return false;
     }
 
-    public function addRole($role)
+    public function addRole($role, $user_id = null)
     {
-        $user = $this->user();
-
+        if (!is_null($user_id)) {
+            $user = $this->app->make(EloquentUserRepository::class)->findOrThrowException($user_id);
+        } else {
+            $user = $this->user();
+        }
 
         if (is_object($role) || is_array($role)) {
             $role_id = $role['id'];
@@ -159,9 +163,13 @@ class Access {
         }
     }
 
-    public function removeRole($role)
+    public function removeRole($role, $user_id = null)
     {
-        $user = $this->user();
+        if (!is_null($user_id)) {
+            $user = $this->app->make(EloquentUserRepository::class)->findOrThrowException($user_id);
+        } else {
+            $user = $this->user();
+        }
 
         if (is_object($role) || is_array($role)) {
             $role_id = $role['id'];

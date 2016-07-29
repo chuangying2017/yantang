@@ -2,6 +2,7 @@
 
 use App\Events\Preorder\PreorderIsCancel;
 use App\Models\Subscribe\Preorder;
+use App\Models\Subscribe\PreorderAssign;
 use App\Repositories\NoGenerator;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\Product\PreorderSkusRepositoryContract;
@@ -399,5 +400,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         }
 
         return $query->get();
+    }
+
+    public function changeTheStaffPreorders($old_staff_id, $new_staff_id)
+    {
+        Preorder::query()->where('staff_id', $old_staff_id)->update(['staff_id' => $new_staff_id]);
+        PreorderAssign::query()->where('staff_id', $old_staff_id)->update(['staff_id' => $new_staff_id]);
     }
 }

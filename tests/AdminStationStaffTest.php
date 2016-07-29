@@ -12,7 +12,7 @@ class AdminStationStaffTest extends TestCase {
     public function it_can_create_a_staff()
     {
 
-        $station = $this->it_can_bind_user_to_station();
+//        $station = $this->it_can_bind_user_to_station();
 
         $user_id = 1;
         $this->json('post', 'stations/staffs',

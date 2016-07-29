@@ -94,4 +94,21 @@ class AdminStationApiTest extends TestCase {
         $this->dumpResponse();
     }
 
+    /** @test */
+    public function it_can_unbind_user_of_station()
+    {
+        $user_id = 1;
+        $station_id = 1;
+        $this->seeInDatabase('station_user', ['user_id' => $user_id, 'station_id' => $station_id]);
+        $this->seeInDatabase('assigned_roles', ['user_id' => $user_id, 'role_id' => \App\Repositories\Backend\AccessProtocol::ID_ROLE_OF_STATION]);
+
+        $this->json('put', 'admin/stations/' . $station_id . '/unbind', [
+            'user' => 'all'
+        ], $this->getAuthHeader());
+
+        $this->assertResponseStatus(204);
+
+        $this->notSeeInDatabase('station_user', ['user_id' => $user_id, 'station_id' => $station_id]);
+        $this->notSeeInDatabase('assigned_roles', ['user_id' => $user_id, 'role_id' => \App\Repositories\Backend\AccessProtocol::ID_ROLE_OF_STATION]);
+    }
 }

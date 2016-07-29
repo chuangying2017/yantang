@@ -50,8 +50,6 @@ class StaffPreorderApiTest extends TestCase {
 
         $this->json('get', 'staffs/preorders/' . $order_id, [], $this->getAuthHeader(2));
 
-        $this->dumpResponse();
-
         $this->assertResponseOk();
     }
 
@@ -71,8 +69,6 @@ class StaffPreorderApiTest extends TestCase {
         );
 
         $this->assertResponseOk();
-
-        $this->echoJson();
 
         $this->seeInDatabase('preorders', ['id' => $order_id, 'pause_time' => $pause_time]);
     }
@@ -96,6 +92,36 @@ class StaffPreorderApiTest extends TestCase {
         $this->assertResponseOk();
 
         $this->seeInDatabase('preorders', ['id' => $order_id, 'restart_time' => $restart_time]);
+    }
+
+
+    /** @test */
+    public function it_can_assign_all_preorder_from_the_staff_to_a_new_staff()
+    {
+        $staff = $this->it_can_create_a_staff();
+
+        $old_staff_id = 1;
+
+        $this->json('put', 'stations/staffs/' . $old_staff_id . '/preorders', ['staff' => $staff['id']], $this->getAuthHeader());
+
+        $this->assertResponseOk();
+    }
+
+    /** @test */
+    public function it_can_create_a_staff()
+    {
+        $user_id = 1;
+        $this->json('post', 'stations/staffs',
+            [
+                'name' => '服务部' . mt_rand(),
+                'phone' => '服务部描述' . mt_rand()
+            ],
+            ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
+        );
+
+        $this->assertResponseStatus(201);
+
+        return $this->getResponseData('data');
     }
 
 }

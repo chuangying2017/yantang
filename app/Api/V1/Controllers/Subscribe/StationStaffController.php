@@ -1,6 +1,7 @@
 <?php namespace App\Api\V1\Controllers\Subscribe;
 
 use App\API\V1\Controllers\Controller;
+use App\Api\V1\Requests\Station\ReAssignStaffRequest;
 use App\Api\V1\Transformers\Subscribe\Station\StaffPreorderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
@@ -101,6 +102,7 @@ class StationStaffController extends Controller {
         return $this->response->noContent();
     }
 
+
     public function orders(Request $request, $staff_id, StationPreorderRepositoryContract $preorderRepo)
     {
         $this->checkAuth($staff_id);
@@ -109,9 +111,20 @@ class StationStaffController extends Controller {
         $start_time = $request->input('start_time') ?: null;
         $end_time = $request->input('end_time') ?: null;
 
-        $orders = $this->orderRepo->getPreordersOfStation(access()->stationId(), $staff_id, $status, $start_time, $end_time);
+        $orders = $preorderRepo->getPreordersOfStation(access()->stationId(), $staff_id, $status, $start_time, $end_time);
 
-        return $this->response->collection($orders, new StaffPreorderTransformer());
+        return $this->response->paginator($orders, new StaffPreorderTransformer());
+    }
+
+    public function reassign(ReAssignStaffRequest $request, $staff_id, StationPreorderRepositoryContract $preorderRepo)
+    {
+        $this->checkAuth($staff_id);
+
+        $new_staff_id = $request->input('staff');
+
+        $preorderRepo->changeTheStaffPreorders($staff_id, $new_staff_id);
+
+        return $this->response->array(['data' => 'success']);
     }
 
     /**

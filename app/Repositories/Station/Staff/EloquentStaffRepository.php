@@ -3,6 +3,7 @@
 use App\Models\Subscribe\Preorder;
 use App\Models\Subscribe\StationStaff;
 use App\Repositories\Backend\AccessProtocol;
+use App\Repositories\Backend\Role\RoleRepositoryContract;
 use App\Repositories\Station\StationProtocol;
 
 class EloquentStaffRepository implements StaffRepositoryContract {
@@ -65,7 +66,13 @@ class EloquentStaffRepository implements StaffRepositoryContract {
             throw new \Exception('配送员有配送订单');
         }
 
-        return StationStaff::destroy($staff_id);
+        $staff = $this->getStaff($staff_id);
+
+        if ($staff['user_id']) {
+            access()->removeRole(AccessProtocol::ROLE_OF_STAFF, $staff['user_id']);
+        }
+
+        return $staff->delete();
     }
 
     public function getStaff($staff_id, $with_user = false)

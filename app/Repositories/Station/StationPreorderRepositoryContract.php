@@ -16,4 +16,6 @@ interface StationPreorderRepositoryContract extends PreorderRepositoryContract {
     public function getDayPreorderWithProductsOfStaff($staff_id, $date, $day_time = null);
 
     public function updatePreorderPriority($order_id, $staff_id, $preorder_priority);
+
+    public function changeTheStaffPreorders($old_staff_id, $new_staff_id);
 }

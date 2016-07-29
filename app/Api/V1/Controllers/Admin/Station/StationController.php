@@ -78,13 +78,22 @@ class StationController extends Controller {
      */
     public function update(CreateStationRequest $request, $id)
     {
-        if ($request->input('reset_user')) {
-            $this->stationRepo->unbindAllUser($id);
-        }
-
         $station = $this->stationRepo->updateStation($id, $request->all());
 
         return $this->response->item($station, new StationTransformer());
+    }
+
+    public function unbind(Request $request, $station_id)
+    {
+        $user_id = $request->input('user');
+
+        if ($user_id == 'all') {
+            $this->stationRepo->unbindAllUser($station_id);
+        } else {
+            $this->stationRepo->unbindUser($station_id, $user_id);
+        }
+
+        return $this->response->noContent();
     }
 
     /**
