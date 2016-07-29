@@ -7,6 +7,10 @@ class StationTransformer extends TransformerAbstract {
 
     public function transform(Station $station)
     {
+        if ($station->relationLoaded('user')) {
+            $this->defaultIncludes = ['user'];
+        }
+
         $data = [
             'id' => $station['id'],
             'name' => $station['name'],
@@ -30,6 +34,11 @@ class StationTransformer extends TransformerAbstract {
         };
 
         return $data;
+    }
+
+    public function includeUser(Station $station)
+    {
+        return $this->collection($station->user, new StationUserTransformer(), true);
     }
 
 }

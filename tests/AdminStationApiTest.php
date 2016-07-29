@@ -111,4 +111,13 @@ class AdminStationApiTest extends TestCase {
         $this->notSeeInDatabase('station_user', ['user_id' => $user_id, 'station_id' => $station_id]);
         $this->notSeeInDatabase('assigned_roles', ['user_id' => $user_id, 'role_id' => \App\Repositories\Backend\AccessProtocol::ID_ROLE_OF_STATION]);
     }
+
+    /** @test */
+    public function it_can_get_a_station_detail()
+    {
+        $station_id = 1;
+        $this->json('get', 'admin/stations/' . $station_id, [], $this->getAuthHeader());
+
+        $this->dump();
+    }
 }
