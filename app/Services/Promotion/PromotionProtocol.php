@@ -65,6 +65,7 @@ class PromotionProtocol {
     const DISCOUNT_TYPE_OF_SPECIAL_PRICE = 'price';
     const DISCOUNT_TYPE_OF_COUPON = 'coupon';
     const DISCOUNT_TYPE_OF_PRODUCT = 'product';
+    const DISCOUNT_TYPE_OF_GIFT = 'gift';
 
     public static function getRuleBenefitCalculator($type)
     {

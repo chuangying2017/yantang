@@ -15,7 +15,7 @@ class CampaignService extends PromotionServiceAbstract implements PromotionAutoU
     {
         $this->usable($items);
 
-        foreach ($this->ruleService->getRules()->getAll() as $rule_key => $rule) {
+        foreach ($this->ruleService->getRules() as $rule_key => $rule) {
             $this->using($items, $rule_key);
         }
 

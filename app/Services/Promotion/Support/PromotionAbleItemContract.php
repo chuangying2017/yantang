@@ -1,12 +1,10 @@
 <?php namespace App\Services\Promotion\Support;
 
-interface PromotionAbleItemContract extends PromotionAbleItemSettingContract {
+interface PromotionAbleItemContract {
 
     public function init($items_data);
 
     public function getItems();
-
-    public function get();
 
     public function getAmount($item_keys = null);
 

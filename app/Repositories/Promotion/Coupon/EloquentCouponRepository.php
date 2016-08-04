@@ -4,6 +4,7 @@ use App\Models\Promotion\Coupon;
 use App\Models\Promotion\Ticket;
 use App\Repositories\Promotion\PromotionRepositoryAbstract;
 use App\Repositories\Promotion\Traits\Counter;
+use App\Services\Promotion\PromotionProtocol;
 
 class EloquentCouponRepository extends PromotionRepositoryAbstract implements CouponRepositoryContract {
 
@@ -31,14 +32,13 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
 
     public function getCouponsById($coupon_ids)
     {
-        return Coupon::with('rules')->whereIn('id', to_array($coupon_ids))->get();
+        return Coupon::with('rules', 'counter')->find($coupon_ids);
     }
 
     public function getUsefulPromotions()
     {
-        $ticket_coupon_ids = Ticket::where('user_id', access()->id())->effect()->pluck('promotion_id')->all();
-        $coupons = Coupon::with('rules', 'counter')->find($ticket_coupon_ids);
+        $ticket_coupon_ids = Ticket::query()->where('status', PromotionProtocol::STATUS_OF_TICKET_OK)->where('user_id', access()->id())->effect()->pluck('promotion_id')->all();
 
-        return $coupons;
+        return $this->getCouponsById($ticket_coupon_ids);
     }
 }

@@ -21,7 +21,7 @@ class PreorderOrderApiTest extends TestCase {
             'station_id' => 1,
             'daytime' => 0,
             'weekday_type' => 'all',
-            'start_time' => '2016-07-28',
+            'start_time' => '2016-08-28',
             'channel' => 'wx_pub_qr'
         ];
 

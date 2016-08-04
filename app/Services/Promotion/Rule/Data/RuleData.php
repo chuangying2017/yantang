@@ -27,50 +27,51 @@ class RuleData implements RuleDataContract {
         ]);
     }
 
-    public function setRuleKey($rule_key)
+    public function getAll()
     {
-        $this->rule_key = $rule_key;
+        return $this->rules;
+    }
+
+    public function getAllKeys()
+    {
+        return array_keys($this->rules);
+    }
+
+    public function unsetRule($rule_key)
+    {
+        unset($this->rules[$rule_key]);
         return $this;
     }
 
-    public function setRelated($item_keys)
+
+    public function getByGroup($group)
     {
-        // TODO: Implement setRelated() method.
+        // TODO: Implement getByGroup() method.
     }
 
-    public function setUsable()
+    public function setRule($rule_key)
     {
-        // TODO: Implement setUsable() method.
+        // TODO: Implement setRule() method.
     }
 
-    public function unsetUsable()
+    public function getRuleID()
     {
-        // TODO: Implement unsetUsable() method.
+        // TODO: Implement getRuleID() method.
     }
 
-    public function setUsing()
+    public function getPromotionID()
     {
-        // TODO: Implement setUse() method.
-    }
-
-    public function unsetUsing()
-    {
-        // TODO: Implement unsetUse() method.
-    }
-
-    public function setBenefit($value)
-    {
-        // TODO: Implement setBenefit() method.
-    }
-
-    public function unsetBenefit()
-    {
-        // TODO: Implement unsetBenefit() method.
+        // TODO: Implement getPromotionID() method.
     }
 
     public function getType()
     {
         // TODO: Implement getType() method.
+    }
+
+    public function getQualification()
+    {
+        // TODO: Implement getQualification() method.
     }
 
     public function getItems()
@@ -98,30 +99,14 @@ class RuleData implements RuleDataContract {
         // TODO: Implement getMultiType() method.
     }
 
-    public function getAll()
+    public function getGroup()
     {
-        return $this->rules;
+        // TODO: Implement getGroup() method.
     }
 
-    public function unsetRule($rule_key)
+    public function setRelated($item_keys)
     {
-        unset($this->rules[$rule_key]);
-        return $this;
-    }
-
-    public function getRuleID()
-    {
-        // TODO: Implement getRuleID() method.
-    }
-
-    public function getPromotionID()
-    {
-        // TODO: Implement getPromotionID() method.
-    }
-
-    public function getQualification()
-    {
-        // TODO: Implement getQualification() method.
+        // TODO: Implement setRelated() method.
     }
 
     public function getRelatedItems()
@@ -129,14 +114,14 @@ class RuleData implements RuleDataContract {
         // TODO: Implement getRelatedItems() method.
     }
 
-    public function getGroup()
+    public function setUsable()
     {
-        // TODO: Implement getGroup() method.
+        // TODO: Implement setUsable() method.
     }
 
-    public function getByGroup($group)
+    public function unsetUsable()
     {
-        // TODO: Implement getByGroup() method.
+        // TODO: Implement unsetUsable() method.
     }
 
     public function isUsable()
@@ -144,14 +129,19 @@ class RuleData implements RuleDataContract {
         // TODO: Implement isUsable() method.
     }
 
-    public function unsetAllNotUsingUsable()
-    {
-        // TODO: Implement unsetAllNotUsingUsable() method.
-    }
-
     public function unsetSameGroupUsable()
     {
         // TODO: Implement unsetSameGroupUsable() method.
+    }
+
+    public function setConflictUsable()
+    {
+        // TODO: Implement setConflictUsable() method.
+    }
+
+    public function setUsing()
+    {
+        // TODO: Implement setUsing() method.
     }
 
     public function isUsing()
@@ -159,13 +149,29 @@ class RuleData implements RuleDataContract {
         // TODO: Implement isUsing() method.
     }
 
+    public function unsetUsing()
+    {
+        // TODO: Implement unsetUsing() method.
+    }
+
+    public function setBenefit($value)
+    {
+        // TODO: Implement setBenefit() method.
+    }
+
+    public function unsetBenefit()
+    {
+        // TODO: Implement unsetBenefit() method.
+    }
+
     public function setMessage($message)
     {
         // TODO: Implement setMessage() method.
     }
 
-    public function setConflictUsable()
+
+    public function getRule()
     {
-        // TODO: Implement setConflictUsable() method.
+        // TODO: Implement getRule() method.
     }
 }

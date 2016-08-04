@@ -1,6 +1,6 @@
 <?php namespace App\Repositories\Promotion;
 
-use App\Models\Promotion\PromotionDetail;
+use App\Models\Promotion\PromotionAbstract;
 use App\Models\Promotion\UserPromotion;
 use App\Repositories\Promotion\Rule\RuleRepositoryContract;
 use App\Services\Order\OrderProtocol;
@@ -8,6 +8,9 @@ use Carbon\Carbon;
 
 abstract class PromotionRepositoryAbstract implements PromotionRepositoryContract, PromotionSupportRepositoryContract {
 
+    /**
+     * @var PromotionAbstract
+     */
     protected $model;
 
     /**
@@ -57,7 +60,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
             'active' => array_get($data, 'active', 1),
         ];
 
-        $promotion = is_null($promotion_id) ? new $model() : $this->get($promotion_id);
+        $promotion = is_null($promotion_id) ? new $model : $this->get($promotion_id);
         $promotion->fill($promotion_data);
         $promotion->save();
         return $promotion;
@@ -86,8 +89,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
 
     public function getAll($not_over_time = true)
     {
-        $model = $this->getModel();
-        $query = $model::query();
+        $query = $this->getQuery();
         if ($not_over_time) {
             $query = $query->effect();
         }
@@ -96,10 +98,9 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
 
     public function getAllPaginated($not_over_time = true)
     {
-        $model = $this->getModel();
-        $query = $model::query();
+        $query = $this->getQuery();
         if ($not_over_time) {
-            $query = $query->effect();
+            $query->effect();
         }
 
         return $query->paginate(OrderProtocol::ORDER_PER_PAGE);
@@ -111,7 +112,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     {
         $promotion = $this->fillPromotion($promotion_id, $data);
 
-        if(isset($data['rules'])) {
+        if (isset($data['rules'])) {
             $this->syncRules($promotion, $data['rules'], false);
         }
 
@@ -129,21 +130,30 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     }
 
     /**
-     * @param mixed $model
+     * @param PromotionAbstract $model
      * @return PromotionRepositoryAbstract
      */
-    protected function setModel($model)
+    protected function setModel(PromotionAbstract $model)
     {
         $this->model = $model;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return PromotionAbstract
      */
     protected function getModel()
     {
         return $this->model;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function getQuery()
+    {
+        $model = $this->getModel();
+        return $model::query();
     }
 
     /*
@@ -210,12 +220,12 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
 
     public function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
     {
-        $query = UserPromotion::where('user_id', $user_id)->where('promotion_id', $promotion_id);
+        $query = UserPromotion::query()->where('user_id', $user_id)->where('promotion_id', $promotion_id);
 
         if (!is_null($rule_id)) {
             $query = $query->where('rule_id', $rule_id);
         }
 
-        return $query->count();
+        return $query->get()->count();
     }
 }

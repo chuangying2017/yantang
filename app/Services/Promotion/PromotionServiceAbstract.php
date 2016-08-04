@@ -20,7 +20,9 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
 
     /**
      * PromotionServiceAbstract constructor.
-     * @param
+     * @param PromotionSupportRepositoryContract $promotionSupportRepo
+     * @param RuleServiceContract $ruleService
+     * @internal param $
      */
     public function __construct(PromotionSupportRepositoryContract $promotionSupportRepo, RuleServiceContract $ruleService)
     {
@@ -28,7 +30,12 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
         $this->promotionSupportRepo = $promotionSupportRepo;
     }
 
-
+    /**
+     * 过滤相关
+     * @param PromotionAbleItemContract $items
+     * @param null $rules
+     * @return PromotionAbleItemContract
+     */
     public function related(PromotionAbleItemContract $items, $rules = null)
     {
         $rules_array = is_null($rules) ? $this->promotionSupportRepo->getUsefulRules() : $rules;
@@ -36,6 +43,11 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
         return $items;
     }
 
+    /**
+     *
+     * @param PromotionAbleItemContract $items
+     * @return PromotionAbleItemContract
+     */
     public function usable(PromotionAbleItemContract $items)
     {
         $rules = $this->getRelateRules($items);

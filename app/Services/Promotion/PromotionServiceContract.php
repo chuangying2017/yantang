@@ -5,12 +5,14 @@ use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 interface PromotionServiceContract {
 
-    public function related(PromotionAbleItemContract $items, $rules = null);
+    public function setItems(PromotionAbleItemContract $items);
 
-    public function usable(PromotionAbleItemContract $items);
+    public function related($rules = null);
 
-    public function using(PromotionAbleItemContract $items, $rule_key);
+    public function usable();
 
-    public function notUsing(PromotionAbleItemContract $items, $rule_key);
+    public function using($rule_key);
+
+    public function notUsing($rule_key);
 
 }
