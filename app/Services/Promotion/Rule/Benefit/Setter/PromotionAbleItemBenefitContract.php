@@ -1,4 +1,4 @@
-<?php namespace App\Services\Promotion\Support\Benefit;
+<?php namespace App\Services\Promotion\Rule\Benefit\Setter;
 interface PromotionAbleItemBenefitContract {
 
     public function init($benefit_name);

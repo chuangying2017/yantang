@@ -45,15 +45,15 @@ class RuleService implements RuleServiceContract {
         $this->user = $user;
         $this->specifyRuleService = $specifyRuleService;
     }
-    
-    public function filterRelate(PromotionSupportRepositoryContract $promotionSupport)
+
+    public function filterRelate()
     {
 
         foreach ($this->rules->getAllKeys() as $rule_key) {
             $this->setSpecifyRuleServiceInfo($rule_key);
 
             //检查并设置用户是否有参加活动资格,没有资格则删除规则
-            if ($this->specifyRuleService->checkUserQualify($promotionSupport)) {
+            if ($this->specifyRuleService->checkUserQualify()) {
                 //检查商品是否符合规则要求,符合则标记为关联
                 $this->specifyRuleService->checkRelateItems();
             }

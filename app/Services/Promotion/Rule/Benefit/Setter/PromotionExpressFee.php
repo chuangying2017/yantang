@@ -1,4 +1,6 @@
-<?php namespace App\Services\Promotion\Support\Benefit;
+<?php namespace App\Services\Promotion\Rule\Benefit\Setter;
+
+
 class PromotionExpressFee implements PromotionAbleItemBenefitContract {
 
     protected $discount_express_fee;

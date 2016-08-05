@@ -3,6 +3,6 @@
 use App\Repositories\Promotion\PromotionRepositoryContract;
 use App\Repositories\Promotion\PromotionSupportRepositoryContract;
 
-interface CampaignRepositoryContract extends PromotionRepositoryContract, PromotionSupportRepositoryContract {
+interface CampaignRepositoryContract extends PromotionRepositoryContract {
 
 }

@@ -1,7 +1,11 @@
 <?php namespace App\Services\Promotion\Rule;
 
-use App\Repositories\Promotion\PromotionSupportRepositoryContract;
+use App\Repositories\Promotion\PromotionSupportRepository;
+use App\Services\Promotion\PromotionProtocol;
+use App\Services\Promotion\Rule\Benefit\BenefitCalculator;
 use App\Services\Promotion\Rule\Data\RuleDataContract;
+use App\Services\Promotion\Rule\Qualification\QualifyChecker;
+use App\Services\Promotion\Rule\Usage\GetRelate;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 use App\Services\Promotion\Support\PromotionAbleUserContract;
 
@@ -51,89 +55,53 @@ class SpecifyRuleService implements SpecifyRuleContract {
         $this->rules->setRule($current_rule_key);
     }
 
-    public function checkUserQualify(PromotionSupportRepositoryContract $promotionRepo)
+    public function checkUserQualify()
     {
-        // TODO: Implement checkUserQualify() method.
+        $qualify = $this->rules->getQualification();
+
+        $user_has_qualify = app()->make(QualifyChecker::class)->setQualifyType($qualify['type'])->check($this->user, $qualify['values']);
+
+        $promotionRepo = app()->make(PromotionSupportRepository::class);
+        $user_has_quota = $this->userHasQuota($qualify['quantity'], $this->rules->getPromotionID(), $this->rules->getRuleID(), $promotionRepo);
+
+        if ($user_has_qualify && $user_has_quota) {
+            return true;
+        }
+
+        $this->rules->unsetRule();
+        return false;
+    }
+
+    protected function userHasQuota($quantity, $promotion_id, $rule_id, PromotionSupportRepository $promotionSupport)
+    {
+        if ($quantity > 0) {
+            return $quantity > $promotionSupport->getUserPromotionTimes($promotion_id, $this->user->getUserId(), $rule_id);
+        }
+        return true;
     }
 
     public function checkRelateItems()
     {
-        // TODO: Implement checkRelateItems() method.
+        $rule_items = $this->rules->getItems();
+
+        $relate_item_keys = app()->make(GetRelate::class)->setRelateType($rule_items['type'])->filter($this->items, $rule_items['values']);
+
+        if (empty($relate_item_keys) || is_null($relate_item_keys) || !$relate_item_keys) {
+            $this->rules->unsetRule();
+            return false;
+        }
+
+        $this->rules->setRelated($relate_item_keys);
+
+        return true;
     }
 
     public function checkItemsInRange()
     {
-        // TODO: Implement checkItemsInRange() method.
-    }
+        $usable_items = $this->rules->getRelatedItems();
+        $range = $this->rules->getRange();
 
-    public function isUsing()
-    {
-        // TODO: Implement isUsing() method.
-    }
-
-    public function isUsable()
-    {
-        // TODO: Implement isUsable() method.
-    }
-
-    public function setBenefit()
-    {
-        // TODO: Implement setBenefit() method.
-    }
-
-    public function setAsUsing()
-    {
-//        $discount = $this->rules->getDiscount();
-//        $calculator = PromotionProtocol::getRuleBenefitCalculator($discount['type']);
-//        $benefit_value = $calculator->calAndSet($discount['mode'], $discount['value'], $items, $this->rules->getRelatedItems());
-//
-//        $this->rules->setUsing();
-//
-//        $this->rules->setBenefit($benefit_value);
-//        if ($this->isCoupon()) {
-//            $items->setCouponBenefit($rule_key, $this->rules->getDiscount(), $benefit_value);
-//        } else {
-//            $items->setCampaignBenefit($rule_key, $this->rules->getDiscount(), $benefit_value);
-//        }
-//
-//        if ($this->rules->getMultiType()) {
-//            $this->rules->unsetAllNotUsingUsable();
-//        }
-//
-//        if ($this->rules->getGroup()) {
-//            $this->rules->unsetSameGroupUsable();
-//        }
-    }
-
-    public function setAsNotUsing()
-    {
-//        $discount = $this->rules->getDiscount();
-//        $calculator = PromotionProtocol::getRuleBenefitCalculator($discount['type']);
-//        $calculator->rollback($discount['mode'], $discount['value'], $items, $this->rules->getRelatedItems());
-//
-//        $this->rules->unsetUsing();
-//        $this->rules->unsetBenefit();
-//
-//        if ($this->isCoupon()) {
-//            $items->unsetCouponBenefit($rule_key);
-//        } else {
-//            $items->unsetCampaignBenefit($rule_key);
-//        }
-//
-//        $this->rules->setConflictUsable();
-    }
-
-
-    public function calculatePromotionBenefits($items, $discount)
-    {
-        $benefit_handler = PromotionProtocol::getRuleBenefitCalculator($discount['type']);
-
-        return $benefit_handler->calAndSet($items, $discount['mode'], $discount['value']);
-    }
-
-    public function itemsInRange($usable_items, $range)
-    {
-        $usable_items_range_value = $this->getItemsRangeValue($usable_items, $range['type']);
+        $usable_items_range_value = $this->calItemsRange($usable_items, $range['type']);
 
         if ($range['max']) {
             if ($usable_items_range_value > $range['max']) {
@@ -147,48 +115,85 @@ class SpecifyRuleService implements SpecifyRuleContract {
             return false;
         }
 
+        $this->rules->setUsable();
+
         return true;
     }
 
-    protected function getItemsRangeValue($items, $range_type)
+    protected function calItemsRange($usable_items, $type)
     {
-        $item_value = 0;
-        foreach ($items as $item) {
-            if ($range_type == PromotionProtocol::RANGE_TYPE_OF_AMOUNT) {
-                $item_value = bcadd($item_value, bcmul($item['quantity'], $item['price']));
-            } else if ($range_type == PromotionProtocol::RANGE_TYPE_OF_QUANTITY) {
-                $item_value = bcadd($item_value, $item['quantity']);
+        $usable_items_range_value = 0;
+        if ($type == PromotionProtocol::RANGE_TYPE_OF_AMOUNT) {
+            foreach ($usable_items as $item) {
+                $usable_items_range_value = bcadd($usable_items_range_value, bcmul($item['quantity'], $item['price']));
+            }
+        } else if ($type == PromotionProtocol::RANGE_TYPE_OF_QUANTITY) {
+            foreach ($usable_items as $item) {
+                $usable_items_range_value = bcadd($usable_items_range_value, $item['quantity']);
             }
         }
 
-        return $item_value;
+        return $usable_items_range_value;
     }
 
-
-    protected function userHasQuota($quantity, $promotion_id, $rule_id, PromotionSupportRepositoryContract $promotionSupport)
+    public function isUsing()
     {
-        if ($quantity > 0) {
-            return $quantity > $promotionSupport->getUserPromotionTimes($promotion_id, $this->user->getUserId(), $rule_id);
+        return $this->rules->isUsing();
+    }
+
+    public function isUsable()
+    {
+        return $this->rules->isUsable();
+    }
+
+    public function setBenefit()
+    {
+        $discount = $this->rules->getDiscount();
+
+        $benefit_value = app()->make(BenefitCalculator::class)->setBenefitType($discount['type'])->calAndSet($discount['mode'], $discount['value'], $this->items, $this->rules->getRelatedItems());
+        $this->rules->setBenefit($benefit_value)->setUsing();
+
+        return $benefit_value;
+    }
+
+    public function setAsUsing()
+    {
+        if (!$this->isUsable()) {
+            return false;
         }
+
+        $this->setBenefit();
+
+        if ($this->rules->getMultiType()) {
+            $this->rules->unsetOtherUsable();
+        }
+
+        if ($this->rules->getGroup()) {
+            $this->rules->unsetSameGroupUsable();
+        }
+
         return true;
     }
 
-    public function hasQualify($rule_key, PromotionSupportRepositoryContract $promotionSupport)
+    public function unsetBenefit()
     {
-        $this->rules->setRuleKey($rule_key);
-        $rule_qualify = $this->rules->getQualification();
+        $discount = $this->rules->getDiscount();
 
-        $qualify_checker = PromotionProtocol::getRuleQualifyChecker($rule_qualify['type']);
+        $benefit_value = app()->make(BenefitCalculator::class)->setBenefitType($discount['type'])->rollback($discount['mode'], $discount['value'], $this->items, $this->rules->getRelatedItems());
+        $this->rules->unsetBenefit()->unsetUsing();
 
-        if (!$qualify_checker->check($this->user, $rule_qualify['values'])) {
-            $this->rules->setMessage('不符合条件,参与失败');
+        return $benefit_value;
+    }
+
+    public function setAsNotUsing()
+    {
+        if (!$this->isUsing()) {
             return false;
         }
 
-        if (!$this->userHasQuota($rule_qualify['quantity'], $this->rules->getPromotionID(), $this->rules->getRuleID(), $promotionSupport)) {
-            $this->rules->setMessage('参加次数超过上限');
-            return false;
-        }
+        $this->unsetBenefit();
+
+        $this->rules->setConflictUsable();
 
         return true;
     }

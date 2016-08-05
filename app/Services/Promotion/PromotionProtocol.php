@@ -66,45 +66,13 @@ class PromotionProtocol {
     const DISCOUNT_TYPE_OF_COUPON = 'coupon';
     const DISCOUNT_TYPE_OF_PRODUCT = 'product';
     const DISCOUNT_TYPE_OF_GIFT = 'gift';
-
-    public static function getRuleBenefitCalculator($type)
-    {
-        $handler = null;
-        switch ($type) {
-            case self::DISCOUNT_TYPE_OF_AMOUNT:
-                $handler = new AmountBenefit();
-                break;
-        }
-        return $handler;
-    }
+    
 
     const DISCOUNT_MODE_OF_DECREASE = 'decrease';
     const DISCOUNT_MODE_OF_PERCENTAGE = 'percentage';
     const DISCOUNT_MODE_OF_EQUAL = 'equal';
     const DISCOUNT_MODE_OF_MUL = 'mul';
-
-
-    public static function calModeValue($mode, $origin_value, $cal_value)
-    {
-        $result = $origin_value;
-        switch ($mode) {
-            case self::DISCOUNT_MODE_OF_DECREASE:
-                $result = bcsub($origin_value, $cal_value, 0);
-                break;
-            case self::DISCOUNT_MODE_OF_PERCENTAGE:
-                $result = bcmul($origin_value, (100 - $cal_value), 0);
-                break;
-            case self::DISCOUNT_MODE_OF_EQUAL:
-                $result = $cal_value;
-                break;
-            case self::DISCOUNT_MODE_OF_MUL:
-                $result = bcmul($origin_value, $cal_value, 0);
-                break;
-            default:
-                throw new \Exception('优惠模式错误');
-        }
-        return $result;
-    }
+    
 
     const MULTI_TYPE_OF_ONLY = 0;
     const MULTI_TYPE_OF_CAN_MULTI = 1;
@@ -117,7 +85,7 @@ class PromotionProtocol {
             self::QUALI_TYPE_OF_ROLE => '指定用户角色',
         ];
 
-        return is_null($name) ? $data : $data[$name];
+        return is_null($name) ? $data : array_get($data, $name, null);
     }
 
     public static function getItemType($name = null)

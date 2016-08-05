@@ -1,10 +1,6 @@
-<?php namespace App\Services\Promotion\Support;
+<?php namespace App\Services\Promotion\Rule\Benefit\Setter;
 
 use App\Services\Promotion\PromotionProtocol;
-use App\Services\Promotion\Support\Benefit\PromotionAbleItemBenefitContract;
-use App\Services\Promotion\Support\Benefit\PromotionCredit;
-use App\Services\Promotion\Support\Benefit\PromotionExpressFee;
-use App\Services\Promotion\Support\Benefit\PromotionGift;
 
 trait PromotionAbleItemTrait {
 

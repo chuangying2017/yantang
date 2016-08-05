@@ -1,99 +1,97 @@
 <?php namespace App\Services\Promotion;
 
-use App\Repositories\Promotion\PromotionSupportRepositoryContract;
-use App\Services\Promotion\Data\PromotionDataProtocol;
-use App\Services\Promotion\Rule\Data\RuleDataContract;
+use App\Repositories\Promotion\PromotionRepositoryAbstract;
 use App\Services\Promotion\Rule\RuleServiceContract;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 abstract class PromotionServiceAbstract implements PromotionServiceContract {
-
 
     /**
      * @var RuleServiceContract
      */
     protected $ruleService;
     /**
-     * @var PromotionSupportRepositoryContract
+     * @var PromotionRepositoryAbstract
      */
-    protected $promotionSupportRepo;
+    protected $promotionRepo;
+
+    /**
+     * @var PromotionAbleItemContract
+     */
+    protected $items;
+
 
     /**
      * PromotionServiceAbstract constructor.
-     * @param PromotionSupportRepositoryContract $promotionSupportRepo
+     * @param PromotionRepositoryAbstract $promotionRepo
      * @param RuleServiceContract $ruleService
      * @internal param $
      */
-    public function __construct(PromotionSupportRepositoryContract $promotionSupportRepo, RuleServiceContract $ruleService)
+    public function __construct(PromotionRepositoryAbstract $promotionRepo, RuleServiceContract $ruleService)
     {
         $this->ruleService = $ruleService;
-        $this->promotionSupportRepo = $promotionSupportRepo;
+        $this->promotionRepo = $promotionRepo;
     }
+
+    public function setItems(PromotionAbleItemContract $items)
+    {
+        $this->items = $items;
+    }
+
 
     /**
      * 过滤相关
-     * @param PromotionAbleItemContract $items
      * @param null $rules
-     * @return PromotionAbleItemContract
+     * @return $this
      */
-    public function related(PromotionAbleItemContract $items, $rules = null)
+    public function related($rules = null)
     {
-        $rules_array = is_null($rules) ? $this->promotionSupportRepo->getUsefulRules() : $rules;
-        $this->ruleService->setRules($rules_array)->filterRelate($items, $this->promotionSupportRepo);
-        return $items;
+        $rules_array = is_null($rules) ? $this->promotionRepo->getUsefulRules() : $rules;
+
+        $this->ruleService->setRules($rules_array)->setItems($this->items);
+
+        $this->ruleService->filterRelate();
+
+        return $this;
     }
 
     /**
      *
-     * @param PromotionAbleItemContract $items
-     * @return PromotionAbleItemContract
+     * @return $this
      */
-    public function usable(PromotionAbleItemContract $items)
+    public function usable()
     {
-        $rules = $this->getRelateRules($items);
-        if (!$rules) {
-            $this->related($items);
-        } else {
-            $this->ruleService->setRules($rules);
+        if (!$this->getRelateRules()) {
+            $this->related();
         }
 
-        $this->ruleService->filterUsable($items);
+        $this->ruleService->filterUsable();
 
-        return $items;
+        return $this;
     }
 
-    public function using(PromotionAbleItemContract $items, $rule_key)
+    public function using($rule_key)
     {
-        $rules = $this->getRelateRules($items);
-        if (!$rules) {
-            $this->usable($items);
-        } else {
-            $this->ruleService->setRules($rules);
+        if (!$this->getRelateRules()) {
+            $this->usable();
         }
 
-        $this->ruleService->setRules($rules)
-            ->using($items, $rule_key);
+        $this->ruleService->using($rule_key);
 
-        return $items;
+        return $this;
     }
 
-
-    public function notUsing(PromotionAbleItemContract $items, $rule_key)
+    public function notUsing($rule_key)
     {
-        $rules = $this->getRelateRules($items);
-        if (!$rules) {
-            $this->usable($items);
-        } else {
-            $this->ruleService->setRules($rules);
+        if (!$this->getRelateRules()) {
+            $this->usable();
         }
 
-        $this->ruleService->setRules($rules)
-            ->notUsing($items, $rule_key);
+        $this->ruleService->notUsing($rule_key);
 
-        return $items;
+        return $this;
     }
 
-    protected abstract function getRelateRules(PromotionAbleItemContract $items);
-
+    protected abstract function getRelateRules();
 
 }

@@ -1,7 +1,11 @@
 <?php namespace App\Services\Promotion\Rule\Data;
-interface SpecifyRuleDataContract extends SpecifyRuleDataSettingContract{
+interface SpecifyRuleDataContract extends SpecifyRuleDataSettingContract {
 
     public function setRule($rule_key);
+    
+    public function resetRule();
+
+    public function unsetRule();
 
     public function getRule();
 
@@ -25,4 +29,5 @@ interface SpecifyRuleDataContract extends SpecifyRuleDataSettingContract{
 
     public function getGroup();
     
+
 }

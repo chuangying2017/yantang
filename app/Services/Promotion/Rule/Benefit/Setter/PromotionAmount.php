@@ -1,17 +1,14 @@
-<?php namespace App\Services\Promotion\Support\Benefit;
-
-class PromotionGift implements PromotionAbleItemBenefitContract {
-
-    protected $gifts;
+<?php namespace App\Services\Promotion\Rule\Benefit\Setter;
+class PromotionAmount implements PromotionAbleItemBenefitContract{
 
     public function init($benefit_name)
     {
-        $this->gifts = $benefit_name;
+        // TODO: Implement init() method.
     }
 
     public function add($benefit, $key = null)
     {
-        $this->gifts[] = $benefit;
+        // TODO: Implement add() method.
     }
 
     public function remove($benefit, $key = null)
@@ -21,6 +18,6 @@ class PromotionGift implements PromotionAbleItemBenefitContract {
 
     public function get($key = null)
     {
-        return $this->gifts;
+        // TODO: Implement get() method.
     }
 }

@@ -1,12 +1,11 @@
 <?php namespace App\Repositories\Promotion;
 
 use App\Models\Promotion\PromotionAbstract;
-use App\Models\Promotion\UserPromotion;
 use App\Repositories\Promotion\Rule\RuleRepositoryContract;
 use App\Services\Order\OrderProtocol;
 use Carbon\Carbon;
 
-abstract class PromotionRepositoryAbstract implements PromotionRepositoryContract, PromotionSupportRepositoryContract {
+abstract class PromotionRepositoryAbstract implements PromotionRepositoryContract {
 
     /**
      * @var PromotionAbstract
@@ -218,14 +217,5 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         ];
     }
 
-    public function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
-    {
-        $query = UserPromotion::query()->where('user_id', $user_id)->where('promotion_id', $promotion_id);
 
-        if (!is_null($rule_id)) {
-            $query = $query->where('rule_id', $rule_id);
-        }
-
-        return $query->get()->count();
-    }
 }

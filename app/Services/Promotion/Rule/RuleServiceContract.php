@@ -1,16 +1,14 @@
 <?php namespace App\Services\Promotion\Rule;
 
-use App\Repositories\Promotion\PromotionSupportRepositoryContract;
 use App\Services\Promotion\Rule\Data\RuleDataContract;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 interface RuleServiceContract {
 
     /**
-     * @param PromotionSupportRepositoryContract $promotionSupport
      * @return $this
      */
-    public function filterRelate(PromotionSupportRepositoryContract $promotionSupport);
+    public function filterRelate();
 
     /**
      * @return $this
@@ -34,11 +32,10 @@ interface RuleServiceContract {
      * @return mixed
      */
     public function setItems(PromotionAbleItemContract $items);
-
-
+    
     /**
      * @param array $rules
-     * @return mixed
+     * @return $this
      */
     public function setRules(array $rules);
 

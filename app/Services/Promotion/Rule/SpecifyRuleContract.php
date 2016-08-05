@@ -29,7 +29,7 @@ interface SpecifyRuleContract {
 
     //检查计算
     //unset if don't has qualify
-    public function checkUserQualify(PromotionSupportRepositoryContract $promotionRepo);
+    public function checkUserQualify();
 
     public function checkRelateItems();
 
@@ -42,6 +42,8 @@ interface SpecifyRuleContract {
 
     //操作
     public function setBenefit();
+
+    public function unsetBenefit();
 
     public function setAsUsing();
 

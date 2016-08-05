@@ -1,13 +1,16 @@
 <?php namespace App\Services\Promotion\Rule\Usage;
 
+use App\Services\Promotion\Support\PromotionAbleItemContract;
+
 class AllItemsUsage implements Usage {
 
-    public function filter($items, $item_values)
+    public function filter(PromotionAbleItemContract $items, $item_values)
     {
-        $item_id = [];
-        foreach($items as $item) {
-            $item_id[] = $item['id'];
+        $item_keys = [];
+        foreach ($items->getItems() as $key => $item) {
+            $item_keys[] = $key;
         }
-        return $item_id;
+
+        return $item_keys;
     }
 }

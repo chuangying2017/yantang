@@ -1,4 +1,6 @@
-<?php namespace App\Services\Promotion\Support\Benefit;
+<?php namespace App\Services\Promotion\Rule\Benefit\Setter;
+
+
 class PromotionCredit implements PromotionAbleItemBenefitContract {
 
     protected $credits;
