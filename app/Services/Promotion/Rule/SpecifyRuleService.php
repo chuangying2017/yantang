@@ -150,10 +150,13 @@ class SpecifyRuleService implements SpecifyRuleContract {
     {
         $discount = $this->rules->getDiscount();
 
-        $benefit_value = app()->make(BenefitCalculator::class)->setBenefitType($discount['type'])->calAndSet($discount['mode'], $discount['value'], $this->items, $this->rules->getRelatedItems());
-        $this->rules->setBenefit($benefit_value)->setUsing();
+        $benefit_value = app()->make(BenefitCalculator::class)->setBenefitType($discount['type'])->cal($discount['mode'], $discount['value'], $this->items, $this->rules->getRelatedItems());
 
-        return $benefit_value;
+        $this->rules->setBenefit($benefit_value);
+
+        $this->items->addPromotion($this->rules);
+
+        return $this;
     }
 
     public function setAsUsing()
@@ -177,12 +180,9 @@ class SpecifyRuleService implements SpecifyRuleContract {
 
     public function unsetBenefit()
     {
-        $discount = $this->rules->getDiscount();
+        $this->items->removePromotion($this->rules);
 
-        $benefit_value = app()->make(BenefitCalculator::class)->setBenefitType($discount['type'])->rollback($discount['mode'], $discount['value'], $this->items, $this->rules->getRelatedItems());
-        $this->rules->unsetBenefit()->unsetUsing();
-
-        return $benefit_value;
+        return $this;
     }
 
     public function setAsNotUsing()

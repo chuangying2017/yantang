@@ -4,7 +4,7 @@ use App\Services\Promotion\PromotionProtocol;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 class BenefitCalculator {
-
+    
     /**
      * @var Benefit
      */
@@ -37,14 +37,9 @@ class BenefitCalculator {
         $this->calculator = $calculator;
     }
 
-    public function calAndSet($mode, $value, PromotionAbleItemContract $items, $item_option = null)
+    public function cal($mode, $value, PromotionAbleItemContract $items, $item_option = null)
     {
-        $this->calculator->calAndSet($mode, $value, $items, $item_option);
-    }
-
-    public function rollback($mode, $benefit_value, PromotionAbleItemContract $items, $item_option = null)
-    {
-        $this->calculator->rollback($mode, $benefit_value, $items, $item_option);
+        return $this->calculator->cal($mode, $value, $items, $item_option);
     }
 
 }

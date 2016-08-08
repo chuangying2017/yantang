@@ -1,6 +1,6 @@
 <?php namespace App\Services\Promotion;
 
-use App\Repositories\Promotion\PromotionRepositoryAbstract;
+use App\Repositories\Promotion\PromotionRepositoryContract;
 use App\Services\Promotion\Rule\RuleServiceContract;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 
@@ -11,7 +11,7 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
      */
     protected $ruleService;
     /**
-     * @var PromotionRepositoryAbstract
+     * @var PromotionRepositoryContract
      */
     protected $promotionRepo;
 
@@ -23,11 +23,10 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
 
     /**
      * PromotionServiceAbstract constructor.
-     * @param PromotionRepositoryAbstract $promotionRepo
+     * @param PromotionRepositoryContract $promotionRepo
      * @param RuleServiceContract $ruleService
-     * @internal param $
      */
-    public function __construct(PromotionRepositoryAbstract $promotionRepo, RuleServiceContract $ruleService)
+    public function __construct(PromotionRepositoryContract $promotionRepo, RuleServiceContract $ruleService)
     {
         $this->ruleService = $ruleService;
         $this->promotionRepo = $promotionRepo;

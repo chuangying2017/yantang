@@ -1,6 +1,6 @@
 <?php namespace App\Services\Promotion\Support;
 
-interface PromotionAbleItemContract {
+interface PromotionAbleItemContract extends PromotionAbleItemBenefitContract {
 
     public function init($items_data);
 
@@ -21,5 +21,6 @@ interface PromotionAbleItemContract {
     public function getItemCategory($item_key);
 
     public function getItemGroup($item_key);
+
 
 }

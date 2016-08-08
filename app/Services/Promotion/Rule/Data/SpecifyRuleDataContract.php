@@ -23,6 +23,8 @@ interface SpecifyRuleDataContract extends SpecifyRuleDataSettingContract {
 
     public function getDiscount();
 
+    public function getBenefit();
+
     public function getWeight();
 
     public function getMultiType();

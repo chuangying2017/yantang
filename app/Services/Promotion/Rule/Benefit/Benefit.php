@@ -6,17 +6,7 @@ use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 abstract class Benefit {
 
-    /**
-     * @var PromotionAbleItemBenefitContract
-     */
-    protected $benefit_setter;
-
-    public function __construct(PromotionAbleItemBenefitContract $benefit_setter)
-    {
-        $this->benefit_setter = $benefit_setter;
-    }
-
-    public abstract function calAndSet($mode, $value, PromotionAbleItemContract $items, $item_option = null);
+    public abstract function cal($mode, $value, PromotionAbleItemContract $items, $item_option = null);
 
     public abstract function rollback($mode, $benefit_value, PromotionAbleItemContract $items, $item_option = null);
 

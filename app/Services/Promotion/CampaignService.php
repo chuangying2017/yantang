@@ -2,7 +2,6 @@
 
 use App\Repositories\Promotion\Campaign\CampaignRepositoryContract;
 use App\Services\Promotion\Rule\RuleServiceContract;
-use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 class CampaignService extends PromotionServiceAbstract implements PromotionAutoUsing {
 
@@ -11,19 +10,19 @@ class CampaignService extends PromotionServiceAbstract implements PromotionAutoU
         parent::__construct($campaignRepo, $ruleService);
     }
 
-    public function autoUsing(PromotionAbleItemContract $items)
+    public function autoUsing()
     {
-        $this->usable($items);
+        $this->usable();
 
         foreach ($this->ruleService->getRules() as $rule_key => $rule) {
-            $this->using($items, $rule_key);
+            $this->using($rule_key);
         }
 
-        return $items;
+        return $this;
     }
 
-    protected function getRelateRules(PromotionAbleItemContract $items)
+    protected function getRelateRules()
     {
-        return $items->getRelateCampaigns();
+        
     }
 }

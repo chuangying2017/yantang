@@ -1,7 +1,7 @@
 <?php namespace App\Services\Order\Generator;
 
+use App\Services\Promotion\Rule\Benefit\Setter\PromotionAbleItemTrait;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
-use App\Services\Promotion\Support\PromotionAbleItemTrait;
 
 class TempOrder implements PromotionAbleItemContract {
 
