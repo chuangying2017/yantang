@@ -46,9 +46,21 @@ class RuleService implements RuleServiceContract {
         $this->specifyRuleService = $specifyRuleService;
     }
 
+    /**
+     * @return $this
+     */
+    public function filterQualify()
+    {
+        foreach ($this->rules->getAllKeys() as $rule_key) {
+            $this->setSpecifyRuleServiceInfo($rule_key);
+            $this->specifyRuleService->checkUserQualify();
+        }
+        
+        return $this;
+    }
+
     public function filterRelate()
     {
-
         foreach ($this->rules->getAllKeys() as $rule_key) {
             $this->setSpecifyRuleServiceInfo($rule_key);
 
@@ -158,4 +170,6 @@ class RuleService implements RuleServiceContract {
         $this->rules->init($rules);
         return $this;
     }
+
+
 }

@@ -15,5 +15,6 @@ interface PromotionRepositoryContract {
 
     public function getUsefulRules();
 
+    public function getPromotionWithDecodeRules($promotion_id);
 
 }

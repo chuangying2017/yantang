@@ -54,6 +54,4 @@ interface SpecifyRuleDataSettingContract {
 
     public function getMessage();
 
-    public function unsetRule();
-
 }

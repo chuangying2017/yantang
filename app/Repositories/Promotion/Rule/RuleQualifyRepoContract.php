@@ -3,5 +3,4 @@ interface RuleQualifyRepoContract {
 
     public function syncQualifies($rule_id, $quantities);
 
-
 }

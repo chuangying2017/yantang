@@ -7,12 +7,12 @@ interface PromotionServiceContract {
 
     public function setItems(PromotionAbleItemContract $items);
 
-    public function related($rules = null);
+    public function checkRelated($rules = null);
 
-    public function usable();
+    public function checkUsable();
 
-    public function using($rule_key);
+    public function setUsing($rule_key);
 
-    public function notUsing($rule_key);
+    public function setNotUsing($rule_key);
 
 }

@@ -22,5 +22,8 @@ interface PromotionAbleItemContract extends PromotionAbleItemBenefitContract {
 
     public function getItemGroup($item_key);
 
+    public function setRules($rules);
+
+    public function getRules();
 
 }

@@ -12,17 +12,15 @@ class CampaignService extends PromotionServiceAbstract implements PromotionAutoU
 
     public function autoUsing()
     {
-        $this->usable();
+        $this->checkUsable();
 
         foreach ($this->ruleService->getRules() as $rule_key => $rule) {
-            $this->using($rule_key);
+            $this->setUsing($rule_key);
         }
+
+        $this->updateItemsRules();
 
         return $this;
     }
 
-    protected function getRelateRules()
-    {
-        
-    }
 }

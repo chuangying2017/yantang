@@ -6,7 +6,6 @@ class CachePromotionSupportRepository {
 
     const CACHE_KEY_OF_CAMPAIGNS = 'YT_CURRENT_CAMPAIGNS';
 
-
     public function getCampaigns()
     {
         if (Cache::has(self::CACHE_KEY_OF_CAMPAIGNS)) {

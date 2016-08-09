@@ -71,17 +71,5 @@ class PromotionServiceProvider extends ServiceProvider {
             \App\Repositories\Auth\User\EloquentUserRepository::class
         );
 
-
-        $this->app->bind(
-            \App\Repositories\Store\Statement\StatementRepositoryContract::class,
-            \App\Repositories\Store\Statement\StatementRepository::class
-        );
-
-        $this->app->bind(
-            \App\Services\Statement\StatementServiceAbstract::class,
-            \App\Services\Statement\StatementService::class
-        );
-
-
     }
 }

@@ -43,13 +43,15 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
      * @param null $rules
      * @return $this
      */
-    public function related($rules = null)
+    public function checkRelated($rules = null)
     {
         $rules_array = is_null($rules) ? $this->promotionRepo->getUsefulRules() : $rules;
 
         $this->ruleService->setRules($rules_array)->setItems($this->items);
 
         $this->ruleService->filterRelate();
+
+        $this->updateItemsRules();
 
         return $this;
     }
@@ -58,39 +60,47 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
      *
      * @return $this
      */
-    public function usable()
+    public function checkUsable()
     {
-        if (!$this->getRelateRules()) {
-            $this->related();
+        if (!$this->items->getRules()) {
+            $this->checkRelated();
         }
 
         $this->ruleService->filterUsable();
 
+        $this->updateItemsRules();
+
         return $this;
     }
 
-    public function using($rule_key)
+    public function setUsing($rule_key)
     {
-        if (!$this->getRelateRules()) {
-            $this->usable();
+        if (!$this->items->getRules()) {
+            $this->checkUsable();
         }
 
         $this->ruleService->using($rule_key);
 
+        $this->updateItemsRules();
+
         return $this;
     }
 
-    public function notUsing($rule_key)
+    public function setNotUsing($rule_key)
     {
-        if (!$this->getRelateRules()) {
-            $this->usable();
+        if (!$this->items->getRules()) {
+            $this->checkUsable();
         }
 
         $this->ruleService->notUsing($rule_key);
 
+        $this->updateItemsRules();
+
         return $this;
     }
 
-    protected abstract function getRelateRules();
-
+    protected function updateItemsRules()
+    {
+        $this->items->setRules($this->ruleService->getRules());
+    }
 }

@@ -37,13 +37,6 @@ class RuleData implements RuleDataContract {
         return array_keys($this->rules);
     }
 
-    public function unsetRule($rule_key)
-    {
-        unset($this->rules[$rule_key]);
-        return $this;
-    }
-
-
     public function getByGroup($group)
     {
         // TODO: Implement getByGroup() method.
@@ -173,5 +166,30 @@ class RuleData implements RuleDataContract {
     public function getRule()
     {
         // TODO: Implement getRule() method.
+    }
+
+    public function resetRule()
+    {
+        // TODO: Implement resetRule() method.
+    }
+
+    public function getBenefit()
+    {
+        // TODO: Implement getBenefit() method.
+    }
+
+    public function unsetOtherUsable()
+    {
+        // TODO: Implement unsetOtherUsable() method.
+    }
+
+    public function getMessage()
+    {
+        // TODO: Implement getMessage() method.
+    }
+
+    public function unsetRule()
+    {
+        // TODO: Implement unsetRule() method.
     }
 }

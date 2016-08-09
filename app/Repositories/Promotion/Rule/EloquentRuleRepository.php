@@ -68,20 +68,21 @@ class EloquentRuleRepository implements RuleRepositoryContract {
 
     public function syncQualifies($rule_id, $qualifies)
     {
-        RuleQualify::where('rule_id', $rule_id)->delete();
+        RuleQualify::query()->where('rule_id', $rule_id)->delete();
 
         $qua_data = [];
         foreach ($qualifies['values'] as $value) {
             $qua_data[] = ['value' => $value, 'count' => $qualifies['quantity']];
         }
+        
         $rule = $this->getRule($rule_id);
         $rule->qualifies()->createMany($qua_data);
     }
 
     public function deleteRule($rule_id)
     {
-        RuleItem::where('rule_id', $rule_id)->delete();
-        RuleQualify::where('rule_id', $rule_id)->delete();
+        RuleItem::query()->where('rule_id', $rule_id)->delete();
+        RuleQualify::query()->where('rule_id', $rule_id)->delete();
         Rule::find($rule_id)->delete();
         return 1;
     }

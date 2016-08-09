@@ -5,6 +5,11 @@ use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 interface RuleServiceContract {
 
+	/**
+     * @return $this
+     */
+    public function filterQualify();
+    
     /**
      * @return $this
      */

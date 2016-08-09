@@ -21,7 +21,7 @@ class CheckCoupon extends GenerateHandlerAbstract {
 
     public function handle(TempOrder $temp_order)
     {
-        $this->couponService->usable($temp_order);
+        $this->couponService->checkUsable($temp_order);
         return $this->next($temp_order);
     }
 }

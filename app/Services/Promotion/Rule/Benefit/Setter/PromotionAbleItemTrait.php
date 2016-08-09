@@ -16,6 +16,8 @@ trait PromotionAbleItemTrait {
     //优惠规则
     protected $promotions;
 
+    protected $rules;
+
     protected function getBenefitHandlerByType($type)
     {
         $data = [
@@ -61,9 +63,9 @@ trait PromotionAbleItemTrait {
         $discount = $rule->getDiscount();
 
         $this->setPromotionBenefit($discount['type'])->addPromotionBenefit($rule->getBenefit());
-        
+
         $rule->setUsing();
-        
+
         return $this;
     }
 
@@ -76,7 +78,7 @@ trait PromotionAbleItemTrait {
         unset($this->promotions[$rule->getRuleID()]);
 
         $rule->unsetBenefit()->unsetUsing();
-        
+
         return $this;
     }
 
@@ -85,5 +87,15 @@ trait PromotionAbleItemTrait {
         return is_null($rule) ? $this->promotions : $this->promotions[$rule->getRuleID()];
     }
 
+    public function setRules($rules)
+    {
+        $this->rules = $rules;
+        return $this;
+    }
+
+    public function getRules()
+    {
+        return $this->rules;
+    }
 
 }

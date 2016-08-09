@@ -65,7 +65,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         return $promotion;
     }
 
-    private function syncRules($promotion, $rules, $create = true)
+    private function syncRules(PromotionAbstract $promotion, $rules, $create = true)
     {
         $rule_ids = [];
         foreach ($rules as $rule_data) {
@@ -83,6 +83,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         }
 
         $promotion->rules()->sync($rule_ids);
+        
     }
 
 
@@ -175,13 +176,23 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
 
     public abstract function getUsefulPromotions();
 
+    public function getPromotionWithDecodeRules($promotion_id)
+    {
+        $promotion = $this->get($promotion_id, true);
+
+        $promotion['rules'] = $this->decodePromotionRules($promotion);
+
+        return $promotion;
+    }
 
     protected function decodePromotionRules($promotion)
     {
         if ($promotion['counter']['remain'] > 0) {
+            $rules = [];
             foreach ($promotion['rules'] as $rule_model) {
-                $this->decodePromotionRule($rule_model, $promotion);
+                $rules[] = $this->decodePromotionRule($rule_model, $promotion);
             }
+            return $rules;
         }
         return false;
     }

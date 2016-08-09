@@ -13,5 +13,5 @@ interface RuleRepositoryContract extends RuleQualifyRepoContract, RuleItemRepoCo
     public function getRules();
 
     public function getRule($rule_id);
-
+    
 }

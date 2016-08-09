@@ -1,4 +1,5 @@
 <?php namespace App\Services\Promotion\Support;
+
 use App\Services\Promotion\Rule\Data\SpecifyRuleDataContract;
 
 interface PromotionAbleItemBenefitContract {
@@ -8,6 +9,5 @@ interface PromotionAbleItemBenefitContract {
     public function removePromotion(SpecifyRuleDataContract $rule);
 
     public function getPromotions(SpecifyRuleDataContract $rule = null);
-    
 
 }
