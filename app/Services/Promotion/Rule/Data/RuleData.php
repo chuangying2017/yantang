@@ -2,6 +2,14 @@
 
 class RuleData implements RuleDataContract {
 
+    const KEY_OF_RULE_USABLE = 'usable';
+    const KEY_OF_RULE_USING = 'using';
+    const KEY_OF_RULE_CONFLICT_WITH_OTHER = 'conflict';
+    const KEY_OF_RULE_RELATED = 'related';
+
+    const VALUE_OF_RULE_YES = 1;
+    const VALUE_OF_RULE_NO = 0;
+
     protected $rules;
     protected $rule_key;
 
@@ -39,157 +47,195 @@ class RuleData implements RuleDataContract {
 
     public function getByGroup($group)
     {
-        // TODO: Implement getByGroup() method.
+        return array_filter($this->rules, function ($rule) use ($group) {
+            return $rule['group'] == $group;
+        });
     }
 
     public function setRule($rule_key)
     {
-        // TODO: Implement setRule() method.
+        $this->rule_key = $rule_key;
     }
 
     public function getRuleID()
     {
-        // TODO: Implement getRuleID() method.
+        return $this->getRule('id');
     }
 
     public function getPromotionID()
     {
-        // TODO: Implement getPromotionID() method.
+        return $this->getRule('promotion_id');
     }
 
     public function getType()
     {
-        // TODO: Implement getType() method.
+        return $this->getRule('promotion_type');
     }
 
     public function getQualification()
     {
-        // TODO: Implement getQualification() method.
+        return $this->getRule('qualify');
     }
 
     public function getItems()
     {
-        // TODO: Implement getItems() method.
+        return $this->getRule('items');
     }
 
     public function getRange()
     {
-        // TODO: Implement getRange() method.
+        return $this->getRule('range');
     }
 
     public function getDiscount()
     {
-        // TODO: Implement getDiscount() method.
+        return $this->getRule('discount');
     }
 
     public function getWeight()
     {
-        // TODO: Implement getWeight() method.
+        return $this->getRule('weight');
     }
 
     public function getMultiType()
     {
-        // TODO: Implement getMultiType() method.
+        return $this->getRule('multi');
     }
 
     public function getGroup()
     {
-        // TODO: Implement getGroup() method.
+        return $this->getRule('group');
     }
 
     public function setRelated($item_keys)
     {
-        // TODO: Implement setRelated() method.
+        $this->updateRule(self::KEY_OF_RULE_RELATED, $item_keys);
     }
 
     public function getRelatedItems()
     {
-        // TODO: Implement getRelatedItems() method.
+        return $this->getRule(self::KEY_OF_RULE_RELATED);
     }
 
-    public function setUsable()
+    public function setUsable($rule_key = null)
     {
-        // TODO: Implement setUsable() method.
+        return $this->updateRule(self::KEY_OF_RULE_USABLE, 1, $rule_key);
     }
 
-    public function unsetUsable()
+    public function unsetUsable($rule_key = null)
     {
-        // TODO: Implement unsetUsable() method.
+        if (!is_null($rule_key) && $rule_key != $this->rule_key) {
+            $this->updateRule(self::KEY_OF_RULE_CONFLICT_WITH_OTHER, $this->rule_key, $rule_key);
+        }
+        $this->updateRule(self::KEY_OF_RULE_USABLE, 0, $rule_key);
     }
 
     public function isUsable()
     {
-        // TODO: Implement isUsable() method.
+        return $this->getRule(self::KEY_OF_RULE_USABLE);
     }
 
     public function unsetSameGroupUsable()
     {
-        // TODO: Implement unsetSameGroupUsable() method.
+        $rules = $this->getByGroup($this->getGroup());
+        foreach ($rules as $rule_key => $rule) {
+            if ($rule_key != $this->rule_key) {
+                $this->unsetUsable($rule_key);
+            }
+        }
+
+        return $this;
     }
 
     public function setConflictUsable()
     {
-        // TODO: Implement setConflictUsable() method.
+        foreach ($this->getConflicts() as $rule_key => $rule) {
+            $this->setUsable($rule_key);
+        }
+        return $this;
     }
 
     public function setUsing()
     {
-        // TODO: Implement setUsing() method.
+        return $this->updateRule(self::KEY_OF_RULE_USING, 1);
     }
 
     public function isUsing()
     {
-        // TODO: Implement isUsing() method.
+        return $this->getRule(self::KEY_OF_RULE_USING);
     }
 
     public function unsetUsing()
     {
-        // TODO: Implement unsetUsing() method.
+        return $this->updateRule(self::KEY_OF_RULE_USING, 0);
     }
 
-    public function setBenefit($value)
+    public function getRule($key = null)
     {
-        // TODO: Implement setBenefit() method.
-    }
-
-    public function unsetBenefit()
-    {
-        // TODO: Implement unsetBenefit() method.
-    }
-
-    public function setMessage($message)
-    {
-        // TODO: Implement setMessage() method.
-    }
-
-
-    public function getRule()
-    {
-        // TODO: Implement getRule() method.
+        return is_null($key) ? $this->rules[$this->rule_key] : array_get($this->rules, $this->rule_key . '.' . $key, null);
     }
 
     public function resetRule()
     {
-        // TODO: Implement resetRule() method.
+
+    }
+
+    public function setBenefit($value)
+    {
+        return $this->updateRule('benefit', $value);
+    }
+
+    public function unsetBenefit()
+    {
+        unset($this->rules[$this->rule_key]['benefit']);
+        return $this;
     }
 
     public function getBenefit()
     {
-        // TODO: Implement getBenefit() method.
+        return $this->getRule('benefit');
     }
 
     public function unsetOtherUsable()
     {
-        // TODO: Implement unsetOtherUsable() method.
+        foreach ($this->getAllKeys() as $rule_key) {
+            if ($rule_key !== $this->rule_key) {
+                $this->unsetUsable($rule_key);
+            }
+        }
+        return $this;
+    }
+
+    public function setMessage($message)
+    {
+        return $this->updateRule('message', $message);
     }
 
     public function getMessage()
     {
-        // TODO: Implement getMessage() method.
+        return $this->getRule('message');
     }
 
     public function unsetRule()
     {
-        // TODO: Implement unsetRule() method.
+        unset($this->rules[$this->rule_key]);
+        return $this;
+    }
+
+    protected function updateRule($key, $value, $rule_key = null)
+    {
+        if (is_null($rule_key)) {
+            $this->rules[$this->rule_key][$key] = $value;
+        } else {
+            $this->rules[$rule_key][$key] = $value;
+        }
+        return $this;
+    }
+
+    public function getConflicts()
+    {
+        return array_map(function ($rule) {
+            return array_get($rule, self::KEY_OF_RULE_CONFLICT_WITH_OTHER, null) === $this->rule_key;
+        }, $this->getAll());
     }
 }

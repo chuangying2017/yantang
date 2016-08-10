@@ -116,7 +116,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
 
     public function getSkus($sku_ids)
     {
-        return ProductSku::findOrFail($sku_ids);
+        return ProductSku::query()->findOrFail($sku_ids);
     }
 
     public function increaseStock($product_sku_id, $quantity = 1)

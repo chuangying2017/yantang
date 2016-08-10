@@ -1,12 +1,15 @@
 <?php namespace App\Services\Order\Generator;
 
+use App\Repositories\Product\Brand\EloquentBrandRepository;
+use App\Repositories\Product\Cat\EloquentCategoryRepository;
+use App\Repositories\Product\Group\EloquentGroupRepository;
 use App\Services\Promotion\Rule\Benefit\Setter\PromotionAbleItemTrait;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 class TempOrder implements PromotionAbleItemContract {
 
     use PromotionAbleItemTrait;
-    
+
     protected $carts;
     protected $temp_order_id;
     protected $address;
@@ -16,8 +19,8 @@ class TempOrder implements PromotionAbleItemContract {
     protected $skus;
     protected $promotion;
     protected $error;
-    
-    
+
+
     protected $products_amount = 0;
     protected $discount_amount = 0;
 
@@ -51,6 +54,7 @@ class TempOrder implements PromotionAbleItemContract {
             'error' => $this->error,
             'special_campaign' => $this->special_campaign,
             'preorder' => $this->preorder,
+            'promotions' => $this->promotions
         ];
     }
 
@@ -121,9 +125,9 @@ class TempOrder implements PromotionAbleItemContract {
     /**
      * @return mixed
      */
-    public function getSkus()
+    public function getSkus($sku_key = null)
     {
-        return $this->skus;
+        return is_null($sku_key) ? $this->skus : $this->skus[$sku_key];
     }
 
     /**
@@ -151,10 +155,15 @@ class TempOrder implements PromotionAbleItemContract {
     }
 
     /**
+     * @param $sku_key
+     * @param bool $discount
      * @return mixed
      */
-    public function getSkuAmount($sku_key)
+    public function getSkuAmount($sku_key, $discount = false)
     {
+        if ($discount) {
+            return $this->skus[$sku_key]['discount_amount'];
+        }
         return $this->skus[$sku_key]['total_amount'];
     }
 
@@ -167,6 +176,7 @@ class TempOrder implements PromotionAbleItemContract {
         $this->skus[$sku_key]['discount_amount'] = 0;
         $this->skus[$sku_key]['pay_amount'] = $sku_amount;
     }
+
 
     /**
      * @param string $temp_order_id
@@ -305,48 +315,87 @@ class TempOrder implements PromotionAbleItemContract {
         return is_null($key) ? $this->preorder : $this->preorder[$key];
     }
 
-    public function init($items_data)
-    {
-        // TODO: Implement init() method.
-    }
 
-    public function getItems()
+    public function getItems($sku_keys = null)
     {
-        // TODO: Implement getItems() method.
+        if (is_null($sku_keys)) {
+            return $this->getSkus();
+        }
+
+        $items = [];
+        foreach ($sku_keys as $sku_key) {
+            $items[$sku_key] = $this->getSkus($sku_key);
+        }
+        
+        return $items;
     }
 
     public function getAmount($item_keys = null)
     {
-        // TODO: Implement getAmount() method.
+        if (is_null($item_keys)) {
+            return $this->getPayAmount();
+        } else if (is_array($item_keys)) {
+            $amount = 0;
+            foreach ($item_keys as $item_key) {
+                $amount += $this->getSkuAmount($item_key, true);
+            }
+            return $amount;
+        } else {
+            return $this->getSkuAmount($item_keys, true);
+        }
     }
 
     public function getItemsQuantity($item_keys = null)
     {
-        // TODO: Implement getItemsQuantity() method.
+        $quantity = 0;
+
+        if (is_null($item_keys)) {
+            foreach ($this->getSkus() as $sku) {
+                $quantity += $sku['quantity'];
+            }
+        } else if (is_array($item_keys)) {
+            foreach ($item_keys as $item_key) {
+                $sku = $this->getSkus($item_key);
+                $quantity += $sku['quantity'];
+            }
+        } else {
+            $sku = $this->getSkus($item_keys);
+            $quantity += $sku['quantity'];
+        }
+
+        return $quantity;
     }
 
     public function getDiscountAmount()
     {
-        // TODO: Implement getDiscountAmount() method.
+        return $this->discount_amount;
     }
 
     public function getItemProductId($item_key)
     {
-        // TODO: Implement getItemProductId() method.
+        $sku = $this->getSkus($item_key);
+        return $sku['product_id'];
     }
 
     public function getItemProductSkuID($item_key)
     {
-        // TODO: Implement getItemProductSkuID() method.
+        $sku = $this->getSkus($item_key);
+        return $sku['id'];
     }
 
     public function getItemCategory($item_key)
     {
-        // TODO: Implement getItemCategory() method.
+        app()->make(EloquentCategoryRepository::class)->getByIdProducts($this->getItemProductId($item_key));
+    }
+
+    public function getItemBrand($item_key)
+    {
+        app()->make(EloquentBrandRepository::class)->getByIdProducts($this->getItemProductId($item_key));
     }
 
     public function getItemGroup($item_key)
     {
-        // TODO: Implement getItemGroup() method.
+        app()->make(EloquentGroupRepository::class)->getByIdProducts($this->getItemProductId($item_key));
     }
+
 }

@@ -55,7 +55,7 @@ class RuleService implements RuleServiceContract {
             $this->setSpecifyRuleServiceInfo($rule_key);
             $this->specifyRuleService->checkUserQualify();
         }
-        
+
         return $this;
     }
 
@@ -104,7 +104,8 @@ class RuleService implements RuleServiceContract {
         $this->setSpecifyRuleServiceInfo($rule_key);
 
         if (!$this->specifyRuleService->isUsable() || $this->specifyRuleService->isUsing()) {
-            return $this;
+            $this->rules->setMessage('优惠券不可用于该订单');
+            return false;
         }
 
         /**
@@ -114,7 +115,7 @@ class RuleService implements RuleServiceContract {
          */
         $this->specifyRuleService->setAsUsing();
 
-        return $this;
+        return true;
     }
 
     public function notUsing($rule_key)

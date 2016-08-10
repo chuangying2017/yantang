@@ -12,4 +12,6 @@ interface CategoryRepositoryContract {
 
     public function get($cat_id);
 
+    public function getByIdProducts($product_id);
+
 }

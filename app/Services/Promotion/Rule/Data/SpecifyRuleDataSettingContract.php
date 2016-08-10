@@ -14,7 +14,7 @@ interface SpecifyRuleDataSettingContract {
 	/**
      * @return $this
      */
-    public function setUsable();
+    public function setUsable($rule_key = null);
 
 	/**
      * @return $this

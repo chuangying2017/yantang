@@ -20,7 +20,6 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
      */
     protected $items;
 
-
     /**
      * PromotionServiceAbstract constructor.
      * @param PromotionRepositoryContract $promotionRepo
@@ -36,7 +35,6 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     {
         $this->items = $items;
     }
-
 
     /**
      * 过滤相关
@@ -79,11 +77,11 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
             $this->checkUsable();
         }
 
-        $this->ruleService->using($rule_key);
+        $success = $this->ruleService->using($rule_key);
 
         $this->updateItemsRules();
 
-        return $this;
+        return $success;
     }
 
     public function setNotUsing($rule_key)

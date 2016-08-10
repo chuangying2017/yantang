@@ -2,9 +2,8 @@
 
 interface PromotionAbleItemContract extends PromotionAbleItemBenefitContract {
 
-    public function init($items_data);
 
-    public function getItems();
+    public function getItems($item_keys = null);
 
     public function getAmount($item_keys = null);
 
@@ -21,6 +20,8 @@ interface PromotionAbleItemContract extends PromotionAbleItemBenefitContract {
     public function getItemCategory($item_key);
 
     public function getItemGroup($item_key);
+    
+    public function getItemBrand($item_key);
 
     public function setRules($rules);
 

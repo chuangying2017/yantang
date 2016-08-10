@@ -83,7 +83,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         }
 
         $promotion->rules()->sync($rule_ids);
-        
+
     }
 
 
@@ -201,6 +201,8 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     {
         return [
             'id' => $rule['id'],
+            'name' => $rule['name'],
+            'desc' => $rule['desc'],
             'promotion_id' => $promotion['id'],
             'promotion_type' => get_class($promotion),
             'group' => $promotion['id'],
@@ -224,7 +226,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
                 'value' => $rule['discount_content']
             ],
             'weight' => $rule['weight'],
-            'multi' => $rule['multi_able']
+            'multi' => $rule['multi_able'],
         ];
     }
 

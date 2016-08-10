@@ -2,7 +2,7 @@
 
 use App\Services\Promotion\CouponService;
 
-class UseCoupon extends GenerateHandlerAbstract{
+class UseCoupon extends GenerateHandlerAbstract {
 
     /**
      * @var CouponService
@@ -21,8 +21,10 @@ class UseCoupon extends GenerateHandlerAbstract{
 
     public function handle(TempOrder $temp_order)
     {
-        #todo 使用优惠券
-        #todo 如何传输参数 ?
+        $coupon = $temp_order->getRequestPromotion();
+
+        $success = $this->couponService->setUsing($coupon);
+
         return $this->next($temp_order);
     }
 }

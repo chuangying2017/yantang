@@ -155,14 +155,15 @@ class OrderGenerator implements OrderGeneratorContract {
      */
     public function useCoupon($temp_order_id, $coupon_id)
     {
-        #todo 传输coupon值
         $config = [
             UseCoupon::class,
             SaveTempOrder::class,
         ];
+
         $handler = $this->getOrderGenerateHandler($config);
 
         $temp_order = $this->pullTempOrder($temp_order_id);
+        $temp_order->setRequestPromotion($coupon_id);
 
         $temp_order = $handler->handle($temp_order);
 
@@ -171,7 +172,7 @@ class OrderGenerator implements OrderGeneratorContract {
 
     /**
      * @param $temp_order_id
-     * @return mixed
+     * @return TempOrder
      */
     protected function pullTempOrder($temp_order_id)
     {

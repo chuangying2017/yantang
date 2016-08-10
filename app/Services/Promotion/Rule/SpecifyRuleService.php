@@ -98,10 +98,10 @@ class SpecifyRuleService implements SpecifyRuleContract {
 
     public function checkItemsInRange()
     {
-        $usable_items = $this->rules->getRelatedItems();
+        $usable_item_keys = $this->rules->getRelatedItems();
         $range = $this->rules->getRange();
 
-        $usable_items_range_value = $this->calItemsRange($usable_items, $range['type']);
+        $usable_items_range_value = $this->calItemsRange($this->items->getItems($usable_item_keys), $range['type']);
 
         if ($range['max']) {
             if ($usable_items_range_value > $range['max']) {
@@ -150,7 +150,14 @@ class SpecifyRuleService implements SpecifyRuleContract {
     {
         $discount = $this->rules->getDiscount();
 
-        $benefit_value = app()->make(BenefitCalculator::class)->setBenefitType($discount['type'])->cal($discount['mode'], $discount['value'], $this->items, $this->rules->getRelatedItems());
+        $benefit_value = app()->make(BenefitCalculator::class)
+            ->setBenefitType($discount['type'])
+            ->cal(
+                $discount['mode'],
+                $discount['value'],
+                $this->items,
+                $this->items->getItems($this->rules->getRelatedItems())
+            );
 
         $this->rules->setBenefit($benefit_value);
 

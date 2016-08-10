@@ -7,7 +7,7 @@ interface SpecifyRuleDataContract extends SpecifyRuleDataSettingContract {
 
     public function unsetRule();
 
-    public function getRule();
+    public function getRule($key = null);
 
     public function getRuleID();
 
@@ -30,6 +30,7 @@ interface SpecifyRuleDataContract extends SpecifyRuleDataSettingContract {
     public function getMultiType();
 
     public function getGroup();
-    
 
+    public function getConflicts();
+    
 }
