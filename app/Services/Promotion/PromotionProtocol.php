@@ -19,23 +19,6 @@ class PromotionProtocol {
     const NAME_OF_COUNTER_EFFECT_DAY = 'effect_days';
 
 
-    const QUALI_TYPE_OF_USER = 'user';
-    const QUALI_TYPE_OF_LEVEL = 'level';
-    const QUALI_TYPE_OF_ROLE = 'role';
-    const QUALI_TYPE_OF_ALL = 'all';
-
-    public static function getRuleQualifyChecker($type)
-    {
-        $handler = null;
-        switch ($type) {
-            case self::QUALI_TYPE_OF_ALL:
-                $handler = new AllUserQualification();
-                break;
-        }
-
-        return $handler;
-    }
-
     const ITEM_TYPE_OF_PRODUCT = 'product';
     const ITEM_TYPE_OF_SKU = 'sku';
     const ITEM_TYPE_OF_CATEGORY = 'cat';
@@ -46,19 +29,6 @@ class PromotionProtocol {
     const RANGE_TYPE_OF_AMOUNT = 'amount';
     const RANGE_TYPE_OF_QUANTITY = 'quantity';
 
-    public static function getRuleUsageFilter($type)
-    {
-        $handler = null;
-        switch ($type) {
-            case self::QUALI_TYPE_OF_ALL:
-                $handler = new AllItemsUsage();
-                break;
-        }
-
-        return $handler;
-    }
-
-
     const DISCOUNT_TYPE_OF_AMOUNT = 'amount';
     const DISCOUNT_TYPE_OF_EXPRESS = 'express';
     const DISCOUNT_TYPE_OF_CREDITS = 'credits';
@@ -66,20 +36,27 @@ class PromotionProtocol {
     const DISCOUNT_TYPE_OF_COUPON = 'coupon';
     const DISCOUNT_TYPE_OF_PRODUCT = 'product';
     const DISCOUNT_TYPE_OF_GIFT = 'gift';
-    
+
 
     const DISCOUNT_MODE_OF_DECREASE = 'decrease';
     const DISCOUNT_MODE_OF_PERCENTAGE = 'percentage';
     const DISCOUNT_MODE_OF_EQUAL = 'equal';
     const DISCOUNT_MODE_OF_MUL = 'mul';
-    
+
 
     const MULTI_TYPE_OF_ONLY = 0;
     const MULTI_TYPE_OF_CAN_MULTI = 1;
 
+    const QUALI_TYPE_OF_USER = 'user';
+    const QUALI_TYPE_OF_LEVEL = 'level';
+    const QUALI_TYPE_OF_ROLE = 'role';
+    const QUALI_TYPE_OF_ALL = 'all';
+
+
     public static function getQualifyType($name = null)
     {
         $data = [
+            self::QUALI_TYPE_OF_ALL => '所有用户',
             self::QUALI_TYPE_OF_USER => '指定用户',
             self::QUALI_TYPE_OF_LEVEL => '指定用户等级',
             self::QUALI_TYPE_OF_ROLE => '指定用户角色',
@@ -153,7 +130,6 @@ class PromotionProtocol {
     const STATUS_OF_TICKET_OK = 0;
     const STATUS_OF_TICKET_EXPIRED = 2;
 
-    const LENGTH_OF_TICKET_NO = 8;
-
+    const LENGTH_OF_TICKET_NO = 24;
 
 }

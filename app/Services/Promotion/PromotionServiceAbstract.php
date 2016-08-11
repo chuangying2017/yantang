@@ -3,8 +3,12 @@
 use App\Repositories\Promotion\PromotionRepositoryContract;
 use App\Services\Promotion\Rule\RuleServiceContract;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
+use App\Services\Promotion\Support\PromotionAbleUserContract;
+use App\Services\Traits\Messages;
 
 abstract class PromotionServiceAbstract implements PromotionServiceContract {
+
+    use Messages;
 
     /**
      * @var RuleServiceContract
@@ -19,6 +23,12 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
      * @var PromotionAbleItemContract
      */
     protected $items;
+
+    /**
+     * @var PromotionAbleUserContract
+     */
+    protected $user;
+
 
     /**
      * PromotionServiceAbstract constructor.
@@ -36,6 +46,11 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
         $this->items = $items;
     }
 
+    public function setUser(PromotionAbleUserContract $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * 过滤相关
      * @param null $rules
@@ -45,7 +60,7 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     {
         $rules_array = is_null($rules) ? $this->promotionRepo->getUsefulRules() : $rules;
 
-        $this->ruleService->setRules($rules_array)->setItems($this->items);
+        $this->ruleService->setRules($rules_array)->setUser($this->user)->setItems($this->items);
 
         $this->ruleService->filterRelate();
 
@@ -101,4 +116,5 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     {
         $this->items->setRules($this->ruleService->getRules());
     }
+
 }

@@ -2,6 +2,7 @@
 
 use App\Services\Promotion\Rule\Data\RuleDataContract;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
+use App\Services\Promotion\Support\PromotionAbleUserContract;
 
 interface RuleServiceContract {
 
@@ -34,10 +35,16 @@ interface RuleServiceContract {
 
     /**
      * @param PromotionAbleItemContract $items
-     * @return mixed
+     * @return $this
      */
     public function setItems(PromotionAbleItemContract $items);
-    
+
+
+	/**
+     * @param PromotionAbleUserContract $user
+     * @return $this
+     */
+    public function setUser(PromotionAbleUserContract $user);
     /**
      * @param array $rules
      * @return $this

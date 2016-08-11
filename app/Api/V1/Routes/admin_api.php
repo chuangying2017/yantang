@@ -97,9 +97,17 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->resource('store', 'StoreStatementController', ['only' => ['index', 'show']]);
             $api->resource('stations', 'StationStatementController', ['only' => ['index', 'show']]);
         });
+
+    });
+
+    //优惠信息
+    $api->group(['namespace' => 'Promotion', 'prefix' => 'promotions'], function ($api) {
+        $api->resource('coupons', 'CouponController');
+        $api->resource('campaigns', 'CampaignController');
     });
 
 
+    //团购
     $api->group(['namespace' => 'Campaign'], function ($api) {
         $api->resource('store', 'StoreController');
         $api->resource('campaigns', 'CampaignController');

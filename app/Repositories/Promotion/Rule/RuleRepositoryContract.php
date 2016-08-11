@@ -2,9 +2,9 @@
 
 interface RuleRepositoryContract extends RuleQualifyRepoContract, RuleItemRepoContract {
 
-    public function createRule($qualifies, $items, $range, $discount, $weight, $multi, $memo);
+    public function createRule($name, $desc, $qualifies, $items, $range, $discount, $weight, $multi);
 
-    public function updateRule($rule_id, $qualifies, $items, $range, $discount, $weight, $multi, $memo);
+    public function updateRule($rule_id, $name, $desc, $qualifies, $items, $range, $discount, $weight, $multi);
 
     public function deleteRule($rule_id);
 
@@ -13,5 +13,5 @@ interface RuleRepositoryContract extends RuleQualifyRepoContract, RuleItemRepoCo
     public function getRules();
 
     public function getRule($rule_id);
-    
+
 }

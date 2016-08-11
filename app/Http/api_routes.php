@@ -12,6 +12,13 @@ $api->version('v1', function ($api) {
          */
         require_once(__DIR__ . '/../Api/V1/Routes/user_api.php');
 
+
+        /**
+         * 优惠
+         */
+        require_once(__DIR__ . '/../Api/V1/Routes/promotion_api.php');
+
+
         /**
          * 商城
          */

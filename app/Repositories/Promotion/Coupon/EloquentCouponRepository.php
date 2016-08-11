@@ -17,7 +17,7 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
 
     protected function attachRelation($coupon_id, $data)
     {
-        $this->createCounter($coupon_id, $data['total'], $data['effect_days']);
+        $counter = $this->createCounter($coupon_id, $data['total'], $data['effect_days']);
     }
 
     protected function updateRelation($coupon_id, $data)
@@ -27,7 +27,7 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
 
     public function get($promotion_id, $with_detail = true)
     {
-        return $promotion_id instanceof Coupon ? $promotion_id->load('counter') : Coupon::with('counter')->find($promotion_id);
+        return $promotion_id instanceof Coupon ? $promotion_id->load('counter') : Coupon::with('counter')->findOrFail($promotion_id);
     }
 
     public function getCouponsById($coupon_ids)

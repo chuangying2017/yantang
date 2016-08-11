@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 class CouponService extends PromotionServiceAbstract implements PromotionDispatcher {
 
+
     /**
      * @var TicketRepositoryContract
      */
@@ -33,20 +34,26 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
 
         //非有效期内
         if ($promotion['start_time'] > Carbon::now() && $promotion['end_time'] < Carbon::now()) {
+            $this->setErrorMessage('优惠券不在有效期内');
             return false;
         }
 
-        $this->ruleService->setRules($promotion['rules']);
+        if (empty($promotion['rules'])) {
+            $this->setErrorMessage('来晚了');
+            return false;
+        }
+
+        $this->ruleService->setUser($user)->setRules($promotion['rules']);
         $this->ruleService->filterQualify();
 
-        //无字歌领取
+        //无资格领取
         if (empty($this->ruleService->getRules())) {
+            $this->setErrorMessage('领取失败');
             return false;
         }
 
         return $this->ticketRepo->createTicket($user->getUserId(), $promotion, true);
     }
-    
 
 
 }

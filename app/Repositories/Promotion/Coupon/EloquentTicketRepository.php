@@ -13,20 +13,20 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     {
         return Ticket::create([
             'user_id' => $user_id,
-            'coupon_id' => $coupon['id'],
-            'ticket_no' => $generate_no ? '' : str_random(PromotionProtocol::LENGTH_OF_TICKET_NO),
+            'promotion_id' => $coupon['id'],
+            'ticket_no' => $generate_no ? str_random(PromotionProtocol::LENGTH_OF_TICKET_NO) : '',
             'start_time' => $coupon['start_time'],
             'end_time' => $this->calEndTime($coupon),
             'status' => PromotionProtocol::STATUS_OF_TICKET_OK
         ]);
-
     }
 
     private function calEndTime(Coupon $coupon)
     {
-        $days = $this->getCounter('effect_days');
+        $days = $this->getCounter($coupon['id'], 'effect_days');
+        
         if ($days > 0) {
-            return $this->getBiggerTime(time() + $days * 24 * 3600, strtotime($coupon['end_time']));
+            return $this->getEarlyTime(time() + $days * 24 * 3600, strtotime($coupon['end_time']));
         }
         return $coupon['end_time'];
     }
@@ -34,6 +34,11 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     protected function getBiggerTime($left, $right)
     {
         return date('Y-m-d H:i:s', $left > $right ? $left : $right);
+    }
+
+    protected function getEarlyTime($left, $right)
+    {
+        return date('Y-m-d H:i:s', $left < $right ? $left : $right);
     }
 
     public function updateTicket($ticket_id, $status)
@@ -51,23 +56,28 @@ class EloquentTicketRepository implements TicketRepositoryContract {
 
     public function deleteTicket($ticket_id)
     {
-        return Ticket::where('id', $ticket_id)->delete();
+        return Ticket::query()->where('id', $ticket_id)->delete();
     }
 
+	/**
+     * @param $ticket_id
+     * @param bool $with_coupon
+     * @return Ticket
+     */
     public function getTicket($ticket_id, $with_coupon = true)
     {
         if ($with_coupon) {
             return Ticket::with('coupon')->find($ticket_id);
         }
-        return Ticket::find($ticket_id);
+        return Ticket::query()->find($ticket_id);
     }
 
     public function getTicketsByCoupon($coupon_id, $with_coupon = true)
     {
         if ($with_coupon) {
-            return Ticket::with('coupon')->where('coupon_id', $coupon_id)->get();
+            return Ticket::with('coupon')->where('promotion_id', $coupon_id)->get();
         }
-        return Ticket::where('coupon_id', $coupon_id)->get();
+        return Ticket::query()->where('promotion_id', $coupon_id)->get();
     }
 
     public function getTicketsByUser($user_id, $with_coupon = true)
@@ -75,6 +85,6 @@ class EloquentTicketRepository implements TicketRepositoryContract {
         if ($with_coupon) {
             return Ticket::with('coupon')->where('user_id', $user_id)->get();
         }
-        return Ticket::where('user_id', $user_id)->get();
+        return Ticket::query()->where('user_id', $user_id)->get();
     }
 }

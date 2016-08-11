@@ -71,13 +71,14 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         foreach ($rules as $rule_data) {
             $rule = $this->ruleRepo->updateRule(
                 $create ? null : array_get($rule_data, 'id', null),
+                $rule_data['name'],
+                $rule_data['desc'],
                 $rule_data['qualify'],
                 $rule_data['items'],
                 $rule_data['range'],
                 $rule_data['discount'],
                 $rule_data['weight'],
-                $rule_data['multi'],
-                $rule_data['memo']
+                $rule_data['multi']
             );
             $rule_ids[] = $rule['id'];
         }
@@ -93,6 +94,9 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         if ($not_over_time) {
             $query = $query->effect();
         }
+
+        $query->orderBy('created_at', 'desc');
+
         return $query->get();
     }
 
@@ -106,6 +110,11 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
         return $query->paginate(OrderProtocol::ORDER_PER_PAGE);
     }
 
+    /**
+     * @param $promotion_id
+     * @param bool $with_detail
+     * @return PromotionAbstract
+     */
     public abstract function get($promotion_id, $with_detail = true);
 
     public function update($promotion_id, $data)
@@ -130,10 +139,10 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     }
 
     /**
-     * @param PromotionAbstract $model
+     * @param string $model
      * @return PromotionRepositoryAbstract
      */
-    protected function setModel(PromotionAbstract $model)
+    protected function setModel($model)
     {
         $this->model = $model;
         return $this;
@@ -194,7 +203,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
             }
             return $rules;
         }
-        return false;
+        return [];
     }
 
     protected function decodePromotionRule($rule, $promotion)
@@ -223,7 +232,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
             'discount' => [
                 'type' => $rule['discount_resource'],
                 'mode' => $rule['discount_mode'],
-                'value' => $rule['discount_content']
+                'value' => json_decode($rule['discount_content'])
             ],
             'weight' => $rule['weight'],
             'multi' => $rule['multi_able'],

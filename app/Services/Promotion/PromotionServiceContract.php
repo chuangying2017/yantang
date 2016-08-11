@@ -2,10 +2,13 @@
 
 
 use App\Services\Promotion\Support\PromotionAbleItemContract;
+use App\Services\Promotion\Support\PromotionAbleUserContract;
 
 interface PromotionServiceContract {
 
     public function setItems(PromotionAbleItemContract $items);
+
+    public function setUser(PromotionAbleUserContract $user);
 
     public function checkRelated($rules = null);
 

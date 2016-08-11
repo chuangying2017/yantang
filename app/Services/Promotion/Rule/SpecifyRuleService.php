@@ -33,6 +33,7 @@ class SpecifyRuleService implements SpecifyRuleContract {
     public function setUser(PromotionAbleUserContract $user)
     {
         $this->user = $user;
+        return $this;
     }
 
     /**
@@ -42,6 +43,7 @@ class SpecifyRuleService implements SpecifyRuleContract {
     public function setItems(PromotionAbleItemContract $items)
     {
         $this->items = $items;
+        return $this;
     }
 
     /**
@@ -53,6 +55,7 @@ class SpecifyRuleService implements SpecifyRuleContract {
     {
         $this->rules = $rules;
         $this->rules->setRule($current_rule_key);
+        return $this;
     }
 
     public function checkUserQualify()

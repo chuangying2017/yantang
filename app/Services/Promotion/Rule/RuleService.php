@@ -36,13 +36,11 @@ class RuleService implements RuleServiceContract {
     /**
      * RuleService constructor.
      * @param RuleDataContract $rules
-     * @param PromotionAbleUserContract $user
      * @param SpecifyRuleContract $specifyRuleService
      */
-    public function __construct(RuleDataContract $rules, PromotionAbleUserContract $user, SpecifyRuleContract $specifyRuleService)
+    public function __construct(RuleDataContract $rules, SpecifyRuleContract $specifyRuleService)
     {
         $this->rules = $rules;
-        $this->user = $user;
         $this->specifyRuleService = $specifyRuleService;
     }
 
@@ -51,9 +49,12 @@ class RuleService implements RuleServiceContract {
      */
     public function filterQualify()
     {
+        $this->specifyRuleService->setUser($this->user);
+
         foreach ($this->rules->getAllKeys() as $rule_key) {
-            $this->setSpecifyRuleServiceInfo($rule_key);
-            $this->specifyRuleService->checkUserQualify();
+            $this->specifyRuleService
+                ->setRules($this->rules, $rule_key)
+                ->checkUserQualify();
         }
 
         return $this;
@@ -160,6 +161,17 @@ class RuleService implements RuleServiceContract {
     public function setItems(PromotionAbleItemContract $items)
     {
         $this->items = $items;
+        return $this;
+    }
+
+    /**
+     * @param PromotionAbleUserContract $user
+     * @return $this
+     */
+    public function setUser(PromotionAbleUserContract $user)
+    {
+        $this->user = $user;
+        return $this;
     }
 
     /**
