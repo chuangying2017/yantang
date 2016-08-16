@@ -6,7 +6,7 @@ interface RuleDataContract extends SpecifyRuleDataContract {
 
     public function sortRules();
 
-    public function getAll();
+    public function getAll($type = null);
 
     public function getAllKeys();
 

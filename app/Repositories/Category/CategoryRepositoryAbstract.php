@@ -15,7 +15,7 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
         $this->init();
     }
 
-    public function getByIdProducts($product_id)
+    public function getIdsByProducts($product_id)
     {
         return \DB::table('product_category')->where('product_id', $product_id)->pluck('cat_id');
     }

@@ -31,7 +31,7 @@ interface SpecifyRuleContract {
     //unset if don't has qualify
     public function checkUserQualify();
 
-    public function checkRelateItems();
+    public function checkRelateItems($unset_if_not_relate = true);
 
     public function checkItemsInRange();
 
@@ -49,5 +49,6 @@ interface SpecifyRuleContract {
 
     public function setAsNotUsing();
 
+    public function isCoupon();
 
 }

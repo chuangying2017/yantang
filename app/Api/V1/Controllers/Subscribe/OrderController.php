@@ -12,6 +12,7 @@ use App\Services\Order\OrderGenerator;
 use App\Services\Order\OrderManageContract;
 use App\Services\Order\OrderProtocol;
 use App\Services\Pay\Pingxx\PingxxProtocol;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -51,6 +52,8 @@ class OrderController extends Controller {
             $temp_order = $orderGenerator->subscribe(access()->id(), $skus, $weekday_type, $daytime, $start_time, $address_id);
 
             return $this->response->item($temp_order, new TempOrderTransformer());
+        } catch (ModelNotFoundException $e) {
+            $this->response->errorNotFound($e->getMessage());
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }

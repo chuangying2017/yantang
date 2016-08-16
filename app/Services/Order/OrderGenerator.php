@@ -57,6 +57,7 @@ class OrderGenerator implements OrderGeneratorContract {
     public function buyCart($user_id, $cart_ids)
     {
         $carts = app(CartRepositoryContract::class)->getMany($cart_ids, false);
+
         $skus = [];
         foreach ($carts as $cart) {
             $skus[] = [
@@ -125,6 +126,7 @@ class OrderGenerator implements OrderGeneratorContract {
 
         $temp_order = $handler->handle(new TempOrder($user_id, $skus));
 
+
         return $temp_order;
     }
 
@@ -139,6 +141,7 @@ class OrderGenerator implements OrderGeneratorContract {
         if ($temp_order->getError()) {
             throw new \Exception(json_encode($temp_order->getError()));
         }
+        
 
         $this->setOrderRepo(app()->make(MallClientOrderRepository::class));
         $order = $this->orderRepo->createOrder($temp_order->toArray());
@@ -163,6 +166,7 @@ class OrderGenerator implements OrderGeneratorContract {
         $handler = $this->getOrderGenerateHandler($config);
 
         $temp_order = $this->pullTempOrder($temp_order_id);
+
         $temp_order->setRequestPromotion($coupon_id);
 
         $temp_order = $handler->handle($temp_order);

@@ -44,11 +44,13 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     public function setItems(PromotionAbleItemContract $items)
     {
         $this->items = $items;
+        return $this;
     }
 
     public function setUser(PromotionAbleUserContract $user)
     {
         $this->user = $user;
+        return $this;
     }
 
     /**
@@ -59,8 +61,8 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     public function checkRelated($rules = null)
     {
         $rules_array = is_null($rules) ? $this->promotionRepo->getUsefulRules() : $rules;
-
-        $this->ruleService->setRules($rules_array)->setUser($this->user)->setItems($this->items);
+        $this->ruleService->setRules($rules_array);
+        $this->ruleService->setUser($this->user)->setItems($this->items);
 
         $this->ruleService->filterRelate();
 
@@ -77,6 +79,8 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     {
         if (!$this->items->getRules()) {
             $this->checkRelated();
+        } else {
+            $this->revert();
         }
 
         $this->ruleService->filterUsable();
@@ -90,6 +94,8 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     {
         if (!$this->items->getRules()) {
             $this->checkUsable();
+        } else {
+            $this->revert();
         }
 
         $success = $this->ruleService->using($rule_key);
@@ -103,6 +109,8 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     {
         if (!$this->items->getRules()) {
             $this->checkUsable();
+        } else {
+            $this->revert();
         }
 
         $this->ruleService->notUsing($rule_key);
@@ -116,5 +124,16 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     {
         $this->items->setRules($this->ruleService->getRules());
     }
+
+    public function getRules()
+    {
+        return $this->ruleService->getRules();
+    }
+
+    protected function revert()
+    {
+        $this->ruleService->setUser($this->user)->setItems($this->items)->setRules($this->items->getRules());
+    }
+
 
 }

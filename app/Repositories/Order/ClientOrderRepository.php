@@ -94,9 +94,8 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         $order->skus = $this->orderSkuRepo->createOrderSkus($order, $data['skus']);
         $order->address = $this->createOrderAddress($order['id'], $data['address']);
         $order->billings = $this->createOrderBilling($order);
-        $order->promotions = $this->createOrderPromotion($order['id'], $data['promotion']);
+        $order->promotions = $this->createOrderPromotion($order['id'], $data['promotions']);
         $order->memo = $this->createOrderMemo($order['id'], array_get($data, 'memo', ''));
-
 
         DB::commit();
 
@@ -121,9 +120,9 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         return $billings;
     }
 
-    protected function createOrderPromotion($order_id, $promotion)
+    protected function createOrderPromotion($order_id, $promotions)
     {
-        return $this->orderPromotionRepo->createOrderPromotion($order_id, $promotion);
+        return $this->orderPromotionRepo->createOrderPromotion($order_id, $promotions);
     }
 
     protected function createOrderMemo($order_id, $memo)
@@ -149,7 +148,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         return $order;
     }
 
-	/**
+    /**
      * @param $order_no
      * @param bool $with_detail
      * @return Order

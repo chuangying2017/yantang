@@ -1,10 +1,17 @@
 <?php namespace App\Services\Promotion;
 
+use App\Models\Promotion\Campaign;
+use App\Models\Promotion\Coupon;
 use App\Services\Promotion\Rule\Benefit\AmountBenefit;
 use App\Services\Promotion\Rule\Qualification\AllUserQualification;
 use App\Services\Promotion\Rule\Usage\AllItemsUsage;
 
 class PromotionProtocol {
+    
+    const TICKET_PER_PAGE = 10;
+
+    const MODEL_OF_COUPON = Coupon::class;
+    const MODEL_OF_CAMPAIGN = Campaign::class;
 
     const TYPE_OF_COUPON = 'coupon';
     const TYPE_OF_MALL_CAMPAIGN = 'mall_campaign';

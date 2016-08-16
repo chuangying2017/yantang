@@ -14,9 +14,9 @@ class GetRelate {
     {
         $filters = [
             PromotionProtocol::ITEM_TYPE_OF_ALL => AllItemsUsage::class,
-            PromotionProtocol::ITEM_TYPE_OF_PRODUCT => '',
-            PromotionProtocol::ITEM_TYPE_OF_SKU => '',
-            PromotionProtocol::ITEM_TYPE_OF_CATEGORY => '',
+            PromotionProtocol::ITEM_TYPE_OF_PRODUCT => ProductUsage::class,
+            PromotionProtocol::ITEM_TYPE_OF_SKU => SkuUsage::class,
+            PromotionProtocol::ITEM_TYPE_OF_CATEGORY => CategoryUsage::class,
             PromotionProtocol::ITEM_TYPE_OF_GROUP => '',
             PromotionProtocol::ITEM_TYPE_OF_BRAND => '',
         ];

@@ -65,7 +65,7 @@ class SpecifyRuleService implements SpecifyRuleContract {
         $user_has_qualify = app()->make(QualifyChecker::class)->setQualifyType($qualify['type'])->check($this->user, $qualify['values']);
 
         $promotionRepo = app()->make(PromotionSupportRepository::class);
-        $user_has_quota = $this->userHasQuota($qualify['quantity'], $this->rules->getPromotionID(), $this->rules->getRuleID(), $promotionRepo);
+        $user_has_quota = $this->userHasQuota($qualify['quantity'], $this->rules->getPromotionID(), null, $promotionRepo);
 
         if ($user_has_qualify && $user_has_quota) {
             return true;
@@ -83,15 +83,20 @@ class SpecifyRuleService implements SpecifyRuleContract {
         return true;
     }
 
-    public function checkRelateItems()
+    public function checkRelateItems($unset_if_not_relate = true)
     {
         $rule_items = $this->rules->getItems();
 
         $relate_item_keys = app()->make(GetRelate::class)->setRelateType($rule_items['type'])->filter($this->items, $rule_items['values']);
 
         if (empty($relate_item_keys) || is_null($relate_item_keys) || !$relate_item_keys) {
-            $this->rules->unsetRule();
-            return false;
+            if ($unset_if_not_relate) {
+                $this->rules->unsetRule();
+                return false;
+            } else {
+                $this->rules->setMessage('没有符合优惠的商品');
+                return false;
+            }
         }
 
         $this->rules->setRelated($relate_item_keys);
@@ -165,7 +170,7 @@ class SpecifyRuleService implements SpecifyRuleContract {
         $this->rules->setBenefit($benefit_value);
 
         $this->items->addPromotion($this->rules);
-
+        
         return $this;
     }
 
@@ -175,8 +180,10 @@ class SpecifyRuleService implements SpecifyRuleContract {
             return false;
         }
 
-        $this->setBenefit();
+        $this->rules->setUsing();
 
+        $this->setBenefit();
+        
         if ($this->rules->getMultiType()) {
             $this->rules->unsetOtherUsable();
         }
@@ -208,5 +215,8 @@ class SpecifyRuleService implements SpecifyRuleContract {
         return true;
     }
 
-
+    public function isCoupon()
+    {
+        return $this->rules->getType() == PromotionProtocol::MODEL_OF_COUPON;
+    }
 }

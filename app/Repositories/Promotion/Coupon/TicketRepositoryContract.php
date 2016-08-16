@@ -10,10 +10,10 @@ interface TicketRepositoryContract {
 
     public function deleteTicket($ticket_id);
 
+    public function updateAsUsed($ticket_id);
+    
     public function getTicket($ticket_id, $with_coupon = true);
 
-    public function getTicketsByCoupon($coupon_id, $with_coupon = true);
-
-    public function getTicketsByUser($user_id, $with_coupon = true);
+    public function getTicketsByUser($user_id, $status, $with_coupon = true);
 
 }

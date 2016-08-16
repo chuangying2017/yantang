@@ -314,7 +314,7 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
         if (count($relation)) {
             return User::with($relation)->find($user_id);
         }
-        return User::find($user_id);
+        return User::query()->find($user_id);
     }
 
     //优惠信息

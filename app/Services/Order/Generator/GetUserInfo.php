@@ -21,6 +21,7 @@ class GetUserInfo extends GenerateHandlerAbstract {
     public function handle(TempOrder $temp_order)
     {
         $temp_order->setUser($this->userContract->getUserInfo($temp_order->getUser()));
+        
         return $this->next($temp_order);
     }
 }

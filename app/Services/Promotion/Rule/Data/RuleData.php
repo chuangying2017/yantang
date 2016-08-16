@@ -1,5 +1,7 @@
 <?php namespace App\Services\Promotion\Rule\Data;
 
+use App\Services\Promotion\PromotionProtocol;
+
 class RuleData implements RuleDataContract {
 
     const KEY_OF_RULE_USABLE = 'usable';
@@ -35,7 +37,7 @@ class RuleData implements RuleDataContract {
         ]);
     }
 
-    public function getAll()
+    public function getAll($type = null)
     {
         return $this->rules;
     }

@@ -212,6 +212,16 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
             'id' => $rule['id'],
             'name' => $rule['name'],
             'desc' => $rule['desc'],
+            'promotion' => [
+                'id' => $promotion['id'],
+                'name' => $promotion['name'],
+                'desc' => $promotion['desc'],
+                'cover_image' => $promotion['cover_image'],
+                'start_time' => $promotion['start_time'],
+                'end_time' => $promotion['end_time'],
+                'type' => $promotion['type']
+            ],
+            'ticket' => array_get($promotion, 'ticket'),
             'promotion_id' => $promotion['id'],
             'promotion_type' => get_class($promotion),
             'group' => $promotion['id'],

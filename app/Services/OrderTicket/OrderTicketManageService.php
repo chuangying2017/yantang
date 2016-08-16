@@ -17,14 +17,12 @@ class OrderTicketManageService implements OrderTicketManageContract {
      * @var CampaignOrderRepository
      */
     private $orderRepo;
-    /**
-     * @var OrderPromotionRepositoryContract
-     */
-    private $orderPromotion;
+
 
     /**
      * OrderTicketManageService constructor.
      * @param OrderTicketRepositoryContract $ticketRepo
+     * @param CampaignOrderRepository $orderRepo
      */
     public function __construct(
         OrderTicketRepositoryContract $ticketRepo,

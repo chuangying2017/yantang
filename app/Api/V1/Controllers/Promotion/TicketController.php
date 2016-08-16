@@ -6,6 +6,7 @@ use App\API\V1\Transformers\Promotion\TicketTransformer;
 use App\Repositories\Auth\User\EloquentUserRepository;
 use App\Repositories\Promotion\Coupon\TicketRepositoryContract;
 use App\Services\Promotion\CouponService;
+use App\Services\Promotion\PromotionProtocol;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -27,9 +28,12 @@ class TicketController extends Controller {
         $this->ticketRepo = $ticketRepo;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $status = $request->input('status') ?: PromotionProtocol::STATUS_OF_TICKET_OK;
+        $tickets = $this->ticketRepo->getTicketsByUser(access()->id(), $status);
 
+        return $this->response->paginator($tickets, new TicketTransformer());
     }
 
     public function store(Request $request, CouponService $couponService, EloquentUserRepository $userRepository)
@@ -38,7 +42,7 @@ class TicketController extends Controller {
 
         $ticket = $couponService->dispatch($userRepository->setUser(access()->user()), $coupon_id);
         if (!$ticket) {
-            $this->response->error($couponService->getErrorMessage('领取失败'), 200);
+            $this->response->error($couponService->getErrorMessage('领取失败'), 400);
         }
 
         return $this->response->item($ticket, new TicketTransformer())->setStatusCode(201);

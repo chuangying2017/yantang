@@ -144,7 +144,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
         $sku->sales = $sku->sales + $quantity;
         $sku->save();
 
-        $meta = ProductMeta::where('product_id', $sku->product_id)->first();
+        $meta = ProductMeta::query()->where('product_id', $sku->product_id)->first();
         if ($meta) {
             $meta->sales += $quantity;
             $meta->stock -= $quantity;

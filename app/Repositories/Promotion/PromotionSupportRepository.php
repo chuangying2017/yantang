@@ -4,10 +4,10 @@ use App\Models\Promotion\UserPromotion;
 
 class PromotionSupportRepository {
 
-    public function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
+    public static function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
     {
         $query = UserPromotion::query()->where('user_id', $user_id)->where('promotion_id', $promotion_id);
-
+        
         if (!is_null($rule_id)) {
             $query = $query->where('rule_id', $rule_id);
         }
@@ -15,4 +15,20 @@ class PromotionSupportRepository {
         return $query->get()->count();
     }
 
+    public static function addUserPromotion($user_id, $promotion_id, $rule_id = null, $used = 0)
+    {
+        return UserPromotion::create([
+            'user_id' => $user_id,
+            'promotion_id' => $promotion_id,
+            'rule_id' => $rule_id ?: 0,
+            'used' => $used,
+        ]);
+    }
+
+    public static function updateUserPromotionAsUsed($user_id, $promotion_id, $rule_id)
+    {
+        return UserPromotion::query()->where('user_id', $user_id)
+            ->where('$promotion_id', $promotion_id)
+            ->update(['rule_id' => $rule_id, 'used' => 1]);
+    }
 }

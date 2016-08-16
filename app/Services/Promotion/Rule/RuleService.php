@@ -65,11 +65,16 @@ class RuleService implements RuleServiceContract {
         foreach ($this->rules->getAllKeys() as $rule_key) {
             $this->setSpecifyRuleServiceInfo($rule_key);
 
-            //检查并设置用户是否有参加活动资格,没有资格则删除规则
-            if ($this->specifyRuleService->checkUserQualify()) {
-                //检查商品是否符合规则要求,符合则标记为关联
-                $this->specifyRuleService->checkRelateItems();
+            if ($this->specifyRuleService->isCoupon()) {
+                $this->specifyRuleService->checkRelateItems(false);
+            } else {
+                //检查并设置用户是否有参加活动资格,没有资格则删除规则
+                if ($this->specifyRuleService->checkUserQualify()) {
+                    //检查商品是否符合规则要求,符合则标记为关联
+                    $this->specifyRuleService->checkRelateItems();
+                }
             }
+
         }
 
         return $this;
@@ -104,8 +109,12 @@ class RuleService implements RuleServiceContract {
     {
         $this->setSpecifyRuleServiceInfo($rule_key);
 
-        if (!$this->specifyRuleService->isUsable() || $this->specifyRuleService->isUsing()) {
+        if (!$this->specifyRuleService->isUsable()) {
             $this->rules->setMessage('优惠券不可用于该订单');
+            return false;
+        }
+
+        if ($this->specifyRuleService->isUsing()) {
             return false;
         }
 

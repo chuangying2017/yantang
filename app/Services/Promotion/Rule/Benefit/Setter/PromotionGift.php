@@ -6,6 +6,7 @@ class PromotionGift implements PromotionAbleItemBenefitContract {
 
     public function init($benefit_name)
     {
+        return $this;
         
     }
 

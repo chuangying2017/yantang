@@ -20,7 +20,6 @@ class TempOrder implements PromotionAbleItemContract {
     protected $promotion;
     protected $error;
 
-
     protected $products_amount = 0;
     protected $discount_amount = 0;
 
@@ -50,11 +49,13 @@ class TempOrder implements PromotionAbleItemContract {
             'discount_amount' => $this->discount_amount,
             'pay_amount' => $this->getPayAmount(),
             'express_fee' => $this->express_fee,
-            'promotion' => $this->promotion,
             'error' => $this->error,
             'special_campaign' => $this->special_campaign,
             'preorder' => $this->preorder,
-            'promotions' => $this->promotions
+            'promotions' => $this->promotions,
+            'rules' => $this->getRules(),
+            'coupons' => $this->showCoupons(),
+            'campaigns' => $this->getCampaigns(),
         ];
     }
 
@@ -170,10 +171,10 @@ class TempOrder implements PromotionAbleItemContract {
     /**
      * @param mixed $sku_amount
      */
-    public function setSkuAmount($sku_key, $sku_amount)
+    public function setSkuAmount($sku_key, $sku_amount, $discount_amount = 0)
     {
         $this->skus[$sku_key]['total_amount'] = $sku_amount;
-        $this->skus[$sku_key]['discount_amount'] = 0;
+        $this->skus[$sku_key]['discount_amount'] = $discount_amount;
         $this->skus[$sku_key]['pay_amount'] = $sku_amount;
     }
 
@@ -326,7 +327,7 @@ class TempOrder implements PromotionAbleItemContract {
         foreach ($sku_keys as $sku_key) {
             $items[$sku_key] = $this->getSkus($sku_key);
         }
-        
+
         return $items;
     }
 
@@ -398,4 +399,8 @@ class TempOrder implements PromotionAbleItemContract {
         app()->make(EloquentGroupRepository::class)->getByIdProducts($this->getItemProductId($item_key));
     }
 
+    public function getSkuPriceTag()
+    {
+        return $this->preorder ? 'subscribe_price' : 'price';
+    }
 }

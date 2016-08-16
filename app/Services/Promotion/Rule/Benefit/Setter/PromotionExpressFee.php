@@ -8,6 +8,7 @@ class PromotionExpressFee implements PromotionAbleItemBenefitContract {
     public function add($discount_amount, $key = null)
     {
         $this->discount_express_fee += $discount_amount;
+        return $this;
     }
 
     public function remove($discount_amount, $key = null)

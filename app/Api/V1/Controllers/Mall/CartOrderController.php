@@ -69,7 +69,8 @@ class CartOrderController extends Controller {
             return $this->response->item($temp_order, new TempOrderTransformer());
         }
 
-        $ticket_id = $request->input('ticket_id') ?: null;
+        $ticket_id = $request->input('ticket') ?: null;
+
         if ($ticket_id) {
             $temp_order = $this->orderGenerator->useCoupon($temp_order_id, $ticket_id);
             return $this->response->item($temp_order, new TempOrderTransformer());

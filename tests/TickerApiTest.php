@@ -26,5 +26,17 @@ class TickerApiTest extends TestCase {
             $this->getAuthHeader());
 
         $this->assertResponseStatus(201);
+
+        $this->seeInDatabase('user_promotion', ['user_id' => 1, 'promotion_id' => 13]);
+
+
+        $this->json('post', 'promotions/tickets',
+            [
+                'coupon_id' => 13
+            ],
+            $this->getAuthHeader());
+
+        $this->assertResponseStatus(400);
+
     }
 }

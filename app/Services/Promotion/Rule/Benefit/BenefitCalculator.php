@@ -4,7 +4,7 @@ use App\Services\Promotion\PromotionProtocol;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 class BenefitCalculator {
-    
+
     /**
      * @var Benefit
      */
@@ -18,7 +18,7 @@ class BenefitCalculator {
             PromotionProtocol::DISCOUNT_TYPE_OF_CREDITS => '',
             PromotionProtocol::DISCOUNT_TYPE_OF_SPECIAL_PRICE => '',
             PromotionProtocol::DISCOUNT_TYPE_OF_COUPON => '',
-            PromotionProtocol::DISCOUNT_TYPE_OF_PRODUCT => '',
+            PromotionProtocol::DISCOUNT_TYPE_OF_PRODUCT => ProductBenefit::class,
             PromotionProtocol::DISCOUNT_TYPE_OF_GIFT => '',
         ];
 

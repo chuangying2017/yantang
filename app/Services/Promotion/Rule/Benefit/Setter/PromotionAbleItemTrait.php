@@ -18,9 +18,17 @@ trait PromotionAbleItemTrait {
 
     protected $rules;
 
+    protected $coupons;
+
+    protected $campaigns;
+
     protected function getBenefitHandlerByType($type)
     {
         $data = [
+            PromotionProtocol::DISCOUNT_TYPE_OF_PRODUCT => [
+                'handler' => PromotionProducts::class,
+                'var' => &$this->skus
+            ],
             PromotionProtocol::DISCOUNT_TYPE_OF_GIFT => [
                 'handler' => PromotionGift::class,
                 'var' => &$this->promotion_gifts
@@ -32,12 +40,13 @@ trait PromotionAbleItemTrait {
         ];
 
         $handler = array_get($data, $type . '.handler', null);
-
         if (is_null($handler)) {
             throw new \Exception('优惠项目不存在');
         }
 
-        return app()->make($handler)->init($data[$type]['var']);
+        $handler_obj = app()->make($handler);
+        $handler_obj->init($data[$type]['var']);
+        return $handler_obj;
     }
 
     protected function setPromotionBenefit($benefit_type)
@@ -96,6 +105,49 @@ trait PromotionAbleItemTrait {
     public function getRules()
     {
         return $this->rules;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getCoupons($keys = null)
+    {
+        return $this->coupons;
+    }
+
+    public function showCoupons()
+    {
+        return $this->coupons;
+    }
+
+    public function showCampaigns()
+    {
+        return $this->campaigns;
+    }
+
+    /**
+     * @param mixed $coupons
+     */
+    public function setCoupons($coupons)
+    {
+        $this->coupons = $coupons;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCampaigns()
+    {
+        return $this->campaigns;
+    }
+
+    /**
+     * @param mixed $campaigns
+     */
+    public function setCampaigns($campaigns)
+    {
+        $this->campaigns = $campaigns;
     }
 
 }

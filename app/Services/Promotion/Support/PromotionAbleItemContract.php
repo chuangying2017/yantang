@@ -27,4 +27,6 @@ interface PromotionAbleItemContract extends PromotionAbleItemBenefitContract {
 
     public function getRules();
 
+    public function getSkuPriceTag();
+
 }
