@@ -8,11 +8,8 @@ abstract class Benefit {
 
     public abstract function cal($mode, $value, PromotionAbleItemContract $items, $item_option = null);
 
-    public abstract function rollback($mode, $benefit_value, PromotionAbleItemContract $items, $item_option = null);
-
     protected static function calModeValue($mode, $origin_value, $cal_value)
     {
-        $result = $origin_value;
         switch ($mode) {
             case PromotionProtocol::DISCOUNT_MODE_OF_DECREASE:
                 $result = bcsub($origin_value, $cal_value, 0);

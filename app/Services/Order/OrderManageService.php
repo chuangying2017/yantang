@@ -35,6 +35,8 @@ class OrderManageService implements OrderManageContract {
      * OrderManageService constructor.
      * @param OrderBillingRepository $orderBillingRepo
      * @param OrderBillingService $orderBillingService
+     * @param ClientOrderRepository $orderRepositoryContract
+     * @param OrderDeliverRepository $orderDeliverRepo
      */
     public function __construct(
         OrderBillingRepository $orderBillingRepo,

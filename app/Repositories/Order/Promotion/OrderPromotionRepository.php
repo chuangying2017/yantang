@@ -2,6 +2,7 @@
 
 use App\Models\Order\OrderPromotion;
 use App\Repositories\Promotion\Coupon\TicketRepositoryContract;
+use App\Repositories\Promotion\PromotionSupportRepository;
 use App\Services\Order\OrderProtocol;
 
 class OrderPromotionRepository implements OrderPromotionRepositoryContract {
@@ -30,17 +31,19 @@ class OrderPromotionRepository implements OrderPromotionRepositoryContract {
                 'promotion_id' => $promotion_data['promotion_id'],
                 'promotion_rule_id' => $promotion_data['id']
             ]);
+
+            $user_promotion = PromotionSupportRepository::updateUserPromotionAsUsed(access()->id(), $promotion_data['promotion_id'], $promotion_data['id']);
         }
     }
 
     public function getOrderPromotion($order_id)
     {
-        return OrderPromotion::where('order_id', $order_id)->get();
+        return OrderPromotion::query()->where('order_id', $order_id)->get();
     }
 
     public function updateOrderPromotionFinish($order_promotion_id)
     {
-        $order_promotion = OrderPromotion::find($order_promotion_id);
+        $order_promotion = OrderPromotion::query()->find($order_promotion_id);
         $order_promotion->status = OrderProtocol::ORDER_PROMOTION_STATUS_OF_DONE;
         $order_promotion->save();
         return $order_promotion;

@@ -28,7 +28,8 @@ class TickerApiTest extends TestCase {
         $this->assertResponseStatus(201);
 
         $this->seeInDatabase('user_promotion', ['user_id' => 1, 'promotion_id' => 13]);
-
+        $this->seeInDatabase('promotion_counter', ['promotion_id' => 13, 'dispatch' => 1]);
+        $this->seeInDatabase('user_promotion', ['promotion_id' => 13, 'user_id' => 1]);
 
         $this->json('post', 'promotions/tickets',
             [

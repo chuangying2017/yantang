@@ -32,10 +32,6 @@ class ProductBenefit extends Benefit {
         return $benefit_values;
     }
 
-    public function rollback($mode, $benefit_value, PromotionAbleItemContract $items, $item_option = null)
-    {
-        // TODO: Implement rollback() method.
-    }
 
     /**
      * @var ProductSkuRepositoryContract

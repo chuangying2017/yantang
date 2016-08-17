@@ -48,7 +48,7 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
 
         //无资格领取
         if (empty($this->ruleService->getRules())) {
-            $this->setErrorMessage('领取失败');
+            $this->setErrorMessage('已经领取或不符合领取资格,领取失败');
             return false;
         }
 

@@ -49,6 +49,8 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
      * @param OrderSkuRepositoryContract $orderSkuRepo
      * @param EloquentOrderAddressRepository $orderAddressRepo
      * @param OrderBillingRepository $orderBillingRepo
+     * @param OrderPromotionRepositoryContract $orderPromotionRepo
+     * @param OrderMemoRepository $memoRepo
      */
     public function __construct(
         OrderSkuRepositoryContract $orderSkuRepo,
