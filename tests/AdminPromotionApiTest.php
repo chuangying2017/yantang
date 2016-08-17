@@ -50,7 +50,7 @@ class AdminPromotionApiTest extends TestCase {
                     'desc' => '订购牛奶, 15送3',
                     'qualify' => [
                         'type' => \App\Services\Promotion\PromotionProtocol::QUALI_TYPE_OF_ALL,
-                        'quantity' => 100,
+                        'quantity' => 1,
                         'values' => null
                     ],
                     'items' => [

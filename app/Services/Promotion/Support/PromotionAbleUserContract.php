@@ -12,4 +12,6 @@ interface PromotionAbleUserContract {
 
     public function getUserRoles();
 
+    public function getGroup();
+
 }

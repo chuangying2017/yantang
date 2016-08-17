@@ -341,4 +341,9 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
     }
 
     protected $user;
+
+    public function getGroup()
+    {
+        return \DB::table('group_user')->where('user_id', $this->user->id)->pluck('group_id');
+    }
 }

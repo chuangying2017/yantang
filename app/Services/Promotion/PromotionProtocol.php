@@ -58,6 +58,7 @@ class PromotionProtocol {
     const QUALI_TYPE_OF_LEVEL = 'level';
     const QUALI_TYPE_OF_ROLE = 'role';
     const QUALI_TYPE_OF_ALL = 'all';
+    const QUALI_TYPE_OF_GROUP = 'group';
 
 
     public static function getQualifyType($name = null)
