@@ -17,6 +17,7 @@ class ProductSkuTransformer extends TransformerAbstract {
             'display_price' => display_price($sku['display_price']),
             'stock' => $sku['stock'],
             'sales' => $sku['sales'],
+            'unit' => $sku['unit'],
             'attr' => json_decode($sku['attr'], true),
         ];
     }
