@@ -20,6 +20,7 @@ class ProductSkuTransformer extends TransformerAbstract {
             'settle_price' => display_price($sku['settle_price']),
             'express_fee' => display_price($sku['express_fee']),
             'stock' => $sku['stock'],
+            'unit' => $sku['unit'],
             'sales' => $sku['sales'],
             'attr' => json_decode($sku['attr'], true),
             'created_at' => $sku['created_at'],

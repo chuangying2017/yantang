@@ -43,6 +43,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
                 'service_fee' => array_get($sku_data, 'service_fee', 0),
                 'bar_code' => $sku_data['bar_code'],
                 'stock' => $sku_data['stock'],
+                'unit' => $sku_data['unit'],
                 'attr' => array_get($sku_data, 'attr', ''),
                 'type' => array_get($sku_data, 'type', ProductProtocol::TYPE_OF_ENTITY),
             ]);
