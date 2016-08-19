@@ -32,7 +32,8 @@ class AccountProtocol {
             self::ACCOUNT_TYPE_FROZEN_USE => 'frozen_use',
             self::ACCOUNT_TYPE_UNFROZEN => '解冻',
             self::ACCOUNT_TYPE_WITHDRAW => '提现',
-            self::ACCOUNT_TYPE_REFUND => '退回'];
+            self::ACCOUNT_TYPE_REFUND => '退回',
+        ];
 
         return is_null($key) ? $data : array_get($data, $key, self::ACCOUNT_TYPE_USE);
     }

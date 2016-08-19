@@ -7,19 +7,20 @@ use App\Services\Pay\Exception\MultiChargeException;
 use App\Services\Pay\Exception\WrongChargeBillingException;
 
 class WalletService extends AccountService {
-
-    /**
+    
+	/**
      * WalletService constructor.
-     * @param WalletRepositoryContract $wallet
+     * @param WalletRepositoryContract $account
      */
     public function __construct(WalletRepositoryContract $account)
     {
         parent::__construct($account);
     }
 
-    /**
-     * 检查账单是否为充值订单
+
+	/**
      * @param BillingContract $billing
+     * @throws MultiChargeException
      * @throws WrongChargeBillingException
      */
     public function validRecharge(BillingContract $billing)
@@ -36,7 +37,7 @@ class WalletService extends AccountService {
     /**
      * 需要支付金额与帐号类型金额单位换算
      * @param $billing_amount
-     * @return mixed
+     * @return int
      */
     public function transAmount($billing_amount)
     {

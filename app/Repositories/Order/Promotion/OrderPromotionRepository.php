@@ -1,8 +1,7 @@
 <?php namespace App\Repositories\Order\Promotion;
 
 use App\Models\Order\OrderPromotion;
-use App\Repositories\Promotion\Coupon\TicketRepositoryContract;
-use App\Repositories\Promotion\PromotionSupportRepository;
+use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Services\Order\OrderProtocol;
 
 class OrderPromotionRepository implements OrderPromotionRepositoryContract {
@@ -21,10 +20,15 @@ class OrderPromotionRepository implements OrderPromotionRepositoryContract {
         if (!$promotions_data) {
             return;
         }
+
         foreach ($promotions_data as $promotion_data) {
+            
             if (isset($promotion_data['ticket'])) {
-                $this->ticketRepo->updateAsUsed($promotion_data['ticket']['id']);
+                $this->ticketRepo->updateAsUsed($promotion_data['ticket']['id'], $promotion_data['id']);
+            } else {
+                $this->ticketRepo->createLogTicket(access()->id(), $promotion_data['promotion_id'], $promotion_data['promotion']['type'], $promotion_data['id']);
             }
+
             OrderPromotion::create([
                 'order_id' => $order_id,
                 'promotion_type' => $promotion_data['promotion_type'],
@@ -32,7 +36,6 @@ class OrderPromotionRepository implements OrderPromotionRepositoryContract {
                 'promotion_rule_id' => $promotion_data['id']
             ]);
 
-            $user_promotion = PromotionSupportRepository::updateUserPromotionAsUsed(access()->id(), $promotion_data['promotion_id'], $promotion_data['id']);
         }
     }
 

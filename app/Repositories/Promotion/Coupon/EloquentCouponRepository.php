@@ -37,18 +37,21 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
 
     public function getUsefulPromotions()
     {
-        $tickets = Ticket::query()->where('status', PromotionProtocol::STATUS_OF_TICKET_OK)->where('user_id', access()->id())->effect()->get();
+        $tickets = $this->ticketRepo->getCouponTicketsOfUser(access()->id(), PromotionProtocol::STATUS_OF_TICKET_OK, false);
 
-        $coupons = $this->getCouponsById($tickets->pluck('promotion_id')->all());
+        $origin_coupons = $this->getCouponsById($tickets->pluck('promotion_id')->all());
 
-        foreach ($coupons as $coupon_key => $coupon) {
-            foreach ($tickets as $ticket) {
+        $coupons = [];
+        
+        foreach ($tickets as $ticket_key => $ticket) {
+            foreach ($origin_coupons as $coupon_key => $coupon) {
                 if ($ticket['promotion_id'] == $coupon['id']) {
-                    $coupons[$coupon_key]->ticket = $ticket;
-                    break;
+                    $coupons[$ticket_key] = $coupon;
+                    $coupons[$ticket_key]->ticket = $ticket;
                 }
             }
         }
+
         return $coupons;
     }
 }

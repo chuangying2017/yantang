@@ -14,12 +14,9 @@ class BenefitCalculator {
     {
         $calculator = [
             PromotionProtocol::DISCOUNT_TYPE_OF_AMOUNT => AmountBenefit::class,
-            PromotionProtocol::DISCOUNT_TYPE_OF_EXPRESS => '',
-            PromotionProtocol::DISCOUNT_TYPE_OF_CREDITS => '',
-            PromotionProtocol::DISCOUNT_TYPE_OF_SPECIAL_PRICE => '',
-            PromotionProtocol::DISCOUNT_TYPE_OF_COUPON => '',
+            PromotionProtocol::DISCOUNT_TYPE_OF_EXPRESS => ExpressFeeBenefit::class,
+            PromotionProtocol::DISCOUNT_TYPE_OF_SPECIAL_PRICE => SpecialPriceBenefit::class,
             PromotionProtocol::DISCOUNT_TYPE_OF_PRODUCT => ProductBenefit::class,
-            PromotionProtocol::DISCOUNT_TYPE_OF_GIFT => '',
         ];
 
         $handler = array_get($calculator, $type, null);

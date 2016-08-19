@@ -21,6 +21,8 @@ class CartOrderApiTest extends TestCase {
 
         $order = $this->getResponseData('data');
 
+        $this->dump();
+
         $this->seeInDatabase('tickets', ['id' => 16, 'status' => \App\Services\Promotion\PromotionProtocol::STATUS_OF_TICKET_USED]);
         $this->seeInDatabase('order_promotions', ['order_id' => $order['id']]);
 
@@ -37,6 +39,8 @@ class CartOrderApiTest extends TestCase {
         $this->json('put', 'mall/orders/cart/' . $temp_order_id, [
             'ticket' => 16
         ], $this->getAuthHeader());
+
+        $this->dump();
 
         return $temp_order_id;
     }
@@ -63,10 +67,11 @@ class CartOrderApiTest extends TestCase {
 
         $this->json('post', 'mall/orders/cart',
             [
-                'cart_ids' => to_array($cart_ids),
-                'address' => $address['id']
+                'cart_ids' => to_array($cart_ids)
             ],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+
+
         $result = $this->getResponseData();
 
         $this->assertResponseOk();
@@ -79,8 +84,8 @@ class CartOrderApiTest extends TestCase {
                 'address' => $address['id']
             ],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
-        $result = $this->getResponseData();
 
+        $result = $this->getResponseData();
         $this->assertResponseOk();
 
         return $temp_order_id;

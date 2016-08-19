@@ -32,8 +32,7 @@ abstract class AccountService implements PayableContract, RechargeableContract, 
         $account_amount = $this->account->getAmount();
         return $account_amount >= $this->transAmount($need_amount);
     }
-
-
+    
     public abstract function transAmount($billing_amount);
 
     public function pay(BillingContract $billing)
@@ -58,8 +57,7 @@ abstract class AccountService implements PayableContract, RechargeableContract, 
 
         return $record;
     }
-
-
+    
     public abstract function validRecharge(BillingContract $billing);
 
     public function recharge(BillingContract $billing)

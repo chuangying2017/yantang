@@ -10,7 +10,6 @@ trait PromotionAbleItemTrait {
      */
     protected $promotion_benefit_handler;
 
-    protected $promotion_gifts = null;
     protected $promotion_express_fee = 0;
 
     //优惠规则
@@ -25,17 +24,21 @@ trait PromotionAbleItemTrait {
     protected function getBenefitHandlerByType($type)
     {
         $data = [
+            PromotionProtocol::DISCOUNT_TYPE_OF_AMOUNT => [
+                'handler' => PromotionAmount::class,
+                'var' => &$this->products_amount
+            ],
             PromotionProtocol::DISCOUNT_TYPE_OF_PRODUCT => [
                 'handler' => PromotionProducts::class,
                 'var' => &$this->skus
             ],
-            PromotionProtocol::DISCOUNT_TYPE_OF_GIFT => [
-                'handler' => PromotionGift::class,
-                'var' => &$this->promotion_gifts
-            ],
             PromotionProtocol::DISCOUNT_TYPE_OF_EXPRESS => [
                 'handler' => PromotionExpressFee::class,
                 'var' => &$this->promotion_express_fee
+            ],
+            PromotionProtocol::DISCOUNT_TYPE_OF_SPECIAL_PRICE => [
+                'handler' => PromotionSpecialPrice::class,
+                'var' => &$this->skus
             ],
         ];
 

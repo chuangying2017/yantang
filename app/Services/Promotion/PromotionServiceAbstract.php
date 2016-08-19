@@ -61,11 +61,12 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
     public function checkRelated($rules = null)
     {
         $rules_array = is_null($rules) ? $this->promotionRepo->getUsefulRules() : $rules;
+        
         $this->ruleService->setRules($rules_array);
         $this->ruleService->setUser($this->user)->setItems($this->items);
 
         $this->ruleService->filterRelate();
-
+        
         $this->updateItemsRules();
 
         return $this;

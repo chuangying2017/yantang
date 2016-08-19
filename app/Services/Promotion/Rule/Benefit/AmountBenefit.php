@@ -14,9 +14,4 @@ class AmountBenefit extends Benefit {
         return $benefit_value;
     }
 
-    public function rollback($mode, $benefit_value, PromotionAbleItemContract $items, $item_keys = null)
-    {
-
-    }
-
 }

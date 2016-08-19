@@ -1,27 +1,23 @@
 <?php namespace App\Services\Promotion\Rule\Benefit\Setter;
-
-
-class PromotionGift implements PromotionAbleItemBenefitContract {
-
+class PromotionSpecialPrice implements PromotionAbleItemBenefitContract{
 
     public function init($benefit_name)
     {
-        return $this;
-        
+        // TODO: Implement init() method.
     }
 
     public function add($benefit, $key = null)
     {
-        
+        // TODO: Implement add() method.
     }
 
     public function remove($benefit, $key = null)
     {
-        
+        // TODO: Implement remove() method.
     }
 
     public function get($key = null)
     {
-        
+        // TODO: Implement get() method.
     }
 }

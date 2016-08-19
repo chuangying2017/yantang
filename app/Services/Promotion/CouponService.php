@@ -2,7 +2,7 @@
 
 
 use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
-use App\Repositories\Promotion\Coupon\TicketRepositoryContract;
+use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Services\Promotion\Rule\RuleServiceContract;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 use App\Services\Promotion\Support\PromotionAbleUserContract;

@@ -47,15 +47,15 @@ class OrderController extends Controller {
      */
     public function store(OrderGenerator $orderGenerator, Request $request)
     {
-        try {
+//        try {
             $temp_order_id = $request->input(['temp_order_id']);
 
             $order = $orderGenerator->confirm($temp_order_id);
 
             return $this->response->item($order, new ClientOrderTransformer())->setStatusCode(201);
-        } catch (\Exception $e) {
-            $this->response->errorBadRequest($e->getMessage());
-        }
+//        } catch (\Exception $e) {
+//            $this->response->errorBadRequest($e->getMessage());
+//        }
     }
 
 

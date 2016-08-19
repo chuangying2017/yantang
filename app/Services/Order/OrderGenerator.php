@@ -118,7 +118,7 @@ class OrderGenerator implements OrderGeneratorContract {
             GetUserInfo::class,
             CalExpressFee::class,
             CalSkuAmount::class,
-            CheckCampaign::class,
+//            CheckCampaign::class,
             CheckCoupon::class,
             SaveTempOrder::class,
         ];

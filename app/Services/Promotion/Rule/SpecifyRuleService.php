@@ -1,6 +1,7 @@
 <?php namespace App\Services\Promotion\Rule;
 
 use App\Repositories\Promotion\PromotionSupportRepository;
+use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Services\Promotion\PromotionProtocol;
 use App\Services\Promotion\Rule\Benefit\BenefitCalculator;
 use App\Services\Promotion\Rule\Data\RuleDataContract;
@@ -64,8 +65,7 @@ class SpecifyRuleService implements SpecifyRuleContract {
 
         $user_has_qualify = app()->make(QualifyChecker::class)->setQualifyType($qualify['type'])->check($this->user, $qualify['values']);
 
-        $promotionRepo = app()->make(PromotionSupportRepository::class);
-        $user_has_quota = $this->userHasQuota($qualify['quantity'], $this->rules->getPromotionID(), null, $promotionRepo);
+        $user_has_quota = $this->userHasQuota($qualify['quantity'], $this->rules->getPromotionID(), null);
 
         if ($user_has_qualify && $user_has_quota) {
             return true;
@@ -75,10 +75,10 @@ class SpecifyRuleService implements SpecifyRuleContract {
         return false;
     }
 
-    protected function userHasQuota($quantity, $promotion_id, $rule_id, PromotionSupportRepository $promotionSupport)
+    protected function userHasQuota($quantity, $promotion_id, $rule_id)
     {
         if ($quantity > 0) {
-            return $quantity > $promotionSupport->getUserPromotionTimes($promotion_id, $this->user->getUserId(), $rule_id);
+            return $quantity > TicketRepositoryContract::getUserPromotionTimes($promotion_id, $this->user->getUserId(), $rule_id);
         }
         return true;
     }
@@ -170,7 +170,7 @@ class SpecifyRuleService implements SpecifyRuleContract {
         $this->rules->setBenefit($benefit_value);
 
         $this->items->addPromotion($this->rules);
-        
+
         return $this;
     }
 
@@ -183,7 +183,7 @@ class SpecifyRuleService implements SpecifyRuleContract {
         $this->rules->setUsing();
 
         $this->setBenefit();
-        
+
         if ($this->rules->getMultiType()) {
             $this->rules->unsetOtherUsable();
         }

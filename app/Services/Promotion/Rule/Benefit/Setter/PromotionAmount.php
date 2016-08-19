@@ -1,23 +1,25 @@
 <?php namespace App\Services\Promotion\Rule\Benefit\Setter;
-class PromotionAmount implements PromotionAbleItemBenefitContract{
+class PromotionAmount implements PromotionAbleItemBenefitContract {
+
+    protected $discount_amount;
 
     public function init($benefit_name)
     {
-        // TODO: Implement init() method.
+        $this->discount_amount = $benefit_name;
     }
 
     public function add($benefit, $key = null)
     {
-        // TODO: Implement add() method.
+        $this->discount_amount += $benefit;
     }
 
     public function remove($benefit, $key = null)
     {
-        // TODO: Implement remove() method.
+        $this->discount_amount -= $benefit;
     }
 
     public function get($key = null)
     {
-        // TODO: Implement get() method.
+        return $this->discount_amount;
     }
 }

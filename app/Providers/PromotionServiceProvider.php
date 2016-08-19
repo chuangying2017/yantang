@@ -76,8 +76,8 @@ class PromotionServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
-            \App\Repositories\Promotion\Coupon\TicketRepositoryContract::class,
-            \App\Repositories\Promotion\Coupon\EloquentTicketRepository::class
+            \App\Repositories\Promotion\TicketRepositoryContract::class,
+            \App\Repositories\Promotion\EloquentTicketRepository::class
         );
 
 

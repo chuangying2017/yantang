@@ -49,6 +49,7 @@ class TempOrder implements PromotionAbleItemContract {
             'discount_amount' => $this->discount_amount,
             'pay_amount' => $this->getPayAmount(),
             'express_fee' => $this->express_fee,
+            'discount_express_fee' => $this->promotion_express_fee,
             'error' => $this->error,
             'special_campaign' => $this->special_campaign,
             'preorder' => $this->preorder,

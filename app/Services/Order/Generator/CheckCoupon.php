@@ -36,7 +36,7 @@ class CheckCoupon extends GenerateHandlerAbstract {
             ->setUser($this->userContract)
             ->setItems($temp_order)
             ->checkUsable();
-
+        
         $temp_order->setCoupons($this->couponService->getRules());
 
         return $this->next($temp_order);

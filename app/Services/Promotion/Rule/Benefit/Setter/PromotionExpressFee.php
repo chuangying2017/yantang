@@ -3,7 +3,7 @@
 
 class PromotionExpressFee implements PromotionAbleItemBenefitContract {
 
-    protected $discount_express_fee;
+    protected $discount_express_fee = 0;
 
     public function add($discount_amount, $key = null)
     {

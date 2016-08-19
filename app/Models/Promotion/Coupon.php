@@ -25,7 +25,7 @@ class Coupon extends PromotionAbstract {
      */
     public function tickets()
     {
-        return $this->hasMany(Ticket::class, 'coupon_id', 'id');
+        return $this->hasMany(Ticket::class, 'promotion_id', 'id');
     }
 
 }

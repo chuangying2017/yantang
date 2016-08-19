@@ -44,5 +44,5 @@ class PromotionProducts implements PromotionAbleItemBenefitContract {
     {
         // TODO: Implement get() method.
     }
-    
+
 }

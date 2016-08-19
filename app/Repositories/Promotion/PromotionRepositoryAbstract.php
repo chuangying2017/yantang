@@ -15,16 +15,24 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     /**
      * @var RuleRepositoryContract
      */
-    private $ruleRepo;
+    protected $ruleRepo;
+
+
+    /**
+     * @var TicketRepositoryContract
+     */
+    protected $ticketRepo;
 
     /**
      * PromotionRepositoryAbstract constructor.
      * @param RuleRepositoryContract $ruleRepo
+     * @param TicketRepositoryContract $ticketRepo
      */
-    public function __construct(RuleRepositoryContract $ruleRepo)
+    public function __construct(RuleRepositoryContract $ruleRepo, TicketRepositoryContract $ticketRepo)
     {
         $this->init();
         $this->ruleRepo = $ruleRepo;
+        $this->ticketRepo = $ticketRepo;
     }
 
     protected abstract function init();
@@ -171,7 +179,6 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     public function getUsefulRules()
     {
         $promotions = $this->getUsefulPromotions();
-
         $rules = [];
         foreach ($promotions as $promotion) {
             $promotion_rules = $this->decodePromotionRules($promotion);
@@ -179,7 +186,6 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
                 $rules = array_merge($rules, $promotion_rules);
             }
         }
-
         return $rules;
     }
 
@@ -248,6 +254,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
             'multi' => $rule['multi_able'],
         ];
     }
+
 
 
 }
