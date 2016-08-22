@@ -60,6 +60,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
 
         $promotion_data = [
             'name' => array_get($data, 'name'),
+            'content' => array_get($data, 'content'),
             'desc' => array_get($data, 'desc', ''),
             'cover_image' => array_get($data, 'cover_image', ''),
             'start_time' => array_get($data, 'start_time', Carbon::now()),

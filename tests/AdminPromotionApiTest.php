@@ -19,7 +19,7 @@ class AdminPromotionApiTest extends TestCase {
     /** @test */
     public function it_can_create_a_coupon()
     {
-        $data = $this->getCouponDataOfManjian();
+        $data = $this->getCouponData();
 
         $this->json('post',
             'admin/promotions/coupons',
@@ -40,6 +40,7 @@ class AdminPromotionApiTest extends TestCase {
         $data = [
             'name' => '满赠优惠券',
             'desc' => '订购牛奶, 15送3',
+            'content' => '3元',
             'cover_image' => 'image_url',
             'start_time' => '2016-08-09 10:00:00',
             'end_time' => '2016-08-29 10:00:00',
