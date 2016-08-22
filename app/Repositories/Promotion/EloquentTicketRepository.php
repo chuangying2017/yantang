@@ -40,9 +40,7 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     {
         $ticket = $this->getTicket($ticket_id);
         if ($ticket['status'] === PromotionProtocol::STATUS_OF_TICKET_OK) {
-
             $this->increaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_USED);
-
             return $this->updateTicket($ticket, PromotionProtocol::STATUS_OF_TICKET_USED, $rule_id);
         }
 
@@ -84,10 +82,14 @@ class EloquentTicketRepository implements TicketRepositoryContract {
      */
     public function getTicket($ticket_id, $with_promotion = true)
     {
-        if ($with_promotion) {
-            $ticket = Ticket::with('coupon')->find($ticket_id);
+        if ($ticket_id instanceof Ticket) {
+            $ticket = $ticket_id;
         } else {
             $ticket = Ticket::query()->find($ticket_id);
+        }
+
+        if ($with_promotion) {
+            $ticket->load('coupon');
         }
 
         if ($ticket['end_time'] < Carbon::now() && $ticket['status'] == PromotionProtocol::STATUS_OF_TICKET_OK) {

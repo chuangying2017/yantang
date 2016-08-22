@@ -33,6 +33,9 @@ interface RuleServiceContract {
      */
     public function notUsing($rule_key);
 
+
+    public function notUsingAll();
+
     /**
      * @param PromotionAbleItemContract $items
      * @return $this

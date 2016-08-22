@@ -1,5 +1,7 @@
 <?php namespace App\Services\Promotion\Support;
 
+use App\Services\Promotion\PromotionProtocol;
+
 interface PromotionAbleItemContract extends PromotionAbleItemBenefitContract {
 
 
@@ -12,6 +14,8 @@ interface PromotionAbleItemContract extends PromotionAbleItemBenefitContract {
     public function getExpressFee();
 
     public function getDiscountAmount();
+    
+    public function setDiscountAmount($amount, $action = PromotionProtocol::ACTION_OF_ADD);
 
     public function getItemProductId($item_key);
 

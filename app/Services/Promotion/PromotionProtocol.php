@@ -13,6 +13,10 @@ class PromotionProtocol {
     const MODEL_OF_COUPON = Coupon::class;
     const MODEL_OF_CAMPAIGN = Campaign::class;
 
+    const ACTION_OF_ADD = 1;
+    const ACTION_OF_SUB = 2;
+    const ACTION_OF_EQU = 3;
+    
     const TYPE_OF_COUPON = 'coupon';
     const TYPE_OF_MALL_CAMPAIGN = 'mall_campaign';
     const TYPE_OF_SPECIAL_CAMPAIGN = 'spec_campaign';

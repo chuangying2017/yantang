@@ -12,7 +12,7 @@ abstract class Benefit {
     {
         switch ($mode) {
             case PromotionProtocol::DISCOUNT_MODE_OF_DECREASE:
-                $result = bcsub($origin_value, $cal_value, 0);
+                $result = $origin_value > $cal_value ? $cal_value : $origin_value;
                 break;
             case PromotionProtocol::DISCOUNT_MODE_OF_PERCENTAGE:
                 $result = bcmul($origin_value, (100 - $cal_value), 0);

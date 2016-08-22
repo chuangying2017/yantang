@@ -17,8 +17,8 @@ class GetRelate {
             PromotionProtocol::ITEM_TYPE_OF_PRODUCT => ProductUsage::class,
             PromotionProtocol::ITEM_TYPE_OF_SKU => SkuUsage::class,
             PromotionProtocol::ITEM_TYPE_OF_CATEGORY => CategoryUsage::class,
-            PromotionProtocol::ITEM_TYPE_OF_GROUP => '',
-            PromotionProtocol::ITEM_TYPE_OF_BRAND => '',
+            PromotionProtocol::ITEM_TYPE_OF_GROUP => CategoryUsage::class,
+            PromotionProtocol::ITEM_TYPE_OF_BRAND => CategoryUsage::class,
         ];
 
         $handler = array_get($filters, $type, null);
@@ -26,6 +26,7 @@ class GetRelate {
             throw new \Exception('错误的优惠商品关联类型');
         }
 
+        
         $this->setRelateFilter(app()->make($handler));
 
         return $this;

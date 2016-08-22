@@ -42,16 +42,16 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
         $origin_coupons = $this->getCouponsById($tickets->pluck('promotion_id')->all());
 
         $coupons = [];
-        
+
         foreach ($tickets as $ticket_key => $ticket) {
             foreach ($origin_coupons as $coupon_key => $coupon) {
                 if ($ticket['promotion_id'] == $coupon['id']) {
-                    $coupons[$ticket_key] = $coupon;
-                    $coupons[$ticket_key]->ticket = $ticket;
+                    $coupons[$ticket['id']] = clone $coupon;
+                    $coupons[$ticket['id']]['ticket'] = $ticket;
+                    break;
                 }
             }
         }
-
         return $coupons;
     }
 }

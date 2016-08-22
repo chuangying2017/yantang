@@ -1,25 +1,35 @@
 <?php namespace App\Services\Promotion\Rule\Benefit\Setter;
+
+use App\Services\Promotion\PromotionProtocol;
+use App\Services\Promotion\Support\PromotionAbleItemContract;
+
 class PromotionAmount implements PromotionAbleItemBenefitContract {
 
-    protected $discount_amount;
+    /**
+     * @var PromotionAbleItemContract
+     */
+    protected $items;
 
     public function init($benefit_name)
     {
-        $this->discount_amount = $benefit_name;
+        $this->items = $benefit_name;
+        return $this;
     }
 
     public function add($benefit, $key = null)
     {
-        $this->discount_amount += $benefit;
+        $this->items->setDiscountAmount($benefit, PromotionProtocol::ACTION_OF_ADD);
+        return $this;
     }
 
     public function remove($benefit, $key = null)
     {
-        $this->discount_amount -= $benefit;
+        $this->items->setDiscountAmount($benefit, PromotionProtocol::ACTION_OF_SUB);
+        return $this;
     }
 
     public function get($key = null)
     {
-        return $this->discount_amount;
+        return $this->items->getDiscountAmount();
     }
 }

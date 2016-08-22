@@ -3,6 +3,7 @@
 use App\Repositories\Product\Brand\EloquentBrandRepository;
 use App\Repositories\Product\Cat\EloquentCategoryRepository;
 use App\Repositories\Product\Group\EloquentGroupRepository;
+use App\Services\Promotion\PromotionProtocol;
 use App\Services\Promotion\Rule\Benefit\Setter\PromotionAbleItemTrait;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 
@@ -46,7 +47,7 @@ class TempOrder implements PromotionAbleItemContract {
             'address' => $this->address,
             'total_amount' => $this->total_amount,
             'products_amount' => $this->products_amount,
-            'discount_amount' => $this->discount_amount,
+            'discount_amount' => $this->getDiscountAmount(),
             'pay_amount' => $this->getPayAmount(),
             'express_fee' => $this->express_fee,
             'discount_express_fee' => $this->promotion_express_fee,
@@ -164,7 +165,7 @@ class TempOrder implements PromotionAbleItemContract {
     public function getSkuAmount($sku_key, $discount = false)
     {
         if ($discount) {
-            return $this->skus[$sku_key]['discount_amount'];
+            return $this->skus[$sku_key]['total_amount'] - $this->skus[$sku_key]['discount_amount'];
         }
         return $this->skus[$sku_key]['total_amount'];
     }
@@ -222,14 +223,6 @@ class TempOrder implements PromotionAbleItemContract {
     public function setProductsAmount($products_amount)
     {
         $this->products_amount = $products_amount;
-    }
-
-    /**
-     * @param mixed $discount_amount
-     */
-    public function setDiscountAmount($discount_amount)
-    {
-        $this->discount_amount = $discount_amount;
     }
 
 
@@ -403,5 +396,16 @@ class TempOrder implements PromotionAbleItemContract {
     public function getSkuPriceTag()
     {
         return $this->preorder ? 'subscribe_price' : 'price';
+    }
+
+    public function setDiscountAmount($amount, $action = PromotionProtocol::ACTION_OF_ADD)
+    {
+        if ($action === PromotionProtocol::ACTION_OF_ADD) {
+            $this->discount_amount += $amount;
+        } else if ($action === PromotionProtocol::ACTION_OF_SUB) {
+            $this->discount_amount -= $amount;
+        } else {
+            $this->discount_amount = $amount;
+        }
     }
 }

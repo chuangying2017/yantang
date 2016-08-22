@@ -21,9 +21,7 @@ class CartOrderApiTest extends TestCase {
 
         $order = $this->getResponseData('data');
 
-        $this->dump();
-
-        $this->seeInDatabase('tickets', ['id' => 16, 'status' => \App\Services\Promotion\PromotionProtocol::STATUS_OF_TICKET_USED]);
+        $this->seeInDatabase('tickets', ['id' => 51, 'status' => \App\Services\Promotion\PromotionProtocol::STATUS_OF_TICKET_USED]);
         $this->seeInDatabase('order_promotions', ['order_id' => $order['id']]);
 
         $this->assertResponseStatus(201);
@@ -37,7 +35,7 @@ class CartOrderApiTest extends TestCase {
         $temp_order_id = $this->it_can_create_a_temp_order();
 
         $this->json('put', 'mall/orders/cart/' . $temp_order_id, [
-            'ticket' => 16
+            'ticket' => 51
         ], $this->getAuthHeader());
 
         $this->dump();
@@ -50,7 +48,7 @@ class CartOrderApiTest extends TestCase {
     {
         $temp_order_id = $this->it_can_use_a_coupon();
         $this->json('put', 'mall/orders/cart/' . $temp_order_id, [
-            'ticket' => 16
+            'ticket' => 51
         ], $this->getAuthHeader());
 
         $this->dump();
@@ -125,7 +123,7 @@ class CartOrderApiTest extends TestCase {
     public function it_can_add_a_sku_to_cart()
     {
         $user_id = 1;
-        $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 15], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+        $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 20], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
         $result = $this->getResponseData();
         $this->assertResponseStatus(201);

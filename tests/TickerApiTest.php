@@ -19,21 +19,21 @@ class TickerApiTest extends TestCase {
     /** @test */
     public function user_can_get_a_coupon_ticket()
     {
+        $promotion_id = 26;
         $this->json('post', 'promotions/tickets',
             [
-                'coupon_id' => 13
+                'coupon_id' => $promotion_id
             ],
             $this->getAuthHeader());
 
         $this->assertResponseStatus(201);
 
-        $this->seeInDatabase('user_promotion', ['user_id' => 1, 'promotion_id' => 13]);
-        $this->seeInDatabase('promotion_counter', ['promotion_id' => 13, 'dispatch' => 1]);
-        $this->seeInDatabase('user_promotion', ['promotion_id' => 13, 'user_id' => 1]);
+        $this->seeInDatabase('tickets', ['user_id' => 1, 'promotion_id' => $promotion_id]);
+        $this->seeInDatabase('promotion_counter', ['promotion_id' => $promotion_id, 'dispatch' => 1]);
 
         $this->json('post', 'promotions/tickets',
             [
-                'coupon_id' => 13
+                'coupon_id' => $promotion_id
             ],
             $this->getAuthHeader());
 

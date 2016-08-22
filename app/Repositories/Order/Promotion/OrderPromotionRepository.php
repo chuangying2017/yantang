@@ -22,18 +22,20 @@ class OrderPromotionRepository implements OrderPromotionRepositoryContract {
         }
 
         foreach ($promotions_data as $promotion_data) {
-            
+
             if (isset($promotion_data['ticket'])) {
-                $this->ticketRepo->updateAsUsed($promotion_data['ticket']['id'], $promotion_data['id']);
+                $ticket = $this->ticketRepo->updateAsUsed($promotion_data['ticket']['id'], $promotion_data['id']);
             } else {
-                $this->ticketRepo->createLogTicket(access()->id(), $promotion_data['promotion_id'], $promotion_data['promotion']['type'], $promotion_data['id']);
+                $ticket = $this->ticketRepo->createLogTicket(access()->id(), $promotion_data['promotion_id'], $promotion_data['promotion']['type'], $promotion_data['id']);
             }
 
             OrderPromotion::create([
                 'order_id' => $order_id,
                 'promotion_type' => $promotion_data['promotion_type'],
                 'promotion_id' => $promotion_data['promotion_id'],
-                'promotion_rule_id' => $promotion_data['id']
+                'promotion_rule_id' => $promotion_data['id'],
+                'ticket_id' => $ticket['id'],
+                'content' => json_encode($promotion_data['benefit'])
             ]);
 
         }

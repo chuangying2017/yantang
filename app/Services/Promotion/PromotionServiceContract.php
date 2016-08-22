@@ -16,7 +16,7 @@ interface PromotionServiceContract {
 
     public function setUsing($rule_key);
 
-    public function setNotUsing($rule_key);
+    public function setNotUsing($rule_key = null);
 
     public function getRules();
 

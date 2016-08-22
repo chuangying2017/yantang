@@ -186,6 +186,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
                 $rules = array_merge($rules, $promotion_rules);
             }
         }
+        
         return $rules;
     }
 
@@ -228,6 +229,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
                 'type' => $promotion['type']
             ],
             'ticket' => array_get($promotion, 'ticket'),
+            
             'promotion_id' => $promotion['id'],
             'promotion_type' => get_class($promotion),
             'group' => $promotion['id'],
@@ -254,7 +256,6 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
             'multi' => $rule['multi_able'],
         ];
     }
-
 
 
 }

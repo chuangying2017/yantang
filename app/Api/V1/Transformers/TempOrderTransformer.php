@@ -12,6 +12,7 @@ class TempOrderTransformer extends TransformerAbstract {
         unset($data['rules']);
         $data['total_amount'] = display_price($data['total_amount']);
         $data['products_amount'] = display_price($data['products_amount']);
+        $data['discount_amount'] = display_price($data['discount_amount']);
         $data['pay_amount'] = display_price($data['pay_amount']);
         $data['express_fee'] = display_price($data['express_fee']);
         $data['skus'] = $this->transSkus($data);
@@ -30,6 +31,7 @@ class TempOrderTransformer extends TransformerAbstract {
             $skus[$key]['display_price'] = display_price($sku['display_price']);
             $skus[$key]['subscribe_price'] = display_price($sku['subscribe_price']);
             $skus[$key]['total_amount'] = display_price($sku['total_amount']);
+            $skus[$key]['discount_amount'] = display_price($sku['discount_amount']);
             $skus[$key]['pay_amount'] = display_price($sku['pay_amount']);
             $skus[$key]['income_price'] = display_price($sku['income_price']);
         }

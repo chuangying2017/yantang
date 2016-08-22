@@ -5,7 +5,7 @@ use App\Models\Promotion\RuleItem;
 use App\Models\Promotion\RuleQualify;
 
 class EloquentRuleRepository implements RuleRepositoryContract {
-
+    
 
     public function createRule($name, $desc, $qualifies, $items, $range, $discount, $weight, $multi)
     {
@@ -63,7 +63,7 @@ class EloquentRuleRepository implements RuleRepositoryContract {
         RuleItem::query()->where('rule_id', $rule_id)->delete();
 
         $item_data = [];
-        foreach ($items['values'] as $value) {
+        foreach (to_array($items['values']) as $value) {
             $item_data[] = ['value' => $value];
         }
 

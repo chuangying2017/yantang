@@ -66,7 +66,7 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
         $this->ruleService->setUser($this->user)->setItems($this->items);
 
         $this->ruleService->filterRelate();
-        
+
         $this->updateItemsRules();
 
         return $this;
@@ -100,13 +100,13 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
         }
 
         $success = $this->ruleService->using($rule_key);
-
+        
         $this->updateItemsRules();
 
         return $success;
     }
 
-    public function setNotUsing($rule_key)
+    public function setNotUsing($rule_key = null)
     {
         if (!$this->items->getRules()) {
             $this->checkUsable();
@@ -114,7 +114,11 @@ abstract class PromotionServiceAbstract implements PromotionServiceContract {
             $this->revert();
         }
 
-        $this->ruleService->notUsing($rule_key);
+        if (is_null($rule_key)) {
+            $this->ruleService->notUsingAll();
+        } else {
+            $this->ruleService->notUsing($rule_key);
+        }
 
         $this->updateItemsRules();
 

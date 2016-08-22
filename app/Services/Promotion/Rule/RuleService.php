@@ -142,6 +142,14 @@ class RuleService implements RuleServiceContract {
     }
 
 
+    public function notUsingAll()
+    {
+        foreach ($this->rules->getRule() as $rule_key => $rule) {
+            $this->notUsing($rule_key);
+        }
+    }
+
+
     /**
      * @param null $rule_key
      * @return $this

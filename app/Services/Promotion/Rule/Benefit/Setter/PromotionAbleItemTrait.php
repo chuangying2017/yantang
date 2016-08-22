@@ -26,7 +26,7 @@ trait PromotionAbleItemTrait {
         $data = [
             PromotionProtocol::DISCOUNT_TYPE_OF_AMOUNT => [
                 'handler' => PromotionAmount::class,
-                'var' => &$this->products_amount
+                'var' => &$this
             ],
             PromotionProtocol::DISCOUNT_TYPE_OF_PRODUCT => [
                 'handler' => PromotionProducts::class,

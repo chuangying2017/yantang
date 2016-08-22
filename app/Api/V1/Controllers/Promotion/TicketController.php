@@ -31,7 +31,7 @@ class TicketController extends Controller {
     public function index(Request $request)
     {
         $status = $request->input('status') ?: PromotionProtocol::STATUS_OF_TICKET_OK;
-        $tickets = $this->ticketRepo->getTicketsByUser(access()->id(), $status);
+        $tickets = $this->ticketRepo->getCouponTicketsOfUserPaginated(access()->id(), $status);
 
         return $this->response->paginator($tickets, new TicketTransformer());
     }
