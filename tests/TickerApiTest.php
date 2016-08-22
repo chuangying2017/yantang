@@ -13,6 +13,19 @@ class TickerApiTest extends TestCase {
     {
         $this->json('get', 'promotions/tickets', [], $this->getAuthHeader());
 
+        $this->echoJson();
+
+        $this->assertResponseOk();
+    }
+
+    /** @test */
+    public function it_can_get_a_ticket_detail()
+    {
+        $ticket_no = 'jxldE0X6qdGWN6zmeIdWWQ34';
+        $this->json('get', 'promotions/tickets/' . $ticket_no, [], $this->getAuthHeader());
+
+        $this->echoJson();
+
         $this->assertResponseOk();
     }
 
@@ -28,8 +41,9 @@ class TickerApiTest extends TestCase {
 
         $this->assertResponseStatus(201);
 
+        $this->echoJson();
+
         $this->seeInDatabase('tickets', ['user_id' => 1, 'promotion_id' => $promotion_id]);
-        $this->seeInDatabase('promotion_counter', ['promotion_id' => $promotion_id, 'dispatch' => 1]);
 
         $this->json('post', 'promotions/tickets',
             [

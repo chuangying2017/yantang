@@ -141,7 +141,7 @@ class OrderGenerator implements OrderGeneratorContract {
         if ($temp_order->getError()) {
             throw new \Exception(json_encode($temp_order->getError()));
         }
-        
+
 
         $this->setOrderRepo(app()->make(MallClientOrderRepository::class));
         $order = $this->orderRepo->createOrder($temp_order->toArray());
@@ -221,6 +221,7 @@ class OrderGenerator implements OrderGeneratorContract {
             GetOrderAddress::class,
             SetPreorderInfo::class,
             CalSkuAmount::class,
+            CheckCoupon::class,
             SaveTempOrder::class,
         ];
 

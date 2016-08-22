@@ -84,8 +84,10 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     {
         if ($ticket_id instanceof Ticket) {
             $ticket = $ticket_id;
+        } else if (strlen($ticket_id) == PromotionProtocol::LENGTH_OF_TICKET_NO) {
+            $ticket = Ticket::query()->where('ticket_no', $ticket_id)->firstOrFail();
         } else {
-            $ticket = Ticket::query()->find($ticket_id);
+            $ticket = Ticket::query()->findOrFail($ticket_id);
         }
 
         if ($with_promotion) {

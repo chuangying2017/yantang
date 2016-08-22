@@ -16,6 +16,7 @@ class PromotionProducts implements PromotionAbleItemBenefitContract {
                 if ($origin_sku['id'] == $sku['id']) {
                     $this->skus[$sku_key]['quantity'] += $sku['quantity'];
                     $this->skus[$sku_key]['discount_amount'] += $sku['discount_amount'];
+                    $this->skus[$sku_key]['total_amount'] += $sku['discount_amount'];
                     break;
                 }
                 $this->skus[] = $sku;

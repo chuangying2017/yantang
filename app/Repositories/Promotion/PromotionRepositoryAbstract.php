@@ -112,8 +112,10 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     {
         $query = $this->getQuery();
         if ($not_over_time) {
-            $query->effect();
+            $query->where('active', 1)->effect();
         }
+
+        $query->orderBy('created_at', 'desc');
 
         return $query->paginate(OrderProtocol::ORDER_PER_PAGE);
     }
@@ -186,7 +188,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
                 $rules = array_merge($rules, $promotion_rules);
             }
         }
-        
+
         return $rules;
     }
 
@@ -229,7 +231,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
                 'type' => $promotion['type']
             ],
             'ticket' => array_get($promotion, 'ticket'),
-            
+
             'promotion_id' => $promotion['id'],
             'promotion_type' => get_class($promotion),
             'group' => $promotion['id'],

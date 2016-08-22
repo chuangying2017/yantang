@@ -165,7 +165,7 @@ class SpecifyRuleService implements SpecifyRuleContract {
                 $this->items,
                 $this->items->getItems($this->rules->getRelatedItems())
             );
-        
+
         $this->rules->setBenefit($benefit_value);
 
         $this->items->addPromotion($this->rules);

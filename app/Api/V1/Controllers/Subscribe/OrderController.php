@@ -88,6 +88,18 @@ class OrderController extends Controller {
         return $this->response->item($order, new ClientOrderTransformer());
     }
 
+    public function update($temp_order_id, Request $request, OrderGenerator $orderGenerator)
+    {
+        $ticket_id = $request->input('ticket') ?: null;
+
+        if ($ticket_id) {
+            $temp_order = $orderGenerator->useCoupon($temp_order_id, $ticket_id);
+            return $this->response->item($temp_order, new TempOrderTransformer());
+        }
+
+        return $this->show($temp_order_id);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

@@ -14,7 +14,7 @@ class PreorderOrderApiTest extends TestCase {
 //        $address = $this->it_can_create_a_subscribe_address();
         $data = [
             'skus' => [
-                ['product_sku_id' => 2, 'quantity' => 60, 'per_day' => 2],
+                ['product_sku_id' => 2, 'quantity' => 15, 'per_day' => 2],
                 ['product_sku_id' => 3, 'quantity' => 90, 'per_day' => 3],
             ],
             'address_id' => 127,
@@ -29,9 +29,21 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->assertResponseStatus(200);
 
-        $this->echoJson();
+//        $this->echoJson();
 
         return $this->getResponseData('data.temp_order_id');
+    }
+
+    /** @test */
+    public function it_can_use_a_coupon()
+    {
+        $temp_order_id = $this->it_can_create_a_preorder_temp_order();
+
+        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
+            'ticket' => 16
+        ], $this->getAuthHeader());
+
+        $this->echoJson();
     }
 
     /** @test */
@@ -42,7 +54,9 @@ class PreorderOrderApiTest extends TestCase {
             'channel' => 'wx_pub_qr'
         ];
 
+
         $this->json('put', 'subscribe/orders/' . $temp_order_id . '/confirm', $data, $this->getAuthHeader());
+
 
 //        $this->echoJson();
 

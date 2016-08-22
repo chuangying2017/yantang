@@ -30,13 +30,13 @@ class PreorderSkusRepository implements PreorderSkusRepositoryContract {
             ]);
             $product_sku['preorder_id'] = $order_id;
 
-            $temp_campaign_date = env('TEMP_CAMPAIGN_DATE', '2016-07-27');
-            if (Carbon::today() >= $temp_campaign_date && Carbon::today() <= Carbon::createFromFormat('Y-m-d', $temp_campaign_date)->addDays(15)) {
-                if ($product_sku['total'] == 15) {
-                    $product_sku['total'] += 3;
-                    $product_sku['remain'] += 3;
-                }
-            }
+//            $temp_campaign_date = env('TEMP_CAMPAIGN_DATE', '2016-07-27');
+//            if (Carbon::today() >= $temp_campaign_date && Carbon::today() <= Carbon::createFromFormat('Y-m-d', $temp_campaign_date)->addDays(15)) {
+//                if ($product_sku['total'] == 15) {
+//                    $product_sku['total'] += 3;
+//                    $product_sku['remain'] += 3;
+//                }
+//            }
 
             $product_sku['per_day'] = $product_sku['quantity'];
             $order_skus[] = PreorderSku::create($product_sku);

@@ -28,9 +28,9 @@ class CouponController extends Controller {
 
     public function index(Request $request)
     {
-        $coupons = $this->couponRepo->getAll();
+        $coupons = $this->couponRepo->getAllPaginated(false);
 
-        return $coupons;
+        return $this->response->paginator($coupons, new CouponTransformer());
     }
 
     public function store(Request $request)

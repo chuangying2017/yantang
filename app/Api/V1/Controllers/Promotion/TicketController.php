@@ -36,6 +36,13 @@ class TicketController extends Controller {
         return $this->response->paginator($tickets, new TicketTransformer());
     }
 
+    public function show($ticket_no)
+    {
+        $ticket = $this->ticketRepo->getTicket($ticket_no);
+
+        return $this->response->item($ticket, new TicketTransformer());
+    }
+
     public function store(Request $request, CouponService $couponService, EloquentUserRepository $userRepository)
     {
         $coupon_id = $request->input('coupon_id');

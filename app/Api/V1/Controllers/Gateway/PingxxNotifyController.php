@@ -62,6 +62,8 @@ class PingxxNotifyController extends Controller {
     /**
      * Show the form for creating a new resource.
      *
+     * @param Request $request
+     * @param PingxxRefundService $refundService
      * @return \Illuminate\Http\Response
      */
     public function refund(Request $request, PingxxRefundService $refundService)
@@ -70,7 +72,6 @@ class PingxxNotifyController extends Controller {
 
         if ($refundService->succeed($refund)) {
             return $this->response->accepted();
-
         }
 
         $this->response->error('refund fail', 500);
