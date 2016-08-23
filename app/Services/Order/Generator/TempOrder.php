@@ -1,8 +1,15 @@
 <?php namespace App\Services\Order\Generator;
 
+use App\Repositories\Product\Brand\EloquentBrandRepository;
+use App\Repositories\Product\Cat\EloquentCategoryRepository;
+use App\Repositories\Product\Group\EloquentGroupRepository;
+use App\Services\Promotion\PromotionProtocol;
+use App\Services\Promotion\Rule\Benefit\Setter\PromotionAbleItemTrait;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 
 class TempOrder implements PromotionAbleItemContract {
+
+    use PromotionAbleItemTrait;
 
     protected $carts;
     protected $temp_order_id;
@@ -13,6 +20,7 @@ class TempOrder implements PromotionAbleItemContract {
     protected $skus;
     protected $promotion;
     protected $error;
+
     protected $products_amount = 0;
     protected $discount_amount = 0;
 
@@ -32,6 +40,7 @@ class TempOrder implements PromotionAbleItemContract {
 
     public function toArray()
     {
+        $this->updateSkusPayAmount();
         return [
             'temp_order_id' => $this->temp_order_id,
             'user' => $this->user,
@@ -39,13 +48,17 @@ class TempOrder implements PromotionAbleItemContract {
             'address' => $this->address,
             'total_amount' => $this->total_amount,
             'products_amount' => $this->products_amount,
-            'discount_amount' => $this->discount_amount,
+            'discount_amount' => $this->getDiscountAmount(),
             'pay_amount' => $this->getPayAmount(),
             'express_fee' => $this->express_fee,
-            'promotion' => $this->promotion,
+            'discount_express_fee' => $this->promotion_express_fee,
             'error' => $this->error,
             'special_campaign' => $this->special_campaign,
             'preorder' => $this->preorder,
+            'promotions' => $this->promotions,
+            'rules' => $this->getRules(),
+            'coupons' => $this->showCoupons(),
+            'campaigns' => $this->getCampaigns(),
         ];
     }
 
@@ -116,9 +129,9 @@ class TempOrder implements PromotionAbleItemContract {
     /**
      * @return mixed
      */
-    public function getSkus()
+    public function getSkus($sku_key = null)
     {
-        return $this->skus;
+        return is_null($sku_key) ? $this->skus : $this->skus[$sku_key];
     }
 
     /**
@@ -146,22 +159,40 @@ class TempOrder implements PromotionAbleItemContract {
     }
 
     /**
+     * @param $sku_key
+     * @param bool $discount
      * @return mixed
      */
-    public function getSkuAmount($sku_key)
+    public function getSkuAmount($sku_key, $discount = false)
     {
+        if ($discount) {
+            return $this->skus[$sku_key]['total_amount'] - $this->skus[$sku_key]['discount_amount'];
+        }
         return $this->skus[$sku_key]['total_amount'];
+    }
+
+    public function updateSkusPayAmount()
+    {
+        $this->products_amount = 0;
+        foreach ($this->skus as $sku_key => $sku) {
+            $this->skus[$sku_key]['pay_amount'] = $this->getSkuAmount($sku_key, true);
+            $this->products_amount += $this->skus[$sku_key]['pay_amount'];
+        }
+
+        return $this;
     }
 
     /**
      * @param mixed $sku_amount
      */
-    public function setSkuAmount($sku_key, $sku_amount)
+    public function setSkuAmount($sku_key, $sku_amount, $discount_amount = 0)
     {
         $this->skus[$sku_key]['total_amount'] = $sku_amount;
-        $this->skus[$sku_key]['discount_amount'] = 0;
+        $this->skus[$sku_key]['origin_total_amount'] = $sku_amount;
+        $this->skus[$sku_key]['discount_amount'] = $discount_amount;
         $this->skus[$sku_key]['pay_amount'] = $sku_amount;
     }
+
 
     /**
      * @param string $temp_order_id
@@ -207,213 +238,6 @@ class TempOrder implements PromotionAbleItemContract {
         $this->products_amount = $products_amount;
     }
 
-    /**
-     * @param mixed $discount_amount
-     */
-    public function setDiscountAmount($discount_amount)
-    {
-        $this->discount_amount = $discount_amount;
-    }
-
-    public function init($items_data)
-    {
-        // TODO: Implement init() method.
-    }
-
-    public function getItems()
-    {
-        // TODO: Implement getItems() method.
-    }
-
-    public function getAmount($item_keys = null)
-    {
-        // TODO: Implement getAmount() method.
-    }
-
-    public function getItemsQuantity($item_keys = null)
-    {
-        // TODO: Implement getItemsQuantity() method.
-    }
-
-    public function getDiscountAmount()
-    {
-        // TODO: Implement getDiscountAmount() method.
-    }
-
-    public function getItemProductId($item_key)
-    {
-        // TODO: Implement getItemProductId() method.
-    }
-
-    public function getItemProductSkuID($item_key)
-    {
-        // TODO: Implement getItemProductSkuID() method.
-    }
-
-    public function getItemCategory($item_key)
-    {
-        // TODO: Implement getItemCategory() method.
-    }
-
-    public function getItemGroup($item_key)
-    {
-        // TODO: Implement getItemGroup() method.
-    }
-
-    public function setGifts($item_key = null)
-    {
-        // TODO: Implement setGifts() method.
-    }
-
-    public function unsetGifts($item_key = null)
-    {
-        // TODO: Implement unsetGifts() method.
-    }
-
-    public function getGifts($item_key = null)
-    {
-        // TODO: Implement getGifts() method.
-    }
-
-    public function setCredits()
-    {
-        // TODO: Implement setCredits() method.
-    }
-
-    public function unsetCredits()
-    {
-        // TODO: Implement unsetCredits() method.
-    }
-
-    public function getCredits()
-    {
-        // TODO: Implement getCredits() method.
-    }
-
-    public function setSkusDiscountAmount($item_keys, $discount_amount)
-    {
-        // TODO: Implement setSkusDiscountAmount() method.
-    }
-
-    public function unsetSkusDiscountAmount($item_keys, $discount_amount)
-    {
-        // TODO: Implement unsetSkusDiscountAmount() method.
-    }
-
-    public function getSkusDiscountAmount($item_keys)
-    {
-        // TODO: Implement getSkusDiscountAmount() method.
-    }
-
-    public function setSpecialPrice($special_price, $max_quantity = null, $qualify_text = null)
-    {
-        // TODO: Implement setSpecialPrice() method.
-    }
-
-    public function unsetSpecialPrice($special_price, $max_quantity = null, $qualify_text = null)
-    {
-        // TODO: Implement unsetSpecialPrice() method.
-    }
-
-    public function getSpecialPrice()
-    {
-        // TODO: Implement getSpecialPrice() method.
-    }
-
-    public function unsetDiscountAmount($discount_amount)
-    {
-        // TODO: Implement unsetDiscountAmount() method.
-    }
-
-    public function setDiscountExpressFee($discount_express_fee)
-    {
-        // TODO: Implement setDiscountExpressFee() method.
-    }
-
-    public function unsetDiscountExpressFee($discount_express_fee)
-    {
-        // TODO: Implement unsetDiscountExpressFee() method.
-    }
-
-    public function setRelateCoupons($rules)
-    {
-        // TODO: Implement setRelateCoupons() method.
-    }
-
-    public function unsetRelateCoupon($rule_key = null)
-    {
-        // TODO: Implement unsetRelateCoupon() method.
-    }
-
-    public function getRelateCoupons()
-    {
-        // TODO: Implement getRelateCoupons() method.
-    }
-
-    public function setRelateCampaigns($rules)
-    {
-        // TODO: Implement setRelateCampaigns() method.
-    }
-
-    public function unsetRelateCampaign($rule_key = null)
-    {
-        // TODO: Implement unsetRelateCampaign() method.
-    }
-
-    public function getRelateCampaigns()
-    {
-        // TODO: Implement getRelateCampaigns() method.
-    }
-
-    public function setUsableCampaigns($rule_key)
-    {
-        // TODO: Implement setUsableCampaigns() method.
-    }
-
-    public function unsetUsableCampaign($rule_key = null)
-    {
-        // TODO: Implement unsetUsableCampaign() method.
-    }
-
-    public function getUsableCampaigns()
-    {
-        // TODO: Implement getUsableCampaigns() method.
-    }
-
-    public function setUsableCoupons($rule_key)
-    {
-        // TODO: Implement setUsableCoupons() method.
-    }
-
-    public function unsetUsableCoupon($rule_key = null)
-    {
-        // TODO: Implement unsetUsableCoupon() method.
-    }
-
-    public function getUsableCoupons()
-    {
-        // TODO: Implement getUsableCoupons() method.
-    }
-
-    public function setCampaignBenefit($rule_key, $discount, $benefit)
-    {
-        // TODO: Implement setCampaignBenefit() method.
-    }
-
-    public function unsetCampaignBenefit($rule_key = null)
-    {
-        // TODO: Implement unsetCampaignBenefit() method.
-    }
-
-    public function setCouponBenefit($rule_key, $discount, $benefit)
-    {
-        // TODO: Implement setCouponBenefit() method.
-    }
-
-    public function unsetCouponBenefit($rule_key = null)
-    {
-        // TODO: Implement unsetCouponBenefit() method.
-    }
 
     /**
      * @param mixed $request_promotion
@@ -431,11 +255,6 @@ class TempOrder implements PromotionAbleItemContract {
     public function getRequestPromotion()
     {
         return $this->request_promotion;
-    }
-
-    public function get()
-    {
-        // TODO: Implement get() method.
     }
 
     /**
@@ -502,5 +321,167 @@ class TempOrder implements PromotionAbleItemContract {
     public function getPreorder($key = null)
     {
         return is_null($key) ? $this->preorder : $this->preorder[$key];
+    }
+
+
+    public function getItems($sku_keys = null)
+    {
+        if (is_null($sku_keys)) {
+            return $this->getSkus();
+        }
+
+        $items = [];
+        foreach ($sku_keys as $sku_key) {
+            $items[$sku_key] = $this->getSkus($sku_key);
+        }
+
+        return $items;
+    }
+
+    public function getAmount($item_keys = null)
+    {
+        if (is_null($item_keys)) {
+            return $this->getPayAmount();
+        } else if (is_array($item_keys)) {
+            $amount = 0;
+            foreach ($item_keys as $item_key) {
+                $amount += $this->getSkuAmount($item_key, true);
+            }
+            return $amount;
+        } else {
+            return $this->getSkuAmount($item_keys, true);
+        }
+    }
+
+    public function getItemsQuantity($item_keys = null)
+    {
+        $quantity = 0;
+
+        if (is_null($item_keys)) {
+            foreach ($this->getSkus() as $sku) {
+                $quantity += $sku['quantity'];
+            }
+        } else if (is_array($item_keys)) {
+            foreach ($item_keys as $item_key) {
+                $sku = $this->getSkus($item_key);
+                $quantity += $sku['quantity'];
+            }
+        } else {
+            $sku = $this->getSkus($item_keys);
+            $quantity += $sku['quantity'];
+        }
+
+        return $quantity;
+    }
+
+    public function getDiscountAmount()
+    {
+        return $this->discount_amount;
+    }
+
+    public function getItemProductId($item_key)
+    {
+        $sku = $this->getSkus($item_key);
+        return $sku['product_id'];
+    }
+
+    public function getItemProductSkuID($item_key)
+    {
+        $sku = $this->getSkus($item_key);
+        return $sku['id'];
+    }
+
+    public function getItemCategory($item_key)
+    {
+        app()->make(EloquentCategoryRepository::class)->getByIdProducts($this->getItemProductId($item_key));
+    }
+
+    public function getItemBrand($item_key)
+    {
+        app()->make(EloquentBrandRepository::class)->getByIdProducts($this->getItemProductId($item_key));
+    }
+
+    public function getItemGroup($item_key)
+    {
+        app()->make(EloquentGroupRepository::class)->getByIdProducts($this->getItemProductId($item_key));
+    }
+
+    public function getSkuPriceTag()
+    {
+        return $this->preorder ? 'subscribe_price' : 'price';
+    }
+
+    public function setDiscountAmount($amount, $action = PromotionProtocol::ACTION_OF_ADD)
+    {
+        if ($action === PromotionProtocol::ACTION_OF_ADD) {
+            $this->discount_amount += $amount;
+        } else if ($action === PromotionProtocol::ACTION_OF_SUB) {
+            $this->discount_amount -= $amount;
+        } else {
+            $this->discount_amount = $amount;
+        }
+    }
+
+
+    public function setProductDiscount($sku_id, $amount, $action = PromotionProtocol::ACTION_OF_ADD)
+    {
+        $need_set_sku_key = $this->findSkuKeyBySkuId($sku_id);
+
+        if (is_null($need_set_sku_key)) {
+            return false;
+        }
+
+        if ($action === PromotionProtocol::ACTION_OF_ADD) {
+            $this->skus[$need_set_sku_key]['discount_amount'] += $amount;
+        } else if ($action === PromotionProtocol::ACTION_OF_SUB) {
+            $this->skus[$need_set_sku_key]['discount_amount'] -= $amount;
+        }
+
+        $this->setDiscountAmount($amount, $action);
+
+        return true;
+    }
+
+    protected function findSkuKeyBySkuId($sku_id)
+    {
+        $need_set_sku_key = null;
+        foreach ($this->skus as $sku_key => $sku) {
+            if ($sku['id'] == $sku_id) {
+                $need_set_sku_key = $sku_key;
+            }
+        }
+
+        return $need_set_sku_key;
+    }
+
+
+    public function setPromotionProducts($add_sku, $action = PromotionProtocol::ACTION_OF_ADD)
+    {
+        $sku_key = $this->findSkuKeyBySkuId($add_sku['id']);
+
+        if ($action == PromotionProtocol::ACTION_OF_ADD) {
+
+            if (is_null($sku_key)) {
+                $this->skus[] = $add_sku;
+            } else {
+                $this->skus[$sku_key]['quantity'] += $add_sku['quantity'];
+                $this->skus[$sku_key]['discount_amount'] += $add_sku['discount_amount'];
+                $this->skus[$sku_key]['total_amount'] += $add_sku['discount_amount'];
+            }
+            $this->total_amount += $add_sku['total_amount'];
+
+        } else {
+
+            if ($add_sku['quantity'] < $this->skus[$sku_key]['quantity']) {
+                $this->skus[$sku_key]['quantity'] -= $add_sku['quantity'];
+                $this->skus[$sku_key]['discount_amount'] -= $add_sku['discount_amount'];
+            } else {
+                unset($this->skus[$sku_key]);
+            }
+            $this->total_amount -= $add_sku['total_amount'];
+            
+        }
+
+        $this->setDiscountAmount($add_sku['discount_amount'], $action);
     }
 }

@@ -64,7 +64,7 @@ trait UserRelationship {
 
     public function groups()
     {
-        return $this->belongToMany(UserGroup::class, 'user_id', 'group_id');
+        return $this->belongsToMany(UserGroup::class, 'user_id', 'group_id');
     }
 
 }

@@ -2,6 +2,7 @@
 
 use App\Services\Client\Account\AccountProtocol;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class EloquentAccountRepository implements AccountRepositoryContract {
 
@@ -54,7 +55,7 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
     {
         $model = $this->getAccountModel();
 
-        return $model::firstOrCreate(
+        return $model::query()->firstOrCreate(
             ['user_id' => $this->getUserId()]
         );
     }
@@ -120,14 +121,14 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
     public function getRecord($billing_id, $billing_type)
     {
         $record_model = $this->getAccountRecordModel();
-        return $record_model::where('resource_type', $billing_type)->where('resource_id', $billing_id)->first();
+        return $record_model::query()->where('resource_type', $billing_type)->where('resource_id', $billing_id)->first();
     }
 
     protected function createRecord($amount, $resource_type, $resource_id, $type)
     {
         $record_model = $this->getAccountRecordModel();
 
-        if ($record_model::where(['resource_type' => $resource_type, 'resource_id' => $resource_id])->first()) {
+        if ($record_model::query()->where(['resource_type' => $resource_type, 'resource_id' => $resource_id])->first()) {
             throw new \Exception('重复处理账单');
         }
 
@@ -173,7 +174,7 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
     }
 
     /**
-     * @return null
+     * @return Model
      */
     public function getAccountModel()
     {
@@ -181,7 +182,7 @@ abstract class EloquentAccountRepository implements AccountRepositoryContract {
     }
 
     /**
-     * @return null
+     * @return Model
      */
     public function getAccountRecordModel()
     {

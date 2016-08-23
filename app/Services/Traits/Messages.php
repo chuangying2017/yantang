@@ -2,7 +2,7 @@
 
 trait Messages {
 
-    protected $error_message;
+    protected $error_message = null;
 
     /**
      * @param mixed $error_message
@@ -18,9 +18,9 @@ trait Messages {
     /**
      * @return mixed
      */
-    public function getErrorMessage()
+    public function getErrorMessage($default = '')
     {
-        return $this->error_message;
+        return is_null($this->error_message) ? $default : $this->error_message;
     }
 
 

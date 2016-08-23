@@ -314,26 +314,36 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
         if (count($relation)) {
             return User::with($relation)->find($user_id);
         }
-        return User::find($user_id);
+        return User::query()->find($user_id);
     }
 
+    //优惠信息
     public function setUser(User $user)
     {
-        // TODO: Implement setUser() method.
+        $this->user = $user;
+        return $this;
     }
 
     public function getUserId()
     {
-        // TODO: Implement getUserId() method.
+        return $this->user->id;
     }
 
     public function getUserLevel()
     {
-        // TODO: Implement getUserLevel() method.
+        
     }
 
     public function getUserRoles()
     {
-        // TODO: Implement getUserRoles() method.
+        $this->user->load('roles');
+        return $this->user->roles;
+    }
+
+    protected $user;
+
+    public function getGroup()
+    {
+        return \DB::table('group_user')->where('user_id', $this->user->id)->pluck('group_id');
     }
 }

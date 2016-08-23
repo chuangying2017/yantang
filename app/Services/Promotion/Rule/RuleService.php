@@ -8,6 +8,10 @@ use App\Services\Promotion\Support\PromotionAbleUserContract;
 
 class RuleService implements RuleServiceContract {
 
+    /**
+     * @var SpecifyRuleContract
+     */
+    protected $specifyRuleService;
 
     /**
      * @var RuleDataContract
@@ -18,131 +22,65 @@ class RuleService implements RuleServiceContract {
      */
     private $user;
 
-    protected $rule_key;
+    /**
+     * @var PromotionAbleItemContract
+     */
+    protected $items;
+
+    /*
+	* @var PromotionSupportRepositoryContract
+	*/
+    protected $promotionSupport;
 
 
     /**
      * RuleService constructor.
      * @param RuleDataContract $rules
+     * @param SpecifyRuleContract $specifyRuleService
      */
-    public function __construct(RuleDataContract $rules, PromotionAbleUserContract $user)
+    public function __construct(RuleDataContract $rules, SpecifyRuleContract $specifyRuleService)
     {
         $this->rules = $rules;
-        $this->user = $user;
-    }
-
-    /*
-     * @var PromotionSupportRepositoryContract
-     */
-    protected $promotionSupport;
-
-
-    public function setRule($rule_key)
-    {
-        $this->rule_key = $rule_key;
-    }
-
-    public function calculatePromotionBenefits($items, $discount)
-    {
-        $benefit_handler = PromotionProtocol::getRuleBenefitCalculator($discount['type']);
-
-        return $benefit_handler->calAndSet($items, $discount['mode'], $discount['value']);
-    }
-
-
-    public function itemsInRange($usable_items, $range)
-    {
-        $usable_items_range_value = $this->getItemsRangeValue($usable_items, $range['type']);
-
-        if ($range['max']) {
-            if ($usable_items_range_value > $range['max']) {
-                $this->rules->setMessage('超出限制,无法使用');
-                return false;
-            }
-        }
-
-        if ($usable_items_range_value < $range['min']) {
-            $this->rules->setMessage('数量金额不足');
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function getItemsRangeValue($items, $range_type)
-    {
-        $item_value = 0;
-        foreach ($items as $item) {
-            if ($range_type == PromotionProtocol::RANGE_TYPE_OF_AMOUNT) {
-                $item_value = bcadd($item_value, bcmul($item['quantity'], $item['price']));
-            } else if ($range_type == PromotionProtocol::RANGE_TYPE_OF_QUANTITY) {
-                $item_value = bcadd($item_value, $item['quantity']);
-            }
-        }
-
-        return $item_value;
+        $this->specifyRuleService = $specifyRuleService;
     }
 
     /**
-     * @param mixed $rules
-     * @return RuleService
+     * @return $this
      */
-    public function setRules($rules)
+    public function filterQualify()
     {
-        $this->rules->init($rules);
+        $this->specifyRuleService->setUser($this->user);
+
+        foreach ($this->rules->getAllKeys() as $rule_key) {
+            $this->specifyRuleService
+                ->setRules($this->rules, $rule_key)
+                ->checkUserQualify();
+        }
+
         return $this;
     }
 
-    protected function userHasQuota($quantity, $promotion_id, $rule_id, PromotionSupportRepositoryContract $promotionSupport)
+    public function filterRelate()
     {
-        if ($quantity > 0) {
-            return $quantity > $promotionSupport->getUserPromotionTimes($promotion_id, $this->user->getUserId(), $rule_id);
-        }
-        return true;
-    }
+        foreach ($this->rules->getAllKeys() as $rule_key) {
+            $this->setSpecifyRuleServiceInfo($rule_key);
 
-    public function hasQualify($rule_key, PromotionSupportRepositoryContract $promotionSupport)
-    {
-        $this->rules->setRuleKey($rule_key);
-        $rule_qualify = $this->rules->getQualification();
-
-        $qualify_checker = PromotionProtocol::getRuleQualifyChecker($rule_qualify['type']);
-
-        if (!$qualify_checker->check($this->user, $rule_qualify['values'])) {
-            $this->rules->setMessage('不符合条件,参与失败');
-            return false;
-        }
-
-        if (!$this->userHasQuota($rule_qualify['quantity'], $this->rules->getPromotionID(), $this->rules->getRuleID(), $promotionSupport)) {
-            $this->rules->setMessage('参加次数超过上限');
-            return false;
-        }
-
-        return true;
-    }
-
-    public function filterRelate(PromotionAbleItemContract $items, PromotionSupportRepositoryContract $promotionSupport)
-    {
-        foreach ($this->rules->getAll() as $rule_key => $rule) {
-            if (!$this->hasQualify($rule_key, $promotionSupport)) {
-                $this->rules->unsetRule($rule_key);
+            if ($this->specifyRuleService->isCoupon()) {
+                $this->specifyRuleService->checkRelateItems(false);
             } else {
-                $rule_items = $this->rules->setRuleKey($rule_key)->getItems();
-                $usage_filter = PromotionProtocol::getRuleUsageFilter($rule_items['type']);
-                $this->rules->setRelated($usage_filter->filter($items, $rule_items['values']));
+                //检查并设置用户是否有参加活动资格,没有资格则删除规则
+                if ($this->specifyRuleService->checkUserQualify()) {
+                    //检查商品是否符合规则要求,符合则标记为关联
+                    $this->specifyRuleService->checkRelateItems();
+                }
             }
-        }
 
-        if ($this->isCoupon()) {
-            $items->setRelateCoupons($this->rules->getAll());
-        } else {
-            $items->setRelateCampaigns($this->rules->getAll());
         }
 
         return $this;
     }
 
-    public function filterUsable(PromotionAbleItemContract $items)
+    public function filterUsable()
     {
         /**
          * 规则排序:
@@ -154,97 +92,113 @@ class RuleService implements RuleServiceContract {
 
         /**
          * 计算生效的规则
-         * 1. 计算优惠资源
          * 4. 记录未生效信息
          */
-        foreach ($this->rules->getAll() as $rule_key => $rule) {
-            $this->rules->setRuleKey($rule_key);
+        foreach ($this->rules->getAllKeys() as $rule_key) {
 
-            if ($this->itemsInRange($this->rules->getRelatedItems(), $this->rules->getRange())) {
-                if ($this->isCoupon()) {
-                    $items->setUsableCoupons($rule_key);
-                } else {
-                    $items->setUsableCampaigns($rule_key);
-                }
-            }
+            $this->setSpecifyRuleServiceInfo($rule_key);
+
+            $this->specifyRuleService->checkItemsInRange();
         }
 
         return $this;
     }
 
-    public function using(PromotionAbleItemContract $items, $rule_key)
+    public function using($rule_key)
     {
-        $this->rules->setRuleKey($rule_key);
+        $this->setSpecifyRuleServiceInfo($rule_key);
+
+        if (!$this->specifyRuleService->isUsable()) {
+            $this->rules->setMessage('优惠券不可用于该订单');
+            return false;
+        }
+
+        if ($this->specifyRuleService->isUsing()) {
+            return false;
+        }
 
         /**
          * 1. 计算优惠资源
          * 2. 排他生效后结束
          * 3. 组内权重高生效后跳过同组
          */
-        if (!$this->rules->isUsable() || $this->rules->isUsing()) {
+        $this->specifyRuleService->setAsUsing();
+
+        return true;
+    }
+
+    public function notUsing($rule_key)
+    {
+        $this->setSpecifyRuleServiceInfo($rule_key);
+
+        if (!$this->specifyRuleService->isUsing()) {
             return $this;
         }
 
-        $discount = $this->rules->getDiscount();
-        $calculator = PromotionProtocol::getRuleBenefitCalculator($discount['type']);
-        $benefit_value = $calculator->calAndSet($discount['mode'], $discount['value'], $items, $this->rules->getRelatedItems());
-
-        $this->rules->setUsing();
-
-        $this->rules->setBenefit($benefit_value);
-        if ($this->isCoupon()) {
-            $items->setCouponBenefit($rule_key, $this->rules->getDiscount(), $benefit_value);
-        } else {
-            $items->setCampaignBenefit($rule_key, $this->rules->getDiscount(), $benefit_value);
-        }
-
-        if ($this->rules->getMultiType()) {
-            $this->rules->unsetAllNotUsingUsable();
-        }
-
-        if ($this->rules->getGroup()) {
-            $this->rules->unsetSameGroupUsable();
-        }
+        $this->specifyRuleService->setAsNotUsing();
 
         return $this;
     }
 
-    public function notUsing(PromotionAbleItemContract $items, $rule_key)
+
+    public function notUsingAll()
     {
-        $this->rules->setRuleKey($rule_key);
-
-        if (!$this->rules->isUsing()) {
-            return $this;
+        foreach ($this->rules->getRule() as $rule_key => $rule) {
+            $this->notUsing($rule_key);
         }
-
-        $discount = $this->rules->getDiscount();
-        $calculator = PromotionProtocol::getRuleBenefitCalculator($discount['type']);
-        $calculator->rollback($discount['mode'], $discount['value'], $items, $this->rules->getRelatedItems());
-
-        $this->rules->unsetUsing();
-        $this->rules->unsetBenefit();
-
-        if ($this->isCoupon()) {
-            $items->unsetCouponBenefit($rule_key);
-        } else {
-            $items->unsetCampaignBenefit($rule_key);
-        }
-
-        $this->rules->setConflictUsable();
-
-        return $this;
     }
 
-    public function getRules()
+
+    /**
+     * @param null $rule_key
+     * @return $this
+     */
+    protected function setSpecifyRuleServiceInfo($rule_key = null)
     {
-        return $this->rules;
+        $this->specifyRuleService->setUser($this->user)->setItems($this->items);
+        if (!is_null($rule_key)) {
+            $this->specifyRuleService->setRules($this->rules, $rule_key);
+        }
+        return $this;
     }
 
     /**
+     * @return array
+     */
+    public function getRules()
+    {
+        return $this->rules->getAll();
+    }
+
+    /**
+     * @param PromotionAbleItemContract $items
+     * @return mixed
+     */
+    public function setItems(PromotionAbleItemContract $items)
+    {
+        $this->items = $items;
+        return $this;
+    }
+
+    /**
+     * @param PromotionAbleUserContract $user
      * @return $this
      */
-    private function isCoupon()
+    public function setUser(PromotionAbleUserContract $user)
     {
-        return $this->rules->getType() == PromotionProtocol::RULE_TYPE_OF_COUPON;
+        $this->user = $user;
+        return $this;
     }
+
+    /**
+     * @param mixed $rules
+     * @return RuleService
+     */
+    public function setRules(array $rules)
+    {
+        $this->rules->init($rules);
+        return $this;
+    }
+
+
 }

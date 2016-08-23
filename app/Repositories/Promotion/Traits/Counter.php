@@ -18,7 +18,7 @@ trait Counter {
 
     public function updateCounter($promotion_id, $total, $days = 0)
     {
-        PromotionCounter::where('promotion_id', $promotion_id)->update([
+        return PromotionCounter::query()->where('promotion_id', $promotion_id)->update([
             'total' => $total,
             'days' => $days
         ]);
@@ -26,24 +26,18 @@ trait Counter {
 
     public function getCounter($promotion_id, $name = null)
     {
-        $counter = $promotion_id instanceof PromotionCounter ? $promotion_id : PromotionCounter::findOrFail($promotion_id);
+        $counter = $promotion_id instanceof PromotionCounter ? $promotion_id : PromotionCounter::query()->findOrFail($promotion_id);
         return !is_null($name) ? $counter[$name] : $counter;
     }
 
     public function increaseCounter($promotion_id, $name = PromotionProtocol::NAME_OF_COUNTER_DISPATCH, $quantity = 1)
     {
-        $counter = $this->getCounter($promotion_id);
-        $counter->$name += $quantity;
-        $counter->save();
-        return $counter;
+        return PromotionCounter::query()->where('promotion_id', $promotion_id)->increment($name, $quantity);
     }
 
     public function decreaseCounter($promotion_id, $name = PromotionProtocol::NAME_OF_COUNTER_USED, $quantity = 1)
     {
-        $counter = $this->getCounter($promotion_id);
-        $counter->$name -= $quantity;
-        $counter->save();
-        return $counter;
+        return PromotionCounter::query()->where('promotion_id', $promotion_id)->decrement($name, $quantity);
     }
 
 }

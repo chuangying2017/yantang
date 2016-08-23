@@ -1,5 +1,7 @@
 <?php namespace App\Repositories\Category;
 
+use App\Models\Product\CategoryAbstract;
+
 abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract, TreeNodeContract {
 
     protected $type;
@@ -11,6 +13,11 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
     public function __construct()
     {
         $this->init();
+    }
+
+    public function getIdsByProducts($product_id)
+    {
+        return \DB::table('product_category')->where('product_id', $product_id)->pluck('cat_id');
     }
 
     public function create($name, $desc, $cover_image, $priority = 0, $pid = null)
@@ -49,6 +56,10 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
         return $model::orderBy('priority', 'asc')->get();
     }
 
+	/**
+     * @param $cat_id
+     * @return CategoryAbstract
+     */
     public function get($cat_id)
     {
         $model = $this->getModel();

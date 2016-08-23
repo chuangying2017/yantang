@@ -29,13 +29,13 @@ class EloquentCartRepository implements CartRepositoryContract {
         if ($with_sku) {
             return Cart::with('sku')->get();
         }
-        return Cart::get();
+        return Cart::query()->get();
     }
 
     public function getMany($cart_ids, $with_sku = true)
     {
         if (!$with_sku) {
-            return Cart::find($cart_ids);
+            return Cart::query()->find($cart_ids);
         }
         return Cart::with('sku')->find($cart_ids);
     }

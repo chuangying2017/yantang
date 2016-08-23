@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class PromotionCounter extends Model {
 
+    public $incrementing = false;
+
     protected $primaryKey = 'promotion_id';
 
     protected $table = 'promotion_counter';
 
-    protected $guarded = ['promotion_id'];
+    protected $guarded = [];
 
     protected $appends = ['remain'];
 

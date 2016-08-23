@@ -2,10 +2,11 @@
 
 use App\Models\Promotion\Traits\PromotionScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ticket extends Model {
 
-    use PromotionScope;
+    use PromotionScope, SoftDeletes;
 
     protected $table = 'tickets';
 
@@ -17,7 +18,7 @@ class Ticket extends Model {
 
     public function coupon()
     {
-        return $this->belongsTo(Coupon::class);
+        return $this->belongsTo(Coupon::class, 'promotion_id', 'id');
     }
 
 }

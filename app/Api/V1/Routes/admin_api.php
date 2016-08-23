@@ -57,6 +57,20 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             });
         });
 
+
+        //优惠信息
+        $api->group(['namespace' => 'Promotion', 'prefix' => 'promotions'], function ($api) {
+            $api->resource('coupons', 'CouponController');
+            $api->resource('campaigns', 'CampaignController');
+        });
+
+    });
+
+    /**
+     * 商城管理员
+     */
+    $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_MALL]], function ($api) {
+
         $api->group(['namespace' => 'Product'], function ($api) {
             $api->group(['prefix' => 'products'], function ($api) {
                 $api->resource('attributes', 'AttributeController');
@@ -72,27 +86,17 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->resource('products', 'ProductController');
         });
 
-
-        /**
-         * Mall Orders
-         */
-        $api->group(['namespace' => 'Order'], function ($api) {
-            $api->group(['prefix' => 'mall'], function ($api) {
-                $api->resource('orders', 'MallOrderController', ['only' => ['index', 'show', 'update']]);
-            });
-
-            $api->group(['prefix' => 'special'], function ($api) {
-                $api->resource('orders', 'SpecialOrderController', ['only' => ['index', 'show', 'update']]);
-            });
-
-            $api->group(['prefix' => 'subscribe'], function ($api) {
-                $api->get('preorders/reject', 'PreorderController@reject');
-                $api->get('preorders/overtime', 'PreorderController@overtime');
-                $api->resource('orders', 'PreorderController', ['only' => ['index', 'show', 'update']]);
-            });
-
+        $api->group(['prefix' => 'mall'], function ($api) {
+            $api->resource('orders', 'Order\MallOrderController', ['only' => ['index', 'show', 'update']]);
         });
 
+    });
+
+
+    /**
+     * 对账管理员
+     */
+    $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_FINANCE]], function ($api) {
         $api->group(['namespace' => 'Statement', 'prefix' => 'statements'], function ($api) {
             $api->resource('store', 'StoreStatementController', ['only' => ['index', 'show']]);
             $api->resource('stations', 'StationStatementController', ['only' => ['index', 'show']]);
@@ -100,23 +104,48 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
     });
 
 
-    $api->group(['namespace' => 'Campaign'], function ($api) {
-        $api->resource('store', 'StoreController');
-        $api->resource('campaigns', 'CampaignController');
-    });
+    /**
+     * 优惠购管理员
+     */
+    //团购
+    $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STORE_ADMIN]], function ($api) {
 
-    $api->group(['namespace' => 'Subscribe'], function ($api) {
-        $api->resource('preorders/comments', 'CommentController');
+        $api->group(['prefix' => 'special'], function ($api) {
+            $api->resource('orders', 'Order\SpecialOrderController', ['only' => ['index', 'show', 'update']]);
+        });
+
+        $api->group(['namespace' => 'Campaign'], function ($api) {
+            $api->resource('store', 'StoreController');
+            $api->resource('campaigns', 'CampaignController');
+        });
+
+        $api->group(['namespace' => 'Subscribe'], function ($api) {
+            $api->resource('preorders/comments', 'CommentController');
+        });
     });
 
 
     /**
-     * 总部管理服务部
+     * 服务部&订奶
      */
-    $api->group(['namespace' => 'Station'], function ($api) {
-        $api->put('stations/{station_id}/unbind', 'StationController@unbind');
-        $api->resource('stations', 'StationController');
-        $api->resource('districts', 'DistrictController');
+    $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STATION_ADMIN]], function ($api) {
+
+        //订奶订单
+        $api->group(['namespace' => 'Order'], function ($api) {
+            $api->group(['prefix' => 'subscribe'], function ($api) {
+                $api->get('preorders/reject', 'PreorderController@reject');
+                $api->get('preorders/overtime', 'PreorderController@overtime');
+                $api->resource('orders', 'PreorderController', ['only' => ['index', 'show', 'update']]);
+            });
+        });
+
+        //管理服务部
+        $api->group(['namespace' => 'Station'], function ($api) {
+            $api->put('stations/{station_id}/unbind', 'StationController@unbind');
+            $api->resource('stations', 'StationController');
+            $api->resource('districts', 'DistrictController');
+        });
+
     });
 
 

@@ -2,19 +2,15 @@
 
 namespace App\Models\Promotion;
 
-use App\Models\Promotion\Traits\PromotionRelations;
-use App\Models\Promotion\Traits\PromotionScope;
 use App\Services\Promotion\PromotionProtocol;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Campaign extends Model {
+class Campaign extends PromotionAbstract {
 
-    use SoftDeletes, PromotionRelations, PromotionScope;
+    const TYPE_OF_PROMOTION = PromotionProtocol::TYPE_OF_SPECIAL_CAMPAIGN;
 
     protected $attributes = [
-        'type' => PromotionProtocol::TYPE_OF_SPECIAL_CAMPAIGN
+        'type' => self::TYPE_OF_PROMOTION
     ];
 
     protected static function boot()
@@ -22,13 +18,8 @@ class Campaign extends Model {
         parent::boot();
 
         static::addGlobalScope('type', function (Builder $builder) {
-            $builder->where('type', PromotionProtocol::TYPE_OF_SPECIAL_CAMPAIGN);
+            $builder->where('type', self::TYPE_OF_PROMOTION);
         });
     }
-
-    protected $table = 'promotions';
-
-    protected $guarded = ['id'];
-
 
 }

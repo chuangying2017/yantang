@@ -2,15 +2,22 @@
 
 
 use App\Services\Promotion\Support\PromotionAbleItemContract;
+use App\Services\Promotion\Support\PromotionAbleUserContract;
 
 interface PromotionServiceContract {
 
-    public function related(PromotionAbleItemContract $items, $rules = null);
+    public function setItems(PromotionAbleItemContract $items);
 
-    public function usable(PromotionAbleItemContract $items);
+    public function setUser(PromotionAbleUserContract $user);
 
-    public function using(PromotionAbleItemContract $items, $rule_key);
+    public function checkRelated($rules = null);
 
-    public function notUsing(PromotionAbleItemContract $items, $rule_key);
+    public function checkUsable();
+
+    public function setUsing($rule_key);
+
+    public function setNotUsing($rule_key = null);
+
+    public function getRules();
 
 }

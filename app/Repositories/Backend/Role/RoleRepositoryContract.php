@@ -1,4 +1,5 @@
 <?php namespace App\Repositories\Backend\Role;
+use App\Models\Access\Role\Role;
 
 /**
  * Interface RoleRepositoryContract

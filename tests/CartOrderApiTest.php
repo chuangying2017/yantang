@@ -11,24 +11,70 @@ class CartOrderApiTest extends TestCase {
     /** @test */
     public function ite_can_create_a_cart_order()
     {
-        $cart_ids = $this->it_can_add_a_sku_to_cart();
         $user_id = 1;
-        $this->it_can_add_a_sku_to_cart();
+
+//        $temp_order_id = $this->it_can_create_a_temp_order();
+
+        $temp_order_id = $this->it_can_use_a_coupon();
+
+        $this->json('post', 'mall/orders', ['temp_order_id' => $temp_order_id], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+
+        $order = $this->getResponseData('data');
+
+        $this->seeInDatabase('tickets', ['id' => 51, 'status' => \App\Services\Promotion\PromotionProtocol::STATUS_OF_TICKET_USED]);
+        $this->seeInDatabase('order_promotions', ['order_id' => $order['id']]);
+
+        $this->assertResponseStatus(201);
+
+        return $order;
+    }
+
+    /** @test */
+    public function it_can_use_a_coupon()
+    {
+        $temp_order_id = $this->it_can_create_a_temp_order();
+
+        $this->json('put', 'mall/orders/cart/' . $temp_order_id, [
+            'ticket' => 51
+        ], $this->getAuthHeader());
+
+        $this->dump();
+
+        return $temp_order_id;
+    }
+
+    /** @test */
+    public function it_can_prevent_multi_use_coupon()
+    {
+        $temp_order_id = $this->it_can_use_a_coupon();
+        $this->json('put', 'mall/orders/cart/' . $temp_order_id, [
+            'ticket' => 51
+        ], $this->getAuthHeader());
+
+        $this->dump();
+    }
+
+    /** @test */
+    public function it_can_create_a_temp_order()
+    {
+        $user_id = 1;
+
+        $cart_ids = $this->it_can_add_a_sku_to_cart();
 
         $address = \App\Models\Client\Address::create(['user_id' => $user_id, 'name' => 'troy']);
 
         $this->json('post', 'mall/orders/cart',
             [
-                'cart_ids' => to_array($cart_ids),
-                'address' => $address['id']
+                'cart_ids' => to_array($cart_ids)
             ],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+
+
         $result = $this->getResponseData();
 
         $this->assertResponseOk();
 
         $temp_order_id = $result['data']['temp_order_id'];
-
 
         //add address
         $this->json('put', 'mall/orders/cart/' . $temp_order_id,
@@ -36,17 +82,11 @@ class CartOrderApiTest extends TestCase {
                 'address' => $address['id']
             ],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
-        $result = $this->getResponseData();
 
+        $result = $this->getResponseData();
         $this->assertResponseOk();
 
-        $this->json('post', 'mall/orders', ['temp_order_id' => $temp_order_id], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
-
-        $order = $this->getResponseData('data');
-
-        $this->assertResponseStatus(201);
-
-        return $order;
+        return $temp_order_id;
     }
 
     /** @test */
@@ -82,8 +122,8 @@ class CartOrderApiTest extends TestCase {
     /** @test */
     public function it_can_add_a_sku_to_cart()
     {
-        $user_id = 2;
-        $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 2], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
+        $user_id = 1;
+        $this->json('POST', 'mall/cart', ['product_sku_id' => 2, 'quantity' => 20], ['Authorization' => 'Bearer ' . $this->getToken($user_id)]);
 
         $result = $this->getResponseData();
         $this->assertResponseStatus(201);

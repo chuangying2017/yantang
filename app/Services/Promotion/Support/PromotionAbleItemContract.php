@@ -1,12 +1,11 @@
 <?php namespace App\Services\Promotion\Support;
 
-interface PromotionAbleItemContract extends PromotionAbleItemSettingContract {
+use App\Services\Promotion\PromotionProtocol;
 
-    public function init($items_data);
+interface PromotionAbleItemContract extends PromotionAbleItemBenefitContract {
 
-    public function getItems();
 
-    public function get();
+    public function getItems($item_keys = null);
 
     public function getAmount($item_keys = null);
 
@@ -16,6 +15,12 @@ interface PromotionAbleItemContract extends PromotionAbleItemSettingContract {
 
     public function getDiscountAmount();
 
+    public function setDiscountAmount($amount, $action = PromotionProtocol::ACTION_OF_ADD);
+
+    public function setProductDiscount($sku_id, $amount, $action = PromotionProtocol::ACTION_OF_ADD);
+
+    public function setPromotionProducts($sku, $action = PromotionProtocol::ACTION_OF_ADD);
+
     public function getItemProductId($item_key);
 
     public function getItemProductSkuID($item_key);
@@ -23,5 +28,13 @@ interface PromotionAbleItemContract extends PromotionAbleItemSettingContract {
     public function getItemCategory($item_key);
 
     public function getItemGroup($item_key);
+
+    public function getItemBrand($item_key);
+
+    public function setRules($rules);
+
+    public function getRules();
+
+    public function getSkuPriceTag();
 
 }

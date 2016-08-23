@@ -2,10 +2,9 @@
 
 use Cache;
 
-class CachePromotionSupportRepository implements PromotionSupportRepositoryContract {
+class CachePromotionSupportRepository {
 
     const CACHE_KEY_OF_CAMPAIGNS = 'YT_CURRENT_CAMPAIGNS';
-
 
     public function getCampaigns()
     {

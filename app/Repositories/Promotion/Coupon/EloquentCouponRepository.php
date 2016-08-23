@@ -4,6 +4,7 @@ use App\Models\Promotion\Coupon;
 use App\Models\Promotion\Ticket;
 use App\Repositories\Promotion\PromotionRepositoryAbstract;
 use App\Repositories\Promotion\Traits\Counter;
+use App\Services\Promotion\PromotionProtocol;
 
 class EloquentCouponRepository extends PromotionRepositoryAbstract implements CouponRepositoryContract {
 
@@ -16,7 +17,7 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
 
     protected function attachRelation($coupon_id, $data)
     {
-        $this->createCounter($coupon_id, $data['total'], $data['effect_days']);
+        $counter = $this->createCounter($coupon_id, $data['total'], $data['effect_days']);
     }
 
     protected function updateRelation($coupon_id, $data)
@@ -26,19 +27,31 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
 
     public function get($promotion_id, $with_detail = true)
     {
-        return $promotion_id instanceof Coupon ? $promotion_id->load('counter') : Coupon::with('counter')->find($promotion_id);
+        return $promotion_id instanceof Coupon ? $promotion_id->load('counter') : Coupon::with('counter')->findOrFail($promotion_id);
     }
 
     public function getCouponsById($coupon_ids)
     {
-        return Coupon::with('rules')->whereIn('id', to_array($coupon_ids))->get();
+        return Coupon::with('rules', 'counter')->find($coupon_ids);
     }
 
     public function getUsefulPromotions()
     {
-        $ticket_coupon_ids = Ticket::where('user_id', access()->id())->effect()->pluck('promotion_id')->all();
-        $coupons = Coupon::with('rules', 'counter')->find($ticket_coupon_ids);
+        $tickets = $this->ticketRepo->getCouponTicketsOfUser(access()->id(), PromotionProtocol::STATUS_OF_TICKET_OK, false);
 
+        $origin_coupons = $this->getCouponsById($tickets->pluck('promotion_id')->all());
+
+        $coupons = [];
+
+        foreach ($tickets as $ticket_key => $ticket) {
+            foreach ($origin_coupons as $coupon_key => $coupon) {
+                if ($ticket['promotion_id'] == $coupon['id']) {
+                    $coupons[$ticket['id']] = clone $coupon;
+                    $coupons[$ticket['id']]['ticket'] = $ticket;
+                    break;
+                }
+            }
+        }
         return $coupons;
     }
 }

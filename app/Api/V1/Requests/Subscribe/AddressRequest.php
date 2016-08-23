@@ -32,7 +32,7 @@ class AddressRequest extends Request {
             'detail' => 'required',
             'longitude' => 'required',
             'latitude' => 'required',
-            'street' => 'required'
+//            'street' => 'required'
         ];
     }
 }

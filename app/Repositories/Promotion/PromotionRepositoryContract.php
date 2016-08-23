@@ -13,4 +13,8 @@ interface PromotionRepositoryContract {
 
     public function delete($promotion_id);
 
+    public function getUsefulRules();
+
+    public function getPromotionWithDecodeRules($promotion_id);
+
 }

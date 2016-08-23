@@ -28,7 +28,7 @@ class EloquentCampaignRepository extends PromotionRepositoryAbstract implements 
 
     public function get($promotion_id, $with_detail = true)
     {
-        $campaign = $promotion_id instanceof Campaign ? $promotion_id : Campaign::findOrFail($promotion_id);
+        $campaign = $promotion_id instanceof Campaign ? $promotion_id : Campaign::query()->findOrFail($promotion_id);
         if ($with_detail) {
             $campaign->load(['detail', 'skus.sku']);
         }

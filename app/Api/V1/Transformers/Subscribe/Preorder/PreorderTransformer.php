@@ -84,7 +84,11 @@ class PreorderTransformer extends TransformerAbstract {
 
     public function includeAssign(Preorder $preorder)
     {
-        return $this->item($preorder->assign, new PreorderAssignTransformer(), true);
+        if ($preorder->assign) {
+            return $this->item($preorder->assign, new PreorderAssignTransformer(), true);
+        }
+
+        return null;
     }
 
 }
