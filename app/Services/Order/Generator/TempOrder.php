@@ -40,6 +40,7 @@ class TempOrder implements PromotionAbleItemContract {
 
     public function toArray()
     {
+        $this->updateSkusPayAmount();
         return [
             'temp_order_id' => $this->temp_order_id,
             'user' => $this->user,
@@ -170,12 +171,24 @@ class TempOrder implements PromotionAbleItemContract {
         return $this->skus[$sku_key]['total_amount'];
     }
 
+    public function updateSkusPayAmount()
+    {
+        $this->products_amount = 0;
+        foreach ($this->skus as $sku_key => $sku) {
+            $this->skus[$sku_key]['pay_amount'] = $this->getSkuAmount($sku_key, true);
+            $this->products_amount += $this->skus[$sku_key]['pay_amount'];
+        }
+
+        return $this;
+    }
+
     /**
      * @param mixed $sku_amount
      */
     public function setSkuAmount($sku_key, $sku_amount, $discount_amount = 0)
     {
         $this->skus[$sku_key]['total_amount'] = $sku_amount;
+        $this->skus[$sku_key]['origin_total_amount'] = $sku_amount;
         $this->skus[$sku_key]['discount_amount'] = $discount_amount;
         $this->skus[$sku_key]['pay_amount'] = $sku_amount;
     }
@@ -407,5 +420,68 @@ class TempOrder implements PromotionAbleItemContract {
         } else {
             $this->discount_amount = $amount;
         }
+    }
+
+
+    public function setProductDiscount($sku_id, $amount, $action = PromotionProtocol::ACTION_OF_ADD)
+    {
+        $need_set_sku_key = $this->findSkuKeyBySkuId($sku_id);
+
+        if (is_null($need_set_sku_key)) {
+            return false;
+        }
+
+        if ($action === PromotionProtocol::ACTION_OF_ADD) {
+            $this->skus[$need_set_sku_key]['discount_amount'] += $amount;
+        } else if ($action === PromotionProtocol::ACTION_OF_SUB) {
+            $this->skus[$need_set_sku_key]['discount_amount'] -= $amount;
+        }
+
+        $this->setDiscountAmount($amount, $action);
+
+        return true;
+    }
+
+    protected function findSkuKeyBySkuId($sku_id)
+    {
+        $need_set_sku_key = null;
+        foreach ($this->skus as $sku_key => $sku) {
+            if ($sku['id'] == $sku_id) {
+                $need_set_sku_key = $sku_key;
+            }
+        }
+
+        return $need_set_sku_key;
+    }
+
+
+    public function setPromotionProducts($add_sku, $action = PromotionProtocol::ACTION_OF_ADD)
+    {
+        $sku_key = $this->findSkuKeyBySkuId($add_sku['id']);
+
+        if ($action == PromotionProtocol::ACTION_OF_ADD) {
+
+            if (is_null($sku_key)) {
+                $this->skus[] = $add_sku;
+            } else {
+                $this->skus[$sku_key]['quantity'] += $add_sku['quantity'];
+                $this->skus[$sku_key]['discount_amount'] += $add_sku['discount_amount'];
+                $this->skus[$sku_key]['total_amount'] += $add_sku['discount_amount'];
+            }
+            $this->total_amount += $add_sku['total_amount'];
+
+        } else {
+
+            if ($add_sku['quantity'] < $this->skus[$sku_key]['quantity']) {
+                $this->skus[$sku_key]['quantity'] -= $add_sku['quantity'];
+                $this->skus[$sku_key]['discount_amount'] -= $add_sku['discount_amount'];
+            } else {
+                unset($this->skus[$sku_key]);
+            }
+            $this->total_amount -= $add_sku['total_amount'];
+            
+        }
+
+        $this->setDiscountAmount($add_sku['discount_amount'], $action);
     }
 }

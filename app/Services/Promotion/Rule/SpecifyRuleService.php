@@ -106,10 +106,50 @@ class SpecifyRuleService implements SpecifyRuleContract {
     public function checkItemsInRange()
     {
         $usable_item_keys = $this->rules->getRelatedItems();
+
+        $in_range = $this->calAndCheckItemsRange($this->items->getItems($usable_item_keys));
+
+        if ($in_range) {
+            $this->rules->setUsable();
+        }
+
+        return true;
+    }
+
+    protected function calAndCheckItemsRange($usable_items)
+    {
+        $usable_items_range_value = 0;
+
         $range = $this->rules->getRange();
 
-        $usable_items_range_value = $this->calItemsRange($this->items->getItems($usable_item_keys), $range['type']);
+        $type = $range['type'];
 
+        if ($type == PromotionProtocol::RANGE_TYPE_OF_QUANTITY) {
+            //删除不符合条件的关联
+            $new_related = [];
+            foreach ($usable_items as $item_key => $item) {
+                $usable_items_range_value = $item['quantity'];
+                if ($this->checkValueInRange($range, $usable_items_range_value)) {
+                    $new_related[] = $item_key;
+                    $this->rules->setRelated($new_related);
+                }
+            }
+            return count($new_related) ? true : false;
+        } else if ($type == PromotionProtocol::RANGE_TYPE_OF_AMOUNT) {
+            foreach ($usable_items as $item) {
+                $usable_items_range_value = bcadd($usable_items_range_value, bcmul($item['quantity'], $item['price']));
+            }
+        } else if ($type == PromotionProtocol::RANGE_TYPE_OF_TOTAL_QUANTITY) {
+            foreach ($usable_items as $item) {
+                $usable_items_range_value = bcadd($usable_items_range_value, $item['quantity']);
+            }
+        }
+
+        return $this->checkValueInRange($range, $usable_items_range_value);
+    }
+
+    protected function checkValueInRange($range, $usable_items_range_value)
+    {
         if ($range['max']) {
             if ($usable_items_range_value > $range['max']) {
                 $this->rules->setMessage('超出限制,无法使用');
@@ -122,26 +162,9 @@ class SpecifyRuleService implements SpecifyRuleContract {
             return false;
         }
 
-        $this->rules->setUsable();
-
         return true;
     }
 
-    protected function calItemsRange($usable_items, $type)
-    {
-        $usable_items_range_value = 0;
-        if ($type == PromotionProtocol::RANGE_TYPE_OF_AMOUNT) {
-            foreach ($usable_items as $item) {
-                $usable_items_range_value = bcadd($usable_items_range_value, bcmul($item['quantity'], $item['price']));
-            }
-        } else if ($type == PromotionProtocol::RANGE_TYPE_OF_QUANTITY) {
-            foreach ($usable_items as $item) {
-                $usable_items_range_value = bcadd($usable_items_range_value, $item['quantity']);
-            }
-        }
-
-        return $usable_items_range_value;
-    }
 
     public function isUsing()
     {

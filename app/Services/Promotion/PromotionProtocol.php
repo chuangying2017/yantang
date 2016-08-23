@@ -39,6 +39,7 @@ class PromotionProtocol {
 
     const RANGE_TYPE_OF_AMOUNT = 'amount';
     const RANGE_TYPE_OF_QUANTITY = 'quantity';
+    const RANGE_TYPE_OF_TOTAL_QUANTITY = 'total_quantity';
 
     const DISCOUNT_TYPE_OF_AMOUNT = 'amount';
     const DISCOUNT_TYPE_OF_EXPRESS = 'express';
@@ -46,7 +47,6 @@ class PromotionProtocol {
     const DISCOUNT_TYPE_OF_SPECIAL_PRICE = 'price';
     const DISCOUNT_TYPE_OF_COUPON = 'coupon';
     const DISCOUNT_TYPE_OF_PRODUCT = 'product';
-    const DISCOUNT_TYPE_OF_GIFT = 'gift';
 
 
     const DISCOUNT_MODE_OF_DECREASE = 'decrease';

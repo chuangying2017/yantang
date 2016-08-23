@@ -92,7 +92,6 @@ class RuleService implements RuleServiceContract {
 
         /**
          * 计算生效的规则
-         * 1. 计算优惠资源
          * 4. 记录未生效信息
          */
         foreach ($this->rules->getAllKeys() as $rule_key) {

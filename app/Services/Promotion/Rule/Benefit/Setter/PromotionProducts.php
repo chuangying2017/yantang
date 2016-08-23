@@ -1,49 +1,47 @@
 <?php namespace App\Services\Promotion\Rule\Benefit\Setter;
+
+use App\Services\Promotion\PromotionProtocol;
+use App\Services\Promotion\Support\PromotionAbleItemContract;
+
 class PromotionProducts implements PromotionAbleItemBenefitContract {
 
-    protected $skus;
+    /**
+     * @var PromotionAbleItemContract
+     */
+    protected $order;
 
-    public function init($benefit_name)
+    protected $related_skus;
+
+    /**
+     * @param $benefit_name
+     * @param null $related_skus
+     * @return $this
+     */
+    public function init($benefit_name, $related_skus = null)
     {
-        $this->skus = $benefit_name;
+        $this->related_skus = $related_skus;
+        $this->order = $benefit_name;
         return $this;
     }
 
-    public function add($skus, $key = null)
+    public function add($skus)
     {
         foreach ($skus as $sku) {
-            foreach ($this->skus as $sku_key => $origin_sku) {
-                if ($origin_sku['id'] == $sku['id']) {
-                    $this->skus[$sku_key]['quantity'] += $sku['quantity'];
-                    $this->skus[$sku_key]['discount_amount'] += $sku['discount_amount'];
-                    $this->skus[$sku_key]['total_amount'] += $sku['discount_amount'];
-                    break;
-                }
-                $this->skus[] = $sku;
-            }
+            $this->order->setPromotionProducts($sku, PromotionProtocol::ACTION_OF_ADD);
         }
     }
 
-    public function remove($skus, $key = null)
+    public function remove($skus)
     {
         foreach ($skus as $sku) {
-            foreach ($this->skus as $sku_key => $origin_sku) {
-                if ($origin_sku['id'] == $sku['id']) {
-                    if ($sku['quantity'] < $origin_sku['quantity']) {
-                        $this->skus[$sku_key]['quantity'] -= $sku['quantity'];
-                        $this->skus[$sku_key]['discount_amount'] -= $sku['discount_amount'];
-                    } else {
-                        unset($this->skus[$sku_key]);
-                    }
-                    break;
-                }
-            }
+            $this->order->setPromotionProducts($sku, PromotionProtocol::ACTION_OF_SUB);
         }
     }
 
-    public function get($key = null)
+    public function get()
     {
         // TODO: Implement get() method.
     }
+
 
 }

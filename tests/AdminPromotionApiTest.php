@@ -45,6 +45,8 @@ class AdminPromotionApiTest extends TestCase {
             'start_time' => '2016-08-09 10:00:00',
             'end_time' => '2016-08-29 10:00:00',
             'active' => 1,
+            'effect_days' => '10', //领券后有效时间
+            'total' => 10000,
             'rules' => [
                 [
                     'name' => '15送3 优惠券',
@@ -66,15 +68,13 @@ class AdminPromotionApiTest extends TestCase {
                     'discount' => [
                         'type' => \App\Services\Promotion\PromotionProtocol::DISCOUNT_TYPE_OF_PRODUCT,
                         'mode' => \App\Services\Promotion\PromotionProtocol::DISCOUNT_MODE_OF_EQUAL,
-                        'value' => [3 => 3]
+                        'value' => 3
                     ],
                     'weight' => 100,
                     'multi' => 1,
                     'memo' => '备注'
                 ]
             ],
-            'effect_days' => '10', //领券后有效时间
-            'total' => 10000
         ];
 
         return $data;

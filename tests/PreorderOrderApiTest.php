@@ -43,7 +43,11 @@ class PreorderOrderApiTest extends TestCase {
             'ticket' => 16
         ], $this->getAuthHeader());
 
-        $this->echoJson();
+//        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
+//            'ticket' => 51
+//        ], $this->getAuthHeader());
+
+        $this->dump();
     }
 
     /** @test */

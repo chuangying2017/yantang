@@ -21,7 +21,7 @@ trait PromotionAbleItemTrait {
 
     protected $campaigns;
 
-    protected function getBenefitHandlerByType($type)
+    protected function getBenefitHandlerByType($type, $related_items)
     {
         $data = [
             PromotionProtocol::DISCOUNT_TYPE_OF_AMOUNT => [
@@ -30,7 +30,7 @@ trait PromotionAbleItemTrait {
             ],
             PromotionProtocol::DISCOUNT_TYPE_OF_PRODUCT => [
                 'handler' => PromotionProducts::class,
-                'var' => &$this->skus
+                'var' => &$this
             ],
             PromotionProtocol::DISCOUNT_TYPE_OF_EXPRESS => [
                 'handler' => PromotionExpressFee::class,
@@ -48,13 +48,13 @@ trait PromotionAbleItemTrait {
         }
 
         $handler_obj = app()->make($handler);
-        $handler_obj->init($data[$type]['var']);
+        $handler_obj->init($data[$type]['var'], $related_items);
         return $handler_obj;
     }
 
-    protected function setPromotionBenefit($benefit_type)
+    protected function setPromotionBenefit($benefit_type, $related_items)
     {
-        $this->promotion_benefit_handler = $this->getBenefitHandlerByType($benefit_type);
+        $this->promotion_benefit_handler = $this->getBenefitHandlerByType($benefit_type, $related_items);
         return $this;
     }
 
@@ -74,7 +74,7 @@ trait PromotionAbleItemTrait {
 
         $discount = $rule->getDiscount();
 
-        $this->setPromotionBenefit($discount['type'])->addPromotionBenefit($rule->getBenefit());
+        $this->setPromotionBenefit($discount['type'], $this->getItems($rule->getRelatedItems()))->addPromotionBenefit($rule->getBenefit());
 
         $rule->setUsing();
 
@@ -85,7 +85,7 @@ trait PromotionAbleItemTrait {
     {
         $discount = $rule->getDiscount();
 
-        $this->setPromotionBenefit($discount['type'])->removePromotionBenefit($rule->getBenefit());
+        $this->setPromotionBenefit($discount['type'], $this->getItems($rule->getRelatedItems()))->removePromotionBenefit($rule->getBenefit());
 
         unset($this->promotions[$rule->getRuleID()]);
 
