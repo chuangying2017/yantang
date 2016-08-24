@@ -59,6 +59,7 @@ class TempOrderTransformer extends TransformerAbstract {
                 $coupons[$key] = array_only($coupon, [
                     'id',
                     'name',
+                    'content',
                     'desc',
                     'promotion',
                     'multi',
