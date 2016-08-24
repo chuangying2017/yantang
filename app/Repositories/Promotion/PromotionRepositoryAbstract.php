@@ -224,7 +224,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
             'desc' => $rule['desc'],
             'promotion' => [
                 'id' => $promotion['id'],
-                'content' => $rule['content'],
+                'content' => $promotion['content'],
                 'name' => $promotion['name'],
                 'desc' => $promotion['desc'],
                 'cover_image' => $promotion['cover_image'],
