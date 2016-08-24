@@ -37,8 +37,18 @@ class CouponController extends Controller {
     {
         $coupon = $this->couponRepo->create($request->all());
 
+        $coupon->load('rules', 'counter');
+        
         return $this->response->item($coupon, new CouponTransformer())->setStatusCode(201);
     }
 
+    public function show($coupon_id)
+    {
+        $coupon = $this->couponRepo->get($coupon_id, true);
+
+        $coupon->load('rules', 'counter');
+
+        return $this->response->item($coupon, new CouponTransformer());
+    }
 
 }

@@ -35,7 +35,7 @@ class PreorderOrderApiTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_use_a_coupon()
+    public function it_can_create_a_preorder_temp_order_and_use_a_coupon()
     {
         $temp_order_id = $this->it_can_create_a_preorder_temp_order();
 
@@ -47,17 +47,18 @@ class PreorderOrderApiTest extends TestCase {
 //            'ticket' => 51
 //        ], $this->getAuthHeader());
 
-        $this->dump();
+//        $this->dump();
+        return $this->getResponseData('data.temp_order_id');
+
     }
 
     /** @test */
     public function it_can_create_a_preorder_order()
     {
-        $temp_order_id = $this->it_can_create_a_preorder_temp_order();
+        $temp_order_id = $this->it_can_create_a_preorder_temp_order_and_use_a_coupon();
         $data = [
             'channel' => 'wx_pub_qr'
         ];
-
 
         $this->json('put', 'subscribe/orders/' . $temp_order_id . '/confirm', $data, $this->getAuthHeader());
 

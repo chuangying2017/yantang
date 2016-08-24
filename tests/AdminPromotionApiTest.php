@@ -26,10 +26,12 @@ class AdminPromotionApiTest extends TestCase {
             $data,
             $this->getAuthHeader()
         );
-
+        
         $promotion = $this->getResponseData('data');
 
         $this->seeInDatabase('promotion_counter', ['promotion_id' => $promotion['id']]);
+
+        $this->echoJson();
 
         $this->assertResponseStatus(201);
     }

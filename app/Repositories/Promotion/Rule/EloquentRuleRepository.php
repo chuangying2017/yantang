@@ -3,9 +3,10 @@
 use App\Models\Promotion\Rule;
 use App\Models\Promotion\RuleItem;
 use App\Models\Promotion\RuleQualify;
+use App\Services\Promotion\PromotionProtocol;
 
 class EloquentRuleRepository implements RuleRepositoryContract {
-    
+
 
     public function createRule($name, $desc, $qualifies, $items, $range, $discount, $weight, $multi)
     {
@@ -27,7 +28,7 @@ class EloquentRuleRepository implements RuleRepositoryContract {
             'range_max' => array_get($range, 'max', null),
             'discount_resource' => $discount['type'],
             'discount_mode' => $discount['mode'],
-            'discount_content' => json_encode($discount['value']),
+            'discount_content' => $this->transDiscountContent($discount),
             'weight' => $weight,
             'multi_able' => $multi,
         ];
@@ -37,6 +38,18 @@ class EloquentRuleRepository implements RuleRepositoryContract {
         $this->syncItems($rule['id'], $items);
         $this->syncQualifies($rule['id'], $qualifies);
         return $rule;
+    }
+
+    protected function transDiscountContent($discount)
+    {
+        $content = json_encode($discount['value']);
+        if (PromotionProtocol::discountContentIsAmount($discount['type'], $discount['mode'])) {
+            return store_price($content);
+        } else if (PromotionProtocol::discountContentIsPercentage($discount['mode'])) {
+            return store_percentage($content);
+        }
+
+        return $content;
     }
 
     /**

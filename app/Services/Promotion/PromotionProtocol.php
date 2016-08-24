@@ -7,8 +7,10 @@ use App\Services\Promotion\Rule\Qualification\AllUserQualification;
 use App\Services\Promotion\Rule\Usage\AllItemsUsage;
 
 class PromotionProtocol {
-    
+
     const TICKET_PER_PAGE = 10;
+
+    const BASE_OF_PERCENTAGE = 10000;
 
     const MODEL_OF_COUPON = Coupon::class;
     const MODEL_OF_CAMPAIGN = Campaign::class;
@@ -16,7 +18,7 @@ class PromotionProtocol {
     const ACTION_OF_ADD = 1;
     const ACTION_OF_SUB = 2;
     const ACTION_OF_EQU = 3;
-    
+
     const TYPE_OF_COUPON = 'coupon';
     const TYPE_OF_MALL_CAMPAIGN = 'mall_campaign';
     const TYPE_OF_SPECIAL_CAMPAIGN = 'spec_campaign';
@@ -53,6 +55,21 @@ class PromotionProtocol {
     const DISCOUNT_MODE_OF_PERCENTAGE = 'percentage';
     const DISCOUNT_MODE_OF_EQUAL = 'equal';
     const DISCOUNT_MODE_OF_MUL = 'mul';
+
+    public static function discountContentIsAmount($type, $mode)
+    {
+        return
+            in_array($type, [self::DISCOUNT_TYPE_OF_AMOUNT, self::DISCOUNT_TYPE_OF_SPECIAL_PRICE, self::DISCOUNT_TYPE_OF_EXPRESS]) &&
+            in_array($mode, [self::DISCOUNT_MODE_OF_DECREASE, self::ACTION_OF_EQU])
+                ? true : false;
+    }
+
+    public static function discountContentIsPercentage($mode)
+    {
+        return
+            in_array($mode, [self::DISCOUNT_MODE_OF_PERCENTAGE])
+                ? true : false;
+    }
 
 
     const MULTI_TYPE_OF_ONLY = 0;
