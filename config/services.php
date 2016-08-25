@@ -44,40 +44,63 @@ return [
 	 */
 
     'github' => [
-        'client_id'     => env('GITHUB_CLIENT_ID'),
+        'client_id' => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect'      => env('GITHUB_REDIRECT'),
+        'redirect' => env('GITHUB_REDIRECT'),
     ],
 
     'facebook' => [
-        'client_id'     => env('FACEBOOK_CLIENT_ID'),
+        'client_id' => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-        'redirect'      => env('FACEBOOK_REDIRECT'),
+        'redirect' => env('FACEBOOK_REDIRECT'),
     ],
 
     'twitter' => [
-        'client_id'     => env('TWITTER_CLIENT_ID'),
+        'client_id' => env('TWITTER_CLIENT_ID'),
         'client_secret' => env('TWITTER_CLIENT_SECRET'),
-        'redirect'      => env('TWITTER_REDIRECT'),
+        'redirect' => env('TWITTER_REDIRECT'),
     ],
 
     'google' => [
-        'client_id'     => env('GOOGLE_CLIENT_ID'),
+        'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect'      => env('GOOGLE_REDIRECT'),
+        'redirect' => env('GOOGLE_REDIRECT'),
     ],
 
     'weixin' => [
-        'client_id'     => env('WECHAT_APPID'),
+        'client_id' => env('WECHAT_APPID'),
         'client_secret' => env('WECHAT_APPSECRET'),
-        'redirect'      => env('WEIXIN_REDIRECT_URI'),
-        'base_redirect' => env('WEIXIN_BASE_REDIRECT_URL'),
+        'redirect' => env('WECHAT_REDIRECT_URL'),
+        'auth_base_uri' => 'https://open.weixin.qq.com/connect/oauth2/authorize',
+        'redirect_urls' => [
+            'client' => 'http://client.yt.weazm.com/?#!/auth/wechatAuth',
+            'station' => 'http://station.yt.weazm.com/auth/wechatAuth',
+            'store' => 'http://store.yt.weazm.com/auth/wechatAuth',
+            'staff' => 'http://staff.yt.weazm.com/auth/wechatAuth',
+            'admin' => 'http://admin.yt.weazm.com/auth/wechatAuth',
+            'test' => 'http://client.yt.weazm.com/?#!/auth/wechatAuth'
+        ]
     ],
 
-    'meitianhui' => [
-        'client_id'     => env('MTH_APPID'),
-        'client_secret' => env('MTH_APPSECRET'),
-        'redirect'      => env('MTH_REDIRECT_URI'),
+    'pingxx' => [
+        'app_id' => env('PINGXX_APP_ID'),
+        'api_key' => env(env('PINGXX_ACCOUNT_ENV', 'TEST') . '_PINGXX_API_KEY'),
+        'live' => env('PINGXX_LIVE_MODE', false),
+        'mobile_success' => env('PAYMENT_MOBILE_SUCCESS_URL'),
+        'mobile_cancel' => env('PAYMENT_MOBILE_CANCEL_URL'),
+        'pc_success' => env('PAYMENT_PC_SUCCESS_URL'),
+        'pc_cancel' => env('PAYMENT_PC_CANCEL_URL'),
+        'pub_key_path' => app_path('Repositories/Pay/Pingxx') . '/pingpp_rsa_public_key.pem',
     ],
+
+    'search' => [
+        'root' => env('SEARCH_ROOT_PATH'),
+        'name' => env('SEARCH_APP_NAME')
+    ],
+
+    'subscribe' => [
+        'pause_days' => env('SUBSCRIBE_PAUSE_DAYS', 2),
+    ],
+
 
 ];

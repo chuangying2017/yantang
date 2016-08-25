@@ -18,9 +18,8 @@ class RouteNeedsRole {
      */
     public function handle($request, Closure $next, $role)
     {
-        if ( ! access()->hasRole($role)) {
-            return new RedirectResponse('http://e-grace.com.cn/');
-//            API::response()->errorForbidden('没有权限');
+        if (!access()->hasRole($role)) {
+            API::response()->errorForbidden('没有权限');
         }
 
         return $next($request);

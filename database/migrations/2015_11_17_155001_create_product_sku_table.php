@@ -15,7 +15,6 @@ class CreateProductSkuTable extends Migration {
         Schema::create('product_skus', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id')->unsigned()->index();
-            $table->foreign('product_id')->references('id')->on('products');
             $table->string('name');
             $table->string('cover_image');
             $table->string('sku_no')->unique()->index();
@@ -27,7 +26,10 @@ class CreateProductSkuTable extends Migration {
             $table->integer('express_fee')->unsigned()->default(0);
             $table->integer('income_price')->unsigned();
             $table->integer('settle_price')->unsigned();
+            $table->integer('subscribe_price')->unsigned();
+            $table->integer('service_fee')->unsigned();
             $table->string('attr', 1024);
+            $table->string('type')->default('entity');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -40,9 +42,6 @@ class CreateProductSkuTable extends Migration {
      */
     public function down()
     {
-        Schema::table('product_skus', function (Blueprint $table) {
-            $table->dropForeign('product_skus_product_id_foreign');
-        });
         Schema::drop('product_skus');
     }
 }

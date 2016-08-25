@@ -31,11 +31,11 @@
         "dingo/api": "1.0.x@dev",
         "tymon/jwt-auth": "0.5.*",
         "barryvdh/laravel-cors": "^0.7.1",
-        "toplan/laravel-sms":"~2.3.1",
-        "socialiteproviders/weixin": "^1.0",
-        "socialiteproviders/weixin-web": "^1.0",
+        "toplan/laravel-sms": "~2.3.1",
         "hightman/xunsearch": "*@beta",
-        "overtrue/laravel-wechat": "~3.0"
+        "overtrue/laravel-wechat": "~3.0",
+        "socialiteproviders/manager": "^2.1",
+        "socialiteproviders/weixin": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -65,6 +65,7 @@
     "autoload-dev": {
         "classmap": [
             "tests/TestCase.php"
+
         ]
     },
     "scripts": {

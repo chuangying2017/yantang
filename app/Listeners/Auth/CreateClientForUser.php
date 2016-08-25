@@ -3,20 +3,25 @@
 namespace App\Listeners\Auth;
 
 use App\Events\Auth\UserRegister;
-use App\Services\Client\ClientService;
+use App\Repositories\Client\ClientRepositoryContract;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CreateClientForUser {
 
     /**
+     * @var ClientRepositoryContract
+     */
+    private $client;
+
+    /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ClientRepositoryContract $client)
     {
-        //
+        $this->client = $client;
     }
 
     /**
@@ -30,6 +35,6 @@ class CreateClientForUser {
         $user = $event->user;
         $register_data = $event->register_data;
 
-        ClientService::create($user, $register_data);
+        $this->client->createClient($user['id'], $register_data);
     }
 }

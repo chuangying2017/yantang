@@ -16,6 +16,7 @@ class CreateProductMixSkuTable extends Migration {
             $table->increments('id');
             $table->integer('product_sku_mix_id')->unsigned()->index();
             $table->integer('product_sku_id')->unsigned()->index();
+            $table->integer('quantity')->default(1);
             $table->timestamps();
         });
     }

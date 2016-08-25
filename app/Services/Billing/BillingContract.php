@@ -6,108 +6,27 @@
  */
 interface BillingContract {
 
-	/**
-	 * @param $input
-	 * @return mixed
-	 */
-	public function createCustomer($input);
+    public function getID();
+
+    public function getOrderNo();
+
+    public function isPaid($check = false);
+
+    public function getAmount();
+
+    public function getType();
+
+    public function getPayer();
 
 	/**
-	 * @param $id
-	 * @param $input
-	 * @return mixed
-	 */
-	public function updateCustomer($id, $input);
+     * @param $billing_id
+     * @return $this
+     */
+    public function setID($billing_id);
 
-	/**
-	 * @param $id
-	 * @return mixed
-	 */
-	public function deleteCustomer($id);
+    public function getRefundedAmount();
 
-	/**
-	 * @param $customer_id
-	 * @param $token
-	 * @return mixed
-	 */
-	public function createCard($customer_id, $token);
+    public function getPayment();
 
-	/**
-	 * @param $customer_id
-	 * @param $card_id
-	 * @return mixed
-	 */
-	public function deleteCard($customer_id, $card_id);
 
-	/**
-	 * @param $customer_id
-	 * @param $amount
-	 * @return mixed
-	 */
-	public function getCharges($customer_id, $amount);
-
-	/**
-	 * @param $input
-	 * @return mixed
-	 */
-	public function createPlan($input);
-
-	/**
-	 * @param $id
-	 * @param $input
-	 * @return mixed
-	 */
-	public function updatePlan($id, $input);
-
-	/**
-	 * @param $id
-	 * @return mixed
-	 */
-	public function deletePlan($id);
-
-	/**
-	 * @param $customer_id
-	 * @param $input
-	 * @return mixed
-	 */
-	public function createSubscription($customer_id, $input);
-
-	/**
-	 * @param $customer_id
-	 * @param $subscription_id
-	 * @param $input
-	 * @return mixed
-	 */
-	public function updateSubscription($customer_id, $subscription_id, $input);
-
-	/**
-	 * @param $customer_id
-	 * @param $subscription_id
-	 * @return mixed
-	 */
-	public function cancelSubscription($customer_id, $subscription_id);
-
-	/**
-	 * @param $input
-	 * @return mixed
-	 */
-	public function createCoupon($input);
-
-	/**
-	 * @param $coupon_id
-	 * @return mixed
-	 */
-	public function deleteCoupon($coupon_id);
-
-	/**
-	 * @param $charge_id
-	 * @return mixed
-	 */
-	public function refund($charge_id);
-
-	/**
-	 * @param $input
-	 * @return mixed
-	 */
-	public function charge($input);
 }

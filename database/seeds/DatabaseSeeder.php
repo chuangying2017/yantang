@@ -1,5 +1,6 @@
 <?php
 
+use Baum\Extensions\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder {
@@ -22,9 +23,22 @@ class DatabaseSeeder extends Seeder {
 //        $this->call(ImageSeeder::class);
 //        $this->call(NavSeeder::class);
 //        $this->call(ClientSeeder::class);
-        $this->call(AccessTableSeeder::class);
-        $this->call(AgentRateSeeder::class);
 
+
+        /**
+         * 初始数据
+         */
+//        $this->call(AccessTableSeeder::class);
+//        $this->call(GroupSeeder::class);
+//        $this->call(UserSeeder::class);
+
+
+        /**
+         * 测试数据
+         */
+//        $this->call(DistrictSeeder::class);
+//        $this->call(StationSeeder::class);
+        $this->call(CouponSeeder::class);
 
         if (env('DB_DRIVER') == 'mysql')
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');

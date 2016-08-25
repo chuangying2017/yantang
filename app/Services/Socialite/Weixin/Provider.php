@@ -2,28 +2,46 @@
 
 namespace App\Services\Socialite\Weixin;
 
-use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
-use Laravel\Socialite\Two\User;
+use SocialiteProviders\Manager\OAuth2\AbstractProvider;
+use SocialiteProviders\Manager\OAuth2\User;
 
-class Provider extends AbstractProvider implements ProviderInterface {
+class Provider extends AbstractProvider implements ProviderInterface
+{
+    /**
+     * Unique Provider Identifier.
+     */
+    const IDENTIFIER = 'WEIXIN';
 
     /**
-     * {@inheritdoc}.
+     * @var string
      */
     protected $openId;
 
     /**
      * {@inheritdoc}.
      */
-    protected $scopes = ['snsapi_userinfo'];
+    protected $scopes = ['snsapi_login'];
+
+    /**
+     * set Open Id.
+     *
+     * @param string $openId
+     */
+    public function setOpenId($openId)
+    {
+        $this->openId = $openId;
+    }
 
     /**
      * {@inheritdoc}.
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://open.weixin.qq.com/connect/oauth2/authorize', $state);
+        return $this->buildAuthUrlFromBase($this->getConfig(
+            'auth_base_uri',
+            'https://open.weixin.qq.com/connect/oauth2/authorize'
+        ), $state);
     }
 
     /**
@@ -31,11 +49,9 @@ class Provider extends AbstractProvider implements ProviderInterface {
      */
     protected function buildAuthUrlFromBase($url, $state)
     {
-        $session = $this->request->getSession();
-
         $query = http_build_query($this->getCodeFields($state), '', '&', $this->encodingType);
 
-        return $url . '?' . $query . '#wechat_redirect';
+        return $url.'?'.$query.'#wechat_redirect';
     }
 
     /**
@@ -44,11 +60,11 @@ class Provider extends AbstractProvider implements ProviderInterface {
     protected function getCodeFields($state = null)
     {
         return [
-            'appid'         => $this->clientId,
-            'redirect_uri'  => $this->redirectUrl,
+            'appid' => $this->clientId,
+            'redirect_uri' => $this->redirectUrl . '?role=' . \Request::input('role'),
             'response_type' => 'code',
-            'scope'         => $this->formatScopes($this->scopes, $this->scopeSeparator),
-            'state'         => $state,
+            'scope' => $this->formatScopes($this->scopes, $this->scopeSeparator),
+            'state' => $state,
         ];
     }
 
@@ -68,8 +84,8 @@ class Provider extends AbstractProvider implements ProviderInterface {
         $response = $this->getHttpClient()->get('https://api.weixin.qq.com/sns/userinfo', [
             'query' => [
                 'access_token' => $token,
-                'openid'       => $this->openId,
-                'lang'         => 'zh_CN',
+                'openid' => $this->openId,
+                'lang' => 'zh_CN',
             ],
         ]);
 
@@ -82,12 +98,11 @@ class Provider extends AbstractProvider implements ProviderInterface {
     protected function mapUserToObject(array $user)
     {
         return (new User())->setRaw($user)->map([
-            'id'       => $user['openid'],
-            'union_id' => array_get($user, 'unionid', null),
+            'id' => $user['openid'],
             'nickname' => $user['nickname'],
-            'avatar'   => $user['headimgurl'],
-            'name'     => null,
-            'email'    => null,
+            'union_id' => array_get($user, 'unionid', null),
+            'avatar' => $user['headimgurl'],
+            'name' => null, 'email' => null,
         ]);
     }
 
@@ -98,46 +113,43 @@ class Provider extends AbstractProvider implements ProviderInterface {
     {
         return [
             'appid' => $this->clientId, 'secret' => $this->clientSecret,
-            'code'  => $code, 'grant_type' => 'authorization_code',
+            'code' => $code, 'grant_type' => 'authorization_code',
         ];
     }
 
     /**
      * {@inheritdoc}.
      */
-    public function getAccessToken($code)
+    public function getAccessTokenResponse($code)
     {
         $response = $this->getHttpClient()->get($this->getTokenUrl(), [
             'query' => $this->getTokenFields($code),
         ]);
 
-        return $this->parseAccessToken($response->getBody()->getContents());
+        $this->credentialsResponseBody = json_decode($response->getBody(), true);
+
+        if (isset($this->credentialsResponseBody['errcode'])) {
+            throw new \Exception($this->credentialsResponseBody['errmsg'], $this->credentialsResponseBody['errcode']);
+        }
+
+
+        $this->openId = $this->credentialsResponseBody['openid'];
+
+        return $this->credentialsResponseBody;
     }
 
-    /**
-     * {@inheritdoc}.
-     */
-    protected function parseAccessToken($body)
+    public static function additionalConfigKeys()
     {
-        $jsonArray = json_decode($body, true);
-        $this->openId = $jsonArray['openid'];
-
-        return $jsonArray['access_token'];
+        return ['auth_base_uri'];
     }
 
     /**
-     * @param mixed $response
+     * Get the code from the request.
      *
      * @return string
      */
-    protected function removeCallback($response)
+    protected function getCode()
     {
-        if (strpos($response, 'callback') !== false) {
-            $lpos = strpos($response, '(');
-            $rpos = strrpos($response, ')');
-            $response = substr($response, $lpos + 1, $rpos - $lpos - 1);
-        }
-
-        return $response;
+        return \Request::input('code');
     }
 }

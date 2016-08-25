@@ -14,7 +14,6 @@ class CreateTableProductMeta extends Migration {
     {
         Schema::create('product_meta', function (Blueprint $table) {
             $table->integer('product_id')->unsigned()->index();
-            $table->foreign('product_id')->references('id')->on('products');
             $table->integer('favs')->unsigned()->default(0);
             $table->integer('sales')->unsigned()->default(0);
             $table->integer('stock')->unsigned();
@@ -29,9 +28,6 @@ class CreateTableProductMeta extends Migration {
      */
     public function down()
     {
-        Schema::table('product_meta', function (Blueprint $table) {
-            $table->dropForeign('product_meta_product_id_foreign');
-        });
         Schema::drop('product_meta');
     }
 }

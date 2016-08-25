@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Pay\PingxxPayment;
 use Illuminate\Database\Eloquent\Model;
 
 class PingxxRefund extends Model {
@@ -14,6 +15,5 @@ class PingxxRefund extends Model {
     {
         return $this->belongsTo(PingxxPayment::class, 'pingxx_payment_id', 'id');
     }
-
 
 }

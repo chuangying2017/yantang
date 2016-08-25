@@ -14,7 +14,6 @@ class CreateOrderMemoTable extends Migration {
     {
         Schema::create('order_memo', function (Blueprint $table) {
             $table->integer('order_id')->unsigned()->index();
-            $table->foreign('order_id')->references('id')->on('orders');
             $table->mediumText('customer')->nullable();
             $table->mediumText('merchant')->nullable();
             $table->mediumText('system')->nullable();
@@ -29,7 +28,6 @@ class CreateOrderMemoTable extends Migration {
      */
     public function down()
     {
-
         Schema::drop('order_memo');
     }
 }

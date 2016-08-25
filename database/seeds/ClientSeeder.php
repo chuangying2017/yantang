@@ -12,7 +12,7 @@ class ClientSeeder extends Seeder
      */
     public function run()
     {
-        App\Models\Client::updateOrCreate(['user_id' => 2], [
+        \App\Models\Client\Client::updateOrCreate(['user_id' => 2], [
             "user_id" => 2,
             "nickname" => "bryant",
             "sex" => "",

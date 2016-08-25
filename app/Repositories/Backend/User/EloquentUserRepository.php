@@ -1,10 +1,12 @@
 <?php namespace App\Repositories\Backend\User;
 
+use App\Models\Access\Role\Role;
 use App\Models\Access\User\User;
 use App\Exceptions\GeneralException;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
-use App\Repositories\Frontend\Auth\AuthenticationContract;
+use App\Repositories\Auth\AuthenticationContract;
 use App\Exceptions\Backend\Access\User\UserNeedsRolesException;
+use Dingo\Api\Exception\StoreResourceFailedException;
 
 /**
  * Class EloquentUserRepository
@@ -45,7 +47,7 @@ class EloquentUserRepository implements UserContract {
         else
             $user = User::withTrashed()->find($id);
 
-        if ( ! is_null($user)) return $user;
+        if (!is_null($user)) return $user;
 
         throw new GeneralException('That user does not exist.');
     }
@@ -59,7 +61,7 @@ class EloquentUserRepository implements UserContract {
      */
     public function getUsersPaginated($per_page, $status = 1, $order_by = 'id', $sort = 'asc')
     {
-        return User::where('status', $status)->orderBy($order_by, $sort)->paginate($per_page);
+        return User::with('roles')->where('status', $status)->whereNotNull('password')->orderBy($order_by, $sort)->paginate($per_page);
     }
 
     /**
@@ -78,7 +80,7 @@ class EloquentUserRepository implements UserContract {
      */
     public function getAllUsers($order_by = 'id', $sort = 'asc')
     {
-        return User::orderBy($order_by, $sort)->get();
+        return User::orderBy($order_by, $sort)->whereNotNull('password')->get();
     }
 
     /**
@@ -92,6 +94,7 @@ class EloquentUserRepository implements UserContract {
     public function create($input, $roles, $permissions)
     {
         $user = $this->createUserStub($input);
+        $this->checkExistUserByPhone($input, $user);
 
         if ($user->save()) {
             //User Created, Validate Roles
@@ -123,19 +126,19 @@ class EloquentUserRepository implements UserContract {
     public function update($id, $input, $roles, $permissions)
     {
         $user = $this->findOrThrowException($id);
-        $this->checkUserByEmail($input, $user);
+        $this->checkUserByPhone($input, $user);
 
-        if ($user->update($input)) {
+        if ($user->update(array_only($input, ['username', 'phone', 'email', 'password']))) {
             //For whatever reason this just wont work in the above call, so a second is needed for now
-            $user->status = isset($input['status']) ? 1 : 0;
-            $user->confirmed = isset($input['confirmed']) ? 1 : 0;
+            $user->status = 1;
+            $user->confirmed = 1;
             $user->save();
 
             $this->checkUserRolesCount($roles);
             $this->flushRoles($roles, $user);
             $this->flushPermissions($permissions, $user);
 
-            return true;
+            return $user;
         }
 
         throw new GeneralException('There was a problem updating this user. Please try again.');
@@ -313,12 +316,13 @@ class EloquentUserRepository implements UserContract {
     private function createUserStub($input)
     {
         $user = new User;
-        $user->name = $input['name'];
-        $user->email = $input['email'];
+        $user->username = $input['username'];
+        $user->email = array_get($input, 'email', null);
+        $user->phone = array_get($input, 'phone', null);
         $user->password = $input['password'];
-        $user->status = isset($input['status']) ? 1 : 0;
+        $user->status = array_get($input, 'status', 1);
         $user->confirmation_code = md5(uniqid(mt_rand(), true));
-        $user->confirmed = isset($input['confirmed']) ? 1 : 0;
+        $user->confirmed = array_get($input, 'confirmed', 1);
 
         return $user;
     }
@@ -326,5 +330,33 @@ class EloquentUserRepository implements UserContract {
     public function findUserByPhone($phone)
     {
         return User::where('phone', $phone)->first();
+    }
+
+    /**
+     * @param $input
+     * @param $user
+     * @throws GeneralException
+     */
+    private function checkUserByPhone($input, $user)
+    {
+        //Figure out if email is not the same
+        if ($user->phone != $input['phone']) {
+            //Check to see if email exists
+            if (User::where('phone', '=', $input['phone'])->first())
+                throw new GeneralException('该电话用户已存在.');
+        }
+    }
+
+    private function checkExistUserByPhone($input, $user)
+    {
+        //Check to see if phone exists
+        if (User::where('phone', '=', $input['phone'])->first())
+            throw new StoreResourceFailedException('该电话用户已存在.');
+    }
+
+    public function getAllUsersByRole($role)
+    {
+        $role = Role::with('users')->where('name', $role)->orWhere('id', $role)->first();
+        return is_null($role) ? null : $role->users;
     }
 }

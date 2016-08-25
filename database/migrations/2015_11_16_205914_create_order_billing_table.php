@@ -15,7 +15,6 @@ class CreateOrderBillingTable extends Migration {
         Schema::create('order_billing', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned()->index();
-            $table->foreign('order_id')->references('id')->on('orders');
             $table->string('billing_no')->index();
             $table->integer('user_id')->unsigned();
             $table->unsignedInteger('amount');
@@ -36,9 +35,6 @@ class CreateOrderBillingTable extends Migration {
      */
     public function down()
     {
-        Schema::table('order_billing', function (Blueprint $table) {
-            $table->dropForeign('order_billing_order_id_foreign');
-        });
         Schema::drop('order_billing');
     }
 }

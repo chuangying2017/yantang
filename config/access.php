@@ -89,6 +89,6 @@ return array(
         /*
          * Whether a role must contain a permission or can be used standalone as a label
          */
-        'role_must_contain_permission' => true
+        'role_must_contain_permission' => false
     ],
 );

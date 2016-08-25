@@ -11,11 +11,11 @@ class AttributeSeeder extends Seeder {
      */
     public function run()
     {
-        \App\Models\Attribute::truncate();
+        \App\Models\Product\Attribute::truncate();
         $data = [
             ['name' => '规格']
         ];
 
-        \App\Models\Attribute::insert($data);
+        \App\Models\Product\Attribute::insert($data);
     }
 }

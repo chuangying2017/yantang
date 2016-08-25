@@ -2,33 +2,50 @@
 
 namespace App\Models;
 
+use App\Models\Order\Order;
+use App\Models\Product\Product;
+use App\Models\Subscribe\Preorder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Comment extends Model
-{
-    //
+class Comment extends Model {
+
     use SoftDeletes;
 
-    protected $fillable = ['content', 'user_id', 'product_id', 'status', 'order_id'];
+    protected $table = 'comments';
 
-    public function product()
+    protected $guarded = [];
+
+    protected static function boot()
     {
-        return $this->belongsTo('App\Models\Product');
+        parent::boot();
+
+        static::deleting(function (self $comment) {
+            $comment->images()->detach();
+            $comment->products()->detach();
+            $comment->orders()->detach();
+            $comment->preorders()->detach();
+        });
     }
 
     public function images()
     {
-        return $this->morphedByMany('App\Models\Image', 'imageable');
+        return $this->morphToMany(Image::class, 'imageable');
     }
 
-    public function user()
+    public function products()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->morphedByMany(Product::class, 'commentable');
     }
 
-    public function order()
+    public function orders()
     {
-        return $this->belongsTo('App\Models\Order');
+        return $this->morphedByMany(Order::class, 'commentable');
     }
+
+    public function preorders()
+    {
+        return $this->morphedByMany(Preorder::class, 'commentable');
+    }
+
 }

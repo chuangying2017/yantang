@@ -37,7 +37,7 @@ return [
      */
     'enable' => [
         'Log',
-        'YunPian' => 100
+        'Luosimao' => 100
     ],
 
     /*
@@ -122,7 +122,7 @@ return [
         'Luosimao'   => [
             // 短信 API key
             // 在管理中心->短信->触发发送下查看
-            'apikey'      => 'your api key',
+            'apikey'      => env('LUOSIMAO_API_KEY'),
 
             // 语言验证 API key
             // 在管理中心->语音->语音验证下查看

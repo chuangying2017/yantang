@@ -1,4 +1,5 @@
 <?php namespace App\Models\Access\Role\Traits\Relationship;
+use App\Models\Access\User\User;
 
 /**
  * Class RoleRelationship
@@ -11,7 +12,7 @@ trait RoleRelationship {
      */
     public function users()
     {
-        return $this->belongsToMany(config('auth.model'), config('access.assigned_roles_table'), 'role_id', 'user_id');
+        return $this->belongsToMany(User::class, config('access.assigned_roles_table'), 'role_id', 'user_id');
     }
 
     /**

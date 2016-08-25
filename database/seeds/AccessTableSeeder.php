@@ -12,7 +12,7 @@ class AccessTableSeeder extends Seeder {
 
 //		$this->call(UserTableSeeder::class);
 		$this->call(RoleTableSeeder::class);
-//		$this->call(UserRoleSeeder::class);
+		$this->call(UserRoleSeeder::class);
 		$this->call(PermissionGroupTableSeeder::class);
 		$this->call(PermissionTableSeeder::class);
 		$this->call(PermissionDependencyTableSeeder::class);

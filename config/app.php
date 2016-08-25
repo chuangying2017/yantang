@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'name' => '东方丽人商城后台',
+
+    'name' => '燕塘优鲜达',
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -161,17 +162,21 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\AccessServiceProvider::class,
         App\Providers\ConfigServiceProvider::class,
-        App\Providers\MacroServiceProvider::class,
 
         /*
         * Custom Service Providers
         */
         App\Providers\LocalEnvironmentServiceProvider::class,
-        App\Services\Marketing\MarketingServiceProvider::class,
-        \App\Providers\ApiServiceProvider::class,
+        App\Providers\ApiServiceProvider::class,
+        App\Providers\ClientServiceProvider::class,
+        App\Providers\OrderServiceProvider::class,
+        App\Providers\UserServiceProvider::class,
+        App\Providers\PromotionServiceProvider::class,
+        App\Providers\StatementServiceProvider::class,
 
 
-        \App\Services\Product\Search\ProductServiceProvider::class,
+        App\Services\Product\Providers\ProductServiceProvider::class,
+        App\Providers\SubscribeServiceProvider::class,
 
         /*
 		 * Third party service providers
@@ -193,7 +198,9 @@ return [
         Baum\Providers\BaumServiceProvider::class,
         Toplan\PhpSms\PhpSmsServiceProvider::class,
         Toplan\Sms\SmsManagerServiceProvider::class,
-        SocialiteProviders\Manager\ServiceProvider::class,
+
+        \SocialiteProviders\Manager\ServiceProvider::class,
+
         Overtrue\LaravelWechat\ServiceProvider::class,
     ],
 
@@ -242,23 +249,23 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         /* Third Party */
-        'Active'     => HieuLe\Active\Facades\Active::class,
-        'Form'       => Collective\Html\FormFacade::class,
-        'Gravatar'   => Creativeorange\Gravatar\Facades\Gravatar::class,
-        'HTML'       => Collective\Html\HtmlFacade::class,
-        'Socialite'  => Laravel\Socialite\Facades\Socialite::class,
-        'APIRoute'   => Dingo\Api\Facade\Route::class,
-        'API'        => Dingo\Api\Facade\API::class,
-        'JWTAuth'    => Tymon\JWTAuth\Facades\JWTAuth::class,
-        'PhpSms'     => Toplan\PhpSms\Facades\Sms::class,
+        'Active' => HieuLe\Active\Facades\Active::class,
+        'Form' => Collective\Html\FormFacade::class,
+        'Gravatar' => Creativeorange\Gravatar\Facades\Gravatar::class,
+        'HTML' => Collective\Html\HtmlFacade::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'APIRoute' => Dingo\Api\Facade\Route::class,
+        'API' => Dingo\Api\Facade\API::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'PhpSms' => Toplan\PhpSms\Facades\Sms::class,
         'SmsManager' => Toplan\Sms\Facades\SmsManager::class,
         'EasyWeChat' => Overtrue\LaravelWechat\Facade::class,
 
         /*
         * Custom Alias
         */
-        'Bugsnag'    => Bugsnag\BugsnagLaravel\BugsnagFacade::class,
-        'Excel'      => Maatwebsite\Excel\Facades\Excel::class,
+        'Bugsnag' => Bugsnag\BugsnagLaravel\BugsnagFacade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

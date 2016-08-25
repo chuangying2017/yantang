@@ -1,4 +1,5 @@
 <?php namespace App\Repositories\Backend\Role;
+use App\Models\Access\Role\Role;
 
 /**
  * Interface RoleRepositoryContract
@@ -38,7 +39,7 @@ interface RoleRepositoryContract {
 	/**
 	 * @param $id
 	 * @param $input
-	 * @return mixed
+	 * @return Role
 	 */
 	public function update($id, $input);
 

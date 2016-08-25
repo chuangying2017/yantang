@@ -8,9 +8,9 @@
  */
 $router->group(['namespace' => 'Frontend'], function () use ($router) {
     //pingxx 回调
-    require(__DIR__ . "/Routes/Frontend/Payment.php");
-    require(__DIR__ . "/Routes/Frontend/Frontend.php");
-    require(__DIR__ . "/Routes/Frontend/Access.php");
+//    require(__DIR__ . "/Routes/Frontend/Payment.php");
+//    require(__DIR__ . "/Routes/Frontend/Frontend.php");
+//    require(__DIR__ . "/Routes/Frontend/Access.php");
 });
 
 
@@ -28,8 +28,8 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
              * Note: Administrator has all permissions so you do not have to specify the administrator role everywhere.
              */
             $router->group(['middleware' => 'access.routeNeedsPermission:view-backend'], function () use ($router) {
-                require(__DIR__ . "/Routes/Backend/Access.php");
-                require(__DIR__ . "/Routes/Backend/Dashboard.php");
+//                require(__DIR__ . "/Routes/Backend/Access.php");
+//                require(__DIR__ . "/Routes/Backend/Dashboard.php");
 //                require(__DIR__ . "/Routes/Backend/Client.php");
 //                require(__DIR__ . "/Routes/Backend/Product.php");
 //                require(__DIR__ . "/Routes/Backend/Merchant.php");
@@ -53,5 +53,5 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
 /**
  * 测试路由,当 env => local debug => true 有效
  */
-require(__DIR__ . "/Routes/test.php");
+//require(__DIR__ . "/Routes/test.php");
 

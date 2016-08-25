@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 
 // composer require laracasts/testdummy
 //use Laracasts\TestDummy\Factory as TestDummy;
-use App\Models\Product;
+use App\Models\Product\Product;
 
 class ProductTableSeeder extends Seeder
 {
@@ -14,7 +14,7 @@ class ProductTableSeeder extends Seeder
     {
 
 //        Product::truncate();
-        factory(App\Models\Product::class, 50)->create();
+        factory(\App\Models\Product\Product::class, 50)->create();
 
     }
 }

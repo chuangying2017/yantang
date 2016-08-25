@@ -7,22 +7,22 @@ return [
      * 是否数据库记录日志
      * -----------------------------------
      */
-    'database_enable'  => true,
+    'database_enable' => true,
 
     /*
      * -----------------------------------
      * 验证码发送前合法性验证
      * -----------------------------------
      */
-    'verify'           => [
+    'verify' => [
         'mobile' => [
             'enable' => false,
 
             //default rule
-            'use'    => 'check_mobile_exists',
+            'use' => 'check_mobile_exists',
 
             //available rules
-            'rules'  => [
+            'rules' => [
 
                 'mobile_required' => 'required|zh_mobile',
 
@@ -40,18 +40,18 @@ return [
      * 验证码模块提示信息
      * -----------------------------------
      */
-    'notifies'         => [
+    'notifies' => [
         // 频繁请求无效的提示
-        'request_invalid'    => "请求无效，请在%s秒后重试",
+        'request_invalid' => "请求无效，请在%s秒后重试",
 
         // 验证码短信发送失败的提示
-        'sms_send_failure'   => "短信验证码发送失败，请稍后重试",
+        'sms_send_failure' => "短信验证码发送失败，请稍后重试",
 
         // 语音验证码发送发送成功的提示
         'voice_send_failure' => "语音验证码请求失败，请稍后重试",
 
         // 验证码短信发送成功的提示
-        'sms_send_success'   => "短信验证码发送成功，请注意查收",
+        'sms_send_success' => "短信验证码发送成功，请注意查收",
 
         // 语音验证码发送发送成功的提示
         'voice_send_success' => "语音验证码发送成功，请注意接听",
@@ -82,7 +82,7 @@ return [
      * storePrefixKey: 存储key的prefix
      * storage: 存储方式
      */
-    'storage'        => 'App\Services\Utilities\SmsStorage',
+    'storage' => App\Repositories\Auth\SmsStorage::class,
 
     'storePrefixKey' => 'laravel_sms_info',
 
@@ -91,5 +91,5 @@ return [
      * queue job
      * -----------------------------------
      */
-    'queueJob'       => 'App\Jobs\SendReminderSms',
+    'queueJob' => 'App\Jobs\SendReminderSms',
 ];

@@ -2,8 +2,8 @@
 
 ## 文档
 
-[API 文档编辑](https://designer.stoplight.io/wk/vwgvfNZTeRv5fxBSe/eHmhJMokutbpG2j38/TMYzL2CTbswoHfsQv/docs)
-[API 查看](http://yantang.api-docs.io/v1)
+### [API 文档编辑](https://designer.stoplight.io/wk/vwgvfNZTeRv5fxBSe/eHmhJMokutbpG2j38/TMYzL2CTbswoHfsQv/docs)
+### [API 查看](http://yantang.api-docs.io/v1)
 
 ---
 

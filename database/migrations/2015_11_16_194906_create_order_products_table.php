@@ -12,7 +12,7 @@ class CreateOrderProductsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('order_products', function (Blueprint $table) {
+        Schema::create('order_skus', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('origin_order_id')->unsigned()->index();
             $table->integer('order_id')->unsigned()->index();
@@ -23,15 +23,13 @@ class CreateOrderProductsTable extends Migration {
             $table->unsignedInteger('price');
             $table->unsignedInteger('discount_amount');
             $table->unsignedInteger('pay_amount');
-            $table->string('title');
+            $table->string('name');
             $table->string('cover_image');
             $table->string('attr', 1024);
+            $table->string('type')->default('entity');
             $table->smallInteger('return_quantity')->default(0);
             $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('order_id')->references('id')->on('orders');
-            $table->foreign('origin_order_id')->references('id')->on('orders');
         });
 
     }
@@ -43,12 +41,6 @@ class CreateOrderProductsTable extends Migration {
      */
     public function down()
     {
-        Schema::table('order_products', function (Blueprint $table) {
-            $table->dropForeign('order_products_order_id_foreign');
-        });
-        Schema::table('order_products', function (Blueprint $table) {
-            $table->dropForeign('order_products_origin_order_id_foreign');
-        });
-        Schema::drop('order_products');
+        Schema::drop('order_skus');
     }
 }

@@ -1,6 +1,6 @@
 database/seeds/Agent.php<?php
 
-use App\Models\Category;
+use App\Models\Product\CategoryAbstract;
 use Illuminate\Database\Seeder;
 
 // composer require laracasts/testdummy
@@ -10,7 +10,7 @@ class CategoryTableSeeder extends Seeder {
 
     public function run()
     {
-        App\Models\Category::truncate();
+        \App\Models\Product\CategoryAbstract::truncate();
 
         $categories = [
             ['name' => '护理', 'children' => [
@@ -45,7 +45,7 @@ class CategoryTableSeeder extends Seeder {
             ]]
         ];
 
-        Category::buildTree($categories); // => true
+        CategoryAbstract::buildTree($categories); // => true
 //        factory(App\Models\Category::class, 5)->create()->each(function($cat){
 //            factory(App\Models\Category::class, 5)->create(['pid'=>$cat->id]);
 //        });

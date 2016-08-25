@@ -28,6 +28,7 @@ class CreateProductsTable extends Migration {
             $table->dateTime('end_time')->nullable(); //停售时间时间
             $table->boolean('with_invoice')->default(false);
             $table->boolean('with_care')->default(false);
+            $table->integer('priority')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
