@@ -13,6 +13,8 @@ class AdminPromotionApiTest extends TestCase {
     {
         $this->json('get', 'admin/promotions/coupons', [], $this->getAuthHeader());
 
+        $this->echoJson();
+
         $this->assertResponseOk();
     }
 
@@ -26,7 +28,7 @@ class AdminPromotionApiTest extends TestCase {
             $data,
             $this->getAuthHeader()
         );
-        
+
         $promotion = $this->getResponseData('data');
 
         $this->seeInDatabase('promotion_counter', ['promotion_id' => $promotion['id']]);

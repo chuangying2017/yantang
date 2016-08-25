@@ -11,6 +11,8 @@ interface PromotionRepositoryContract {
 
     public function update($promotion_id, $data);
 
+    public function updateActiveStatus($promotion_id, $active = true);
+
     public function delete($promotion_id);
 
     public function getUsefulRules();

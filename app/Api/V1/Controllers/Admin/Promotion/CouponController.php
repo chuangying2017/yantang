@@ -38,8 +38,16 @@ class CouponController extends Controller {
         $coupon = $this->couponRepo->create($request->all());
 
         $coupon->load('rules', 'counter');
-        
+
         return $this->response->item($coupon, new CouponTransformer())->setStatusCode(201);
+    }
+
+    public function update(Request $request, $promotion_id)
+    {
+        $active = $request->input('active') ?: true;
+        $coupon = $this->couponRepo->updateActiveStatus($promotion_id, $active);
+
+        return $this->response->item($coupon, new CouponTransformer());
     }
 
     public function show($coupon_id)
@@ -50,5 +58,6 @@ class CouponController extends Controller {
 
         return $this->response->item($coupon, new CouponTransformer());
     }
+
 
 }

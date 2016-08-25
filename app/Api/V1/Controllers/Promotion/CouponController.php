@@ -39,5 +39,6 @@ class CouponController extends Controller {
 
         return $this->response->item($coupons, new CouponTransformer());
     }
+    
 
 }

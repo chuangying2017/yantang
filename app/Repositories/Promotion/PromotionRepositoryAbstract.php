@@ -41,6 +41,17 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
 
     protected abstract function updateRelation($promotion_id, $data);
 
+    public function updateActiveStatus($promotion_id, $active = true)
+    {
+        $promotion = $this->get($promotion_id, false);
+
+        $promotion->active = $active_value = $active ? 1 : 0;
+        $promotion->save();
+
+        return $promotion;
+    }
+
+
     public function create($data)
     {
         $promotion = $this->fillPromotion(null, $data);
@@ -101,7 +112,7 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     {
         $query = $this->getQuery();
         if ($not_over_time) {
-            $query = $query->effect();
+            $query = $query->effect()->where('active', 1);
         }
 
         $query->orderBy('created_at', 'desc');
