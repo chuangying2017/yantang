@@ -44,6 +44,7 @@ class PreorderAssignService implements PreorderAssignServiceContact {
          * 顺时针遍服务范围点,若点在服务范围点向量左边则不在服务范围内
          */
         $available_stations = $this->filterAvailable($longitude, $latitude, $stations);
+        
         if (!count($available_stations)) {
             return null;
         }
@@ -56,35 +57,56 @@ class PreorderAssignService implements PreorderAssignServiceContact {
     }
 
 
+//    public function inSide($longitude, $latitude, $geo)
+//    {
+//        $geo_count = count($geo);
+//
+//        if (!$geo_count) {
+//            return false;
+//        }
+//
+//
+//        for ($point_index = 0; $point_index < $geo_count; $point_index++) {
+//            $start_point = $geo[$point_index];
+//            $end_point = (($point_index + 1) == $geo_count) ? $geo[0] : $geo[$point_index + 1];
+//            $cal = bccomp(
+//                bcmul(
+//                    bcsub($this->getPointLongitude($start_point), $longitude, 6),
+//                    bcsub($this->getPointLatitude($end_point), $latitude, 6),
+//                    12),
+//                bcmul(
+//                    bcsub($this->getPointLatitude($start_point), $latitude, 6),
+//                    bcsub($this->getPointLongitude($end_point), $longitude, 6),
+//                    12),
+//                12);
+//
+//            if ($cal === -1) {
+//                return false;
+//            }
+//        }
+//
+//        return true;
+//    }
+
     public function inSide($longitude, $latitude, $geo)
     {
-        $geo_count = count($geo);
+        $x = $longitude;
+        $y = $latitude;
 
-        if (!$geo_count) {
-            return false;
+        $inside = false;
+
+        for ($i = 0, $j = count($geo) - 1; $i < count($geo); $j = $i++) {
+            $xi = $geo[$i][0];
+            $yi = $geo[$i][1];
+            $xj = $geo[$j][0];
+            $yj = $geo[$j][1];
+
+            $intersect = (($yi > $y) != ($yj > $y))
+                && ($x < ($xj - $xi) * ($y - $yi) / ($yj - $yi) + $xi);
+            if ($intersect) $inside = !$inside;
         }
 
-
-        for ($point_index = 0; $point_index < $geo_count; $point_index++) {
-            $start_point = $geo[$point_index];
-            $end_point = (($point_index + 1) == $geo_count) ? $geo[0] : $geo[$point_index + 1];
-            $cal = bccomp(
-                bcmul(
-                    bcsub($this->getPointLongitude($start_point), $longitude, 6),
-                    bcsub($this->getPointLatitude($end_point), $latitude, 6),
-                    12),
-                bcmul(
-                    bcsub($this->getPointLatitude($start_point), $latitude, 6),
-                    bcsub($this->getPointLongitude($end_point), $longitude, 6),
-                    12),
-                12);
-
-            if ($cal === -1) {
-                return false;
-            }
-        }
-
-        return true;
+        return $inside;
     }
 
     private function getPointLongitude($point)
@@ -134,7 +156,6 @@ class PreorderAssignService implements PreorderAssignServiceContact {
         }
         return $closest_station;
     }
-
 
 
 }
