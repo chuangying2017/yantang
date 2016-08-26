@@ -30,7 +30,9 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     protected function updateTicket($ticket_id, $status, $rule_id = 0)
     {
         $ticket = $this->getTicket($ticket_id);
-        $ticket->rule_id = $rule_id;
+        if (!is_null($rule_id)) {
+            $ticket->rule_id = $rule_id;
+        }
         $ticket->status = $status;
         $ticket->save();
         return $ticket;
@@ -72,6 +74,12 @@ class EloquentTicketRepository implements TicketRepositoryContract {
 
     public function deleteTicket($ticket_id)
     {
+        $ticket = $this->getTicket($ticket_id, false);
+        $this->decreaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_DISPATCH);
+        if ($ticket['status'] == PromotionProtocol::STATUS_OF_TICKET_USED) {
+            $this->decreaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_USED);
+        }
+
         return Ticket::query()->where('id', $ticket_id)->delete();
     }
 
@@ -164,7 +172,10 @@ class EloquentTicketRepository implements TicketRepositoryContract {
 
     public static function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
     {
-        $query = Ticket::query()->where('user_id', $user_id)->where('promotion_id', $promotion_id);
+        $query = Ticket::query()
+            ->where('user_id', $user_id)
+            ->where('promotion_id', $promotion_id)
+            ->where('status', '!=', PromotionProtocol::STATUS_OF_TICKET_CANCEL);
 
         if (!is_null($rule_id)) {
             $query = $query->where('rule_id', $rule_id);
@@ -193,4 +204,15 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     }
 
 
+    public function updateAsCancel($ticket_id)
+    {
+        $ticket = $this->getTicket($ticket_id);
+
+        if ($ticket['status'] == PromotionProtocol::STATUS_OF_TICKET_USED) {
+            $this->decreaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_USED);
+            return $this->updateTicket($ticket_id, PromotionProtocol::STATUS_OF_TICKET_CANCEL, null);
+        }
+
+        return $ticket;
+    }
 }
