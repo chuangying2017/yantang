@@ -145,7 +145,7 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
 
     public function getByDistrict($district_id)
     {
-        return Station::query()->where('district_id', $district_id)->get(['id', 'name', 'longitude', 'latitude', 'geo']);
+        return Station::query()->where('district_id', $district_id)->where('active', 1)->get(['id', 'name', 'longitude', 'latitude', 'geo']);
     }
 
     public function unbindAllUser($station_id)
