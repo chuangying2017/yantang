@@ -11,11 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PromotionAbstract extends Model {
 
     use SoftDeletes, PromotionRelations, PromotionScope;
-    
 
     protected $table = 'promotions';
 
     protected $guarded = ['id'];
-
 
 }
