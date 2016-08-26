@@ -39,7 +39,8 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
             'phone',
             'longitude',
             'latitude',
-            'active'
+            'active',
+            'geo'
         ]));
         $station->save();
 
