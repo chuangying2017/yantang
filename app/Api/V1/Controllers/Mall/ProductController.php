@@ -38,6 +38,7 @@ class ProductController extends Controller {
         $group = $request->input('group');
 
         $keyword = $request->input('keyword');
+        $status = ProductProtocol::VAR_PRODUCT_STATUS_UP;
 
         if ($keyword) {
             $products = $this->productRepo->search($keyword, compact('brand', 'cat', 'group', 'status'));
