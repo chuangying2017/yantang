@@ -31,5 +31,5 @@ interface StationRepositoryContract {
 
     public function getAllActive($only_id = false);
 
-    public function getByDistrict($district);
+    public function getByDistrict($district = null);
 }

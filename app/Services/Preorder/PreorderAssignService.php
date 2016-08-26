@@ -44,9 +44,13 @@ class PreorderAssignService implements PreorderAssignServiceContact {
          * 顺时针遍服务范围点,若点在服务范围点向量左边则不在服务范围内
          */
         $available_stations = $this->filterAvailable($longitude, $latitude, $stations);
-        
+
         if (!count($available_stations)) {
-            return null;
+            $stations = $this->stationRepo->getByDistrict();
+            $available_stations = $this->filterAvailable($longitude, $latitude, $stations);
+            if (!count($available_stations)) {
+                return null;
+            }
         }
 
         if (count($available_stations) == 1) {

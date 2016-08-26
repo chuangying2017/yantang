@@ -144,9 +144,15 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
         return generate_bind_token($station_id);
     }
 
-    public function getByDistrict($district_id)
+    public function getByDistrict($district_id = null)
     {
-        return Station::query()->where('district_id', $district_id)->where('active', 1)->get(['id', 'name', 'longitude', 'latitude', 'geo']);
+        $query = Station::query();
+
+        if (!is_null($district_id)) {
+            $query->where('district_id', $district_id);
+        }
+
+        return $query->where('active', 1)->get(['id', 'name', 'longitude', 'latitude', 'geo']);
     }
 
     public function unbindAllUser($station_id)
