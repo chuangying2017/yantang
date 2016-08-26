@@ -4,7 +4,6 @@ use App\Services\Promotion\PromotionProtocol;
 
 interface PromotionAbleItemContract extends PromotionAbleItemBenefitContract {
 
-
     public function getItems($item_keys = null);
 
     public function getAmount($item_keys = null);
