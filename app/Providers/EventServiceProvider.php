@@ -80,6 +80,7 @@ class EventServiceProvider extends ServiceProvider {
         'App\Events\Order\OrderIsCancel' => [
             'App\Listeners\Product\IncreaseProductSkuStock',
             'App\Listeners\Preorder\SetPreorderAsCancel',
+            'App\Listeners\Promotion\RestoreTickets',
         ],
 
         'App\Events\Order\OrderIsDone' => [
