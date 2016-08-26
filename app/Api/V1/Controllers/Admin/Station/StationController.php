@@ -65,6 +65,7 @@ class StationController extends Controller {
     public function show($id)
     {
         $station = $this->stationRepo->getStation($id, true);
+        $station['bind_token'] = generate_bind_token($station['id']);
 
         return $this->response->item($station, new StationTransformer());
     }
@@ -79,6 +80,7 @@ class StationController extends Controller {
     public function update(CreateStationRequest $request, $id)
     {
         $station = $this->stationRepo->updateStation($id, $request->all());
+        $station['bind_token'] = generate_bind_token($station['id']);
 
         return $this->response->item($station, new StationTransformer());
     }
