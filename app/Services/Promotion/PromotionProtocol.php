@@ -158,6 +158,7 @@ class PromotionProtocol {
     const STATUS_OF_TICKET_USED = 1;
     const STATUS_OF_TICKET_OK = 0;
     const STATUS_OF_TICKET_EXPIRED = 2;
+    const STATUS_OF_TICKET_CANCEL = 3;
 
     const LENGTH_OF_TICKET_NO = 24;
 
