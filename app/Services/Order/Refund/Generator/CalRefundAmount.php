@@ -9,8 +9,9 @@ class CalRefundAmount extends RefundGenerateHandlerAbstract {
         $discount_amount = 0;
         foreach ($order_skus as $order_sku) {
             $discount_amount = $discount_amount + $order_sku['discount_amount'];
-            $refund_amount = $refund_amount + ($order_sku['price'] * $order_sku['quantity']);
+            $refund_amount = $refund_amount + $order_sku['pay_amount'];
         }
+        $refund_amount += $discount_amount;
 
         $temp_order->setRefundAmount($refund_amount);
         $temp_order->setDiscountAmount($discount_amount);

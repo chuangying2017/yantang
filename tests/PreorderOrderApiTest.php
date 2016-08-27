@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PreorderOrderApiTest extends TestCase {
 
-    use DatabaseTransactions;
+//    use DatabaseTransactions;
 
     /** @test */
     public function it_can_create_a_preorder_temp_order()
@@ -75,8 +75,8 @@ class PreorderOrderApiTest extends TestCase {
         $this->getUrl($pay_url);
 
         $this->json('POST', 'subscribe/orders/' . $order['order_no'] . '/checkout', ['channel' => 'wx_pub_qr'], ['Authorization' => 'Bearer ' . $this->getToken()]);
-        $charge = $this->getResponseData('data');
 
+        $charge = $this->getResponseData('data');
 
         $this->json('post', 'gateway/pingxx/paid',
             ['data' => ['object' => $charge]],
@@ -88,6 +88,9 @@ class PreorderOrderApiTest extends TestCase {
         $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => \App\Services\Order\OrderProtocol::STATUS_OF_PAID]);
 
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
+
+        
+
 
         return $order;
     }

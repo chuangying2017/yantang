@@ -112,7 +112,7 @@ class PingxxPayService implements ThirdPartyPayContract {
         if (config('services.pingxx.live')) {
             return $charge->paid && $charge->livemode;
         }
-
+        
         return $charge->paid;
     }
 

@@ -31,6 +31,7 @@ class SetRefundSkus extends RefundGenerateHandlerAbstract {
             $refund_order_skus = $this->transform($order_skus);
         }
 
+
         foreach ($order_skus as $key => $order_sku) {
             if ($order_sku['quantity'] - $order_sku['return_quantity'] < $refund_order_skus[$order_sku['id']]) {
                 $temp_order->setError('退货退款商品数量超出购买量');

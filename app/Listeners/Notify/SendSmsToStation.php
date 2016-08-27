@@ -51,7 +51,8 @@ class SendSmsToStation {
 
                 $phone = $preorder['station']['phone'];
 
-                $result = Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_STATION_NEW_ORDER)->send();
+                NotifyProtocol::notifyStationNewOrder($phone);
+
             } catch (\Exception $e) {
                 \Log::error($e);
             }

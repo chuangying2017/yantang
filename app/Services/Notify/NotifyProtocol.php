@@ -1,4 +1,7 @@
 <?php namespace App\Services\Notify;
+
+use Toplan\PhpSms\Sms;
+
 class NotifyProtocol {
 
     const SMS_TO_STATION_NEW_ORDER = '您好，您有一笔新的订单，请及时处理！【燕塘优鲜达】';
@@ -10,4 +13,14 @@ class NotifyProtocol {
     const SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME = '您有一个来自服务部的订单待处理，请及时处理！【燕塘优鲜达】';
 
     const SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT = '您有一个来自服务部的订单待处理，请及时处理！【燕塘优鲜达】';
+
+
+    public static function notifyStationNewOrder($phone)
+    {
+        try {
+            $result = Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_STATION_NEW_ORDER)->send();
+        } catch (\Exception $e) {
+            \Log::error($e);
+        }
+    }
 }
