@@ -37,7 +37,7 @@ class SetRefundSkus extends RefundGenerateHandlerAbstract {
                 return $temp_order;
             }
             $order_skus[$key]['quantity'] = $refund_order_skus[$order_sku['id']];
-            $order_skus[$key]['pay_amount'] = $refund_order_skus[$order_sku['id']] * $order_sku['price'];
+            $order_skus[$key]['pay_amount'] = $refund_order_skus[$order_sku['id']] * $order_sku['price'] - $order_sku['discount_amount'];
         }
 
         $temp_order->setRefundSkus($order_skus);

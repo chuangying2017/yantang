@@ -31,6 +31,7 @@ class PreorderTransformer extends TransformerAbstract {
             'status' => $preorder->status,
             'start_time' => $preorder->start_time,
             'daytime' => $preorder->daytime,
+            'weekday_type' => $preorder->weekday_type,
             'pause_time' => $preorder->pause_time,
             'restart_time' => $preorder->restart_time,
             'created_at' => $preorder->created_at,
