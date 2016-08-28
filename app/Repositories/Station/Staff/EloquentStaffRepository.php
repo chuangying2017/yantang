@@ -22,6 +22,11 @@ class EloquentStaffRepository implements StaffRepositoryContract {
     public function updateStaff($staff_id, $staff_data)
     {
         $staff = $this->getStaff($staff_id);
+
+        if (array_get($staff_data, 'user_id', 0) == 0) {
+            access()->removeRole(AccessProtocol::ROLE_OF_STAFF, $staff['user_id']);
+        }
+
         $staff->fill(array_only($staff_data, [
             'name',
             'phone',
@@ -136,15 +141,11 @@ class EloquentStaffRepository implements StaffRepositoryContract {
     {
         $staff = $this->getStaff($staff_id);
 
-        if ($staff['user_id'] != $user_id) {
-            return false;
-        }
+        access()->removeRole(AccessProtocol::ROLE_OF_STAFF, $staff['user_id']);
 
         $staff->user_id = 0;
         $staff->status = StationProtocol::STATUS_OF_STAFF_UN_BIND;
         $staff->save();
-
-        access()->removeRole(AccessProtocol::ROLE_OF_STAFF, $user_id);
 
         return $staff;
     }
