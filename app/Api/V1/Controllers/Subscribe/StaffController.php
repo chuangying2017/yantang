@@ -85,6 +85,10 @@ class StaffController extends Controller {
     {
         $success = $this->staffRepo->unbindUser($staff_id, access()->id());
 
+        if (!$success) {
+            $this->response->errorForbidden('解绑失败');
+        }
+
         return $this->response->noContent();
     }
 

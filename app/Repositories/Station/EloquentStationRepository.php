@@ -82,6 +82,8 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
             throw new \Exception('服务部存在订单,无法删除');
         }
 
+        $this->unbindAllUser($station_id);
+
         return Station::destroy($station_id);
     }
 
