@@ -53,17 +53,23 @@ class PreorderProtocol {
         ]);
     }
 
-    public static function validOrderAssignStatus($status)
+    public static function validOrderAssignStatus($status, $assigning = false)
     {
         if (is_null($status)) {
             return false;
         }
-        return in_array($status, [
-            self::ASSIGN_STATUS_OF_UNTREATED,
-            self::ASSIGN_STATUS_OF_CONFIRM,
-            self::ASSIGN_STATUS_OF_ASSIGNED,
-            self::ASSIGN_STATUS_OF_REJECT,
-        ]);
+
+        return $assigning ?
+            in_array($status, [
+                self::ASSIGN_STATUS_OF_UNTREATED,
+                self::ASSIGN_STATUS_OF_REJECT,
+            ]) :
+            in_array($status, [
+                self::ASSIGN_STATUS_OF_UNTREATED,
+                self::ASSIGN_STATUS_OF_CONFIRM,
+                self::ASSIGN_STATUS_OF_ASSIGNED,
+                self::ASSIGN_STATUS_OF_REJECT,
+            ]);
     }
 
     public static function validChargeStatus($status)

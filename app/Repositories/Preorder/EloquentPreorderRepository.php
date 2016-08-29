@@ -109,15 +109,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $query->where('staff_id', $staff_id);
         }
 
-        if (PreorderProtocol::validOrderStatus($status)) {
-            $query->where('status', $status);
-        } else if (PreorderProtocol::validOrderAssignStatus($status) === true) {
-            $query->with('assign')->whereHas('assign', function ($query) use ($status) {
-                $query->where('status', $status);
-            });
-        } else {
-            $query->whereNotIn('status', [PreorderProtocol::ORDER_STATUS_OF_UNPAID, PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
-        }
+        $this->scopeStatus($query, $status);
 
         if (!is_null($start_time)) {
             $query->where('end_time', '>=', $start_time);
@@ -318,15 +310,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $query->where('phone', $phone);
         }
 
-        if (PreorderProtocol::validOrderStatus($order_status) === true) {
-            $query->where('status', $order_status);
-        }
-
-        if (PreorderProtocol::validOrderAssignStatus($order_status) === true) {
-            $query->with('assign')->whereHas('assign', function ($query) use ($order_status) {
-                $query->where('status', $order_status);
-            });
-        }
+        $this->scopeStatus($query, $order_status);
 
         if (!is_null($start_time)) {
             $query->where('start_time', '>=', $start_time);
@@ -339,6 +323,27 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $query->orderBy('created_at', 'desc');
 
         return $query->paginate(PreorderProtocol::PREORDER_PER_PAGE);
+    }
+
+    protected function scopeStatus($query, $order_status)
+    {
+        if (PreorderProtocol::validOrderStatus($order_status) === true) {
+            $query->where('status', $order_status);
+        } else if (PreorderProtocol::validOrderAssignStatus($order_status) === true) {
+
+            if (PreorderProtocol::validOrderAssignStatus($order_status, true) === true) {
+                $query->where('status', PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
+            }
+
+            $query->with('assign')->whereHas('assign', function ($query) use ($order_status) {
+                $query->where('status', $order_status);
+            });
+        } else {
+            $query->whereNotIn('status', [
+                PreorderProtocol::ORDER_STATUS_OF_UNPAID,
+                PreorderProtocol::ORDER_STATUS_OF_CANCEL
+            ]);
+        }
     }
 
     public function updatePreorderStatusByOrder($order_id, $status)
