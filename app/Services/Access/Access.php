@@ -144,8 +144,12 @@ class Access {
 
     public function addRole($role, $user_id = null)
     {
-        if (!is_null($user_id)) {
-            $user = $this->app->make(EloquentUserRepository::class)->findOrThrowException($user_id);
+        if (!is_null($user_id) && $user_id) {
+            try {
+                $user = $this->app->make(EloquentUserRepository::class)->findOrThrowException($user_id);
+            } catch (\Exception $e) {
+                \Log::error($e);
+            }
         } else {
             $user = $this->user();
         }
@@ -165,8 +169,12 @@ class Access {
 
     public function removeRole($role, $user_id = null)
     {
-        if (!is_null($user_id)) {
-            $user = $this->app->make(EloquentUserRepository::class)->findOrThrowException($user_id);
+        if (!is_null($user_id) && $user_id) {
+            try {
+                $user = $this->app->make(EloquentUserRepository::class)->findOrThrowException($user_id);
+            } catch (\Exception $e) {
+                \Log::error($e);
+            }
         } else {
             $user = $this->user();
         }
