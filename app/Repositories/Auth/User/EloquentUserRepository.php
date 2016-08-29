@@ -34,7 +34,7 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
 
     /**
      * @param $id
-     * @return \Illuminate\Support\Collection|null|static
+     * @return User
      * @throws GeneralException
      */
     public function findOrThrowException($id)
