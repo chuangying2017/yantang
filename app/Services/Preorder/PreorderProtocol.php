@@ -45,6 +45,7 @@ class PreorderProtocol {
             return false;
         }
         return in_array($status, [
+            self::ORDER_STATUS_OF_UNPAID,
             self::ORDER_STATUS_OF_SHIPPING,
             self::ORDER_STATUS_OF_ASSIGNING,
             self::ORDER_STATUS_OF_DONE,

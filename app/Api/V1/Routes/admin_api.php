@@ -133,8 +133,8 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
         //订奶订单
         $api->group(['namespace' => 'Order'], function ($api) {
             $api->group(['prefix' => 'subscribe'], function ($api) {
-                $api->get('preorders/reject', 'PreorderController@reject');
-                $api->get('preorders/overtime', 'PreorderController@overtime');
+                $api->get('orders/reject', 'PreorderController@reject');
+                $api->get('orders/overtime', 'PreorderController@overtime');
                 $api->resource('orders', 'PreorderController', ['only' => ['index', 'show', 'update']]);
             });
         });
