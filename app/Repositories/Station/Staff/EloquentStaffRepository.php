@@ -46,6 +46,11 @@ class EloquentStaffRepository implements StaffRepositoryContract {
         }
 
         $staff = $this->getStaff($staff_id);
+
+        if ($staff['user_id'] != $user_id) {
+            access()->removeRole(AccessProtocol::ROLE_OF_STAFF, $staff['user_id']);
+        }
+
         $staff->user_id = $user_id;
         $staff->status = StationProtocol::STATUS_OF_STAFF_BIND;
         $staff->save();
