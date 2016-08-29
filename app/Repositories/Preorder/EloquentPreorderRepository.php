@@ -111,6 +111,10 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if (PreorderProtocol::validOrderStatus($status)) {
             $query->where('status', $status);
+        } else if (PreorderProtocol::validOrderAssignStatus($status) === true) {
+            $query->with('assign')->whereHas('assign', function ($query) use ($status) {
+                $query->where('status', $status);
+            });
         } else {
             $query->whereNotIn('status', [PreorderProtocol::ORDER_STATUS_OF_UNPAID, PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
         }
@@ -316,6 +320,12 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if (PreorderProtocol::validOrderStatus($order_status) === true) {
             $query->where('status', $order_status);
+        }
+
+        if (PreorderProtocol::validOrderAssignStatus($order_status) === true) {
+            $query->with('assign')->whereHas('assign', function ($query) use ($order_status) {
+                $query->where('status', $order_status);
+            });
         }
 
         if (!is_null($start_time)) {
