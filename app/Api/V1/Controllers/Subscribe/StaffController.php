@@ -81,7 +81,7 @@ class StaffController extends Controller {
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function postUnBind(BindStaffRequest $request, $staff_id)
+    public function postUnBind(Request $request, $staff_id)
     {
         $success = $this->staffRepo->unbindUser($staff_id, access()->id());
 

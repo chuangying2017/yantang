@@ -18,8 +18,8 @@ class StationStaffTest extends TestCase
 
         $this->assertResponseOk();
     }
-    
-    
+
+
 
     /** @test */
     public function it_can_get_a_staff_info()
@@ -70,8 +70,13 @@ class StationStaffTest extends TestCase
 
         $this->assertResponseStatus(201);
 
+        $this->json('post', 'staffs/' . $staff['id'] . '/unbind', [], $this->getAuthHeader());
+
+        $this->assertResponseStatus(204);
+
 
         $this->json('GET', 'staffs/info', [], ['Authorization' => 'Bearer ' . $token]);
+
 
         $result = $this->getResponseData();
 
