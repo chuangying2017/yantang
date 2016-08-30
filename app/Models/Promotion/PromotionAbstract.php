@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PromotionAbstract extends Model {
 
-    use SoftDeletes, PromotioxnRelations, PromotionScope;
+    use SoftDeletes, PromotionRelations, PromotionScope;
 
     protected $table = 'promotions';
 

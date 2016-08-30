@@ -18,7 +18,9 @@ class EloquentTicketRepository implements TicketRepositoryContract {
             'start_time' => $promotion['start_time'],
             'end_time' => $this->calEndTime($promotion),
             'type' => $promotion['type'],
-            'status' => PromotionProtocol::STATUS_OF_TICKET_OK
+            'status' => PromotionProtocol::STATUS_OF_TICKET_OK,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
 
         if (!is_array($user_id)) {
@@ -34,6 +36,7 @@ class EloquentTicketRepository implements TicketRepositoryContract {
                 return false;
             }
             $result = Ticket::insert($tickets_data);
+            return count($ticket_data);
         }
 
         $ticket_count = is_null($user_id) ? 1 : count($user_id);
@@ -183,7 +186,6 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     {
         return date('Y-m-d H:i:s', $left < $right ? $left : $right);
     }
-
 
     public static function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
     {
