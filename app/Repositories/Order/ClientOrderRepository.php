@@ -16,7 +16,7 @@ use App\Services\Order\OrderProtocol;
 use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ClientOrderRepository implements ClientOrderRepositoryContract {
+class ClientOrderRepository implements ClientOrderRepositoryContract, OrderCounterRepositoryContract {
 
     protected $type;
     /**
@@ -178,7 +178,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
 
     public function getAllOrders($status = null, $order_by = 'created_at', $sort = 'desc')
     {
-        $query = Order::where('order_type', $this->type);
+        $query = Order::query()->where('order_type', $this->type);
         if (!is_null($status)) {
             $query = $query->where('status', $status);
         }
@@ -238,6 +238,40 @@ class ClientOrderRepository implements ClientOrderRepositoryContract {
         event(new OrderIsCancel($order));
 
         return $order;
+    }
+
+    public function getOrdersCount($user_id, $order_type, $status = null, $start_time = null)
+    {
+        $query = $this->scopeOrderCount($user_id, $order_type, $status, $start_time);
+        return $query->get()->count();
+    }
+
+    public function hasOrdersCount($user_id, $order_type, $status = null, $start_time = null)
+    {
+        $query = $this->scopeOrderCount($user_id, $order_type, $status, $start_time);
+        return $query->first();
+    }
+
+    /**
+     * @param $user_id
+     * @param $order_type
+     * @param null $status
+     * @param null $start_time
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function scopeOrderCount($user_id, $order_type, $status = null, $start_time = null)
+    {
+        $query = Order::query()->where('user_id', $user_id)->where('order_type', $order_type);
+
+        if (OrderProtocol::validOrderStatus($status)) {
+            $query->whereIn('status', to_array($status));
+        }
+
+        if (!is_null($start_time)) {
+            $query->where('created_at', '>=', $start_time);
+        }
+
+        return $query;
     }
 
 }
