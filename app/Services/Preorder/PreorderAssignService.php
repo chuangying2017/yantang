@@ -133,7 +133,7 @@ class PreorderAssignService implements PreorderAssignServiceContact {
     {
         $available_stations = [];
         foreach ($stations as $station) {
-            foreach (explode($station['geo'], ',') as $geo) {
+            foreach (explode($station['geo'], '|') as $geo) {
                 if ($this->inSide($longitude, $latitude, $geo)) {
                     $available_stations[] = $station;
                 }
