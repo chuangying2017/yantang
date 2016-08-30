@@ -35,6 +35,8 @@ class QualifyChecker {
             PromotionProtocol::QUALI_TYPE_OF_ROLE => RoleUsers::class,
             PromotionProtocol::QUALI_TYPE_OF_USER => SpecifyUsers::class,
             PromotionProtocol::QUALI_TYPE_OF_GROUP => GroupUser::class,
+            PromotionProtocol::QUALI_TYPE_OF_FIRST_ORDER => FirstOrder::class,
+            PromotionProtocol::QUALI_TYPE_OF_FIRST_PAID_ORDER => FirstPaidOrder::class,
         ];
 
         $this->setQualifyChecker(app()->make($handler[$type]));
