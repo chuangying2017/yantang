@@ -11,7 +11,7 @@ use Storage;
 
 class SeedCouponForFirstOrderUser extends Command {
 
-    const SEED_COUPON_USER_FILE_NAME = 'coupon_seed_user.json';
+    const SEED_COUPON_USER_FILE_NAME = '_coupon_seed_user.json';
 
     /**
      * @var CouponRepositoryContract
@@ -30,7 +30,7 @@ class SeedCouponForFirstOrderUser extends Command {
      *
      * @var string
      */
-    protected $description = 'seed coupon for first order user';
+    protected $description = 'example => coupon:seed 9 | coupon:seed reset,9';
 
     /**
      * Create a new command instance.
@@ -52,16 +52,17 @@ class SeedCouponForFirstOrderUser extends Command {
      */
     public function handle()
     {
-        if ($this->argument('coupon_id') == 'reset') {
-            $this->initSeedUser();
+        $coupon_id = $this->argument('coupon_id');
+        if (strpos($coupon_id, 'reset') !== false) {
+            $this->initSeedUser(explode(',', $coupon_id)[1]);
             echo 'reset';
             return;
         }
 
-        $user_ids = $this->getFirstPaidOrderUserIds();
+        $user_ids = $this->getFirstPaidOrderUserIds($coupon_id);
         $count = $this->ticketRepo->createTicket($user_ids, $this->getCoupon(), false);
 
-        $this->storeSeedUser($user_ids);
+        $this->storeSeedUser($coupon_id, $user_ids);
 
         echo 'success, seed: ' . $count;
     }
@@ -74,7 +75,7 @@ class SeedCouponForFirstOrderUser extends Command {
         return $coupon;
     }
 
-    private function getFirstPaidOrderUserIds()
+    private function getFirstPaidOrderUserIds($coupon_id)
     {
         $from_database_user_ids = array_unique(
             Order::query()->where('pay_status', OrderProtocol::PAID_STATUS_OF_PAID)
@@ -83,31 +84,31 @@ class SeedCouponForFirstOrderUser extends Command {
                 ->pluck('user_id')->all()
         );
 
-        return array_diff($from_database_user_ids, $this->getSeedUser(), $this->getSeedUser());
+        return array_diff($from_database_user_ids, $this->getSeedUser($coupon_id));
     }
 
-    private function storeSeedUser($user_ids)
+    private function storeSeedUser($coupon_id, $user_ids)
     {
         $new_user_ids = array_unique(
             array_merge(
                 $user_ids,
-                $this->getSeedUser()
+                $this->getSeedUser($coupon_id)
             )
         );
-        Storage::disk('local')->put(self::SEED_COUPON_USER_FILE_NAME, json_encode($new_user_ids));
+        Storage::disk('local')->put($coupon_id . self::SEED_COUPON_USER_FILE_NAME, json_encode($new_user_ids));
     }
 
-    private function getSeedUser()
+    private function getSeedUser($coupon_id)
     {
-        if (!Storage::disk('local')->exists(self::SEED_COUPON_USER_FILE_NAME)) {
-            $this->initSeedUser();
+        if (!Storage::disk('local')->exists($coupon_id . self::SEED_COUPON_USER_FILE_NAME)) {
+            $this->initSeedUser($coupon_id);
         }
-        return json_decode(Storage::disk('local')->get(self::SEED_COUPON_USER_FILE_NAME), true);
+        return json_decode(Storage::disk('local')->get($coupon_id . self::SEED_COUPON_USER_FILE_NAME), true);
     }
 
-    private function initSeedUser()
+    private function initSeedUser($coupon_id)
     {
-        Storage::disk('local')->put(self::SEED_COUPON_USER_FILE_NAME, json_encode([]));
+        Storage::disk('local')->put($coupon_id . self::SEED_COUPON_USER_FILE_NAME, json_encode([]));
     }
 
     /**
