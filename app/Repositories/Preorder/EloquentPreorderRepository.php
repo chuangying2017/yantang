@@ -177,7 +177,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $orders = $this->getPreordersOfStation($station_id, null, PreorderProtocol::ORDER_STATUS_OF_SHIPPING, $start_time, $end_time, 'created_at', 'desc', $per_page);
 
         $orders->load(['skus' => function ($query) use ($start_time, $daytime) {
-            if ($daytime) {
+            if (!is_null($daytime)) {
                 $query->where('weekday', $start_time->dayOfWeek)->where('daytime', $daytime);
             }
             $query->where('weekday', $start_time->dayOfWeek);

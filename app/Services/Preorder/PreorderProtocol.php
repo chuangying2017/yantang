@@ -30,8 +30,8 @@ class PreorderProtocol {
     const ASSIGN_STATUS_OF_REJECT = 'reject';
     const DAYS_OF_ASSIGN_DISPOSE = 1;
 
-    const DAYTIME_OF_AM = 0;
-    const DAYTIME_OF_PM = 1;
+    const DAYTIME_OF_AM = 1;
+    const DAYTIME_OF_PM = 0;
 
     //Deliver
     const PREORDER_DELIVER_STATUS_OF_NEED_CONFIRM = 0;
