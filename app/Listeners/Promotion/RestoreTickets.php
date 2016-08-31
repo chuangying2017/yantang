@@ -14,7 +14,7 @@ class RestoreTickets {
      * @var TicketRepositoryContract
      */
     private $ticketRepo;
-    
+
     /**
      * Create the event listener.
      *
@@ -34,14 +34,17 @@ class RestoreTickets {
     public function handle(OrderIsCancel $event)
     {
         $order = $event->order;
-        $promotions = $order->load('promotions');
+        $order->load('promotions');
+        $promotions = $order['promotions'];
 
-        foreach ($promotions as $promotion) {
-            $ticket_id = $promotion['ticket_id'];
-            if ($promotions['type'] == PromotionProtocol::TYPE_OF_COUPON) {
-                $this->ticketRepo->updateAsOk($ticket_id);
-            } else {
-                $this->ticketRepo->updateAsCancel($ticket_id);
+        if (count($promotions)) {
+            foreach ($promotions as $promotion) {
+                $ticket_id = $promotion['ticket_id'];
+                if ($promotions['type'] == PromotionProtocol::TYPE_OF_COUPON) {
+                    $this->ticketRepo->updateAsOk($ticket_id);
+                } else {
+                    $this->ticketRepo->updateAsCancel($ticket_id);
+                }
             }
         }
     }
