@@ -13,6 +13,7 @@ use App\Repositories\Order\Memo\OrderMemoRepository;
 use App\Repositories\Order\Promotion\OrderPromotionRepositoryContract;
 use App\Repositories\Order\Sku\OrderSkuRepositoryContract;
 use App\Services\Order\OrderProtocol;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -144,6 +145,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract, OrderCount
     {
         $order = $this->getOrder($order_no, false);
         $order->pay_status = $status;
+        $order->pay_at = Carbon::now();
         $order->pay_channel = $pay_channel;
         $order->save();
 

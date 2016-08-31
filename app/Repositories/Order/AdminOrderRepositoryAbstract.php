@@ -61,11 +61,10 @@ abstract class AdminOrderRepositoryAbstract implements AdminOrderRepositoryContr
 
     protected function queryOrders($status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc', $per_page = null)
     {
-        $query = Order::where('order_type', $this->type);
+        $query = Order::query()->where('order_type', $this->type);
         if (!is_null($status)) {
             $query = $query->where('status', $status);
         }
-
 
         if (!is_null($keyword)) {
             $query = $query->where(function ($query) use ($keyword) {
@@ -79,6 +78,7 @@ abstract class AdminOrderRepositoryAbstract implements AdminOrderRepositoryContr
             });
         }
 
+        $query->orderBy($order_by, $sort);
 
         if ($this->isMallOrder()) {
             $query = $query->with('address');

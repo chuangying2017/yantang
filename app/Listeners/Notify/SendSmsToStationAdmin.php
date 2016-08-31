@@ -42,42 +42,25 @@ class SendSmsToStationAdmin {
 
     public function preorderHandleOvertime(PreordersNotHandleInTime $event)
     {
-        $this->sendMessage(NotifyProtocol::SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME);
+        NotifyProtocol::sendMessage($this->getAdminStationPhone(), NotifyProtocol::SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME);
     }
 
     public function orderAssignIsReject(AssignIsReject $event)
     {
-        $this->sendMessage(NotifyProtocol::SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT);
-    }
-
-    protected function sendMessage($message)
-    {
-        try {
-            $admin = $this->getAdminStationPhone();
-
-            if (!is_null($admin)) {
-                Sms::make()->to($admin['phone'])->content($message);
-                return 1;
-            }
-
-            \Log::error('服务部管理员不存在');
-            return 0;
-        } catch (\Exception $e) {
-            \Log::error($e);
-        } finally {
-            return 0;
-        }
+        NotifyProtocol::sendMessage($this->getAdminStationPhone(), NotifyProtocol::SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT);
     }
 
     protected function getAdminStationPhone()
     {
-        $users = $this->userRepo->getAllUsersByRole(AccessProtocol::ROLE_OF_STATION_ADMIN);
-
-        if (!is_null($users)) {
-            return $users->first();
-        }
-
-        return null;
+        return '13580347020';
+//        $users = $this->userRepo->getAllUsersByRole(AccessProtocol::ROLE_OF_STATION_ADMIN);
+//
+//        if (!is_null($users)) {
+//            $user = $users->first();
+//            return $user['phone'];
+//        }
+//
+//        return null;
     }
 
 
