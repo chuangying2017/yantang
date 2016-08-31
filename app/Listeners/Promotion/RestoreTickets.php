@@ -40,7 +40,7 @@ class RestoreTickets {
         if (count($promotions)) {
             foreach ($promotions as $promotion) {
                 $ticket_id = $promotion['ticket_id'];
-                if ($promotions['type'] == PromotionProtocol::TYPE_OF_COUPON) {
+                if ($promotion['type'] == PromotionProtocol::TYPE_OF_COUPON) {
                     $this->ticketRepo->updateAsOk($ticket_id);
                 } else {
                     $this->ticketRepo->updateAsCancel($ticket_id);
