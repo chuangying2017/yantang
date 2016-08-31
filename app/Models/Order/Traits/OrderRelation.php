@@ -7,6 +7,7 @@ use App\Models\Order\Order;
 use App\Models\Order\OrderAddress;
 use App\Models\Order\OrderDeliver;
 use App\Models\Order\OrderMemo;
+use App\Models\Order\OrderPromotion;
 use App\Models\Order\OrderSku;
 use App\Models\Order\OrderSpecialCampaign;
 use App\Services\Order\OrderProtocol;
@@ -65,7 +66,7 @@ trait OrderRelation {
 
     public function promotions()
     {
-        return $this->hasMany(OrderProtocol::class, 'order_id', 'id');
+        return $this->hasMany(OrderPromotion::class, 'order_id', 'id');
     }
 
 }
