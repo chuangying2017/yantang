@@ -52,7 +52,7 @@ class SendSmsToStationAdmin {
 
     protected function getAdminStationPhone()
     {
-        return '13580347020';
+        return env('STATION_ADMIN_PHONE', '13580347020');
 //        $users = $this->userRepo->getAllUsersByRole(AccessProtocol::ROLE_OF_STATION_ADMIN);
 //
 //        if (!is_null($users)) {
