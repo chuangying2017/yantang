@@ -30,16 +30,12 @@ class EloquentTicketRepository implements TicketRepositoryContract {
             if (empty($user_id)) {
                 return 0;
             }
-            $tickets_data = [];
             foreach ($user_id as $dispatch_user_id) {
                 $ticket_data['user_id'] = $dispatch_user_id;
-                $tickets_data[] = $ticket_data;
+                $ticket_data['ticket_no'] = $generate_no ? str_random(PromotionProtocol::LENGTH_OF_TICKET_NO) : '';
+                $result = Ticket::create($ticket_data);
             }
-            if (!count($tickets_data)) {
-                return false;
-            }
-            $result = Ticket::insert($tickets_data);
-            $result = count($tickets_data);
+            $result = count($user_id);
         }
 
         $ticket_count = is_null($user_id) ? 1 : count($user_id);
