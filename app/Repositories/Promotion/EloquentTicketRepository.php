@@ -39,7 +39,7 @@ class EloquentTicketRepository implements TicketRepositoryContract {
                 return false;
             }
             $result = Ticket::insert($tickets_data);
-            return count($tickets_data);
+            $result = count($tickets_data);
         }
 
         $ticket_count = is_null($user_id) ? 1 : count($user_id);
