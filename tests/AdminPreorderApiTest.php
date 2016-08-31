@@ -12,10 +12,10 @@ class AdminPreorderApiTest extends TestCase {
     public function it_can_get_all_preorders()
     {
         $this->json('get', 'admin/subscribe/orders',
-            ['status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM],
+            ['status' => null],
             $this->getAuthHeader());
 
-        $this->echoJson();
+        $this->dump();
 
 //        $this->seeJsonStructure(['data' => [['assign' => ['time_before']]]]);
     }

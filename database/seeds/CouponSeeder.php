@@ -15,22 +15,22 @@ class CouponSeeder extends Seeder {
 //        Coupon::truncate();
 
         $data = [
-            'name' => '满20瓶减16元',
-            'desc' => '订购牛奶,满20瓶减16元',
-            'content' => '16元',
+            'name' => '满30瓶减20元',
+            'desc' => '订购牛奶,满30瓶减20元',
+            'content' => '20元',
             'cover_image' => 'image_url',
-            'start_time' => '2016-08-09 10:00:00',
-            'end_time' => '2016-09-29 10:00:00',
+            'start_time' => '2016-08-27 00:00:00',
+            'end_time' => '2016-11-01 00:00:00',
             'active' => 1,
             'effect_days' => '30', //领券后有效时间
-            'total' => 10000,
+            'total' => 1000000,
             'rules' => [
                 [
-                    'name' => '满20瓶减16元',
-                    'desc' => '订购牛奶,满20瓶减16元',
+                    'name' => '满30瓶减20元',
+                    'desc' => '订购牛奶,满30瓶减20元',
                     'qualify' => [
                         'type' => \App\Services\Promotion\PromotionProtocol::QUALI_TYPE_OF_ALL,
-                        'quantity' => 2,
+                        'quantity' => 1,
                         'values' => null
                     ],
                     'items' => [
@@ -39,13 +39,13 @@ class CouponSeeder extends Seeder {
                     ],
                     'range' => [
                         'type' => \App\Services\Promotion\PromotionProtocol::RANGE_TYPE_OF_QUANTITY,
-                        'min' => 20,
+                        'min' => 30,
                         'max' => null
                     ],
                     'discount' => [
                         'type' => \App\Services\Promotion\PromotionProtocol::DISCOUNT_TYPE_OF_AMOUNT,
                         'mode' => \App\Services\Promotion\PromotionProtocol::DISCOUNT_MODE_OF_DECREASE,
-                        'value' => 16
+                        'value' => 20
                     ],
                     'weight' => 100,
                     'multi' => 1,

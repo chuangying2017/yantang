@@ -111,6 +111,16 @@ class OrderProtocol {
         ]);
     }
 
+    public static function getStatusOfPaid()
+    {
+        return [
+            self::STATUS_OF_PAID,
+            self::STATUS_OF_SHIPPING,
+            self::STATUS_OF_SHIPPED,
+            self::STATUS_OF_DONE
+        ];
+    }
+
     public static function statusIs($need_status, $current_status)
     {
         $valid_status = [$need_status];

@@ -12,25 +12,48 @@ class EloquentTicketRepository implements TicketRepositoryContract {
 
     public function createTicket($user_id = null, PromotionAbstract $promotion, $generate_no = false)
     {
-        $ticket = Ticket::create([
-            'user_id' => $user_id,
+        $ticket_data = [
             'promotion_id' => $promotion['id'],
             'ticket_no' => $generate_no ? str_random(PromotionProtocol::LENGTH_OF_TICKET_NO) : '',
             'start_time' => $promotion['start_time'],
             'end_time' => $this->calEndTime($promotion),
             'type' => $promotion['type'],
-            'status' => PromotionProtocol::STATUS_OF_TICKET_OK
-        ]);
+            'status' => PromotionProtocol::STATUS_OF_TICKET_OK,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ];
 
-        $this->increaseCounter($promotion['id'], PromotionProtocol::NAME_OF_COUNTER_DISPATCH);
+        if (!is_array($user_id)) {
+            $ticket_data['user_id'] = $user_id;
+            $result = Ticket::create($ticket_data);
+        } else {
+            if (empty($user_id)) {
+                return 0;
+            }
+            $tickets_data = [];
+            foreach ($user_id as $dispatch_user_id) {
+                $ticket_data['user_id'] = $dispatch_user_id;
+                $tickets_data[] = $ticket_data;
+            }
+            if (!count($tickets_data)) {
+                return false;
+            }
+            $result = Ticket::insert($tickets_data);
+            return count($tickets_data);
+        }
 
-        return $ticket;
+        $ticket_count = is_null($user_id) ? 1 : count($user_id);
+        $this->increaseCounter($promotion['id'], PromotionProtocol::NAME_OF_COUNTER_DISPATCH, $ticket_count);
+
+        return $result;
     }
 
     protected function updateTicket($ticket_id, $status, $rule_id = 0)
     {
         $ticket = $this->getTicket($ticket_id);
-        $ticket->rule_id = $rule_id;
+        if (!is_null($rule_id)) {
+            $ticket->rule_id = $rule_id;
+        }
         $ticket->status = $status;
         $ticket->save();
         return $ticket;
@@ -72,6 +95,12 @@ class EloquentTicketRepository implements TicketRepositoryContract {
 
     public function deleteTicket($ticket_id)
     {
+        $ticket = $this->getTicket($ticket_id, false);
+        $this->decreaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_DISPATCH);
+        if ($ticket['status'] == PromotionProtocol::STATUS_OF_TICKET_USED) {
+            $this->decreaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_USED);
+        }
+
         return Ticket::query()->where('id', $ticket_id)->delete();
     }
 
@@ -161,10 +190,12 @@ class EloquentTicketRepository implements TicketRepositoryContract {
         return date('Y-m-d H:i:s', $left < $right ? $left : $right);
     }
 
-
     public static function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null)
     {
-        $query = Ticket::query()->where('user_id', $user_id)->where('promotion_id', $promotion_id);
+        $query = Ticket::query()
+            ->where('user_id', $user_id)
+            ->where('promotion_id', $promotion_id)
+            ->where('status', '!=', PromotionProtocol::STATUS_OF_TICKET_CANCEL);
 
         if (!is_null($rule_id)) {
             $query = $query->where('rule_id', $rule_id);
@@ -193,4 +224,26 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     }
 
 
+    public function updateAsCancel($ticket_id)
+    {
+        $ticket = $this->getTicket($ticket_id);
+
+        if ($ticket['status'] == PromotionProtocol::STATUS_OF_TICKET_USED) {
+            $this->decreaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_USED);
+            return $this->updateTicket($ticket_id, PromotionProtocol::STATUS_OF_TICKET_CANCEL, null);
+        }
+
+        return $ticket;
+    }
+
+    public function rollback($ticket_id)
+    {
+        $ticket = $this->getTicket($ticket_id);
+
+        if ($ticket['type'] == PromotionProtocol::TYPE_OF_COUPON) {
+            $this->updateAsOk($ticket);
+        } else {
+            $this->updateAsCancel($ticket);
+        }
+    }
 }

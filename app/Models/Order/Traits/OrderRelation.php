@@ -7,8 +7,10 @@ use App\Models\Order\Order;
 use App\Models\Order\OrderAddress;
 use App\Models\Order\OrderDeliver;
 use App\Models\Order\OrderMemo;
+use App\Models\Order\OrderPromotion;
 use App\Models\Order\OrderSku;
 use App\Models\Order\OrderSpecialCampaign;
+use App\Services\Order\OrderProtocol;
 
 trait OrderRelation {
 
@@ -60,6 +62,11 @@ trait OrderRelation {
     public function refer()
     {
         return $this->belongsToMany(Order::class, 'return_orders', 'return_order_id', 'order_id');
+    }
+
+    public function promotions()
+    {
+        return $this->hasMany(OrderPromotion::class, 'order_id', 'id');
     }
 
 }

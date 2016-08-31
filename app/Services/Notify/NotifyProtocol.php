@@ -17,10 +17,20 @@ class NotifyProtocol {
 
     public static function notifyStationNewOrder($phone)
     {
+        return self::sendMessage($phone, NotifyProtocol::SMS_TO_STATION_NEW_ORDER);
+    }
+
+    public static function sendMessage($phone, $message)
+    {
         try {
-            $result = Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_STATION_NEW_ORDER)->send();
+            if (!is_null($phone)) {
+                Sms::make()->to($phone)->content($message);
+                return 1;
+            }
         } catch (\Exception $e) {
             \Log::error($e);
         }
+        return 0;
     }
+
 }

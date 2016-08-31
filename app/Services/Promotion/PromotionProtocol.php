@@ -80,7 +80,9 @@ class PromotionProtocol {
     const QUALI_TYPE_OF_ROLE = 'role';
     const QUALI_TYPE_OF_ALL = 'all';
     const QUALI_TYPE_OF_GROUP = 'group';
-
+    const QUALI_TYPE_OF_FIRST_ORDER = 'first_order';
+    const QUALI_TYPE_OF_FIRST_PAID_ORDER = 'first_paid';
+    
 
     public static function getQualifyType($name = null)
     {
@@ -89,6 +91,8 @@ class PromotionProtocol {
             self::QUALI_TYPE_OF_USER => '指定用户',
             self::QUALI_TYPE_OF_LEVEL => '指定用户等级',
             self::QUALI_TYPE_OF_ROLE => '指定用户角色',
+            self::QUALI_TYPE_OF_FIRST_ORDER => '首单优惠',
+            self::QUALI_TYPE_OF_FIRST_PAID_ORDER => '首单已支付优惠',
         ];
 
         return is_null($name) ? $data : array_get($data, $name, null);
@@ -158,6 +162,7 @@ class PromotionProtocol {
     const STATUS_OF_TICKET_USED = 1;
     const STATUS_OF_TICKET_OK = 0;
     const STATUS_OF_TICKET_EXPIRED = 2;
+    const STATUS_OF_TICKET_CANCEL = 3;
 
     const LENGTH_OF_TICKET_NO = 24;
 
