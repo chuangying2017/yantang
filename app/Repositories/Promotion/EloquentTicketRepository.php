@@ -235,4 +235,15 @@ class EloquentTicketRepository implements TicketRepositoryContract {
 
         return $ticket;
     }
+
+    public function rollback($ticket_id)
+    {
+        $ticket = $this->getTicket($ticket_id);
+
+        if ($ticket['type'] == PromotionProtocol::TYPE_OF_COUPON) {
+            $this->updateAsOk($ticket);
+        } else {
+            $this->updateAsCancel($ticket);
+        }
+    }
 }

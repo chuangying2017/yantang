@@ -16,6 +16,8 @@ interface TicketRepositoryContract {
 
     public function updateAsExpire($ticket_id);
 
+    public function rollback($ticket_id);
+
     public function updateAsCancel($ticket_id);
 
     public function getTicket($ticket_id, $with_promotion = true);
