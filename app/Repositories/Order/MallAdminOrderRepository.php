@@ -11,4 +11,5 @@ class MallAdminOrderRepository extends AdminOrderRepositoryAbstract {
     {
         $this->type = OrderProtocol::ORDER_TYPE_OF_MALL_MAIN;
     }
+    
 }
