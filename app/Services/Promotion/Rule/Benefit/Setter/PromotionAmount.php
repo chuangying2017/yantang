@@ -33,6 +33,9 @@ class PromotionAmount implements PromotionAbleItemBenefitContract {
     {
         $unset_amount = $discount_amount;
         $base_total = array_sum(array_pluck($this->related_skus, 'origin_total_amount'));
+
+        $sku_counter = 0;
+
         foreach ($this->related_skus as $related_sku) {
 
             $sku_discount_amount = intval(round($discount_amount / $base_total * $related_sku['origin_total_amount']));
@@ -40,6 +43,11 @@ class PromotionAmount implements PromotionAbleItemBenefitContract {
             //检查有单品优惠金额是否超过总优惠金额
             $sku_discount_amount = $unset_amount > $sku_discount_amount ? $sku_discount_amount : $unset_amount;
             $unset_amount -= $sku_discount_amount;
+
+            ++$sku_counter;
+            if ($sku_counter == count($this->related_skus) && $unset_amount > 0) {
+                $sku_discount_amount += $unset_amount;
+            }
 
             $this->order->setProductDiscount($related_sku['id'], $sku_discount_amount, $action);
         }
