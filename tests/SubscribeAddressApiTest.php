@@ -62,7 +62,7 @@ class SubscribeAddressApiTest extends TestCase {
             $this->getAuthHeader()
         );
 
-        $this->dump();
+        $this->echoJson();
 
     }
 
