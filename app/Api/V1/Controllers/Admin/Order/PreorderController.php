@@ -4,6 +4,7 @@ use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Admin\Preorders\UpdateAssignRequest;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
+use App\Services\Chart\ExcelService;
 use Illuminate\Http\Request;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Services\Preorder\PreorderProtocol;
@@ -27,6 +28,22 @@ class PreorderController extends Controller {
         $end_time = $request->input('end_time', null);
         $status = $request->input('status', null);
         $station_id = $request->input('station_id', null);
+
+        if ($request->input('export') == 'all') {
+            $orders = $this->preorderRepo->getAll($station_id, $order_no, $phone, $status, $start_time, $end_time);
+            $orders->load([
+                'order' => function ($query) {
+                    $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'status', 'pay_amount');
+                },
+                'skus' => function ($query) {
+                    $query->select('order_id', 'name', 'total', 'remain');
+                },
+                'station' => function ($query) {
+                    $query->select('id', 'name');
+                }]);
+
+            return ExcelService::downPreorder($orders->toArray());
+        }
 
         $orders = $this->preorderRepo->getAllPaginated($station_id, $order_no, $phone, $status, $start_time, $end_time);
         $orders->load('assign');
