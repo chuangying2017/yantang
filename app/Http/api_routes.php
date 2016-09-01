@@ -47,6 +47,12 @@ $api->version('v1', function ($api) {
          */
         require_once(__DIR__ . '/../Api/V1/Routes/gateway_api.php');
 
+        
+        /**
+         * Tool Support
+         */
+        require_once(__DIR__ . '/../Api/V1/Routes/test_api.php');
+
     });
 
 });

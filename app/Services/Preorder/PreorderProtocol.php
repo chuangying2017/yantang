@@ -95,7 +95,7 @@ class PreorderProtocol {
             self::ORDER_STATUS_OF_CANCEL => '已结束',
         ];
 
-        return is_null($key) ? $data : $data[$key];
+        return is_null($key) ? $data : array_get($data, $key, '其他');
     }
 
 

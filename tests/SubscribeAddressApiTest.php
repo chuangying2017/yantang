@@ -47,6 +47,26 @@ class SubscribeAddressApiTest extends TestCase {
     }
 
     /** @test */
+    public function it_can_check_the_address_is_vaild()
+    {
+        $out_side = [23.091847, 113.306186];
+
+        $data = [
+            'longitude' => $out_side[0],
+            'latitude' => $out_side[1],
+            'district_id' => 440105
+        ];
+
+        $this->json('post', 'test/address/check',
+            $data,
+            $this->getAuthHeader()
+        );
+
+        $this->echoJson();
+
+    }
+
+    /** @test */
     public function it_can_create_a_subscribe_address()
     {
         $station = $this->it_can_create_a_station();

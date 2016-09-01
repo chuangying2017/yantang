@@ -189,7 +189,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract, OrderCount
 
     public function getPaginatedOrders($status = null, $order_by = 'created_at', $sort = 'desc', $per_page = OrderProtocol::ORDER_PER_PAGE)
     {
-        $query = Order::where('order_type', $this->type);
+        $query = Order::query()->where('order_type', $this->type);
         if (!is_null($status)) {
             $query = $query->where('status', $status);
         }

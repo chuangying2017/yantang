@@ -93,7 +93,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $orders;
     }
 
-    protected function queryOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc')
+    protected function queryOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null)
     {
         $query = Preorder::query();
 
@@ -118,6 +118,15 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($end_time)) {
             $query->where('start_time', '<=', $end_time);
         }
+
+        if (!is_null($order_no)) {
+            $query->where('order_no', $order_no);
+        }
+
+        if (!is_null($phone)) {
+            $query->where('phone', $phone);
+        }
+
 
         $query->orderBy($orderBy, $sort);
 
@@ -296,33 +305,26 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null)
     {
-        $query = Preorder::query();
+        return $this->queryOrders(
+            null, $station_id, null,
+            $order_status,
+            $start_time, $end_time,
+            PreorderProtocol::PREORDER_PER_PAGE,
+            'created_at', 'sort',
+            $order_no, $phone
+        );
+    }
 
-        if (!is_null($station_id)) {
-            $query->where('station_id', $station_id);
-        }
-
-        if (!is_null($order_no)) {
-            $query->where('order_no', $order_no);
-        }
-
-        if (!is_null($phone)) {
-            $query->where('phone', $phone);
-        }
-
-        $this->scopeStatus($query, $order_status);
-
-        if (!is_null($start_time)) {
-            $query->where('start_time', '>=', $start_time);
-        }
-
-        if (!is_null($end_time)) {
-            $query->where('start_time', '<=', $end_time);
-        }
-
-        $query->orderBy('created_at', 'desc');
-
-        return $query->paginate(PreorderProtocol::PREORDER_PER_PAGE);
+    public function getAll($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null)
+    {
+        return $this->queryOrders(
+            null, $station_id, null,
+            $order_status,
+            $start_time, $end_time,
+            null,
+            'created_at', 'sort',
+            $order_no, $phone
+        );
     }
 
     protected function scopeStatus($query, $order_status)

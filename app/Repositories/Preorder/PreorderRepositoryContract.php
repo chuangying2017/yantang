@@ -1,7 +1,10 @@
 <?php namespace App\Repositories\Preorder;
 
 
+use App\Models\Subscribe\Preorder;
 use App\Services\Preorder\PreorderProtocol;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 interface PreorderRepositoryContract {
 
@@ -21,8 +24,28 @@ interface PreorderRepositoryContract {
 
     public function getAllByUser($user_id, $status = null, $start_time = null, $end_time = null);
 
+	/**
+     * @param null $station_id
+     * @param null $order_no
+     * @param null $phone
+     * @param null $order_status
+     * @param null $start_time
+     * @param null $end_time
+     * @return mixed
+     */
     public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null);
 
+	/**
+     * @param null $station_id
+     * @param null $order_no
+     * @param null $phone
+     * @param null $order_status
+     * @param null $start_time
+     * @param null $end_time
+     * @return Collection
+     */
+    public function getAll($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null);
+    
     public function getByOrder($origin_order_id, $date = null);
 
     public function get($order_id, $with_detail = false);
