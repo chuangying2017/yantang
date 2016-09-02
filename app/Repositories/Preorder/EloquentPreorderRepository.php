@@ -137,6 +137,50 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
+    protected function queryByOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null)
+    {
+        $query = Preorder::query();
+
+        if (!is_null($user_id)) {
+            $query->where('user_id', $user_id);
+        }
+
+        if (!is_null($station_id)) {
+            $query->where('station_id', $station_id);
+        }
+
+        if (!is_null($staff_id)) {
+            $query->where('staff_id', $staff_id);
+        }
+
+        $this->scopeStatus($query, $status);
+
+        if (!is_null($start_time)) {
+            $query->where('created_at', '>=', $start_time);
+        }
+
+        if (!is_null($end_time)) {
+            $query->where('created_at', '<=', $end_time);
+        }
+
+        if (!is_null($order_no)) {
+            $query->where('order_no', $order_no);
+        }
+
+        if (!is_null($phone)) {
+            $query->where('phone', $phone);
+        }
+
+
+        $query->orderBy($orderBy, $sort);
+
+        if (!is_null($per_page)) {
+            return $query->paginate($per_page);
+        }
+
+        return $query->get();
+    }
+
     /**
      * @param $preorder_id
      * @param bool|false $with_detail
@@ -305,7 +349,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null)
     {
-        return $this->queryOrders(
+        return $this->queryByOrders(
             null, $station_id, null,
             $order_status,
             $start_time, $end_time,
@@ -317,7 +361,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getAll($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null)
     {
-        return $this->queryOrders(
+        return $this->queryByOrders(
             null, $station_id, null,
             $order_status,
             $start_time, $end_time,
