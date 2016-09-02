@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\SettlePreorder',
         'App\Console\Commands\InitSearch',
         'App\Console\Commands\CleanData',
+        'App\Console\Commands\CheckPreorderAssignOvertime',
         'App\Console\Commands\SeedCouponForFirstOrderUser',
     ];
 
