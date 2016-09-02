@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use App\Services\Preorder\PreorderSettleService;
 use Illuminate\Console\Command;
 
-class SettlePreorder extends Command
-{
+class SettlePreorder extends Command {
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'preorder:settle';
+    protected $signature = 'preorder:settle {--date=}';
 
     /**
      * The console command description.
@@ -43,6 +43,7 @@ class SettlePreorder extends Command
      */
     public function handle()
     {
-        $this->settleService->settle();
+        $date = $this->option('date') ?: null;
+        $this->settleService->settle($date);
     }
 }

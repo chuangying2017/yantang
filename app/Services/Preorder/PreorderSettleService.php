@@ -45,19 +45,19 @@ class PreorderSettleService implements PreorderSettleServiceContract {
         $this->skuRepo = $skuRepo;
     }
 
-    public function settle()
+    public function settle($date = null)
     {
         $station_ids = $this->stationRepo->getAll(true);
         foreach ($station_ids as $station_id) {
             \DB::beginTransaction();
-            $this->settleStation($station_id);
+            $this->settleStation($station_id, $date);
             \DB::commit();
         }
     }
 
-    protected function settleStation($station_id)
+    protected function settleStation($station_id, $date = null)
     {
-        $orders = $this->stationPreorderRepo->getDayPreorderWithProductsByStation($station_id, Carbon::yesterday());
+        $orders = $this->stationPreorderRepo->getDayPreorderWithProductsByStation($station_id, $this->getSettleDate($date));
 
         $orders = $this->filterNotDeliverOrders($orders, $station_id);
 
@@ -68,10 +68,10 @@ class PreorderSettleService implements PreorderSettleServiceContract {
                 'preorder_id' => $order['id'],
                 'station_id' => $order['station_id'],
                 'staff_id' => $order['staff_id'],
-                'deliver_at' => Carbon::yesterday()
+                'deliver_at' => $this->getSettleDate($date)
             ];
 
-            if (!count($order['skus']) || $this->deliverRepo->getRecentDeliver($order['id'], Carbon::yesterday())) {
+            if (!count($order['skus']) || $this->deliverRepo->getRecentDeliver($order['id'], $this->getSettleDate($date))) {
                 continue;
             }
 
@@ -93,6 +93,12 @@ class PreorderSettleService implements PreorderSettleServiceContract {
             $deliver = $this->deliverRepo->updateAsSuccess($deliver);
             $deliver->skus()->attach($deliver_sku_relate_ids);
         }
+
+    }
+
+    protected function getSettleDate($date)
+    {
+        return is_null($date) ? Carbon::yesterday() : Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
     }
 
     protected function filterNotDeliverOrders($orders, $station_id)
