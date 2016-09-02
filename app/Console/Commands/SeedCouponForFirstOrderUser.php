@@ -6,6 +6,7 @@ use App\Models\Order\Order;
 use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
 use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Services\Order\OrderProtocol;
+use App\Services\Promotion\CouponService;
 use Illuminate\Console\Command;
 use Storage;
 
@@ -13,17 +14,13 @@ class SeedCouponForFirstOrderUser extends Command {
 
     const SEED_COUPON_USER_FILE_NAME = '_coupon_seed_user.json';
 
-    /**
-     * @var CouponRepositoryContract
-     */
-    private $couponRepo;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'coupon:seed {coupon_id}';
+    protected $signature = 'coupon:seed {coupon_id} {--user=}';
 
     /**
      * The console command description.
@@ -35,14 +32,12 @@ class SeedCouponForFirstOrderUser extends Command {
     /**
      * Create a new command instance.
      *
-     * @param CouponRepositoryContract $couponRepo
-     * @param TicketRepositoryContract $ticketRepo
+     * @param CouponService $couponService
      */
-    public function __construct(CouponRepositoryContract $couponRepo, TicketRepositoryContract $ticketRepo)
+    public function __construct(CouponService $couponService)
     {
         parent::__construct();
-        $this->couponRepo = $couponRepo;
-        $this->ticketRepo = $ticketRepo;
+        $this->couponService = $couponService;
     }
 
     /**
@@ -59,21 +54,23 @@ class SeedCouponForFirstOrderUser extends Command {
             return;
         }
 
+        $user_ids = $this->option('user');
+        if ($user_ids) {
+            $count = $this->couponService->dispatchWithoutCheck($user_ids, $coupon_id);
+            echo 'success, seed: ' . $count;
+
+            return;
+        }
+
         $user_ids = $this->getFirstPaidOrderUserIds($coupon_id);
-        $count = $this->ticketRepo->createTicket($user_ids, $this->getCoupon(), false);
+
+        $count = $this->couponService->dispatchWithoutCheck($user_ids, $coupon_id);
 
         $this->storeSeedUser($coupon_id, $user_ids);
 
         echo 'success, seed: ' . $count;
     }
 
-    private function getCoupon()
-    {
-        $coupon_id = $this->argument('coupon_id');
-        $coupon = $this->couponRepo->get($coupon_id, false);
-
-        return $coupon;
-    }
 
     private function getFirstPaidOrderUserIds($coupon_id)
     {
@@ -112,8 +109,9 @@ class SeedCouponForFirstOrderUser extends Command {
     }
 
     /**
-     * @var TicketRepositoryContract
+     * @var CouponService
      */
-    private $ticketRepo;
+    private $couponService;
+
 
 }
