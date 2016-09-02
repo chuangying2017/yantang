@@ -24,7 +24,7 @@ class NotifyProtocol {
     {
         try {
             if (!is_null($phone)) {
-                Sms::make()->to($phone)->content($message);
+                $result = Sms::make()->to($phone)->content($message)->send();
                 return 1;
             }
         } catch (\Exception $e) {
