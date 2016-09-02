@@ -62,13 +62,7 @@ class PreorderDeliverRepository implements PreorderDeliverRepositoryContract, St
 
     public function getRecentDeliver($preorder_id, $deliver_at)
     {
-        $deliver = PreorderDeliver::query()->where('preorder_id', $preorder_id)->orderBy('created_at', 'desc')->first();
-
-        if ($deliver && $deliver['deliver_at'] >= $deliver_at) {
-            return false;
-        }
-
-        return $deliver;
+        return PreorderDeliver::query()->where('preorder_id', $preorder_id)->where('deliver_at', $deliver_at)->first();
     }
 
     public function getByPreorderPaginated($preorder_id, $per_page = 20)

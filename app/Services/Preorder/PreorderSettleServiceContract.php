@@ -4,5 +4,4 @@ interface PreorderSettleServiceContract {
 
     public function settle();
 
-
 }
