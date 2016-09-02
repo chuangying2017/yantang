@@ -56,4 +56,11 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
     }
 
 
+    public function dispatchWithoutCheck($user_id, $promotion_id)
+    {
+        $promotion = $this->promotionRepo->getPromotionWithDecodeRules($promotion_id);
+
+        return $this->ticketRepo->createTicket($user_id, $promotion, true);
+
+    }
 }

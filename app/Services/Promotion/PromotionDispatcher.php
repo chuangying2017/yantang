@@ -6,4 +6,6 @@ interface PromotionDispatcher {
 
     public function dispatch(PromotionAbleUserContract $user, $promotion_id);
 
+    public function dispatchWithoutCheck($user_id, $promotion_id);
+
 }
