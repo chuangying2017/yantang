@@ -26,6 +26,7 @@ class ExcelService {
             $e_data['地址'] = $preorder['address'];
             $e_data['服务部'] = array_get($preorder, 'station.name');
             $e_data['下单时间'] = $preorder['created_at'];
+            $e_data['配送开始时间'] = $preorder['start_time'];
             $e_data['配送状态'] = PreorderProtocol::status($preorder['status']);
             $e_data['订单总价'] = array_get($preorder, 'order.total_amount');
             $e_data['优惠金额'] = array_get($preorder, 'order.discount_amount') ?: 0;
