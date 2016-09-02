@@ -48,6 +48,7 @@ class PreorderSettleService implements PreorderSettleServiceContract {
     public function settle($date = null)
     {
         $station_ids = $this->stationRepo->getAll(true);
+        $date = $this->getSettleDate($date);
         foreach ($station_ids as $station_id) {
             \DB::beginTransaction();
             $this->settleStation($station_id, $date);
@@ -55,9 +56,9 @@ class PreorderSettleService implements PreorderSettleServiceContract {
         }
     }
 
-    protected function settleStation($station_id, $date = null)
+    protected function settleStation($station_id, Carbon $date = null)
     {
-        $orders = $this->stationPreorderRepo->getDayPreorderWithProductsByStation($station_id, $this->getSettleDate($date));
+        $orders = $this->stationPreorderRepo->getDayPreorderWithProductsByStation($station_id, $date->copy());
 
         $orders = $this->filterNotDeliverOrders($orders, $station_id);
 
@@ -68,10 +69,10 @@ class PreorderSettleService implements PreorderSettleServiceContract {
                 'preorder_id' => $order['id'],
                 'station_id' => $order['station_id'],
                 'staff_id' => $order['staff_id'],
-                'deliver_at' => $this->getSettleDate($date)
+                'deliver_at' => $date
             ];
 
-            if (!count($order['skus']) || $this->deliverRepo->getRecentDeliver($order['id'], $this->getSettleDate($date))) {
+            if (!count($order['skus']) || $this->deliverRepo->getRecentDeliver($order['id'], $date)) {
                 continue;
             }
 
@@ -96,9 +97,14 @@ class PreorderSettleService implements PreorderSettleServiceContract {
 
     }
 
+	/**
+     * @param $date
+     * @return Carbon
+     */
     protected function getSettleDate($date)
     {
-        return is_null($date) ? Carbon::yesterday() : Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
+        $date = is_null($date) ? Carbon::yesterday() : Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
+        return $date >= Carbon::today() ? Carbon::yesterday() : $date;
     }
 
     protected function filterNotDeliverOrders($orders, $station_id)
