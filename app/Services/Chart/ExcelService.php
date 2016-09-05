@@ -28,9 +28,9 @@ class ExcelService {
             $e_data['下单时间'] = $preorder['created_at'];
             $e_data['配送开始时间'] = $preorder['start_time'];
             $e_data['配送状态'] = PreorderProtocol::status($preorder['status']);
-            $e_data['订单总价'] = array_get($preorder, 'order.total_amount');
-            $e_data['优惠金额'] = array_get($preorder, 'order.discount_amount') ?: 0;
-            $e_data['实付价格'] = array_get($preorder, 'order.pay_amount');
+            $e_data['订单总价'] = display_price(array_get($preorder, 'order.total_amount'));
+            $e_data['优惠金额'] = display_price(array_get($preorder, 'order.discount_amount') ?: 0);
+            $e_data['实付价格'] = display_price(array_get($preorder, 'order.pay_amount'));
             $e_data['商品详情'] = self::getPreorderSkusArray($preorder);
 
             $e_datas[$key] = $e_data;
