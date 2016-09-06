@@ -133,6 +133,10 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Preorder\SetPreorderAsDone',
         ],
 
+        'App\Events\Preorder\PreorderDeliverStart' => [
+            'App\Listeners\Preorder\SetPreorderAsDeliver',
+        ],
+
         /**
          * 订奶订单分配
          */

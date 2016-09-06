@@ -110,4 +110,16 @@ class PreorderProtocol {
         return is_null($key) ? $data : $data[$key];
     }
 
+    public static function statusTimeTag($status)
+    {
+        $data = [
+            self::ORDER_STATUS_OF_ASSIGNING => 'pay_at',
+            self::ORDER_STATUS_OF_DONE => 'done_at',
+            self::ORDER_STATUS_OF_SHIPPING => 'confirm_at',
+            self::ORDER_STATUS_OF_CANCEL => 'cancel_at'
+        ];
+
+        return array_get($data, $status, null);
+    }
+
 }

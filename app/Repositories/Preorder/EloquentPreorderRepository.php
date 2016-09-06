@@ -259,6 +259,12 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $order = $this->get($order_id);
         $order->status = $status;
+
+        $time_tag = PreorderProtocol::statusTimeTag($status);
+        if (!is_null($time_tag)) {
+            $order->$time_tag = Carbon::now();
+        }
+
         $order->save();
         return $order;
     }
@@ -468,5 +474,14 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         Preorder::query()->where('staff_id', $old_staff_id)->update(['staff_id' => $new_staff_id]);
         PreorderAssign::query()->where('staff_id', $old_staff_id)->update(['staff_id' => $new_staff_id]);
+    }
+
+    public function updatePreorderAsDeliver($order_id)
+    {
+        $order = $this->get($order_id, false);
+        $order->deliver_at = Carbon::now();
+        $order->save();
+
+        return $order;
     }
 }

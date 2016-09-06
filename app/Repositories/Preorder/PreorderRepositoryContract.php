@@ -16,6 +16,8 @@ interface PreorderRepositoryContract {
 
     public function updatePreorderStatus($order_id, $status);
 
+    public function updatePreorderAsDeliver($order_id);
+
     public function updatePreorderStatusByOrder($order_id, $status);
 
     public function updatePreorderAssign($order_id, $station_id = null, $staff_id = null);
