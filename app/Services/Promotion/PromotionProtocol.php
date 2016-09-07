@@ -82,7 +82,7 @@ class PromotionProtocol {
     const QUALI_TYPE_OF_GROUP = 'group';
     const QUALI_TYPE_OF_FIRST_ORDER = 'first_order';
     const QUALI_TYPE_OF_FIRST_PAID_ORDER = 'first_paid';
-    
+
 
     public static function getQualifyType($name = null)
     {
@@ -166,4 +166,15 @@ class PromotionProtocol {
 
     const LENGTH_OF_TICKET_NO = 24;
 
+
+    const ACTIVE_OF_OK = 1;
+    const ACTIVE_OF_NO = 0;
+
+    public static function validActive($active)
+    {
+        return (in_array($active, [
+            self::ACTIVE_OF_OK,
+            self::ACTIVE_OF_NO,
+        ])) ? $active : self::ACTIVE_OF_OK;
+    }
 }

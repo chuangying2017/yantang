@@ -64,9 +64,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if (PreorderProtocol::validOrderStatus($status)) {
             $query->where('status', $status);
-        } else {
-            $query->where('status', '!=', PreorderProtocol::ORDER_STATUS_OF_UNPAID);
-        }
+        } 
 
         if (!is_null($start_time)) {
             $query->where('end_time', '>=', $start_time);
