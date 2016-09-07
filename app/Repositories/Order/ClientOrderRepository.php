@@ -242,38 +242,28 @@ class ClientOrderRepository implements ClientOrderRepositoryContract, OrderCount
         return $order;
     }
 
-    public function getOrdersCount($user_id, $order_type, $status = null, $start_time = null)
-    {
-        $query = $this->scopeOrderCount($user_id, $order_type, $status, $start_time);
-        return $query->get()->count();
-    }
 
-    public function hasOrdersCount($user_id, $order_type, $status = null, $start_time = null)
-    {
-        $query = $this->scopeOrderCount($user_id, $order_type, $status, $start_time);
-        return $query->first();
-    }
+    /**
+     * 特殊查询
+     */
 
     /**
      * @param $user_id
      * @param $order_type
-     * @param null $status
      * @param null $start_time
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Order
      */
-    protected function scopeOrderCount($user_id, $order_type, $status = null, $start_time = null)
+    public function getFirstPaidOrder($user_id, $order_type, $start_time = null)
     {
-        $query = Order::query()->where('user_id', $user_id)->where('order_type', $order_type);
-
-        if (OrderProtocol::validOrderStatus($status)) {
-            $query->whereIn('status', to_array($status));
-        }
+        $query = Order::query()->paid()->where('user_id', $user_id)->where('order_type', $order_type);
 
         if (!is_null($start_time)) {
             $query->where('created_at', '>=', $start_time);
         }
 
-        return $query;
+        $query->orderBy('pay_at', 'asc');
+
+        return $query->first();
     }
 
 }

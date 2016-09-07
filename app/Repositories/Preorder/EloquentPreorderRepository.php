@@ -195,8 +195,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         }
 
         if ($with_detail) {
-            $order->load('skus', 'station', 'staff', 'user', 'order');
+            //查询赠品
+            $order->load('skus', 'station', 'staff', 'user', 'order', 'tickets', 'tickets.coupon');
         }
+        
+        
 
         return $order;
     }

@@ -23,7 +23,6 @@ class CouponController extends Controller {
      */
     public function __construct(CouponRepositoryContract $couponRepo)
     {
-
         $this->couponRepo = $couponRepo;
     }
 

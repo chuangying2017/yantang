@@ -3,6 +3,7 @@
 use App\Models\Promotion\PromotionAbstract;
 use App\Repositories\Promotion\Rule\RuleRepositoryContract;
 use App\Services\Order\OrderProtocol;
+use App\Services\Promotion\PromotionProtocol;
 use Carbon\Carbon;
 
 abstract class PromotionRepositoryAbstract implements PromotionRepositoryContract {
@@ -270,6 +271,24 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
             'weight' => $rule['weight'],
             'multi' => $rule['multi_able'],
         ];
+    }
+
+
+    public function getAllByQualifyTye($qua_type, $effect = true)
+    {
+        $query = $this->getQuery();
+
+        $query->whereHas('rules', function ($query) use ($qua_type) {
+            $query->where('qua_type', $qua_type);
+        });
+
+        if ($effect) {
+            $query = $query->effect();
+        }
+
+        $query->orderBy('created_at', 'desc');
+
+        return $query->get();
     }
 
 

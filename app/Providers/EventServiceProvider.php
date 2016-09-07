@@ -71,6 +71,7 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
             'App\Listeners\Product\DecreaseProductSkuStock',
             'App\Listeners\Preorder\SetPreorderAsPaid',
+            'App\Listeners\Promotion\DispatchSubscribeOrderGift',
         ],
 
         'App\Events\Order\OrderIsCreated' => [
@@ -81,6 +82,7 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Product\IncreaseProductSkuStock',
             'App\Listeners\Preorder\SetPreorderAsCancel',
             'App\Listeners\Promotion\RestoreTickets',
+            'App\Listeners\Promotion\CancelOrderGift',
         ],
 
         'App\Events\Order\OrderIsDone' => [

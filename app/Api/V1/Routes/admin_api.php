@@ -61,6 +61,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
         //优惠信息
         $api->group(['namespace' => 'Promotion', 'prefix' => 'promotions'], function ($api) {
             $api->resource('coupons', 'CouponController');
+            $api->resource('tickets', 'TicketController', ['only' => ['store']]);
             $api->resource('campaigns', 'CampaignController');
         });
 

@@ -1,8 +1,6 @@
 <?php namespace App\Repositories\Order;
 interface OrderCounterRepositoryContract {
 
-    public function getOrdersCount($user_id, $order_type, $status = null, $start_time = null);
-
-    public function hasOrdersCount($user_id, $order_type, $status = null, $start_time = null);
+    public function getFirstPaidOrder($user_id, $order_type, $start_time = null);
 
 }

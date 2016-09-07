@@ -13,10 +13,10 @@ class PingxxNotifyRequest extends Request {
      */
     public function authorize()
     {
-//        if(app()->environment() == 'testing') {
-//            return true;
-//        }
-
+        if (app()->environment() == 'testing') {
+            return true;
+        }
+        
         $signature = $this->header('X-Pingplusplus-Signature');
         return $this->verify_signature(file_get_contents('php://input'), $signature) === 1;
     }

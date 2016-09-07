@@ -28,7 +28,7 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
         $this->ticketRepo = $ticketRepo;
     }
 
-    public function dispatch(PromotionAbleUserContract $user, $promotion_id)
+    public function dispatch(PromotionAbleUserContract $user, $promotion_id, $source_type = PromotionProtocol::TICKET_RESOURCE_OF_USER, $source_id = 0)
     {
         $promotion = $this->promotionRepo->getPromotionWithDecodeRules($promotion_id);
 
@@ -44,6 +44,7 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
         }
 
         $this->ruleService->setUser($user)->setRules($promotion['rules']);
+        
         $this->ruleService->filterQualify();
 
         //无资格领取
@@ -52,7 +53,7 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
             return false;
         }
 
-        return $this->ticketRepo->createTicket($user->getUserId(), $promotion, true);
+        return $this->ticketRepo->createTicket($user->getUserId(), $promotion, true, $source_type, $source_id);
     }
 
 
@@ -60,7 +61,7 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
     {
         $promotion = $this->promotionRepo->getPromotionWithDecodeRules($promotion_id);
 
-        return $this->ticketRepo->createTicket($user_id, $promotion, true);
+        return $this->ticketRepo->createTicket($user_id, $promotion, true, PromotionProtocol::TICKET_RESOURCE_OF_ADMIN);
 
     }
 }

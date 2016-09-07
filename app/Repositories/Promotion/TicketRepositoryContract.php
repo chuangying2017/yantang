@@ -1,10 +1,11 @@
 <?php namespace App\Repositories\Promotion;
 
 use App\Models\Promotion\PromotionAbstract;
+use App\Services\Promotion\PromotionProtocol;
 
 interface TicketRepositoryContract {
 
-    public function createTicket($user_id = null, PromotionAbstract $promotion, $generate_no = false);
+    public function createTicket($user_id = null, PromotionAbstract $promotion, $generate_no = false, $source_type = PromotionProtocol::TICKET_RESOURCE_OF_USER, $source_id = 0);
 
     public function createLogTicket($user_id, $promotion_id, $promotion_type, $rule_id);
 
@@ -23,9 +24,11 @@ interface TicketRepositoryContract {
     public function getTicket($ticket_id, $with_promotion = true);
 
     public function getCouponTicketsOfUser($user_id, $status, $with_promotion = true);
-    
+
     public function getCouponTicketsOfUserPaginated($user_id, $status, $with_promotion = true);
 
     public static function getUserPromotionTimes($promotion_id, $user_id, $rule_id = null);
+
+    public static function getTicketBySource($source_type, $source_id = null);
 
 }

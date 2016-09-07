@@ -19,4 +19,6 @@ interface PromotionRepositoryContract {
 
     public function getPromotionWithDecodeRules($promotion_id);
 
+    public function getAllByQualifyTye($qua_type, $effect = true);
+
 }

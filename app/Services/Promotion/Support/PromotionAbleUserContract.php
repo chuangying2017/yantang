@@ -1,10 +1,8 @@
 <?php namespace App\Services\Promotion\Support;
 
-use App\Models\Access\User\User;
-
 interface PromotionAbleUserContract {
 
-    public function setUser(User $user);
+    public function setUser($user);
 
     public function getUserId();
 
