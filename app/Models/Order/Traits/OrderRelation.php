@@ -10,6 +10,7 @@ use App\Models\Order\OrderMemo;
 use App\Models\Order\OrderPromotion;
 use App\Models\Order\OrderSku;
 use App\Models\Order\OrderSpecialCampaign;
+use App\Models\Subscribe\Preorder;
 use App\Services\Order\OrderProtocol;
 
 trait OrderRelation {
@@ -67,6 +68,11 @@ trait OrderRelation {
     public function promotions()
     {
         return $this->hasMany(OrderPromotion::class, 'order_id', 'id');
+    }
+
+    public function preorder()
+    {
+        return $this->hasOne(Preorder::class, 'order_id', 'id');
     }
 
 }
