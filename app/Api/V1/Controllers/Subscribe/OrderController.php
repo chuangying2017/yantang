@@ -67,8 +67,6 @@ class OrderController extends Controller {
 
             $order = $orderGenerator->confirmSubscribe($temp_order_id);
 
-            $order->load('preorder');
-
             $charge = $orderCheckout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 
             return $this->response->item($order, new ClientOrderTransformer())->setMeta(['charge' => $charge])->setStatusCode(201);;
