@@ -1,6 +1,7 @@
 <?php namespace App\Api\V1\Transformers\Subscribe\Preorder;
 
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
+use App\API\V1\Transformers\Promotion\TicketTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
@@ -12,7 +13,7 @@ class PreorderTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'station', 'staff', 'deliver', 'assign', 'order'];
+    protected $availableIncludes = ['skus', 'station', 'staff', 'deliver', 'assign', 'order', 'tickets'];
 
     public function transform(Preorder $preorder)
     {
@@ -36,7 +37,8 @@ class PreorderTransformer extends TransformerAbstract {
             'restart_time' => $preorder->restart_time,
             'created_at' => $preorder->created_at,
             'pause_status' => $this->isPause($preorder),
-            'is_new' => $preorder->start_time >= date('Y-m-d') ? 1 : 0
+            'is_new' => $preorder->start_time >= date('Y-m-d') ? 1 : 0,
+            'has_coupon' => 0,
         ];
 
         return $data;
@@ -91,5 +93,15 @@ class PreorderTransformer extends TransformerAbstract {
 
         return null;
     }
+
+    public function includeTickets(Preorder $preorder)
+    {
+        if ($preorder->tickets) {
+            return $this->collection($preorder->tickets, new TicketTransformer(), true);
+        }
+
+        return null;
+    }
+
 
 }

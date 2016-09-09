@@ -4,7 +4,7 @@ use App\Repositories\Order\ClientOrderRepository;
 use App\Services\Order\OrderProtocol;
 use App\Services\Promotion\Support\PromotionAbleUserContract;
 
-class FirstPaidOrder implements Qualification {
+class FirstPaidSubscribeOrder implements Qualification {
 
     /**
      * @var ClientOrderRepository
@@ -17,16 +17,14 @@ class FirstPaidOrder implements Qualification {
     }
 
 
-    public function check(PromotionAbleUserContract $user, $qualify_values)
+    public function check(PromotionAbleUserContract $user, $start_time)
     {
         $user_id = $user->getUserId();
 
-        foreach (to_array($qualify_values) as $order_type) {
-            if ($this->orderRepo->hasOrdersCount($user_id, $order_type, OrderProtocol::getStatusOfPaid())) {
-                return true;
-            }
+        if ($this->orderRepo->getFirstPaidOrder($user_id, OrderProtocol::ORDER_TYPE_OF_SUBSCRIBE, array_first($start_time))) {
+            return true;
         }
-
+        
         return false;
     }
 

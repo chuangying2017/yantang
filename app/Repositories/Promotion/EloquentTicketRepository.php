@@ -10,7 +10,7 @@ class EloquentTicketRepository implements TicketRepositoryContract {
 
     use Counter;
 
-    public function createTicket($user_id = null, PromotionAbstract $promotion, $generate_no = false)
+    public function createTicket($user_id = null, PromotionAbstract $promotion, $generate_no = false, $source_type = PromotionProtocol::TICKET_RESOURCE_OF_USER, $source_id = 0)
     {
         $ticket_data = [
             'promotion_id' => $promotion['id'],
@@ -19,6 +19,8 @@ class EloquentTicketRepository implements TicketRepositoryContract {
             'end_time' => $this->calEndTime($promotion),
             'type' => $promotion['type'],
             'status' => PromotionProtocol::STATUS_OF_TICKET_OK,
+            'source_type' => $source_type,
+            'source_id' => $source_id,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
@@ -224,9 +226,16 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     {
         $ticket = $this->getTicket($ticket_id);
 
-        if ($ticket['status'] == PromotionProtocol::STATUS_OF_TICKET_USED) {
-            $this->decreaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_USED);
+        if ($ticket['status'] == PromotionProtocol::STATUS_OF_TICKET_OK) {
+            $this->decreaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_DISPATCH);
             return $this->updateTicket($ticket_id, PromotionProtocol::STATUS_OF_TICKET_CANCEL, null);
+        }
+
+        if ($ticket['status'] == PromotionProtocol::STATUS_OF_TICKET_USED) {
+            if ($ticket['type'] != PromotionProtocol::TYPE_OF_COUPON) {
+                $this->decreaseCounter($ticket['promotion_id'], PromotionProtocol::NAME_OF_COUNTER_USED);
+                return $this->updateTicket($ticket_id, PromotionProtocol::STATUS_OF_TICKET_CANCEL, null);
+            }
         }
 
         return $ticket;
@@ -242,4 +251,14 @@ class EloquentTicketRepository implements TicketRepositoryContract {
             $this->updateAsCancel($ticket);
         }
     }
+
+    public static function getTicketBySource($source_type, $source_id = null)
+    {
+        $query = Ticket::query()->where('source_type', $source_type);
+        if (!is_null($source_id)) {
+            $query->where('source_id', $source_id);
+        }
+        return $query->get();
+    }
+
 }

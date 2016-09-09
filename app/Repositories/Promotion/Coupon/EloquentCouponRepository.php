@@ -54,4 +54,5 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
         }
         return $coupons;
     }
+    
 }

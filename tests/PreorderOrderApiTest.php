@@ -6,22 +6,22 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PreorderOrderApiTest extends TestCase {
 
-//    use DatabaseTransactions;
+    use DatabaseTransactions;
 
     /** @test */
     public function it_can_create_a_preorder_temp_order()
     {
-//        $address = $this->it_can_create_a_subscribe_address();
+        $address = $this->it_can_create_a_subscribe_address();
         $data = [
             'skus' => [
-                ['product_sku_id' => 2, 'quantity' => 15, 'per_day' => 2],
-                ['product_sku_id' => 3, 'quantity' => 90, 'per_day' => 3],
+                ['product_sku_id' => 219, 'quantity' => 15, 'per_day' => 2],
+                ['product_sku_id' => 220, 'quantity' => 90, 'per_day' => 3],
             ],
-            'address_id' => 127,
+            'address_id' => $address['id'],
             'station_id' => 1,
             'daytime' => 0,
             'weekday_type' => 'all',
-            'start_time' => '2016-08-28',
+            'start_time' => '2016-09-11',
             'channel' => 'wx_pub_qr'
         ];
 
@@ -89,8 +89,11 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
 
-        
-
+        $this->notSeeInDatabase('tickets', [
+            'user_id' => 1,
+            'promotion_id' => 11,
+            'source_type' => \App\Services\Promotion\PromotionProtocol::TICKET_RESOURCE_OF_ORDER,
+            'source_id' => $order['id']]);
 
         return $order;
     }
@@ -131,6 +134,8 @@ class PreorderOrderApiTest extends TestCase {
     {
         $order = $this->it_can_create_a_preorder_order();
 
+//        $order = \App\Models\Order\Order::query()->find(1720);
+
         $this->json('delete', 'subscribe/orders/' . $order['order_no'],
             [
                 'memo' => '后悔'
@@ -138,6 +143,16 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
         $this->assertResponseStatus(204);
+    }
+
+    /** @test */
+    public function it_can_show_a_preorder_detail()
+    {
+        $preorder_id = 1631;
+
+        $this->json('get', 'subscribe/preorders/' . $preorder_id, [], $this->getAuthHeader());
+
+        $this->echoJson();
     }
 
 }

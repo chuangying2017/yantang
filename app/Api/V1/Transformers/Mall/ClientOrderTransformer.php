@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Transformers\Mall;
 
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\Order\Order;
 use League\Fractal\TransformerAbstract;
@@ -8,7 +9,7 @@ class ClientOrderTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'address', 'billings', 'deliver'];
+    protected $availableIncludes = ['skus', 'address', 'billings', 'deliver', 'preorder'];
 
     public function transform(Order $order)
     {
@@ -53,6 +54,11 @@ class ClientOrderTransformer extends TransformerAbstract {
     public function includeDeliver(Order $order)
     {
         return $this->item($order['deliver'], new OrderDeliverTransformer(), true);
+    }
+
+    public function includePreorder(Order $order)
+    {
+        return $this->item($order->preorder, new PreorderTransformer(), true);
     }
 
 }

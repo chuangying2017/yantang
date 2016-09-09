@@ -318,9 +318,13 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
     }
 
     //优惠信息
-    public function setUser(User $user)
+    public function setUser($user)
     {
-        $this->user = $user;
+        if ($user instanceof User) {
+            $this->user = $user;
+        } else {
+            $this->user = $this->findOrThrowException($user);
+        }
         return $this;
     }
 
@@ -331,7 +335,7 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
 
     public function getUserLevel()
     {
-        
+
     }
 
     public function getUserRoles()

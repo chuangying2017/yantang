@@ -41,6 +41,7 @@ class PreorderController extends Controller {
     public function show($order_id)
     {
         $order = $this->preorderRepo->get($order_id, true);
+        
 
         return $this->response->item($order, new PreorderTransformer());
     }

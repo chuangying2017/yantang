@@ -9,4 +9,5 @@ interface OrderManageContract {
 
     public function orderDone($order_id);
 
+    public function orderIsFirstPaid($order);
 }

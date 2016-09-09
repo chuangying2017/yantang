@@ -4,6 +4,7 @@ use App\Models\Access\User\User;
 use App\Models\Billing\PreorderBilling;
 use App\Models\District;
 use App\Models\Order\Order;
+use App\Models\Promotion\Ticket;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -58,6 +59,11 @@ class Preorder extends Model {
     public function counter()
     {
         return $this->hasMany(PreorderSkuCounter::class, 'preorder_id', 'id');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'source_id', 'order_id');
     }
 
 }

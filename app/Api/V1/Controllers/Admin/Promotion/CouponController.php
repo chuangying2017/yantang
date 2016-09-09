@@ -4,6 +4,7 @@ namespace App\Api\V1\Controllers\Admin\Promotion;
 
 use App\API\V1\Transformers\Admin\Promotion\CouponTransformer;
 use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
+use App\Services\Promotion\PromotionProtocol;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -22,7 +23,6 @@ class CouponController extends Controller {
      */
     public function __construct(CouponRepositoryContract $couponRepo)
     {
-
         $this->couponRepo = $couponRepo;
     }
 
@@ -44,7 +44,7 @@ class CouponController extends Controller {
 
     public function update(Request $request, $promotion_id)
     {
-        $active = $request->input('active') ?: true;
+        $active = PromotionProtocol::validActive($request->input('active'));
         $coupon = $this->couponRepo->updateActiveStatus($promotion_id, $active);
 
         return $this->response->item($coupon, new CouponTransformer());
@@ -59,5 +59,11 @@ class CouponController extends Controller {
         return $this->response->item($coupon, new CouponTransformer());
     }
 
+    public function destroy($coupon_id)
+    {
+        $this->couponRepo->delete($coupon_id);
+
+        return $this->response->noContent();
+    }
 
 }
