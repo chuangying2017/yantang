@@ -40,6 +40,7 @@ class CheckoutController extends Controller {
 
             return $this->response->array(['data' => $charge]);
         } catch (\Exception $e) {
+            \Log::error($e);
             $this->response->error($e->getMessage(), 400);
         }
 
