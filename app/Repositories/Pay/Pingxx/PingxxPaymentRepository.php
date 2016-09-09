@@ -186,7 +186,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         return PingxxPayment::class;
     }
 
-	/**
+    /**
      * @param $billing_id
      * @param $billing_type
      * @param null $channel
@@ -198,7 +198,9 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
             return PingxxPayment::query()
                 ->where('billing_id', $billing_id)
                 ->where('billing_type', $billing_type)
-                ->where('channel', $channel)->first();
+                ->where('channel', $channel)
+                ->orderBy('created_at', 'desc')
+                ->first();
         }
 
         return PingxxPayment::query()

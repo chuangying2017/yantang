@@ -39,7 +39,7 @@ class PingxxPayService implements ThirdPartyPayContract {
 
         $payment = $this->paymentRepository->getPaymentByBilling($billing->getID(), $billing->getType(), $this->getChannel());
 
-        if ($payment) {
+        if ($payment && !$this->checkPaymentExpired($payment)) {
             $charge = $this->getChargeAndSetIfPaid($payment);
         } else {
             $charge = $this->paymentRepository->createCharge($billing->getAmount(), $billing->getOrderNo(), $this->getChannel());
@@ -121,6 +121,16 @@ class PingxxPayService implements ThirdPartyPayContract {
         $payment = $this->paymentRepository->getPayment($payment);
         if ($payment['paid']) {
             return $payment;
+        }
+
+        return false;
+    }
+
+    protected function checkPaymentExpired($payment)
+    {
+        $payment = $this->paymentRepository->getPayment($payment);
+        if ($payment['time_expire'] <= time()) {
+            return true;
         }
 
         return false;
