@@ -39,7 +39,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
 
     protected static function getPaymentNo($order_no, $channel)
     {
-        return $order_no . PingxxProtocol::getChannelNo($channel);
+        return $order_no . PingxxProtocol::getChannelNo($channel) . date('ymd');
     }
 
 
