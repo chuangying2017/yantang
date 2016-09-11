@@ -31,18 +31,7 @@ class PreorderController extends Controller {
 
         if ($request->input('export') == 'all') {
             $orders = $this->preorderRepo->getAll($station_id, $order_no, $phone, $status, $start_time, $end_time);
-            $orders->load([
-                'order' => function ($query) {
-                    $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'status', 'pay_amount');
-                },
-                'skus' => function ($query) {
-                    $query->select('order_id', 'name', 'total', 'remain');
-                },
-                'station' => function ($query) {
-                    $query->select('id', 'name');
-                }]);
-
-            return ExcelService::downPreorder($orders->toArray());
+            return ExcelService::downPreorder($orders);
         }
 
         $orders = $this->preorderRepo->getAllPaginated($station_id, $order_no, $phone, $status, $start_time, $end_time);

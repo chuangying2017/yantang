@@ -64,7 +64,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if (PreorderProtocol::validOrderStatus($status)) {
             $query->where('status', $status);
-        } 
+        }
 
         if (!is_null($start_time)) {
             $query->where('end_time', '>=', $start_time);
@@ -135,7 +135,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
-    protected function queryByOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null)
+    protected function queryByOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null)
     {
         $query = Preorder::query();
 
@@ -154,11 +154,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $this->scopeStatus($query, $status);
 
         if (!is_null($start_time)) {
-            $query->where('created_at', '>=', $start_time);
+            $query->where($time_name, '>=', $start_time);
         }
 
         if (!is_null($end_time)) {
-            $query->where('created_at', '<=', $end_time);
+            $query->where($time_name, '<=', $end_time);
         }
 
         if (!is_null($order_no)) {
@@ -198,8 +198,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             //查询赠品
             $order->load('skus', 'station', 'staff', 'user', 'order', 'tickets', 'tickets.coupon');
         }
-        
-        
+
 
         return $order;
     }
@@ -354,24 +353,24 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
-    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null)
+    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at')
     {
         return $this->queryByOrders(
             null, $station_id, null,
             $order_status,
-            $start_time, $end_time,
+            $start_time, $end_time, $time_name,
             PreorderProtocol::PREORDER_PER_PAGE,
             'created_at', 'sort',
             $order_no, $phone
         );
     }
 
-    public function getAll($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null)
+    public function getAll($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at')
     {
         return $this->queryByOrders(
             null, $station_id, null,
             $order_status,
-            $start_time, $end_time,
+            $start_time, $end_time, $time_name,
             null,
             'created_at', 'sort',
             $order_no, $phone

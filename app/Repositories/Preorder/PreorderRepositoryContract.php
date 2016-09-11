@@ -26,27 +26,29 @@ interface PreorderRepositoryContract {
 
     public function getAllByUser($user_id, $status = null, $start_time = null, $end_time = null);
 
-	/**
+    /**
      * @param null $station_id
      * @param null $order_no
      * @param null $phone
      * @param null $order_status
      * @param null $start_time
      * @param null $end_time
+     * @param string $time_name
      * @return mixed
      */
-    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null);
+    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at');
 
-	/**
+    /**
      * @param null $station_id
      * @param null $order_no
      * @param null $phone
      * @param null $order_status
      * @param null $start_time
      * @param null $end_time
+     * @param string $time_name
      * @return Collection
      */
-    public function getAll($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null);
+    public function getAll($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at');
     
     public function getByOrder($origin_order_id, $date = null);
 

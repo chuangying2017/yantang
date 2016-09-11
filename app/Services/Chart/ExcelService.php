@@ -19,6 +19,19 @@ class ExcelService {
     {
         $e_datas = [];
 
+        $preorders->load([
+            'order' => function ($query) {
+                $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'status', 'pay_amount');
+            },
+            'skus' => function ($query) {
+                $query->select('order_id', 'name', 'total', 'remain');
+            },
+            'station' => function ($query) {
+                $query->select('id', 'name');
+            }]);
+
+        $preorders = $preorders->toArray();
+
         foreach ($preorders as $key => $preorder) {
             $e_data['订单号'] = $preorder['order_no'];
             $e_data['姓名'] = $preorder['name'];

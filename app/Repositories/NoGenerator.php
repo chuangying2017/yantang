@@ -51,6 +51,14 @@ class NoGenerator {
         }
     }
 
+    const PREFIX_OF_STATION_INVOICE_NO = '10';
+
+
+    public static function generateStationInvoiceNo($date, $station_id)
+    {
+        return self::PREFIX_OF_STATION_INVOICE_NO . Carbon::parse($date)->format('Ymd') . sprintf("%06d", $station_id);
+    }
+
     public static function generateOrderBillingNo()
     {
         return self::ORDER_BILLING_PREFIX . self::generate_no();
