@@ -47,7 +47,7 @@ class SendSmsToStaff {
         if ($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_SHIPPING) {
             try {
                 $phone = $preorder->staff->phone;
-                Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_CLIENT_PREORDER_IS_ASSIGNED)->send();
+                Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_STAFF_PREORDER_IS_ASSIGNED)->send();
             } catch (\Exception $e) {
                 \Log::error($e);
             }
