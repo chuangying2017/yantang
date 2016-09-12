@@ -137,6 +137,12 @@ class ClientOrderRepository implements ClientOrderRepositoryContract, OrderCount
     {
         $order = $this->getOrder($order_no, false);
         $order->status = $status;
+
+        $time_tag = OrderProtocol::statusTimeTag($status);
+        if (!is_null($time_tag)) {
+            $order->time_tag = Carbon::now();
+        }
+
         $order->save();
         return $order;
     }

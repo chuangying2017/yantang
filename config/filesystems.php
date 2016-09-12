@@ -73,7 +73,7 @@ return [
             'access_key' => getenv("QINIU_ACCESS_KEY"),  //AccessKey
             'secret_key' => getenv("QINIU_SECRET_KEY"),  //SecretKey
             'bucket'     => getenv("QINIU_BUCKET"),  //Bucket名字
-            'notify_url' => '',  //持久化处理回调地址
+            'notify_url' => getenv("QINIU_NOTIFY"),  //持久化处理回调地址
         ],
 
     ],

@@ -149,5 +149,16 @@ class OrderProtocol {
         return true;
     }
 
+    public static function statusTimeTag($status)
+    {
+        $data = [
+            self::STATUS_OF_SHIPPING => 'deliver_at',
+            self::STATUS_OF_CANCEL => 'cancel_at',
+            self::STATUS_OF_DONE => 'done_at',
+        ];
+
+        return array_get($data, $status, null);
+    }
+
 
 }

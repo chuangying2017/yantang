@@ -11,4 +11,5 @@ class EloquentCategoryRepository extends CategoryRepositoryAbstract {
         $this->setType(CategoryProtocol::TYPE_OF_MAIN)
             ->setModel(Category::class);
     }
+    
 }
