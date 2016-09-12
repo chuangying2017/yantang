@@ -1,6 +1,7 @@
 <?php namespace App\Services\Invoice;
 
 use App\Repositories\Invoice\InvoiceProtocol;
+use App\Repositories\Invoice\StationAdminInvoiceRepository;
 use App\Repositories\Invoice\StationInvoiceRepository;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
@@ -28,12 +29,14 @@ class StationInvoiceService implements InvoiceServiceContract {
      * @param StationInvoiceRepository $stationInvoiceRepo
      * @param PreorderRepositoryContract $preorderRepo
      * @param StationRepositoryContract $stationRepo
+     * @param StationAdminInvoiceRepository $stationAdminInvoiceRepository
      */
-    public function __construct(StationInvoiceRepository $stationInvoiceRepo, PreorderRepositoryContract $preorderRepo, StationRepositoryContract $stationRepo)
+    public function __construct(StationInvoiceRepository $stationInvoiceRepo, PreorderRepositoryContract $preorderRepo, StationRepositoryContract $stationRepo, StationAdminInvoiceRepository $stationAdminInvoiceRepository)
     {
         $this->stationInvoiceRepo = $stationInvoiceRepo;
         $this->preorderRepo = $preorderRepo;
         $this->stationRepo = $stationRepo;
+        $this->stationAdminInvoiceRepository = $stationAdminInvoiceRepository;
     }
 
     public function settleAll($invoice_date)
@@ -44,9 +47,13 @@ class StationInvoiceService implements InvoiceServiceContract {
             $start_time = $this->getStartTime($invoice_date);
             $end_time = $this->getEndTime($invoice_date);
 
+            $station_invoices = [];
+
             foreach ($stations as $station) {
-                $this->settleMerchant($station, $invoice_date, $start_time, $end_time);
+                $station_invoices[] = $this->settleMerchant($station, $invoice_date, $start_time, $end_time);
             }
+
+            return $this->settleAdmin($station_invoices, $invoice_date, $start_time, $end_time);
         } catch (\Exception $e) {
             \Log::error($e);
         }
@@ -55,10 +62,10 @@ class StationInvoiceService implements InvoiceServiceContract {
     public function settleMerchant($station, $request_invoice_date, $start_time, $end_time)
     {
         $station_id = $station['id'];
-        $invoices = $this->stationInvoiceRepo->getAllOfMerchant($station_id, $request_invoice_date);
+        $invoices = $this->stationInvoiceRepo->getAll($station_id, $request_invoice_date);
 
         if ($invoices->first()) {
-            info('服务部 ' . $station['name'] . ' 于' . $request_invoice_date . '的账单已出', $invoices->first());
+            info('服务部 ' . $station['name'] . ' 于' . $request_invoice_date . '的账单已出', $invoices->first()->toArray());
             return $invoices->first();
         }
 
@@ -90,7 +97,34 @@ class StationInvoiceService implements InvoiceServiceContract {
         }
 
         return $this->stationInvoiceRepo->create($invoice_data);
+    }
 
+    public function settleAdmin($merchant_invoices, $request_invoice_date, $start_time, $end_time)
+    {
+        $invoice_data = [
+            'invoice_date' => $request_invoice_date,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'merchant_id' => InvoiceProtocol::ID_OF_ADMIN_INVOICE,
+            'merchant_name' => InvoiceProtocol::NAME_OF_ADMIN_INVOICE,
+            'total_count' => 0,
+            'total_amount' => 0,
+            'discount_amount' => 0,
+            'pay_amount' => 0,
+            'service_amount' => 0,
+            'receive_amount' => 0,
+        ];
+
+        foreach ($merchant_invoices as $merchant_invoice) {
+            $invoice_data['total_count'] += $merchant_invoice['total_count'];
+            $invoice_data['total_amount'] += $merchant_invoice['total_amount'];
+            $invoice_data['discount_amount'] += $merchant_invoice['discount_amount'];
+            $invoice_data['pay_amount'] += $merchant_invoice['pay_amount'];
+            $invoice_data['service_amount'] += $merchant_invoice['service_amount'];
+            $invoice_data['receive_amount'] += $merchant_invoice['receive_amount'];
+        }
+
+        return $this->stationAdminInvoiceRepository->create($invoice_data);
     }
 
     protected function getStartTime($invoice_date)
@@ -161,6 +195,11 @@ class StationInvoiceService implements InvoiceServiceContract {
 
         return $data;
     }
+
+    /**
+     * @var StationAdminInvoiceRepository
+     */
+    private $stationAdminInvoiceRepository;
 
 
 }

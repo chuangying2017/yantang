@@ -98,10 +98,16 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
      * 对账管理员
      */
     $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_FINANCE]], function ($api) {
+        
         $api->group(['namespace' => 'Statement', 'prefix' => 'statements'], function ($api) {
             $api->resource('store', 'StoreStatementController', ['only' => ['index', 'show']]);
             $api->resource('stations', 'StationStatementController', ['only' => ['index', 'show']]);
         });
+
+        $api->group(['namespace' => 'Invoice', 'prefix' => 'invoices'], function ($api) {
+            $api->resource('stations', 'StationInvoiceController', ['only' => ['index', 'show']]);
+        });
+        
     });
 
 

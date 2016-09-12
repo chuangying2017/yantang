@@ -1,5 +1,6 @@
 <?php namespace App\Repositories;
 
+use App\Models\Invoice\StationInvoice;
 use App\Models\Statement\StationStatement;
 use App\Models\Subscribe\Station;
 use Carbon\Carbon;
@@ -54,10 +55,15 @@ class NoGenerator {
     const PREFIX_OF_STATION_INVOICE_NO = '10';
 
 
-    public static function generateStationInvoiceNo($date, $station_id)
+    public static function generateInvoiceNo($model, $date, $station_id)
     {
+        if($model == StationInvoice::class) {
+            return self::PREFIX_OF_STATION_INVOICE_NO . Carbon::parse($date)->format('Ymd') . sprintf("%06d", $station_id);
+        }
+
         return self::PREFIX_OF_STATION_INVOICE_NO . Carbon::parse($date)->format('Ymd') . sprintf("%06d", $station_id);
     }
+
 
     public static function generateOrderBillingNo()
     {
