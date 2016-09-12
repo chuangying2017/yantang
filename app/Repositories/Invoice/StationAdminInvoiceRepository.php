@@ -18,10 +18,12 @@ class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
         }
 
         if ($with_detail) {
-            $invoice->detail = StationInvoice::query()
-                ->where('merchant_id', '!=', InvoiceProtocol::ID_OF_ADMIN_INVOICE)
-                ->where('invoice_date', $invoice['invoice_date'])
-                ->get();
+            if($invoice['merchant_id'] == InvoiceProtocol::ID_OF_ADMIN_INVOICE) {
+                $invoice->detail = StationInvoice::query()
+                    ->where('merchant_id', '!=', InvoiceProtocol::ID_OF_ADMIN_INVOICE)
+                    ->where('invoice_date', $invoice['invoice_date'])
+                    ->get();
+            }
         }
 
         return $invoice;

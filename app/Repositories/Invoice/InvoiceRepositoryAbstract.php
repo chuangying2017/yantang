@@ -64,7 +64,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
         }
 
         if ($with_detail) {
-            $invoice->load('orders');
+            $invoice->load(['orders']);
         }
 
         return $invoice;
@@ -196,5 +196,18 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
         return $this;
     }
 
+
+    public function getAllOrders($invoice_no, $per_page = null)
+    {
+        $order_model = InvoiceProtocol::getOrderModel($this->getInvoiceModel());
+
+        $query = $order_model::query()->where('invoice_no', $invoice_no);
+
+        if ($per_page) {
+            return $query->paginate($per_page);
+        }
+
+        return $query->get();
+    }
 
 }

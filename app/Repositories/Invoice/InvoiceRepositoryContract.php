@@ -13,4 +13,6 @@ interface InvoiceRepositoryContract {
 
     public function updateAsError($invoice_no, $memo = '');
 
+    public function getAllOrders($invoice_no, $per_page = null);
+
 }
