@@ -14,8 +14,8 @@ class CreateInvoicePreorderTable extends Migration {
     {
         Schema::create('invoice_orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('invoice_id');
-            
+            $table->string('invoice_no');
+
             $table->integer('order_id');
             $table->integer('preorder_id');
             $table->string('order_no');

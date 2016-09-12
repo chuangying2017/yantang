@@ -12,9 +12,11 @@ class InvoiceAbstract extends Model {
 
     public $incrementing = false;
 
+    protected $guarded = [];
+
     public function orders()
     {
-        return $this->hasMany(StationInvoiceOrder::class, 'invoice_id', 'id');
+        return $this->hasMany(StationInvoiceOrder::class, 'invoice_no', 'invoice_no');
     }
 
 }

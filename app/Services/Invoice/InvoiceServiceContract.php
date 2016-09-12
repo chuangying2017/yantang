@@ -3,6 +3,6 @@ interface InvoiceServiceContract {
 
     public function settleAll($invoice_date);
 
-    public function settleMerchant($merchant_id, $invoice_date, $start_time, $end_time);
+    public function settleMerchant($merchant_id, $request_invoice_date, $start_time, $end_time);
 
 }

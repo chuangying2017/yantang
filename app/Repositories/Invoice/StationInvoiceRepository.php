@@ -9,6 +9,7 @@ class StationInvoiceRepository implements InvoiceRepositoryContract {
 
     public function create($invoice_data)
     {
+
         $invoice_orders = $invoice_data['detail'];
 
         \DB::beginTransaction();
