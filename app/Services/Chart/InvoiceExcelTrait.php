@@ -31,7 +31,6 @@ trait InvoiceExcelTrait {
             $e_data['地址'] = $preorder['address'];
             $e_data['商品详情'] = self::getPreorderSkusArray(json_decode($preorder['detail'], true));
             $e_data['下单时间'] = $preorder['created_at'];
-            $e_data['配送开始时间'] = $preorder['start_time'];
             $e_data['配送状态'] = PreorderProtocol::status($preorder['status']);
             $e_data['订单总价'] = display_price(array_get($preorder, 'total_amount'));
             $e_data['促销费'] = display_price(array_get($preorder, 'discount_amount') ?: 0);
@@ -54,7 +53,6 @@ trait InvoiceExcelTrait {
             '地址' => '',
             '商品详情' => '',
             '下单时间' => '',
-            '配送开始时间' => '',
             '配送状态' => '',
             '订单总价' => display_price(array_get($invoice, 'total_amount')),
             '促销费' => display_price(array_get($invoice, 'discount_amount') ?: 0),
