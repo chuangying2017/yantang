@@ -49,7 +49,8 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
 
         if (InvoiceProtocol::invoiceHasOrders($this->getInvoiceType())) {
             $invoice->orders()->createMany($invoice_orders);
-            Preorder::query()->whereIn('id', array_only($invoice_orders, 'preorder_id'))->update(['invoice' => 1]);
+            $invoice_preorder_ids =  array_pluck($invoice_orders, 'preorder_id');
+            Preorder::query()->whereIn('id', $invoice_preorder_ids)->update(['invoice' => 1]);
         }
 
         \DB::commit();
