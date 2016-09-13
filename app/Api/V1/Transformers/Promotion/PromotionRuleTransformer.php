@@ -1,4 +1,4 @@
-<?php namespace App\API\V1\Transformers\Promotion;
+<?php namespace App\Api\V1\Transformers\Promotion;
 
 use App\Models\Promotion\Rule;
 use League\Fractal\TransformerAbstract;

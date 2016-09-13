@@ -1,4 +1,4 @@
-<?php namespace App\API\V1\Transformers\Invoice;
+<?php namespace App\Api\V1\Transformers\Invoice;
 
 use App\Models\Invoice\StationInvoiceOrder;
 use League\Fractal\TransformerAbstract;

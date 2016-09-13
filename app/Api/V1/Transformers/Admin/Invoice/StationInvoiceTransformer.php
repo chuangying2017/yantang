@@ -1,4 +1,4 @@
-<?php namespace App\API\V1\Transformers\Admin\Invoice;
+<?php namespace App\Api\V1\Transformers\Admin\Invoice;
 
 use App\Models\Invoice\StationAdminInvoice;
 use Illuminate\Database\Eloquent\Collection;
