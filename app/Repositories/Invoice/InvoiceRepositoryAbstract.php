@@ -140,6 +140,8 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
             $query->where('status', $status);
         }
 
+        $query->orderBy('created_at', 'desc');
+
         if (!is_null($paginate)) {
             return $query->paginate($paginate);
         }
