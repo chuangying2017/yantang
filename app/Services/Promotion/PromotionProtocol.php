@@ -43,6 +43,11 @@ class PromotionProtocol {
     const RANGE_TYPE_OF_QUANTITY = 'quantity';
     const RANGE_TYPE_OF_TOTAL_QUANTITY = 'total_quantity';
 
+    public static function checkRangeContentIsPrice($type)
+    {
+        return in_array($type, [self::RANGE_TYPE_OF_AMOUNT]);
+    }
+
     const DISCOUNT_TYPE_OF_AMOUNT = 'amount';
     const DISCOUNT_TYPE_OF_EXPRESS = 'express';
     const DISCOUNT_TYPE_OF_CREDITS = 'credits';
@@ -60,7 +65,7 @@ class PromotionProtocol {
     {
         return
             in_array($type, [self::DISCOUNT_TYPE_OF_AMOUNT, self::DISCOUNT_TYPE_OF_SPECIAL_PRICE, self::DISCOUNT_TYPE_OF_EXPRESS]) &&
-            in_array($mode, [self::DISCOUNT_MODE_OF_DECREASE, self::ACTION_OF_EQU])
+            in_array($mode, [self::DISCOUNT_MODE_OF_DECREASE, self::DISCOUNT_MODE_OF_EQUAL])
                 ? true : false;
     }
 

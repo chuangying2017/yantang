@@ -24,8 +24,12 @@ class EloquentRuleRepository implements RuleRepositoryContract {
             'item_type' => $items['type'],
             'item_content' => json_encode($items['values']),
             'range_type' => $range['type'],
-            'range_min' => $range['min'],
-            'range_max' => array_get($range, 'max', null),
+            'range_min' => PromotionProtocol::checkRangeContentIsPrice($range['type']) ?
+                store_price($range['min']) :
+                $range['min'],
+            'range_max' => PromotionProtocol::checkRangeContentIsPrice($range['type']) ?
+                store_price(array_get($range, 'max', null)) :
+                array_get($range, 'max', null),
             'discount_resource' => $discount['type'],
             'discount_mode' => $discount['mode'],
             'discount_content' => $this->transDiscountContent($discount),
