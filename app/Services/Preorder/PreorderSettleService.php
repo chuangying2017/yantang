@@ -1,5 +1,6 @@
 <?php namespace App\Services\Preorder;
 
+use App\Events\Preorder\PreorderDeliverStart;
 use App\Events\Preorder\PreorderSkusOut;
 use App\Repositories\Preorder\Deliver\PreorderDeliverRepositoryContract;
 use App\Repositories\Preorder\Product\PreorderSkusRepositoryContract;
@@ -78,6 +79,11 @@ class PreorderSettleService implements PreorderSettleServiceContract {
 
             $out_sku = 0;
             foreach ($order['skus'] as $deliver_sku) {
+
+                if ($deliver_sku['remain'] == $deliver_sku['total']) {
+                    event(new PreorderDeliverStart($order));
+                }
+
                 $sku_deliver_quantity = ($deliver_sku['quantity'] > $deliver_sku['remain']) ? $deliver_sku['remain'] : $deliver_sku['quantity'];
                 if ($sku_deliver_quantity == $deliver_sku['remain']) {
                     $out_sku++;
@@ -97,7 +103,7 @@ class PreorderSettleService implements PreorderSettleServiceContract {
 
     }
 
-	/**
+    /**
      * @param $date
      * @return Carbon
      */

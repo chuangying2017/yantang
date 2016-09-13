@@ -14,4 +14,6 @@ interface CategoryRepositoryContract {
 
     public function getIdsByProducts($product_id);
 
+    
+
 }

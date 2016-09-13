@@ -37,6 +37,11 @@ class PreorderProtocol {
     const PREORDER_DELIVER_STATUS_OF_NEED_CONFIRM = 0;
     const PREORDER_DELIVER_STATUS_OF_OK = 1;
     const PREORDER_DELIVER_STATUS_OF_ERROR = 2;
+    
+    //Time name
+    const TIME_NAME_OF_CONFIRM = 'confirm_at';
+    const TIME_NAME_OF_CREATE = 'created_at';
+    const TIME_NAME_OF_DONE = 'done_at';
 
 
     public static function validOrderStatus($status)
@@ -108,6 +113,18 @@ class PreorderProtocol {
         ];
 
         return is_null($key) ? $data : $data[$key];
+    }
+
+    public static function statusTimeTag($status)
+    {
+        $data = [
+            self::ORDER_STATUS_OF_ASSIGNING => 'pay_at',
+            self::ORDER_STATUS_OF_DONE => 'done_at',
+            self::ORDER_STATUS_OF_SHIPPING => 'confirm_at',
+            self::ORDER_STATUS_OF_CANCEL => 'cancel_at'
+        ];
+
+        return array_get($data, $status, null);
     }
 
 }

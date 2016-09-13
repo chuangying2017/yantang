@@ -34,6 +34,10 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->get('preorders/daily', 'StationPreorderController@daily');
 
             $api->resource('statements', 'StationStatementController', ['only' => ['index', 'show', 'update']]);
+
+            $api->get('invoices/{invoice_no}/orders', 'StationInvoiceController@orders')->name('station.invoice.orders');
+            $api->resource('invoices', 'StationInvoiceController', ['only' => ['index', 'show', 'update']]);
+
             //管理配送员
             $api->get('staffs/{staff_id}/preorders', 'StationStaffController@orders');
             $api->put('staffs/{staff_id}/preorders', 'StationStaffController@reassign');
