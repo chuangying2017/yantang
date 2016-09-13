@@ -22,7 +22,7 @@ class ExcelService {
         $full_file_name = $path . $title . '.xls';
         $local_path = storage_path('app/' . $path);
 
-        if($e_data) {
+        if ($e_data) {
             Excel::create($title, function ($excel) use ($e_data) {
                 $excel->sheet('data', function ($sheet) use ($e_data) {
                     $sheet->fromArray($e_data);
@@ -82,7 +82,6 @@ class ExcelService {
             $e_data['地址'] = $preorder['address'];
             $e_data['服务部'] = array_get($preorder, 'station.name');
             $e_data['下单时间'] = $preorder['created_at'];
-            $e_data['配送开始时间'] = $preorder['start_time'];
             $e_data['配送状态'] = PreorderProtocol::status($preorder['status']);
             $e_data['订单总价'] = display_price(array_get($preorder, 'order.total_amount'));
             $e_data['优惠金额'] = display_price(array_get($preorder, 'order.discount_amount') ?: 0);

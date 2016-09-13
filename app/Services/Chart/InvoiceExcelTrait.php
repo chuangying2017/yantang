@@ -9,7 +9,7 @@ trait InvoiceExcelTrait {
     public static function downloadStationInvoice($invoice, $local = true)
     {
         $path = self::getStationInvoiceLocalPath($invoice['invoice_date']);
-        $title = $invoice['merchant_name'];
+        $title = $invoice['merchant_name'] . '-' . $invoice['invoice_date'];
 
         $full_file_name = $path . $title . '.xls';
 
@@ -66,9 +66,9 @@ trait InvoiceExcelTrait {
         return self::saveAndDownload($e_datas, $title, $path, $local);
     }
 
-    public static function downloadStationAdminInvoice($invoice, $title = '总部', $local = true)
+    public static function downloadStationAdminInvoice($invoice, $title = '燕塘优先达服务部对账单-概况-', $local = true)
     {
-        $title .= '_' . $invoice['invoice_date'];
+        $title .= $invoice['invoice_date'];
         $path = self::getStationInvoiceLocalPath($invoice['invoice_date']);
         $full_file_name = $path . $title . '.xls';
 
@@ -112,7 +112,7 @@ trait InvoiceExcelTrait {
 
     public static function downloadStationAdminInvoiceDetail($invoice, $local = true)
     {
-        $pack_file = $invoice['invoice_date'] . '-订单数据.zip';
+        $pack_file = '燕塘优先达服务部对账单-明细-' . $invoice['invoice_date'] . '.zip';
         $path = self::getStationInvoiceLocalPath($invoice['invoice_date']);
 
         $full_file_name = $path . $pack_file;
