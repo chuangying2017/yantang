@@ -31,7 +31,7 @@ class StationInvoiceTransformer extends TransformerAbstract {
 
     public function includeDetail(StationAdminInvoice $invoice)
     {
-        return $this->collection($invoice->detail, new \App\API\V1\Transformers\Invoice\StationInvoiceTransformer(), true);
+        return $this->collection($invoice->detail, new \App\Api\V1\Transformers\Invoice\StationInvoiceTransformer(), true);
     }
 
 }
