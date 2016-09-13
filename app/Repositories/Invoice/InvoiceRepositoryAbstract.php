@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Invoice;
 
 use App\Models\Invoice\InvoiceAbstract;
+use App\Models\Subscribe\Preorder;
 use App\Repositories\NoGenerator;
 
 abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
@@ -48,6 +49,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
 
         if (InvoiceProtocol::invoiceHasOrders($this->getInvoiceType())) {
             $invoice->orders()->createMany($invoice_orders);
+            Preorder::query()->whereIn('id', array_only($invoice_orders, 'preorder_id'))->update(['invoice' => 1]);
         }
 
         \DB::commit();
@@ -93,14 +95,14 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
 
     public function updateAsError($invoice_no, $memo = '')
     {
-        return $this->updateStatus($invoice_no, InvoiceProtocol::INVOICE_STATUS_OF_ERROR, $memo);
+        return $this->updateStatus($invoice_no, InvoiceProtocol::INVOICE_STATUS_OF_REJECT, $memo);
     }
 
     protected function updateStatus($invoice_no, $status, $memo = '')
     {
         $invoice = $this->get($invoice_no, false);
 
-        if ($invoice !== InvoiceProtocol::INVOICE_STATUS_OF_PENDING) {
+        if ($invoice['status'] !== InvoiceProtocol::INVOICE_STATUS_OF_PENDING) {
             return $invoice;
         }
 

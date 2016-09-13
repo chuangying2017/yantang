@@ -402,6 +402,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $preorder = Preorder::query()->where('order_id', $order_id)->firstOrFail();
         $preorder->status = $status;
+        $preorder->pay_at = Carbon::now();
         $preorder->save();
 
         if ($status == PreorderProtocol::ORDER_STATUS_OF_CANCEL) {

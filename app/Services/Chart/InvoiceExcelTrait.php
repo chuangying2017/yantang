@@ -1,11 +1,12 @@
 <?php namespace App\Services\Chart;
 
+use App\Repositories\Invoice\InvoiceProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 
 trait InvoiceExcelTrait {
 
-    public static function downloadStationInvoice($invoice, $local = false)
+    public static function downloadStationInvoice($invoice, $local = true)
     {
         $path = self::getStationInvoiceLocalPath($invoice['invoice_date']);
         $title = $invoice['merchant_name'];
@@ -13,7 +14,7 @@ trait InvoiceExcelTrait {
         $full_file_name = $path . $title . '.xls';
 
         if (self::getFile($full_file_name, $local)) {
-            return self::getFile($full_file_name, $local);
+            return self::downloadLocalFile(self::getFile($full_file_name, $local));
         }
 
         $invoice->load('orders');
@@ -65,12 +66,13 @@ trait InvoiceExcelTrait {
         return self::saveAndDownload($e_datas, $title, $path, $local);
     }
 
-    public static function downloadStationAdminInvoice($invoice, $title = '总部')
+    public static function downloadStationAdminInvoice($invoice, $title = '总部', $local = true)
     {
         $path = self::getStationInvoiceLocalPath($invoice['invoice_date']);
         $full_file_name = $path . $title . '.xls';
-        if (self::getFile($full_file_name)) {
-            return self::getFile($full_file_name);
+
+        if (self::getFile($full_file_name, $local)) {
+            return self::downloadLocalFile(self::getFile($full_file_name, $local));
         }
 
         $e_datas = [];
@@ -84,6 +86,8 @@ trait InvoiceExcelTrait {
             $e_data['客户实付金额'] = display_price(array_get($merchant_invoice, 'pay_amount'));
             $e_data['手续费'] = display_price(array_get($merchant_invoice, 'service_amount'));
             $e_data['实收价格'] = display_price(array_get($merchant_invoice, 'receive_amount'));
+            $e_data['对账情况'] = InvoiceProtocol::statusName($merchant_invoice['status']);
+            $e_data['备注'] = $merchant_invoice['memo'];
 
             $e_datas[$key] = $e_data;
         }
@@ -102,18 +106,18 @@ trait InvoiceExcelTrait {
 
         $e_datas['合计'] = $summary;
 
-        return self::saveAndDownload($e_datas, $title, $path);
+        return self::saveAndDownload($e_datas, $title, $path, $local);
     }
 
-    public static function downloadStationAdminInvoiceDetail($invoice)
+    public static function downloadStationAdminInvoiceDetail($invoice, $local = true)
     {
         $pack_file = $invoice['invoice_date'] . '-订单数据.zip';
         $path = self::getStationInvoiceLocalPath($invoice['invoice_date']);
 
         $full_file_name = $path . $pack_file;
 
-        if (self::getFile($full_file_name)) {
-            return self::getFile($full_file_name);
+        if (self::getFile($full_file_name, $local)) {
+            return self::downloadLocalFile(self::getFile($full_file_name, $local));
         }
 
         $invoice_urls = [];
@@ -128,9 +132,7 @@ trait InvoiceExcelTrait {
         }
         $zip->close();
 
-        $result = \Storage::drive('qiniu')->put($full_file_name, file_get_contents(storage_path('app/' . $full_file_name)));
-
-        return \Storage::drive('qiniu')->get($full_file_name);
+        return self::saveAndDownload(null, $pack_file, $path, $local);
     }
 
     protected static function getStationInvoiceLocalPath($date)

@@ -15,7 +15,7 @@ class InvoiceProtocol {
 
     const INVOICE_STATUS_OF_PENDING = 'pending';
     const INVOICE_STATUS_OF_CONFIRM = 'confirm';
-    const INVOICE_STATUS_OF_ERROR = 'error';
+    const INVOICE_STATUS_OF_REJECT = 'reject';
 
     const INVOICE_TYPE_OF_STATION = 1;
     const INVOICE_TYPE_OF_STORE = 2;
@@ -28,7 +28,7 @@ class InvoiceProtocol {
     const INVOICE_MODEL_OF_STATION_ORDER = StationInvoiceOrder::class;
 
 
-	/**
+    /**
      * @param $merchant
      * @return Model
      */
@@ -53,5 +53,16 @@ class InvoiceProtocol {
     public static function invoiceHasOrders($type)
     {
         return in_array($type, [self::INVOICE_TYPE_OF_STATION, self::INVOICE_TYPE_OF_STORE]);
+    }
+
+    public static function statusName($status)
+    {
+        $data = [
+            self::INVOICE_STATUS_OF_PENDING => '未操作',
+            self::INVOICE_STATUS_OF_CONFIRM => '已确认',
+            self::INVOICE_STATUS_OF_REJECT => '有异议'
+        ];
+        
+        return array_get($data, $status, '');
     }
 }

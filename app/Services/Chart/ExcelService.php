@@ -11,38 +11,32 @@ class ExcelService {
     public static function getFile($file, $local = false)
     {
         if ($local) {
-            if (file_exists(storage_path('app/' . $file))) {
-                return storage_path('app/' . $file);
-            }
-            return false;
+            return self::getLocalFullPath($file);
         }
 
-        $qiniu = \Storage::drive('qiniu');
-        if ($qiniu->exists($file)) {
-            return $qiniu->downloadUrl($file);
-        }
-
-        return false;
+        return self::getCDNFullPath($file);
     }
 
-    public static function saveAndDownload($e_data, $title, $path, $local = false)
+    public static function saveAndDownload($e_data = null, $title, $path, $local = false)
     {
         $full_file_name = $path . $title . '.xls';
         $local_path = storage_path('app/' . $path);
 
-        Excel::create($title, function ($excel) use ($e_data) {
-            $excel->sheet('data', function ($sheet) use ($e_data) {
-                $sheet->fromArray($e_data);
-            });
-        })->store('xls', $local_path);
-
-        $local_full_path = storage_path('app/') . $full_file_name;
-        $result = \Storage::drive('qiniu')->put($full_file_name, file_get_contents($local_full_path));
+        if($e_data) {
+            Excel::create($title, function ($excel) use ($e_data) {
+                $excel->sheet('data', function ($sheet) use ($e_data) {
+                    $sheet->fromArray($e_data);
+                });
+            })->store('xls', $local_path);
+        }
 
         if ($local) {
-            return $local_full_path;
+            return self::downloadLocalFile(self::getFile($full_file_name, true));
         }
-        return self::getFile($full_file_name);
+
+        $result = \Storage::drive('qiniu')->put($full_file_name, file_get_contents(self::getFile($full_file_name, true)));
+
+        return self::getFile($full_file_name, $local);
     }
 
     public static function downExcel($e_data, $title)
@@ -101,6 +95,30 @@ class ExcelService {
         $title = $title ?: '燕塘优鲜达订奶订单 - 导出时间:' . Carbon::now()->toDateTimeString();
 
         return self::downExcel($e_datas, $title);
+    }
+
+
+    protected static function getLocalFullPath($file)
+    {
+        if (file_exists(storage_path('app/' . $file))) {
+            return storage_path('app/' . $file);
+        }
+        return false;
+    }
+
+    protected static function getCDNFullPath($file)
+    {
+        $qiniu = \Storage::drive('qiniu');
+        if ($qiniu->exists($file)) {
+            return $qiniu->downloadUrl($file);
+        }
+
+        return false;
+    }
+
+    public static function downloadLocalFile($file)
+    {
+        return response()->download($file);
     }
 
 

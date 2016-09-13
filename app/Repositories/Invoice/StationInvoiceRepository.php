@@ -11,4 +11,6 @@ class StationInvoiceRepository extends InvoiceRepositoryAbstract {
         $this->setInvoiceModel(InvoiceProtocol::INVOICE_MODEL_OF_STATION)->setInvoiceType(InvoiceProtocol::INVOICE_TYPE_OF_STATION);
     }
     
+    
+    
 }
