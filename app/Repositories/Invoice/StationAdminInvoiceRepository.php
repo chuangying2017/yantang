@@ -39,7 +39,7 @@ class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
 
         $invoice_no = NoGenerator::generateInvoiceNo($this->getInvoiceModel(), $invoice_data['invoice_date'], $invoice_data['merchant_id']);
 
-        $invoice = $invoice_model::query()->updateOrcreate(['invoice' => $invoice_no], [
+        $invoice = $invoice_model::query()->updateOrcreate(['invoice_no' => $invoice_no], [
             'invoice' => $invoice_no,
             'invoice_date' => $invoice_data['invoice_date'],
             'start_time' => $invoice_data['start_time'],
