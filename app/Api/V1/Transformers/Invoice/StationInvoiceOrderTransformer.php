@@ -31,6 +31,8 @@ class StationInvoiceOrderTransformer extends TransformerAbstract {
             'pay_amount' => display_price($order['pay_amount']),
             'service_amount' => display_price($order['service_amount']),
             'receive_amount' => display_price($order['receive_amount']),
+            'confirm_at' => $order['confirm_at'],
+            'order_at' => $order['order_at'],
         ];
     }
 
