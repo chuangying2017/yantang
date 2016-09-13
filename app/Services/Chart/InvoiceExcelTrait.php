@@ -68,6 +68,7 @@ trait InvoiceExcelTrait {
 
     public static function downloadStationAdminInvoice($invoice, $title = '总部', $local = true)
     {
+        $title .= '_' . $invoice['invoice_date'];
         $path = self::getStationInvoiceLocalPath($invoice['invoice_date']);
         $full_file_name = $path . $title . '.xls';
 
@@ -122,7 +123,7 @@ trait InvoiceExcelTrait {
 
         $invoice_urls = [];
         foreach ($invoice->detail as $key => $merchant_invoice) {
-            $invoice_urls[] = self::downloadStationInvoice($merchant_invoice, true);
+            $invoice_urls[] = self::downloadStationInvoice($merchant_invoice, true)->getFile()->getPathname();
         }
 
         $zip = new \ZipArchive;
@@ -132,7 +133,7 @@ trait InvoiceExcelTrait {
         }
         $zip->close();
 
-        return self::saveAndDownload(null, $pack_file, $path, $local);
+        return self::downloadLocalFile(self::getFile($full_file_name, $local));
     }
 
     protected static function getStationInvoiceLocalPath($date)
