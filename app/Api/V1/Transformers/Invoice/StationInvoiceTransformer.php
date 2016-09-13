@@ -1,4 +1,4 @@
-<?php namespace App\API\V1\Transformers\Invoice;
+<?php namespace App\Api\V1\Transformers\Invoice;
 
 use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\Invoice\StationInvoice;
