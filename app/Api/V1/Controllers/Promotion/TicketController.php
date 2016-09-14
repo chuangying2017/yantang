@@ -47,10 +47,12 @@ class TicketController extends Controller {
     {
         $coupon_id = $request->input('coupon_id');
 
-        $ticket = $couponService->dispatch($userRepository->setUser(access()->user()), $coupon_id);
+        $user = access()->user();
+        $ticket = $couponService->dispatch($userRepository->setUser($user), $coupon_id);
 
         if (!$ticket) {
-            $this->response->error($couponService->getErrorMessage('领取失败'), 400);
+            info($user['id'] . '领取优惠券 ' . $coupon_id . ' 失败:' . $couponService->getErrorMessage());
+            $this->response->error($couponService->getErrorMessage($couponService->getErrorMessage()), 400);
         }
 
         return $this->response->item($ticket, new TicketTransformer())->setStatusCode(201);
