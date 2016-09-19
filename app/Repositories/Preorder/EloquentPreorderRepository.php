@@ -377,7 +377,9 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     protected function scopeStatus($query, $order_status)
     {
-        if (PreorderProtocol::validOrderStatus($order_status) === true) {
+
+        if (PreorderProtocol::validOrderStatus($order_status) === true) {        
+
             $query->where('status', $order_status);
         } else if (PreorderProtocol::validOrderAssignStatus($order_status) === true) {
 
@@ -388,7 +390,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             //查询超时未处理订单
 
             $query->with('assign')->whereHas('assign', function ($query) use ($order_status) {
-
                 if ($order_status == PreorderProtocol::ASSIGN_STATUS_OF_OVERTIME) {
                     $query->where('time_before', '<=', Carbon::now());
                     $order_status = PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED;
@@ -409,7 +410,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $preorder = Preorder::query()->where('order_id', $order_id)->firstOrFail();
         $preorder->status = $status;
-        $preorder->pay_at = Carbon::now();
+
+        if ($status == PreorderProtocol::ORDER_STATUS_OF_ASSIGNING) {
+            $preorder->pay_at = Carbon::now();
+        }
+
         $preorder->save();
 
         if ($status == PreorderProtocol::ORDER_STATUS_OF_CANCEL) {

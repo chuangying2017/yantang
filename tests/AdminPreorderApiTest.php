@@ -65,14 +65,61 @@ class AdminPreorderApiTest extends TestCase {
     /** @test */
     public function it_can_get_all_not_handle_on_time_preorders()
     {
-        $this->json('get', 'admin/subscribe/preorders/reject',
+        $this->json('get', 'admin/subscribe/orders',
             [
-
+                'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_OVERTIME
             ],
             $this->getAuthHeader());
 
-        $this->echoJson();
+        $this->dump();
 
         $this->assertResponseStatus(200);
     }
+
+    /** @test */
+    public function it_can_get_all_cancel_overtime_order()
+    {
+        $api = app('Dingo\Api\Dispatcher');
+
+        $admin_user_id = 1;
+        $user = \App\Models\Access\User\User::find($admin_user_id);
+        $jwt_token = JWTAuth::fromUser($user);
+
+        $api->header('Authorization', 'Bearer ' . $jwt_token);
+
+        $orders = $api->get('api/admin/subscribe/origin-orders', [
+            'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_UNPAID,
+            'per_page' => 20,
+            'order_by' => 'created_at',
+            'sort' => 'desc',
+            'page' => 1
+        ]);
+
+        $orders = $orders->toArray();
+        
+        dd($orders);
+
+        $order = array_first($orders['data']);
+        
+        
+
+
+        $api->delete('api/admin/subscribe/origin-orders/' . $order['id']);
+        
+        
+
+        $orders = $api->get('api/admin/subscribe/origin-orders', [
+            'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_UNPAID,
+            'per_page' => 20,
+            'order_by' => 'created_at',
+            'sort' => 'desc',
+            'page' => 1
+        ]);
+
+        $orders = $orders->toArray();
+
+        $order = array_first($orders['data']);
+
+    }
 }
+

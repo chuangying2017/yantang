@@ -29,7 +29,7 @@ class PreorderProtocol {
     const ASSIGN_STATUS_OF_CONFIRM = 'confirm';
     const ASSIGN_STATUS_OF_ASSIGNED = 'assign';
     const ASSIGN_STATUS_OF_REJECT = 'reject';
-    const DAYS_OF_ASSIGN_DISPOSE = 1;
+    const DAYS_OF_ASSIGN_DISPOSE_HOURS = 12;
 
     const DAYTIME_OF_AM = 1;
     const DAYTIME_OF_PM = 0;
@@ -38,7 +38,7 @@ class PreorderProtocol {
     const PREORDER_DELIVER_STATUS_OF_NEED_CONFIRM = 0;
     const PREORDER_DELIVER_STATUS_OF_OK = 1;
     const PREORDER_DELIVER_STATUS_OF_ERROR = 2;
-    
+
     //Time name
     const TIME_NAME_OF_CONFIRM = 'confirm_at';
     const TIME_NAME_OF_CREATE = 'created_at';
@@ -69,8 +69,10 @@ class PreorderProtocol {
             in_array($status, [
                 self::ASSIGN_STATUS_OF_UNTREATED,
                 self::ASSIGN_STATUS_OF_REJECT,
+                self::ASSIGN_STATUS_OF_OVERTIME,
             ]) :
             in_array($status, [
+                self::ASSIGN_STATUS_OF_OVERTIME,
                 self::ASSIGN_STATUS_OF_UNTREATED,
                 self::ASSIGN_STATUS_OF_CONFIRM,
                 self::ASSIGN_STATUS_OF_ASSIGNED,

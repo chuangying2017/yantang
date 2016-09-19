@@ -69,7 +69,7 @@ class OrderManageService implements OrderManageContract {
         //生成退款退货订单
         $refund_order_generator = app()->make(RefundOrderGenerator::class);
         $refund_order = $refund_order_generator->refund($order_id, $order_skus_info, $memo);
-        
+
         //未发货,直接退款
         $order = $this->orderRepo->getOrder($order['id'], false);
         if ($order['status'] == OrderProtocol::STATUS_OF_PAID) {
@@ -141,5 +141,24 @@ class OrderManageService implements OrderManageContract {
         $order = $this->orderRepo->getOrder($order, false);
         $recent_order = $this->orderRepo->getFirstPaidOrder($order->user_id, $order->order_type);
         return $order['id'] === $recent_order['id'];
+    }
+
+    public function cancelUnpaidOrder($order_id)
+    {
+        $order = $this->orderRepo->getOrder($order_id, false);
+
+        if (!($order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_DEFAULT || $order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_REJECT)) {
+            \Log::error('订单退款处理中,无法重复提交');
+            return false;
+        }
+
+        //未支付,直接取消
+        if ($order['pay_status'] == OrderProtocol::PAID_STATUS_OF_UNPAID) {
+            if (!app()->make(OrderCheckoutService::class)->checkOrderIsPaid($order['id'])) {
+                return $this->orderRepo->updateOrderStatusAsCancel($order);
+            }
+        }
+
+        return false;
     }
 }

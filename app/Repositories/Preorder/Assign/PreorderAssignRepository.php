@@ -30,7 +30,7 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
             'preorder_id' => $order_id,
             'station_id' => $station_id,
             'status' => PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED,
-            'time_before' => Carbon::now()->addDays(PreorderProtocol::DAYS_OF_ASSIGN_DISPOSE)
+            'time_before' => Carbon::now()->addHours(PreorderProtocol::DAYS_OF_ASSIGN_DISPOSE_HOURS)
         ]);
 
         event(new AssignIsCreate($assign));

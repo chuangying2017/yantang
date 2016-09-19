@@ -6,6 +6,7 @@ use App\Events\Order\OrderIsDeliverDone;
 use App\Events\Order\OrderIsDone;
 use App\Events\Order\OrderIsPaid;
 use App\Models\Order\Order;
+use App\Models\Subscribe\Preorder;
 use App\Repositories\Billing\OrderBillingRepository;
 use App\Repositories\NoGenerator;
 use App\Repositories\Order\Address\EloquentOrderAddressRepository;
@@ -271,5 +272,6 @@ class ClientOrderRepository implements ClientOrderRepositoryContract, OrderCount
 
         return $query->first();
     }
+
 
 }
