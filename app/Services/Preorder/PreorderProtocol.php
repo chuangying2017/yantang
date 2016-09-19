@@ -25,6 +25,7 @@ class PreorderProtocol {
 
     //status对应的值
     const ASSIGN_STATUS_OF_UNTREATED = 'untreated';
+    const ASSIGN_STATUS_OF_OVERTIME = 'overtime';
     const ASSIGN_STATUS_OF_CONFIRM = 'confirm';
     const ASSIGN_STATUS_OF_ASSIGNED = 'assign';
     const ASSIGN_STATUS_OF_REJECT = 'reject';

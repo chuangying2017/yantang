@@ -33,11 +33,11 @@ class StationPreorderApiTest extends TestCase {
     public function it_can_get_all_not_confirm_orders_of_station()
     {
         $this->json('get', 'stations/preorders',
-            ['status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING],
-            $this->getAuthHeader()
+            ['keyword' => '13798070384'],
+            $this->getAuthHeader(84)
         );
 
-        $this->echoJson();
+        $this->dump();
 
         $this->assertResponseOk();
     }

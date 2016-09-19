@@ -13,9 +13,9 @@ class StaffPreorderApiTest extends TestCase {
     {
         $this->json('get', 'staffs/preorders',
             [
-                'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING
+                'keyword' => '108160828954221082143'
             ],
-            $this->getAuthHeader(2));
+            $this->getAuthHeader(284));
 
         $this->echoJson();
 

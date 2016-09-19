@@ -13,7 +13,7 @@ class AdminPreorderApiTest extends TestCase {
     {
         $this->json('get', 'admin/subscribe/orders',
             [
-                'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING
+                'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_OVERTIME
             ],
             $this->getAuthHeader());
 
