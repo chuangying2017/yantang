@@ -2,7 +2,9 @@
 
 namespace App\Api\V1\Controllers\Admin\Order;
 
+use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Repositories\Order\SubscribeOrderRepository;
+use App\Services\Order\OrderManageContract;
 use App\Services\Order\OrderProtocol;
 use Illuminate\Http\Request;
 
@@ -27,7 +29,6 @@ class SubscribeOrderController extends Controller {
 
     public function index(Request $request)
     {
-        $export = $request->input('export') ?: 0;
         $status = $request->input('status') ?: null;
         $keyword = $request->input('keyword') ?: null;
         $start_time = $request->input('start_time') ?: null;
@@ -37,16 +38,16 @@ class SubscribeOrderController extends Controller {
         $sort = $request->input('sort') ?: 'desc';
         $per_page = $request->input('per_page') ?: OrderProtocol::ORDER_PER_PAGE;
 
-        if (!$export) {
-            $orders = $this->orderRepo->getPaginatedOrders($status, $keyword, $order_by, $sort, $per_page, $start_time, $end_time, $time_name);
+        $orders = $this->orderRepo->getPaginatedOrders($status, $keyword, $order_by, $sort, $per_page, $start_time, $end_time, $time_name);
 
-            return $orders;
-        }
-
-        #todo 导出excel
-
-        $orders = $this->orderRepo->getAllOrders($start_time, $end_time, $time_name, $status, $keyword, $order_by, $sort);
+        return $this->response->paginator($orders, new ClientOrderTransformer());
     }
 
+    public function destroy(Request $request, $order_id, OrderManageContract $orderManager)
+    {
+        $success = $orderManager->cancelUnpaidOrder($order_id);
+
+        return $this->response->noContent();
+    }
 
 }

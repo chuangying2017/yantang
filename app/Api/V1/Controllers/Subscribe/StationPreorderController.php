@@ -45,9 +45,14 @@ class StationPreorderController extends Controller {
         $status = $request->input('status') ?: null;
         $start_time = $request->input('start_time') ?: null;
         $end_time = $request->input('end_time') ?: null;
-        $staff_id = $request->input('staff') ? : null;
+        $staff_id = $request->input('staff') ?: null;
+        $keyword = $request->input('keyword') ?: null;
 
-        $orders = $this->orderRepo->getPreordersOfStation(access()->stationId(), $staff_id, $status, $start_time, $end_time);
+        if (!is_null($keyword)) {
+            $orders = $this->orderRepo->getPreordersOfStationByKeyword($keyword, access()->stationId(), $staff_id, $status, $start_time, $end_time);
+        } else {
+            $orders = $this->orderRepo->getPreordersOfStation(access()->stationId(), $staff_id, $status, $start_time, $end_time);
+        }
 
         return $this->response->paginator($orders, new PreorderTransformer());
     }

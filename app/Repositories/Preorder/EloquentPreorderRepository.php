@@ -91,7 +91,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $orders;
     }
 
-    protected function queryOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null)
+    protected function queryOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $per_page = null, $orderBy = 'created_at', $sort = 'desc', $keyword = null)
     {
         $query = Preorder::query();
 
@@ -117,14 +117,12 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $query->where('start_time', '<=', $end_time);
         }
 
-        if (!is_null($order_no)) {
-            $query->where('order_no', $order_no);
+        if (!is_null($keyword)) {
+            $query->where(function ($query) use ($keyword) {
+                $query->where('order_no', $keyword)
+                    ->orWhere('phone', $keyword);
+            });
         }
-
-        if (!is_null($phone)) {
-            $query->where('phone', $phone);
-        }
-
 
         $query->orderBy($orderBy, $sort);
 
@@ -379,7 +377,9 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     protected function scopeStatus($query, $order_status)
     {
-        if (PreorderProtocol::validOrderStatus($order_status) === true) {
+
+        if (PreorderProtocol::validOrderStatus($order_status) === true) {        
+
             $query->where('status', $order_status);
         } else if (PreorderProtocol::validOrderAssignStatus($order_status) === true) {
 
@@ -387,9 +387,17 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
                 $query->where('status', PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
             }
 
+            //查询超时未处理订单
+
             $query->with('assign')->whereHas('assign', function ($query) use ($order_status) {
+                if ($order_status == PreorderProtocol::ASSIGN_STATUS_OF_OVERTIME) {
+                    $query->where('time_before', '<=', Carbon::now());
+                    $order_status = PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED;
+                }
+
                 $query->where('status', $order_status);
             });
+
         } else {
             $query->whereNotIn('status', [
                 PreorderProtocol::ORDER_STATUS_OF_UNPAID,
@@ -402,7 +410,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $preorder = Preorder::query()->where('order_id', $order_id)->firstOrFail();
         $preorder->status = $status;
-        $preorder->pay_at = Carbon::now();
+
+        if ($status == PreorderProtocol::ORDER_STATUS_OF_ASSIGNING) {
+            $preorder->pay_at = Carbon::now();
+        }
+
         $preorder->save();
 
         if ($status == PreorderProtocol::ORDER_STATUS_OF_CANCEL) {
@@ -483,5 +495,21 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $order->save();
 
         return $order;
+    }
+
+    public function getPreordersOfStationByKeyword($keyword, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $order_by = 'created_at', $sort = 'desc', $per_page = PreorderProtocol::PREORDER_PER_PAGE)
+    {
+        $orders = $this->queryOrders(null, $station_id, $staff_id, $status, $start_time, $end_time, $per_page, $order_by, $sort, $keyword);
+        $orders->load('assign');
+
+        return $orders;
+    }
+
+    public function getPreordersOfStaffByKeyword($keyword, $staff_id, $status = null, $date = null, $daytime = null, $per_page = null)
+    {
+        $orders = $this->queryOrders(null, null, $staff_id, $status, null, null, $per_page, 'staff_priority', 'asc', $keyword);
+        $orders->load('skus');
+
+        return $orders;
     }
 }

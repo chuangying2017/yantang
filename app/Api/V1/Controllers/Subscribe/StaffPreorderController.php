@@ -43,8 +43,13 @@ class StaffPreorderController extends Controller {
         $date = $request->input('date') ?: null;
         $daytime = $request->input('daytime');
         $status = $request->input('status') ?: null;
+        $keyword = $request->input('keyword') ?: null;
 
-        $orders = $this->orderRepo->getPreordersOfStaff(access()->staffId(), $status, $date, $daytime, PreorderProtocol::PREORDER_PER_PAGE);
+        if (!is_null($keyword)) {
+            $orders = $this->orderRepo->getPreordersOfStaffByKeyword($keyword, access()->staffId(), $status, $date, $daytime, PreorderProtocol::PREORDER_PER_PAGE);
+        } else {
+            $orders = $this->orderRepo->getPreordersOfStaff(access()->staffId(), $status, $date, $daytime, PreorderProtocol::PREORDER_PER_PAGE);
+        }
 
         return $this->response->paginator($orders, new PreorderTransformer());
     }

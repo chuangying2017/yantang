@@ -98,7 +98,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
      * 对账管理员
      */
     $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_FINANCE]], function ($api) {
-        
+
         $api->group(['namespace' => 'Statement', 'prefix' => 'statements'], function ($api) {
             $api->resource('store', 'StoreStatementController', ['only' => ['index', 'show']]);
             $api->resource('stations', 'StationStatementController', ['only' => ['index', 'show']]);
@@ -108,7 +108,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->get('stations/{invoice_no}/orders', 'StationInvoiceController@orders')->name('admin.invoices.stations.orders');
             $api->resource('stations', 'StationInvoiceController', ['only' => ['index', 'show']]);
         });
-        
+
     });
 
 
@@ -142,6 +142,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
         $api->group(['namespace' => 'Order'], function ($api) {
             $api->group(['prefix' => 'subscribe'], function ($api) {
                 $api->resource('orders', 'PreorderController', ['only' => ['index', 'show', 'update']]);
+                $api->resource('origin-orders', 'SubscribeOrderController', ['only' => ['index', 'destroy']]);
             });
         });
 

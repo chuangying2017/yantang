@@ -57,7 +57,7 @@ class AdminOrderApiTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_get_paginate_special_orders()
+    public function it_can_get_paginate_untreat_special_orders()
     {
         $user_id = 1;
 
