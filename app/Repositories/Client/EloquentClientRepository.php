@@ -16,6 +16,7 @@ class EloquentClientRepository implements ClientRepositoryContract {
                 'user_id' => $user_id,
                 'nickname' => array_get($extra_data, 'nickname', Str::random(8)),
                 'avatar' => array_get($extra_data, 'avatar', ClientProtocol::DEFAULT_AVATAR),
+                'sex' => array_get($extra_data, 'sex', ''),
             ]
         );
     }

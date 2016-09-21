@@ -6,8 +6,8 @@ use Laravel\Socialite\Two\ProviderInterface;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use SocialiteProviders\Manager\OAuth2\User;
 
-class Provider extends AbstractProvider implements ProviderInterface
-{
+class Provider extends AbstractProvider implements ProviderInterface {
+
     /**
      * Unique Provider Identifier.
      */
@@ -51,7 +51,7 @@ class Provider extends AbstractProvider implements ProviderInterface
     {
         $query = http_build_query($this->getCodeFields($state), '', '&', $this->encodingType);
 
-        return $url.'?'.$query.'#wechat_redirect';
+        return $url . '?' . $query . '#wechat_redirect';
     }
 
     /**
@@ -102,7 +102,9 @@ class Provider extends AbstractProvider implements ProviderInterface
             'nickname' => $user['nickname'],
             'union_id' => array_get($user, 'unionid', null),
             'avatar' => $user['headimgurl'],
-            'name' => null, 'email' => null,
+            'name' => null,
+            'email' => null,
+            'sex' => array_get($user, 'sex', ''),
         ]);
     }
 
