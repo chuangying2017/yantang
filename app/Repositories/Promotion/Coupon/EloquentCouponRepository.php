@@ -30,9 +30,13 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
         return $promotion_id instanceof Coupon ? $promotion_id->load('counter') : Coupon::with('counter')->findOrFail($promotion_id);
     }
 
-    public function getCouponsById($coupon_ids)
+    public function getCouponsById($coupon_ids, $with_detail = true)
     {
-        return Coupon::with('rules', 'counter')->find($coupon_ids);
+        if ($with_detail) {
+            return Coupon::with('rules', 'counter')->find($coupon_ids);
+        }
+
+        return Coupon::query()->find($coupon_ids);
     }
 
     public function getUsefulPromotions()
@@ -54,5 +58,5 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
         }
         return $coupons;
     }
-    
+
 }
