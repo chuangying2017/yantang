@@ -12,10 +12,9 @@ class AdminRedEnvelopeRuleApiTest extends TestCase {
     /** @test */
     public function it_can_create_a_red_envelope_rule()
     {
-
         $this->json('post', 'admin/promotions/red-envelopes', $this->getRuleData(), $this->getAuthHeader());
 
-        $this->dump();
+        $this->echoJson();
 
         $this->assertResponseStatus(201);
     }

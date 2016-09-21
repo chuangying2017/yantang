@@ -24,7 +24,7 @@ class CreateRedEnvelopeRulesTable extends Migration {
             $table->integer('quantity');
             $table->integer('effect_days');
             $table->integer('dispatch')->default(0);
-            $table->integer('total');
+            $table->integer('total')->default(0);
             $table->string('content');
             $table->string('status', 32);
 
