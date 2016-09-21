@@ -27,6 +27,10 @@ class RedEnvelopeProtocol {
 
         return is_null($key) ? $data : array_get($data, $key, null);
     }
+    
+    const RESOURCE_TYPE_OF_ORDER = 'order';
+    
+    
 
 
 }

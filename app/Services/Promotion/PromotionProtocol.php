@@ -174,6 +174,8 @@ class PromotionProtocol {
     const TICKET_RESOURCE_OF_CAMPAIGN = 'campaign'; //活动派送
     const TICKET_RESOURCE_OF_ADMIN = 'admin'; //后台派送
     const TICKET_RESOURCE_OF_ORDER = 'order'; //下单派送
+    const TICKET_RESOURCE_OF_RED_ENVELOPE = 'red'; //红包领取派送
+    
 
     const LENGTH_OF_TICKET_NO = 24;
 

@@ -41,12 +41,12 @@ class EloquentClientRepository implements ClientRepositoryContract {
         if ($with_user) {
             return Client::with('user')->findOrFail($user_id);
         }
-        return Client::findOrFail($user_id);
+        return Client::query()->findOrFail($user_id);
     }
 
     public function deleteClient($user_id)
     {
-        return Client::where('user_id', $user_id)->delete();
+        return Client::query()->where('user_id', $user_id)->delete();
     }
 
     public function getAllClients($status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc')
