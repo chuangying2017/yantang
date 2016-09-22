@@ -29,6 +29,7 @@ interface PreorderRepositoryContract {
     /**
      * @param null $station_id
      * @param null $order_no
+     * @param null $pay_order_no
      * @param null $phone
      * @param null $order_status
      * @param null $start_time
@@ -36,11 +37,12 @@ interface PreorderRepositoryContract {
      * @param string $time_name
      * @return mixed
      */
-    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at');
+    public function getAllPaginated($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at');
 
     /**
      * @param null $station_id
      * @param null $order_no
+     * @param null $pay_order_no
      * @param null $phone
      * @param null $order_status
      * @param null $start_time
@@ -48,7 +50,7 @@ interface PreorderRepositoryContract {
      * @param string $time_name
      * @return Collection
      */
-    public function getAll($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at');
+    public function getAll($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at');
     
     public function getByOrder($origin_order_id, $date = null);
 

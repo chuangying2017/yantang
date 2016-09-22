@@ -1,6 +1,8 @@
 <?php namespace App\Repositories\Preorder;
 
 use App\Events\Preorder\PreorderIsCancel;
+use App\Models\Billing\OrderBilling;
+use App\Models\Pay\PingxxPayment;
 use App\Models\Subscribe\Preorder;
 use App\Models\Subscribe\PreorderAssign;
 use App\Repositories\NoGenerator;
@@ -133,9 +135,15 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
-    protected function queryByOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null)
+    protected function queryByOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null, $pay_order_no = null)
     {
         $query = Preorder::query();
+
+        if (!is_null($pay_order_no)) {
+            $billing_id = PingxxPayment::query()->where('payment_no', $pay_order_no)->pluck('billing_id')->first();
+            $order_id = OrderBilling::query()->find($billing_id)->pluck('order_id')->first();
+            $query->where('id', $order_id);
+        }
 
         if (!is_null($user_id)) {
             $query->where('user_id', $user_id);
@@ -166,7 +174,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($phone)) {
             $query->where('phone', $phone);
         }
-
 
         $query->orderBy($orderBy, $sort);
 
@@ -351,7 +358,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
-    public function getAllPaginated($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at')
+    public function getAllPaginated($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at')
     {
         return $this->queryByOrders(
             null, $station_id, null,
@@ -359,11 +366,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $start_time, $end_time, $time_name,
             PreorderProtocol::PREORDER_PER_PAGE,
             'created_at', 'sort',
-            $order_no, $phone
+            $order_no, $phone, $pay_order_no
         );
     }
 
-    public function getAll($station_id = null, $order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at')
+    public function getAll($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at')
     {
         return $this->queryByOrders(
             null, $station_id, null,
@@ -371,14 +378,14 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $start_time, $end_time, $time_name,
             null,
             'created_at', 'sort',
-            $order_no, $phone
+            $order_no, $phone, $pay_order_no
         );
     }
 
     protected function scopeStatus($query, $order_status)
     {
 
-        if (PreorderProtocol::validOrderStatus($order_status) === true) {        
+        if (PreorderProtocol::validOrderStatus($order_status) === true) {
 
             $query->where('status', $order_status);
         } else if (PreorderProtocol::validOrderAssignStatus($order_status) === true) {
