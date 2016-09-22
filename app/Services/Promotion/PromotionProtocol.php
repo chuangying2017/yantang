@@ -22,6 +22,7 @@ class PromotionProtocol {
     const TYPE_OF_COUPON = 'coupon';
     const TYPE_OF_MALL_CAMPAIGN = 'mall_campaign';
     const TYPE_OF_SPECIAL_CAMPAIGN = 'spec_campaign';
+    const TYPE_OF_ORDER = 'subscribe_order';
 
     const RULE_TYPE_OF_CAMPAIGN = 'campaign';
     const RULE_TYPE_OF_COUPON = 'coupon';
@@ -54,6 +55,7 @@ class PromotionProtocol {
     const DISCOUNT_TYPE_OF_SPECIAL_PRICE = 'price';
     const DISCOUNT_TYPE_OF_COUPON = 'coupon';
     const DISCOUNT_TYPE_OF_PRODUCT = 'product';
+    const DISCOUNT_TYPE_OF_RED_ENVELOPE = 'red';
 
 
     const DISCOUNT_MODE_OF_DECREASE = 'decrease';
@@ -175,7 +177,7 @@ class PromotionProtocol {
     const TICKET_RESOURCE_OF_ADMIN = 'admin'; //后台派送
     const TICKET_RESOURCE_OF_ORDER = 'order'; //下单派送
     const TICKET_RESOURCE_OF_RED_ENVELOPE = 'red'; //红包领取派送
-    
+
 
     const LENGTH_OF_TICKET_NO = 24;
 

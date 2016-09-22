@@ -25,7 +25,7 @@ class AdminRedEnvelopeRuleApiTest extends TestCase {
         $data = [
             'name' => '红包',
             'desc' => 'desc',
-            'type' => \App\Repositories\RedEnvelope\RedEnvelopeProtocol::TYPE_OF_ORDER,
+            'type' => \App\Repositories\RedEnvelope\RedEnvelopeProtocol::TYPE_OF_SUBSCRIBE_ORDER,
             'start_time' => '2016-09-01',
             'end_time' => '2016-11-01',
             'coupons' => [1, 1, 1],

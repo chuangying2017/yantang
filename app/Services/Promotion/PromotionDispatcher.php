@@ -8,4 +8,5 @@ interface PromotionDispatcher {
 
     public function dispatchWithoutCheck($user_id, $promotion_id, $source_type = PromotionProtocol::TICKET_RESOURCE_OF_ADMIN, $source_id = 0);
 
+    
 }

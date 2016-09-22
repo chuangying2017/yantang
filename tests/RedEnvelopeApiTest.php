@@ -7,8 +7,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class RedEnvelopeApiTest extends TestCase
 {
     /** @test */
-    public function testExample()
+    public function it_can_create_a_()
     {
-        $this->assertTrue(true);
+
     }
 }
