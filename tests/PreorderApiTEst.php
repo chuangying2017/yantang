@@ -9,10 +9,11 @@ class PreorderApiTEst extends TestCase {
     /** @test */
     public function it_can_get_preorder_lists()
     {
-        $this->json('get', 'subscribe/preorders', [], $this->getAuthHeader());
+        $this->json('get', 'subscribe/preorders', [], $this->getAuthHeader(1930));
 
         $this->assertResponseOk();
-        $this->echoJson();
+
+        $this->dump();
 
         $this->seeJsonStructure(['data' => [['skus' => [['quantity']]]]]);
     }
