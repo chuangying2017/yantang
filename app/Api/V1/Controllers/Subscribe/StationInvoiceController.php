@@ -71,6 +71,8 @@ class StationInvoiceController extends Controller {
 
         if ($action == InvoiceProtocol::INVOICE_STATUS_OF_CONFIRM) {
             $invoice = $this->invoiceRepo->updateAsOk($invoice);
+        } else if ($action == InvoiceProtocol::INVOICE_STATUS_OF_RECONFIRM) {
+            $invoice = $this->invoiceRepo->updateAsReconfirm($invoice);
         } else {
             $invoice = $this->invoiceRepo->updateAsError($invoice, $memo);
         }
