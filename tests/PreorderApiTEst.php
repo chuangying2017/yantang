@@ -9,10 +9,11 @@ class PreorderApiTEst extends TestCase {
     /** @test */
     public function it_can_get_preorder_lists()
     {
-        $this->json('get', 'subscribe/preorders', [], $this->getAuthHeader());
+        $this->json('get', 'subscribe/preorders', [], $this->getAuthHeader(1930));
 
         $this->assertResponseOk();
-        $this->echoJson();
+
+        $this->dump();
 
         $this->seeJsonStructure(['data' => [['skus' => [['quantity']]]]]);
     }
@@ -20,18 +21,18 @@ class PreorderApiTEst extends TestCase {
     /** @test */
     public function it_can_get_preorder_detail()
     {
-        $preorder_id = 15;
+        $preorder_id = 3699;
         $this->json('get', 'subscribe/preorders/' . $preorder_id, [], $this->getAuthHeader());
+        $this->dump();
+
         $this->assertResponseOk();
-        $this->echoJson();
     }
 
     /** @test */
     public function it_can_get_preorder_deliver_lists()
     {
-        $preorder_id = 15;
+        $preorder_id = 3699;
         $this->json('get', 'subscribe/preorders/' . $preorder_id . '/deliver', [], $this->getAuthHeader());
-
 
         $this->assertResponseOk();
 

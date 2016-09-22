@@ -1,5 +1,6 @@
 <?php namespace App\Services\Order\Generator;
 
+use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 
 class SetPreorderInfo extends GenerateHandlerAbstract {
@@ -47,7 +48,13 @@ class SetPreorderInfo extends GenerateHandlerAbstract {
             ];
 
         }
-        $preorder['end_time'] = Carbon::createFromFormat('Y-m-d', $temp_order->getPreorder('start_time'))->addDays($max_day)->toDateString();
+        
+        if($preorder['weekday_type'] == PreorderProtocol::WEEKDAY_TYPE_OF_WORKDAY) {
+            $preorder['end_time'] = Carbon::createFromFormat('Y-m-d', $temp_order->getPreorder('start_time'))->addWeekdays($max_day)->toDateString();
+        } else {
+            $preorder['end_time'] = Carbon::createFromFormat('Y-m-d', $temp_order->getPreorder('start_time'))->addDays($max_day)->toDateString();
+        }
+
         $preorder['skus'] = $preorder_skus;
 
         $temp_order->setPreorder($preorder);

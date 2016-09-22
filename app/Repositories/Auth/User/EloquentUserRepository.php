@@ -103,6 +103,7 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
                     'email' => $data->email ?: '',
                     'avatar' => $data->avatar,
                     'phone' => property_exists($data, 'phone') ? $data->phone : null,
+                    'sex' => property_exists($data, 'sex') ? $data->sex : '',
                     'status' => 1
                 ];
                 $user = $this->create($user_data, true);

@@ -6,5 +6,5 @@ use App\Repositories\Promotion\PromotionSupportRepositoryContract;
 
 interface CouponRepositoryContract extends PromotionRepositoryContract {
 
-    public function getCouponsById($coupon_ids);
+    public function getCouponsById($coupon_ids, $with_detail = true);
 }
