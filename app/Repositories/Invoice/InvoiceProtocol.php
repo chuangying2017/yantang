@@ -16,6 +16,7 @@ class InvoiceProtocol {
     const INVOICE_STATUS_OF_PENDING = 'pending';
     const INVOICE_STATUS_OF_CONFIRM = 'confirm';
     const INVOICE_STATUS_OF_REJECT = 'reject';
+    const INVOICE_STATUS_OF_RECONFIRM = 'reconfirm';
 
     const INVOICE_TYPE_OF_STATION = 1;
     const INVOICE_TYPE_OF_STORE = 2;

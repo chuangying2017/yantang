@@ -12,6 +12,8 @@ interface InvoiceRepositoryContract {
     public function updateAsOk($invoice_no);
 
     public function updateAsError($invoice_no, $memo = '');
+    
+    public function updateAsReconfirm($invoice_no);
 
     public function getAllOrders($invoice_no, $per_page = null);
 
