@@ -23,6 +23,7 @@ class PreorderController extends Controller {
     public function index(Request $request)
     {
         $order_no = $request->input('order_no', null);
+        $pay_order_no = $request->input('pay_order_no', null);
         $phone = $request->input('phone', null);
         $start_time = $request->input('start_time', null);
         $end_time = $request->input('end_time', null);
@@ -30,11 +31,11 @@ class PreorderController extends Controller {
         $station_id = $request->input('station_id', null);
 
         if ($request->input('export') == 'all') {
-            $orders = $this->preorderRepo->getAll($station_id, $order_no, $phone, $status, $start_time, $end_time);
+            $orders = $this->preorderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time);
             return ExcelService::downPreorder($orders);
         }
 
-        $orders = $this->preorderRepo->getAllPaginated($station_id, $order_no, $phone, $status, $start_time, $end_time);
+        $orders = $this->preorderRepo->getAllPaginated($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time);
         $orders->load('assign');
 
         return $this->response->paginator($orders, new PreorderTransformer());

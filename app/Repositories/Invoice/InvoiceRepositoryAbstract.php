@@ -49,7 +49,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
 
         if (InvoiceProtocol::invoiceHasOrders($this->getInvoiceType())) {
             $invoice->orders()->createMany($invoice_orders);
-            $invoice_preorder_ids =  array_pluck($invoice_orders, 'preorder_id');
+            $invoice_preorder_ids = array_pluck($invoice_orders, 'preorder_id');
             Preorder::query()->whereIn('id', $invoice_preorder_ids)->update(['invoice' => 1]);
         }
 
@@ -99,16 +99,26 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
         return $this->updateStatus($invoice_no, InvoiceProtocol::INVOICE_STATUS_OF_REJECT, $memo);
     }
 
+    public function updateAsReconfirm($invoice_no)
+    {
+        return $this->updateStatus($invoice_no, InvoiceProtocol::INVOICE_STATUS_OF_RECONFIRM);
+    }
+
     protected function updateStatus($invoice_no, $status, $memo = '')
     {
         $invoice = $this->get($invoice_no, false);
 
-        if ($invoice['status'] !== InvoiceProtocol::INVOICE_STATUS_OF_PENDING) {
+        if (in_array($invoice['status'], [
+            InvoiceProtocol::INVOICE_STATUS_OF_CONFIRM,
+            InvoiceProtocol::INVOICE_STATUS_OF_RECONFIRM,
+        ])) {
             return $invoice;
         }
 
         $invoice->status = $status;
-        $invoice->memo = $memo;
+        if (!empty($memo)) {
+            $invoice->memo = $memo;
+        }
         $invoice->save();
 
         return $invoice;

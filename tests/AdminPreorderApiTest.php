@@ -13,7 +13,7 @@ class AdminPreorderApiTest extends TestCase {
     {
         $this->json('get', 'admin/subscribe/orders',
             [
-                'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_OVERTIME
+                'pay_order_no' => '11916090751111514468306'
             ],
             $this->getAuthHeader());
 
@@ -96,17 +96,17 @@ class AdminPreorderApiTest extends TestCase {
         ]);
 
         $orders = $orders->toArray();
-        
+
         dd($orders);
 
         $order = array_first($orders['data']);
-        
-        
+
+
 
 
         $api->delete('api/admin/subscribe/origin-orders/' . $order['id']);
-        
-        
+
+
 
         $orders = $api->get('api/admin/subscribe/origin-orders', [
             'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_UNPAID,
