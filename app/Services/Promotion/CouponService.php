@@ -62,6 +62,15 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
         $promotion = $this->promotionRepo->getPromotionWithDecodeRules($promotion_id);
 
         return $this->ticketRepo->createTicket($user_id, $promotion, true, $source_type, $source_id);
+    }
 
+    public function cancelByResource($resource_type, $resource_id)
+    {
+        $tickets = $this->ticketRepo->getTicketBySource($resource_type, $resource_id);
+        if (count($tickets)) {
+            foreach ($tickets as $ticket) {
+                $this->ticketRepo->updateAsCancel($ticket);
+            }
+        }
     }
 }

@@ -45,12 +45,13 @@ class RedEnvelopeRecordRepository {
             'dispatch' => 0,
             'resource_type' => $resource_type,
             'resource_id' => $resource_id,
+            'status' => RedEnvelopeProtocol::RECORD_STATUS_OF_OK,
         ]);
 
         return $record;
     }
 
-    public function getByResource($resource_type = RedEnvelopeProtocol::RESOURCE_TYPE_OF_ORDER, $resource_id)
+    public function getByResource($resource_type = RedEnvelopeProtocol::TYPE_OF_SUBSCRIBE_ORDER, $resource_id)
     {
         return RedEnvelopeRecord::query()->where('resource_type', $resource_type)
             ->where('resource_id', $resource_id)->first();
@@ -84,6 +85,15 @@ class RedEnvelopeRecordRepository {
         $effect_end_time = Carbon::parse($end_time)->addDay($effect_days);
 
         return $effect_end_time < $end_time ? $effect_end_time : $end_time;
+    }
+
+    public function updateAsCancel($record_id)
+    {
+        $record = $this->get($record_id);
+        $record->status = RedEnvelopeProtocol::RECORD_STATUS_OF_CANCEL;
+        $record->save();
+
+        return $record;
     }
 
 

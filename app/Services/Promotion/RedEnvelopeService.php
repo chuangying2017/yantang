@@ -1,12 +1,36 @@
 <?php namespace App\Services\Promotion;
 
 use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
+use App\Repositories\RedEnvelope\RedEnvelopeProtocol;
 use App\Repositories\RedEnvelope\RedEnvelopeReceiveRepository;
 use App\Repositories\RedEnvelope\RedEnvelopeRecordRepository;
+use App\Repositories\RedEnvelope\RedEnvelopeRulesRepository;
 use App\Services\Promotion\Support\PromotionAbleUserContract;
 use Carbon\Carbon;
 
 class RedEnvelopeService implements PromotionDispatcher {
+
+
+    /**
+     * @var RedEnvelopeRecordRepository
+     */
+    private $recordRepo;
+    /**
+     * @var RedEnvelopeReceiveRepository
+     */
+    private $receiveRepo;
+    /**
+     * @var CouponService
+     */
+    private $couponService;
+    /**
+     * @var CouponRepositoryContract
+     */
+    private $couponRepo;
+    /**
+     * @var RedEnvelopeRulesRepository
+     */
+    private $ruleRepo;
 
     /**
      * RedEnvelopeService constructor.
@@ -14,24 +38,31 @@ class RedEnvelopeService implements PromotionDispatcher {
      * @param RedEnvelopeReceiveRepository $receiveRepo
      * @param CouponService $couponService
      * @param CouponRepositoryContract $couponRepo
+     * @param RedEnvelopeRulesRepository $ruleRepo
      */
     public function __construct(
         RedEnvelopeRecordRepository $recordRepo,
         RedEnvelopeReceiveRepository $receiveRepo,
         CouponService $couponService,
-        CouponRepositoryContract $couponRepo
+        CouponRepositoryContract $couponRepo,
+        RedEnvelopeRulesRepository $ruleRepo
     )
     {
         $this->recordRepo = $recordRepo;
         $this->receiveRepo = $receiveRepo;
         $this->couponService = $couponService;
         $this->couponRepo = $couponRepo;
+        $this->ruleRepo = $ruleRepo;
     }
 
     public function dispatch(PromotionAbleUserContract $user, $promotion_id, $source_type = PromotionProtocol::TICKET_RESOURCE_OF_USER, $source_id = 0)
     {
         //检查红包有效期、剩余数量
         $record = $this->recordRepo->get($promotion_id);
+
+        if ($record['status'] != RedEnvelopeProtocol::RECORD_STATUS_OF_OK) {
+            return false;
+        }
 
         if ($record['start_time'] > Carbon::now() || $record['end_time'] < Carbon::now()) {
             return false;
@@ -85,20 +116,45 @@ class RedEnvelopeService implements PromotionDispatcher {
         // TODO: Implement dispatchWithoutCheck() method.
     }
 
-    /**
-     * @var RedEnvelopeRecordRepository
-     */
-    private $recordRepo;
-    /**
-     * @var RedEnvelopeReceiveRepository
-     */
-    private $receiveRepo;
-    /**
-     * @var CouponService
-     */
-    private $couponService;
-    /**
-     * @var CouponRepositoryContract
-     */
-    private $couponRepo;
+    public function dispatchForOrder($order_id, $user_id, $order_type)
+    {
+        $type = RedEnvelopeProtocol::typeOfOrder($order_type);
+        if (!$type) {
+            return false;
+        }
+
+        $rule = $this->ruleRepo->get($type);
+        if (!$rule) {
+            return false;
+        }
+
+        if ($rule['total'] > 0 && $rule['total'] <= $rule['dispatch']) {
+            return false;
+        }
+
+        if ($rule['start_time'] > Carbon::now() || $rule['end_time'] < Carbon::now()) {
+            return false;
+        }
+
+        return $this->recordRepo->createRecord($rule, $user_id, $type, $order_id);
+    }
+
+    public function cancelForOrder($order_id, $order_type, CouponService $couponService)
+    {
+        $type = RedEnvelopeProtocol::typeOfOrder($order_type);
+        if (!$type) {
+            return false;
+        }
+
+        $record = $this->recordRepo->getByResource($type, $order_id);
+        if (!$record) {
+            return false;
+        }
+
+        $couponService->cancelByResource(PromotionProtocol::DISCOUNT_TYPE_OF_RED_ENVELOPE, $record['id']);
+
+        return $this->recordRepo->updateAsCancel($record);
+    }
+
+
 }

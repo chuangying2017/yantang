@@ -23,7 +23,7 @@ class RedEnvelopeRulesRepository {
             'quantity' => $data['quantity'],
             'effect_days' => $data['effect_days'],
             'total' => array_get($data, 'total', 0),
-            'status' => array_get($data, 'status', RedEnvelopeProtocol::STATUS_OF_OK)
+            'status' => array_get($data, 'status', RedEnvelopeProtocol::RULE_STATUS_OF_OK)
         ];
     }
 
@@ -55,7 +55,7 @@ class RedEnvelopeRulesRepository {
     public function setAsUnActive($rule_id)
     {
         $rule = $this->get($rule_id);
-        $rule->status = RedEnvelopeProtocol::STATUS_OF_DRAFT;
+        $rule->status = RedEnvelopeProtocol::RULE_STATUS_OF_DRAFT;
         $rule->save();
         return $rule;
     }
@@ -63,7 +63,7 @@ class RedEnvelopeRulesRepository {
     public function setAsActive($rule_id)
     {
         $rule = $this->get($rule_id);
-        $rule->status = RedEnvelopeProtocol::STATUS_OF_OK;
+        $rule->status = RedEnvelopeProtocol::RULE_STATUS_OF_OK;
         $rule->save();
         return $rule;
     }
