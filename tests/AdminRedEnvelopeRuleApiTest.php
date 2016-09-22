@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AdminRedEnvelopeRuleApiTest extends TestCase {
 
-    use DatabaseMigrations;
+//    use DatabaseMigrations;
     use DatabaseTransactions;
 
     /** @test */

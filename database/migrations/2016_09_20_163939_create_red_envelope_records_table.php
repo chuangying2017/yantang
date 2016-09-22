@@ -16,6 +16,7 @@ class CreateRedEnvelopeRecordsTable extends Migration {
 
             $table->increments('id');
 
+            $table->integer('user_id');
             $table->string('rule_id');
 
             $table->string('resource_type', 64);
@@ -30,7 +31,7 @@ class CreateRedEnvelopeRecordsTable extends Migration {
             $table->string('status', 32);
 
             $table->timestamps();
-            
+
         });
     }
 

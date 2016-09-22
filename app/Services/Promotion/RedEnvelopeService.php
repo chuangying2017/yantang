@@ -6,10 +6,12 @@ use App\Repositories\RedEnvelope\RedEnvelopeReceiveRepository;
 use App\Repositories\RedEnvelope\RedEnvelopeRecordRepository;
 use App\Repositories\RedEnvelope\RedEnvelopeRulesRepository;
 use App\Services\Promotion\Support\PromotionAbleUserContract;
+use App\Services\Traits\Messages;
 use Carbon\Carbon;
 
 class RedEnvelopeService implements PromotionDispatcher {
 
+    use Messages;
 
     /**
      * @var RedEnvelopeRecordRepository
@@ -61,14 +63,17 @@ class RedEnvelopeService implements PromotionDispatcher {
         $record = $this->recordRepo->get($promotion_id);
 
         if ($record['status'] != RedEnvelopeProtocol::RECORD_STATUS_OF_OK) {
+            $this->setErrorMessage('红包已失效');
             return false;
         }
 
         if ($record['start_time'] > Carbon::now() || $record['end_time'] < Carbon::now()) {
+            $this->setErrorMessage('红包已过期');
             return false;
         }
 
         if ($record['total'] > 0 && $record['total'] <= $record['dispatch']) {
+            $this->setErrorMessage('红包已抢完');
             return false;
         }
 
@@ -83,11 +88,14 @@ class RedEnvelopeService implements PromotionDispatcher {
         //随机获取红包优惠券内容
         $record->load('rule');
         if (!$record['rule'] && !$record['rule']['coupons']) {
+            $this->setErrorMessage('红包已失效');
             return false;
         }
 
         $coupon = $this->getCoupon($record['rule']['coupons']);
+
         if (!$coupon) {
+            $this->setErrorMessage('红包已失效');
             return false;
         }
         //派发优惠券
@@ -98,11 +106,12 @@ class RedEnvelopeService implements PromotionDispatcher {
 
     protected function getCoupon($rule_coupons)
     {
+
         for ($i = 0; $i < count($rule_coupons); $i++) {
             $coupon_id = array_get($rule_coupons, array_rand($rule_coupons));
 
             $coupon = $this->couponRepo->getCouponsById($coupon_id, false);
-
+            
             if ($coupon) {
                 return $coupon;
             }
@@ -119,6 +128,7 @@ class RedEnvelopeService implements PromotionDispatcher {
     public function dispatchForOrder($order_id, $user_id, $order_type)
     {
         $type = RedEnvelopeProtocol::typeOfOrder($order_type);
+
         if (!$type) {
             return false;
         }

@@ -5,6 +5,13 @@ use App\Models\Subscribe\Station;
 
 class StationTransformer extends TransformerAbstract {
 
+    protected $show_geo;
+
+    public function __construct($show_geo = true)
+    {
+        $this->show_geo = $show_geo;
+    }
+
     public function transform(Station $station)
     {
         if ($station->relationLoaded('user')) {
@@ -23,9 +30,13 @@ class StationTransformer extends TransformerAbstract {
             'phone' => $station['phone'],
             'longitude' => $station['longitude'],
             'latitude' => $station['latitude'],
-            'geo' => $station['geo'],
             'active' => $station['active'],
         ];
+
+        if ($this->show_geo) {
+            $data['geo'] = $station['geo'];
+        }
+
         if (isset($station['bind_token'])) {
             $data['bind_token'] = $station['bind_token'];
         }
