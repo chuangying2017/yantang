@@ -36,6 +36,11 @@ class DispatchSubscribeOrderGift {
      * @var CouponService
      */
     private $couponService;
+    /**
+     * @var RedEnvelopeService
+     */
+    private $redEnvelopeService;
+
 
     /**
      * DispatchSubscribeOrderGift constructor.
@@ -81,19 +86,13 @@ class DispatchSubscribeOrderGift {
                 }
             }
 
-            if (OrderProtocol::ORDER_TYPE_OF_SUBSCRIBE == $order['order_type']) {
-                $this->redEnvelopeService->dispatchForOrder($order['id'], $user_id);
-            }
+            $this->redEnvelopeService->dispatchForOrder($order['id'], $user_id, $order['order_type']);
 
         } catch (\Exception $e) {
             \Log::error($e);
         }
     }
 
-    /**
-     * @var RedEnvelopeService
-     */
-    private $redEnvelopeService;
 
 
 }

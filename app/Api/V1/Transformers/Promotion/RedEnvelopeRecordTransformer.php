@@ -8,8 +8,7 @@ class RedEnvelopeRecordTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $defaultIncludes = ['current_receiver'];
-    protected $availableIncludes = ['current_receiver', 'rule', 'receivers'];
+    protected $availableIncludes = ['rule', 'receivers'];
 
     public function transform(RedEnvelopeRecord $record)
     {
@@ -22,6 +21,7 @@ class RedEnvelopeRecordTransformer extends TransformerAbstract {
             'start_time' => $record['start_time'],
             'end_time' => $record['end_time'],
             'status' => $record['status'],
+            'current_receiver' => $this->includeCurrentReceiver($record),
         ];
 
         return $data;
@@ -48,5 +48,5 @@ class RedEnvelopeRecordTransformer extends TransformerAbstract {
 
         return null;
     }
-    
+
 }

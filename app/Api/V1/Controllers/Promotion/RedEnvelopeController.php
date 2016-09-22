@@ -43,7 +43,7 @@ class RedEnvelopeController extends Controller {
         $receive = $redEnvelopeService->dispatch($userRepository->setUser($user), $record_id);
 
         if (!$receive) {
-            $this->response->accepted(null, '活动已结束或抢完了');
+            return $this->response->accepted(null, $redEnvelopeService->getErrorMessage('活动已结束或抢完了'));
         }
 
         return $this->response->item($receive, new RedEnvelopeReceiveTransformer())->setStatusCode(201);

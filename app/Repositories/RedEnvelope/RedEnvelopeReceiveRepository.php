@@ -16,8 +16,8 @@ class RedEnvelopeReceiveRepository {
         return RedEnvelopeReceive::create([
             'user_id' => $user_id,
             'record_id' => $record_id,
-            'nickname' => $client['nickname'],
-            'avatar' => $client['avatar'],
+            'nickname' => $client['nickname'] ?: '燕塘优优鲜达用户',
+            'avatar' => $client['avatar'] ?: '',
             'coupon_id' => $coupon_id,
             'ticket_id' => $ticket_id,
             'content' => $coupon_content,

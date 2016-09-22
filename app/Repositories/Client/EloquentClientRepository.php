@@ -40,9 +40,9 @@ class EloquentClientRepository implements ClientRepositoryContract {
     public function showClient($user_id, $with_user = false)
     {
         if ($with_user) {
-            return Client::with('user')->findOrFail($user_id);
+            return Client::with('user')->find($user_id);
         }
-        return Client::query()->findOrFail($user_id);
+        return Client::query()->find($user_id);
     }
 
     public function deleteClient($user_id)
