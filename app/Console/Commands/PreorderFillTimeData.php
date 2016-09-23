@@ -49,19 +49,32 @@ class PreorderFillTimeData extends Command {
             'deliver' => function ($query) {
                 $query->orderBy('deliver_at', 'asc');
             }
-        ])->whereIn('status', ['shipping', 'done'])->chunk(100, function ($preorders) {
+        ])->whereIn('status', ['assigning'])->chunk(100, function ($preorders) {
             foreach ($preorders as $preorder) {
                 $this->updateTimes($preorder);
             }
         });
+
+//        Preorder::with([
+//            'assign',
+//            'order',
+//            'deliver' => function ($query) {
+//                $query->orderBy('deliver_at', 'asc');
+//            }
+//        ])->whereIn('status', ['shipping', 'done'])->chunk(100, function ($preorders) {
+//            foreach ($preorders as $preorder) {
+//                $this->updateTimes($preorder);
+//            }
+//        });
 
         echo 'change ' . $this->count;
     }
 
     protected function updateTimes($preorder)
     {
-        $preorder->confirm_at = $preorder->assign->confirm_at;
         $preorder->pay_at = $preorder->order->pay_at;
+
+        $preorder->confirm_at = $preorder->assign->confirm_at;
 
         $this->count++;
 
@@ -72,6 +85,15 @@ class PreorderFillTimeData extends Command {
 
         $preorder->save();
     }
+
+    protected function updatePayTime($preorder)
+    {
+        $preorder->pay_at = $preorder->order->pay_at;
+
+        $preorder->save();
+    }
+
+
 
     protected $count = 0;
 }

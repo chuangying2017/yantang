@@ -54,7 +54,7 @@ class StationInvoiceService implements InvoiceServiceContract {
             if (Carbon::today() <= $invoice_date) {
                 throw new \Exception('未到' . $invoice_date);
             }
-            
+
             $stations = $this->stationRepo->getAllActive();
 
             $start_time = $this->getStartTime($invoice_date);
@@ -216,7 +216,7 @@ class StationInvoiceService implements InvoiceServiceContract {
 
     protected function getAllInvoiceOrders($station_id, $start_time, $end_time)
     {
-        $orders = $this->preorderRepo->getAll($station_id, null, null, null, PreorderProtocol::ASSIGN_STATUS_OF_ASSIGNED, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_CONFIRM, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_NONE);
+        $orders = $this->preorderRepo->getAll($station_id, null, null, null, PreorderProtocol::ASSIGN_STATUS_OF_ASSIGNED, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_CONFIRM, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
 
         $orders->load([
             'order' => function ($query) {
@@ -234,7 +234,7 @@ class StationInvoiceService implements InvoiceServiceContract {
 
     protected function getAllUnConfirmOrders($start_time, $end_time)
     {
-        $orders = $this->preorderRepo->getAll(null, null, null, null, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_CREATE, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_NONE);
+        $orders = $this->preorderRepo->getAll(null, null, null, null, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_PAY, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
 
         $orders->load([
             'order' => function ($query) {
