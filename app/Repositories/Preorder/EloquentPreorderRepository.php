@@ -139,14 +139,6 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $query = Preorder::query();
 
-        if (!is_null($pay_order_no)) {
-            $billing_id = PingxxPayment::query()->where('payment_no', $pay_order_no)->pluck('billing_id')->first();
-
-            $query->whereHas('billings', function ($query) use ($billing_id) {
-                $query->where('id', $billing_id);
-            });
-        }
-
         if (!is_null($user_id)) {
             $query->where('user_id', $user_id);
         }
@@ -158,9 +150,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($staff_id)) {
             $query->where('staff_id', $staff_id);
         }
-
-        $this->scopeStatus($query, $status);
-
+        
         if (!is_null($start_time)) {
             $query->where($time_name, '>=', $start_time);
         }
@@ -168,13 +158,30 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($end_time)) {
             $query->where($time_name, '<=', $end_time);
         }
+        
+        $keyword_tag = 0;
+
+        if (!is_null($pay_order_no)) {
+            $keyword_tag = 1;
+            $billing_id = PingxxPayment::query()->where('payment_no', $pay_order_no)->pluck('billing_id')->first();
+
+            $query->whereHas('billings', function ($query) use ($billing_id) {
+                $query->where('id', $billing_id);
+            });
+        }
 
         if (!is_null($order_no)) {
+            $keyword_tag = 1;
             $query->where('order_no', $order_no);
         }
 
         if (!is_null($phone)) {
+            $keyword_tag = 1;
             $query->where('phone', $phone);
+        }
+        
+        if(!$keyword_tag) {
+            $this->scopeStatus($query, $status);
         }
 
         if (!is_null($invoice)) {
