@@ -47,9 +47,9 @@ if (!function_exists('gravatar')) {
 }
 if (!function_exists('api_route')) {
 
-    function api_route($name, $version = 'v1')
+    function api_route($name, $version = 'v1', $parameters = [])
     {
-        return app('Dingo\Api\Routing\UrlGenerator')->version($version)->route($name);
+        return app('Dingo\Api\Routing\UrlGenerator')->version($version)->route($name, $parameters);
     }
 }
 

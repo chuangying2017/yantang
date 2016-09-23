@@ -1,5 +1,7 @@
 <?php namespace App\Services\Notify;
 
+use App\Services\Notify\Config\NotifyConfigContract;
+use App\Services\Notify\Config\NotifyStationNewOrder;
 use Toplan\PhpSms\Sms;
 
 class NotifyProtocol {
@@ -15,9 +17,49 @@ class NotifyProtocol {
     const SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT = '您有一个来自服务部的订单待处理，请及时处理！【燕塘优鲜达】';
 
 
+    const NOTIFY_CLIENT_PREORDER_IS_ASSIGNED = 101;
+
+    const NOTIFY_STATION_NEW_ORDER = 201;
+
+    const NOTIFY_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME = 301;
+    const NOTIFY_ADMIN_PREORDER_PREORDER_IS_REJECT = 302;
+
+    /**
+     * @param $action
+     * @return NotifyConfigContract|null
+     */
+    public static function getHandler($action)
+    {
+        $data = [
+            self::NOTIFY_STATION_NEW_ORDER => NotifyStationNewOrder::class
+        ];
+
+        return array_get($data, $action, null);
+    }
+
+
     public static function notifyStationNewOrder($phone)
     {
         return self::sendMessage($phone, NotifyProtocol::SMS_TO_STATION_NEW_ORDER);
+    }
+
+    public static function notify($action, $phone = null, $user_id = null, $entity = null)
+    {
+        $handler = self::getHandler($action);
+
+        if (is_null($handler)) {
+            return false;
+        }
+
+        if (config('services.notify.sms')) {
+            self::sendMessage($phone, $handler::sms());
+        }
+
+        if (config('services.notify.weixin')) {
+            $handler::weixin($user_id, $entity);
+        }
+
+        return true;
     }
 
     public static function sendMessage($phone, $message)
