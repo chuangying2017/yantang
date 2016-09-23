@@ -19,6 +19,7 @@ class StationInvoiceTransformer extends TransformerAbstract {
             'end_time' => $invoice['end_time'],
             'merchant_id' => $invoice['merchant_id'],
             'merchant_name' => $invoice['merchant_name'],
+            'merchant_no' => $invoice['merchant_no'],
             'status' => $invoice['status'],
             'total_count' => $invoice['total_count'],
             'total_amount' => display_price($invoice['total_amount']),

@@ -13,11 +13,11 @@ class Kernel extends ConsoleKernel {
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\StoreSettleStatement',
-        'App\Console\Commands\StationSettleStatement',
+//        'App\Console\Commands\StoreSettleStatement',
+//        'App\Console\Commands\StationSettleStatement',
         'App\Console\Commands\SettlePreorder',
         'App\Console\Commands\InitSearch',
-        'App\Console\Commands\CleanData',
+//        'App\Console\Commands\CleanData',
         'App\Console\Commands\CheckPreorderAssignOvertime',
         'App\Console\Commands\RemoveDuplicatePreorderDeliver',
         'App\Console\Commands\SeedCouponForFirstOrderUser',
@@ -41,8 +41,8 @@ class Kernel extends ConsoleKernel {
 //        $schedule->command('statement:station')->monthlyOn(StatementProtocol::getStationCheckDay(), '2:00');
 //
 
-        $schedule->command('invoice:station', ['date' => Carbon::today()->day(10)->toDateString()])->monthlyOn(11, '2:00');
-        $schedule->command('invoice:station', ['date' => Carbon::today()->day(25)->toDateString()])->monthlyOn(26, '2:00');
+//        $schedule->command('invoice:station', ['date' => Carbon::today()->day(10)->toDateString()])->monthlyOn(11, '2:00');
+//        $schedule->command('invoice:station', ['date' => Carbon::today()->day(25)->toDateString()])->monthlyOn(26, '2:00');
 
         $schedule->command('orders:overtime')->everyTenMinutes();
 

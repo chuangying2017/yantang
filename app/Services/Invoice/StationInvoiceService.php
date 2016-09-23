@@ -3,6 +3,7 @@
 use App\Repositories\Invoice\InvoiceProtocol;
 use App\Repositories\Invoice\StationAdminInvoiceRepository;
 use App\Repositories\Invoice\StationInvoiceRepository;
+use App\Repositories\Invoice\StationUnInvoiceRepository;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
 use App\Services\Preorder\PreorderProtocol;
@@ -30,20 +31,32 @@ class StationInvoiceService implements InvoiceServiceContract {
      * @param PreorderRepositoryContract $preorderRepo
      * @param StationRepositoryContract $stationRepo
      * @param StationAdminInvoiceRepository $stationAdminInvoiceRepository
+     * @param StationUnInvoiceRepository $stationUnInvoiceRepository
      */
-    public function __construct(StationInvoiceRepository $stationInvoiceRepo, PreorderRepositoryContract $preorderRepo, StationRepositoryContract $stationRepo, StationAdminInvoiceRepository $stationAdminInvoiceRepository)
+    public function __construct(
+        StationInvoiceRepository $stationInvoiceRepo,
+        PreorderRepositoryContract $preorderRepo,
+        StationRepositoryContract $stationRepo,
+        StationAdminInvoiceRepository $stationAdminInvoiceRepository,
+        StationUnInvoiceRepository $stationUnInvoiceRepository
+    )
     {
         $this->stationInvoiceRepo = $stationInvoiceRepo;
         $this->preorderRepo = $preorderRepo;
         $this->stationRepo = $stationRepo;
         $this->stationAdminInvoiceRepository = $stationAdminInvoiceRepository;
+        $this->stationUnInvoiceRepository = $stationUnInvoiceRepository;
     }
 
     public function settleAll($invoice_date)
     {
-        $stations = $this->stationRepo->getAllActive();
-
         try {
+            if (Carbon::today() <= $invoice_date) {
+                throw new \Exception('未到' . $invoice_date);
+            }
+            
+            $stations = $this->stationRepo->getAllActive();
+
             $start_time = $this->getStartTime($invoice_date);
             $end_time = $this->getEndTime($invoice_date);
 
@@ -53,9 +66,13 @@ class StationInvoiceService implements InvoiceServiceContract {
                 $station_invoices[] = $this->settleMerchant($station, $invoice_date, $start_time, $end_time);
             }
 
-            return $this->settleAdmin($station_invoices, $invoice_date, $start_time, $end_time);
+            $this->settleAdmin($station_invoices, $invoice_date, $start_time, $end_time);
+
+            $this->settleUnConfirm($invoice_date, $start_time, $end_time);
+
         } catch (\Exception $e) {
             \Log::error($e);
+            return false;
         }
     }
 
@@ -77,6 +94,7 @@ class StationInvoiceService implements InvoiceServiceContract {
             'end_time' => $end_time,
             'merchant_id' => $station_id,
             'merchant_name' => $station['name'],
+            'merchant_no' => $station['merchant_no'],
             'total_amount' => 0,
             'discount_amount' => 0,
             'pay_amount' => 0,
@@ -99,8 +117,53 @@ class StationInvoiceService implements InvoiceServiceContract {
         return $this->stationInvoiceRepo->create($invoice_data);
     }
 
+    public function settleUnConfirm($request_invoice_date, $start_time, $end_time)
+    {
+        $invoices = $this->stationUnInvoiceRepository->getAll(InvoiceProtocol::ID_OF_UN_CONFIRM_INVOICE, $request_invoice_date);
+
+        if ($invoices->first()) {
+            info('未确认订单 于' . $request_invoice_date . '的账单已出', $invoices->first()->toArray());
+            return $invoices->first();
+        }
+
+        $orders = $this->getAllUnConfirmOrders($start_time, $end_time);
+
+        $invoice_data = [
+            'invoice_date' => $request_invoice_date,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'merchant_id' => InvoiceProtocol::ID_OF_UN_CONFIRM_INVOICE,
+            'merchant_name' => '未确认订单',
+            'total_amount' => 0,
+            'discount_amount' => 0,
+            'pay_amount' => 0,
+            'service_amount' => 0,
+            'receive_amount' => 0,
+            'detail' => []
+        ];
+
+        foreach ($orders as $order_key => $order) {
+            $invoice_order = $this->getOrderDetail($order);
+            $invoice_data['detail'][$order_key] = $invoice_order;
+
+            $invoice_data['total_amount'] += $invoice_order['total_amount'];
+            $invoice_data['discount_amount'] += $invoice_order['discount_amount'];
+            $invoice_data['pay_amount'] += $invoice_order['pay_amount'];
+            $invoice_data['service_amount'] += $invoice_order['service_amount'];
+            $invoice_data['receive_amount'] += $invoice_order['receive_amount'];
+        }
+
+        return $this->stationUnInvoiceRepository->create($invoice_data);
+    }
+
     public function settleAdmin($merchant_invoices, $request_invoice_date, $start_time, $end_time)
     {
+        $invoices = $this->stationAdminInvoiceRepository->getAll(InvoiceProtocol::ID_OF_ADMIN_INVOICE, $request_invoice_date);
+        if ($invoices->first()) {
+            info('总部 于' . $request_invoice_date . '的账单已出', $invoices->first()->toArray());
+            return $invoices->first();
+        }
+
         $invoice_data = [
             'invoice_date' => $request_invoice_date,
             'start_time' => $start_time,
@@ -127,6 +190,7 @@ class StationInvoiceService implements InvoiceServiceContract {
         return $this->stationAdminInvoiceRepository->create($invoice_data);
     }
 
+
     protected function getStartTime($invoice_date)
     {
         $end_date = $this->getEndTime($invoice_date);
@@ -152,7 +216,7 @@ class StationInvoiceService implements InvoiceServiceContract {
 
     protected function getAllInvoiceOrders($station_id, $start_time, $end_time)
     {
-        $orders = $this->preorderRepo->getAll($station_id, null, null, PreorderProtocol::ASSIGN_STATUS_OF_ASSIGNED, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_CONFIRM);
+        $orders = $this->preorderRepo->getAll($station_id, null, null, null, PreorderProtocol::ASSIGN_STATUS_OF_ASSIGNED, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_CONFIRM, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_NONE);
 
         $orders->load([
             'order' => function ($query) {
@@ -168,7 +232,25 @@ class StationInvoiceService implements InvoiceServiceContract {
         return $orders;
     }
 
-    protected function getOrderDetail($order, $station)
+    protected function getAllUnConfirmOrders($start_time, $end_time)
+    {
+        $orders = $this->preorderRepo->getAll(null, null, null, null, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_CREATE, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_NONE);
+
+        $orders->load([
+            'order' => function ($query) {
+                $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'status', 'pay_amount');
+            },
+            'skus' => function ($query) {
+                $query->select('order_id', 'name', 'total', 'remain');
+            },
+            'staff' => function ($query) {
+                $query->select('id', 'name');
+            }]);
+
+        return $orders;
+    }
+
+    protected function getOrderDetail($order, $station = null)
     {
         $data = [
             'preorder_id' => $order['id'],
@@ -178,18 +260,21 @@ class StationInvoiceService implements InvoiceServiceContract {
             'name' => $order['name'],
             'phone' => $order['phone'],
             'address' => $order['address'],
-            'staff_id' => $order['staff']['id'],
-            'staff_name' => $order['staff']['name'],
-            'station_id' => $station['id'],
-            'station_name' => $station['name'],
+            'staff_id' => $order['staff']['id'] ?: '',
+            'staff_name' => $order['staff']['name'] ?: '',
             'total_amount' => $order['order']['total_amount'],
             'discount_amount' => $order['order']['discount_amount'],
             'pay_amount' => $order['order']['pay_amount'],
-            'confirm_at' => $order['confirm_at'],
+            'confirm_at' => $order['confirm_at'] ?: '',
             'order_at' => $order['created_at'],
             'service_amount' => InvoiceProtocol::calServiceAmount($order['order']['pay_amount']),
             'detail' => json_encode($order['skus'])
         ];
+
+        if (!is_null($station)) {
+            $data['station_id'] = $station['id'];
+            $data['station_name'] = $station['name'];
+        }
 
         $data['receive_amount'] = $data['pay_amount'] - $data['service_amount'];
 
@@ -200,6 +285,10 @@ class StationInvoiceService implements InvoiceServiceContract {
      * @var StationAdminInvoiceRepository
      */
     private $stationAdminInvoiceRepository;
+    /**
+     * @var StationUnInvoiceRepository
+     */
+    private $stationUnInvoiceRepository;
 
 
 }

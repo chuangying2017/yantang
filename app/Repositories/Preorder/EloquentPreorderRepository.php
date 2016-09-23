@@ -135,14 +135,16 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
-    protected function queryByOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null, $pay_order_no = null)
+    protected function queryByOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null, $pay_order_no = null, $invoice = null)
     {
         $query = Preorder::query();
 
         if (!is_null($pay_order_no)) {
             $billing_id = PingxxPayment::query()->where('payment_no', $pay_order_no)->pluck('billing_id')->first();
-            $order_id = OrderBilling::query()->find($billing_id)->pluck('order_id')->first();
-            $query->where('id', $order_id);
+
+            $query->whereHas('billings', function ($query) use ($billing_id) {
+                $query->where('id', $billing_id);
+            });
         }
 
         if (!is_null($user_id)) {
@@ -173,6 +175,10 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if (!is_null($phone)) {
             $query->where('phone', $phone);
+        }
+
+        if (!is_null($invoice)) {
+            $query->where('invoice', $invoice);
         }
 
         $query->orderBy($orderBy, $sort);
@@ -265,7 +271,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $order->status = $status;
 
         $time_tag = PreorderProtocol::statusTimeTag($status);
-        if (!is_null($time_tag)) {
+        if (!is_null($time_tag) && !$order->$time_tag) {
             $order->$time_tag = Carbon::now();
         }
 
@@ -358,7 +364,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
-    public function getAllPaginated($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at')
+    public function getAllPaginated($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $invoice = null)
     {
         return $this->queryByOrders(
             null, $station_id, null,
@@ -366,11 +372,12 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $start_time, $end_time, $time_name,
             PreorderProtocol::PREORDER_PER_PAGE,
             'created_at', 'sort',
-            $order_no, $phone, $pay_order_no
+            $order_no, $phone, $pay_order_no,
+            $invoice
         );
     }
 
-    public function getAll($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at')
+    public function getAll($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $invoice = null)
     {
         return $this->queryByOrders(
             null, $station_id, null,
@@ -378,7 +385,8 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $start_time, $end_time, $time_name,
             null,
             'created_at', 'sort',
-            $order_no, $phone, $pay_order_no
+            $order_no, $phone, $pay_order_no,
+            $invoice
         );
     }
 

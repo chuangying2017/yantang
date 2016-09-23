@@ -12,6 +12,7 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
     {
         return Station::create([
             'name' => $station_data['name'],
+            'merchant_no' => $station_data['merchant_no'],
             'district_id' => $station_data['district_id'],
             'desc' => array_get($station_data, 'desc', ''),
             'tel' => array_get($station_data, 'tel', ''),
@@ -32,6 +33,7 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
         $station->fill(array_only($station_data, [
             'name',
             'district_id',
+            'merchant_no',
             'tel',
             'address',
             'cover_image',
