@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Subscribe\PreorderAssign;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -169,14 +170,18 @@ class StationPreorderApiTest extends TestCase {
     /** @test */
     public function it_can_assign_a_staff_to_preorder()
     {
-        $order_id = 15;
+
+        $order_id = 856;
 
         $this->json('post', 'stations/preorders/' . $order_id . '/assign',
             [
-                'staff' => 1
+                'staff' => 342
             ],
             $this->getAuthHeader()
         );
+
+//        dd(\DB::table('preorder_assign')->where('preorder_id', $order_id)->get());
+//        dd(\App\Models\Subscribe\Preorder::query()->find($order_id));
 
         $this->assertResponseStatus(201);
     }
@@ -321,6 +326,8 @@ class StationPreorderApiTest extends TestCase {
             ],
         ];
     }
+
+
 
 }
 

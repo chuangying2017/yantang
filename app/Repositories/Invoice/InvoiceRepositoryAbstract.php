@@ -37,6 +37,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
             'end_time' => $invoice_data['end_time'],
             'merchant_id' => $invoice_data['merchant_id'],
             'merchant_name' => $invoice_data['merchant_name'],
+            'merchant_no' => $invoice_data['merchant_no'],
             'total_count' => array_get($invoice_data, 'total_count', count($invoice_orders)),
             'total_amount' => $invoice_data['total_amount'],
             'discount_amount' => $invoice_data['discount_amount'],
@@ -50,7 +51,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
         if (InvoiceProtocol::invoiceHasOrders($this->getInvoiceType())) {
             $invoice->orders()->createMany($invoice_orders);
             $invoice_preorder_ids = array_pluck($invoice_orders, 'preorder_id');
-            Preorder::query()->whereIn('id', $invoice_preorder_ids)->update(['invoice' => 1]);
+            Preorder::query()->whereIn('id', $invoice_preorder_ids)->update(['invoice' => InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_OK]);
         }
 
         \DB::commit();
@@ -84,7 +85,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
      * @param null $end_date
      * @param null $status
      */
-    public function getAll($merchant_id, $start_date = null, $end_date = null, $status = null)
+    public function getAll($merchant_id = null, $start_date = null, $end_date = null, $status = null)
     {
         return $this->query($merchant_id, $start_date, $end_date, $status, null);
     }
@@ -128,7 +129,6 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
     {
         $query = $this->getInvoiceModelQuery();
 
-
         if (!is_null($merchant_id)) {
             if (is_array($merchant_id)) {
                 $query->whereIn('merchant_id', $merchant_id);
@@ -136,7 +136,6 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
                 $query->where('merchant_id', $merchant_id);
             }
         }
-
 
         if (!is_null($start_date)) {
             $query->where('invoice_date', '>=', $start_date);
@@ -152,9 +151,11 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
 
         $query->orderBy('created_at', 'desc');
 
+
         if (!is_null($paginate)) {
             return $query->paginate($paginate);
         }
+
 
         return $query->get();
     }

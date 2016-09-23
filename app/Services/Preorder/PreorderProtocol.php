@@ -29,7 +29,7 @@ class PreorderProtocol {
     const ASSIGN_STATUS_OF_CONFIRM = 'confirm';
     const ASSIGN_STATUS_OF_ASSIGNED = 'assign';
     const ASSIGN_STATUS_OF_REJECT = 'reject';
-    const DAYS_OF_ASSIGN_DISPOSE_HOURS = 12;
+    const HOURS_OF_ASSIGN_DISPOSE_HOURS = 12;
 
     const DAYTIME_OF_AM = 1;
     const DAYTIME_OF_PM = 0;

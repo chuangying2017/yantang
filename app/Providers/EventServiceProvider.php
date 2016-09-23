@@ -152,7 +152,6 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Events\Preorder\AssignIsAssigned' => [
             'App\Listeners\Preorder\SetPreorderAsPending',
-
             'App\Listeners\Notify\SendSmsToClient@assigned',
             'App\Listeners\Notify\SendSmsToStaff@assigned',
 
