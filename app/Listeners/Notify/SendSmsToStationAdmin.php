@@ -42,12 +42,12 @@ class SendSmsToStationAdmin {
 
     public function preorderHandleOvertime(PreordersNotHandleInTime $event)
     {
-        NotifyProtocol::sendMessage($this->getAdminStationPhone(), NotifyProtocol::SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME);
+        NotifyProtocol::sendSms($this->getAdminStationPhone(), NotifyProtocol::SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME);
     }
 
     public function orderAssignIsReject(AssignIsReject $event)
     {
-        NotifyProtocol::sendMessage($this->getAdminStationPhone(), NotifyProtocol::SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT);
+        NotifyProtocol::sendSms($this->getAdminStationPhone(), NotifyProtocol::SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT);
     }
 
     protected function getAdminStationPhone()

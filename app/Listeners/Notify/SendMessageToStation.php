@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Toplan\PhpSms\Sms;
 
-class SendSmsToStation {
+class SendMessageToStation {
 
     /**
      * @var PreorderRepositoryContract
@@ -44,20 +44,7 @@ class SendSmsToStation {
 
         $preorder = $this->preorderRepo->get($assign['preorder_id']);
 
-        if ($preorder['status'] !== PreorderProtocol::ORDER_STATUS_OF_UNPAID) {
-
-            try {
-                $preorder->load('station');
-
-                $phone = $preorder['station']['phone'];
-
-                NotifyProtocol::notifyStationNewOrder($phone);
-
-            } catch (\Exception $e) {
-                \Log::error($e);
-            }
-
-        }
+        NotifyProtocol::notify($preorder['station_id'], NotifyProtocol::NOTIFY_ACTION_STATION_NEW_ORDER, null, $preorder);
     }
 
 

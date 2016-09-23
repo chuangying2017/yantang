@@ -143,7 +143,7 @@ class EventServiceProvider extends ServiceProvider {
         'App\Events\Preorder\AssignIsCreate' => [
             'App\Listeners\Preorder\SetStationForPreorder',
 
-            'App\Listeners\Notify\SendSmsToStation@newOrder',
+            'App\Listeners\Notify\SendMessageToStation@newOrder',
         ],
 
         'App\Events\Preorder\AssignIsConfirm' => [

@@ -1,9 +1,9 @@
-<?php namespace App\Services\Notify\Traits;
+<?php namespace App\Services\Notify\Roles;
 
 use App\Models\Subscribe\Station;
 use App\Services\Socialite\ProviderSupportTrait;
 
-trait NotifyStation {
+class NotifyStation implements NotifyRoleContract {
 
     use ProviderSupportTrait;
 
@@ -12,9 +12,10 @@ trait NotifyStation {
         return Station::query()->find($station_id)->pluck('phone')->first();
     }
 
-    public static function getOpenIds($station_id)
+    public static function getWeixinOpenId($station_id)
     {
         $user_ids = \DB::table('station_user')->where('station_id', $station_id)->pluck('user_id');
+        
         return self::getProviderId($user_ids);
     }
 }
