@@ -21,6 +21,7 @@ class StationTransformer extends TransformerAbstract {
         $data = [
             'id' => $station['id'],
             'name' => $station['name'],
+            'merchant_no' => $station['merchant_no'],
             'district_id' => $station['district_id'],
             'tel' => $station['tel'],
             'address' => $station['address'],

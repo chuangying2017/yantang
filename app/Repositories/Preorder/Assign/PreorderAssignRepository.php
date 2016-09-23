@@ -30,7 +30,7 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
             'preorder_id' => $order_id,
             'station_id' => $station_id,
             'status' => PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED,
-            'time_before' => Carbon::now()->addHours(PreorderProtocol::DAYS_OF_ASSIGN_DISPOSE_HOURS)
+            'time_before' => Carbon::now()->addHours(PreorderProtocol::HOURS_OF_ASSIGN_DISPOSE_HOURS)
         ]);
 
         event(new AssignIsCreate($assign));
@@ -75,7 +75,7 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
         $assign = $this->get($order_id);
         $assign->station_id = $station_id;
         $assign->status = PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED;
-        $assign->time_before = Carbon::now()->addDays(PreorderProtocol::DAYS_OF_ASSIGN_DISPOSE);
+        $assign->time_before = Carbon::now()->addHours(PreorderProtocol::HOURS_OF_ASSIGN_DISPOSE_HOURS);
 
         $assign->save();
         return $assign;
@@ -84,9 +84,14 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     public function updateAssignStaff($order_id, $staff_id)
     {
         $assign = $this->get($order_id);
+
         $assign->staff_id = $staff_id;
-        $assign->confirm_at = Carbon::now();
+
+        if (!$assign->confirm_at) {
+            $assign->confirm_at = Carbon::now();
+        }
         $assign->status = PreorderProtocol::ASSIGN_STATUS_OF_ASSIGNED;
+
         $assign->save();
 
         event(new AssignIsAssigned($assign));

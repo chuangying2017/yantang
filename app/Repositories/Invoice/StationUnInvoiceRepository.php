@@ -1,35 +1,13 @@
 <?php namespace App\Repositories\Invoice;
-
-use App\Models\Invoice\StationInvoice;
+use App\Models\Invoice\StationUnInvoice;
 use App\Repositories\NoGenerator;
 
-class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
+class StationUnInvoiceRepository extends InvoiceRepositoryAbstract{
 
     protected function init()
     {
-        $this->setInvoiceModel(InvoiceProtocol::INVOICE_MODEL_OF_STATION_ADMIN)->setInvoiceType(InvoiceProtocol::INVOICE_TYPE_OF_STATION_ADMIN);
+        $this->setInvoiceModel(InvoiceProtocol::INVOICE_MODEL_OF_STATION_UN_CONFIRM)->setInvoiceType(InvoiceProtocol::INVOICE_TYPE_OF_STATION_ADMIN);
     }
-
-    public function get($invoice_no, $with_detail = false)
-    {
-        if ($invoice_no instanceof $this->invoice_model) {
-            $invoice = $invoice_no;
-        } else {
-            $invoice = $this->getInvoiceModelQuery()->where('invoice_no', $invoice_no)->firstOrFail();
-        }
-
-        if ($with_detail) {
-            if ($invoice['merchant_id'] == InvoiceProtocol::ID_OF_ADMIN_INVOICE) {
-                $invoice->detail = StationInvoice::query()
-                    ->whereNotIn('merchant_id', [InvoiceProtocol::ID_OF_ADMIN_INVOICE, InvoiceProtocol::ID_OF_UN_CONFIRM_INVOICE])
-                    ->where('invoice_date', $invoice['invoice_date'])
-                    ->get();
-            }
-        }
-
-        return $invoice;
-    }
-
 
     public function create($invoice_data)
     {
@@ -55,6 +33,8 @@ class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
             'status' => InvoiceProtocol::INVOICE_STATUS_OF_PENDING,
             'memo' => '',
         ]);
+
+        $invoice->orders()->createMany($invoice_orders);
 
         return $invoice;
     }
