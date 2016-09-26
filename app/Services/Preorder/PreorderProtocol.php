@@ -42,6 +42,7 @@ class PreorderProtocol {
     //Time name
     const TIME_NAME_OF_CONFIRM = 'confirm_at';
     const TIME_NAME_OF_CREATE = 'created_at';
+    const TIME_NAME_OF_PAY = 'pay_at';
     const TIME_NAME_OF_DONE = 'done_at';
 
 

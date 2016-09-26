@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Invoice;
 
 use App\Models\Invoice\StationInvoice;
+use App\Models\Invoice\StationUnInvoice;
 use App\Repositories\NoGenerator;
 
 class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
@@ -21,9 +22,10 @@ class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
         if ($with_detail) {
             if ($invoice['merchant_id'] == InvoiceProtocol::ID_OF_ADMIN_INVOICE) {
                 $invoice->detail = StationInvoice::query()
-                    ->whereNotIn('merchant_id', [InvoiceProtocol::ID_OF_ADMIN_INVOICE, InvoiceProtocol::ID_OF_UN_CONFIRM_INVOICE])
+                    ->where('merchant_id', '!=', InvoiceProtocol::ID_OF_ADMIN_INVOICE)
                     ->where('invoice_date', $invoice['invoice_date'])
                     ->get();
+                $invoice->detail = $invoice->detail->merge(StationUnInvoice::query()->where('invoice_date', $invoice['invoice_date'])->get());
             }
         }
 

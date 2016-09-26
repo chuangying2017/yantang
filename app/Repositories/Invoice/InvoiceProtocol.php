@@ -73,5 +73,5 @@ class InvoiceProtocol {
 
 
     const PREORDER_INVOICE_ORDER_OF_OK = 1;
-    const PREORDER_INVOICE_ORDER_OF_NONE = 0;
+    const PREORDER_INVOICE_ORDER_OF_DEFAULT = 0;
 }
