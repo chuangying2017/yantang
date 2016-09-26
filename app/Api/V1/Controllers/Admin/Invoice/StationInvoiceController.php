@@ -34,7 +34,6 @@ class StationInvoiceController extends Controller {
 
         $invoices = $this->invoiceRepo->getAllPaginated(InvoiceProtocol::ID_OF_ADMIN_INVOICE, $start_time, $end_time);
 
-
         return $this->response->paginator($invoices, new StationInvoiceTransformer());
     }
 
