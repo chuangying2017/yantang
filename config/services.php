@@ -102,5 +102,9 @@ return [
         'pause_days' => env('SUBSCRIBE_PAUSE_DAYS', 2),
     ],
 
+    'notify' => [
+        'sms' => env('NOTIFY_BY_SMS', 0),
+        'weixin' => env('NOTIFY_BY_WEIXIN', 1)
+    ],
 
 ];

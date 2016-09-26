@@ -68,15 +68,14 @@ class Preorder extends Model {
         return $this->hasMany(Ticket::class, 'source_id', 'order_id');
     }
 
-    public function billings()
-    {
-        return $this->hasMany(OrderBilling::class, 'order_id', 'order_id');
-    }
-
-
     public function redEnvelope()
     {
         return $this->hasOne(RedEnvelopeRecord::class, 'resource_id', 'order_id');
+    }
+
+    public function billings()
+    {
+        return $this->hasMany(OrderBilling::class, 'order_id', 'order_id');
     }
 
 }

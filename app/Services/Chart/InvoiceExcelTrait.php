@@ -70,9 +70,9 @@ trait InvoiceExcelTrait {
         $path = self::getStationInvoiceLocalPath($invoice['invoice_date']);
         $full_file_name = $path . $title . '.xls';
 
-        if (self::getFile($full_file_name, $local)) {
-            return self::downloadLocalFile(self::getFile($full_file_name, $local));
-        }
+//        if (self::getFile($full_file_name, $local)) {
+//            return self::downloadLocalFile(self::getFile($full_file_name, $local));
+//        }
 
         $e_datas = [];
         foreach ($invoice->detail as $key => $merchant_invoice) {

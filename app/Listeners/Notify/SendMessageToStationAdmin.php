@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Toplan\PhpSms\Sms;
 
-class SendSmsToStationAdmin {
+class SendMessageToStationAdmin {
 
     /**
      * @var UserContract
@@ -42,25 +42,12 @@ class SendSmsToStationAdmin {
 
     public function preorderHandleOvertime(PreordersNotHandleInTime $event)
     {
-        NotifyProtocol::sendMessage($this->getAdminStationPhone(), NotifyProtocol::SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME);
+        NotifyProtocol::notify(null, NotifyProtocol::NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME, null, null);
     }
 
     public function orderAssignIsReject(AssignIsReject $event)
     {
-        NotifyProtocol::sendMessage($this->getAdminStationPhone(), NotifyProtocol::SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT);
-    }
-
-    protected function getAdminStationPhone()
-    {
-        return env('STATION_ADMIN_PHONE', '13580347020');
-//        $users = $this->userRepo->getAllUsersByRole(AccessProtocol::ROLE_OF_STATION_ADMIN);
-//
-//        if (!is_null($users)) {
-//            $user = $users->first();
-//            return $user['phone'];
-//        }
-//
-//        return null;
+        NotifyProtocol::notify(null, NotifyProtocol::NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT, null, null);
     }
 
 

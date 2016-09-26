@@ -23,7 +23,7 @@ class AdminStationInvoiceTest extends TestCase {
     {
         $invoice_no = '1020160925000000';
         $this->json('get', 'admin/invoices/stations/' . $invoice_no, [
-//            'export' => 'all'
+            'export' => 'summary'
         ], $this->getAuthHeader());
 
         $this->dump();

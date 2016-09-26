@@ -143,7 +143,7 @@ class EventServiceProvider extends ServiceProvider {
         'App\Events\Preorder\AssignIsCreate' => [
             'App\Listeners\Preorder\SetStationForPreorder',
 
-            'App\Listeners\Notify\SendSmsToStation@newOrder',
+            'App\Listeners\Notify\SendMessageToStation@newOrder',
         ],
 
         'App\Events\Preorder\AssignIsConfirm' => [
@@ -152,8 +152,8 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Events\Preorder\AssignIsAssigned' => [
             'App\Listeners\Preorder\SetPreorderAsPending',
-            'App\Listeners\Notify\SendSmsToClient@assigned',
-            'App\Listeners\Notify\SendSmsToStaff@assigned',
+            'App\Listeners\Notify\SendMessageToClient@assigned',
+            'App\Listeners\Notify\SendMessageToStaff@assigned',
 
         ],
 
@@ -163,11 +163,11 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Events\Preorder\AssignIsReject' => [
             'App\Listeners\Preorder\RemoveStationFromPreorder',
-            'App\Listeners\Notify\SendSmsToStationAdmin@orderAssignIsReject',
+            'App\Listeners\Notify\SendMessageToStationAdmin@orderAssignIsReject',
         ],
 
         'App\Events\Preorder\PreordersNotHandleInTime' => [
-            'App\Listeners\Notify\SendSmsToStationAdmin@preorderHandleOvertime',
+            'App\Listeners\Notify\SendMessageToStationAdmin@preorderHandleOvertime',
         ],
 
 //        'App\Services\Orders\Event\OrderRequest' => [

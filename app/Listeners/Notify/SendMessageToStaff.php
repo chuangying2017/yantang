@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Notify;
 
-use App\Events\Preorder\AssignIsCreate;
+use App\Events\Preorder\AssignIsAssigned;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Notify\NotifyProtocol;
 use App\Services\Preorder\PreorderProtocol;
@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Toplan\PhpSms\Sms;
 
-class SendSmsToStation {
+class SendMessageToStaff {
 
     /**
      * @var PreorderRepositoryContract
@@ -30,34 +30,24 @@ class SendSmsToStation {
     /**
      * Handle the event.
      *
-     * @param  AssignIsCreate $event
+     * @param  AssignIsAssigned $event
      * @return void
      */
-    public function handle(AssignIsCreate $event)
+    public function handle(AssignIsAssigned $event)
     {
         //
     }
 
-    public function newOrder(AssignIsCreate $event)
+    public function assigned(AssignIsAssigned $event)
     {
         $assign = $event->assign;
 
-        $preorder = $this->preorderRepo->get($assign['preorder_id']);
+        $preorder = $this->preorderRepo->get($assign['preorder_id'], false);
 
-        if ($preorder['status'] !== PreorderProtocol::ORDER_STATUS_OF_UNPAID) {
-
-            try {
-                $preorder->load('station');
-
-                $phone = $preorder['station']['phone'];
-
-                NotifyProtocol::notifyStationNewOrder($phone);
-
-            } catch (\Exception $e) {
-                \Log::error($e);
-            }
-
+        if ($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_SHIPPING) {
+            NotifyProtocol::notify($preorder['staff_id'], NotifyProtocol::NOTIFY_ACTION_STAFF_NEW_ORDER, null, $preorder);
         }
+
     }
 
 
