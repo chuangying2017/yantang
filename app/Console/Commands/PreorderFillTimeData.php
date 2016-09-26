@@ -43,17 +43,28 @@ class PreorderFillTimeData extends Command {
 //        }])->find(768));
 //
 
+
         Preorder::with([
-            'assign',
             'order',
-            'deliver' => function ($query) {
-                $query->orderBy('deliver_at', 'asc');
-            }
-        ])->whereIn('status', ['assigning'])->chunk(100, function ($preorders) {
+        ])->whereIn('status', ['assigning', 'shipping', 'done'])->whereNull('pay_at')->chunk(100, function ($preorders) {
             foreach ($preorders as $preorder) {
-                $this->updateTimes($preorder);
+                $this->updatePayTime($preorder);
+                $this->count++;
             }
         });
+
+
+//        Preorder::with([
+//            'assign',
+//            'order',
+//            'deliver' => function ($query) {
+//                $query->orderBy('deliver_at', 'asc');
+//            }
+//        ])->whereIn('status', ['assigning'])->chunk(100, function ($preorders) {
+//            foreach ($preorders as $preorder) {
+//                $this->updateTimes($preorder);
+//            }
+//        });
 
 //        Preorder::with([
 //            'assign',
