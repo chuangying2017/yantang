@@ -1,6 +1,7 @@
 <?php namespace App\Api\V1\Transformers\Invoice;
 
 use App\Api\V1\Transformers\Traits\SetInclude;
+use App\Models\Invoice\InvoiceAbstract;
 use App\Models\Invoice\StationInvoice;
 use League\Fractal\TransformerAbstract;
 
@@ -10,7 +11,7 @@ class StationInvoiceTransformer extends TransformerAbstract {
 
     protected $availableIncludes = ['orders'];
 
-    public function transform(StationInvoice $invoice)
+    public function transform(InvoiceAbstract $invoice)
     {
         $this->setInclude($invoice);
 
