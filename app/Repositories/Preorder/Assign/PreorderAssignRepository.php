@@ -57,7 +57,7 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
             return $assign;
         }
 
-        if ($assign->status == PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM) {
+        if ($assign->status == PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM || $assign->status == PreorderProtocol::ASSIGN_STATUS_OF_ASSIGNED) {
             throw new \Exception('订单已确认,无法拒绝');
         }
 
