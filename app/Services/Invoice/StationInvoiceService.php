@@ -79,7 +79,7 @@ class StationInvoiceService implements InvoiceServiceContract {
     public function settleMerchant($station, $request_invoice_date, $start_time, $end_time)
     {
         $station_id = $station['id'];
-        $invoices = $this->stationInvoiceRepo->getAll($station_id, $request_invoice_date);
+        $invoices = $this->stationInvoiceRepo->getAll($station_id, $request_invoice_date, $request_invoice_date);
 
         if ($invoices->first()) {
             info('服务部 ' . $station['name'] . ' 于' . $request_invoice_date . '的账单已出', $invoices->first()->toArray());
@@ -119,7 +119,7 @@ class StationInvoiceService implements InvoiceServiceContract {
 
     public function settleUnConfirm($request_invoice_date, $start_time, $end_time)
     {
-        $invoices = $this->stationUnInvoiceRepository->getAll(InvoiceProtocol::ID_OF_UN_CONFIRM_INVOICE, $request_invoice_date);
+        $invoices = $this->stationUnInvoiceRepository->getAll(InvoiceProtocol::ID_OF_UN_CONFIRM_INVOICE, $request_invoice_date, $request_invoice_date);
 
         if ($invoices->first()) {
             info('未确认订单 于' . $request_invoice_date . '的账单已出', $invoices->first()->toArray());
@@ -158,7 +158,7 @@ class StationInvoiceService implements InvoiceServiceContract {
 
     public function settleAdmin($merchant_invoices, $request_invoice_date, $start_time, $end_time)
     {
-        $invoices = $this->stationAdminInvoiceRepository->getAll(InvoiceProtocol::ID_OF_ADMIN_INVOICE, $request_invoice_date);
+        $invoices = $this->stationAdminInvoiceRepository->getAll(InvoiceProtocol::ID_OF_ADMIN_INVOICE, $request_invoice_date, $request_invoice_date);
         if ($invoices->first()) {
             info('总部 于' . $request_invoice_date . '的账单已出', $invoices->first()->toArray());
             return $invoices->first();
