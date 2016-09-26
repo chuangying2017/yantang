@@ -21,7 +21,7 @@ class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
         if ($with_detail) {
             if ($invoice['merchant_id'] == InvoiceProtocol::ID_OF_ADMIN_INVOICE) {
                 $invoice->detail = StationInvoice::query()
-                    ->whereNotIn('merchant_id', InvoiceProtocol::ID_OF_ADMIN_INVOICE)
+                    ->where('merchant_id', '!=', InvoiceProtocol::ID_OF_ADMIN_INVOICE)
                     ->where('invoice_date', $invoice['invoice_date'])
                     ->get();
             }
