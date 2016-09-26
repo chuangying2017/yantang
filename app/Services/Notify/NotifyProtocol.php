@@ -1,39 +1,46 @@
 <?php namespace App\Services\Notify;
 
+use App\Services\Notify\Content\NotifyClientOrderIsAssign;
 use App\Services\Notify\Content\NotifyContentContract;
+use App\Services\Notify\Content\NotifyStaffNewOrder;
+use App\Services\Notify\Content\NotifyStationAdminAssignOvertime;
+use App\Services\Notify\Content\NotifyStationAdminOrderReject;
 use App\Services\Notify\Content\NotifyStationNewOrder;
+use App\Services\Notify\Roles\NotifyClient;
 use App\Services\Notify\Roles\NotifyRoleContract;
+use App\Services\Notify\Roles\NotifyStaff;
 use App\Services\Notify\Roles\NotifyStation;
+use App\Services\Notify\Roles\NotifyStationAdmin;
 use Toplan\PhpSms\Sms;
 
 class NotifyProtocol {
+
+    /**
+     * 短信内容,待删除
+     */
+    const SMS_TO_STATION_NEW_ORDER = '您好，您有一笔新的订单，请及时处理！【燕塘优鲜达】';
+    const SMS_TO_CLIENT_PREORDER_IS_ASSIGNED = '亲爱的客户，您的订单已被接受，您可在“个人中心-我的奶卡”查看具体信息；稍后我们会有专人与您联系，谢谢！【燕塘优鲜达】';
+    const SMS_TO_STAFF_PREORDER_IS_ASSIGNED = '收到一个新的订单，请及时处理！【燕塘优鲜达】';
+    const SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME = '您有一个来自服务部的订单待处理，请及时处理！【燕塘优鲜达】';
+    const SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT = '您有一个来自服务部的订单待处理，请及时处理！【燕塘优鲜达】';
 
     const CHANNEL_OF_SMS = 'sms';
     const CHANNEL_OF_WEIXIN_TEMPLATE = 'weixin';
 
     const ROLE_OF_STATION = 'station';
+    const ROLE_OF_STAFF = 'staff';
     const ROLE_OF_STATION_ADMIN = 'station_admin';
     const ROLE_OF_CLIENT = 'client';
-
-
-    const SMS_TO_STATION_NEW_ORDER = '您好，您有一笔新的订单，请及时处理！【燕塘优鲜达】';
-
-    const SMS_TO_CLIENT_PREORDER_IS_ASSIGNED = '亲爱的客户，您的订单已被接受，您可在“个人中心-我的奶卡”查看具体信息；稍后我们会有专人与您联系，谢谢！【燕塘优鲜达】';
-
-    const SMS_TO_STAFF_PREORDER_IS_ASSIGNED = '收到一个新的订单，请及时处理！【燕塘优鲜达】';
-
-    const SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME = '您有一个来自服务部的订单待处理，请及时处理！【燕塘优鲜达】';
-
-    const SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT = '您有一个来自服务部的订单待处理，请及时处理！【燕塘优鲜达】';
 
 
     const NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED = 101;
 
     const NOTIFY_ACTION_STATION_NEW_ORDER = 201;
 
-    const NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME = 301;
-    const NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT = 302;
+    const NOTIFY_ACTION_STAFF_NEW_ORDER = 301;
 
+    const NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME = 401;
+    const NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT = 402;
 
     /**
      * @param $action
@@ -43,7 +50,11 @@ class NotifyProtocol {
     public static function getContentHandler($action)
     {
         $config = [
-            self::NOTIFY_ACTION_STATION_NEW_ORDER => NotifyStationNewOrder::class
+            self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED => NotifyClientOrderIsAssign::class,
+            self::NOTIFY_ACTION_STATION_NEW_ORDER => NotifyStationNewOrder::class,
+            self::NOTIFY_ACTION_STAFF_NEW_ORDER => NotifyStaffNewOrder::class,
+            self::NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME => NotifyStationAdminAssignOvertime::class,
+            self::NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT => NotifyStationAdminOrderReject::class,
         ];
 
         $handler = array_get($config, $action, null);
@@ -63,7 +74,10 @@ class NotifyProtocol {
     public static function getRoleHandler($role)
     {
         $config = [
-            self::ROLE_OF_STATION => NotifyStation::class
+            self::ROLE_OF_STATION => NotifyStation::class,
+            self::ROLE_OF_STAFF => NotifyStaff::class,
+            self::ROLE_OF_CLIENT => NotifyClient::class,
+            self::ROLE_OF_STATION_ADMIN => NotifyStationAdmin::class
         ];
 
         $handler = array_get($config, $role, null);
@@ -97,6 +111,8 @@ class NotifyProtocol {
             case self::NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME:
             case self::NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT:
                 return self::ROLE_OF_STATION_ADMIN;
+            case self::NOTIFY_ACTION_STAFF_NEW_ORDER:
+                return self::ROLE_OF_STAFF;
             default:
                 throw new \Exception('通知用户角色不存在');
         }
@@ -106,7 +122,6 @@ class NotifyProtocol {
     {
         return self::sendSms($phone, NotifyProtocol::SMS_TO_STATION_NEW_ORDER);
     }
-
 
     public static function notify($id, $action, $channel = null, $entity = null)
     {
@@ -118,12 +133,14 @@ class NotifyProtocol {
 
             switch ($channel) {
                 case NotifyProtocol::CHANNEL_OF_SMS:
-                    return self::sendSms($contact_role::getPhone($id), $content_handler::getSmsContent());
+                    $phone = $content_handler::getSmsContact($entity) ?: $contact_role::getPhone($id);
+                    return self::sendSms($phone, $content_handler::getSmsContent());
                 case NotifyProtocol::CHANNEL_OF_WEIXIN_TEMPLATE:
                     return self::sendWeixinTemplate($contact_role::getWeixinOpenId($id), $content_handler, $entity);
                 default:
                     if (config('services.notify.sms')) {
-                        self::sendSms($contact_role::getPhone($id), $content_handler::getSmsContent());
+                        $phone = $content_handler::getSmsContact($entity) ?: $contact_role::getPhone($id);
+                        return self::sendSms($phone, $content_handler::getSmsContent());
                     }
                     if (config('services.notify.weixin')) {
                         self::sendWeixinTemplate($contact_role::getWeixinOpenId($id), $content_handler, $entity);
@@ -159,7 +176,7 @@ class NotifyProtocol {
         if (!$open_id) {
             return false;
         }
-        
+
         if (is_array($open_id)) {
             foreach ($open_id as $single_open_id) {
                 \EasyWeChat::notice()->to($single_open_id)

@@ -47,5 +47,4 @@ class SendMessageToStation {
         NotifyProtocol::notify($preorder['station_id'], NotifyProtocol::NOTIFY_ACTION_STATION_NEW_ORDER, null, $preorder);
     }
 
-
 }

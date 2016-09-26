@@ -1,7 +1,5 @@
 <?php namespace App\Services\Notify\Content;
-
-
-class NotifyStationNewOrder implements NotifyContentContract {
+class NotifyStaffNewOrder implements NotifyContentContract {
 
 
     /**
@@ -9,7 +7,7 @@ class NotifyStationNewOrder implements NotifyContentContract {
      */
     public static function getSmsContent()
     {
-        return '您好，您有一笔新的订单，请及时处理！【燕塘优鲜达】';
+        return '您好，您有一笔新的订单需要派送！【燕塘优鲜达】';
     }
 
     /**
@@ -29,18 +27,18 @@ class NotifyStationNewOrder implements NotifyContentContract {
     public static function getWeixinTemplateData($preorder = null)
     {
         return [
-            "first" => "您好，您有一笔新的订单，请及时处理",
+            "first" => "您好，您有一笔新的订单需要派送",
             "keyword1" => $preorder['name'],
             "keyword2" => $preorder['phone'],
             "keyword3" => $preorder['address'],
             "keyword4" => $preorder['start_time'],
-            'remark' => '请在12小时内处理订单!'
+            'remark' => ''
         ];
     }
 
     public static function getWeixinTemplateUrl($preorder = null)
     {
-        return api_route('api.stations.preorders.show', 'v1', [$preorder['id']]);
+        return api_route('api.staffs.preorders.show', 'v1', [$preorder['id']]);
     }
 
     /**

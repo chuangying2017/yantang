@@ -10,13 +10,13 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Toplan\PhpSms\Sms;
 
-class SendSmsToStaff {
+class SendMessageToStaff {
 
     /**
      * @var PreorderRepositoryContract
      */
     private $preorderRepo;
-    
+
     /**
      * Create the event listener.
      *
@@ -45,12 +45,7 @@ class SendSmsToStaff {
         $preorder = $this->preorderRepo->get($assign['preorder_id'], false);
 
         if ($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_SHIPPING) {
-            try {
-                $phone = $preorder->staff->phone;
-                Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_STAFF_PREORDER_IS_ASSIGNED)->send();
-            } catch (\Exception $e) {
-                \Log::error($e);
-            }
+            NotifyProtocol::notify($preorder['staff_id'], NotifyProtocol::NOTIFY_ACTION_STAFF_NEW_ORDER, null, $preorder);
         }
 
     }
