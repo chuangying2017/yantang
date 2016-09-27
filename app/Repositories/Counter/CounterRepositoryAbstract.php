@@ -36,7 +36,7 @@ abstract class CounterRepositoryAbstract {
             [
                 'source_type' => $this->getType(),
                 'source_id' => $source_id,
-                'source_name' => is_null($source_name) ? $this->getName($source_id) : $source_name,
+                'source_name' => trim(is_null($source_name) ? $this->getName($source_id) : $source_name),
             ]
         );
     }
