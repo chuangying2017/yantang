@@ -46,7 +46,7 @@ class DailyStationCounter extends Command {
      *
      * @var string
      */
-    protected $description = '初始化服务部计数器';
+    protected $description = '日常服务部计数器';
 
     /**
      * Create a new command instance.

@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use App\Repositories\Counter\StaffOrderCounterRepo;
 use App\Repositories\Counter\StationOrderCounterRepo;
 use App\Repositories\Counter\Unit\DailyCounterRepository;
+use App\Repositories\Counter\Unit\MonthlyCounterRepository;
+use App\Repositories\Counter\Unit\WeeklyCounterRepository;
+use App\Repositories\Counter\Unit\YearlyCounterRepository;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
 use Carbon\Carbon;
@@ -51,13 +54,19 @@ class InitStationCounter extends Command {
      * @param StationOrderCounterRepo $stationOrderCounterRepo
      * @param StaffOrderCounterRepo $staffOrderCounterRepo
      * @param DailyCounterRepository $dailyCounterRepository
+     * @param WeeklyCounterRepository $weeklyCounterRepository
+     * @param MonthlyCounterRepository $monthlyCounterRepository
+     * @param YearlyCounterRepository $yearlyCounterRepository
      */
     public function __construct(
         StationRepositoryContract $stationRepo,
         StaffRepositoryContract $staffRepo,
         StationOrderCounterRepo $stationOrderCounterRepo,
         StaffOrderCounterRepo $staffOrderCounterRepo,
-        DailyCounterRepository $dailyCounterRepository
+        DailyCounterRepository $dailyCounterRepository,
+        WeeklyCounterRepository $weeklyCounterRepository,
+        MonthlyCounterRepository $monthlyCounterRepository,
+        YearlyCounterRepository $yearlyCounterRepository
     )
     {
         parent::__construct();
@@ -65,7 +74,11 @@ class InitStationCounter extends Command {
         $this->staffRepo = $staffRepo;
         $this->stationOrderCounterRepo = $stationOrderCounterRepo;
         $this->staffOrderCounterRepo = $staffOrderCounterRepo;
+
         $this->dailyCounterRepository = $dailyCounterRepository;
+        $this->weeklyCounterRepository = $weeklyCounterRepository;
+        $this->monthlyCounterRepository = $monthlyCounterRepository;
+        $this->yearlyCounterRepository = $yearlyCounterRepository;
     }
 
     /**
@@ -92,8 +105,16 @@ class InitStationCounter extends Command {
                 $this->staffOrderCounterRepo->increment($staff_counter, $staff_quantity, 0, false);
 
                 foreach ($preorders as $preorder) {
-                    $this->dailyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, true, Carbon::parse($preorder['confirm_at'])->toDateString());
-                    $this->dailyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, Carbon::parse($preorder['confirm_at'])->toDateString());
+                    $this->dailyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, true, $preorder['confirm_at']);
+                    $this->weeklyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, true, $preorder['confirm_at']);
+                    $this->monthlyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, true, $preorder['confirm_at']);
+                    $this->yearlyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, true, $preorder['confirm_at']);
+
+                    $this->dailyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
+                    $this->weeklyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
+                    $this->monthlyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
+                    $this->yearlyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
+
                 }
                 $station_quantity += $staff_quantity;
             }
@@ -106,6 +127,9 @@ class InitStationCounter extends Command {
      * @var DailyCounterRepository
      */
     private $dailyCounterRepository;
+    protected $weeklyCounterRepository;
+    protected $monthlyCounterRepository;
+    protected $yearlyCounterRepository;
 
 
 }
