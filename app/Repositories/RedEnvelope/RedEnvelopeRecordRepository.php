@@ -90,8 +90,11 @@ class RedEnvelopeRecordRepository {
     public function updateAsCancel($record_id)
     {
         $record = $this->get($record_id);
-        $record->status = RedEnvelopeProtocol::RECORD_STATUS_OF_CANCEL;
-        $record->save();
+        
+        if ($record) {
+            $record->status = RedEnvelopeProtocol::RECORD_STATUS_OF_CANCEL;
+            $record->save();
+        }
 
         return $record;
     }
