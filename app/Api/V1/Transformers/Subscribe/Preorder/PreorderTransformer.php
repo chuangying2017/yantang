@@ -1,8 +1,8 @@
 <?php namespace App\Api\V1\Transformers\Subscribe\Preorder;
 
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
-use App\API\V1\Transformers\Promotion\RedEnvelopeRecordTransformer;
-use App\API\V1\Transformers\Promotion\TicketTransformer;
+use App\Api\V1\Transformers\Promotion\RedEnvelopeRecordTransformer;
+use App\Api\V1\Transformers\Promotion\TicketTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;

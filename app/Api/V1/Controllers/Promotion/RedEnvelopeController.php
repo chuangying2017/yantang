@@ -2,8 +2,8 @@
 
 namespace App\Api\V1\Controllers\Promotion;
 
-use App\API\V1\Transformers\Promotion\RedEnvelopeReceiveTransformer;
-use App\API\V1\Transformers\Promotion\RedEnvelopeRecordTransformer;
+use App\Api\V1\Transformers\Promotion\RedEnvelopeReceiveTransformer;
+use App\Api\V1\Transformers\Promotion\RedEnvelopeRecordTransformer;
 use App\Repositories\Auth\User\EloquentUserRepository;
 use App\Repositories\RedEnvelope\RedEnvelopeRecordRepository;
 use App\Services\Promotion\RedEnvelopeService;
