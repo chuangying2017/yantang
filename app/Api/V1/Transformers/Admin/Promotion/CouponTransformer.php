@@ -1,4 +1,4 @@
-<?php namespace App\API\V1\Transformers\Admin\Promotion;
+<?php namespace App\Api\V1\Transformers\Admin\Promotion;
 
 use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\Promotion\Coupon;
@@ -13,7 +13,7 @@ class CouponTransformer extends TransformerAbstract {
     public function transform(Coupon $coupon)
     {
         $this->setInclude($coupon);
-        
+
         $data = [
             'id' => $coupon['id'],
             'name' => $coupon['name'],
