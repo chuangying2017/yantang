@@ -120,8 +120,9 @@ class RedEnvelopeRulesRepository {
 
         $query->orderBy('created_at', 'desc');
 
+        
         if (!is_null($per_page)) {
-            $query->paginate($per_page);
+            return $query->paginate($per_page);
         }
 
         return $query->get();

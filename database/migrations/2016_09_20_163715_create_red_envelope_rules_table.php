@@ -28,6 +28,8 @@ class CreateRedEnvelopeRulesTable extends Migration {
             $table->string('content');
             $table->string('status', 32);
 
+            $table->softDeletes();
+            
             $table->timestamps();
         });
     }

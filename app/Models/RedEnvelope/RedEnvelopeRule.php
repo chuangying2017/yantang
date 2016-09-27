@@ -3,9 +3,12 @@
 namespace App\Models\RedEnvelope;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RedEnvelopeRule extends Model {
 
+    use SoftDeletes;
+    
     protected $table = 'red_rules';
 
     protected $guarded = [];

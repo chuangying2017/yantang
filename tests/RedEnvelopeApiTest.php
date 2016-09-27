@@ -11,9 +11,13 @@ class RedEnvelopeApiTest extends TestCase {
     /** @test */
     public function it_can_show_a_red_envelope()
     {
+        $this->it_can_get_a_ticket_from_red_envelope();
+
         $record_id = 2;
 
         $this->json('get', 'promotions/red-envelopes/' . $record_id, [], $this->getAuthHeader());
+
+        $this->echoJson();
 
         $this->assertResponseOk();
 
@@ -37,6 +41,7 @@ class RedEnvelopeApiTest extends TestCase {
             'source_id' => $record_id
         ]);
 
-        $this->dump();
+        $this->echoJson();
+
     }
 }

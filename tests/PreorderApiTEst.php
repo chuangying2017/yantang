@@ -22,8 +22,8 @@ class PreorderApiTEst extends TestCase {
     public function it_can_get_preorder_detail()
     {
         $preorder_id = 3699;
-        $this->json('get', 'subscribe/preorders/' . $preorder_id, [], $this->getAuthHeader());
-        $this->dump();
+        $this->json('get', 'subscribe/preorders/' . $preorder_id, [], $this->getAuthHeader(3878));
+        $this->echoJson();
 
         $this->assertResponseOk();
     }
