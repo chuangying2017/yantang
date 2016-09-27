@@ -13,21 +13,6 @@ use Toplan\PhpSms\Sms;
 class SendMessageToClient {
 
     /**
-     * @var PreorderRepositoryContract
-     */
-    private $preorderRepo;
-
-    /**
-     * Create the event listener.
-     *
-     * @param PreorderRepositoryContract $preorderRepo
-     */
-    public function __construct(PreorderRepositoryContract $preorderRepo)
-    {
-        $this->preorderRepo = $preorderRepo;
-    }
-
-    /**
      * Handle the event.
      *
      * @param  AssignIsAssigned $event
@@ -42,7 +27,7 @@ class SendMessageToClient {
     {
         $assign = $event->assign;
 
-        $preorder = $this->preorderRepo->get($assign['preorder_id'], false);
+        $preorder = $assign->preorder;
 
         if ($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_SHIPPING) {
             NotifyProtocol::notify($preorder['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED, null, $preorder);

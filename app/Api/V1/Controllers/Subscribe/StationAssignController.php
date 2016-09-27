@@ -3,7 +3,6 @@
 use App\API\V1\Controllers\Controller;
 use App\Api\V1\Requests\Station\AssignStaffRequest;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderAssignTransformer;
-use App\Events\Preorder\AssignIsAssigned;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 
 class StationAssignController extends Controller {

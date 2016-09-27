@@ -150,7 +150,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($staff_id)) {
             $query->where('staff_id', $staff_id);
         }
-        
+
         if (!is_null($start_time)) {
             $query->where($time_name, '>=', $start_time);
         }
@@ -158,7 +158,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($end_time)) {
             $query->where($time_name, '<=', $end_time);
         }
-        
+
         $keyword_tag = 0;
 
         if (!is_null($pay_order_no)) {
@@ -179,8 +179,8 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $keyword_tag = 1;
             $query->where('phone', $phone);
         }
-        
-        if(!$keyword_tag) {
+
+        if (!$keyword_tag) {
             $this->scopeStatus($query, $status);
         }
 
@@ -440,6 +440,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if ($status == PreorderProtocol::ORDER_STATUS_OF_CANCEL) {
             app()->make(PreorderAssignRepositoryContract::class)->deleteAssign($preorder['id']);
+            event(new PreorderIsCancel($preorder));
         }
 
         return $preorder;

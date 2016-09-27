@@ -154,7 +154,11 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Preorder\SetPreorderAsPending',
             'App\Listeners\Notify\SendMessageToClient@assigned',
             'App\Listeners\Notify\SendMessageToStaff@assigned',
+//            'App\Listeners\Counter\PreorderCounter@increment',
+        ],
 
+        'App\Events\Preorder\AssignIsDelete' => [
+//            'App\Listeners\Counter\PreorderCounter@decrement',
         ],
 
         'App\Events\Preorder\StaffAssignIsCreate' => [
@@ -170,6 +174,9 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Notify\SendMessageToStationAdmin@preorderHandleOvertime',
         ],
 
+        'App\Events\Preorder\PreorderIsCancel' => [
+//            'App\Listeners\Counter\PreorderCounter@cancel',
+        ],
 //        'App\Services\Orders\Event\OrderRequest' => [
 //
 //        ],

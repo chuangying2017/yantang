@@ -3,6 +3,8 @@
 namespace App\Listeners\Preorder;
 
 use App\Events\Preorder\AssignIsAssigned;
+use App\Repositories\Counter\StaffOrderCounterRepo;
+use App\Repositories\Counter\StationOrderCounterRepo;
 use App\Repositories\Order\PreorderOrderRepository;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Preorder\PreorderProtocol;
@@ -23,9 +25,13 @@ class SetPreorderAsPending {
     /**
      * Create the event listener.
      *
-     * @return void
+     * @param PreorderRepositoryContract $orderRepo
+     * @param PreorderOrderRepository $preorderOrderRepository
      */
-    public function __construct(PreorderRepositoryContract $orderRepo, PreorderOrderRepository $preorderOrderRepository)
+    public function __construct(
+        PreorderRepositoryContract $orderRepo,
+        PreorderOrderRepository $preorderOrderRepository
+    )
     {
         $this->orderRepo = $orderRepo;
         $this->preorderOrderRepository = $preorderOrderRepository;
@@ -42,6 +48,7 @@ class SetPreorderAsPending {
         $assign = $event->assign;
         $preorder = $this->orderRepo->updatePreorderStatus($assign['preorder_id'], PreorderProtocol::ORDER_STATUS_OF_SHIPPING);
         $this->orderRepo->updatePreorderAssign($assign['preorder_id'], null, $assign['staff_id']);
-        $this->preorderOrderRepository->updateOrderStatusAsDeliver($preorder['order_id']);
+        $order = $this->preorderOrderRepository->updateOrderStatusAsDeliver($preorder['order_id']);
     }
+
 }

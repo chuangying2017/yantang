@@ -23,4 +23,9 @@ class StationStaff extends Model {
         return $this->belongsTo(Client::class, 'user_id', 'user_id');
     }
 
+    public function preorders()
+    {
+        return $this->hasMany(Preorder::class, 'staff_id', 'id');
+    }
+
 }
