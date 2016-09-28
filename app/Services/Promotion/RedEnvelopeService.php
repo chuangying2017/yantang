@@ -100,7 +100,7 @@ class RedEnvelopeService implements PromotionDispatcher {
         }
         //派发优惠券
         $ticket = $this->couponService->dispatchWithoutCheck($user->getUserId(), $coupon, PromotionProtocol::TICKET_RESOURCE_OF_RED_ENVELOPE, $record_id);
-
+        $this->recordRepo->incrementDispatch($record);
         return $this->receiveRepo->createReceiver($record_id, $user->getUserId(), $ticket['id'], $ticket['promotion_id'], $coupon['content']);
     }
 
@@ -111,7 +111,7 @@ class RedEnvelopeService implements PromotionDispatcher {
             $coupon_id = array_get($rule_coupons, array_rand($rule_coupons));
 
             $coupon = $this->couponRepo->getCouponsById($coupon_id, false);
-            
+
             if ($coupon) {
                 return $coupon;
             }

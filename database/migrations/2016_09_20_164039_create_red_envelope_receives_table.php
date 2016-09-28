@@ -15,10 +15,10 @@ class CreateRedEnvelopeReceivesTable extends Migration {
         Schema::create('red_receives', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('record_id');
-            
+
             $table->integer('user_id');
-            $table->integer('nickname');
-            $table->integer('avatar');
+            $table->string('nickname');
+            $table->string('avatar');
 
             $table->integer('coupon_id');
             $table->string('content');

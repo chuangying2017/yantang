@@ -19,6 +19,7 @@ class RedEnvelopeReceiveTransformer extends TransformerAbstract {
             'ticket' => [
                 'ticket_id' => $receive['ticket_id']
             ],
+            'receive_at' => $receive['created_at']
         ];
     }
 

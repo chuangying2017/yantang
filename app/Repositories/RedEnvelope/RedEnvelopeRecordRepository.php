@@ -59,7 +59,11 @@ class RedEnvelopeRecordRepository {
 
     public function get($record_id, $with_detail = false)
     {
-        $record = RedEnvelopeRecord::query()->find($record_id);
+        if($record_id instanceof RedEnvelopeRecord) {
+            $record = $record_id;
+        } else {
+            $record = RedEnvelopeRecord::query()->find($record_id);
+        }
 
         if ($with_detail) {
             $record->load('rule', 'receivers');
