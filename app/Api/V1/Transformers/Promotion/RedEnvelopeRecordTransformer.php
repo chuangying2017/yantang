@@ -8,10 +8,11 @@ class RedEnvelopeRecordTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['rule', 'receivers', 'current_receiver'];
+    protected $availableIncludes = ['rule', 'receivers'];
 
     public function transform(RedEnvelopeRecord $record)
     {
+        array_push($this->defaultIncludes, 'current_receiver');
         $this->setInclude($record);
 
         $data = [
