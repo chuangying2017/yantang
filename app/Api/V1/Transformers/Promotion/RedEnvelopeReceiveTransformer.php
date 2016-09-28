@@ -1,6 +1,7 @@
 <?php namespace App\Api\V1\Transformers\Promotion;
 
 use App\Models\RedEnvelope\RedEnvelopeReceive;
+use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 
 class RedEnvelopeReceiveTransformer extends TransformerAbstract {
@@ -19,7 +20,7 @@ class RedEnvelopeReceiveTransformer extends TransformerAbstract {
             'ticket' => [
                 'ticket_id' => $receive['ticket_id']
             ],
-            'receive_at' => $receive['created_at']
+            'receive_at' => Carbon::parse($receive['created_at'])->toDateTimeString()
         ];
     }
 
