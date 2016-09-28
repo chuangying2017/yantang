@@ -20,9 +20,10 @@ class Kernel extends ConsoleKernel {
 //        'App\Console\Commands\CleanData',
         'App\Console\Commands\CheckPreorderAssignOvertime',
         'App\Console\Commands\RemoveDuplicatePreorderDeliver',
-        'App\Console\Commands\SeedCouponForFirstOrderUser',
+//        'App\Console\Commands\SeedCouponForFirstOrderUser',
         'App\Console\Commands\OrderFillTimeData',
         'App\Console\Commands\PreorderFillTimeData',
+        'App\Console\Commands\FillPreorderAmount',
         'App\Console\Commands\SettleStationInvoice',
         'App\Console\Commands\CancelOvertimeUnpaidOrders',
         'App\Console\Commands\InitStationCounter',
@@ -39,6 +40,9 @@ class Kernel extends ConsoleKernel {
     {
         $schedule->command('preorder:settle')->dailyAt('1:00');
         $schedule->command('preorders:assign')->twiceDaily(10, 16);
+
+        //计数器
+        $schedule->command('counter:daily-station')->dailyAt('00:30');
 //        $schedule->command('statement:store')->monthlyOn(StatementProtocol::getStoreCheckDay(), '1:00');
 //        $schedule->command('statement:station')->monthlyOn(StatementProtocol::getStationCheckDay(), '2:00');
 //
@@ -47,6 +51,7 @@ class Kernel extends ConsoleKernel {
 //        $schedule->command('invoice:station', ['date' => Carbon::today()->day(25)->toDateString()])->monthlyOn(26, '2:00');
 
         $schedule->command('orders:overtime')->everyTenMinutes();
+
 
     }
 }

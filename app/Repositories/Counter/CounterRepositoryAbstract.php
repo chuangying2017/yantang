@@ -26,6 +26,14 @@ abstract class CounterRepositoryAbstract {
 
     public abstract function getName($source_id);
 
+    public function getAll()
+    {
+        return Counter::query()
+            ->where('source_type', $this->getType())
+            ->orderBy('quantity', 'desc')
+            ->get();
+    }
+
     public function createCounter($source_id, $source_name = null)
     {
         return Counter::query()->updateOrCreate(

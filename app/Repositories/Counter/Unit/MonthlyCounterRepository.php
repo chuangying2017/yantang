@@ -27,6 +27,6 @@ class MonthlyCounterRepository extends UnitCounterRepositoryAbstract {
      */
     public function getCounterTime($time = null)
     {
-        return $time ? Carbon::parse($time)->year . Carbon::parse($time)->month : Carbon::today()->year . Carbon::today()->month;
+        return $time ? Carbon::parse($time)->format('Y-m') : Carbon::today()->format('Y-m');
     }
 }

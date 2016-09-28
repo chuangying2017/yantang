@@ -95,6 +95,8 @@ class DailyStationCounter extends Command {
         foreach ($stations as $station) {
             $station_quantity = 0;
             $station_cancel_quantity = 0;
+            $station_amount = 0;
+            $station_cancel_amount = 0;
             $staffs = $station->staffs()->where('status', 1)->get();
 
             $station_counter = $this->stationOrderCounterRepo->getCounter($station['id'], true);
@@ -104,44 +106,50 @@ class DailyStationCounter extends Command {
                 $preorders = $staff->preorders()->whereIn('status', ['shipping', 'done'])->where('confirm_at', '>=', $staff_counter['updated_at'])->get();
 
                 foreach ($preorders as $preorder) {
-                    $this->dailyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, true, $preorder['confirm_at']);
-                    $this->weeklyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, true, $preorder['confirm_at']);
-                    $this->monthlyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, true, $preorder['confirm_at']);
-                    $this->yearlyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, true, $preorder['confirm_at']);
+                    $this->dailyCounterRepository->calUnitCounter($staff_counter['id'], 1, $preorder['total_amount'], true, $preorder['confirm_at']);
+                    $this->weeklyCounterRepository->calUnitCounter($staff_counter['id'], 1, $preorder['total_amount'], true, $preorder['confirm_at']);
+                    $this->monthlyCounterRepository->calUnitCounter($staff_counter['id'], 1, $preorder['total_amount'], true, $preorder['confirm_at']);
+                    $this->yearlyCounterRepository->calUnitCounter($staff_counter['id'], 1, $preorder['total_amount'], true, $preorder['confirm_at']);
 
-                    $this->dailyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
-                    $this->weeklyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
-                    $this->monthlyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
-                    $this->yearlyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
+                    $this->dailyCounterRepository->calUnitCounter($station_counter['id'], 1, $preorder['total_amount'], true, $preorder['confirm_at']);
+                    $this->weeklyCounterRepository->calUnitCounter($station_counter['id'], 1, $preorder['total_amount'], true, $preorder['confirm_at']);
+                    $this->monthlyCounterRepository->calUnitCounter($station_counter['id'], 1, $preorder['total_amount'], true, $preorder['confirm_at']);
+                    $this->yearlyCounterRepository->calUnitCounter($station_counter['id'], 1, $preorder['total_amount'], true, $preorder['confirm_at']);
                 }
 
                 $staff_quantity = $preorders->count();
+                $staff_amount = $preorders->sum('total_amount');
                 $station_quantity += $staff_quantity;
-                $this->staffOrderCounterRepo->increment($staff_counter, $staff_quantity, 0, false);
+                $station_amount += $staff_amount;
+
+                $this->staffOrderCounterRepo->increment($staff_counter, $staff_quantity, $staff_amount, false);
 
                 //取消订单,接错重派赞不考虑
                 $cancel_preorders = $staff->preorders()->whereIn('status', ['cancel'])->where('updated_at', '>=', $staff_counter['updated_at'])->get();
 
                 foreach ($cancel_preorders as $preorder) {
-                    $this->dailyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, false, $preorder['confirm_at']);
-                    $this->weeklyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, false, $preorder['confirm_at']);
-                    $this->monthlyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, false, $preorder['confirm_at']);
-                    $this->yearlyCounterRepository->calUnitCounter($staff_counter['id'], 1, 0, false, $preorder['confirm_at']);
+                    $this->dailyCounterRepository->calUnitCounter($staff_counter['id'], 1, $preorder['total_amount'], false, $preorder['confirm_at']);
+                    $this->weeklyCounterRepository->calUnitCounter($staff_counter['id'], 1, $preorder['total_amount'], false, $preorder['confirm_at']);
+                    $this->monthlyCounterRepository->calUnitCounter($staff_counter['id'], 1, $preorder['total_amount'], false, $preorder['confirm_at']);
+                    $this->yearlyCounterRepository->calUnitCounter($staff_counter['id'], 1, $preorder['total_amount'], false, $preorder['confirm_at']);
 
-                    $this->dailyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, false, $preorder['confirm_at']);
-                    $this->weeklyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, false, $preorder['confirm_at']);
-                    $this->monthlyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, false, $preorder['confirm_at']);
-                    $this->yearlyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, false, $preorder['confirm_at']);
+                    $this->dailyCounterRepository->calUnitCounter($station_counter['id'], 1, $preorder['total_amount'], false, $preorder['confirm_at']);
+                    $this->weeklyCounterRepository->calUnitCounter($station_counter['id'], 1, $preorder['total_amount'], false, $preorder['confirm_at']);
+                    $this->monthlyCounterRepository->calUnitCounter($station_counter['id'], 1, $preorder['total_amount'], false, $preorder['confirm_at']);
+                    $this->yearlyCounterRepository->calUnitCounter($station_counter['id'], 1, $preorder['total_amount'], false, $preorder['confirm_at']);
                 }
 
                 $staff_cancel_quantity = $cancel_preorders->count();
                 $station_cancel_quantity += $staff_cancel_quantity;
-                $this->staffOrderCounterRepo->decrement($staff_counter, $station_cancel_quantity, 0, false);
+                $staff_cancel_amount = $preorders->sum('total_amount');
+                $station_cancel_amount += $staff_cancel_amount;
+
+                $this->staffOrderCounterRepo->decrement($staff_counter, $station_cancel_quantity, $staff_cancel_amount, false);
 
             }
 
-            $this->stationOrderCounterRepo->increment($station_counter, $station_quantity, 0, false);
-            $this->stationOrderCounterRepo->decrement($station_counter, $station_cancel_quantity, 0, false);
+            $this->stationOrderCounterRepo->increment($station_counter, $station_quantity, $station_amount, false);
+            $this->stationOrderCounterRepo->decrement($station_counter, $station_cancel_quantity, $station_cancel_amount, false);
         }
     }
 

@@ -30,6 +30,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             'end_time' => $data['end_time'],
             'weekday_type' => $data['weekday_type'],
             'daytime' => $data['daytime'],
+            'total_amount' => $data['total_amount'],
             'status' => PreorderProtocol::ORDER_STATUS_OF_UNPAID,
         ]);
 
