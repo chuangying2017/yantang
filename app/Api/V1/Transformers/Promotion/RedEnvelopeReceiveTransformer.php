@@ -6,11 +6,9 @@ use League\Fractal\TransformerAbstract;
 
 class RedEnvelopeReceiveTransformer extends TransformerAbstract {
 
-    protected $defaultIncludes = ['coupon'];
-
     public function transform(RedEnvelopeReceive $receive)
     {
-        return [
+        $data = [
             'id' => $receive['id'],
             'user_id' => $receive['user_id'],
             'nickname' => $receive['nickname'],
@@ -20,18 +18,22 @@ class RedEnvelopeReceiveTransformer extends TransformerAbstract {
             ],
             'receive_at' => Carbon::parse($receive['created_at'])->toDateTimeString()
         ];
+
+        if ($receive->relationLoaded('coupon')) {
+            $this->defaultIncludes = ['coupon'];
+        } else {
+            $data['coupon'] = [
+                'id' => $receive['coupon_id'],
+                'content' => $receive['content'],
+            ];
+        }
+
+        return $data;
     }
 
     public function includeCoupon(RedEnvelopeReceive $receive)
     {
-        if ($receive->relationLoaded('coupon')) {
-            return $this->item($receive->coupon, new CouponTransformer(), true);
-        }
-
-        return [
-            'id' => $receive['coupon_id'],
-            'content' => $receive['content'],
-        ];
+        return $this->item($receive->coupon, new CouponTransformer(), true);
     }
 
 
