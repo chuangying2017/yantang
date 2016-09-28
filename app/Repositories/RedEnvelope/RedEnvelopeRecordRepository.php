@@ -75,7 +75,7 @@ class RedEnvelopeRecordRepository {
     public function incrementDispatch($record_id, $count = 1)
     {
         $record = $this->get($record_id);
-        if ($record->total > $record->dispatch + $count) {
+        if ($record->total < $record->dispatch + $count) {
             throw new \Exception('红包已领完');
         }
         $record->dispatch += $count;
@@ -94,7 +94,7 @@ class RedEnvelopeRecordRepository {
     public function updateAsCancel($record_id)
     {
         $record = $this->get($record_id);
-        
+
         if ($record) {
             $record->status = RedEnvelopeProtocol::RECORD_STATUS_OF_CANCEL;
             $record->save();
