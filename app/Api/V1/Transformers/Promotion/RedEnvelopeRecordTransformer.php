@@ -42,6 +42,7 @@ class RedEnvelopeRecordTransformer extends TransformerAbstract {
         $current_user_id = access()->id();
         foreach ($record->receivers as $receiver) {
             if ($receiver['user_id'] == $current_user_id) {
+                $receiver->load('coupon');
                 return $this->item($receiver, new RedEnvelopeReceiveTransformer(), true);
             }
         }
