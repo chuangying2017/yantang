@@ -114,7 +114,6 @@ class InitStationCounter extends Command {
                     $this->weeklyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
                     $this->monthlyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
                     $this->yearlyCounterRepository->calUnitCounter($station_counter['id'], 1, 0, true, $preorder['confirm_at']);
-
                 }
                 $station_quantity += $staff_quantity;
             }
