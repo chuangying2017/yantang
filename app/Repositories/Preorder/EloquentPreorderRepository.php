@@ -150,7 +150,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($staff_id)) {
             $query->where('staff_id', $staff_id);
         }
-        
+
         if (!is_null($start_time)) {
             $query->where($time_name, '>=', $start_time);
         }
@@ -158,7 +158,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         if (!is_null($end_time)) {
             $query->where($time_name, '<=', $end_time);
         }
-        
+
         $keyword_tag = 0;
 
         if (!is_null($pay_order_no)) {
@@ -179,8 +179,8 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             $keyword_tag = 1;
             $query->where('phone', $phone);
         }
-        
-        if(!$keyword_tag) {
+
+        if (!$keyword_tag) {
             $this->scopeStatus($query, $status);
         }
 
@@ -306,7 +306,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getPreordersOfStaff($staff_id, $status = null, $date = null, $daytime = null, $per_page = null)
     {
-        $orders = $this->queryOrders(null, null, $staff_id, $status, null, null, $per_page, 'staff_priority', 'asc');
+        $orders = $this->queryOrders(null, null, $staff_id, $status, null, null, $per_page, 'confirm_at', 'desc');
         $orders->load('skus');
 
         return $orders;
