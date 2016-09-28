@@ -37,16 +37,22 @@ class RedEnvelopeController extends Controller {
 
     public function store(Request $request, RedEnvelopeService $redEnvelopeService, EloquentUserRepository $userRepository)
     {
-        $record_id = $request->input('record');
+        try {
+            $record_id = $request->input('record');
 
-        $user = access()->user();
-        $receive = $redEnvelopeService->dispatch($userRepository->setUser($user), $record_id);
+            $user = access()->user();
+            $receive = $redEnvelopeService->dispatch($userRepository->setUser($user), $record_id);
 
-        if (!$receive) {
+            if (!$receive) {
+                return $this->response->accepted(null, $redEnvelopeService->getErrorMessage('活动已结束或抢完了'));
+            }
+
+            $receive->load('coupon');
+            return $this->response->item($receive, new RedEnvelopeReceiveTransformer())->setStatusCode(201);
+        } catch (\Exception $e) {
             return $this->response->accepted(null, $redEnvelopeService->getErrorMessage('活动已结束或抢完了'));
         }
 
-        return $this->response->item($receive, new RedEnvelopeReceiveTransformer())->setStatusCode(201);
     }
 
 
