@@ -45,7 +45,6 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
             $api->resource('staffs', 'StationStaffController');
 
-
             $api->post('/{station_id}/unbind', 'StationController@postUnBind')->name('api.station.unbind');
 
             $api->get('preorders/deliver', 'StationPreorderController@deliver');
