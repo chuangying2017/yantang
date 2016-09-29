@@ -306,7 +306,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getPreordersOfStaff($staff_id, $status = null, $date = null, $daytime = null, $per_page = null)
     {
-        $orders = $this->queryOrders(null, null, $staff_id, $status, null, null, $per_page, 'staff_priority', 'asc');
+        $orders = $this->queryOrders(null, null, $staff_id, $status, null, null, $per_page, 'confirm_at', 'desc');
         $orders->load('skus');
 
         return $orders;
