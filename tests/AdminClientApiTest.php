@@ -9,9 +9,11 @@ class AdminClientApiTest extends TestCase
     /** @test */
     public function it_can_get_all_clients()
     {
-        $this->json('get', 'admin/clients/users', [], $this->getAuthHeader());
+        $this->json('get', 'admin/clients/users', [
+            'keyword' => '曹',
+        ], $this->getAuthHeader());
 
-        $this->echoJson();
+        $this->dump();
 
         $this->assertResponseOk();
     }

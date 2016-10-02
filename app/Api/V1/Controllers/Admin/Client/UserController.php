@@ -24,8 +24,9 @@ class UserController extends Controller {
     public function index(Request $request)
     {
         $status = $request->input('status');
+        $keyword = $request->input('keyword') ?: null;
 
-        $clients = $this->clientRepo->getClientsPaginated($status, true);
+        $clients = $this->clientRepo->getClientsPaginated($keyword, $status, true);
 
         return $this->response->paginator($clients, new ClientUserTransformer());
     }

@@ -49,19 +49,24 @@ class EloquentClientRepository implements ClientRepositoryContract {
         return Client::where('user_id', $user_id)->delete();
     }
 
-    public function getAllClients($status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc')
+    public function getAllClients($keyword = null, $status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc')
     {
-        return $this->queryClients($status, $with_user, $order_by, $sort, null);
+        return $this->queryClients($keyword, $status, $with_user, $order_by, $sort, null);
     }
 
-    public function getClientsPaginated($status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc', $per_page = ClientProtocol::PER_PAGE)
+    public function getClientsPaginated($keyword = null, $status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc', $per_page = ClientProtocol::PER_PAGE)
     {
-        return $this->queryClients($status, $with_user, $order_by, $sort, $per_page);
+        return $this->queryClients($keyword, $status, $with_user, $order_by, $sort, $per_page);
     }
 
-    protected function queryClients($status = null, $with_user = false, $order_by = 'created_at', $sort = 'desc', $per_page = ClientProtocol::PER_PAGE)
+    protected function queryClients($keyword = null, $status = null, $with_user = false, $order_by = 'created_at', $sort = 'desc', $per_page = ClientProtocol::PER_PAGE)
     {
         $query = Client::query();
+
+        if (!is_null($keyword)) {
+            $query->where('nickname', 'like', '%' . $keyword . '%');
+        }
+
         if ($with_user) {
             $query = $query->with('user');
         }
