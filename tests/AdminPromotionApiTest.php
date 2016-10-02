@@ -176,4 +176,24 @@ class AdminPromotionApiTest extends TestCase {
 
         return $data;
     }
+
+
+    /** @test */
+    public function it_can_dispatch_tickets_to_users()
+    {
+        $coupon_id = 8;
+        $user_ids = 100;
+        $this->json('post', 'admin/promotions/tickets', [
+            'coupon_id' => $coupon_id,
+            'user_ids' =>$user_ids,
+            'quantity' => 4,
+        ], $this->getAuthHeader());
+
+        $this->assertResponseOk();
+
+        $this->json('get', 'promotions/tickets', [], $this->getAuthHeader($user_ids));
+
+        $this->dump();
+
+    }
 }

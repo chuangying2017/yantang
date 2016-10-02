@@ -12,9 +12,9 @@ interface ClientRepositoryContract {
 
     public function deleteClient($user_id);
 
-    public function getAllClients($status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc');
+    public function getAllClients($keyword = null, $status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc');
 
-    public function getClientsPaginated($status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc', $per_page = ClientProtocol::PER_PAGE);
+    public function getClientsPaginated($keyword = null, $status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc', $per_page = ClientProtocol::PER_PAGE);
 
     public function block($user_id);
 
