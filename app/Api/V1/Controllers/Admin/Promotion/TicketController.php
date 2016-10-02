@@ -30,8 +30,11 @@ class TicketController extends Controller {
     {
         $user_ids = $request->input('user_ids');
         $promotion_id = $request->input('coupon_id');
-
-        $success = $this->couponService->dispatchWithoutCheck($user_ids, $promotion_id);
+        $quantity = $request->input('quantity') ?: 1;
+        
+        for ($i = 0; $i < $quantity; $i++) {
+            $success = $this->couponService->dispatchWithoutCheck($user_ids, $promotion_id);
+        }
 
         return $this->response->accepted()->setStatusCode(200);
     }
