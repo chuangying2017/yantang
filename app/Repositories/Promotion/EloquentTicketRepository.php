@@ -155,11 +155,16 @@ class EloquentTicketRepository implements TicketRepositoryContract {
         }
 
         if ($status == PromotionProtocol::STATUS_OF_TICKET_OK) {
-            $query->effect();
+            $query->effect()->where('status', $status);
+        } else if ($status == PromotionProtocol::STATUS_OF_TICKET_EXPIRED) {
+            $query->where(function ($query) {
+                $query->where('end_time', '<', Carbon::now())->where('status', PromotionProtocol::STATUS_OF_TICKET_OK);
+            })->orWhere('status', $status);
+        } else {
+            $query->where('status', $status);
         }
 
-        $query->where('status', $status)->orderBy('created_at', 'desc');
-
+        $query->orderBy('created_at', 'desc');
 
         if ($paginate) {
             return $query->paginate($paginate);
