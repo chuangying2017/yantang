@@ -13,27 +13,27 @@ class RedEnvelopeReceiveTransformer extends TransformerAbstract {
             'user_id' => $receive['user_id'],
             'nickname' => $receive['nickname'],
             'avatar' => $receive['avatar'],
-            'ticket' => [
-                'ticket_id' => $receive['ticket_id']
-            ],
             'receive_at' => Carbon::parse($receive['created_at'])->toDateTimeString()
         ];
 
-        if ($receive->relationLoaded('coupon')) {
-            $this->defaultIncludes = ['coupon'];
+        if ($receive->relationLoaded('ticket')) {
+            $this->defaultIncludes = ['ticket'];
         } else {
-            $data['coupon'] = [
-                'id' => $receive['coupon_id'],
-                'content' => $receive['content'],
+            $data['ticket'] = [
+                'id' => $receive['ticket_id'],
+                'coupon' => [
+                    'id' => $receive['coupon_id'],
+                    'content' => $receive['content'],
+                ]
             ];
         }
 
         return $data;
     }
 
-    public function includeCoupon(RedEnvelopeReceive $receive)
+    public function includeTicket(RedEnvelopeReceive $receive)
     {
-        return $this->item($receive->coupon, new CouponTransformer(), true);
+        return $this->item($receive->ticket, new TicketTransformer(), true);
     }
 
 
