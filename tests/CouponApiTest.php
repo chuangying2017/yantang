@@ -9,9 +9,11 @@ class CouponApiTest extends TestCase {
     /** @test */
     public function it_can_get_coupons_lists()
     {
-        $this->json('get', 'promotions/coupons', [], $this->getAuthHeader());
+        $this->json('get', 'promotions/coupons', [
+            'status' => 2
+        ], $this->getAuthHeader(18));
 
-        $this->echoJson();
+        $this->dump();
 
         $this->assertResponseOk();
     }
