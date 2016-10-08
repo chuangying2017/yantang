@@ -11,9 +11,11 @@ class TickerApiTest extends TestCase {
     /** @test */
     public function it_can_show_all_tickets()
     {
-        $this->json('get', 'promotions/tickets', [], $this->getAuthHeader());
+        $this->json('get', 'promotions/tickets', [
+            'status' => 0
+        ], $this->getAuthHeader(18));
 
-        $this->echoJson();
+        $this->dump();
 
         $this->assertResponseOk();
     }
