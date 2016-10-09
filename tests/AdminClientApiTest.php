@@ -10,7 +10,7 @@ class AdminClientApiTest extends TestCase
     public function it_can_get_all_clients()
     {
         $this->json('get', 'admin/clients/users', [
-            'keyword' => '曹',
+            'keyword' => '13710707526',
         ], $this->getAuthHeader());
 
         $this->dump();
