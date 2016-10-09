@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Client;
 
 use App\Models\Client\Client;
+use App\Models\Subscribe\Preorder;
 use App\Services\Client\ClientProtocol;
 use Illuminate\Support\Str;
 
@@ -65,7 +66,15 @@ class EloquentClientRepository implements ClientRepositoryContract {
         $query = Client::query();
 
         if (!is_null($keyword)) {
-            $query->where('nickname', 'like', '%' . $keyword . '%');
+            switch ($keyword) {
+                case is_zh_phone($keyword):
+                    $user_ids = Preorder::query()->where('phone', $keyword)->pluck('user_id')->all();
+                    $query->whereIn('user_id', $user_ids);
+                    break;
+                default:
+                    $query->where('nickname', 'like', '%' . $keyword . '%');
+                    break;
+            }
         }
 
         if ($with_user) {

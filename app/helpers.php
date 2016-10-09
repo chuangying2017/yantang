@@ -199,6 +199,13 @@ if (!function_exists('check_bind_token')) {
     }
 }
 
+if (!function_exists('is_zh_phone')) {
+    function is_zh_phone($phone)
+    {
+        return is_numeric($phone) && strlen($phone) == 11;
+    }
+}
+
 
 if (!function_exists('array_multi_sort')) {
     function array_multi_sort($data, $criteria)
@@ -222,6 +229,8 @@ if (!function_exists('array_multi_sort')) {
         return $data;
     }
 }
+
+
 
 
 
