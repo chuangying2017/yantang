@@ -41,6 +41,15 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     public function updateAssignAsConfirm($order_id)
     {
         $assign = $this->get($order_id);
+
+        if ($assign->status == PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM || $assign->status == PreorderProtocol::ASSIGN_STATUS_OF_ASSIGNED) {
+            return $assign;
+        }
+
+        if ($assign->status == PreorderProtocol::ASSIGN_STATUS_OF_REJECT) {
+            throw new \Exception('订单已拒绝,无法确认');
+        }
+
         $assign->status = PreorderProtocol::ASSIGN_STATUS_OF_CONFIRM;
         $assign->save();
 
