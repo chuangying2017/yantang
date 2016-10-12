@@ -72,6 +72,11 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Product\DecreaseProductSkuStock',
             'App\Listeners\Preorder\SetPreorderAsPaid',
             'App\Listeners\Promotion\DispatchSubscribeOrderGift',
+
+        ],
+
+        'App\Events\Preorder\PreorderIsPaid' => [
+            'App\Listeners\Notify\SendMessageToStation@newOrder',
         ],
 
         'App\Events\Order\OrderIsCreated' => [
@@ -143,11 +148,11 @@ class EventServiceProvider extends ServiceProvider {
         'App\Events\Preorder\AssignIsCreate' => [
             'App\Listeners\Preorder\SetStationForPreorder',
 
-            'App\Listeners\Notify\SendMessageToStation@newOrder',
+            'App\Listeners\Notify\SendMessageToStation@resignOrder',
         ],
 
         'App\Events\Preorder\AssignIsConfirm' => [
-
+            
         ],
 
         'App\Events\Preorder\AssignIsAssigned' => [

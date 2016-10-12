@@ -27,10 +27,10 @@ class SendMessageToStaff {
 
         $preorder = $assign->preorder;
 
-        if ($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_SHIPPING) {
+        if (PreorderProtocol::preorderIsPaid($preorder['status'])) {
             NotifyProtocol::notify($preorder['staff_id'], NotifyProtocol::NOTIFY_ACTION_STAFF_NEW_ORDER, null, $preorder);
         }
-
+        
     }
 
 

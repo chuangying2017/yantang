@@ -118,10 +118,6 @@ class NotifyProtocol {
         }
     }
 
-    public static function notifyStationNewOrder($phone)
-    {
-        return self::sendSms($phone, NotifyProtocol::SMS_TO_STATION_NEW_ORDER);
-    }
 
     public static function notify($id, $action, $channel = null, $entity = null)
     {

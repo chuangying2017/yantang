@@ -12,6 +12,7 @@ use App\Services\Preorder\PreorderAssignServiceContact;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PreorderController extends Controller {
 
@@ -41,7 +42,11 @@ class PreorderController extends Controller {
     public function show($order_id)
     {
         $order = $this->preorderRepo->get($order_id, true);
-        
+
+        if ($order['user_id'] != access()->id()) {
+            throw new AccessDeniedHttpException();
+        }
+
         return $this->response->item($order, new PreorderTransformer());
     }
 
