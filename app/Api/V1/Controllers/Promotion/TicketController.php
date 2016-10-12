@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Promotion;
 
-use App\API\V1\Transformers\Promotion\TicketTransformer;
+use App\Api\V1\Transformers\Promotion\TicketTransformer;
 use App\Repositories\Auth\User\EloquentUserRepository;
 use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Services\Promotion\CouponService;

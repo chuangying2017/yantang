@@ -45,6 +45,7 @@ class PreorderOrderRepository extends ClientOrderRepository {
         $preorder_data['user_id'] = $order['user_id'];
         $preorder_data['order_id'] = $order['id'];
         $preorder_data['order_no'] = $order['order_no'];
+        $preorder_data['total_amount'] = $order['total_amount'];
 
         $preorder = app()->make(PreorderRepositoryContract::class)->createPreorder($preorder_data);
 

@@ -327,7 +327,13 @@ class StationPreorderApiTest extends TestCase {
         ];
     }
 
+    /** @test */
+    public function it_can_get_subscribe_board()
+    {
+        $this->json('get', 'stations/board', [], $this->getAuthHeader());
 
+        $this->dump();
+    }
 
 }
 

@@ -17,6 +17,7 @@ class EloquentClientRepository implements ClientRepositoryContract {
                 'user_id' => $user_id,
                 'nickname' => array_get($extra_data, 'nickname', Str::random(8)),
                 'avatar' => array_get($extra_data, 'avatar', ClientProtocol::DEFAULT_AVATAR),
+                'sex' => array_get($extra_data, 'sex', ''),
             ]
         );
     }
@@ -40,14 +41,14 @@ class EloquentClientRepository implements ClientRepositoryContract {
     public function showClient($user_id, $with_user = false)
     {
         if ($with_user) {
-            return Client::with('user')->findOrFail($user_id);
+            return Client::with('user')->find($user_id);
         }
-        return Client::findOrFail($user_id);
+        return Client::query()->find($user_id);
     }
 
     public function deleteClient($user_id)
     {
-        return Client::where('user_id', $user_id)->delete();
+        return Client::query()->where('user_id', $user_id)->delete();
     }
 
     public function getAllClients($keyword = null, $status = ClientProtocol::STATUS_OK, $with_user = false, $order_by = 'created_at', $sort = 'desc')

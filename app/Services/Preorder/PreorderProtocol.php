@@ -131,4 +131,9 @@ class PreorderProtocol {
         return array_get($data, $status, null);
     }
 
+
+    public static function preorderIsPaid($status)
+    {
+        return !in_array($status, [self::ORDER_STATUS_OF_UNPAID]);
+    }
 }

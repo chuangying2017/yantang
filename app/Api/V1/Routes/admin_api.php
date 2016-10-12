@@ -57,12 +57,15 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             });
         });
 
-
         //优惠信息
         $api->group(['namespace' => 'Promotion', 'prefix' => 'promotions'], function ($api) {
             $api->resource('coupons', 'CouponController');
             $api->resource('tickets', 'TicketController', ['only' => ['store']]);
             $api->resource('campaigns', 'CampaignController');
+            //红包
+            $api->put('red-envelopes/{id}/active', 'RedEnvelopeController@active');
+            $api->put('red-envelopes/{id}/unactive', 'RedEnvelopeController@unactive');
+            $api->resource('red-envelopes', 'RedEnvelopeController', ['only' => ['index', 'show', 'update', 'store']]);
         });
 
     });

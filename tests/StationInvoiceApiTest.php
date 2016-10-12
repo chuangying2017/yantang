@@ -15,7 +15,7 @@ class StationInvoiceApiTest extends TestCase {
             'start_time' => '2016-9-01'
         ], $this->getAuthHeader(292));
 
-        $this->echoJson();
+        $this->dump();
 
         $this->assertResponseOk();
     }
@@ -25,21 +25,22 @@ class StationInvoiceApiTest extends TestCase {
     {
         $invoice_no = '1020160910000067';
         $this->json('get', 'stations/invoices/' . $invoice_no, [
-            'export' => 'all'
+//            'export' => 'all'
         ], $this->getAuthHeader(292));
 
-        $this->echoJson();
+        $this->dump();
     }
 
     /** @test */
     public function it_can_get_station_invoice_orders_detail()
     {
-        $invoice_no = '1020160910000067';
+        $invoice_no = '1020160910000012';
         $this->json('get', 'stations/invoices/' . $invoice_no . '/orders', [
-            'page' => 1
-        ], $this->getAuthHeader(292));
+            'page' => 1,
+            'staff' => 37
+        ], $this->getAuthHeader(84));
 
-        $this->echoJson();
+        $this->dump();
     }
 
     /** @test */

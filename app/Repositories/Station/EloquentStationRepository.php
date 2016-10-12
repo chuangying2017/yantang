@@ -94,7 +94,7 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
         if ($with_user) {
             return Station::with('user', 'user.client')->find($station_id);
         }
-        return Station::find($station_id);
+        return Station::query()->find($station_id);
     }
 
     public function getStationByUser($user_id)

@@ -3,6 +3,7 @@
 namespace App\Listeners\Preorder;
 
 use App\Events\Order\OrderIsPaid;
+use App\Events\Preorder\PreorderIsPaid;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Notify\NotifyProtocol;
 use App\Services\Order\OrderProtocol;
@@ -41,15 +42,8 @@ class SetPreorderAsPaid {
         if ($order['order_type'] == OrderProtocol::ORDER_TYPE_OF_SUBSCRIBE) {
 
             $preorder = $this->preorderRepo->updatePreorderStatusByOrder($order['id'], PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
-
-            if ($preorder['status'] !== PreorderProtocol::ORDER_STATUS_OF_UNPAID) {
-
-                $preorder->load('station');
-
-                $phone = $preorder['station']['phone'];
-
-                NotifyProtocol::notifyStationNewOrder($phone);
-            }
+            
+            event(new PreorderIsPaid($preorder));
         }
     }
 }

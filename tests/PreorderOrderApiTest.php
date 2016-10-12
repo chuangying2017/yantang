@@ -21,7 +21,7 @@ class PreorderOrderApiTest extends TestCase {
             'station_id' => 1,
             'daytime' => 0,
             'weekday_type' => 'all',
-            'start_time' => '2016-09-11',
+            'start_time' => '2016-09-29',
             'channel' => 'wx_pub_qr'
         ];
 
@@ -39,9 +39,9 @@ class PreorderOrderApiTest extends TestCase {
     {
         $temp_order_id = $this->it_can_create_a_preorder_temp_order();
 
-        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
-            'ticket' => 16
-        ], $this->getAuthHeader());
+//        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
+//            'ticket' => 16
+//        ], $this->getAuthHeader());
 
 //        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
 //            'ticket' => 51
@@ -89,11 +89,17 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
 
-        $this->notSeeInDatabase('tickets', [
+        $this->seeInDatabase('tickets', [
             'user_id' => 1,
-            'promotion_id' => 11,
+            'promotion_id' => 8,
             'source_type' => \App\Services\Promotion\PromotionProtocol::TICKET_RESOURCE_OF_ORDER,
             'source_id' => $order['id']]);
+
+        $this->seeInDatabase('red_records', [
+            'user_id' => 1,
+            'rule_id' => 1,
+            'resource_type' => \App\Repositories\RedEnvelope\RedEnvelopeProtocol::TYPE_OF_SUBSCRIBE_ORDER,
+            'resource_id' => $order['id']]);
 
         return $order;
     }

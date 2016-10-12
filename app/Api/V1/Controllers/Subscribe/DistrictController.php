@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Subscribe;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Subscribe\Station\DistrictTransformer;
 use App\Repositories\Station\District\DistrictRepositoryContract;
 use Illuminate\Http\Request;

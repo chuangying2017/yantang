@@ -1,7 +1,8 @@
 <?php namespace App\Api\V1\Transformers\Subscribe\Preorder;
 
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
-use App\API\V1\Transformers\Promotion\TicketTransformer;
+use App\Api\V1\Transformers\Promotion\RedEnvelopeRecordTransformer;
+use App\Api\V1\Transformers\Promotion\TicketTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
@@ -13,7 +14,7 @@ class PreorderTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'station', 'staff', 'deliver', 'assign', 'order', 'tickets'];
+    protected $availableIncludes = ['skus', 'station', 'staff', 'deliver', 'assign', 'order', 'tickets', 'redEnvelope'];
 
     public function transform(Preorder $preorder)
     {
@@ -82,7 +83,7 @@ class PreorderTransformer extends TransformerAbstract {
 
     public function includeStation(Preorder $preorder)
     {
-        return $this->item($preorder->station, new StationTransformer(), true);
+        return $this->item($preorder->station, new StationTransformer(false), true);
     }
 
     public function includeAssign(Preorder $preorder)
@@ -98,6 +99,15 @@ class PreorderTransformer extends TransformerAbstract {
     {
         if ($preorder->tickets) {
             return $this->collection($preorder->tickets, new TicketTransformer(), true);
+        }
+
+        return null;
+    }
+
+    public function includeRedEnvelope(Preorder $preorder)
+    {
+        if ($preorder->redEnvelope) {
+            return $this->item($preorder->redEnvelope, new RedEnvelopeRecordTransformer(), true);
         }
 
         return null;

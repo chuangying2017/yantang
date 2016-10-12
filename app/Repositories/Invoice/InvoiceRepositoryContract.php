@@ -15,6 +15,6 @@ interface InvoiceRepositoryContract {
     
     public function updateAsReconfirm($invoice_no);
 
-    public function getAllOrders($invoice_no, $per_page = null);
+    public function getAllOrders($invoice_no, $per_page = null, $staff_id = null);
 
 }

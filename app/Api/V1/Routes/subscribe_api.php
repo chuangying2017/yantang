@@ -26,6 +26,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
     $api->group(['prefix' => 'stations'], function ($api) {
 
+        $api->get('board', 'StationBoardController@index');
 
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STATION]], function ($api) {
 
@@ -44,7 +45,6 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
             $api->resource('staffs', 'StationStaffController');
 
-
             $api->post('/{station_id}/unbind', 'StationController@postUnBind')->name('api.station.unbind');
 
             $api->get('preorders/deliver', 'StationPreorderController@deliver');
@@ -57,6 +57,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
         $api->get('/{station_id}/bind', 'StationController@getBind')->name('api.station.check.bind.get');
         $api->post('/{station_id}/bind', 'StationController@postBind')->name('api.station.bind');
+
     });
 
     //用户订奶

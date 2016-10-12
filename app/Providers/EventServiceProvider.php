@@ -72,6 +72,11 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Product\DecreaseProductSkuStock',
             'App\Listeners\Preorder\SetPreorderAsPaid',
             'App\Listeners\Promotion\DispatchSubscribeOrderGift',
+
+        ],
+
+        'App\Events\Preorder\PreorderIsPaid' => [
+            'App\Listeners\Notify\SendMessageToStation@newOrder',
         ],
 
         'App\Events\Order\OrderIsCreated' => [
@@ -143,18 +148,22 @@ class EventServiceProvider extends ServiceProvider {
         'App\Events\Preorder\AssignIsCreate' => [
             'App\Listeners\Preorder\SetStationForPreorder',
 
-            'App\Listeners\Notify\SendSmsToStation@newOrder',
+            'App\Listeners\Notify\SendMessageToStation@resignOrder',
         ],
 
         'App\Events\Preorder\AssignIsConfirm' => [
-
+            
         ],
 
         'App\Events\Preorder\AssignIsAssigned' => [
             'App\Listeners\Preorder\SetPreorderAsPending',
-            'App\Listeners\Notify\SendSmsToClient@assigned',
-            'App\Listeners\Notify\SendSmsToStaff@assigned',
+            'App\Listeners\Notify\SendMessageToClient@assigned',
+            'App\Listeners\Notify\SendMessageToStaff@assigned',
+//            'App\Listeners\Counter\PreorderCounter@increment',
+        ],
 
+        'App\Events\Preorder\AssignIsDelete' => [
+//            'App\Listeners\Counter\PreorderCounter@decrement',
         ],
 
         'App\Events\Preorder\StaffAssignIsCreate' => [
@@ -163,13 +172,16 @@ class EventServiceProvider extends ServiceProvider {
 
         'App\Events\Preorder\AssignIsReject' => [
             'App\Listeners\Preorder\RemoveStationFromPreorder',
-            'App\Listeners\Notify\SendSmsToStationAdmin@orderAssignIsReject',
+            'App\Listeners\Notify\SendMessageToStationAdmin@orderAssignIsReject',
         ],
 
         'App\Events\Preorder\PreordersNotHandleInTime' => [
-            'App\Listeners\Notify\SendSmsToStationAdmin@preorderHandleOvertime',
+            'App\Listeners\Notify\SendMessageToStationAdmin@preorderHandleOvertime',
         ],
 
+        'App\Events\Preorder\PreorderIsCancel' => [
+//            'App\Listeners\Counter\PreorderCounter@cancel',
+        ],
 //        'App\Services\Orders\Event\OrderRequest' => [
 //
 //        ],

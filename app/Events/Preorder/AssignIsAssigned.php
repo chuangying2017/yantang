@@ -3,11 +3,12 @@
 namespace App\Events\Preorder;
 
 use App\Events\Event;
+use App\Models\Subscribe\PreorderAssign;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class AssignIsAssigned extends Event
-{
+class AssignIsAssigned extends Event {
+
     use SerializesModels;
     /**
      * @var
@@ -19,8 +20,9 @@ class AssignIsAssigned extends Event
      *
      * @return void
      */
-    public function __construct($assign)
+    public function __construct(PreorderAssign $assign)
     {
+        $assign->load('preorder');
         $this->assign = $assign;
     }
 

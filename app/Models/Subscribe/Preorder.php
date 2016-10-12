@@ -6,6 +6,7 @@ use App\Models\Billing\PreorderBilling;
 use App\Models\District;
 use App\Models\Order\Order;
 use App\Models\Promotion\Ticket;
+use App\Models\RedEnvelope\RedEnvelopeRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -65,6 +66,11 @@ class Preorder extends Model {
     public function tickets()
     {
         return $this->hasMany(Ticket::class, 'source_id', 'order_id');
+    }
+
+    public function redEnvelope()
+    {
+        return $this->hasOne(RedEnvelopeRecord::class, 'resource_id', 'order_id');
     }
 
     public function billings()

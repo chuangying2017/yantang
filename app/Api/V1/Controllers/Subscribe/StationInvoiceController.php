@@ -53,6 +53,7 @@ class StationInvoiceController extends Controller {
 
         $this->checkAuth($invoice);
 
+
         if ($request->input('export') == 'all') {
             return ExcelService::downloadStationInvoice($invoice);
         }
@@ -80,9 +81,15 @@ class StationInvoiceController extends Controller {
         return $this->response->item($invoice, new StationInvoiceTransformer());
     }
 
-    public function orders($invoice_no)
+    public function orders(Request $request, $invoice_no)
     {
-        $orders = $this->invoiceRepo->getAllOrders($invoice_no, InvoiceProtocol::PER_PAGE_OF_ORDER);
+        $invoice = $this->invoiceRepo->get($invoice_no, false);
+
+        $this->checkAuth($invoice);
+        
+        $staff_id = $request->input('staff') ?: null;
+        
+        $orders = $this->invoiceRepo->getAllOrders($invoice_no, InvoiceProtocol::PER_PAGE_OF_ORDER, $staff_id);
 
         return $this->response->paginator($orders, new StationInvoiceOrderTransformer());
     }

@@ -30,6 +30,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             'end_time' => $data['end_time'],
             'weekday_type' => $data['weekday_type'],
             'daytime' => $data['daytime'],
+            'total_amount' => $data['total_amount'],
             'status' => PreorderProtocol::ORDER_STATUS_OF_UNPAID,
         ]);
 
@@ -214,9 +215,8 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if ($with_detail) {
             //查询赠品
-            $order->load('skus', 'station', 'staff', 'user', 'order', 'tickets', 'tickets.coupon');
+            $order->load('skus', 'station', 'staff', 'user', 'order', 'tickets', 'tickets.coupon', 'redEnvelope');
         }
-
 
         return $order;
     }
@@ -289,6 +289,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     public function updatePreorderAssign($order_id, $station_id = null, $staff_id = null)
     {
         $order = $this->get($order_id);
+
+        if ($station_id == 0 && $staff_id == 0) {
+            $order->confirm_at = NULL;
+        }
+
         if (!is_null($station_id)) {
             $order->station_id = $station_id;
         }
@@ -441,6 +446,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if ($status == PreorderProtocol::ORDER_STATUS_OF_CANCEL) {
             app()->make(PreorderAssignRepositoryContract::class)->deleteAssign($preorder['id']);
+            event(new PreorderIsCancel($preorder));
         }
 
         return $preorder;

@@ -213,12 +213,16 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
     }
 
 
-    public function getAllOrders($invoice_no, $per_page = null)
+    public function getAllOrders($invoice_no, $per_page = null, $staff_id = null)
     {
         $order_model = InvoiceProtocol::getOrderModel($this->getInvoiceModel());
 
         $query = $order_model::query()->where('invoice_no', $invoice_no);
 
+        if(!is_null($staff_id)) {
+            $query->where('staff_id', $staff_id);
+        }
+        
         if ($per_page) {
             return $query->paginate($per_page);
         }

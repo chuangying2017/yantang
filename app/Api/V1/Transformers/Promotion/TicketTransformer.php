@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Transformers\Promotion;
 
-use App\API\V1\Transformers\Admin\Promotion\CouponTransformer;
+use App\Api\V1\Transformers\Admin\Promotion\CouponTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\Promotion\Ticket;
 use League\Fractal\TransformerAbstract;

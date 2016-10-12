@@ -1,6 +1,8 @@
 <?php namespace App\Repositories\Station;
 
 
+use App\Models\Subscribe\Station;
+
 interface StationRepositoryContract {
 
     public function createStation($station_data);
@@ -29,6 +31,10 @@ interface StationRepositoryContract {
 
     public function getAll($only_id = false);
 
+	/**
+     * @param bool $only_id
+     * @return Station
+     */
     public function getAllActive($only_id = false);
 
     public function getByDistrict($district = null);

@@ -3,6 +3,7 @@
 use App\Events\Preorder\AssignIsAssigned;
 use App\Events\Preorder\AssignIsConfirm;
 use App\Events\Preorder\AssignIsCreate;
+use App\Events\Preorder\AssignIsDelete;
 use App\Events\Preorder\AssignIsReject;
 use App\Models\Subscribe\PreorderAssign;
 use App\Services\Preorder\PreorderProtocol;
@@ -94,6 +95,8 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     {
         $assign = $this->get($order_id);
 
+        event(new AssignIsDelete($assign));
+
         $assign->staff_id = $staff_id;
 
         if (!$assign->confirm_at) {
@@ -111,6 +114,9 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     public function deleteAssignStaff($order_id)
     {
         $assign = $this->get($order_id);
+
+        event(new AssignIsDelete($assign));
+
         $assign->staff_id = 0;
         $assign->save();
 
