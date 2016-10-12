@@ -136,7 +136,7 @@ class NotifyProtocol {
                 default:
                     if (config('services.notify.sms')) {
                         $phone = $content_handler::getSmsContact($entity) ?: $contact_role::getPhone($id);
-                        return self::sendSms($phone, $content_handler::getSmsContent());
+                        self::sendSms($phone, $content_handler::getSmsContent());
                     }
                     if (config('services.notify.weixin')) {
                         self::sendWeixinTemplate($contact_role::getWeixinOpenId($id), $content_handler, $entity);
