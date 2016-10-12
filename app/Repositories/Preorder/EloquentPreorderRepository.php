@@ -289,6 +289,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     public function updatePreorderAssign($order_id, $station_id = null, $staff_id = null)
     {
         $order = $this->get($order_id);
+
+        if ($station_id == 0 && $staff_id == 0) {
+            $order->confirm_at = NULL;
+        }
+
         if (!is_null($station_id)) {
             $order->station_id = $station_id;
         }

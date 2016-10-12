@@ -12,7 +12,7 @@ class NotifyStationAdmin implements NotifyRoleContract {
     {
         $user_ids = self::getRoleUsers();
 
-        return User::query()->whereNotNull('phone')->whereIn('id', $user_ids)->pluck('phone')->first();
+        return env('STATION_ADMIN_PHONE', User::query()->whereNotNull('phone')->whereIn('id', $user_ids)->pluck('phone')->first());
     }
 
     public static function getWeixinOpenId($id)
