@@ -23,9 +23,11 @@ class Kernel extends ConsoleKernel {
 //        'App\Console\Commands\SeedCouponForFirstOrderUser',
         'App\Console\Commands\OrderFillTimeData',
         'App\Console\Commands\PreorderFillTimeData',
-        'App\Console\Commands\FillPreorderAmount',
         'App\Console\Commands\SettleStationInvoice',
         'App\Console\Commands\CancelOvertimeUnpaidOrders',
+
+        //counter
+        'App\Console\Commands\FillPreorderAmount',
         'App\Console\Commands\InitStationCounter',
         'App\Console\Commands\DailyStationCounter',
     ];
@@ -51,7 +53,5 @@ class Kernel extends ConsoleKernel {
 //        $schedule->command('invoice:station', ['date' => Carbon::today()->day(25)->toDateString()])->monthlyOn(26, '2:00');
 
         $schedule->command('orders:overtime')->everyTenMinutes();
-
-
     }
 }
