@@ -19,7 +19,7 @@ class NotifyClientOrderIsAssign implements NotifyContentContract {
 
     public static function getWeixinTemplateUrl($preorder = null)
     {
-        return api_route('api.subscribe.preorders.show', 'v1', [$preorder['id']]);
+        return 'http://client.yt.weazm.com/?#!/subscribe/orders/' . $preorder['id'];
     }
 
     public static function getWeixinTemplateColor()

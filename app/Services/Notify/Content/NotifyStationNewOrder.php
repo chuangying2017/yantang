@@ -40,7 +40,7 @@ class NotifyStationNewOrder implements NotifyContentContract {
 
     public static function getWeixinTemplateUrl($preorder = null)
     {
-        return api_route('api.stations.preorders.show', 'v1', [$preorder['id']]);
+        return 'http://station.yt.weazm.com/station/subscribes/' . $preorder['id'] . '/setting';
     }
 
     /**

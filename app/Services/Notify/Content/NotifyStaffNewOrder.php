@@ -38,7 +38,7 @@ class NotifyStaffNewOrder implements NotifyContentContract {
 
     public static function getWeixinTemplateUrl($preorder = null)
     {
-        return api_route('api.staffs.preorders.show', 'v1', [$preorder['id']]);
+        return 'http://staff.yt.weazm.com/deliver/orders';
     }
 
     /**
