@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Subscribe\Station;
+
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
     /**
@@ -85,6 +87,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
     {
         return ['Authorization' => 'Bearer ' . $this->getToken($user_id)];
     }
+
 
 
 }

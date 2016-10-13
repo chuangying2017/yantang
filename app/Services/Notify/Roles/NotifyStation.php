@@ -9,7 +9,7 @@ class NotifyStation implements NotifyRoleContract {
 
     public static function getPhone($station_id)
     {
-        return Station::query()->find($station_id)->pluck('phone')->first();
+        return Station::query()->where('id', $station_id)->pluck('phone')->first();
     }
 
     public static function getWeixinOpenId($station_id)

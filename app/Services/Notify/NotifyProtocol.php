@@ -152,7 +152,7 @@ class NotifyProtocol {
     public static function sendSms($phone, $message)
     {
         try {
-            if (!is_null($phone)) {
+            if (!is_null($phone) && $phone) {
                 return Sms::make()->to($phone)->content($message)->send();
             }
         } catch (\Exception $e) {
