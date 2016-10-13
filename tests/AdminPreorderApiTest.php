@@ -13,7 +13,7 @@ class AdminPreorderApiTest extends TestCase {
     {
         $this->json('get', 'admin/subscribe/orders',
             [
-//                'pay_order_no' => '11416092141231277267206092103'
+                'station_id' => '4'
             ],
             $this->getAuthHeader());
 

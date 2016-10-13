@@ -94,7 +94,7 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     public function updateAssignStaff($order_id, $staff_id)
     {
         $assign = $this->get($order_id);
-
+        
         event(new AssignIsDelete($assign));
 
         $assign->staff_id = $staff_id;
