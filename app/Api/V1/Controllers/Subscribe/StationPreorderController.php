@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class StationPreorderController extends Controller {
 
@@ -60,6 +61,10 @@ class StationPreorderController extends Controller {
     public function show($order_id)
     {
         $order = $this->orderRepo->get($order_id, true);
+        
+        if($order['station_id'] != access()->stationId()) {
+            throw new AccessDeniedHttpException();
+        }
 
         return $this->response->item($order, new PreorderTransformer());
     }
@@ -77,6 +82,11 @@ class StationPreorderController extends Controller {
 
     public function confirm(Request $request, PreorderAssignRepositoryContract $assign, $order_id)
     {
+        $order = $this->orderRepo->get($order_id, false);
+        if($order['station_id'] != access()->stationId()) {
+            throw new AccessDeniedHttpException();
+        }
+        
         $assign = $assign->updateAssignAsConfirm($order_id);
 
         return $this->response->array(['data' => $assign['preorder_id']]);
@@ -84,6 +94,11 @@ class StationPreorderController extends Controller {
 
     public function reject(Request $request, PreorderAssignRepositoryContract $assign, $order_id)
     {
+        $order = $this->orderRepo->get($order_id, false);
+        if($order['station_id'] != access()->stationId()) {
+            throw new AccessDeniedHttpException();
+        }
+        
         $memo = $request->input('memo') ?: '';
 
         $assign = $assign->updateAssignAsReject($order_id, $memo);

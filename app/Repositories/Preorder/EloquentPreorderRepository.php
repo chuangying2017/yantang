@@ -145,7 +145,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         }
 
         if (!is_null($station_id)) {
-            $query->where('station_id', $station_id);
+            if(is_array($station_id)) {
+                $query->whereIn('station_id', $station_id);
+            } else {
+                $query->where('station_id', $station_id);
+            }
         }
 
         if (!is_null($staff_id)) {
