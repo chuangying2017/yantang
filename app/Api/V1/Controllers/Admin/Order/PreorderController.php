@@ -22,14 +22,14 @@ class PreorderController extends Controller {
 
     public function index(Request $request)
     {
-        $order_no = $request->input('order_no', null);
-        $pay_order_no = $request->input('pay_order_no', null);
-        $phone = $request->input('phone', null);
-        $start_time = $request->input('start_time', null);
-        $end_time = $request->input('end_time', null);
-        $status = $request->input('status', null);
-        $station_id = $request->input('station_id', null);
-
+        $order_no = $request->input('order_no') ?: null;
+        $pay_order_no = $request->input('pay_order_no') ?: null;
+        $phone = $request->input('phone') ?: null;
+        $start_time = $request->input('start_time') ?: null;
+        $end_time = $request->input('end_time') ?: null;
+        $status = $request->input('status') ?: null;
+        $station_id = $request->input('station_id') ? explode(',', $request->input('station_id')) : null;
+        
         if ($request->input('export') == 'all') {
             $orders = $this->preorderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time);
             return ExcelService::downPreorder($orders);

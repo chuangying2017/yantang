@@ -11,6 +11,7 @@ use App\Services\Preorder\PreorderProtocol;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class StaffPreorderController extends Controller {
 
@@ -58,11 +59,20 @@ class StaffPreorderController extends Controller {
     {
         $order = $this->orderRepo->get($order_id, true);
 
+        if ($order['staff_id'] != access()->staffId()) {
+            throw new AccessDeniedHttpException();
+        }
+
         return $this->response->item($order, new PreorderTransformer());
     }
 
     public function pause(Request $request, PreorderManageServiceContract $preorderManageService, $order_id)
     {
+        $order = $this->orderRepo->get($order_id, false);
+        if ($order['staff_id'] != access()->staffId()) {
+            throw new AccessDeniedHttpException();
+        }
+
         $stop_time = $request->input('pause_time');
         $restart_time = $request->input('restart_time') ?: null;
 
@@ -72,6 +82,11 @@ class StaffPreorderController extends Controller {
 
     public function restart(Request $request, PreorderManageServiceContract $preorderManageService, $order_id)
     {
+        $order = $this->orderRepo->get($order_id, false);
+        if ($order['staff_id'] != access()->staffId()) {
+            throw new AccessDeniedHttpException();
+        }
+
         $restart_time = $request->input('restart_time');
 
         $order = $preorderManageService->restart($order_id, $restart_time);

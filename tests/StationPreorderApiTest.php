@@ -171,14 +171,16 @@ class StationPreorderApiTest extends TestCase {
     public function it_can_assign_a_staff_to_preorder()
     {
 
-        $order_id = 856;
+        $order_id = 858;
 
         $this->json('post', 'stations/preorders/' . $order_id . '/assign',
             [
                 'staff' => 342
             ],
-            $this->getAuthHeader()
+            $this->getAuthHeader(116)
         );
+
+        $this->dump();
 
 //        dd(\DB::table('preorder_assign')->where('preorder_id', $order_id)->get());
 //        dd(\App\Models\Subscribe\Preorder::query()->find($order_id));
