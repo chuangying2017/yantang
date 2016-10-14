@@ -37,7 +37,7 @@ class PreorderAssignService implements PreorderAssignServiceContact {
 
         $stations = $this->stationRepo->getByDistrict($district_id);
         if (!count($stations)) {
-            return null;
+            $stations = $this->stationRepo->getByDistrict();
         }
 
         /**
