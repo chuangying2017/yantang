@@ -66,6 +66,7 @@ class Kernel extends HttpKernel {
 
         'auth.phone.sms.verify' => \App\Api\V1\Middleware\Auth\PhoneSmsValidator::class,
 
+        'status' => \App\Api\V1\Middleware\AddStatusCodeToHeader::class
 
     ];
 }

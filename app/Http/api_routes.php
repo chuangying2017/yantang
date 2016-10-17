@@ -5,7 +5,7 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) {
 
 
-    $api->group(['namespace' => 'App\Api\V1\Controllers', 'middleware' => 'cors'], function ($api) {
+    $api->group(['namespace' => 'App\Api\V1\Controllers', 'middleware' => ['cors', 'status']], function ($api) {
 
         /**
          * 用户相关
@@ -47,7 +47,7 @@ $api->version('v1', function ($api) {
          */
         require_once(__DIR__ . '/../Api/V1/Routes/gateway_api.php');
 
-        
+
         /**
          * Tool Support
          */
