@@ -8,11 +8,12 @@ class UserInfoTransformer extends TransformerAbstract {
     public function transform(User $user)
     {
         $base_info = [
-            'username'      => $user['username'],
-            'email'     => $user['email'],
-            'phone'     => $user['phone'],
-            'status'    => $user['status'],
-            'roles'     => $this->getRoles($user),
+            'id' => $user['id'],
+            'username' => $user['username'],
+            'email' => $user['email'],
+            'phone' => $user['phone'],
+            'status' => $user['status'],
+            'roles' => $this->getRoles($user),
             'providers' => $this->getProviderInfo($user)
         ];
 
@@ -26,8 +27,8 @@ class UserInfoTransformer extends TransformerAbstract {
         $clint_info = [
             'nickname' => null,
             'birthday' => null,
-            'avatar'   => null,
-            'sex'      => null,
+            'avatar' => null,
+            'sex' => null,
         ];
         if (isset($user->client)) {
             $client = $user->client;
@@ -46,11 +47,11 @@ class UserInfoTransformer extends TransformerAbstract {
 
         $data = [];
 
-        if ( ! is_null($providers) && count($providers)) {
+        if (!is_null($providers) && count($providers)) {
             foreach ($providers as $provider) {
                 $provider_name = $provider['provider'];
                 $provider_data = [
-                    'provider'    => $provider['provider'],
+                    'provider' => $provider['provider'],
                     'provider_id' => $provider['provider_id'],
                 ];
                 if ($provider_name == 'weixin' || $provider_name == 'weixin_web') {
