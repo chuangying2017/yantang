@@ -9,7 +9,7 @@ class ClientOrderTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['skus', 'address', 'billings', 'deliver', 'preorder'];
+    protected $availableIncludes = ['skus', 'address', 'billings', 'deliver', 'preorder', 'promotions'];
 
     public function transform(Order $order)
     {
@@ -59,6 +59,11 @@ class ClientOrderTransformer extends TransformerAbstract {
     public function includePreorder(Order $order)
     {
         return $this->item($order->preorder, new PreorderTransformer(), true);
+    }
+
+    public function includePromotions(Order $order)
+    {
+        return $this->collection($order->promotions, new OrderPromotionTransformer(), true);
     }
 
 }
