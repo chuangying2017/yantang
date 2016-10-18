@@ -16,7 +16,7 @@ class RedEnvelopeReceiveTransformer extends TransformerAbstract {
             'receive_at' => Carbon::parse($receive['created_at'])->toDateTimeString()
         ];
 
-        if ($receive->relationLoaded('ticket')) {
+        if ($receive->relationLoaded('ticket.coupon')) {
             $this->defaultIncludes = ['ticket'];
         } else {
             $data['ticket'] = [
