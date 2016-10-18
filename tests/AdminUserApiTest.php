@@ -17,8 +17,8 @@ class AdminUserApiTest extends TestCase {
             ['status' => 1],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
-
-        $this->dump();
+        $this->seeHeader('status', 200);
+//        $this->dump();
         $this->assertResponseOk();
     }
 
