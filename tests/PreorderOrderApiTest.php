@@ -156,9 +156,9 @@ class PreorderOrderApiTest extends TestCase {
     {
         $preorder_id = 1631;
 
-        $this->json('get', 'subscribe/preorders/' . $preorder_id, [], $this->getAuthHeader());
+        $this->json('get', 'subscribe/preorders/' . $preorder_id, [], $this->getAuthHeader(3352));
 
-        $this->echoJson();
+        $this->dump();
     }
 
 }
