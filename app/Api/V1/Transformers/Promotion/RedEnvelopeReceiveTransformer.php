@@ -8,6 +8,8 @@ class RedEnvelopeReceiveTransformer extends TransformerAbstract {
 
     public function transform(RedEnvelopeReceive $receive)
     {
+        $this->defaultIncludes = [];
+
         $data = [
             'id' => $receive['id'],
             'user_id' => $receive['user_id'],
@@ -16,7 +18,7 @@ class RedEnvelopeReceiveTransformer extends TransformerAbstract {
             'receive_at' => Carbon::parse($receive['created_at'])->toDateTimeString()
         ];
 
-        if ($receive->relationLoaded('ticket.coupon')) {
+        if ($receive->relationLoaded('ticket')) {
             $this->defaultIncludes = ['ticket'];
         } else {
             $data['ticket'] = [
