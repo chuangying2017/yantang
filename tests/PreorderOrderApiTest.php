@@ -21,7 +21,7 @@ class PreorderOrderApiTest extends TestCase {
             'station_id' => 1,
             'daytime' => 0,
             'weekday_type' => 'all',
-            'start_time' => '2016-09-29',
+            'start_time' => '2016-10-21',
             'channel' => 'wx_pub_qr'
         ];
 
@@ -62,28 +62,26 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->json('put', 'subscribe/orders/' . $temp_order_id . '/confirm', $data, $this->getAuthHeader());
 
-
 //        $this->echoJson();
 
         $this->assertResponseStatus(201);
-
         $charge = $this->getResponseData('meta.charge');
         $order = $this->getResponseData('data');
-
         //模拟付款
         $pay_url = "http://sissi.pingxx.com/notify.php?ch_id=" . $charge['id'];
         $this->getUrl($pay_url);
 
         $this->json('POST', 'subscribe/orders/' . $order['order_no'] . '/checkout', ['channel' => 'wx_pub_qr'], ['Authorization' => 'Bearer ' . $this->getToken()]);
 
-        $charge = $this->getResponseData('data');
-
-        $this->json('post', 'gateway/pingxx/paid',
-            ['data' => ['object' => $charge]],
-            []
-        );
-
-        $this->assertResponseStatus(202);
+//        $charge = $this->getResponseData('data');
+//
+//        $this->json('post', 'gateway/pingxx/paid',
+//            ['data' => ['object' => $charge]],
+//            []
+//        );
+//
+//
+//        $this->assertResponseStatus(202);
 
         $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => \App\Services\Order\OrderProtocol::STATUS_OF_PAID]);
 
@@ -95,11 +93,17 @@ class PreorderOrderApiTest extends TestCase {
             'source_type' => \App\Services\Promotion\PromotionProtocol::TICKET_RESOURCE_OF_ORDER,
             'source_id' => $order['id']]);
 
-        $this->seeInDatabase('red_records', [
-            'user_id' => 1,
-            'rule_id' => 1,
-            'resource_type' => \App\Repositories\RedEnvelope\RedEnvelopeProtocol::TYPE_OF_SUBSCRIBE_ORDER,
-            'resource_id' => $order['id']]);
+//        $this->seeInDatabase('red_records', [
+//            'user_id' => 1,
+//            'rule_id' => 1,
+//            'resource_type' => \App\Repositories\RedEnvelope\RedEnvelopeProtocol::TYPE_OF_SUBSCRIBE_ORDER,
+//            'resource_id' => $order['id']]);
+
+        $this->seeInDatabase('order_marks', [
+            'order_id' => $order['id'], 
+            'mark_type' => \App\Services\Order\OrderProtocol::ORDER_MARK_TYPE_OF_FIRST,
+            'mark_content' => \App\Services\Order\OrderProtocol::ORDER_MARK_CONTENT_OF_FIRST
+        ]);
 
         return $order;
     }
