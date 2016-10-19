@@ -29,14 +29,14 @@ class PreorderController extends Controller {
         $end_time = $request->input('end_time') ?: null;
         $status = $request->input('status') ?: null;
         $station_id = $request->input('station_id') ? explode(',', $request->input('station_id')) : null;
-        
+
         if ($request->input('export') == 'all') {
             $orders = $this->preorderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time);
             return ExcelService::downPreorder($orders);
         }
 
         $orders = $this->preorderRepo->getAllPaginated($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time);
-        $orders->load('assign');
+        $orders->load('assign', 'station');
 
         return $this->response->paginator($orders, new PreorderTransformer());
     }
