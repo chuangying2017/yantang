@@ -24,6 +24,7 @@ class RedEnvelopeRuleTransformer extends TransformerAbstract {
             'effect_days' => $rule['effect_days'],
             'total' => $rule['total'],
             'dispatch' => $rule['dispatch'],
+            'content' => $rule['content'],
             'status' => $rule['status'],
         ];
 
