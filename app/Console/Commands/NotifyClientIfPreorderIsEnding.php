@@ -15,7 +15,7 @@ class NotifyClientIfPreorderIsEnding extends Command {
      *
      * @var string
      */
-    protected $signature = 'preorder:ending-notify {days=3}';
+    protected $signature = 'notify:preorder-ending {days=3}';
 
     /**
      * The console command description.

@@ -2,6 +2,7 @@
 
 use App\Services\Notify\Content\NotifyClientOrderIsAssign;
 use App\Services\Notify\Content\NotifyClientOrderIsEnding;
+use App\Services\Notify\Content\NotifyClientTicketIsEnding;
 use App\Services\Notify\Content\NotifyContentContract;
 use App\Services\Notify\Content\NotifyStaffNewOrder;
 use App\Services\Notify\Content\NotifyStationAdminAssignOvertime;
@@ -27,6 +28,7 @@ class NotifyProtocol {
 
     const NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED = 101;
     const NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING = 102;
+    const NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING = 111;
 
     const NOTIFY_ACTION_STATION_NEW_ORDER = 201;
 
@@ -45,6 +47,7 @@ class NotifyProtocol {
         $config = [
             self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED => NotifyClientOrderIsAssign::class,
             self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING => NotifyClientOrderIsEnding::class,
+            self::NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING => NotifyClientTicketIsEnding::class,
 
             self::NOTIFY_ACTION_STATION_NEW_ORDER => NotifyStationNewOrder::class,
 
@@ -104,6 +107,7 @@ class NotifyProtocol {
             case self::NOTIFY_ACTION_STATION_NEW_ORDER:
                 return self::ROLE_OF_STATION;
             case self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED:
+            case self::NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING:
             case self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING:
                 return self::ROLE_OF_CLIENT;
             case self::NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME:

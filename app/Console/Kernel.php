@@ -36,6 +36,8 @@ class Kernel extends ConsoleKernel {
 
         //提醒
         'App\Console\Commands\NotifyClientIfPreorderIsEnding',
+        'App\Console\Commands\NotifyClientIfTicketIsEnding',
+        
 
     ];
 
@@ -51,7 +53,8 @@ class Kernel extends ConsoleKernel {
         $schedule->command('preorders:assign')->twiceDaily(10, 16);
 
         //提醒
-//        $schedule->command('preorder:ending-notify')->dailyAt('11:50');
+//        $schedule->command('notify:preorder-ending')->dailyAt('11:50');
+//        $schedule->command('notify:ticket-ending')->dailyAt('9:20');
 
         //计数器
         $schedule->command('counter:daily-station')->dailyAt('00:30');
