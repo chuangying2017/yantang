@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Promotion;
 
-use App\API\V1\Transformers\Promotion\CouponTransformer;
+use App\Api\V1\Transformers\Promotion\CouponTransformer;
 use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
 use Illuminate\Http\Request;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\API\V1\Controllers\Auth;
+namespace App\Api\V1\Controllers\Auth;
 
 use App\Api\V1\Controllers\Controller;
 use \SmsManager;

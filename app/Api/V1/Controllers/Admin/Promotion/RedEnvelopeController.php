@@ -3,7 +3,7 @@
 namespace App\Api\V1\Controllers\Admin\Promotion;
 
 use App\Api\V1\Requests\Promotion\RedEnvelopeRuleRequest;
-use App\API\V1\Transformers\Admin\Promotion\RedEnvelopeRuleTransformer;
+use App\Api\V1\Transformers\Admin\Promotion\RedEnvelopeRuleTransformer;
 use App\Repositories\RedEnvelope\RedEnvelopeProtocol;
 use App\Repositories\RedEnvelope\RedEnvelopeRulesRepository;
 use Illuminate\Http\Request;
