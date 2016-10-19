@@ -30,6 +30,9 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\FillPreorderAmount',
         'App\Console\Commands\InitStationCounter',
         'App\Console\Commands\DailyStationCounter',
+
+        //订单处理
+        'App\Console\Commands\AddMarkToOrder',
     ];
 
     /**
