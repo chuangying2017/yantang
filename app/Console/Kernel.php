@@ -33,6 +33,10 @@ class Kernel extends ConsoleKernel {
 
         //订单处理
         'App\Console\Commands\AddMarkToOrder',
+
+        //提醒
+        'App\Console\Commands\NotifyClientIfPreorderIsEnding',
+
     ];
 
     /**
@@ -46,15 +50,18 @@ class Kernel extends ConsoleKernel {
         $schedule->command('preorder:settle')->dailyAt('1:00');
         $schedule->command('preorders:assign')->twiceDaily(10, 16);
 
+        //提醒
+//        $schedule->command('preorder:ending-notify')->dailyAt('11:50');
+
         //计数器
         $schedule->command('counter:daily-station')->dailyAt('00:30');
-//        $schedule->command('statement:store')->monthlyOn(StatementProtocol::getStoreCheckDay(), '1:00');
-//        $schedule->command('statement:station')->monthlyOn(StatementProtocol::getStationCheckDay(), '2:00');
-//
 
+        //账单
 //        $schedule->command('invoice:station', ['date' => Carbon::today()->day(10)->toDateString()])->monthlyOn(11, '2:00');
 //        $schedule->command('invoice:station', ['date' => Carbon::today()->day(25)->toDateString()])->monthlyOn(26, '2:00');
 
         $schedule->command('orders:overtime')->everyTenMinutes();
+
+
     }
 }

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Subscribe\Preorder;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Notify\NotifyProtocol;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class NotifyClientIfPreorderIsEnding extends Command {
@@ -41,7 +42,7 @@ class NotifyClientIfPreorderIsEnding extends Command {
      */
     public function handle()
     {
-        $preorders = $this->preorderRepo->getAllEnding($this->option('days'));
+        $preorders = $this->preorderRepo->getAllEnding($this->argument('days'));
         foreach ($preorders as $preorder) {
             NotifyProtocol::notify($preorder['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING, null, $preorder);
         }
