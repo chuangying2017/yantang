@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Subscribe;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Station\BindStaffRequest;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Repositories\Station\Staff\StaffRepositoryContract;

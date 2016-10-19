@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Campaign;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Repositories\Order\CampaignOrderRepository;
 use App\Services\Order\Checkout\OrderCheckoutService;
 use App\Services\Order\OrderProtocol;

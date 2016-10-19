@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Admin\Client;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Repositories\Client\UserGroup\UserGroupRepositoryAbstract;
 use Illuminate\Http\Request;
 use App\Api\V1\Transformers\Admin\Access\UserTransformer;

@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Subscribe;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderDeliverTransformer;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;

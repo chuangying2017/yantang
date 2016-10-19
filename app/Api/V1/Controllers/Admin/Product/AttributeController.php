@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Admin\Product;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Admin\Product\AttrTransformer;
 use App\Repositories\Product\Attribute\AttributeRepositoryContract;
 use Illuminate\Http\Request;

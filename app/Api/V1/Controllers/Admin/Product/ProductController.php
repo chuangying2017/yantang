@@ -9,7 +9,7 @@ use App\Repositories\Product\ProductRepositoryContract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 
 
 class ProductController extends Controller {

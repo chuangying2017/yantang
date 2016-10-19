@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Admin\Access\Permission;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Admin\Access\PermissionGroupTransformer;
 use App\Repositories\Backend\Permission\Group\PermissionGroupRepositoryContract;
 use Illuminate\Http\Request;

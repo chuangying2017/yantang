@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Admin\Order;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Admin\Order\AdminMallOrderTransformer;
 use App\Repositories\Order\AdminSpecialCampaignOrderRepository;
 use App\Repositories\Order\MallAdminOrderRepository;

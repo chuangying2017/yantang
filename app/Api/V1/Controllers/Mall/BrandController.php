@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Mall;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\BrandTransformer;
 use App\Repositories\Product\Brand\BrandRepositoryContract;
 use Illuminate\Http\Request;

@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Client;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\API\V1\Transformers\Client\WalletRecordTransformer;
 use App\Repositories\Client\Account\Wallet\WalletRepositoryContract;
 use App\Services\Client\Account\AccountProtocol;

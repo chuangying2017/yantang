@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Admin\Access\Role;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Admin\Access\RoleTransformer;
 use App\Repositories\Backend\Permission\PermissionRepositoryContract;
 use App\Repositories\Backend\Role\RoleRepositoryContract;
