@@ -61,5 +61,7 @@ interface PreorderRepositoryContract {
     public function getAllNotAssignOnTime($station_id = null, $per_page = null);
 
     public function getAllReject($station_id = null, $per_page = null);
+    
+    public function getAllEnding($day = 3, $per_page = null);
 
 }

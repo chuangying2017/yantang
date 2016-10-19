@@ -7,7 +7,7 @@ class RedEnvelopeProtocol {
     const PER_PAGE = 20;
 
     const RULE_STATUS_OF_OK = 1;
-    const RULE_STATUS_OF_DRAFT = 0;
+    const RULE_STATUS_OF_DRAFT = 2;
 
     const RECORD_STATUS_OF_OK = 1;
     const RECORD_STATUS_OF_CANCEL = 2;
