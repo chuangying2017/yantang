@@ -138,6 +138,10 @@ class RedEnvelopeService implements PromotionDispatcher {
             return false;
         }
 
+        if ($rule['status'] != RedEnvelopeProtocol::RULE_STATUS_OF_OK) {
+            return false;
+        }
+
         if ($rule['total'] > 0 && $rule['total'] <= $rule['dispatch']) {
             return false;
         }

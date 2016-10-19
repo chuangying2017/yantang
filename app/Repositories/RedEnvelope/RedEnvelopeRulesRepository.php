@@ -73,7 +73,7 @@ class RedEnvelopeRulesRepository {
         if ($rule_id instanceof RedEnvelopeRule) {
             $rule = $rule_id;
         } else if (RedEnvelopeProtocol::type($rule_id)) {
-            $rule = RedEnvelopeRule::query()->where('type', $rule_id)->first();
+            $rule = RedEnvelopeRule::query()->where('status', RedEnvelopeProtocol::RULE_STATUS_OF_OK)->where('type', $rule_id)->first();
         } else {
             $rule = RedEnvelopeRule::query()->findOrFail($rule_id);
         }
