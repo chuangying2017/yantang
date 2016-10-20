@@ -58,4 +58,18 @@ class UserController extends Controller {
     }
 
 
+    public function weixinInfo()
+    {
+        $openId = access()->getProviderId();
+
+        $info = \EasyWeChat::user()->get($openId);
+
+        return $this->response->array(['data' => [
+            'subscribe' => $info['subscribe'],
+            'openid' => $info['openid']
+        ]]);
+
+    }
+
+
 }

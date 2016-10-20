@@ -351,4 +351,22 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
     {
         return \DB::table('group_user')->where('user_id', $this->user->id)->pluck('group_id');
     }
+
+    //关注信息
+    public function getProviderId($user_id, $provider = 'weixin')
+    {
+        return UserProvider::query()->where('user_id', $user_id)->where("provider", $provider)->pluck('provider_id')->first();
+    }
+
+    public function subscribeWeixin($user_id)
+    {
+        $openid = $this->getProviderId($user_id);
+
+        try {
+            $weixin_user_info =  \EasyWeChat::user()->get($openid);
+            return $weixin_user_info['subscribe'];
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

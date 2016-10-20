@@ -15,6 +15,7 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
         $api->get('users/info', ['uses' => 'UserController@getUserInfo', 'as' => 'user.info']);
         $api->put('users/info', ['uses' => 'UserController@updateUserInfo', 'as' => 'update.user.info']);
 
+        $api->get('users/weixin/subscribe', ['uses' => 'UserController@weixinInfo', 'as' => 'user.weixin.info']);
     });
 
     /**
