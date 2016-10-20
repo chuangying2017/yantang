@@ -1,4 +1,4 @@
-<?php namespace App\API\V1\Transformers\Client;
+<?php namespace App\Api\V1\Transformers\Client;
 
 use App\Models\Client\Account\WalletRecord;
 use App\Services\Client\Account\AccountProtocol;
