@@ -1,5 +1,6 @@
 <?php namespace App\Http;
 
+use App\Api\V1\Middleware\Open\ValidServer;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 /**
@@ -66,7 +67,9 @@ class Kernel extends HttpKernel {
 
         'auth.phone.sms.verify' => \App\Api\V1\Middleware\Auth\PhoneSmsValidator::class,
 
-        'status' => \App\Api\V1\Middleware\AddStatusCodeToHeader::class
+        'status' => \App\Api\V1\Middleware\AddStatusCodeToHeader::class,
+        
+        'valid.server' => ValidServer::class,
 
     ];
 }
