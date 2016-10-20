@@ -110,4 +110,11 @@ class AdminUserApiTest extends TestCase {
 
         $this->assertResponseStatus(201);
     }
+
+    /** @test */
+    public function it_can_check_user_is_subscribe()
+    {
+        $this->json('get', 'users/weixin/subscribe', [], $this->getAuthHeader());
+        $this->dump();
+    }
 }
