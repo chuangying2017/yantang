@@ -50,6 +50,7 @@ class RedEnvelopeController extends Controller {
             $receive->load('ticket', 'ticket.coupon');
             return $this->response->item($receive, new RedEnvelopeReceiveTransformer())->setStatusCode(201);
         } catch (\Exception $e) {
+            \Log::error($e);
             return $this->response->accepted(null, $redEnvelopeService->getErrorMessage('活动已结束或抢完了'));
         }
 
