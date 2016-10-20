@@ -52,7 +52,7 @@ class StationInvoiceController extends Controller {
 
     public function orders(Request $request, $invoice_no)
     {
-        return $this->api->get('api/stations/invoices/' . $invoice_no . '/orders', $request->all());
+        return $this->api->be(access()->user())->get('api/stations/invoices/' . $invoice_no . '/orders', $request->all());
     }
 
 }
