@@ -13,6 +13,7 @@ class UserInfoTransformer extends TransformerAbstract {
             'email' => $user['email'],
             'phone' => $user['phone'],
             'status' => $user['status'],
+            'created_at' => $user['created_at'],
             'roles' => $this->getRoles($user),
             'providers' => $this->getProviderInfo($user)
         ];
