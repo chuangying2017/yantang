@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Subscribe;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Station\AssignStaffRequest;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderAssignTransformer;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;

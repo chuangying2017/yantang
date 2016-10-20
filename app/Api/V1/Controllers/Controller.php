@@ -1,6 +1,6 @@
 <?php
 
-namespace App\API\V1\Controllers;
+namespace App\Api\V1\Controllers;
 
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Foundation\Bus\DispatchesJobs;

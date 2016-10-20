@@ -544,4 +544,15 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         return $orders;
     }
+
+    public function getAllEnding($day = 3, $per_page = null)
+    {
+        $query = Preorder::query()->where('end_time', Carbon::today()->addDays($day));
+        
+        if($per_page) {
+            return $query->paginate($per_page);
+        }
+        
+        return $query->get();
+    }
 }

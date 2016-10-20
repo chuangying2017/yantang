@@ -8,6 +8,8 @@ class RedEnvelopeReceiveTransformer extends TransformerAbstract {
 
     public function transform(RedEnvelopeReceive $receive)
     {
+        $this->defaultIncludes = [];
+
         $data = [
             'id' => $receive['id'],
             'user_id' => $receive['user_id'],

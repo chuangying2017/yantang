@@ -13,6 +13,7 @@ class RedEnvelopeRuleTransformer extends TransformerAbstract {
         }
 
         $data = [
+            'id' => $rule['id'],
             'name' => $rule['name'],
             'desc' => $rule['desc'],
             'start_time' => $rule['start_time'],
@@ -23,6 +24,8 @@ class RedEnvelopeRuleTransformer extends TransformerAbstract {
             'effect_days' => $rule['effect_days'],
             'total' => $rule['total'],
             'dispatch' => $rule['dispatch'],
+            'content' => $rule['content'],
+            'status' => $rule['status'],
         ];
 
         return $data;

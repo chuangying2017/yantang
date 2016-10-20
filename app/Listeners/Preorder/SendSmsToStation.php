@@ -34,24 +34,7 @@ class SendSmsToStation {
      */
     public function handle(AssignIsCreate $event)
     {
-        $assign = $event->assign;
-
-        $preorder = $this->preorderRepo->get($assign['preorder_id']);
-
-        if ($preorder['status'] !== PreorderProtocol::ORDER_STATUS_OF_UNPAID) {
-
-            try {
-                $preorder->load('station');
-
-                $phone = $preorder['station']['phone'];
-
-                $result = Sms::make()->to($phone)->content(NotifyProtocol::SMS_TO_STATION_NEW_ORDER)->send();
-            } catch (\Exception $e) {
-                \Log::error($e);
-            }
-
-        }
-
+        
     }
 
 

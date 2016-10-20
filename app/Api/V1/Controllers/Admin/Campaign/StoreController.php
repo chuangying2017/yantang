@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Admin\Campaign;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Campaign\StoreTransformer;
 use App\Repositories\Store\StoreRepositoryContract;
 use Illuminate\Http\Request;

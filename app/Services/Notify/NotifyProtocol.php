@@ -1,6 +1,8 @@
 <?php namespace App\Services\Notify;
 
 use App\Services\Notify\Content\NotifyClientOrderIsAssign;
+use App\Services\Notify\Content\NotifyClientOrderIsEnding;
+use App\Services\Notify\Content\NotifyClientTicketIsEnding;
 use App\Services\Notify\Content\NotifyContentContract;
 use App\Services\Notify\Content\NotifyStaffNewOrder;
 use App\Services\Notify\Content\NotifyStationAdminAssignOvertime;
@@ -15,15 +17,6 @@ use Toplan\PhpSms\Sms;
 
 class NotifyProtocol {
 
-    /**
-     * 短信内容,待删除
-     */
-    const SMS_TO_STATION_NEW_ORDER = '您好，您有一笔新的订单，请及时处理！【燕塘优鲜达】';
-    const SMS_TO_CLIENT_PREORDER_IS_ASSIGNED = '亲爱的客户，您的订单已被接受，您可在“个人中心-我的奶卡”查看具体信息；稍后我们会有专人与您联系，谢谢！【燕塘优鲜达】';
-    const SMS_TO_STAFF_PREORDER_IS_ASSIGNED = '收到一个新的订单，请及时处理！【燕塘优鲜达】';
-    const SMS_TO_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME = '您有一个来自服务部的订单待处理，请及时处理！【燕塘优鲜达】';
-    const SMS_TO_ADMIN_PREORDER_PREORDER_IS_REJECT = '您有一个来自服务部的订单待处理，请及时处理！【燕塘优鲜达】';
-
     const CHANNEL_OF_SMS = 'sms';
     const CHANNEL_OF_WEIXIN_TEMPLATE = 'weixin';
 
@@ -34,6 +27,8 @@ class NotifyProtocol {
 
 
     const NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED = 101;
+    const NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING = 102;
+    const NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING = 111;
 
     const NOTIFY_ACTION_STATION_NEW_ORDER = 201;
 
@@ -51,8 +46,13 @@ class NotifyProtocol {
     {
         $config = [
             self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED => NotifyClientOrderIsAssign::class,
+            self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING => NotifyClientOrderIsEnding::class,
+            self::NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING => NotifyClientTicketIsEnding::class,
+
             self::NOTIFY_ACTION_STATION_NEW_ORDER => NotifyStationNewOrder::class,
+
             self::NOTIFY_ACTION_STAFF_NEW_ORDER => NotifyStaffNewOrder::class,
+
             self::NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME => NotifyStationAdminAssignOvertime::class,
             self::NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT => NotifyStationAdminOrderReject::class,
         ];
@@ -107,6 +107,8 @@ class NotifyProtocol {
             case self::NOTIFY_ACTION_STATION_NEW_ORDER:
                 return self::ROLE_OF_STATION;
             case self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED:
+            case self::NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING:
+            case self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING:
                 return self::ROLE_OF_CLIENT;
             case self::NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME:
             case self::NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT:

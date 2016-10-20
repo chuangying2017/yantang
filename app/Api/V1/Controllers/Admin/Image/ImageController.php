@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Admin\Image;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\ImageTransformer;
 use App\Repositories\Image\ImageRepositoryContract;
 use Illuminate\Http\Request;

@@ -52,6 +52,11 @@ $api->version('v1', function ($api) {
          * Tool Support
          */
         require_once(__DIR__ . '/../Api/V1/Routes/test_api.php');
+        
+        /**
+         * Open Api
+         */
+        require_once(__DIR__ . '/../Api/V1/Routes/open_api.php');
 
     });
 

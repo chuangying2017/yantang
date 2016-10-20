@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Subscribe;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Station\ReAssignStaffRequest;
 use App\Api\V1\Transformers\Subscribe\Station\StaffPreorderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;

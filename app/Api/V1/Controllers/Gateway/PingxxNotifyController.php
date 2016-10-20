@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Gateway;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Gateway\PingxxNotifyRequest as Request;
 
 use App\Http\Requests;

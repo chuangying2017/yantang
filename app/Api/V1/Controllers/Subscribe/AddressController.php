@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Subscribe;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Subscribe\AddressRequest;
 use App\Api\V1\Transformers\Mall\AddressTransformer;
 use App\Repositories\Address\AddressRepositoryContract;

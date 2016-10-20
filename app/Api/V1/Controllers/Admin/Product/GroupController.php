@@ -8,7 +8,7 @@ use App\Repositories\Product\Group\GroupRepositoryContract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 
 
 class GroupController extends Controller {

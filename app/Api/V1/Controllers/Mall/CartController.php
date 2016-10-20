@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Mall;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\CartTransformer;
 use App\Repositories\Cart\CartRepositoryContract;
 use Illuminate\Http\Request;

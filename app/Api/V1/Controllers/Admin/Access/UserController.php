@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Admin\Access;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Admin\Access\UserTransformer;
 use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Backend\Permission\PermissionRepositoryContract;

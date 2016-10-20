@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Mall;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\GroupTransformer;
 use App\Repositories\Product\Group\GroupRepositoryContract;
 use Illuminate\Http\Request;

@@ -160,5 +160,14 @@ class OrderProtocol {
         return array_get($data, $status, null);
     }
 
+    const ORDER_MARK_TYPE_OF_FIRST = 'first';
+    const ORDER_MARK_CONTENT_OF_FIRST = 1;
+
+    public static function validMark($key)
+    {
+        return in_array($key, [
+            self::ORDER_MARK_TYPE_OF_FIRST
+        ]);
+    }
 
 }

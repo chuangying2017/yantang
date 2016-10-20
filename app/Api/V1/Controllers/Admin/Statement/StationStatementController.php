@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Admin\Statement;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Statement\StationStatementTransformer;
 use App\Repositories\Statement\StationStatementRepository;
 use App\Services\Statement\StatementProtocol;

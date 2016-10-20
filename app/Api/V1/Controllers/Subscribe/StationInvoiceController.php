@@ -11,7 +11,7 @@ use App\Services\Chart\ExcelService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class StationInvoiceController extends Controller {

@@ -44,7 +44,9 @@ class RedEnvelopeRulesRepository {
     public function updateRule($data, $rule_id = null)
     {
         if (!is_null($rule_id)) {
-            $rule = RedEnvelopeRule::query()->find($rule_id)->update($this->filterData($data));
+            $rule = RedEnvelopeRule::query()->findOrFail($rule_id);
+            $rule->fill($this->filterData($data));
+            $rule->save();
         } else {
             $rule = RedEnvelopeRule::query()->updateOrCreate(['type' => $data['type']], $this->filterData($data));
         }
@@ -73,7 +75,7 @@ class RedEnvelopeRulesRepository {
         if ($rule_id instanceof RedEnvelopeRule) {
             $rule = $rule_id;
         } else if (RedEnvelopeProtocol::type($rule_id)) {
-            $rule = RedEnvelopeRule::query()->where('type', $rule_id)->first();
+            $rule = RedEnvelopeRule::query()->where('status', RedEnvelopeProtocol::RULE_STATUS_OF_OK)->where('type', $rule_id)->first();
         } else {
             $rule = RedEnvelopeRule::query()->findOrFail($rule_id);
         }
@@ -120,7 +122,7 @@ class RedEnvelopeRulesRepository {
 
         $query->orderBy('created_at', 'desc');
 
-        
+
         if (!is_null($per_page)) {
             return $query->paginate($per_page);
         }

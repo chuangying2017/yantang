@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Admin\Client;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Admin\Client\ClientUserTransformer;
 use App\Repositories\Client\ClientRepositoryContract;
 use Illuminate\Http\Request;

@@ -1,6 +1,6 @@
 <?php namespace App\Api\V1\Controllers\Mall;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Repositories\Order\ClientOrderRepositoryContract;
 use App\Repositories\Order\MallClientOrderRepository;

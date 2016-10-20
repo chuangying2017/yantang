@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Controllers\Subscribe;
 
-use App\API\V1\Controllers\Controller;
+use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\SubscribeOrderRequest;
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Api\V1\Transformers\TempOrderTransformer;
