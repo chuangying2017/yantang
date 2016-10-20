@@ -32,7 +32,11 @@ class StationInvoiceController extends Controller {
 
     protected function checkAuth($invoice)
     {
-        if (!access()->hasRole(AccessProtocol::ROLE_OF_SUPERVISOR) || $invoice['merchant_id'] != access()->stationId()) {
+        if (access()->hasRole(AccessProtocol::ROLE_OF_SUPERVISOR)) {
+            return true;
+        }
+
+        if ($invoice['merchant_id'] != access()->stationId()) {
             throw new AccessDeniedHttpException('无权查看账单');
         }
     }
