@@ -5,7 +5,7 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) {
 
 
-    $api->group(['namespace' => 'App\Api\V1\Controllers', 'middleware' => ['cors', 'status']], function ($api) {
+    $api->group(['namespace' => 'App\Api\V1\Controllers', 'middleware' => ['cors']], function ($api) {
 
         /**
          * 用户相关
