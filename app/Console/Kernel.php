@@ -37,7 +37,9 @@ class Kernel extends ConsoleKernel {
         //提醒
         'App\Console\Commands\NotifyClientIfPreorderIsEnding',
         'App\Console\Commands\NotifyClientIfTicketIsEnding',
-        
+
+        //client
+        'App\Console\Commands\FillClientGender',
 
     ];
 
