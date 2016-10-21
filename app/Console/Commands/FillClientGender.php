@@ -57,7 +57,6 @@ class FillClientGender extends Command {
 
                 }
             }
-            die();
         });
     }
 }
