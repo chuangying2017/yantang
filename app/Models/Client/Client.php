@@ -2,6 +2,7 @@
 
 namespace App\Models\Client;
 
+use App\Models\Access\User\UserProvider;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -27,6 +28,11 @@ class Client extends Model {
     public function user()
     {
         return $this->belongsTo('App\Models\Access\User\User', 'user_id', 'id');
+    }
+
+    public function providers()
+    {
+        return $this->hasMany(UserProvider::class, 'user_id', 'user_id');
     }
 
 }
