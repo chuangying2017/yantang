@@ -11,9 +11,9 @@ class AdminPromotionApiTest extends TestCase {
     /** @test */
     public function it_can_get_all_coupons()
     {
-        $this->json('get', 'admin/promotions/coupons', [], $this->getAuthHeader());
+        $this->json('get', 'admin/promotions/coupons', ['all' => 0], $this->getAuthHeader());
 
-        $this->echoJson();
+        $this->dump();
 
         $this->assertResponseOk();
     }
