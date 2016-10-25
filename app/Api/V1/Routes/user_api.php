@@ -24,8 +24,12 @@ $api->group(['namespace' => 'Auth'], function () use ($api) {
     $api->group(['middleware' => 'guest', 'web'], function () use ($api) {
         $api->get('auth/login/{provider}', 'AuthController@loginThirdPartyUrl')->name('auth.provider.url');
         $api->post('auth/login/{provider}', 'AuthController@loginThirdParty')->name('auth.provider');
-        $api->controller('auth', 'AuthController');
-        $api->controller('password', 'PasswordController');
+
+        $api->get('auth/logout', 'AuthController@getLogout');
+        $api->post('auth/register', 'AuthController@postRegister');
+        $api->post('auth/login', 'AuthController@postLogin');
+
+//        $api->controller('password', 'PasswordController');
     });
 
     /**

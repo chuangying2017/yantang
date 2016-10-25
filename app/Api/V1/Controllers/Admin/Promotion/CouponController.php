@@ -28,10 +28,15 @@ class CouponController extends Controller {
 
     public function index(Request $request)
     {
-        $coupons = $this->couponRepo->getAllPaginated(false);
-        $coupons->load('counter');
-
-        return $this->response->paginator($coupons, new CouponTransformer());
+        if ($request->input('all')) {
+            $coupons = $this->couponRepo->getAll(false);
+            $coupons->load('counter');
+            return $this->response->collection($coupons, new CouponTransformer());
+        } else {
+            $coupons = $this->couponRepo->getAllPaginated(false);
+            $coupons->load('counter');
+            return $this->response->paginator($coupons, new CouponTransformer());
+        }
     }
 
     public function store(Request $request)
