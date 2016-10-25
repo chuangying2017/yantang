@@ -178,7 +178,8 @@ class EloquentTicketRepository implements TicketRepositoryContract {
         $days = $this->getCounter($coupon['id'], 'effect_days');
 
         if ($days > 0) {
-            return $this->getEarlyTime(time() + $days * 24 * 3600, strtotime($coupon['end_time']));
+            return Carbon::today()->addDays($days);
+//            return $this->getEarlyTime(time() + $days * 24 * 3600, strtotime($coupon['end_time']));
         }
         return $coupon['end_time'];
     }

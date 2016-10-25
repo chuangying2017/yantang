@@ -46,4 +46,16 @@ class RedEnvelopeApiTest extends TestCase {
         $this->echoJson();
 
     }
+
+    /** @test */
+    public function it_can_create_a_red_record()
+    {
+        \DB::beginTransaction();
+        $redRecordRepo = $this->createApplication()->make(\App\Repositories\RedEnvelope\RedEnvelopeRecordRepository::class);
+        $record = $redRecordRepo->createRecord(2, 1, 'preorder', 99999);
+
+        dd($record);
+        \DB::commit();
+
+    }
 }

@@ -86,9 +86,7 @@ class RedEnvelopeRecordRepository {
 
     private function calEndTime($effect_days, $end_time)
     {
-        $effect_end_time = Carbon::parse($end_time)->addDay($effect_days);
-
-        return $effect_end_time < $end_time ? $effect_end_time : $end_time;
+        return Carbon::today()->addDay($effect_days);
     }
 
     public function updateAsCancel($record_id)
