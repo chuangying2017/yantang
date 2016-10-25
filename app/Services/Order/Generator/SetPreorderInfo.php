@@ -48,11 +48,11 @@ class SetPreorderInfo extends GenerateHandlerAbstract {
             ];
 
         }
-        
+
         if($preorder['weekday_type'] == PreorderProtocol::WEEKDAY_TYPE_OF_WORKDAY) {
-            $preorder['end_time'] = Carbon::createFromFormat('Y-m-d', $temp_order->getPreorder('start_time'))->addWeekdays($max_day)->toDateString();
+            $preorder['end_time'] = Carbon::createFromFormat('Y-m-d', $temp_order->getPreorder('start_time'))->addWeekdays($max_day - 1)->toDateString();
         } else {
-            $preorder['end_time'] = Carbon::createFromFormat('Y-m-d', $temp_order->getPreorder('start_time'))->addDays($max_day)->toDateString();
+            $preorder['end_time'] = Carbon::createFromFormat('Y-m-d', $temp_order->getPreorder('start_time'))->addDays($max_day - 1)->toDateString();
         }
 
         $preorder['skus'] = $preorder_skus;
