@@ -25,7 +25,7 @@ class TempRefundOrder {
             'refund_amount' => $this->refund_amount,
             'discount_amount' => $this->discount_amount,
             'pay_amount' => $this->getPayAmount(),
-            'memo' => '',
+            'memo' => $this->memo,
         ];
     }
 
