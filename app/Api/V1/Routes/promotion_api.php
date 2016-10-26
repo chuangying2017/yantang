@@ -15,6 +15,8 @@ $api->group(['namespace' => 'Promotion', 'prefix' => 'promotions'], function ($a
 
         $api->resource('red-envelopes', 'RedEnvelopeController', ['only' => ['show', 'store']]);
         
+        $api->resource('activities', 'ActivityController', ['only' => ['show', 'index']]);
+        
     });
 
 });

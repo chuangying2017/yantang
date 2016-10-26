@@ -66,6 +66,11 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->put('red-envelopes/{id}/active', 'RedEnvelopeController@active');
             $api->put('red-envelopes/{id}/unactive', 'RedEnvelopeController@unactive');
             $api->resource('red-envelopes', 'RedEnvelopeController', ['only' => ['index', 'show', 'update', 'store']]);
+
+            $api->put('activities/{id}/active', 'ActivityController@active');
+            $api->put('activities/{id}/unactive', 'ActivityController@unactive');
+            $api->resource('activities', 'ActivityController', ['only' => ['index', 'show', 'update', 'store']]);
+
         });
 
     });
