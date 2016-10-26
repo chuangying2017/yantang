@@ -12,6 +12,6 @@ class WeixinController extends Controller {
     public function token()
     {
         $token = \EasyWeChat::access_token()->getToken();
-        return $this->response->array(['data' => ['token' => $token]]);
+        return $this->response->array(['access_token'  => $token, 'expires_in' => 2000]);
     }
 }
