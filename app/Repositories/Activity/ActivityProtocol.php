@@ -8,6 +8,9 @@ class ActivityProtocol {
     
     const ACTIVITY_STATUS_OF_OK = 1;
     const ACTIVITY_STATUS_OF_DRAFT = 2;
+    
+    const ACTIVITY_SHARE_OF_OK = 1;
+    const ACTIVITY_SHARE_OF_NONE = 2;
 
     const NAME_STATUS_OF_OK = 'ok';
     const NAME_STATUS_OF_COMING = 'coming';

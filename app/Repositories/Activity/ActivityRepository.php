@@ -21,6 +21,11 @@ class ActivityRepository {
             'start_time' => $data['start_time'],
             'end_time' => $data['end_time'],
             'coupons' => $data['coupons'],
+            'share_image' => $data['share_image'],
+            'share_friend_title' => $data['share_friend_title'],
+            'share_desc' => $data['share_desc'],
+            'share_moment_title' => $data['share_moment_title'],
+            'can_share' => array_get($data, 'can_share', ActivityProtocol::ACTIVITY_SHARE_OF_OK),
             'status' => array_get($data, 'status', ActivityProtocol::ACTIVITY_STATUS_OF_OK),
         ];
     }

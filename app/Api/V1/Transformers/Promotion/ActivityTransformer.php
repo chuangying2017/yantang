@@ -21,6 +21,11 @@ class ActivityTransformer extends TransformerAbstract {
             'background_color' => $activity['background_color'],
             'start_time' => $activity['start_time'],
             'end_time' => $activity['end_time'],
+            'share_image' => $activity['share_image'],
+            'share_friend_title' => $activity['share_friend_title'],
+            'share_desc' => $activity['share_desc'],
+            'share_moment_title' => $activity['share_moment_title'],
+            'can_share' => $activity['can_share'],
             'status' => ActivityProtocol::statusName($activity['status'], $activity['start_time'], $activity['end_time']),
         ];
 

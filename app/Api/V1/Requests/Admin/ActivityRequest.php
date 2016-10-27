@@ -29,6 +29,11 @@ class ActivityRequest extends Request {
             'coupons' => 'required',
             'background_color' => 'required',
             'cover_image' => 'required',
+            'share_image' => 'required',
+            'share_friend_title' => 'required',
+            'share_desc' => 'required',
+            'share_moment_title' => 'required',
+            'can_share' => 'required',
         ];
     }
 }

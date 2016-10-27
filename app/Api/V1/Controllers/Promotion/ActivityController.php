@@ -16,7 +16,7 @@ class ActivityController extends Controller {
      * @var ActivityRepository
      */
     private $activityRepo;
-    
+
     /**
      * ActivityController constructor.
      * @param ActivityRepository $activityRepo
@@ -37,7 +37,11 @@ class ActivityController extends Controller {
     {
         $activity = $this->activityRepo->get($activity_no, true);
 
-        return $this->response->item($activity, new ActivityTransformer());
+        if ($activity['status'] == ActivityProtocol::ACTIVITY_STATUS_OF_OK) {
+            return $this->response->item($activity, new ActivityTransformer());
+        }
+
+        return $this->response->noContent();
     }
 
 
