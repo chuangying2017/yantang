@@ -1,7 +1,7 @@
 <?php namespace App\Models\Subscribe;
 
 use App\Models\Access\User\User;
-use Guzzle\Http\Client;
+use App\Models\Client\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,6 +21,11 @@ class StationStaff extends Model {
     public function client()
     {
         return $this->belongsTo(Client::class, 'user_id', 'user_id');
+    }
+
+    public function station()
+    {
+        return $this->belongsTo(Station::class, 'station_id', 'id');
     }
 
     public function preorders()

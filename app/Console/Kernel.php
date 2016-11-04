@@ -40,6 +40,9 @@ class Kernel extends ConsoleKernel {
 
         //client
         'App\Console\Commands\FillClientGender',
+        
+        //coupon
+        'App\Console\Commands\SeedCouponForSpecifyUser',
 
     ];
 
