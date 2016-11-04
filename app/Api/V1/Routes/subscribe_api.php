@@ -11,6 +11,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
         $api->group(['middleware' => ['api.auth', 'access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STAFF]], function ($api) {
             $api->get('info', 'StaffController@info');
+            $api->get('all', 'StaffController@index');
             $api->get('preorders/daily', 'StaffPreorderController@daily');
             $api->put('preorders/{order_id}/pause', 'StaffPreorderController@pause');
             $api->put('preorders/{order_id}/restart', 'StaffPreorderController@restart');

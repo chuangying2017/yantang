@@ -93,9 +93,11 @@ class StaffController extends Controller {
     }
 
 
-    public function index($station_id)
+    public function index(Request $request)
     {
+        $station_id = $request->input('station_id');
         $staffs = $this->staffRepo->getAllActive($station_id);
+        $staffs->load('station');
 
         return $this->response->collection($staffs, new StaffTransformer());
     }

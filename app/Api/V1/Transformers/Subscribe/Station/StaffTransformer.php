@@ -11,16 +11,30 @@ class StaffTransformer extends TransformerAbstract {
             'id' => (int)$staff->id,
             'staff_no' => $staff->staff_no,
             'name' => $staff->name,
-            'station' => ['id' => $staff->station_id],
             'user' => ['id' => $staff->user_id],
             'phone' => $staff->phone,
         ];
 
-        if(isset($staff['bind_token'])) {
+        
+        if ($staff->relationLoaded('station')) {
+            $this->defaultIncludes = ['station'];
+        } else {
+            $data['station'] = ['id' => $staff->station_id];
+        }
+
+        if (isset($staff['bind_token'])) {
             $data['bind_token'] = $staff['bind_token'];
         }
 
         return $data;
+    }
+
+    public function includeStation(StationStaff $staff)
+    {
+        if($staff['station']) {
+            return $this->item($staff['station'], new StationTransformer(false), true);
+        }
+        return null;
     }
 
 }
