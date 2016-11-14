@@ -70,15 +70,25 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
     {
         $model = $this->getModel();
 
-        $promotion_data = [
-            'name' => array_get($data, 'name'),
-            'content' => array_get($data, 'content'),
-            'desc' => array_get($data, 'desc', ''),
-            'cover_image' => array_get($data, 'cover_image', ''),
-            'start_time' => array_get($data, 'start_time', Carbon::now()),
-            'end_time' => array_get($data, 'end_time', Carbon::today()->addYears(10)),
-            'active' => array_get($data, 'active', 1),
-        ];
+        if ($promotion_id) {
+            $promotion_data = array_only($data, [
+                'name',
+                'desc',
+                'content',
+                'cover_image',
+                'active'
+            ]);
+        } else {
+            $promotion_data = [
+                'name' => array_get($data, 'name'),
+                'content' => array_get($data, 'content'),
+                'desc' => array_get($data, 'desc', ''),
+                'cover_image' => array_get($data, 'cover_image', ''),
+                'start_time' => array_get($data, 'start_time', Carbon::now()),
+                'end_time' => array_get($data, 'end_time', Carbon::today()->addYears(10)),
+                'active' => array_get($data, 'active', 1),
+            ];
+        }
 
         $promotion = is_null($promotion_id) ? new $model : $this->get($promotion_id);
         $promotion->fill($promotion_data);

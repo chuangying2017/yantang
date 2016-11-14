@@ -20,7 +20,7 @@ trait Counter {
     {
         return PromotionCounter::query()->where('promotion_id', $promotion_id)->update([
             'total' => $total,
-            'days' => $days
+            'effect_days' => $days
         ]);
     }
 
