@@ -50,8 +50,10 @@ class CouponController extends Controller {
 
     public function update(Request $request, $promotion_id)
     {
-        $active = PromotionProtocol::validActive($request->input('active'));
-        $coupon = $this->couponRepo->updateActiveStatus($promotion_id, $active);
+        $coupon = $this->couponRepo->update($promotion_id, $request->all());
+
+//        $active = PromotionProtocol::validActive($request->input('active'));
+//        $coupon = $this->couponRepo->updateActiveStatus($promotion_id, $active);
 
         return $this->response->item($coupon, new CouponTransformer());
     }

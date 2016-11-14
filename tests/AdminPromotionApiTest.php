@@ -36,6 +36,8 @@ class AdminPromotionApiTest extends TestCase {
         $this->echoJson();
 
         $this->assertResponseStatus(201);
+
+        return $promotion['id'];
     }
 
 
@@ -131,7 +133,6 @@ class AdminPromotionApiTest extends TestCase {
     }
 
 
-
     protected function getCouponDataOfShouDan()
     {
         $data = [
@@ -185,7 +186,7 @@ class AdminPromotionApiTest extends TestCase {
         $user_ids = 100;
         $this->json('post', 'admin/promotions/tickets', [
             'coupon_id' => $coupon_id,
-            'user_ids' =>$user_ids,
+            'user_ids' => $user_ids,
             'quantity' => 4,
         ], $this->getAuthHeader());
 
@@ -194,6 +195,38 @@ class AdminPromotionApiTest extends TestCase {
         $this->json('get', 'promotions/tickets', [], $this->getAuthHeader($user_ids));
 
         $this->dump();
+
+    }
+
+    /** @test */
+    public function it_can_update_a_coupon()
+    {
+        $promotion_id = $this->it_can_create_a_coupon();
+
+        $data = [
+            'id' => $promotion_id,
+            'name' => 'change14',
+            'desc' => 'change14',
+            'content' => 'change12',
+            'active' => 1,
+        ];
+
+        $counter = [
+            'promotion_id' => $promotion_id,
+            'total' => 100012,
+            'effect_days' => 32
+        ];
+
+        $this->json('put',
+            'admin/promotions/coupons/' . $promotion_id,
+            array_merge($data, $counter),
+            $this->getAuthHeader()
+        );
+
+        $this->assertResponseStatus(200);
+
+        $this->seeInDatabase('promotions', $data);
+        $this->seeInDatabase('promotion_counter', $counter);
 
     }
 }

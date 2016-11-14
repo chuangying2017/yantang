@@ -22,7 +22,9 @@ class EloquentCouponRepository extends PromotionRepositoryAbstract implements Co
 
     protected function updateRelation($coupon_id, $data)
     {
-        $this->updateCounter($coupon_id, $data['total'], $data['effect_days']);
+        if (isset($data['total']) && isset($data['effect_days'])) {
+            $this->updateCounter($coupon_id, $data['total'], $data['effect_days']);
+        }
     }
 
     public function get($promotion_id, $with_detail = true)
