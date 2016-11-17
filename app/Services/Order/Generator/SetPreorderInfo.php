@@ -26,11 +26,11 @@ class SetPreorderInfo extends GenerateHandlerAbstract {
     protected function setPreorderSkusAndCalEndTime(TempOrder $temp_order, $preorder)
     {
         $skus = $temp_order->getSkus();
-        $max_day = 100000;
+        $max_day = 0;
         $preorder_skus = [];
         foreach ($skus as $key => $sku) {
             $current_day = ceil($sku['quantity'] / $sku['per_day']);
-            if ($max_day > ($current_day)) {
+            if ($max_day < $current_day) {
                 $max_day = $current_day;
             }
 
