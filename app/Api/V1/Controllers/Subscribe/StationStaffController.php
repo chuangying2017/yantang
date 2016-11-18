@@ -34,9 +34,10 @@ class StationStaffController extends Controller {
     public function index(Request $request)
     {
         $status = $request->input('status') ?: null;
+        $with_trash = $request->input('all') ?: 0;
 
-        $staffs = $this->staffRepo->getAll(access()->stationId(), $status);
-
+        $staffs = $this->staffRepo->getAll(access()->stationId(), $status, $with_trash);
+        
         return $this->response->collection($staffs, new StaffTransformer());
     }
 

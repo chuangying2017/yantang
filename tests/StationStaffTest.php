@@ -19,6 +19,16 @@ class StationStaffTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /** @test */
+    public function it_can_get_all_staffs()
+    {
+        $this->json('get', 'stations/staffs', [
+            'all' => 1
+        ], $this->getAuthHeader(3));
+
+        $this->dump();
+    }
+
 
 
     /** @test */
@@ -61,7 +71,7 @@ class StationStaffTest extends TestCase
             );
         }
 
-        $this->echoJson();
+        $this->dump();
 
         $this->assertResponseOk();
     }

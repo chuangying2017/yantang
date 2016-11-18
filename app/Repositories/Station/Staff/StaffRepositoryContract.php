@@ -25,7 +25,7 @@ interface StaffRepositoryContract
 
     public function getStaffIdByUser($user_id);
 
-    public function getAll($station_id, $status = null);
+    public function getAll($station_id, $status = null, $with_trash = false);
 
     public function getAllActive($station_id);
 

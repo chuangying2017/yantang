@@ -10,12 +10,12 @@ class StaffTransformer extends TransformerAbstract {
         $data = [
             'id' => (int)$staff->id,
             'staff_no' => $staff->staff_no,
-            'name' => $staff->name,
+            'name' => $staff->name . (is_null($staff['deleted_at']) ? '' : '(已删除)'),
             'user' => ['id' => $staff->user_id],
             'phone' => $staff->phone,
         ];
 
-        
+
         if ($staff->relationLoaded('station')) {
             $this->defaultIncludes = ['station'];
         } else {
@@ -31,7 +31,7 @@ class StaffTransformer extends TransformerAbstract {
 
     public function includeStation(StationStaff $staff)
     {
-        if($staff['station']) {
+        if ($staff['station']) {
             return $this->item($staff['station'], new StationTransformer(false), true);
         }
         return null;

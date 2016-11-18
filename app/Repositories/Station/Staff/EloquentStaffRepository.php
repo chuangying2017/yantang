@@ -108,9 +108,9 @@ class EloquentStaffRepository implements StaffRepositoryContract {
         return StationStaff::query()->where('user_id', $user_id)->first();
     }
 
-    public function getAll($station_id, $status = null)
+    public function getAll($station_id, $status = null, $with_trash = false)
     {
-        return $this->queryStaffs($station_id, $status);
+        return $this->queryStaffs($station_id, $status, null, $with_trash);
     }
 
     public function getAllActive($station_id)
@@ -123,7 +123,7 @@ class EloquentStaffRepository implements StaffRepositoryContract {
         return $this->queryStaffs($station_id, StationProtocol::STATUS_OF_STAFF_BANNED);
     }
 
-    protected function queryStaffs($station_id = null, $status = null, $per_page = null)
+    protected function queryStaffs($station_id = null, $status = null, $per_page = null, $with_trash = false)
     {
         #todo 缓存;
         $query = StationStaff::query();
@@ -132,6 +132,10 @@ class EloquentStaffRepository implements StaffRepositoryContract {
         }
         if (!is_null($status)) {
             $query->where('status', $status);
+        }
+
+        if($with_trash) {
+            $query->withTrashed();
         }
 
         if (!is_null($per_page)) {
