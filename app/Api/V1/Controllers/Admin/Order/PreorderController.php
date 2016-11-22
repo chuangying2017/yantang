@@ -2,6 +2,7 @@
 
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Admin\Preorders\UpdateAssignRequest;
+use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Chart\ExcelService;
@@ -52,9 +53,15 @@ class PreorderController extends Controller {
     {
         $station_id = $request->input('station');
 
-        $assign = $assignRepo->createAssign($order_id, $station_id);
+        $order = $this->preorderRepo->get($order_id, false);
 
-        return $this->response->array(['data' => $assign]);
+        if ($order->isConfirm() && !access()->hasRole(AccessProtocol::ID_ROLE_OF_SUPERVISOR)) {
+            return $this->response->array(['data' => $order->assign]);
+        }
+
+        $order->changeStation($station_id);
+
+        return $this->response->array(['data' => $order->assign]);
     }
 //
 //    public function reject(Request $request)

@@ -46,20 +46,43 @@ class AdminPreorderApiTest extends TestCase {
     /** @test */
     public function it_can_assign_new_station_for_preorder()
     {
-        $preorder_id = 15;
-        $station_id = 2;
+        $preorder_id = 11694;
+        $station_id = 47;
+        $normal_station_admin = 10542;
 
-        $this->json('put', 'admin/subscribe/orders/' . $preorder_id,
+        $invoice_preorder = \App\Models\Subscribe\Preorder::query()->where('status', \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING)
+            ->where('invoice', 1)->first();
+        $un_invoice_preorder = \App\Models\Subscribe\Preorder::query()->where('status', \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING)
+            ->where('invoice', 0)->first();
+
+
+        $this->json('put', 'admin/subscribe/orders/' . $un_invoice_preorder['id'],
             [
                 'station' => $station_id
             ],
-            $this->getAuthHeader());
+            $this->getAuthHeader(1));
 
-        $this->echoJson();
 
         $this->assertResponseStatus(200);
 
-        $this->seeInDatabase('preorder_assign', ['preorder_id' => $preorder_id, 'station_id' => $station_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED]);
+        $un_invoice_preorder = \App\Models\Subscribe\Preorder::query()->find($un_invoice_preorder['id']);
+
+        $this->assertNull($un_invoice_preorder['confirm_at']);
+
+        $this->seeInDatabase('preorders', ['id' => $un_invoice_preorder['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
+        $this->seeInDatabase('preorder_assign', ['preorder_id' => $un_invoice_preorder['id'], 'station_id' => $station_id, 'status' => \App\Services\Preorder\PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED, 'memo' => '接错重派']);
+
+
+        $this->json('put', 'admin/subscribe/orders/' . $un_invoice_preorder['id'],
+            [
+                'station' => $station_id
+            ],
+            $this->getAuthHeader(1));
+
+        $invoice_preorder = \App\Models\Subscribe\Preorder::query()->find($invoice_preorder['id']);
+        $this->assertNotNull($invoice_preorder['confirm_at']);
+
+        
     }
 
     /** @test */
