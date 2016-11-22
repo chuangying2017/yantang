@@ -2,6 +2,8 @@
 class OrderProtocol {
 
     const ORDER_PER_PAGE = 10;
+    
+    const ORDER_IS_PAID = 'paid';
 
     const STATUS_OF_UNPAID = 'unpaid';
     const STATUS_OF_PAYMENT_VERIFY = 'pay_verify';

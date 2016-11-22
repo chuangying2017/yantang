@@ -3,6 +3,7 @@
 use App\Models\Pay\PingxxPaymentRefund;
 use App\Repositories\Pay\RefundPaymentRepositoryContract;
 use App\Repositories\Pay\RefundRepositoryContract;
+use App\Services\Pay\Events\PingxxRefundPaymentIsDone;
 use App\Services\Pay\Events\PingxxRefundPaymentIsFail;
 use App\Services\Pay\Events\PingxxRefundPaymentIsSucceed;
 use App\Services\Pay\Pingxx\PingxxProtocol;
@@ -122,7 +123,7 @@ class PingxxRefundPaymentRepository implements RefundRepositoryContract, RefundP
         $payment->succeed = true;
         $payment->save();
 
-        event(new PingxxRefundPaymentIsSucceed($payment));
+        event(new PingxxRefundPaymentIsDone($payment));
 
         return $payment;
     }

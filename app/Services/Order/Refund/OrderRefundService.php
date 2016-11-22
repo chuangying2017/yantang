@@ -79,8 +79,6 @@ class OrderRefundService implements OrderRefundServiceContract {
         if (!is_null($refund_order_billing)) {
             $this->refund->refund($this->billingService->setID($refund_order_billing));
         }
-        
-        
 
         return $this->orderRepo->updateRefundAsRefunding($order['order_no']);
     }
