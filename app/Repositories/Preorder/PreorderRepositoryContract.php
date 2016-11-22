@@ -54,6 +54,11 @@ interface PreorderRepositoryContract {
     
     public function getByOrder($origin_order_id, $date = null);
 
+	/**
+     * @param $order_id
+     * @param bool $with_detail
+     * @return Preorder
+     */
     public function get($order_id, $with_detail = false);
 
     public function deletePreorder($order_id);

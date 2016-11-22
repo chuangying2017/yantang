@@ -1,5 +1,6 @@
 <?php namespace App\Models\Subscribe;
 
+use App\Events\Preorder\AssignIsCreate;
 use App\Models\Access\User\User;
 use App\Models\Billing\OrderBilling;
 use App\Models\Billing\PreorderBilling;
@@ -7,6 +8,8 @@ use App\Models\District;
 use App\Models\Order\Order;
 use App\Models\Promotion\Ticket;
 use App\Models\RedEnvelope\RedEnvelopeRecord;
+use App\Services\Preorder\PreorderProtocol;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,6 +36,9 @@ class Preorder extends Model {
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function assign()
     {
         return $this->hasOne(PreorderAssign::class);
@@ -76,6 +82,61 @@ class Preorder extends Model {
     public function billings()
     {
         return $this->hasMany(OrderBilling::class, 'order_id', 'order_id');
+    }
+
+    //操作
+    public function changeStation($station_id)
+    {
+        if ($this->isAssigning()) {
+            $this->assign()->delete();
+            $this->addAssign($station_id);
+        } else if ($this->isConfirm()) {
+            $this->assign()->delete();
+            $this->addAssign($station_id, '接错重派');
+            $this->fill([
+                'station_id' => $station_id,
+                'staff_id' => 0,
+                'status' => PreorderProtocol::ORDER_STATUS_OF_ASSIGNING
+            ]);
+            
+            if (!$this->isInvoice()) {
+                $this->attributes['confirm_at'] = null;
+            }
+            
+            $this->save();
+        }
+    }
+
+    public function isAssigning()
+    {
+        return in_array($this->attributes['status'], [
+            PreorderProtocol::ORDER_STATUS_OF_ASSIGNING,
+        ]);
+    }
+
+    public function isConfirm()
+    {
+        return in_array($this->attributes['status'], [
+            PreorderProtocol::ORDER_STATUS_OF_SHIPPING,
+            PreorderProtocol::ORDER_STATUS_OF_DONE,
+        ]);
+    }
+
+    public function isInvoice()
+    {
+        return $this->attributes['invoice'];
+    }
+
+    public function addAssign($station_id, $memo = '')
+    {
+        $assign = $this->assign()->create([
+            'station_id' => $station_id,
+            'status' => PreorderProtocol::ASSIGN_STATUS_OF_UNTREATED,
+            'time_before' => Carbon::now()->addHours(PreorderProtocol::HOURS_OF_ASSIGN_DISPOSE_HOURS),
+            'memo' => $memo
+        ]);
+
+        event(new AssignIsCreate($assign));
     }
 
 }
