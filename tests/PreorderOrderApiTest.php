@@ -14,14 +14,14 @@ class PreorderOrderApiTest extends TestCase {
         $address = $this->it_can_create_a_subscribe_address();
         $data = [
             'skus' => [
-                ['product_sku_id' => 219, 'quantity' => 15, 'per_day' => 2],
-                ['product_sku_id' => 220, 'quantity' => 90, 'per_day' => 3],
+                ['product_sku_id' => 226, 'quantity' => 90, 'per_day' => 2],
+                ['product_sku_id' => 227, 'quantity' => 90, 'per_day' => 3],
             ],
             'address_id' => $address['id'],
             'station_id' => 1,
             'daytime' => 0,
             'weekday_type' => 'all',
-            'start_time' => '2016-10-21',
+            'start_time' => '2016-11-25',
             'channel' => 'wx_pub_qr'
         ];
 
@@ -89,9 +89,10 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->seeInDatabase('tickets', [
             'user_id' => 1,
-            'promotion_id' => 8,
+            'promotion_id' => 34,
             'source_type' => \App\Services\Promotion\PromotionProtocol::TICKET_RESOURCE_OF_ORDER,
-            'source_id' => $order['id']]);
+            'source_id' => $order['id']]
+        );
 
 //        $this->seeInDatabase('red_records', [
 //            'user_id' => 1,
@@ -100,7 +101,7 @@ class PreorderOrderApiTest extends TestCase {
 //            'resource_id' => $order['id']]);
 
         $this->seeInDatabase('order_marks', [
-            'order_id' => $order['id'], 
+            'order_id' => $order['id'],
             'mark_type' => \App\Services\Order\OrderProtocol::ORDER_MARK_TYPE_OF_FIRST,
             'mark_content' => \App\Services\Order\OrderProtocol::ORDER_MARK_CONTENT_OF_FIRST
         ]);
