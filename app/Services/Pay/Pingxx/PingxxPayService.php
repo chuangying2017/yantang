@@ -34,7 +34,7 @@ class PingxxPayService implements ThirdPartyPayContract {
     public function pay(BillingContract $billing)
     {
         if ($billing->isPaid(true)) {
-            throw new \Exception('订单已支付,无需重复支付', 402);
+            return OrderProtocol::ORDER_IS_PAID;
         }
 
         $payment = $this->paymentRepository->getPaymentByBilling($billing->getID(), $billing->getType(), $this->getChannel());

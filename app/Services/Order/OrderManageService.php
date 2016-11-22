@@ -65,6 +65,11 @@ class OrderManageService implements OrderManageContract {
                 return $this->orderRepo->updateOrderStatusAsCancel($order);
             }
         }
+        
+        //无需支付,直接取消
+        if($order['pay_amount'] == 0) {
+            return $this->orderRepo->updateOrderStatusAsCancel($order);
+        }
 
         //生成退款退货订单
         $refund_order_generator = app()->make(RefundOrderGenerator::class);

@@ -74,7 +74,6 @@ class PingxxRefundService implements ThirdPartyRefundContract {
 
             $payment = $this->paymentRepository->updateRefundPaymentAsDone($payment);
 
-            event(new PingxxRefundPaymentIsDone($payment));
 
             return true;
         } else {

@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Billing;
 
+use App\Events\Order\MainBillingIsPaid;
 use App\Models\Billing\OrderBilling;
 use App\Repositories\NoGenerator;
 use App\Services\Billing\BillingProtocol;
@@ -30,9 +31,10 @@ class OrderBillingRepository implements BillingRepositoryContract {
         if(!is_null($pay_channel)) {
             $billing->pay_channel = $pay_channel;
         }
-
         $billing->status = BillingProtocol::STATUS_OF_PAID;
         $billing->save();
+
+        event(new MainBillingIsPaid($billing));
 
         return $billing;
     }

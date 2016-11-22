@@ -53,6 +53,11 @@ class OrderCheckoutService implements OrderCheckoutContract {
             throw new \Exception('订单无支付信息');
         }
 
+        if ($billing['amount'] <= 0) {
+            $this->billingRepo->updateAsPaid($billing);
+            return OrderProtocol::ORDER_IS_PAID;
+        }
+
         $charge = $this->payService->setChannel($pay_channel)->pay($this->orderBillingService->setID($billing));
 
         return $charge;

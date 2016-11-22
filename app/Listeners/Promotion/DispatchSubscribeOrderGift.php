@@ -33,11 +33,15 @@ class DispatchSubscribeOrderGift {
      */
     public function __construct(
         OrderManageService $orderManageService,
-        RedEnvelopeService $redEnvelopeService
+        RedEnvelopeService $redEnvelopeService,
+        CouponService $couponService,
+        CouponRepositoryContract $couponRepo
     )
     {
         $this->orderManageService = $orderManageService;
         $this->redEnvelopeService = $redEnvelopeService;
+        $this->couponRepo = $couponRepo;
+        $this->couponService = $couponService;
     }
 
     /**
@@ -52,7 +56,17 @@ class DispatchSubscribeOrderGift {
             $order = $event->order;
             $user_id = $order->user_id;
 
+            //送红包
             $this->redEnvelopeService->dispatchForOrder($order['id'], $user_id, $order['order_type']);
+
+            //送券
+            $coupons = $this->couponRepo->getAllByQualifyTye(PromotionProtocol::QUALI_TYPE_OF_PRE_ORDER);
+            if (count($coupons)) {
+                foreach ($coupons as $coupon) {
+                    $result = $this->couponService->dispatchWithoutCheck($user_id, $coupon['id'], PromotionProtocol::TICKET_RESOURCE_OF_ORDER, $order['id']);
+                }
+            }
+
         } catch (\Exception $e) {
             \Log::error($e);
         }
