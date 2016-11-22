@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\Order\OrderProtocol;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -14,8 +15,7 @@ class PreorderOrderApiTest extends TestCase {
         $address = $this->it_can_create_a_subscribe_address();
         $data = [
             'skus' => [
-                ['product_sku_id' => 226, 'quantity' => 90, 'per_day' => 2],
-                ['product_sku_id' => 227, 'quantity' => 90, 'per_day' => 3],
+                ['product_sku_id' => 226, 'quantity' => 30, 'per_day' => 2],
             ],
             'address_id' => $address['id'],
             'station_id' => 1,
@@ -39,9 +39,9 @@ class PreorderOrderApiTest extends TestCase {
     {
         $temp_order_id = $this->it_can_create_a_preorder_temp_order();
 
-//        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
-//            'ticket' => 16
-//        ], $this->getAuthHeader());
+        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
+            'ticket' => 47570
+        ], $this->getAuthHeader());
 
 //        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
 //            'ticket' => 51
@@ -67,6 +67,11 @@ class PreorderOrderApiTest extends TestCase {
         $this->assertResponseStatus(201);
         $charge = $this->getResponseData('meta.charge');
         $order = $this->getResponseData('data');
+
+        //无需付款
+        $this->assertEquals($charge, \App\Services\Order\OrderProtocol::ORDER_IS_PAID);
+        return $order;
+
         //模拟付款
         $pay_url = "http://sissi.pingxx.com/notify.php?ch_id=" . $charge['id'];
         $this->getUrl($pay_url);
@@ -88,10 +93,10 @@ class PreorderOrderApiTest extends TestCase {
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
 
         $this->seeInDatabase('tickets', [
-            'user_id' => 1,
-            'promotion_id' => 34,
-            'source_type' => \App\Services\Promotion\PromotionProtocol::TICKET_RESOURCE_OF_ORDER,
-            'source_id' => $order['id']]
+                'user_id' => 1,
+                'promotion_id' => 34,
+                'source_type' => \App\Services\Promotion\PromotionProtocol::TICKET_RESOURCE_OF_ORDER,
+                'source_id' => $order['id']]
         );
 
 //        $this->seeInDatabase('red_records', [
@@ -141,7 +146,7 @@ class PreorderOrderApiTest extends TestCase {
 
 
     /** @test */
-    public function it_can_create_a_order_and_refund()
+    public function it_can_create_a_order_and_cancel_and_refund()
     {
         $order = $this->it_can_create_a_preorder_order();
 
@@ -152,6 +157,7 @@ class PreorderOrderApiTest extends TestCase {
                 'memo' => '后悔'
             ], $this->getAuthHeader());
 
+        $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_CANCEL]);
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
         $this->assertResponseStatus(204);
     }
