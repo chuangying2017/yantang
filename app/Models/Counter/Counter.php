@@ -30,4 +30,33 @@ class Counter extends Model {
         return $this->hasMany(YearlyCounter::class, 'counter_id', 'id')->orderBy('time', 'desc');
     }
 
+
+    public function setAmount($amount)
+    {
+        $this->attributes['amount'] = $amount;
+        $this->save();
+        return $this;
+    }
+
+    public function setQuantity($quantity)
+    {
+        $this->attributes['quantity'] = $quantity;
+        $this->save();
+        return $this;
+    }
+
+    public function setUserCount($user_count)
+    {
+        $this->attributes['user_count'] = $user_count;
+        $this->save();
+        return $this;
+    }
+
+    public function setUserCountKpi($user_count_kpi)
+    {
+        $this->attributes['user_count_kpi'] = $user_count_kpi;
+        $this->save();
+        return $this;
+    }
+
 }

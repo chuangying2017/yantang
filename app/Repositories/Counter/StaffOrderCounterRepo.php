@@ -14,6 +14,6 @@ class StaffOrderCounterRepo extends CounterRepositoryAbstract {
 
     public function getName($source_id)
     {
-        return StationStaff::query()->find($source_id)->pluck('name')->first();
+        return StationStaff::query()->where('id', $source_id)->pluck('name')->first();
     }
 }

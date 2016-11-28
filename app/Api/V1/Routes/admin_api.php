@@ -157,6 +157,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
         //管理服务部
         $api->group(['namespace' => 'Station'], function ($api) {
             $api->put('stations/{station_id}/unbind', 'StationController@unbind');
+            $api->put('stations/{station_id}/kpi', 'StationController@setKpi');
             $api->resource('stations', 'StationController');
             $api->resource('districts', 'DistrictController');
         });

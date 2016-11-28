@@ -10,7 +10,9 @@ class CounterTransformer extends TransformerAbstract {
         return [
             'name' => $counter['source_name'],
             'quantity' => $counter['quantity'],
-            'amount' => display_price($counter['total_amount']),
+            'amount' => display_price($counter['amount']),
+            'user_count' => $counter['user_count'],
+            'user_count_kpi' => $counter['user_count_kpi'],
         ];
     }
 

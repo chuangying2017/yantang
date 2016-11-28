@@ -6,6 +6,7 @@ namespace App\Api\V1\Controllers\Admin\Station;
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Admin\CreateStationRequest;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
+use App\Repositories\Counter\StationOrderCounterRepo;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
 use Illuminate\Http\Request;
@@ -109,5 +110,17 @@ class StationController extends Controller {
         $this->stationRepo->deleteStation($id);
 
         return $this->response->noContent();
+    }
+
+    public function setKpi(Request $request, $station_id, StationOrderCounterRepo $stationOrderCounterRepo)
+    {
+        $user_count_kpi = $request->input('user_count_kpi');
+        $station = $this->stationRepo->getStation($station_id, false);
+        $station_counter = $station->counter;
+        if ($station_counter) {
+            $station_counter->setUserCountKpi($user_count_kpi);
+        }
+
+        return $this->response->item($station, new StationTransformer(false));
     }
 }

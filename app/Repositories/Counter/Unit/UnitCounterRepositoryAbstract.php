@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Counter\Unit;
 
+use App\Models\Counter\Counter;
 use App\Models\Counter\UnitCounter;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -18,18 +19,24 @@ abstract class UnitCounterRepositoryAbstract {
      */
     public abstract function getCounterTime($time = null);
 
-    public function getCounter($counter_id, $time = null)
+    public function getCounter(Counter $counter, $time = null)
     {
+        if (!($counter instanceof Counter)) {
+            $counter = Counter::query()->find($counter);
+        }
+
         return $this->getQuery()->firstOrCreate([
             'type' => $this->getType(),
-            'counter_id' => $counter_id,
+            'counter_id' => $counter['id'],
+            'source_type' => $counter['source_type'],
+            'source_id' => $counter['source_id'],
             'time' => $this->getCounterTime($time)
         ]);
     }
 
-    public function calUnitCounter($counter_id, $quantity, $amount, $increment = true, $time = null)
+    public function calUnitCounter(Counter $counter, $quantity, $amount, $increment = true, $time = null)
     {
-        $unit_counter = $this->getCounter($counter_id, $time);
+        $unit_counter = $this->getCounter($counter, $time);
         if ($increment) {
             $unit_counter->quantity += $quantity;
             $unit_counter->amount += $amount;
