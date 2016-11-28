@@ -120,4 +120,15 @@ class AdminStationApiTest extends TestCase {
 
         $this->dump();
     }
+
+    /** @test */
+    public function it_can_set_station_kpi()
+    {
+        $station_id = 4;
+        $this->json('put', 'admin/stations/' . $station_id . '/kpi', [
+            'user_count_kpi' => 30
+        ], $this->getAuthHeader());
+
+        $this->dump();
+    }
 }

@@ -1,7 +1,9 @@
 <?php namespace App\Models\Subscribe;
 
 use App\Models\Access\User\User;
+use App\Models\Counter\Counter;
 use App\Models\District;
+use App\Repositories\Counter\CounterProtocol;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -45,5 +47,10 @@ class Station extends Model {
     public function district()
     {
         return $this->belongsTo(District::class);
+    }
+
+    public function counter()
+    {
+        return $this->hasOne(Counter::class, 'source_id', 'id')->where('source_type', CounterProtocol::COUNTER_TYPE_OF_STATION_PREORDER);
     }
 }

@@ -34,6 +34,11 @@ abstract class CounterRepositoryAbstract {
             ->get();
     }
 
+	/**
+     * @param $source_id
+     * @param null $source_name
+     * @return Counter
+     */
     public function createCounter($source_id, $source_name = null)
     {
         return Counter::query()->updateOrCreate(
@@ -49,6 +54,11 @@ abstract class CounterRepositoryAbstract {
         );
     }
 
+	/**
+     * @param $source_id
+     * @param bool $create_if_not_exist
+     * @return Counter
+     */
     public function getCounter($source_id, $create_if_not_exist = false)
     {
         if ($source_id instanceof Counter) {
@@ -102,6 +112,7 @@ abstract class CounterRepositoryAbstract {
 
         return $counter;
     }
+
 
 
 }

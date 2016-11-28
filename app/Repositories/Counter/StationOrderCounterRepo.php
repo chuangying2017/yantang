@@ -14,6 +14,6 @@ class StationOrderCounterRepo extends CounterRepositoryAbstract {
 
     public function getName($source_id)
     {
-        return Station::query()->find($source_id)->pluck('name')->first();
+        return Station::query()->where('id', $source_id)->pluck('name')->first();
     }
 }
