@@ -33,6 +33,7 @@ class StationController extends Controller {
     {
         try {
             $station = $this->stationRepo->getStationByUser(access()->id());
+            $station->load('counter');
 
             return $this->response->item($station, new StationTransformer());
 
