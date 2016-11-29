@@ -25,7 +25,7 @@ class StationApiTest extends TestCase {
                 ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
             );
         }
-        $this->dumpResponse();
+        $this->echoJson();
 
         $this->assertResponseOk();
     }

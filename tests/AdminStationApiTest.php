@@ -76,7 +76,7 @@ class AdminStationApiTest extends TestCase {
     /** @test */
     public function it_can_get_station_list()
     {
-        $this->it_can_create_a_station();
+//        $this->it_can_create_a_station();
         $user_id = 1;
         $district_id = 1;
         $per_page = 10;
@@ -84,14 +84,13 @@ class AdminStationApiTest extends TestCase {
 
         $this->json('get', 'admin/stations',
             [
-                'district_id' => $district_id,
-                'keyword' => $keyword,
+//                'keyword' => $keyword,
                 'paginate' => $per_page,
             ],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
 
-        $this->dumpResponse();
+        $this->echoJson();
     }
 
     /** @test */
@@ -129,6 +128,6 @@ class AdminStationApiTest extends TestCase {
             'user_count_kpi' => 30
         ], $this->getAuthHeader());
 
-        $this->dump();
+        $this->echoJson();
     }
 }

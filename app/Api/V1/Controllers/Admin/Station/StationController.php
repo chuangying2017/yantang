@@ -38,6 +38,7 @@ class StationController extends Controller {
     public function index()
     {
         $stations = $this->stationRepo->getAll();
+        $stations->load('counter');
 
         return $this->response->collection($stations, new StationTransformer());
     }
