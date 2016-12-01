@@ -50,10 +50,10 @@ class AdminStationInvoiceTest extends TestCase {
     public function it_can_get_weazm_bounce()
     {
         $this->json('get', 'admin/invoices/bounce', [
-            'date' => '2016-9'
+            'date' => '2016-10'
         ], $this->getAuthHeader(1));
 
-        $this->dump();
+        $this->echoJson();
     }
 }
 

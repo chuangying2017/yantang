@@ -135,7 +135,7 @@ class ExcelService {
         
 
         $title = $title ?: '燕塘优鲜达威臣销售提成-' . Carbon::now()->toDateTimeString();
-        return self::saveAndDownload($e_datas, $title, 'bounce/', true);
+        return self::downExcel($e_datas, $title);
     }
 
 

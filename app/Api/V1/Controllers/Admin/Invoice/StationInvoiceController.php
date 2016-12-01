@@ -72,6 +72,10 @@ class StationInvoiceController extends Controller {
             return $this->response->array(['data' => $month_data]);
         }
 
+        if (Carbon::parse($date) > Carbon::now()->subMonth()) {
+            $this->response->errorNotFound();
+        }
+
         $preorders = $preorderRepo->getAll(null, null, null, null, [PreorderProtocol::ORDER_STATUS_OF_SHIPPING, PreorderProtocol::ORDER_STATUS_OF_DONE], Carbon::parse($date)->startOfMonth(), Carbon::parse($date)->endOfMonth(), 'confirm_at');
         return ExcelService::downloadPreorderBounce($preorders, '燕塘优鲜达威臣销售提成-' . $date);
     }
