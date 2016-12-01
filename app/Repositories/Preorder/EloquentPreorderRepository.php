@@ -408,9 +408,11 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     protected function scopeStatus($query, $order_status)
     {
+        if(is_array($order_status)) {
+            return $query->whereIn('status', $order_status);
+        }
 
         if (PreorderProtocol::validOrderStatus($order_status) === true) {
-
             $query->where('status', $order_status);
         } else if (PreorderProtocol::validOrderAssignStatus($order_status) === true) {
 
