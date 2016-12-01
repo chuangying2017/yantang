@@ -5,7 +5,10 @@ namespace App\Api\V1\Controllers\Admin\Invoice;
 use App\Api\V1\Transformers\Admin\Invoice\StationInvoiceTransformer;
 use App\Repositories\Invoice\InvoiceProtocol;
 use App\Repositories\Invoice\StationAdminInvoiceRepository;
+use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Chart\ExcelService;
+use App\Services\Preorder\PreorderProtocol;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -54,6 +57,25 @@ class StationInvoiceController extends Controller {
     {
         return $this->api->be(access()->user())->get('api/stations/invoices/' . $invoice_no . '/orders', $request->all());
     }
+
+
+    public function bounce(Request $request, PreorderRepositoryContract $preorderRepo)
+    {
+        $date = $request->input('date') ?: null;
+        if (!$date) {
+            $start_date = '2016-9';
+            $month_data[0] = $start_date;
+            $months = Carbon::now()->subMonth()->diffInMonths(Carbon::create(2016, 9));
+            for ($i = 1; $i <= $months; $i++) {
+                $month_data[$i] = Carbon::create(2016, 9)->addMonth($i)->format('Y-m');
+            }
+            return $this->response->array(['data' => $month_data]);
+        }
+
+        $preorders = $preorderRepo->getAll(null, null, null, null, [PreorderProtocol::ORDER_STATUS_OF_SHIPPING, PreorderProtocol::ORDER_STATUS_OF_DONE], Carbon::parse($date)->startOfMonth(), Carbon::parse($date)->endOfMonth(), 'confirm_at');
+        return ExcelService::downloadPreorderBounce($preorders, '燕塘优鲜达威臣销售提成-' . $date);
+    }
+
 
 }
 

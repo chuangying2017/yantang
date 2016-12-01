@@ -32,18 +32,10 @@ class PreorderController extends Controller {
         $station_id = $request->input('station_id') ? explode(',', $request->input('station_id')) : null;
         $time_name = $request->input('time_name', 'created_at');
 
-
         if ($request->input('export') == 'all') {
-            if ($time_name == 'confirm_at') {
-                $status = [PreorderProtocol::ORDER_STATUS_OF_SHIPPING, PreorderProtocol::ORDER_STATUS_OF_DONE];
-                $title = '威臣提成' . $start_time . '-' . $end_time;
-                $orders = $this->preorderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time, $time_name);
-                return ExcelService::downloadPreorderBounce($orders, $title);
-            }
             $orders = $this->preorderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time, $time_name);
             return ExcelService::downPreorder($orders);
         }
-
 
         $orders = $this->preorderRepo->getAllPaginated($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time);
         $orders->load('assign', 'station');

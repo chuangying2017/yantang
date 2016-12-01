@@ -115,6 +115,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
         $api->group(['namespace' => 'Invoice', 'prefix' => 'invoices'], function ($api) {
             $api->get('stations/{invoice_no}/orders', 'StationInvoiceController@orders')->name('admin.invoices.stations.orders');
             $api->resource('stations', 'StationInvoiceController', ['only' => ['index', 'show']]);
+            $api->get('bounce', 'StationInvoiceController@bounce');
         });
 
     });

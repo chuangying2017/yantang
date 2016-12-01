@@ -44,4 +44,16 @@ class AdminStationInvoiceTest extends TestCase {
         $this->echoJson();
         $this->assertResponseOk();
     }
+
+
+    /** @test */
+    public function it_can_get_weazm_bounce()
+    {
+        $this->json('get', 'admin/invoices/bounce', [
+            'date' => '2016-9'
+        ], $this->getAuthHeader(1));
+
+        $this->dump();
+    }
 }
+

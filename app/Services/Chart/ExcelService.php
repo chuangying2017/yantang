@@ -108,28 +108,34 @@ class ExcelService {
 
         $preorders->load([
             'skus' => function ($query) {
-                $query->select('order_id', 'name', 'total');
+                $query->select('product_sku_id', 'order_id', 'name', 'total');
             },
+            'skus.sku' => function ($query) {
+                $query->withTrashed()->select('id', 'price', 'settle_price');
+            }
         ]);
-
+        
         foreach ($preorders as $key => $preorder) {
             $e_data['订单号'] = $preorder['order_no'];
-//            $e_data['姓名'] = $preorder['name'];
-//            $e_data['电话'] = $preorder['phone'];
             $e_data['下单时间'] = $preorder['created_at'];
             $e_data['接单时间'] = $preorder['confirm_at'];
-//            $e_data['配送状态'] = PreorderProtocol::status($preorder['status']);
             $e_data['订单总价'] = display_price($preorder['total_amount']);
 
             foreach ($preorder['skus'] as $sku) {
-                $e_data['商品名称'] = $sku['name'];
-                $e_data['商品数量'] = $sku['total'];
+                $e_data['产品名'] = $sku['name'];
+                $e_data['数量'] = $sku['total'];
+                $e_data['原价'] = display_price($sku['sku']['price']);
+                $e_data['出厂价'] = display_price($sku['sku']['settle_price']);
+                $e_data['结算金额'] = display_price($sku['sku']['settle_price'] * $sku['total']);
+                $e_data['提成金额'] = $e_data['结算金额'] * 0.04;
             }
+
             $e_datas[] = $e_data;
         }
+        
 
-        $title = $title ?: '燕塘优鲜达威臣 - 导出时间:' . Carbon::now()->toDateTimeString();
-        return self::saveAndDownload($e_datas, $title, 'preorders/', true);
+        $title = $title ?: '燕塘优鲜达威臣销售提成-' . Carbon::now()->toDateTimeString();
+        return self::saveAndDownload($e_datas, $title, 'bounce/', true);
     }
 
 
