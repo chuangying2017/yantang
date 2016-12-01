@@ -124,6 +124,8 @@ class PreorderAssignRepository implements PreorderAssignRepositoryContract {
     public function deleteAssign($order_id)
     {
         $assign = $this->get($order_id);
-        return $assign->delete();
+        if($assign) {
+            return $assign->delete();
+        }
     }
 }

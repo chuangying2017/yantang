@@ -26,7 +26,10 @@ class AdminPreorderApiTest extends TestCase {
         $this->json('get', 'admin/subscribe/orders',
             [
                 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING,
-                'export' => 'all'
+                'export' => 'all',
+                'time_name' => 'confirm_at',
+                'start_time' => '2016-08-27',
+                'end_time' => '2016-10-31',
             ],
             $this->getAuthHeader());
         $this->dump();
@@ -82,7 +85,7 @@ class AdminPreorderApiTest extends TestCase {
         $invoice_preorder = \App\Models\Subscribe\Preorder::query()->find($invoice_preorder['id']);
         $this->assertNotNull($invoice_preorder['confirm_at']);
 
-        
+
     }
 
     /** @test */

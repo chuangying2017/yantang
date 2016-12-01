@@ -58,4 +58,5 @@ class StationInvoiceApiTest extends TestCase {
         $this->seeInDatabase('invoices', ['invoice_no' => $invoice_no, 'status' => $status]);
     }
 
+
 }

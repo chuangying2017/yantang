@@ -30,9 +30,10 @@ class PreorderController extends Controller {
         $end_time = $request->input('end_time') ?: null;
         $status = $request->input('status') ?: null;
         $station_id = $request->input('station_id') ? explode(',', $request->input('station_id')) : null;
+        $time_name = $request->input('time_name', 'created_at');
 
         if ($request->input('export') == 'all') {
-            $orders = $this->preorderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time);
+            $orders = $this->preorderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time, $time_name);
             return ExcelService::downPreorder($orders);
         }
 
