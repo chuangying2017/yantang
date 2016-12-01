@@ -59,7 +59,7 @@ class StationInvoiceController extends Controller {
     }
 
 
-    public function bounce(Request $request, PreorderRepositoryContract $preorderRepo)
+    public function bonus(Request $request, PreorderRepositoryContract $preorderRepo)
     {
         $date = $request->input('date') ?: null;
         if (!$date) {
