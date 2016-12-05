@@ -96,7 +96,12 @@ class StaffController extends Controller {
     public function index(Request $request)
     {
         $station_id = $request->input('station_id');
-        $staffs = $this->staffRepo->getAllActive($station_id);
+        $all = $request->input('all') ?: 0;
+        if ($all) {
+            $staffs = $this->staffRepo->getAll(null, null, true);
+        } else {
+            $staffs = $this->staffRepo->getAllActive($station_id);
+        }
         $staffs->load('station');
 
         return $this->response->collection($staffs, new StaffTransformer());

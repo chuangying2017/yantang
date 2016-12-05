@@ -59,14 +59,16 @@ class StationStaffTest extends TestCase
         $user_id = 1;
 
         $this->json('GET', 'staffs/all',
-            [],
+            [
+                'all' => 1
+            ],
             ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
         );
 
         if ($this->response->getStatusCode() == 403) {
             $this->it_can_bind_user_to_staff();
             $this->json('GET', 'staffs/all',
-                [],
+                ['all' => 1],
                 ['Authorization' => 'Bearer ' . $this->getToken($user_id)]
             );
         }
