@@ -112,14 +112,19 @@ class ExcelService {
             },
             'skus.sku' => function ($query) {
                 $query->withTrashed()->select('id', 'price', 'settle_price');
+            },
+            'order' => function ($query) {
+                $query->select('id', 'discount_amount', 'pay_amount', 'total_amount');
             }
         ]);
-        
+
         foreach ($preorders as $key => $preorder) {
             $e_data['订单号'] = $preorder['order_no'];
             $e_data['下单时间'] = $preorder['created_at'];
             $e_data['接单时间'] = $preorder['confirm_at'];
             $e_data['订单总价'] = display_price($preorder['total_amount']);
+            $e_data['优惠总价'] = display_price($preorder['order']['discount_amount']);
+            $e_data['实付总价'] = display_price($preorder['order']['pay_amount']);
 
             foreach ($preorder['skus'] as $sku) {
                 $e_data['产品名'] = $sku['name'];
@@ -132,7 +137,6 @@ class ExcelService {
 
             $e_datas[] = $e_data;
         }
-        
 
         $title = $title ?: '燕塘优鲜达威臣销售提成-' . Carbon::now()->toDateTimeString();
         return self::downExcel($e_datas, $title);
