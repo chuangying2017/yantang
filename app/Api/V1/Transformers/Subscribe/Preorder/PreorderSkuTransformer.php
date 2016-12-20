@@ -14,7 +14,8 @@ class PreorderSkuTransformer extends TransformerAbstract {
             'quantity' => $sku->quantity,
             'price' => display_price($sku->price),
             'total' => $sku['total'],
-            'remain' => $sku['remain']
+            'remain' => $sku['remain'],
+            'per_day' => $sku->per_day,
         ];
 
         return $data;
