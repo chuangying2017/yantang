@@ -11,7 +11,7 @@ class PreorderSkuTransformer extends TransformerAbstract {
             'product_sku_id' => $sku->product_sku_id,
             'name' => $sku->name,
             'cover_image' => $sku->cover_image,
-            'quantity' => $sku->quantity,
+            'quantity' => $sku['total'],
             'price' => display_price($sku->price),
             'total' => $sku['total'],
             'remain' => $sku['remain'],
