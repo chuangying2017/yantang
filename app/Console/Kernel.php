@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel {
 
         //client
         'App\Console\Commands\FillClientGender',
-        
+
         //coupon
         'App\Console\Commands\SeedCouponForSpecifyUser',
 
@@ -54,22 +54,22 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('preorder:settle')->dailyAt('1:00');
-        $schedule->command('preorders:assign')->twiceDaily(10, 16);
+        //标记发货
+        $preorder_settle_start_time = env('PREORDER_SETTLE_START_TIME', '2017-02-08 00:00:00');
+        if(Carbon::parse($preorder_settle_start_time) < Carbon::now()) {
+            $schedule->command('preorder:settle')->dailyAt('1:00');
+        }
 
-        //提醒
-//        $schedule->command('notify:preorder-ending')->dailyAt('11:50');
-//        $schedule->command('notify:ticket-ending')->dailyAt('9:20');
+        //发送超时提醒信息
+        $schedule->command('preorders:assign')->twiceDaily(10, 16);
 
         //计数器
         $schedule->command('counter:daily-station')->dailyAt('00:30');
 
         //账单
-//        $schedule->command('invoice:station', ['date' => Carbon::today()->day(10)->toDateString()])->monthlyOn(11, '2:00');
-//        $schedule->command('invoice:station', ['date' => Carbon::today()->day(25)->toDateString()])->monthlyOn(26, '2:00');
+       $schedule->command('invoice:station', ['date' => Carbon::today()->day(10)->toDateString()])->monthlyOn(11, '2:00');
+       $schedule->command('invoice:station', ['date' => Carbon::today()->day(25)->toDateString()])->monthlyOn(26, '2:00');
 
         $schedule->command('orders:overtime')->everyTenMinutes();
-
-
     }
 }
