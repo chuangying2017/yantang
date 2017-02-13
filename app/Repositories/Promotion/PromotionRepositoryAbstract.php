@@ -228,14 +228,14 @@ abstract class PromotionRepositoryAbstract implements PromotionRepositoryContrac
 
     protected function decodePromotionRules($promotion)
     {
-        if ($promotion['counter']['remain'] > 0) {
+//        if ($promotion['counter']['remain'] > 0) {
             $rules = [];
             foreach ($promotion['rules'] as $rule_model) {
                 $rules[] = $this->decodePromotionRule($rule_model, $promotion);
             }
             return $rules;
-        }
-        return [];
+//        }
+//        return [];
     }
 
     protected function decodePromotionRule($rule, $promotion)
