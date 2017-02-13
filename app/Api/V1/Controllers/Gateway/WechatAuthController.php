@@ -20,6 +20,14 @@ class WechatAuthController extends Controller {
 
         $role = $request->input('role');
 
+        if ($role == 'card') {
+            $state = $request->input('state');
+            $response = \Socialite::driver('weixin')->getAccessTokenResponse($request->input('code'));
+            $openid = $response['openid'];
+
+            return redirect()->to("http://hyf.hi-card.cn/hicardqrcode/qrCode/showWxPay?param1=$state&openId=$openid");
+        }
+
         if (!isset($redirects[$role])) {
             throw new \Exception('role' . $role . ' 不存在', 401);
         }
