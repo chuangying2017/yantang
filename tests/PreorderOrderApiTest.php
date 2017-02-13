@@ -21,7 +21,7 @@ class PreorderOrderApiTest extends TestCase {
             'station_id' => 1,
             'daytime' => 0,
             'weekday_type' => 'all',
-            'start_time' => '2016-11-25',
+            'start_time' => \Carbon\Carbon::today()->addDays(2)->toDateString(),
             'channel' => 'wx_pub_qr'
         ];
 
@@ -29,7 +29,7 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->assertResponseStatus(200);
 
-//        $this->echoJson();
+        $this->dump();
 
         return $this->getResponseData('data.temp_order_id');
     }
