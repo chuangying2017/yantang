@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PreorderOrderApiTest extends TestCase {
 
+    protected $user_id = 2;
+
     use DatabaseTransactions;
 
     /** @test */
@@ -15,7 +17,7 @@ class PreorderOrderApiTest extends TestCase {
         $address = $this->it_can_create_a_subscribe_address();
         $data = [
             'skus' => [
-                ['product_sku_id' => 226, 'quantity' => 30, 'per_day' => 2],
+                ['product_sku_id' => 226, 'quantity' => 45, 'per_day' => 2],
             ],
             'address_id' => $address['id'],
             'station_id' => 1,
@@ -25,11 +27,9 @@ class PreorderOrderApiTest extends TestCase {
             'channel' => 'wx_pub_qr'
         ];
 
-        $this->json('post', 'subscribe/orders', $data, $this->getAuthHeader());
+        $this->json('post', 'subscribe/orders', $data, $this->getAuthHeader($this->user_id));
 
         $this->assertResponseStatus(200);
-
-        $this->dump();
 
         return $this->getResponseData('data.temp_order_id');
     }
@@ -40,14 +40,18 @@ class PreorderOrderApiTest extends TestCase {
         $temp_order_id = $this->it_can_create_a_preorder_temp_order();
 
         $this->json('put', 'subscribe/orders/' . $temp_order_id, [
-            'ticket' => 47570
-        ], $this->getAuthHeader());
+            'ticket' => 830879
+        ], $this->getAuthHeader($this->user_id));
 
-//        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
-//            'ticket' => 51
-//        ], $this->getAuthHeader());
+        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
+            'ticket' => 830879
+        ], $this->getAuthHeader($this->user_id));
 
-//        $this->dump();
+        $this->json('put', 'subscribe/orders/' . $temp_order_id, [
+            'ticket' => 830879
+        ], $this->getAuthHeader($this->user_id));
+
+        $this->dump();
         return $this->getResponseData('data.temp_order_id');
 
     }
@@ -134,7 +138,7 @@ class PreorderOrderApiTest extends TestCase {
         ];
         $this->json('post', 'subscribe/address',
             $data,
-            $this->getAuthHeader()
+            $this->getAuthHeader($this->user_id)
         );
 
         $this->seeInDatabase('addresses', ['name' => 'asda', 'is_subscribe' => 1]);
@@ -171,5 +175,6 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->dump();
     }
+
 
 }

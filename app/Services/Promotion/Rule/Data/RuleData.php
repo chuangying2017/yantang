@@ -126,10 +126,12 @@ class RuleData implements RuleDataContract {
 
     public function unsetUsable($rule_key = null)
     {
-        if (!is_null($rule_key) && $rule_key != $this->rule_key) {
+        $unsetRuleIsUsable = array_get($this->rules, $rule_key . '.' . self::KEY_OF_RULE_USABLE, null) ? true : false;
+
+        if (!is_null($rule_key) && $rule_key != $this->rule_key && $unsetRuleIsUsable) {
             $this->updateRule(self::KEY_OF_RULE_CONFLICT_WITH_OTHER, $this->rule_key, $rule_key);
+            $this->updateRule(self::KEY_OF_RULE_USABLE, 0, $rule_key);
         }
-        $this->updateRule(self::KEY_OF_RULE_USABLE, 0, $rule_key);
     }
 
     public function isUsable()
@@ -236,8 +238,12 @@ class RuleData implements RuleDataContract {
 
     public function getConflicts()
     {
-        return array_map(function ($rule) {
-            return array_get($rule, self::KEY_OF_RULE_CONFLICT_WITH_OTHER, null) === $this->rule_key;
-        }, $this->getAll());
+        $conflict_rules = [];
+        foreach ($this->getAll() as $rule_key => $rule) {
+            if (array_get($rule, self::KEY_OF_RULE_CONFLICT_WITH_OTHER, null) === $this->rule_key) {
+                $conflict_rules[$rule_key] = $rule;
+            }
+        }
+        return $conflict_rules;
     }
 }
