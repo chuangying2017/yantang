@@ -30,7 +30,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
     public function echoJson()
     {
-        echo $this->response->getContent();
+        echo $this->response->getContent() . "\n";
     }
 
     protected function getResponseData($key = null)

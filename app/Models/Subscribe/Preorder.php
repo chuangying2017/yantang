@@ -8,6 +8,7 @@ use App\Models\District;
 use App\Models\Order\Order;
 use App\Models\Promotion\Ticket;
 use App\Models\RedEnvelope\RedEnvelopeRecord;
+use App\Services\Order\OrderProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -98,11 +99,21 @@ class Preorder extends Model {
                 'staff_id' => 0,
                 'status' => PreorderProtocol::ORDER_STATUS_OF_ASSIGNING
             ]);
-            
+
             if (!$this->isInvoice()) {
                 $this->attributes['confirm_at'] = null;
             }
-            
+            try {
+                if ($order = $this->order) {
+                    if ($order['pay_status'] == OrderProtocol::PAID_STATUS_OF_PAID && $order['status'] != OrderProtocol::ORDER_IS_PAID && $order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_DEFAULT) {
+                        $order['status'] = OrderProtocol::ORDER_IS_PAID;
+                        $order->save();
+                    }
+                }
+            } catch (\Exception $e) {
+                \Log::error($e);
+            }
+
             $this->save();
         }
     }
