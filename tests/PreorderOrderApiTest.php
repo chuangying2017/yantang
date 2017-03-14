@@ -51,7 +51,6 @@ class PreorderOrderApiTest extends TestCase {
             'ticket' => 830879
         ], $this->getAuthHeader($this->user_id));
 
-        $this->dump();
         return $this->getResponseData('data.temp_order_id');
 
     }
@@ -73,8 +72,8 @@ class PreorderOrderApiTest extends TestCase {
         $order = $this->getResponseData('data');
 
         //无需付款
-        $this->assertEquals($charge, \App\Services\Order\OrderProtocol::ORDER_IS_PAID);
-        return $order;
+//        $this->assertEquals($charge, \App\Services\Order\OrderProtocol::ORDER_IS_PAID);
+//        return $order;
 
         //模拟付款
         $pay_url = "http://sissi.pingxx.com/notify.php?ch_id=" . $charge['id'];
@@ -96,12 +95,12 @@ class PreorderOrderApiTest extends TestCase {
 
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
 
-        $this->seeInDatabase('tickets', [
-                'user_id' => 1,
-                'promotion_id' => 34,
-                'source_type' => \App\Services\Promotion\PromotionProtocol::TICKET_RESOURCE_OF_ORDER,
-                'source_id' => $order['id']]
-        );
+//        $this->seeInDatabase('tickets', [
+//                'user_id' => 1,
+//                'promotion_id' => 34,
+//                'source_type' => \App\Services\Promotion\PromotionProtocol::TICKET_RESOURCE_OF_ORDER,
+//                'source_id' => $order['id']]
+//        );
 
 //        $this->seeInDatabase('red_records', [
 //            'user_id' => 1,
@@ -109,11 +108,11 @@ class PreorderOrderApiTest extends TestCase {
 //            'resource_type' => \App\Repositories\RedEnvelope\RedEnvelopeProtocol::TYPE_OF_SUBSCRIBE_ORDER,
 //            'resource_id' => $order['id']]);
 
-        $this->seeInDatabase('order_marks', [
-            'order_id' => $order['id'],
-            'mark_type' => \App\Services\Order\OrderProtocol::ORDER_MARK_TYPE_OF_FIRST,
-            'mark_content' => \App\Services\Order\OrderProtocol::ORDER_MARK_CONTENT_OF_FIRST
-        ]);
+//        $this->seeInDatabase('order_marks', [
+//            'order_id' => $order['id'],
+//            'mark_type' => \App\Services\Order\OrderProtocol::ORDER_MARK_TYPE_OF_FIRST,
+//            'mark_content' => \App\Services\Order\OrderProtocol::ORDER_MARK_CONTENT_OF_FIRST
+//        ]);
 
         return $order;
     }
@@ -156,6 +155,51 @@ class PreorderOrderApiTest extends TestCase {
 
 //        $order = \App\Models\Order\Order::query()->find(1720);
 
+        $preorder = \App\Models\Subscribe\Preorder::query()->where('order_id', $order['id'])->first();
+
+        $station_user = \DB::table('station_user')->where('station_id', $preorder['station_id'])->first()->user_id;
+        echo "station is " . $station_user . "\n";
+        $this->json('put', 'stations/preorders/' . $preorder['id'] . '/confirm',
+            [],
+            $this->getAuthHeader($station_user)
+        );
+        $this->echoJson();
+        $staff_id = \App\Models\Subscribe\StationStaff::query()->where('station_id', $station_user)->pluck('id')->first();
+        echo "staff is " . $staff_id . "\n";
+        $this->json('post', 'stations/preorders/' . $preorder['id'] . '/assign',
+            [
+                'staff' => $staff_id
+            ],
+            $this->getAuthHeader($station_user)
+        );
+        $this->echoJson();
+//        $preorder = \App\Models\Subscribe\Preorder::query()->where('order_id', $order['id'])->first();
+        $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING]);
+        $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_SHIPPING]);
+
+
+//        $this->json('delete', 'subscribe/orders/' . $order['order_no'],
+//            [
+//                'memo' => '后悔'
+//            ], $this->getAuthHeader());
+//
+//        $this->notSeeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_CANCEL]);
+//        $this->notSeeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
+
+        //reassign
+        $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_SHIPPING]);
+        $this->seeInDatabase('orders', ['id' => $order['id'], 'refund_status' => OrderProtocol::REFUND_STATUS_OF_DEFAULT]);
+
+        $this->json('put', 'admin/subscribe/orders/' . $preorder['id'],
+            [
+                'station' => \App\Models\Subscribe\Station::query()->orderBy('created_at', 'desc')->pluck('id')->first()
+            ],
+            $this->getAuthHeader(1)
+        );
+
+        $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::ORDER_IS_PAID]);
+        $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
+
         $this->json('delete', 'subscribe/orders/' . $order['order_no'],
             [
                 'memo' => '后悔'
@@ -164,6 +208,7 @@ class PreorderOrderApiTest extends TestCase {
         $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_CANCEL]);
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
         $this->assertResponseStatus(204);
+
     }
 
     /** @test */
