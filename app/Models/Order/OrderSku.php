@@ -23,12 +23,12 @@ class OrderSku extends Model {
 
     public function refer()
     {
-        return $this->belongsTo(OrderSku::class, 'id', 'origin_order_id');
+        return $this->belongsTo(OrderSku::class, 'origin_order_id', 'id');
     }
 
     public function refund()
     {
-        return $this->hasOne(OrderSku::class, 'origin_order_id', 'id');
+        return $this->hasOne(OrderSku::class, 'id', 'origin_order_id');
     }
 
 }

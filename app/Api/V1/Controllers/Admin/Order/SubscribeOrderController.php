@@ -3,9 +3,11 @@
 namespace App\Api\V1\Controllers\Admin\Order;
 
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
+use App\Repositories\Order\PreorderOrderRepository;
 use App\Repositories\Order\SubscribeOrderRepository;
 use App\Services\Order\OrderManageContract;
 use App\Services\Order\OrderProtocol;
+use App\Services\Order\Refund\OrderRefundService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -48,6 +50,31 @@ class SubscribeOrderController extends Controller {
         $success = $orderManager->cancelUnpaidOrder($order_id);
 
         return $this->response->noContent();
+    }
+
+    public function approveRefund(Request $request, $refund_order_no, OrderRefundService $orderRefundService, PreorderOrderRepository $orderRepo)
+    {
+        try {
+            $order = $orderRefundService->refund($refund_order_no);
+            if ($order) {
+                $orderRepo->updateOrderStatusAsCancel($order->refer->first());
+                return $this->response->accepted();
+            }
+        } catch (\Exception $e) {
+            \Log::error($e);
+            $this->response->error($e->getMessage(), 400);
+        }
+    }
+
+    public function rejectRefund(Request $request, $refund_order_no, OrderRefundService $orderRefundService, PreorderOrderRepository $orderRepo)
+    {
+        try {
+            $orderRefundService->reject($refund_order_no);
+            return $this->response->accepted();
+        } catch (\Exception $e) {
+            \Log::error($e);
+            $this->response->error($e->getMessage(), 400);
+        }
     }
 
 }

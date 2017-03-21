@@ -4,6 +4,7 @@ use App\Repositories\Billing\RefundOrderBillingRepository;
 use App\Repositories\Order\RefundClientOrderRepository;
 use App\Services\Billing\BillingProtocol;
 use App\Services\Billing\RefundOrderBillingService;
+use App\Services\Order\OrderProtocol;
 use App\Services\Pay\Pingxx\PingxxRefundService;
 use App\Services\Pay\RefundAbleContract;
 
@@ -54,6 +55,7 @@ class OrderRefundService implements OrderRefundServiceContract {
         $order = $this->orderRepo->getOrder($refund_order);
 
         $refer_order = $order->refer->first();
+
         $refer_order->load('billings');
 
         $pay_amount = $order['pay_amount'];
@@ -82,7 +84,28 @@ class OrderRefundService implements OrderRefundServiceContract {
 
         return $this->orderRepo->updateRefundAsRefunding($order['order_no']);
     }
-    
-    
+
+
+    public function reject($refund_order)
+    {
+        $refund_order = $this->orderRepo->getOrder($refund_order);
+
+        $refer_order = $refund_order->refer->first();
+
+        $refund_order->load('skus', 'skus.refer');
+        foreach ($refund_order['skus'] as $refund_sku) {
+            if ($refer_order_sku = $refund_sku->refer) {
+                $refer_order_sku->decrement('return_quantity', $refund_sku['quantity']);
+            }
+        }
+
+        $refund_order['status'] = OrderProtocol::REFUND_STATUS_OF_REJECT;
+        $refer_order['refund_status'] = OrderProtocol::REFUND_STATUS_OF_REJECT;
+        $refund_order->save();
+        $refer_order->save();
+
+        return $refund_order;
+    }
+
 
 }
