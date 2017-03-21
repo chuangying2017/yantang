@@ -105,7 +105,7 @@ class Preorder extends Model {
             }
             try {
                 if ($order = $this->order) {
-                    if ($order['pay_status'] == OrderProtocol::PAID_STATUS_OF_PAID && $order['status'] != OrderProtocol::ORDER_IS_PAID && $order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_DEFAULT) {
+                    if ($order['pay_status'] == OrderProtocol::PAID_STATUS_OF_PAID && $order['status'] != OrderProtocol::ORDER_IS_PAID && in_array($order['refund_status'], [OrderProtocol::REFUND_STATUS_OF_DEFAULT, OrderProtocol::REFUND_STATUS_OF_APPLY])) {
                         $order['status'] = OrderProtocol::ORDER_IS_PAID;
                         $order->save();
                     }

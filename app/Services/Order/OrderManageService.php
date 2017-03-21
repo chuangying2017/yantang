@@ -55,6 +55,7 @@ class OrderManageService implements OrderManageContract {
     {
         $order = $this->orderRepo->getOrder($order_id, false);
 
+
         if (!($order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_DEFAULT || $order['refund_status'] == OrderProtocol::REFUND_STATUS_OF_REJECT)) {
             throw new \Exception('订单退款处理中,无法重复提交');
         }
@@ -65,22 +66,28 @@ class OrderManageService implements OrderManageContract {
                 return $this->orderRepo->updateOrderStatusAsCancel($order);
             }
         }
-        
+
         //无需支付,直接取消
         if($order['pay_amount'] == 0) {
             return $this->orderRepo->updateOrderStatusAsCancel($order);
         }
 
-        //生成退款退货订单
-        $refund_order_generator = app()->make(RefundOrderGenerator::class);
-        $refund_order = $refund_order_generator->refund($order_id, $order_skus_info, $memo);
+        try {
+            //生成退款退货订单
+            $refund_order_generator = app()->make(RefundOrderGenerator::class);
+            $refund_order = $refund_order_generator->refund($order_id, $order_skus_info, $memo);
 
-        //未发货,直接退款
-        $order = $this->orderRepo->getOrder($order['id'], false);
-        if ($order['status'] == OrderProtocol::STATUS_OF_PAID) {
-            //执行退款
-            app()->make(OrderRefundService::class)->refund($refund_order);
-            return $this->orderRepo->updateOrderStatusAsCancel($order);
+            //未发货,直接退款
+            $order = $this->orderRepo->getOrder($order['id'], false);
+            if ($order['status'] == OrderProtocol::STATUS_OF_PAID) {
+                //执行退款
+                app()->make(OrderRefundService::class)->refund($refund_order);
+                return $this->orderRepo->updateOrderStatusAsCancel($order);
+            }
+
+        } catch (\Exception $e) {
+            \Log::error($e);
+            throw  $e;
         }
 
         return $order;
