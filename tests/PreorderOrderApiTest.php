@@ -152,6 +152,7 @@ class PreorderOrderApiTest extends TestCase {
     public function it_can_create_a_order_and_cancel_and_refund()
     {
         $station_handle = true;
+        $station_handle = false;
         $approve = true;
 
         $order = $this->it_can_create_a_preorder_order();
@@ -186,7 +187,6 @@ class PreorderOrderApiTest extends TestCase {
             [
                 'memo' => '后悔'
             ], $this->getAuthHeader($order['user_id']));
-
 
         $this->json('get', 'admin/subscribe/origin-orders/refund', ['status' => OrderProtocol::REFUND_STATUS_OF_APPLY], $this->getAuthHeader(1));
         $this->echoJson();
