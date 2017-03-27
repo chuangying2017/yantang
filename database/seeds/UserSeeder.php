@@ -30,7 +30,7 @@ class UserSeeder extends Seeder {
             [
                 'username' => 'Admin Istrator',
                 'email' => 'admin@admin.com',
-                'phone' => '12345678910',
+                'phone' => '13800138000',
                 'password' => bcrypt('123456'),
                 'confirmation_code' => md5(uniqid(mt_rand(), true)),
                 'confirmed' => true,
@@ -41,7 +41,7 @@ class UserSeeder extends Seeder {
             [
                 'username' => 'Default User',
                 'email' => 'user@user.com',
-                'phone' => '12345678911',
+                'phone' => '13800138001',
                 'password' => bcrypt('123456'),
                 'confirmation_code' => md5(uniqid(mt_rand(), true)),
                 'confirmed' => true,
