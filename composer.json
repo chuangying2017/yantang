@@ -87,15 +87,5 @@
     },
     "config": {
         "preferred-install": "dist"
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/skys215/laravel-sms"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/skys215/phpsms"
-        }
-    ]
+    }
 }
