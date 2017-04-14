@@ -1,5 +1,7 @@
 FROM daocloud.io/billqiang/nginx-php:laravel-v1.0.0.3
 
+RUN docker-php-ext-install bcmath
+
 COPY app /var/www/html/app
 COPY artisan /var/www/html/artisan
 COPY bootstrap /var/www/html/bootstrap
