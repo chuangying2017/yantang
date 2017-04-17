@@ -69,6 +69,11 @@ class SubscribeServiceProvider extends ServiceProvider {
             \App\Repositories\Preorder\Deliver\PreorderDeliverRepository::class
         );
 
+        $this->app->bind(
+            'collect_order',
+            \App\Models\Subscribe\CollectOrder::class
+        );
+
     }
 
 }

@@ -1,8 +1,8 @@
 <?php namespace App\Services\Order;
-class OrderProtocol {
+class CollectOrderProtocol {
 
     const ORDER_PER_PAGE = 10;
-    
+
     const ORDER_IS_PAID = 'paid';
 
     const STATUS_OF_UNPAID = 'unpaid';
@@ -40,7 +40,6 @@ class OrderProtocol {
     const ORDER_TYPE_OF_REFUND = 2;
     const ORDER_TYPE_OF_CAMPAIGN = 3;
     const ORDER_TYPE_OF_SUBSCRIBE = 4;
-    const ORDER_TYPE_OF_COLLECT = 5;
 
     //Deliver type
     const DELIVER_TYPE_OF_EXPRESS = 'express';
@@ -150,27 +149,6 @@ class OrderProtocol {
         }
 
         return true;
-    }
-
-    public static function statusTimeTag($status)
-    {
-        $data = [
-            self::STATUS_OF_SHIPPING => 'deliver_at',
-            self::STATUS_OF_CANCEL => 'cancel_at',
-            self::STATUS_OF_DONE => 'done_at',
-        ];
-
-        return array_get($data, $status, null);
-    }
-
-    const ORDER_MARK_TYPE_OF_FIRST = 'first';
-    const ORDER_MARK_CONTENT_OF_FIRST = 1;
-
-    public static function validMark($key)
-    {
-        return in_array($key, [
-            self::ORDER_MARK_TYPE_OF_FIRST
-        ]);
     }
 
 }

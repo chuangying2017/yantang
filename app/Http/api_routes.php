@@ -58,6 +58,10 @@ $api->version('v1', function ($api) {
          */
         require_once(__DIR__ . '/../Api/V1/Routes/open_api.php');
 
+        /**
+         * 收款工具
+         */
+        require_once(__DIR__ . '/../Api/V1/Routes/collect_api.php');
     });
 
 });
