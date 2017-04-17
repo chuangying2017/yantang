@@ -83,21 +83,20 @@ class AuthController extends Controller {
             //get parameter
             $redirectArr = parse_url( $url );
             //resolve
-            $paramsArr = parse_str( $redirectArr['query'] );
+            $paramsArr = [];
+            parse_str( $redirectArr['query'], $paramsArr );
             //decode url
             $redirect_uri = urldecode( $paramsArr['redirect_uri'] );
 
 
             //get parameter of redirect uri
             $reParam = parse_url( $redirect_uri );
-            $reParamArr = parse_str( $reParamArr['query'] );
+            $reParamArr = [];
+            parse_str( $reParam['query'], $reParamArr );
             //add back param
             $reParamArr['back'] = $request->input('backURL');
             $reParam['query'] = http_build_query( $reParamArr );
             $redirect_uri = http_build_url( $reParam );
-            //encode
-            $redirect_uri = urlencode( $redirect_uri );
-
 
             //add to old return url
             $paramsArr['redirect_uri'] = $redirect_uri;
