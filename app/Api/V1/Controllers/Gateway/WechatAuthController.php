@@ -27,6 +27,9 @@ class WechatAuthController extends Controller {
 
             return redirect()->to("http://hyf.hi-card.cn/hicardqrcode/qrCode/showWxPay?param1=$state&openId=$openid");
         }
+        if( $role == 'deliver' ){
+            $url = $request->input('back');
+        }
 
         if (!isset($redirects[$role])) {
             throw new \Exception('role' . $role . ' 不存在', 401);
