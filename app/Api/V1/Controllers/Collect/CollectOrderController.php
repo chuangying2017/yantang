@@ -80,9 +80,6 @@ class CollectOrderController extends Controller {
     public function preConfirm(CollectOrder $collect_order, ConfirmCollectRequest $request, CollectOrderGenerator $collectOrderGenerator)
     {
 
-        //give collect order ticket for user
-        $this->ticketRepo->createOrderTicket($collect_order);
-
         $weekday_type = 'all';
         $daytime = PreorderProtocol::DAYTIME_OF_AM;
         $start_time = Carbon::today()->toDateString();
