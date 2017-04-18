@@ -13,7 +13,6 @@ use App\Services\Order\OrderManageContract;
 use App\Services\Order\OrderProtocol;
 use App\Services\Pay\Pingxx\PingxxProtocol;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Models\Subscribe\CollectOrder;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -62,25 +61,11 @@ class OrderController extends Controller {
 
     public function confirm($temp_order_id, Request $request, OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout)
     {
-        $staff_id = $request->input('staff_id');
-        $collect_order_id = $request->input('collect_order_id');
         try {
 
             $pay_channel = $request->input('channel') ?: PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
 
             $order = $orderGenerator->confirmSubscribe($temp_order_id);
-
-            //收款员逻辑
-            if( !is_null( $staff_id ) ){
-                CollectOrder::where([
-                    'id' => $collect_order_id,
-                    'staff_id' => $staff_id,
-                    'has_generated_preorder' => 0,
-                ])->update([
-                    'preorder_id'=> $order['id'],
-                    'has_generated_preorder' => 1,
-                ]);
-            }
 
             $charge = $orderCheckout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 
@@ -103,41 +88,16 @@ class OrderController extends Controller {
         return $this->response->item($order, new ClientOrderTransformer());
     }
 
-    public function view( $temp_order_id, OrderGenerator $orderGenerator ){
-        $temp_order = $orderGenerator->getTempOrder( $temp_order_id );
-        return $this->response->item($temp_order, new TempOrderTransformer());
-    }
-
     public function update($temp_order_id, Request $request, OrderGenerator $orderGenerator)
     {
-
         $ticket_id = $request->input('ticket') ?: null;
 
-        $skus = $request->input('skus');
-        $address_id = $request->input('address_id');
-
-        $temp_order = $orderGenerator->getTempOrder($temp_order_id);
         if ($ticket_id) {
             $temp_order = $orderGenerator->useCoupon($temp_order_id, $ticket_id);
-        }
-        if( $skus ){
-            $temp_order = $orderGenerator->updateSku($temp_order_id, $skus);
-        }
-        if( $address_id ){
-            $temp_order = $orderGenerator->updateAddress($temp_order_id, $address_id);
+            return $this->response->item($temp_order, new TempOrderTransformer());
         }
 
-        $temp_order = $orderGenerator->getTempOrder($temp_order_id);
-
-        return $this->response->item($temp_order, new TempOrderTransformer());
-
-    }
-
-    public function remove($temp_order_id, OrderGenerator $orderGenerator)
-    {
-        $order = $orderGenerator->pullTempOrder($temp_order_id);
-
-        return $this->response->noContent();
+        return $this->show($temp_order_id);
     }
 
     /**
