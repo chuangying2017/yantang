@@ -11,7 +11,7 @@ use App\Api\V1\Transformers\CollectOrderTransformer;
 use App\Api\V1\Transformers\TempOrderTransformer;
 use App\Services\Order\CollectOrderGenerator;
 use App\Services\Order\CollectOrderProtocol;
-use App\Services\PreOrder\PreorderProtocol;
+use App\Services\Preorder\PreorderProtocol;
 use App\Services\Pay\Pingxx\PingxxProtocol;
 use App\Services\Order\OrderProtocol;
 use App\Repositories\Address\AddressRepositoryContract;
