@@ -90,6 +90,7 @@ class PromotionProtocol {
     const QUALI_TYPE_OF_FIRST_PRE_ORDER = 'first_preorder_paid';
     const QUALI_TYPE_OF_PRE_ORDER = 'preorder_paid';
     const QUALI_TYPE_OF_COLLECT_ORDER = 'collect_order';
+    const QUALI_TYPE_OF_REGISTER_USER = 'register_user';
 
 
     public static function getQualifyType($name = null)
@@ -102,7 +103,7 @@ class PromotionProtocol {
             self::QUALI_TYPE_OF_FIRST_PRE_ORDER => '订奶首单已支付优惠',
             self::QUALI_TYPE_OF_PRE_ORDER => '订奶下单已支付优惠',
             self::QUALI_TYPE_OF_COLLECT_ORDER => '线上收款订单',
-
+            self::QUALI_TYPE_OF_REGISTER_USER => '注册时获得',
         ];
 
         return is_null($name) ? $data : array_get($data, $name, null);

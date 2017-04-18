@@ -15,6 +15,7 @@ use App\Services\Preorder\PreorderProtocol;
 use App\Services\Pay\Pingxx\PingxxProtocol;
 use App\Services\Order\OrderProtocol;
 use App\Repositories\Address\AddressRepositoryContract;
+use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
 
 use App\Services\Order\Checkout\OrderCheckoutService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -33,9 +34,15 @@ class CollectOrderController extends Controller {
      */
     private $addressRepo;
 
-    public function __construct(AddressRepositoryContract $addressRepo)
+    /**
+     * @var CouponRepositoryContract
+     */
+    private $couponRepo;
+
+    public function __construct(AddressRepositoryContract $addressRepo,CouponRepositoryContract $couponRepo)
     {
         $this->addressRepo = $addressRepo;
+        $this->couponRepo = $couponRepo;
     }
 
     public function index( Request $requset )
@@ -73,6 +80,9 @@ class CollectOrderController extends Controller {
     public function preConfirm(CollectOrder $collect_order, ConfirmCollectRequest $request, CollectOrderGenerator $collectOrderGenerator)
     {
 
+        //give collect order ticket for user
+        $this->ticketRepo->createOrderTicket($collect_order);
+
         $weekday_type = 'all';
         $daytime = PreorderProtocol::DAYTIME_OF_AM;
         $start_time = Carbon::today()->toDateString();
@@ -102,7 +112,7 @@ class CollectOrderController extends Controller {
         $collect_order_id = $collect_order['id'];
 
         $pay_channel = $request->input('channel') ?: PingxxProtocol::PINGXX_WAP_CHANNEL_WECHAT;
-        // try {
+        try {
             $order = $collectOrderGenerator->confirmSubscribe($temp_order_id);
 
             //收款员逻辑
@@ -119,9 +129,9 @@ class CollectOrderController extends Controller {
             $charge = $orderCheckout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 
             return $this->response->item($order, new ClientOrderTransformer())->setMeta(['charge' => $charge])->setStatusCode(201);
-        // } catch (\Exception $e) {
-        //     $this->response->errorBadRequest($e->getMessage());
-        // }
+        } catch (\Exception $e) {
+            $this->response->errorBadRequest($e->getMessage());
+        }
     }
 
     /**
