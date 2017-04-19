@@ -19,7 +19,7 @@ class CollectOrder extends Model
 
     public function sku()
     {
-        return $this->hasOne(ProductSku::class, 'id', 'sku_id');
+        return $this->hasOne(ProductSku::class, 'id', 'sku_id')->withTrashed();
     }
 
     public function address()
