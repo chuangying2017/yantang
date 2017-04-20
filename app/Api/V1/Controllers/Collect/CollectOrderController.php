@@ -120,7 +120,6 @@ class CollectOrderController extends Controller {
                     'staff_id' => $staff_id,
                 ])->update([
                     'order_id'=> $order['id'],
-                    'has_generated_order' => 1,
                 ]);
             }
 
