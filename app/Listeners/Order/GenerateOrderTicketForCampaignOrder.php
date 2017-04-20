@@ -7,6 +7,9 @@ use App\Services\Order\OrderProtocol;
 use App\Services\OrderTicket\OrderTicketManageContract;
 use App\Services\Order\OrderManageContract;
 use App\Services\Promotion\PromotionProtocol;
+use App\Services\Promotion\CouponService;
+use App\Repositories\Promotion\TicketRepositoryContract;
+use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -32,18 +35,24 @@ class GenerateOrderTicketForCampaignOrder {
      */
     private $couponRepo;
 
+     /**
+     * @var TicketRepositoryContract
+     */
+    private $ticketRepo;
+
     /**
      * Create the event listener.
      *
      * @return void
      */
     public function __construct(OrderTicketManageContract $orderTicketManage,
-       OrderManageContract $orderManage, CouponService $couponService, CouponRepositoryContract $couponRepo)
+       OrderManageContract $orderManage, CouponService $couponService, CouponRepositoryContract $couponRepo, TicketRepositoryContract $ticketRepo)
     {
         $this->orderTicketManage = $orderTicketManage;
         $this->orderManage = $orderManage;
         $this->couponService = $couponService;
         $this->couponRepo = $couponRepo;
+        $this->ticketRepo = $ticketRepo;
     }
 
     /**
@@ -62,11 +71,17 @@ class GenerateOrderTicketForCampaignOrder {
             $this->orderManage->orderDone($order['id']);
 
             try{
-                //送券
                 $coupons = $this->couponRepo->getAllByQualifyTye(PromotionProtocol::QUALI_TYPE_OF_COLLECT_ORDER);
-                if (count($coupons)) {
-                    foreach ($coupons as $coupon) {
-                        $result = $this->couponService->dispatchWithoutCheck($user['id'], $coupon['id']);
+                $userCoupons = $this->ticketRepo->getCouponTicketsOfUser($order['user_id'],PromotionProtocol::STATUS_OF_TICKET_OK, true)->pluck('coupon');
+
+                $collectCouponIds = array_column( $coupons->toArray(), 'id' );
+                $userCouponIds = array_column( $userCoupons->toArray(), 'id' );
+                $dispatchCouponIds = array_diff( $collectCouponIds, $userCouponIds );
+
+                //check user has unused such coupon
+                foreach ($coupons as $coupon) {
+                    if( in_array( $coupon->id, $dispatchCouponIds ) ){
+                        $result = $this->couponService->dispatchWithoutCheck($order['user_id'], $coupon['id']);
                     }
                 }
             }
