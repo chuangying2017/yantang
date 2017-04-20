@@ -45,7 +45,7 @@ class CollectOrder extends Model
     public static function getAddressIds(){
         return self::with('address')
                 ->where('staff_id', access()->id())
-                ->where('has_generated_order', 1)
+                ->whereNotNull('order_id')
                 ->groupBy('address_id')
                 ->get();
     }

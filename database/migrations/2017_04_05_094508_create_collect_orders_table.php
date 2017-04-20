@@ -18,7 +18,6 @@ class CreateCollectOrdersTable extends Migration
             $table->integer('address_id')->unsigned();
             $table->integer('sku_id')->unsigned();
             $table->integer('quantity')->unsigned()->default(1);
-            $table->boolean('has_generated_order')->default(false);
             $table->integer('order_id')->nullable();
             $table->softDeletes();
             $table->timestamps();

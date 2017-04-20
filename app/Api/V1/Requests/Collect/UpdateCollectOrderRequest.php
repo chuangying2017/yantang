@@ -17,7 +17,7 @@ class UpdateCollectOrderRequest extends Request {
     public function authorize()
     {
         $collect_order = $this->route('collect_order');
-        return ($collect_order->staff_id == access()->id()) || $collect_order->has_generated_order;
+        return $collect_order->staff_id == access()->id();
     }
 
     /**
