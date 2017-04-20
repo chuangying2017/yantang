@@ -5,6 +5,7 @@ namespace App\Api\V1\Controllers\Collect;
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Collect\CollectOrderRequest;
 use App\Api\V1\Requests\Collect\UpdateCollectOrderRequest;
+use App\Api\V1\Requests\Collect\DeleteCollectOrderRequest;
 use App\Api\V1\Requests\Collect\ConfirmCollectRequest;
 use App\Api\V1\Transformers\Mall\ClientOrderTransformer;
 use App\Api\V1\Transformers\CollectOrderTransformer;
@@ -160,7 +161,7 @@ class CollectOrderController extends Controller {
 
     }
 
-    public function destroy(CollectOrder $collect_order, CollectOrderGenerator $collectOrderGenerator)
+    public function destroy(CollectOrder $collect_order, DeleteCollectOrderRequest $request, CollectOrderGenerator $collectOrderGenerator)
     {
         $collect_order->delete();
 

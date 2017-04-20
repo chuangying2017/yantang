@@ -5,9 +5,12 @@ use App\Models\Product\ProductSku;
 use App\Models\Order\Order;
 use App\Models\Subscribe\StationStaff;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CollectOrder extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = ['id'];
 
     protected $table = 'collect_orders';
