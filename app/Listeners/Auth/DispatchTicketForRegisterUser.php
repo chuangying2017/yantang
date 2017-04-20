@@ -7,6 +7,7 @@ use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
 use App\Services\Promotion\PromotionProtocol;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Services\Promotion\CouponService;
 
 class DispatchTicketForRegisterUser {
 
