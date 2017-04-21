@@ -51,7 +51,7 @@ class CollectOrderController extends Controller {
         $status = $requset->input('status');
         $orders = CollectOrder::query()
                 ->with('order')
-                ->where(['staff_id'=>access()->id()]);
+                ->where('staff_id',access()->id());
         if( $status == 'collected'){
             $orders->whereHas('order', function( $query ){
                 $query->where('pay_status', OrderProtocol::PAID_STATUS_OF_PAID );
@@ -63,10 +63,12 @@ class CollectOrderController extends Controller {
                 OrderProtocol::PAID_STATUS_OF_PARTIAL,
                 OrderProtocol::PAID_STATUS_OF_PENDING,
             ];
-            $orders->whereHas('order', function( $query ) use ($pay_status){
-                $query->whereIn('pay_status', $pay_status);
-            })
-            ->orWhereNull('order_id');
+            $orders->where(function($query) use ($pay_status){
+                $query->whereHas('order', function( $query ) use ($pay_status){
+                    $query->whereIn('pay_status', $pay_status);
+                })
+                ->orWhereNull('order_id');
+            });
         }
         $orders = $orders->orderBy('created_at', 'desc')
             ->paginate(CollectOrderProtocol::ORDER_PER_PAGE);
