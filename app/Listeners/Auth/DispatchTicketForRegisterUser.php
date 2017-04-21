@@ -45,7 +45,7 @@ class DispatchTicketForRegisterUser {
 
         try {
             //送券
-            $coupons = $this->couponRepo->getAllByQualifyTye(PromotionProtocol::QUALI_TYPE_OF_REGISTER_USER);
+            $coupons = $this->couponRepo->getAllByQualifyTye(PromotionProtocol::QUALI_TYPE_OF_COLLECT_ORDER);
             if (count($coupons)) {
                 foreach ($coupons as $coupon) {
                     $result = $this->couponService->dispatchWithoutCheck($user['id'], $coupon['id']);
