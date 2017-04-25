@@ -72,6 +72,7 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
             'App\Listeners\Product\DecreaseProductSkuStock',
             'App\Listeners\Preorder\SetPreorderAsPaid',
+            'App\Listeners\Collect\SetCollectOrderAsPaid',
             'App\Listeners\Promotion\DispatchSubscribeOrderGift',
             'App\Listeners\Order\CheckIfFirstOrder',
         ],
