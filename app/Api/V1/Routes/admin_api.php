@@ -118,6 +118,9 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->get('bonus', 'StationInvoiceController@bonus');
         });
 
+        $api->group(['namespace'=>'Collect'], function( $api ){
+            $api->resource('collect_order','CollectController',['only'=>['index','show']]);
+        });
     });
 
 
