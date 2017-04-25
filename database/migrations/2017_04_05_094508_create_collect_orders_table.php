@@ -19,6 +19,7 @@ class CreateCollectOrdersTable extends Migration
             $table->integer('sku_id')->unsigned();
             $table->integer('quantity')->unsigned()->default(1);
             $table->integer('order_id')->nullable();
+            $table->timestamp('pay_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

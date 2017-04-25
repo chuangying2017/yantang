@@ -53,22 +53,10 @@ class CollectOrderController extends Controller {
                 ->with('order')
                 ->where('staff_id',access()->id());
         if( $status == 'collected'){
-            $orders->whereHas('order', function( $query ){
-                $query->where('pay_status', OrderProtocol::PAID_STATUS_OF_PAID );
-            });
+            $orders->whereNotNull('pay_at');
         }
         else{
-            $pay_status = [
-                OrderProtocol::PAID_STATUS_OF_UNPAID,
-                OrderProtocol::PAID_STATUS_OF_PARTIAL,
-                OrderProtocol::PAID_STATUS_OF_PENDING,
-            ];
-            $orders->where(function($query) use ($pay_status){
-                $query->whereHas('order', function( $query ) use ($pay_status){
-                    $query->whereIn('pay_status', $pay_status);
-                })
-                ->orWhereNull('order_id');
-            });
+            $orders->whereNull('pay_at');
         }
         $orders = $orders->orderBy('created_at', 'desc')
             ->paginate(CollectOrderProtocol::ORDER_PER_PAGE);
@@ -144,12 +132,6 @@ class CollectOrderController extends Controller {
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(CollectOrder $collect_order)
     {
         return $this->response->item($collect_order, new CollectOrderTransformer());
