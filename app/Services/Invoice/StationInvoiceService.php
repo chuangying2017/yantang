@@ -6,7 +6,9 @@ use App\Repositories\Invoice\StationInvoiceRepository;
 use App\Repositories\Invoice\StationUnInvoiceRepository;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
+use App\Repositories\Order\CollectOrderRepository;
 use App\Services\Preorder\PreorderProtocol;
+use App\Models\Collect\CollectOrder;
 use Carbon\Carbon;
 
 class StationInvoiceService implements InvoiceServiceContract {
@@ -38,7 +40,8 @@ class StationInvoiceService implements InvoiceServiceContract {
         PreorderRepositoryContract $preorderRepo,
         StationRepositoryContract $stationRepo,
         StationAdminInvoiceRepository $stationAdminInvoiceRepository,
-        StationUnInvoiceRepository $stationUnInvoiceRepository
+        StationUnInvoiceRepository $stationUnInvoiceRepository,
+        CollectOrderRepository $collectRepo
     )
     {
         $this->stationInvoiceRepo = $stationInvoiceRepo;
@@ -46,6 +49,8 @@ class StationInvoiceService implements InvoiceServiceContract {
         $this->stationRepo = $stationRepo;
         $this->stationAdminInvoiceRepository = $stationAdminInvoiceRepository;
         $this->stationUnInvoiceRepository = $stationUnInvoiceRepository;
+
+        $this->collectRepo = $collectRepo;
     }
 
     public function settleAll($invoice_date)
@@ -87,6 +92,7 @@ class StationInvoiceService implements InvoiceServiceContract {
         }
 
         $orders = $this->getAllInvoiceOrders($station_id, $start_time, $end_time);
+        $collect_orders = $this->getCollectedOrders($station_id, $start_time, $end_time);
 
         $invoice_data = [
             'invoice_date' => $request_invoice_date,
@@ -106,6 +112,17 @@ class StationInvoiceService implements InvoiceServiceContract {
         foreach ($orders as $order_key => $order) {
             $invoice_order = $this->getOrderDetail($order, $station);
             $invoice_data['detail'][$order_key] = $invoice_order;
+
+            $invoice_data['total_amount'] += $invoice_order['total_amount'];
+            $invoice_data['discount_amount'] += $invoice_order['discount_amount'];
+            $invoice_data['pay_amount'] += $invoice_order['pay_amount'];
+            $invoice_data['service_amount'] += $invoice_order['service_amount'];
+            $invoice_data['receive_amount'] += $invoice_order['receive_amount'];
+        }
+
+        foreach ($collect_orders as $collect_order_key => $collect_order) {
+            $invoice_order = $this->getOrderDetailFromCollectOrder($collect_order, $station);
+            $invoice_data['collect_orders'][$collect_order_key] = $invoice_order;
 
             $invoice_data['total_amount'] += $invoice_order['total_amount'];
             $invoice_data['discount_amount'] += $invoice_order['discount_amount'];
@@ -269,6 +286,52 @@ class StationInvoiceService implements InvoiceServiceContract {
             'order_at' => $order['created_at'],
             'service_amount' => InvoiceProtocol::calServiceAmount($order['order']['pay_amount']),
             'detail' => json_encode($order['skus'])
+        ];
+
+        if (!is_null($station)) {
+            $data['station_id'] = $station['id'];
+            $data['station_name'] = $station['name'];
+        }
+
+        $data['receive_amount'] = $data['pay_amount'] - $data['service_amount'];
+
+        return $data;
+    }
+
+    protected function getCollectedOrders( $station_id, $start_time, $end_time)
+    {
+        $orders = $this->collectRepo->getPaidOrders( $station_id, $start_time, $end_time );
+        $orders->load([
+            'order' => function( $query ){
+                $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'pay_amount');
+            },
+            'sku'=> function($query){
+                $query->select('id','product_id','name', 'price', 'unit');
+            },
+            'staff' => function( $query ){
+                $query->select('user_id', 'name');
+            },
+        ]);
+        return $orders;
+    }
+
+    protected function getOrderDetailFromCollectOrder( CollectOrder $collect_order, $station = null )
+    {
+        $data = [
+            'collect_order_id' => $collect_order['id'],
+            'order_id' => $collect_order['order_id'],
+            'order_no' => $collect_order['order']['order_no'],
+            'name' => $collect_order['address']['name'],
+            'phone' => $collect_order['address']['phone'],
+            'address' => $collect_order['address']['detail'],
+            'staff_id' => $collect_order['staff']['user_id'],
+            'staff_name' => $collect_order['staff']['name'],
+            'total_amount' => $collect_order['order']['total_amount'],
+            'discount_amount' => $collect_order['order']['discount_amount'],
+            'pay_amount' => $collect_order['order']['pay_amount'],
+            'pay_at' => $collect_order['pay_at'],
+            'service_amount' => InvoiceProtocol::calServiceAmount($collect_order['order']['pay_amount']),
+            'detail' => json_encode($collect_order['sku']),
         ];
 
         if (!is_null($station)) {

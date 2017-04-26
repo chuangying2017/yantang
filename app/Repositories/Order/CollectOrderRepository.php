@@ -1,9 +1,24 @@
 <?php namespace App\Repositories\Order;
 
+use App\Repositories\Station\Staff\EloquentStaffRepository;
 use App\Models\Collect\CollectOrder;
 
 class CollectOrderRepository implements ClientOrderRepositoryContract{
     protected $lists_relations = ['sku','address'];
+
+    /**
+     * @var StaffRepositoryContract
+     */
+    private $staffRepo;
+
+    /**
+     * StationController constructor.
+     * @param StaffRepositoryContract $staffRepo
+     */
+    public function __construct(EloquentStaffRepository $staffRepo)
+    {
+        $this->staffRepo = $staffRepo;
+    }
 
     /**
      * @param $data
@@ -62,4 +77,28 @@ class CollectOrderRepository implements ClientOrderRepositoryContract{
 
     }
 
+    public function getPaidOrders( $station_id = null, $start_time = null, $end_time = null, $staff_id = null )
+    {
+        $cOrders = CollectOrder::query();
+        if( $station_id ){
+            $staffs = $this->staffRepo->getAll( $station_id, null, true );
+            $staffIds = $staffs->pluck('user_id')->filter();
+            if( !$staffs->isEmpty() ){
+                $cOrders->whereIn( 'staff_id', $staffIds );
+            }
+        }
+        if( $staff_id ){
+            $cOrders->where('staff_id', $staff_id);
+        }
+
+        if( $start_time ){
+            $cOrders->where('pay_at', '>', $start_time);
+        }
+        if( $end_time ){
+            $cOrders->where('pay_at', '<', $end_time);
+        }
+
+
+        return $cOrders->get();
+    }
 }

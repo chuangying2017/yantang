@@ -2,6 +2,7 @@
 
 use App\Models\Invoice\InvoiceAbstract;
 use App\Models\Subscribe\Preorder;
+use App\Models\Collect\CollectOrder;
 use App\Repositories\NoGenerator;
 
 abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
@@ -26,6 +27,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
 
 
         $invoice_orders = array_get($invoice_data, 'detail', null);
+        $collect_orders = array_get($invoice_data, 'collect_orders', []);
 
         $invoice_model = $this->getInvoiceModel();
 
@@ -52,6 +54,10 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
             $invoice->orders()->createMany($invoice_orders);
             $invoice_preorder_ids = array_pluck($invoice_orders, 'preorder_id');
             Preorder::query()->whereIn('id', $invoice_preorder_ids)->update(['invoice' => InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_OK]);
+
+            $invoice->collect_orders()->createMany($collect_orders);
+            $invoice_collect_order_ids = array_pluck($collect_orders, 'collect_order_id');
+            CollectOrder::query()->whereIn('id', $invoice_collect_order_ids)->update(['invoice' => InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_OK]);
         }
 
         \DB::commit();

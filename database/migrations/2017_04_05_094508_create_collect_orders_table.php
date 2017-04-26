@@ -20,6 +20,7 @@ class CreateCollectOrdersTable extends Migration
             $table->integer('quantity')->unsigned()->default(1);
             $table->integer('order_id')->nullable();
             $table->timestamp('pay_at')->nullable();
+            $table->boolean('invoice')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
