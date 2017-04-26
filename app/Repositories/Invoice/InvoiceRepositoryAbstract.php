@@ -4,6 +4,7 @@ use App\Models\Invoice\InvoiceAbstract;
 use App\Models\Subscribe\Preorder;
 use App\Models\Collect\CollectOrder;
 use App\Repositories\NoGenerator;
+use App\Models\Invoice\StationInvoiceCollectOrder;
 
 abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
 
@@ -219,9 +220,14 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
     }
 
 
-    public function getAllOrders($invoice_no, $per_page = null, $staff_id = null)
+    public function getAllOrders($invoice_no, $per_page = null, $staff_id = null, $type = 'preorder')
     {
-        $order_model = InvoiceProtocol::getOrderModel($this->getInvoiceModel());
+        if( $type == 'preorder' ){
+            $order_model = InvoiceProtocol::getOrderModel($this->getInvoiceModel());
+        }
+        else if( $type == 'collect' ){
+            $order_model = StationInvoiceCollectOrder::class;
+        }
 
         $query = $order_model::query()->where('invoice_no', $invoice_no);
 
