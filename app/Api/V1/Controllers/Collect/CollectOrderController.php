@@ -51,7 +51,7 @@ class CollectOrderController extends Controller {
         $status = $requset->input('status');
         $orders = CollectOrder::query()
                 ->with('order')
-                ->where('staff_id',access()->id());
+                ->where('staff_id',access()->staffId());
         if( $status == 'collected'){
             $orders->whereNotNull('pay_at');
         }
@@ -74,7 +74,7 @@ class CollectOrderController extends Controller {
             'sku_id' => $sku_id,
             'quantity' => $quantity,
             'address_id' => $address_id,
-            'staff_id' => access()->id()
+            'staff_id' => access()->staffId()
         ]);
         return $this->response->noContent()->setStatusCode(201);
     }
