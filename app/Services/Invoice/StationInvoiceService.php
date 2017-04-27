@@ -317,6 +317,7 @@ class StationInvoiceService implements InvoiceServiceContract {
 
     protected function getOrderDetailFromCollectOrder( CollectOrder $collect_order, $station = null )
     {
+        $collect_order['sku']['quantity'] = $collect_order['quantity'];
         $data = [
             'collect_order_id' => $collect_order['id'],
             'order_id' => $collect_order['order_id'],

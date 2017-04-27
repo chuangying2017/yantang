@@ -3,6 +3,7 @@
 namespace App\Api\V1\Controllers\Admin\Invoice;
 
 use App\Api\V1\Transformers\Admin\Invoice\StationInvoiceTransformer;
+use App\Api\V1\Transformers\Admin\Invoice\StationInvoiceCollectOrderTransformer;
 use App\Repositories\Invoice\InvoiceProtocol;
 use App\Repositories\Invoice\StationAdminInvoiceRepository;
 use App\Repositories\Preorder\PreorderRepositoryContract;
@@ -58,6 +59,10 @@ class StationInvoiceController extends Controller {
         return $this->api->be(access()->user())->get('api/stations/invoices/' . $invoice_no . '/orders', $request->all());
     }
 
+    public function collect_orders(Request $request, $invoice_no)
+    {
+        return $this->api->be(access()->user())->get('api/stations/invoices/' . $invoice_no . '/collect_orders', $request->all());
+    }
 
     public function bonus(Request $request, PreorderRepositoryContract $preorderRepo)
     {
