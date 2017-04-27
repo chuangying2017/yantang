@@ -30,7 +30,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
     public function echoJson()
     {
-        echo $this->response->getContent();
+        echo $this->response->getContent() . "\n";
     }
 
     protected function getResponseData($key = null)
@@ -55,7 +55,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         } else {
             $user = \App\Models\Access\User\User::create();
         }
-
         $this->actingAs($user);
         return $user;
     }

@@ -35,7 +35,7 @@ class UseCoupon extends GenerateHandlerAbstract {
         $coupons = $temp_order->getCoupons();
 
         $rule_key = $this->findRuleKey($ticket, $coupons);
-        
+
         if (!is_null($rule_key)) {
             $this->couponService
                 ->setUser($this->userContract)
@@ -47,7 +47,7 @@ class UseCoupon extends GenerateHandlerAbstract {
                 $success = $this->couponService->setUsing($rule_key);
             }
             $temp_order->setCoupons($this->couponService->getRules());
-        } 
+        }
 
         return $this->next($temp_order);
     }
