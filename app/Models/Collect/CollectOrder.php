@@ -17,7 +17,7 @@ class CollectOrder extends Model
 
     public function staff()
     {
-        return $this->hasOne(StationStaff::class, 'user_id', 'staff_id');
+        return $this->hasOne(StationStaff::class, 'id', 'staff_id');
     }
 
     public function sku()

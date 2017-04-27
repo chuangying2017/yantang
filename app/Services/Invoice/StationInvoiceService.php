@@ -309,7 +309,7 @@ class StationInvoiceService implements InvoiceServiceContract {
                 $query->select('id','product_id','name', 'price', 'unit');
             },
             'staff' => function( $query ){
-                $query->select('user_id', 'name');
+                $query->select('id', 'name');
             },
         ]);
         return $orders;
@@ -324,7 +324,7 @@ class StationInvoiceService implements InvoiceServiceContract {
             'name' => $collect_order['address']['name'],
             'phone' => $collect_order['address']['phone'],
             'address' => $collect_order['address']['detail'],
-            'staff_id' => $collect_order['staff']['user_id'],
+            'staff_id' => $collect_order['staff_id'],
             'staff_name' => $collect_order['staff']['name'],
             'total_amount' => $collect_order['order']['total_amount'],
             'discount_amount' => $collect_order['order']['discount_amount'],

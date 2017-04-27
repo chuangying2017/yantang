@@ -82,7 +82,7 @@ class CollectOrderRepository implements ClientOrderRepositoryContract{
         $cOrders = CollectOrder::query();
         if( $station_id ){
             $staffs = $this->staffRepo->getAll( $station_id, null, true );
-            $staffIds = $staffs->pluck('user_id')->filter();
+            $staffIds = $staffs->pluck('id')->filter();
             if( !$staffs->isEmpty() ){
                 $cOrders->whereIn( 'staff_id', $staffIds );
             }
