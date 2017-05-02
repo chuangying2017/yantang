@@ -1,4 +1,4 @@
-FROM daocloud.io/piresdev/nginx-php-laravel:v1.0.0
+FROM daocloud.io/piresdev/nginx-php-laravel:v1.0.1
 
 RUN docker-php-ext-install bcmath
 
