@@ -3,13 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Services\Subscribe\PreorderService;
-use App\Services\Subscribe\PreorderProductService;
-use App\Services\Subscribe\StaffService;
-use App\Services\Subscribe\StationService;
-use App\Services\Subscribe\StatementsService;
 
-class SubscribeServiceProvider extends ServiceProvider {
+class SubscribeServiceProvider extends ServiceProvider
+{
 
     public function register()
     {
@@ -37,7 +33,6 @@ class SubscribeServiceProvider extends ServiceProvider {
             \App\Services\Preorder\PreorderAssignServiceContact::class,
             \App\Services\Preorder\PreorderAssignService::class
         );
-
 
         $this->app->bind(
             \App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract::class,
@@ -71,7 +66,7 @@ class SubscribeServiceProvider extends ServiceProvider {
 
         $this->app->bind(
             'collect_order',
-            \App\Models\Subscribe\CollectOrder::class
+            \App\Models\Collect\CollectOrder::class
         );
 
     }
