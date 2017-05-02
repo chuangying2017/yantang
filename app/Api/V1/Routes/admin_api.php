@@ -155,6 +155,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
         $api->group(['namespace' => 'Order'], function ($api) {
             $api->group(['prefix' => 'subscribe'], function ($api) {
                 $api->resource('orders', 'PreorderController', ['only' => ['index', 'show', 'update']]);
+                $api->resource('collect_orders', 'CollectOrderController', ['only' => ['index', 'show', 'update']]);
                 $api->resource('origin-orders', 'SubscribeOrderController', ['only' => ['index', 'destroy']]);
                 $api->get('origin-orders/refund', 'SubscribeOrderController@refundOrders');
                 $api->put('origin-orders/refund/{refund_order_no}/reject', 'SubscribeOrderController@rejectRefund');
