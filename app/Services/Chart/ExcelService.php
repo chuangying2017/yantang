@@ -17,26 +17,36 @@ class ExcelService {
         return self::getCDNFullPath($file);
     }
 
+    public static function save($sheetsData, $filename, $local_path){
+        return Excel::create($filename, function ($excel) use ($sheetsData) {
+            foreach( $sheetsData as $sheetName => $sheetData ){
+                $excel->sheet($sheetName, function ($sheet) use ($sheetData) {
+                    $sheet->fromArray($sheetData);
+                });
+            };
+        })->store('xls', $local_path);
+    }
+
+    public static function download( $filename, $local = false){
+        if ($local) {
+            return self::downloadLocalFile(self::getFile($filename, true));
+        }
+
+        $result = \Storage::drive('qiniu')->put($filename, file_get_contents(self::getFile($filename, true)));
+
+        return self::getFile($filename, $local);
+    }
+
     public static function saveAndDownload($e_data = null, $title, $path, $local = false)
     {
         $full_file_name = $path . $title . '.xls';
         $local_path = storage_path('app/' . $path);
 
         if ($e_data) {
-            Excel::create($title, function ($excel) use ($e_data) {
-                $excel->sheet('data', function ($sheet) use ($e_data) {
-                    $sheet->fromArray($e_data);
-                });
-            })->store('xls', $local_path);
+            self::save(['data'=>$e_data], $title, $local_path);
         }
 
-        if ($local) {
-            return self::downloadLocalFile(self::getFile($full_file_name, true));
-        }
-
-        $result = \Storage::drive('qiniu')->put($full_file_name, file_get_contents(self::getFile($full_file_name, true)));
-
-        return self::getFile($full_file_name, $local);
+        return self::download( $full_file_name, $local );
     }
 
     public static function downExcel($e_data, $title)
@@ -55,6 +65,12 @@ class ExcelService {
         foreach ($skus as $sku) {
             $e_sku .= $sku['name'] . ', ' . '总共: ' . $sku['total'] . ', ' . '剩余: ' . $sku['remain'] . "\n";
         }
+        return $e_sku;
+    }
+
+    protected static function getCollectOrderSku($sku)
+    {
+        $e_sku = $sku['name'] . ', ' . '总共: ' . $sku['quantity'] . ' ' . $sku['unit'];
         return $e_sku;
     }
 
