@@ -3,6 +3,7 @@
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Admin\Order\AdminCollectOrderTransformer;
 use App\Models\Collect\CollectOrder;
+use App\Models\Order\Order;
 use App\Repositories\Order\CollectOrderRepository;
 use Illuminate\Http\Request;
 
@@ -28,6 +29,11 @@ class CollectOrderController extends Controller
             // $orders = $this->collectOrderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time, $time_name);
             // return ExcelService::downPreorder($orders);
         }
+        $order_no = $request->input('order_no');
+        $order_id = null;
+        if( $order_no ){
+            $order_id = Order::where('order_no', $order_no)->select('id')->first();
+        }
 
         $query = CollectOrder::query();
 
@@ -43,6 +49,10 @@ class CollectOrderController extends Controller
 
         if (!is_null($end_time)) {
             $query->where('pay_at', '<=', $end_time);
+        }
+
+        if (!is_null($order_id)) {
+            $query->where('order_id', $order_id);
         }
 
         $query->orderBy('pay_at', 'DESC');
