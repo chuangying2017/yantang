@@ -4,13 +4,18 @@ namespace App\Api\V1\Controllers\Admin\Invoice;
 
 use App\Api\V1\Transformers\Admin\Invoice\StationInvoiceTransformer;
 use App\Api\V1\Transformers\Admin\Invoice\StationInvoiceCollectOrderTransformer;
+use App\Api\V1\Transformers\Invoice\StationInvoiceCollectOrderTransformer as Client_StationInvoiceCollectOrderTransformer;
+use App\Api\V1\Transformers\Invoice\StationInvoiceOrderTransformer;
+use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Invoice\InvoiceProtocol;
+use App\Repositories\Invoice\StationInvoiceRepository;
 use App\Repositories\Invoice\StationAdminInvoiceRepository;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Chart\ExcelService;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -23,12 +28,29 @@ class StationInvoiceController extends Controller {
     private $invoiceRepo;
 
     /**
+     * @var StationInvoiceRepository
+     */
+    private $stationInvoiceRepo;
+
+    /**
      * StationInvoiceController constructor.
      * @param StationAdminInvoiceRepository $invoiceRepo
      */
-    public function __construct(StationAdminInvoiceRepository $invoiceRepo)
+    public function __construct(StationAdminInvoiceRepository $invoiceRepo,StationInvoiceRepository $stationInvoiceRepo)
     {
         $this->invoiceRepo = $invoiceRepo;
+        $this->stationInvoiceRepo = $stationInvoiceRepo;
+    }
+
+    protected function checkAuth($invoice)
+    {
+        if (access()->hasRole(AccessProtocol::ROLE_OF_SUPERVISOR)) {
+            return true;
+        }
+
+        if ($invoice['merchant_id'] != access()->stationId()) {
+            throw new AccessDeniedHttpException('无权查看账单');
+        }
     }
 
     public function index(Request $request)
@@ -56,12 +78,29 @@ class StationInvoiceController extends Controller {
 
     public function orders(Request $request, $invoice_no)
     {
-        return $this->api->be(access()->user())->get('api/stations/invoices/' . $invoice_no . '/orders', $request->all());
+        $invoice = $this->stationInvoiceRepo->get($invoice_no, false);
+
+        $this->checkAuth($invoice);
+
+        $staff_id = $request->input('staff') ?: null;
+
+        $orders = $this->stationInvoiceRepo->getAllOrders($invoice_no, InvoiceProtocol::PER_PAGE_OF_ORDER, $staff_id);
+
+        return $this->response->paginator($orders, new StationInvoiceOrderTransformer());
     }
+
 
     public function collect_orders(Request $request, $invoice_no)
     {
-        return $this->api->be(access()->user())->get('api/stations/invoices/' . $invoice_no . '/collect_orders', $request->all());
+        $invoice = $this->stationInvoiceRepo->get($invoice_no, false);
+
+        $this->checkAuth($invoice);
+
+        $staff_id = $request->input('staff') ?: null;
+
+        $orders = $this->stationInvoiceRepo->getAllOrders($invoice_no, InvoiceProtocol::PER_PAGE_OF_ORDER, $staff_id, 'collect');
+
+        return $this->response->paginator($orders, new Client_StationInvoiceCollectOrderTransformer());
     }
 
     public function bonus(Request $request, PreorderRepositoryContract $preorderRepo)
