@@ -1,4 +1,6 @@
-FROM daocloud.io/billqiang/nginx-php:laravel-v1.0.0.3
+FROM daocloud.io/piresdev/nginx-php-laravel:v1.0.1
+
+RUN docker-php-ext-install zip
 
 COPY app /var/www/html/app
 COPY artisan /var/www/html/artisan
@@ -14,4 +16,5 @@ COPY tests /var/www/html/tests
 
 RUN chmod -R 777 bootstrap/cache
 RUN mkdir -pm777 storage/app/public storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+RUN chown -R www-data:www-data .
 RUN composer install
