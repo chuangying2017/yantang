@@ -135,9 +135,6 @@ trait InvoiceExcelTrait {
         return self::download($full_file_name, $local);
     }
 
-    public static function downloadInvoice($invice_no, $type = ''){
-
-    }
     public static function downloadStationAdminInvoice($invoice, $title = '燕塘优先达服务部对账单-概况-', $local = true)
     {
         $title .= $invoice['invoice_date'];
