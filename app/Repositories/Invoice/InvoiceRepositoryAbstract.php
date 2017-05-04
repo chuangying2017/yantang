@@ -41,7 +41,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
             'merchant_id' => $invoice_data['merchant_id'],
             'merchant_name' => $invoice_data['merchant_name'],
             'merchant_no' => $invoice_data['merchant_no'],
-            'total_count' => array_get($invoice_data, 'total_count', count($invoice_orders)),
+            'total_count' => array_get($invoice_data, 'total_count', count($invoice_orders) + count($collect_orders)),
             'total_amount' => $invoice_data['total_amount'],
             'discount_amount' => $invoice_data['discount_amount'],
             'pay_amount' => $invoice_data['pay_amount'],
@@ -234,7 +234,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
         if(!is_null($staff_id)) {
             $query->where('staff_id', $staff_id);
         }
-        
+
         if ($per_page) {
             return $query->paginate($per_page);
         }
