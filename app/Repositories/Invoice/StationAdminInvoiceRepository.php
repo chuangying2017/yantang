@@ -36,6 +36,7 @@ class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
     public function create($invoice_data)
     {
         $invoice_orders = array_get($invoice_data, 'detail', null);
+        $collect_orders = array_get($invoice_data, 'collect_orders', null);
 
         $invoice_model = $this->getInvoiceModel();
 
@@ -48,7 +49,7 @@ class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
             'end_time' => $invoice_data['end_time'],
             'merchant_id' => $invoice_data['merchant_id'],
             'merchant_name' => $invoice_data['merchant_name'],
-            'total_count' => array_get($invoice_data, 'total_count', count($invoice_orders)),
+            'total_count' => array_get($invoice_data, 'total_count', count($invoice_orders) + count($collect_orders)),
             'total_amount' => $invoice_data['total_amount'],
             'discount_amount' => $invoice_data['discount_amount'],
             'pay_amount' => $invoice_data['pay_amount'],

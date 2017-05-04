@@ -2,7 +2,9 @@
 
 use App\Models\Invoice\InvoiceAbstract;
 use App\Models\Subscribe\Preorder;
+use App\Models\Collect\CollectOrder;
 use App\Repositories\NoGenerator;
+use App\Models\Invoice\StationInvoiceCollectOrder;
 
 abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
 
@@ -26,6 +28,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
 
 
         $invoice_orders = array_get($invoice_data, 'detail', null);
+        $collect_orders = array_get($invoice_data, 'collect_orders', []);
 
         $invoice_model = $this->getInvoiceModel();
 
@@ -38,7 +41,7 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
             'merchant_id' => $invoice_data['merchant_id'],
             'merchant_name' => $invoice_data['merchant_name'],
             'merchant_no' => $invoice_data['merchant_no'],
-            'total_count' => array_get($invoice_data, 'total_count', count($invoice_orders)),
+            'total_count' => array_get($invoice_data, 'total_count', count($invoice_orders) + count($collect_orders)),
             'total_amount' => $invoice_data['total_amount'],
             'discount_amount' => $invoice_data['discount_amount'],
             'pay_amount' => $invoice_data['pay_amount'],
@@ -52,6 +55,10 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
             $invoice->orders()->createMany($invoice_orders);
             $invoice_preorder_ids = array_pluck($invoice_orders, 'preorder_id');
             Preorder::query()->whereIn('id', $invoice_preorder_ids)->update(['invoice' => InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_OK]);
+
+            $invoice->collect_orders()->createMany($collect_orders);
+            $invoice_collect_order_ids = array_pluck($collect_orders, 'collect_order_id');
+            CollectOrder::query()->whereIn('id', $invoice_collect_order_ids)->update(['invoice' => InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_OK]);
         }
 
         \DB::commit();
@@ -213,16 +220,21 @@ abstract class InvoiceRepositoryAbstract implements InvoiceRepositoryContract {
     }
 
 
-    public function getAllOrders($invoice_no, $per_page = null, $staff_id = null)
+    public function getAllOrders($invoice_no, $per_page = null, $staff_id = null, $type = 'preorder')
     {
-        $order_model = InvoiceProtocol::getOrderModel($this->getInvoiceModel());
+        if( $type == 'preorder' ){
+            $order_model = InvoiceProtocol::getOrderModel($this->getInvoiceModel());
+        }
+        else if( $type == 'collect' ){
+            $order_model = StationInvoiceCollectOrder::class;
+        }
 
         $query = $order_model::query()->where('invoice_no', $invoice_no);
 
         if(!is_null($staff_id)) {
             $query->where('staff_id', $staff_id);
         }
-        
+
         if ($per_page) {
             return $query->paginate($per_page);
         }

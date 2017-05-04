@@ -4,6 +4,7 @@ namespace App\Api\V1\Controllers\Subscribe;
 
 use App\Api\V1\Transformers\Invoice\StationInvoiceOrderTransformer;
 use App\Api\V1\Transformers\Invoice\StationInvoiceTransformer;
+use App\Api\V1\Transformers\Invoice\StationInvoiceCollectOrderTransformer;
 use App\Repositories\Backend\AccessProtocol;
 use App\Repositories\Invoice\InvoiceProtocol;
 use App\Repositories\Invoice\StationInvoiceRepository;
@@ -97,6 +98,20 @@ class StationInvoiceController extends Controller {
         $orders = $this->invoiceRepo->getAllOrders($invoice_no, InvoiceProtocol::PER_PAGE_OF_ORDER, $staff_id);
 
         return $this->response->paginator($orders, new StationInvoiceOrderTransformer());
+    }
+
+
+    public function collect_orders(Request $request, $invoice_no)
+    {
+        $invoice = $this->invoiceRepo->get($invoice_no, false);
+
+        $this->checkAuth($invoice);
+
+        $staff_id = $request->input('staff') ?: null;
+
+        $orders = $this->invoiceRepo->getAllOrders($invoice_no, InvoiceProtocol::PER_PAGE_OF_ORDER, $staff_id, 'collect');
+
+        return $this->response->paginator($orders, new StationInvoiceCollectOrderTransformer());
     }
 
 }

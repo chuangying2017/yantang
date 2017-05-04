@@ -12,7 +12,6 @@ use JWTAuth;
 use App\Api\V1\Requests\Auth\ThirdPartyRequest;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-
 /**
  * Class AuthController
  * @package App\Api\V1\Controllers\Frontend\Auth
@@ -79,6 +78,35 @@ class AuthController extends Controller {
     public function loginThirdPartyUrl(Request $request, $provider)
     {
         $url = $this->auth->loginThirdPartyUrl($request->all(), $provider);
+
+        if( $request->input('role') == 'deliver' ){
+            //get parameter
+            $redirectArr = parse_url( $url );
+            //resolve
+            $paramsArr = [];
+            parse_str( $redirectArr['query'], $paramsArr );
+            //decode url
+            $redirect_uri = urldecode( $paramsArr['redirect_uri'] );
+
+
+            //get parameter of redirect uri
+            $reParam = parse_url( $redirect_uri );
+            $reParamArr = [];
+            parse_str( $reParam['query'], $reParamArr );
+            //add back param
+            $reParamArr['back'] = $request->input('backURL');
+            $reParam['query'] = http_build_query( $reParamArr );
+            $redirect_uri = http_build_url( $reParam );
+
+            //add to old return url
+            $paramsArr['redirect_uri'] = $redirect_uri;
+            //build query
+            $redirectArr['query'] = http_build_query( $paramsArr );
+
+            //build url
+            $url = http_build_url( $redirectArr );
+            //return it
+        }
 
         return $this->response->array(['data' => compact('url')]);
     }

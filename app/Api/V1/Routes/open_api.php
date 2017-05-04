@@ -12,3 +12,4 @@ $api->group(['namespace' => 'Open', 'prefix' => 'open', 'middleware' => ['valid.
 
 });
 
+$api->get('jstoken', 'Open\WeixinController@jstoken')->name('jstoken');

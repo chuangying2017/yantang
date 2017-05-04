@@ -99,6 +99,8 @@ class RuleService implements RuleServiceContract {
             $this->setSpecifyRuleServiceInfo($rule_key);
 
             $this->specifyRuleService->checkItemsInRange();
+
+            $this->specifyRuleService->checkOrderIsCollect();
         }
 
         return $this;

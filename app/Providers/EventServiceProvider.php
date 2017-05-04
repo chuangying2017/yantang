@@ -34,7 +34,8 @@ class EventServiceProvider extends ServiceProvider {
         'App\Events\Auth\UserRegister' => [
             'App\Listeners\Auth\CreateClientForUser',
             'App\Listeners\Auth\CreateWalletForUser',
-            'App\Listeners\Auth\CreateCreditsWalletForUser'
+            'App\Listeners\Auth\CreateCreditsWalletForUser',
+            'App\Listeners\Auth\DispatchTicketForRegisterUser',
         ],
 
         'App\Events\Auth\UserLoggedOut' => [
@@ -71,6 +72,7 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
             'App\Listeners\Product\DecreaseProductSkuStock',
             'App\Listeners\Preorder\SetPreorderAsPaid',
+            'App\Listeners\Collect\SetCollectOrderAsPaid',
             'App\Listeners\Promotion\DispatchSubscribeOrderGift',
             'App\Listeners\Order\CheckIfFirstOrder',
         ],

@@ -60,6 +60,7 @@ class Kernel extends HttpKernel {
          * Access Middleware
          */
 
+        'across' => \App\Http\Middleware\RemoveAcrossControl::class,
         'cors' => \Barryvdh\Cors\HandleCors::class,
 
         'access.routeNeedsRole' => \App\Http\Middleware\RouteNeedsRole::class,
