@@ -3,6 +3,7 @@
 use App\Models\Banner;
 
 class BannerService {
+    const BANNER_PER_PAGE = 20;
 
     const TYPE_OF_SLIDER = 'slider';
 
@@ -37,7 +38,7 @@ class BannerService {
 
     public static function delete($id)
     {
-        return Banner::destroy($id);
+        return Banner::where('id', $id)->delete();
     }
 
     public static function listByType($type = null, $group = false)
@@ -55,5 +56,15 @@ class BannerService {
         }
 
         return $data;
+    }
+
+    public static function lists( $type = null ){
+        $query =  Banner::query();
+        if (!is_null($type)) {
+            $query->where('type', $type);
+        }
+
+        return $query->orderBy('index')
+                    ->paginate( self::BANNER_PER_PAGE );
     }
 }
