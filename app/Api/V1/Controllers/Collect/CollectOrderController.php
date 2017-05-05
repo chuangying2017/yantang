@@ -46,9 +46,10 @@ class CollectOrderController extends Controller {
         $this->couponRepo = $couponRepo;
     }
 
-    public function index( Request $requset )
+    public function index( Request $request )
     {
-        $status = $requset->input('status');
+        $status = $request->input('status');
+        $pageSize = $request->input('size', CollectOrderProtocol::ORDER_PER_PAGE);
         $orders = CollectOrder::query()
                 ->with('order')
                 ->where('staff_id',access()->staffId());
@@ -59,7 +60,7 @@ class CollectOrderController extends Controller {
             $orders->whereNull('pay_at');
         }
         $orders = $orders->orderBy('created_at', 'desc')
-            ->paginate(CollectOrderProtocol::ORDER_PER_PAGE);
+            ->paginate($pageSize);
 
         return $this->response->paginator($orders, new CollectOrderTransformer());
     }
