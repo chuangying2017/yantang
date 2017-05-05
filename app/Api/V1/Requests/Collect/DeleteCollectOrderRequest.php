@@ -18,8 +18,16 @@ class DeleteCollectOrderRequest extends Request {
     public function authorize()
     {
         $collect_order = $this->route('collect_order');
-
-        return is_null($collect_order->order) || ($collect_order->order->status == OrderProtocol::PAID_STATUS_OF_UNPAID);
+        if( $collect_order->staff_id != access()->staffId() ){
+            return false;
+        }
+        if( is_null($collect_order->order)
+            || ($collect_order->order->status == OrderProtocol::PAID_STATUS_OF_UNPAID)
+        ){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
