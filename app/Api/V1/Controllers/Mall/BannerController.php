@@ -9,7 +9,7 @@ class BannerController extends Controller {
     public function index(Request $request)
     {
         $type = $request->input('type');
-        $banners = BannerService::lists( $type );
+        $banners = BannerService::listByType( $type );
 
         return $this->response->array($banners, new BannerTransformer());
     }

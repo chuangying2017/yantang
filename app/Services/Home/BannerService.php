@@ -40,7 +40,7 @@ class BannerService {
         return Banner::destroy($id);
     }
 
-    public static function lists($type = null, $group = false)
+    public static function listByType($type = null, $group = false)
     {
         if (is_null($type)) {
             $sliders = Banner::where('type', self::TYPE_OF_SLIDER)->orderBy('index')->get(['id', 'title', 'url', 'cover_image', 'index', 'type']);
