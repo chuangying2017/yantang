@@ -15,5 +15,7 @@ $api->group(['namespace' => 'Mall', 'prefix' => 'mall'], function ($api) {
     $api->resource('cats', 'CategoryController', ['only' => ['index', 'show']]);
     $api->resource('brands', 'BrandController', ['only' => ['index', 'show']]);
     $api->resource('groups', 'GroupController', ['only' => ['index', 'show']]);
+    $api->resource('banner', 'BannerController', ['only' => ['index']]);
+    ;
 });
 
