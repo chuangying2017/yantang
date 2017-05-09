@@ -25,16 +25,14 @@ class BannerRequest extends Request {
      */
     public function rules()
     {
-        $rules = [
-            //
-        ];
 
-        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
-            $rules = [
-                'cover_image' => 'required',
-                'type'        => 'required|in:' . BannerService::TYPE_OF_SLIDER . ',' . BannerService::TYPE_OF_GRID
-            ];
-        }
+        $rules = [
+            'cover_image' => 'required',
+            'type'        => 'required|in:' . BannerService::TYPE_OF_SLIDER . ',' . BannerService::TYPE_OF_GRID,
+            'title' => 'required|min:2',
+            'url' => 'url',
+            'index' => 'numeric',
+        ];
 
         return $rules;
     }

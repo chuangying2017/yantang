@@ -97,6 +97,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
 
         $api->group(['prefix' => 'mall'], function ($api) {
             $api->resource('orders', 'Order\MallOrderController', ['only' => ['index', 'show', 'update']]);
+            $api->resource('banner', 'Banner\BannerController');
         });
 
     });
