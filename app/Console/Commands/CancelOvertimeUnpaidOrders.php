@@ -30,15 +30,7 @@ class CancelOvertimeUnpaidOrders extends Command {
     public function __construct(Dispatcher $api)
     {
         parent::__construct();
-    }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
-    {
         $this->api = $api;
 
         $admin_user_id = 1;
@@ -54,7 +46,15 @@ class CancelOvertimeUnpaidOrders extends Command {
             'sort' => 'asc',
             'page' => 1
         ];
+    }
 
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
         $pay_time_before = Carbon::now()->subHours(2);
         $count = 0;
 
