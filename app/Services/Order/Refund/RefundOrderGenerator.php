@@ -37,6 +37,12 @@ class RefundOrderGenerator {
 
         $temp_refund = $handler->handle(new TempRefundOrder($order_no, $order_skus, $memo));
 
+        \Log::debug('refund ' . json_encode($temp_refund->toArray()));
+        if ($error_msg = $temp_refund->getError()) {
+            \Log::error('error ' . $error_msg);
+            throw new \Exception($error_msg);
+        }
+
         return $this->confirm($temp_refund->getTempOrderId());
     }
 

@@ -202,6 +202,7 @@ return [
         \SocialiteProviders\Manager\ServiceProvider::class,
 
         Overtrue\LaravelWechat\ServiceProvider::class,
+        Overtrue\LaravelPinyin\ServiceProvider::class,
     ],
 
     /*
@@ -260,6 +261,7 @@ return [
         'PhpSms' => Toplan\PhpSms\Facades\Sms::class,
         'SmsManager' => Toplan\Sms\Facades\SmsManager::class,
         'EasyWeChat' => Overtrue\LaravelWechat\Facade::class,
+        'Pinyin' => Overtrue\LaravelPinyin\Facades\Pinyin::class,
 
         /*
         * Custom Alias

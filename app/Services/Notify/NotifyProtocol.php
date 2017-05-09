@@ -123,12 +123,12 @@ class NotifyProtocol {
 
     public static function notify($id, $action, $channel = null, $entity = null)
     {
+        $role = self::getRoleByAction($action);
+
+        $contact_role = self::getRoleHandler($role);
+        $content_handler = self::getContentHandler($action);
+
         try {
-            $role = self::getRoleByAction($action);
-
-            $contact_role = self::getRoleHandler($role);
-            $content_handler = self::getContentHandler($action);
-
             switch ($channel) {
                 case NotifyProtocol::CHANNEL_OF_SMS:
                     $phone = $content_handler::getSmsContact($entity) ?: $contact_role::getPhone($id);
@@ -175,24 +175,36 @@ class NotifyProtocol {
             return false;
         }
 
+        //可能会有已经取消关注的用户，会导致用户下不了单
         if (is_array($open_id)) {
             foreach ($open_id as $single_open_id) {
-                \EasyWeChat::notice()->to($single_open_id)
-                    ->url($content::getWeixinTemplateUrl($entity))
-                    ->color($content::getWeixinTemplateColor())
-                    ->template($content::getWeixinTemplateID())
-                    ->andData($content::getWeixinTemplateData($entity))
-                    ->send();
+                try{
+                    \EasyWeChat::notice()->to($single_open_id)
+                        ->url($content::getWeixinTemplateUrl($entity))
+                        ->color($content::getWeixinTemplateColor())
+                        ->template($content::getWeixinTemplateID())
+                        ->andData($content::getWeixinTemplateData($entity))
+                        ->send();
+                    }
+                    catch( \Exception $e ){
+                        \Log::error($e);
+                    }
             }
             return true;
         }
 
-        return \EasyWeChat::notice()->to($open_id)
-            ->url($content::getWeixinTemplateUrl($entity))
-            ->color($content::getWeixinTemplateColor())
-            ->template($content::getWeixinTemplateID())
-            ->andData($content::getWeixinTemplateData($entity))
-            ->send();
+        try{
+            $result =  \EasyWeChat::notice()->to($open_id)
+                ->url($content::getWeixinTemplateUrl($entity))
+                ->color($content::getWeixinTemplateColor())
+                ->template($content::getWeixinTemplateID())
+                ->andData($content::getWeixinTemplateData($entity))
+                ->send();
+            return $result;
+        }
+        catch( \Exception $e ){
+            \Log::error($e);
+        }
     }
 
 

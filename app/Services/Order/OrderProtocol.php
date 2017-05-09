@@ -40,6 +40,7 @@ class OrderProtocol {
     const ORDER_TYPE_OF_REFUND = 2;
     const ORDER_TYPE_OF_CAMPAIGN = 3;
     const ORDER_TYPE_OF_SUBSCRIBE = 4;
+    const ORDER_TYPE_OF_COLLECT = 5;
 
     //Deliver type
     const DELIVER_TYPE_OF_EXPRESS = 'express';

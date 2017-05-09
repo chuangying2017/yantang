@@ -116,4 +116,10 @@ class EloquentAddressRepository implements AddressRepositoryContract {
     {
         return Address::with('info')->where('is_subscribe', 1)->get();
     }
+
+    public function transferAddressToUser( $address_id, $user_id ){
+        $addr = new Address();
+        return \DB::table( $addr->getTable() )->where('id', $address_id)
+                ->update(['user_id'=>$user_id]);
+    }
 }

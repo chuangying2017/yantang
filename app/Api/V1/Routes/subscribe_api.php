@@ -38,6 +38,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->resource('statements', 'StationStatementController', ['only' => ['index', 'show', 'update']]);
 
             $api->get('invoices/{invoice_no}/orders', 'StationInvoiceController@orders')->name('station.invoice.orders');
+            $api->get('invoices/{invoice_no}/collect_orders', 'StationInvoiceController@collect_orders')->name('station.invoice.orders');
             $api->resource('invoices', 'StationInvoiceController', ['only' => ['index', 'show', 'update']]);
 
             //管理配送员

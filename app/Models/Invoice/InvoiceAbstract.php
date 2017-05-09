@@ -18,6 +18,10 @@ class InvoiceAbstract extends Model {
     {
         return $this->hasMany(StationInvoiceOrder::class, 'invoice_no', 'invoice_no');
     }
-    
+
+    public function collect_orders()
+    {
+        return $this->hasMany(StationInvoiceCollectOrder::class, 'invoice_no', 'invoice_no');
+    }
 
 }

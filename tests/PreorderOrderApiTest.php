@@ -151,44 +151,68 @@ class PreorderOrderApiTest extends TestCase {
     /** @test */
     public function it_can_create_a_order_and_cancel_and_refund()
     {
+        $station_handle = true;
+        $station_handle = false;
+        $approve = true;
+
         $order = $this->it_can_create_a_preorder_order();
 
 //        $order = \App\Models\Order\Order::query()->find(1720);
 
         $preorder = \App\Models\Subscribe\Preorder::query()->where('order_id', $order['id'])->first();
 
-        $station_user = \DB::table('station_user')->where('station_id', $preorder['station_id'])->first()->user_id;
-        echo "station is " . $station_user . "\n";
-        $this->json('put', 'stations/preorders/' . $preorder['id'] . '/confirm',
-            [],
-            $this->getAuthHeader($station_user)
-        );
-        $this->echoJson();
-        $staff_id = \App\Models\Subscribe\StationStaff::query()->where('station_id', $station_user)->pluck('id')->first();
-        echo "staff is " . $staff_id . "\n";
-        $this->json('post', 'stations/preorders/' . $preorder['id'] . '/assign',
-            [
-                'staff' => $staff_id
-            ],
-            $this->getAuthHeader($station_user)
-        );
-        $this->echoJson();
+        if ($station_handle) {
+            $station_user = \DB::table('station_user')->where('station_id', $preorder['station_id'])->first()->user_id;
+            echo "station is " . $station_user . "\n";
+            $this->json('put', 'stations/preorders/' . $preorder['id'] . '/confirm',
+                [],
+                $this->getAuthHeader($station_user)
+            );
+            $this->echoJson();
+            $staff_id = \App\Models\Subscribe\StationStaff::query()->where('station_id', $station_user)->pluck('id')->first();
+            echo "staff is " . $staff_id . "\n";
+            $this->json('post', 'stations/preorders/' . $preorder['id'] . '/assign',
+                [
+                    'staff' => $staff_id
+                ],
+                $this->getAuthHeader($station_user)
+            );
+            $this->echoJson();
 //        $preorder = \App\Models\Subscribe\Preorder::query()->where('order_id', $order['id'])->first();
-        $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING]);
-        $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_SHIPPING]);
+            $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_SHIPPING]);
+            $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_SHIPPING]);
+        }
 
+        $this->json('delete', 'subscribe/orders/' . $order['order_no'],
+            [
+                'memo' => '后悔'
+            ], $this->getAuthHeader($order['user_id']));
 
-//        $this->json('delete', 'subscribe/orders/' . $order['order_no'],
-//            [
-//                'memo' => '后悔'
-//            ], $this->getAuthHeader());
-//
-//        $this->notSeeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_CANCEL]);
-//        $this->notSeeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
+        $this->json('get', 'admin/subscribe/origin-orders/refund', ['status' => OrderProtocol::REFUND_STATUS_OF_APPLY], $this->getAuthHeader(1));
+        $this->echoJson();
+
+        if ($station_handle) {
+            $this->notSeeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_CANCEL]);
+            $this->notSeeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
+        } else {
+            $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_CANCEL]);
+            $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
+            return 0;
+        }
+
+        $order = \App\Models\Order\Order::query()->find($order['id']);
+        $refund_order = $order->refund()->first();
+
+        if ($approve) {
+            $this->json('put', 'admin/subscribe/origin-orders/refund/' . $refund_order['order_no'] . '/approve', [], $this->getAuthHeader(1));
+            $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_CANCEL]);
+            $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);
+            return 0;
+        }
 
         //reassign
         $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_SHIPPING]);
-        $this->seeInDatabase('orders', ['id' => $order['id'], 'refund_status' => OrderProtocol::REFUND_STATUS_OF_DEFAULT]);
+        $this->seeInDatabase('orders', ['id' => $order['id'], 'refund_status' => OrderProtocol::REFUND_STATUS_OF_APPLY]);
 
         $this->json('put', 'admin/subscribe/orders/' . $preorder['id'],
             [
@@ -197,13 +221,21 @@ class PreorderOrderApiTest extends TestCase {
             $this->getAuthHeader(1)
         );
 
+
         $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::ORDER_IS_PAID]);
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_ASSIGNING]);
+
+
+        $this->json('put', 'admin/subscribe/origin-orders/refund/' . $refund_order['order_no'] . '/reject', [], $this->getAuthHeader(1));
+
+        $this->seeInDatabase('orders', ['id' => $refund_order['id'], 'status' => OrderProtocol::REFUND_STATUS_OF_REJECT]);
+        $this->seeInDatabase('orders', ['id' => $order['id'], 'refund_status' => OrderProtocol::REFUND_STATUS_OF_REJECT]);
+        $this->seeInDatabase('order_skus', ['order_id' => $order['id'], 'return_quantity' => 0]);
 
         $this->json('delete', 'subscribe/orders/' . $order['order_no'],
             [
                 'memo' => '后悔'
-            ], $this->getAuthHeader());
+            ], $this->getAuthHeader($order['user_id']));
 
         $this->seeInDatabase('orders', ['id' => $order['id'], 'status' => OrderProtocol::STATUS_OF_CANCEL]);
         $this->seeInDatabase('preorders', ['order_id' => $order['id'], 'status' => \App\Services\Preorder\PreorderProtocol::ORDER_STATUS_OF_CANCEL]);

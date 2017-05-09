@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+  mariadb:
+    image: mariadb
+    container_name: yt-mariadb
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: yantang
+    ports:
+      - 3306:3306
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  api:
+    image: daocloud.io/billqiang/yt-api
+    container_name: yt-api
+    restart: always
+    links:
+      - mariadb
+    volumes:
+      - ./.env.example:/var/www/html/.env
+    environment:
+      DB_HOST: mariadb
+      DB_DATABASE: yantang
+      DB_USERNAME: root
+      DB_PASSWORD: ''
+      DB_CHARSET: utf8mb4
+      DB_COLLATION: utf8mb4_unicode_ci
+      DB_LOCAL_HOST: mariadb
+      DB_LOCAL_DATABASE: yantang
+      DB_LOCAL_USERNAME: root
+      DB_LOCAL_PASSWORD: ''
+      DB_LOCAL_CHARSET: utf8mb4
+      DB_LOCAL_COLLATION: utf8mb4_unicode_ci
+      DB_LOCAL_PORT: 3306
+      DB_TEST_HOST: mariadb
+      DB_TEST_DATABASE: yantang
+      DB_TEST_USERNAME: root
+      DB_TEST_PASSWORD: ''
+      DB_TEST_CHARSET: utf8mb4
+      DB_TEST_COLLATION: utf8mb4_unicode_ci
+      DB_TEST_PORT: 3306

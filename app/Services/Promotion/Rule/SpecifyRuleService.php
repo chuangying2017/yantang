@@ -116,6 +116,21 @@ class SpecifyRuleService implements SpecifyRuleContract {
         return true;
     }
 
+    public function checkOrderIsCollect(){
+        if (
+            $this->rules->getQualification()['type'] == PromotionProtocol::QUALI_TYPE_OF_COLLECT_ORDER
+        ){
+            if( isset($this->items->getPreorder()['collect_order_id']) && !is_null($this->items->getPreorder()['collect_order_id'])){
+            }
+            else{
+                $this->rules->setMessage('不是收款订单');
+                $this->rules->setUnusable();
+            }
+        }
+
+        return ;
+    }
+
     protected function calAndCheckItemsRange($usable_items)
     {
         $usable_items_range_value = 0;

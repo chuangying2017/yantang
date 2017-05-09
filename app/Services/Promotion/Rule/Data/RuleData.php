@@ -134,6 +134,11 @@ class RuleData implements RuleDataContract {
         }
     }
 
+    public function setUnusable()
+    {
+        $this->updateRule(self::KEY_OF_RULE_USABLE, 0 );
+    }
+
     public function isUsable()
     {
         return $this->getRule(self::KEY_OF_RULE_USABLE);

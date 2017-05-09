@@ -114,10 +114,14 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
 
         $api->group(['namespace' => 'Invoice', 'prefix' => 'invoices'], function ($api) {
             $api->get('stations/{invoice_no}/orders', 'StationInvoiceController@orders')->name('admin.invoices.stations.orders');
+            $api->get('stations/{invoice_no}/collect_orders', 'StationInvoiceController@collect_orders')->name('admin.invoices.stations.collect_orders');
             $api->resource('stations', 'StationInvoiceController', ['only' => ['index', 'show']]);
             $api->get('bonus', 'StationInvoiceController@bonus');
         });
 
+        $api->group(['namespace'=>'Collect'], function( $api ){
+            $api->resource('collect_order','CollectController',['only'=>['index','show']]);
+        });
     });
 
 
@@ -151,7 +155,11 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
         $api->group(['namespace' => 'Order'], function ($api) {
             $api->group(['prefix' => 'subscribe'], function ($api) {
                 $api->resource('orders', 'PreorderController', ['only' => ['index', 'show', 'update']]);
+                $api->resource('collect_orders', 'CollectOrderController', ['only' => ['index', 'show', 'update']]);
                 $api->resource('origin-orders', 'SubscribeOrderController', ['only' => ['index', 'destroy']]);
+                $api->get('origin-orders/refund', 'SubscribeOrderController@refundOrders');
+                $api->put('origin-orders/refund/{refund_order_no}/reject', 'SubscribeOrderController@rejectRefund');
+                $api->put('origin-orders/refund/{refund_order_no}/approve', 'SubscribeOrderController@approveRefund');
             });
         });
 
