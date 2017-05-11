@@ -18,7 +18,7 @@ class ValidServer {
     {
         $request_api = $request->getClientIp();
 
-        info($request_api);
+        // info($request_api);
 
         if (in_array(
             $request_api,
