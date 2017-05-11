@@ -175,36 +175,29 @@ class NotifyProtocol {
             return false;
         }
 
-        //可能会有已经取消关注的用户，会导致用户下不了单
-        if (is_array($open_id)) {
-            foreach ($open_id as $single_open_id) {
-                try{
-                    \EasyWeChat::notice()->to($single_open_id)
-                        ->url($content::getWeixinTemplateUrl($entity))
-                        ->color($content::getWeixinTemplateColor())
-                        ->template($content::getWeixinTemplateID())
-                        ->andData($content::getWeixinTemplateData($entity))
-                        ->send();
-                    }
-                    catch( \Exception $e ){
-                        \Log::error($e);
-                    }
+        if (!is_array($open_id)) {
+            $open_id = [$open_id];
+        }
+        foreach ($open_id as $single_open_id) {
+            try{
+                \EasyWeChat::notice()->to($single_open_id)
+                    ->url($content::getWeixinTemplateUrl($entity))
+                    ->color($content::getWeixinTemplateColor())
+                    ->template($content::getWeixinTemplateID())
+                    ->andData($content::getWeixinTemplateData($entity))
+                    ->send();
             }
-            return true;
+            catch( \EasyWeChat\Core\Exceptions\HttpException $e ){
+                // errCode 43004: 可能会有已经取消关注的用户，会导致用户下不了单
+                if( $e->getCode() != '43004' ){
+                    \Log::error( $e );
+                }
+            }
+            catch( \Exception $e ){
+                \Log::error($e);
+            }
         }
-
-        try{
-            $result =  \EasyWeChat::notice()->to($open_id)
-                ->url($content::getWeixinTemplateUrl($entity))
-                ->color($content::getWeixinTemplateColor())
-                ->template($content::getWeixinTemplateID())
-                ->andData($content::getWeixinTemplateData($entity))
-                ->send();
-            return $result;
-        }
-        catch( \Exception $e ){
-            \Log::error($e);
-        }
+        return true;
     }
 
 
