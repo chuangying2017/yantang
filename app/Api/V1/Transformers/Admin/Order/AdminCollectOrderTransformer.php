@@ -15,6 +15,7 @@ class AdminCollectOrderTransformer extends TransformerAbstract
             $data['order']['pay_amount'] = display_price($data['order']['pay_amount']);
             $data['order']['total_amount'] = display_price($data['order']['total_amount']);
             $data['order']['products_amount'] = display_price($data['order']['products_amount']);
+            $data['order']['discount_amount'] = display_price($data['order']['discount_amount']);
         }
         if ($data['sku']) {
             $data['sku']['price'] = display_price($data['sku']['price']);
