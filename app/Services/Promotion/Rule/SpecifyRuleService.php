@@ -117,18 +117,30 @@ class SpecifyRuleService implements SpecifyRuleContract {
     }
 
     public function checkOrderIsCollect(){
-        if (
-            $this->rules->getQualification()['type'] == PromotionProtocol::QUALI_TYPE_OF_COLLECT_ORDER
-        ){
-            if( isset($this->items->getPreorder()['collect_order_id']) && !is_null($this->items->getPreorder()['collect_order_id'])){
-            }
-            else{
-                $this->rules->setMessage('不是收款订单');
-                $this->rules->setUnusable();
-            }
+        $isCollectCoupon = $this->rules->getQualification()['type'] == PromotionProtocol::QUALI_TYPE_OF_COLLECT_ORDER;
+        $isCollectOrder = isset($this->items->getPreorder()['collect_order_id']) && !is_null($this->items->getPreorder()['collect_order_id']);
+
+        //同或：异或非门
+        //是收款订单，且是收款专用优惠券 均为1
+        //或者  不是收款订单，且也不是收款专用优惠券 均为0
+        //时  该优惠券可用
+        if ( $isCollectCoupon === $isCollectOrder ){
+            return;
         }
 
-        return ;
+        //不是收款订单，提示只能使用一般优惠券
+        if( !$isCollectOrder ){
+            $this->rules->setMessage('该券只能在收款订单中使用');
+            $this->rules->setUnusable();
+        }
+
+        //不是收款优惠券,提示只能在收款时使用
+        if( !$isCollectCoupon ){
+            $this->rules->setMessage('该券不能在收款订单中使用');
+            $this->rules->setUnusable();
+        }
+
+        return;
     }
 
     protected function calAndCheckItemsRange($usable_items)
