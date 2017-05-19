@@ -58,14 +58,14 @@ class CollectOrderController extends Controller
         $query->orderBy('pay_at', 'DESC');
 
         $orders = $query->paginate(self::PER_PAGE);
-        $orders->load('staff');
+        $orders->load(['staff', 'staff.station']);
 
         return $this->response->paginator($orders, new AdminCollectOrderTransformer());
     }
 
     public function show($order_id)
     {
-        $order = CollectOrder::with(['staff', 'sku', 'address', 'order'])
+        $order = CollectOrder::with(['staff', 'sku', 'address', 'order', 'staff.station', 'order.promotions.promotion'])
             ->where('id', $order_id)
             ->firstOrFail();
 
