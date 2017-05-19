@@ -20,7 +20,7 @@ trait InvoiceExcelTrait {
         $invoice->load('orders');
         $e_preorders = [];
         foreach ($invoice['orders'] as $key => $preorder) {
-            $e_data['序号'] = $key;
+            $e_data['序号'] = $key+1;
             $e_data['接单日期'] = Carbon::parse($preorder['confirm_at'])->toDateString();
             $e_data['接单时间'] = Carbon::parse($preorder['confirm_at'])->toTimeString();
             $e_data['服务部'] = $preorder['station_name'];
@@ -72,7 +72,7 @@ trait InvoiceExcelTrait {
         ];
         $e_collects = [];
         foreach ($invoice['collect_orders'] as $key => $collect_order) {
-            $e_collect['序号'] = $key;
+            $e_collect['序号'] = $key+1;
             $e_collect['支付日期'] = Carbon::parse($collect_order['pay_at'])->toDateString();
             $e_collect['支付时间'] = Carbon::parse($collect_order['pay_at'])->toTimeString();
             $e_collect['服务部'] = $collect_order['station_name'];
@@ -147,7 +147,7 @@ trait InvoiceExcelTrait {
 
         $e_datas = [];
         foreach ($invoice->detail as $key => $merchant_invoice) {
-            $e_data['序号'] = $key;
+            $e_data['序号'] = $key+1;
             $e_data['接单时间'] = $merchant_invoice['start_time'] . ' - ' . $merchant_invoice['end_time'];
             $e_data['服务部'] = $merchant_invoice['merchant_name'];
             $e_data['订单数'] = $merchant_invoice['total_count'];
