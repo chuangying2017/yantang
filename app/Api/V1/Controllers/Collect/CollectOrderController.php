@@ -13,9 +13,12 @@ use App\Api\V1\Transformers\TempOrderTransformer;
 use App\Services\Order\CollectOrderGenerator;
 use App\Services\Order\CollectOrderProtocol;
 use App\Services\Preorder\PreorderProtocol;
+use App\Services\Promotion\PromotionProtocol;
 use App\Services\Pay\Pingxx\PingxxProtocol;
 use App\Services\Order\OrderProtocol;
+use App\Services\Promotion\CouponService;
 use App\Repositories\Address\AddressRepositoryContract;
+use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
 
 use App\Services\Order\Checkout\OrderCheckoutService;
@@ -35,15 +38,9 @@ class CollectOrderController extends Controller {
      */
     private $addressRepo;
 
-    /**
-     * @var CouponRepositoryContract
-     */
-    private $couponRepo;
-
-    public function __construct(AddressRepositoryContract $addressRepo,CouponRepositoryContract $couponRepo)
+    public function __construct(AddressRepositoryContract $addressRepo)
     {
         $this->addressRepo = $addressRepo;
-        $this->couponRepo = $couponRepo;
     }
 
     public function index( Request $request )
@@ -65,7 +62,7 @@ class CollectOrderController extends Controller {
         return $this->response->paginator($orders, new CollectOrderTransformer());
     }
 
-    public function store(CollectOrderRequest $request, CollectOrderGenerator $collectOrderGenerator)
+    public function store(CollectOrderRequest $request)
     {
         $sku_id = $request->input('sku_id');
         $quantity = $request->input('quantity');
@@ -80,8 +77,27 @@ class CollectOrderController extends Controller {
         return $this->response->noContent()->setStatusCode(201);
     }
 
-    public function preConfirm(CollectOrder $collect_order, ConfirmCollectRequest $request, CollectOrderGenerator $collectOrderGenerator)
+    public function preConfirm(CollectOrder $collect_order, ConfirmCollectRequest $request,CouponService $couponService, TicketRepositoryContract $ticketRepo, CollectOrderGenerator $collectOrderGenerator, CouponRepositoryContract $couponRepo)
     {
+        try{
+            $user_id = access()->id();
+            $coupons = $couponRepo->getAllByQualifyTye(PromotionProtocol::QUALI_TYPE_OF_COLLECT_ORDER);
+            $userCoupons = $ticketRepo->getCouponTicketsOfUser($user_id,PromotionProtocol::STATUS_OF_TICKET_OK, true)->pluck('coupon');
+
+            $collectCouponIds = array_column( $coupons->toArray(), 'id' );
+            $userCouponIds = array_column( $userCoupons->toArray(), 'id' );
+            $dispatchCouponIds = array_diff( $collectCouponIds, $userCouponIds );
+
+            //check user has unused such coupon
+            foreach ($coupons as $coupon) {
+                if( in_array( $coupon->id, $dispatchCouponIds ) ){
+                    $result = $couponService->dispatchWithoutCheck($user_id, $coupon['id']);
+                }
+            }
+        }
+        catch( \Exception $e ){
+            \Log::error( 'Failed to dispatch ticket when user sees collect order. '.$e );
+        }
 
         $weekday_type = 'all';
         $daytime = PreorderProtocol::DAYTIME_OF_AM;
