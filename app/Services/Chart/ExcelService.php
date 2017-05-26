@@ -63,7 +63,7 @@ class ExcelService {
     {
         $e_sku = '';
         foreach ($skus as $sku) {
-            $e_sku .= $sku['name'] . ', ' . '总共: ' . $sku['total'] . ', ' . '剩余: ' . $sku['remain'] . "\n";
+            $e_sku .= $sku['name'] . ', ' . '总共: ' . $sku['total'] . ', ' . '剩余: ' . $sku['remain'] . ', ' . '每日配送: ' . $sku['per_day'] . "\n";
         }
         return $e_sku;
     }
@@ -83,7 +83,7 @@ class ExcelService {
                 $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'status', 'pay_amount');
             },
             'skus' => function ($query) {
-                $query->select('order_id', 'name', 'total', 'remain');
+                $query->select('order_id', 'name', 'total', 'remain', 'per_day');
             },
             'station' => function ($query) {
                 $query->select('id', 'name');
