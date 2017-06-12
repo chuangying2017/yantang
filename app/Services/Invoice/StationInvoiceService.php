@@ -240,7 +240,7 @@ class StationInvoiceService implements InvoiceServiceContract {
                 $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'status', 'pay_amount');
             },
             'skus' => function ($query) {
-                $query->select('order_id', 'name', 'total', 'remain');
+                $query->select('order_id', 'name', 'total', 'remain', 'per_day');
             },
             'staff' => function ($query) {
                 $query->select('id', 'name');
@@ -258,7 +258,7 @@ class StationInvoiceService implements InvoiceServiceContract {
                 $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'status', 'pay_amount');
             },
             'skus' => function ($query) {
-                $query->select('order_id', 'name', 'total', 'remain');
+                $query->select('order_id', 'name', 'total', 'remain', 'per_day');
             },
             'staff' => function ($query) {
                 $query->select('id', 'name');
