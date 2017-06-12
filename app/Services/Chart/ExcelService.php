@@ -109,6 +109,9 @@ class ExcelService {
             $e_data['实付价格'] = display_price(array_get($preorder, 'order.pay_amount'));
             $e_data['商品详情'] = self::getPreorderSkusArray($preorder['skus']);
 
+            $e_data['订购商品总数量'] = array_sum(array_pluck($preorder['skus'], 'total'));
+            $e_data['每日配送总数量'] = array_sum(array_pluck($preorder['skus'], 'per_day'));
+
             if ($expand_skus) {
                 foreach ($preorder['skus'] as $sku) {
                     $e_data['商品名称'] = $sku['name'];
