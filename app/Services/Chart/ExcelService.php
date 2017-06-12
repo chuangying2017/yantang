@@ -63,7 +63,11 @@ class ExcelService {
     {
         $e_sku = '';
         foreach ($skus as $sku) {
-            $e_sku .= $sku['name'] . ', ' . '总共: ' . $sku['total'] . ', ' . '剩余: ' . $sku['remain'] . ', ' . '每日配送: ' . $sku['per_day'] . "\n";
+            $per_day = '';
+            if(isset($sku['per_day'])){
+                $per_day = ', 每日配送: ' . $sku['per_day'];
+            }
+            $e_sku .= $sku['name'] . ', ' . '总共: ' . $sku['total'] . ', ' . '剩余: ' . $sku['remain'] . $per_day . "\n";
         }
         return $e_sku;
     }
