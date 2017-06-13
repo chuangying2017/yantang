@@ -24,9 +24,18 @@ class UserController extends Controller {
     public function index(Request $request)
     {
         $status = $request->input('status');
-        $keyword = $request->input('keyword') ?: null;
+        $type = $request->input('type');
 
-        $clients = $this->clientRepo->getClientsPaginated($keyword, $status, true);
+        if( $type == 'ordernos'){
+            $order_nos = $request->input('orderNos');
+            $order_nos = explode(',', $order_nos);
+            $clients = $this->clientRepo->getAllClientsByOrderNo($order_nos);
+        }
+        else {
+            $keyword = $request->input('keyword') ?: null;
+
+            $clients = $this->clientRepo->getClientsPaginated($keyword, $status, true);
+        }
 
         return $this->response->paginator($clients, new ClientUserTransformer());
     }
