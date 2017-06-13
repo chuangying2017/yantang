@@ -91,6 +91,21 @@ class EloquentClientRepository implements ClientRepositoryContract {
         return $query->get();
     }
 
+    public function getAllClientsByOrderNo( $order_nos ){
+        $query = Client::query();
+
+        if (!is_null($order_nos)) {
+            if(!is_array($order_nos) ){
+                $order_nos = [$order_nos];
+            }
+            $user_ids = Preorder::query()->whereIn('order_no', $order_nos)->pluck('user_id')->all();
+            $query->whereIn('user_id', $user_ids);
+        }
+
+        return $query->with('user')->paginate(count($order_nos));
+
+    }
+
     public function block($user_id)
     {
         return Client::where('user_id', $user_id)->update(['status' => ClientProtocol::STATUS_BLOCK]);
