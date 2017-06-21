@@ -7,7 +7,8 @@ use App\Repositories\Category\CategoryProtocol;
 use App\Repositories\Product\ProductProtocol;
 use App\Repositories\Product\Sku\SubscribeSkuRepositoryContract;
 
-class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract, ProductMixRepositoryContract, SubscribeSkuRepositoryContract {
+class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract, ProductMixRepositoryContract, SubscribeSkuRepositoryContract
+{
 
     public function createSku($sku_data, $product_id)
     {
@@ -120,9 +121,14 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
         return ProductSku::query()->findOrFail($sku_ids);
     }
 
+    public function getSkusWithTrash($sku_ids)
+    {
+        return ProductSku::query()->withTrashed()->findOrFail($sku_ids);
+    }
+
     public function increaseStock($product_sku_id, $quantity = 1)
     {
-        $sku = $this->getSkus($product_sku_id);
+        $sku = $this->getSkusWithTrash($product_sku_id);
         $sku->stock = $sku->stock + $quantity;
         $sku->save();
 
@@ -137,7 +143,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
 
     public function decreaseStock($product_sku_id, $quantity = 1)
     {
-        $sku = $this->getSkus($product_sku_id);
+        $sku = $this->getSkusWithTrash($product_sku_id);
         if ($sku->stock < $quantity) {
             throw new \Exception('库存不足,减库存失败');
         }
@@ -157,7 +163,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
 
     public function getStock($product_sku_id)
     {
-        $sku = $this->getSkus($product_sku_id);
+        $sku = $this->getSkusWithTrash($product_sku_id);
         return $sku->stock;
     }
 
@@ -165,7 +171,6 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
     {
         return $this->getStock($product_sku_id) > $quantity;
     }
-
 
     /**
      * @return ProductSku
@@ -175,10 +180,9 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
         return ProductSku::query()->where('type', ProductProtocol::TYPE_OF_ENTITY)->get();
     }
 
-
     public function getMixSkus($mix_sku_id)
     {
-        $sku = $this->getSkus($mix_sku_id);
+        $sku = $this->getSkusWithTrash($mix_sku_id);
         $sku->load('mix');
 
         return $sku->mix;
