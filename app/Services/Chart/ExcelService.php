@@ -120,6 +120,24 @@ class ExcelService {
             }
             $e_datas[] = $e_data;
         }
+        if (!$preorders) {
+            $e_data = [];
+            $e_data['订单号'] = '无结果';
+            $e_data['姓名'] = '';
+            $e_data['电话'] = '';
+            $e_data['地址'] = '';
+            $e_data['服务部'] = '';
+            $e_data['下单时间'] = '';
+            $e_data['接单时间'] = '';
+            $e_data['配送状态'] = '';
+            $e_data['订单总价'] = '';
+            $e_data['优惠金额'] = '';
+            $e_data['实付价格'] = '';
+            $e_data['商品详情'] = '';
+            $e_data['订购商品总数量'] = '';
+            $e_data['每日配送总数量'] = '';
+            $e_datas[] = $e_data;
+        }
 
         $title = $title ?: '燕塘优鲜达订奶订单 - 导出时间:' . Carbon::now()->toDateTimeString();
         return self::saveAndDownload($e_datas, $title, 'preorders/', true);
