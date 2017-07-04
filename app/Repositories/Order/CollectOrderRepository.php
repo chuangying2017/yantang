@@ -99,4 +99,41 @@ class CollectOrderRepository implements ClientOrderRepositoryContract{
 
         return $cOrders->get();
     }
+
+    public function getAllPaid($station_id = null, $order_no = null, $phone = null, $start_time = null, $end_time = null, $per_page = CollectOrderProtocol::ORDER_PER_PAGE)
+    {
+        $query = CollectOrder::query();
+
+        if (!is_null($phone)) {
+            $query->whereHas('address', function ($query) use ($phone) {
+                $query->where('phone', $phone);
+            });
+        }
+        $query->whereNotNull('pay_at');
+        if (!is_null($start_time)) {
+            $query->where('pay_at', '>=', $start_time);
+        }
+
+        if (!is_null($end_time)) {
+            $query->where('pay_at', '<=', $end_time);
+        }
+
+        $order_id = null;
+        if ($order_no) {
+            $order_id = Order::where('order_no', $order_no)->select('id')->first();
+        }
+        if (!is_null($order_id)) {
+            $query->where('order_id', $order_id);
+        }
+
+        $query->orderBy('pay_at', 'DESC');
+        if ($per_page) {
+            $orders = $query->paginate($per_page);
+        } else {
+            $orders = $query->get();
+        }
+        $orders->load(['staff', 'staff.station', 'sku', 'order', 'address']);
+
+        return $orders;
+    }
 }
