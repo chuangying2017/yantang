@@ -125,6 +125,55 @@ class ExcelService {
         return self::saveAndDownload($e_datas, $title, 'preorders/', true);
     }
 
+    public static function downCollectOrder($collectOrders, $title = null, $expand_skus = false)
+    {
+        $e_datas = [];
+
+        $collectOrders = $collectOrders->toArray();
+        // dd($collectOrders);
+        foreach ($collectOrders as $key => $collectOrder) {
+            $address = [
+                $collectOrder['address']['district'],
+                $collectOrder['address']['detail'],
+            ];
+            $e_data['订单号'] = $collectOrder['order']['order_no'];
+            $e_data['姓名'] = $collectOrder['address']['name'];
+            $e_data['电话'] = $collectOrder['address']['phone'];
+            $e_data['地址'] = join('', $address);
+            $e_data['服务部'] = $collectOrder['staff']['station']['name'];
+            $e_data['接单时间'] = $collectOrder['pay_at'];
+            $e_data['订单总价'] = display_price(array_get($collectOrder, 'order.total_amount'));
+            $e_data['优惠金额'] = display_price(array_get($collectOrder, 'order.discount_amount') ?: 0);
+            $e_data['实付价格'] = display_price(array_get($collectOrder, 'order.pay_amount'));
+            $e_data['商品详情'] = $collectOrder['sku']['name'] . ' ' . $collectOrder['quantity'] . $collectOrder['sku']['unit'];
+
+            if ($expand_skus) {
+                foreach ($preorder['sku'] as $sku) {
+                    $e_data['商品名称'] = $sku['name'];
+                    $e_data['商品数量'] = $sku['total'];
+                }
+            }
+            $e_datas[] = $e_data;
+        }
+        if (!$collectOrders) {
+            $e_data = [];
+            $e_data['订单号'] = '无结果';
+            $e_data['姓名'] = '';
+            $e_data['电话'] = '';
+            $e_data['地址'] = '';
+            $e_data['服务部'] = '';
+            $e_data['接单时间'] = '';
+            $e_data['订单总价'] = '';
+            $e_data['优惠金额'] = '';
+            $e_data['实付价格'] = '';
+            $e_data['商品详情'] = '';
+            $e_datas[] = $e_data;
+        }
+
+        $title = $title ?: '燕塘优鲜达收款订单 - 导出时间:' . Carbon::now()->toDateTimeString();
+        return self::saveAndDownload($e_datas, $title, 'collectOrders/', true);
+    }
+
     public static function downloadPreorderBounce($preorders, $title = null)
     {
         $e_datas = [];

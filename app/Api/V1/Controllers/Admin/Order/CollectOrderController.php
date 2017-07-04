@@ -5,6 +5,7 @@ use App\Api\V1\Transformers\Admin\Order\AdminCollectOrderTransformer;
 use App\Models\Collect\CollectOrder;
 use App\Models\Order\Order;
 use App\Repositories\Order\CollectOrderRepository;
+use App\Services\Chart\ExcelService;
 use Illuminate\Http\Request;
 
 class CollectOrderController extends Controller
@@ -23,43 +24,20 @@ class CollectOrderController extends Controller
         $phone = $request->input('phone') ?: null;
         $start_time = $request->input('start_time') ?: null;
         $end_time = $request->input('end_time') ?: null;
-        $time_name = $request->input('time_name', 'created_at');
-
-        if ($request->input('export') == 'all') {
-            // $orders = $this->collectOrderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time, $time_name);
-            // return ExcelService::downPreorder($orders);
-        }
         $order_no = $request->input('order_no');
-        $order_id = null;
-        if( $order_no ){
-            $order_id = Order::where('order_no', $order_no)->select('id')->first();
+        $export = $request->input('export', null);
+        $per_page = self::PER_PAGE;
+        if ($export == 'all') {
+            $per_page = null;
         }
 
-        $query = CollectOrder::query();
+        $station_id = null;
 
-        if (!is_null($phone)) {
-            $query->whereHas('address', function ($query) use ($phone) {
-                $query->where('phone', $phone);
-            });
+        $orders = $this->collectOrderRepo->getAllPaid($station_id, $order_no, $phone, $start_time, $end_time, $per_page);
+
+        if ($export == 'all') {
+            return ExcelService::downCollectOrder($orders);
         }
-        $query->whereNotNull('pay_at');
-        if (!is_null($start_time)) {
-            $query->where('pay_at', '>=', $start_time);
-        }
-
-        if (!is_null($end_time)) {
-            $query->where('pay_at', '<=', $end_time);
-        }
-
-        if (!is_null($order_id)) {
-            $query->where('order_id', $order_id);
-        }
-
-        $query->orderBy('pay_at', 'DESC');
-
-        $orders = $query->paginate(self::PER_PAGE);
-        $orders->load(['staff', 'staff.station']);
-
         return $this->response->paginator($orders, new AdminCollectOrderTransformer());
     }
 
