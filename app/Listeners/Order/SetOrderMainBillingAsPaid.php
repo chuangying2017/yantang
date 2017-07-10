@@ -36,6 +36,8 @@ class SetOrderMainBillingAsPaid {
     public function handle(PingxxPaymentIsPaid $event)
     {
         $pingxx_payment = $event->payment;
+
+        \Log::debug('test: SetOrderMainBillingAsPaid', [$event]);
         if ($pingxx_payment['billing_type'] == BillingProtocol::BILLING_TYPE_OF_ORDER_BILLING) {
             $billing = $this->orderCheckoutService->billingPaid($pingxx_payment);
         }

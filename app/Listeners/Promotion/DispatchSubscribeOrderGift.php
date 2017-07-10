@@ -52,6 +52,8 @@ class DispatchSubscribeOrderGift {
      */
     public function handle(OrderIsPaid $event)
     {
+        \Log::debug('test: DispatchSubscribeOrderGift', [$event]);
+
         try {
             $order = $event->order;
             $user_id = $order->user_id;

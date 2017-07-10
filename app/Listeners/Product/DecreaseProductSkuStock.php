@@ -38,6 +38,8 @@ class DecreaseProductSkuStock {
      */
     public function handle(OrderIsPaid $event)
     {
+        \Log::debug('test: DecreaseProductSkuStock', [$event]);
+
         $order = $event->order;
         $order_skus = $this->orderSkuRepo->getOrderSkus($order['id']);
         foreach ($order_skus as $order_sku) {

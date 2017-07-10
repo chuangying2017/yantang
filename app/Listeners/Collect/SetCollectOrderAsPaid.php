@@ -16,6 +16,8 @@ class SetCollectOrderAsPaid {
      */
     public function handle(OrderIsPaid $event)
     {
+        \Log::debug('test: SetColletcorderAsPaid', [$event]);
+
         $order = $event->order;
 
         $colletcOrder = CollectOrder::where('order_id', $order['id'])->first();
