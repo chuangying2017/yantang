@@ -1,7 +1,8 @@
 <?php namespace App\Repositories\Order;
 
-use App\Repositories\Station\Staff\EloquentStaffRepository;
 use App\Models\Collect\CollectOrder;
+use App\Models\Order\Order;
+use App\Repositories\Station\Staff\EloquentStaffRepository;
 
 class CollectOrderRepository implements ClientOrderRepositoryContract{
     protected $lists_relations = ['sku','address'];
@@ -120,7 +121,7 @@ class CollectOrderRepository implements ClientOrderRepositoryContract{
 
         $order_id = null;
         if ($order_no) {
-            $order_id = Order::where('order_no', $order_no)->select('id')->first();
+            $order_id = Order::where('order_no', $order_no)->pluck('id');
         }
         if (!is_null($order_id)) {
             $query->where('order_id', $order_id);
