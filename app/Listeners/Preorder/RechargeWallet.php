@@ -38,6 +38,8 @@ class RechargeWallet {
      */
     public function handle(ChargeBillingIsPaid $event)
     {
+        \Log::debug('test: ChargeBillingIsPaid@resignOrder', [$event]);
+
         $billing = $event->billing;
         $this->walletService->recharge($this->billingService->setID($billing));
     }

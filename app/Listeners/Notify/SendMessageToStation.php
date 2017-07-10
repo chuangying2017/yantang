@@ -24,6 +24,7 @@ class SendMessageToStation {
 
     public function newOrder(PreorderIsPaid $event)
     {
+        \Log::debug('test: SendMessageToStation@newOrder', [$event]);
         $preorder = $event->preorder;
 
         if (PreorderProtocol::preorderIsPaid($preorder['status'])) {
@@ -33,6 +34,8 @@ class SendMessageToStation {
 
     public function resignOrder(AssignIsCreate $event)
     {
+        \Log::debug('test: SendMessageToStation@resignOrder', [$event]);
+
         $assign = $event->assign;
         $preorder = $assign->preorder;
 
