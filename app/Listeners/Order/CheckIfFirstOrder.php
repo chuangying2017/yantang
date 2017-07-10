@@ -28,6 +28,8 @@ class CheckIfFirstOrder {
      */
     public function handle(OrderIsPaid $event)
     {
+        \Log::debug('test: CheckIfFirstOrder', [$event]);
+
         $order = $event->order;
         if ($this->orderManageService->orderIsFirstPaid($order)) {
             event(new FirstOrderIsPaid($order));

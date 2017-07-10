@@ -26,6 +26,8 @@ class UpdateBillingRefundAmount {
      */
     public function handle(PingxxRefundPaymentIsDone $event)
     {
+        \Log::debug('test: UpdateBillingRefundAmount', [$event]);
+
         $refund_payment = $event->refund_payment;
 
         $refund_payment->payment()->update(['refunded' => 1]);

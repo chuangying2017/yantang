@@ -26,6 +26,7 @@ class OrderRefundFail
      */
     public function handle(PingxxRefundPaymentIsFail $event)
     {
-        //
+        \Log::debug('test: OrderRefundFail', [$event]);
+
     }
 }

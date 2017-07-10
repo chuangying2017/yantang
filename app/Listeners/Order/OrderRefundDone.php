@@ -38,6 +38,8 @@ class OrderRefundDone {
      */
     public function handle(PingxxRefundPaymentIsDone $event)
     {
+        \Log::debug('test: OrderRefundDone', [$event]);
+
         $refund_payment = $event->refund_payment;
 
         $billing = $this->orderBillingRepo->getBilling($refund_payment['billing_id']);

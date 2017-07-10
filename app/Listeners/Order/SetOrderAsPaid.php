@@ -33,7 +33,9 @@ class SetOrderAsPaid {
      */
     public function handle(MainBillingIsPaid $event)
     {
+        \Log::debug('test: SetOrderAsPaid', [$event]);
         $billing = $event->billing;
+
         if ($billing['pay_type'] == OrderProtocol::BILLING_TYPE_OF_MONEY) {
             $this->orderManageService->orderPaid($billing['order_id']);
         }

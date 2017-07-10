@@ -40,6 +40,8 @@ class OrderRefundSucceed {
      */
     public function handle(PingxxRefundPaymentIsSucceed $event)
     {
+        \Log::debug('test: OrderRefundSucceed', [$event]);
+
         $payment = $event->refund_payment;
 
         $billing = $this->orderBillingRepo->updateAsPaid($payment['billing_id']);
