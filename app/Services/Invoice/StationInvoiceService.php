@@ -1,14 +1,15 @@
 <?php namespace App\Services\Invoice;
 
+use App\Models\Collect\CollectOrder;
 use App\Repositories\Invoice\InvoiceProtocol;
 use App\Repositories\Invoice\StationAdminInvoiceRepository;
 use App\Repositories\Invoice\StationInvoiceRepository;
 use App\Repositories\Invoice\StationUnInvoiceRepository;
+use App\Repositories\Invoice\StationRefundInvoiceRepository;
+use App\Repositories\Order\CollectOrderRepository;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
-use App\Repositories\Order\CollectOrderRepository;
 use App\Services\Preorder\PreorderProtocol;
-use App\Models\Collect\CollectOrder;
 use Carbon\Carbon;
 
 class StationInvoiceService implements InvoiceServiceContract {
@@ -41,6 +42,7 @@ class StationInvoiceService implements InvoiceServiceContract {
         StationRepositoryContract $stationRepo,
         StationAdminInvoiceRepository $stationAdminInvoiceRepository,
         StationUnInvoiceRepository $stationUnInvoiceRepository,
+        StationRefundInvoiceRepository $stationRefundInvoiceRepository,
         CollectOrderRepository $collectRepo
     )
     {
@@ -49,6 +51,7 @@ class StationInvoiceService implements InvoiceServiceContract {
         $this->stationRepo = $stationRepo;
         $this->stationAdminInvoiceRepository = $stationAdminInvoiceRepository;
         $this->stationUnInvoiceRepository = $stationUnInvoiceRepository;
+        $this->stationRefundInvoiceRepository = $stationRefundInvoiceRepository;
 
         $this->collectRepo = $collectRepo;
     }
@@ -57,7 +60,7 @@ class StationInvoiceService implements InvoiceServiceContract {
     {
         try {
             if (Carbon::today() <= $invoice_date) {
-                throw new \Exception('未到' . $invoice_date);
+                throw new \Exception('今天为' . Carbon::today()->toDateTimeString() . '未到' . $invoice_date);
             }
 
             $stations = $this->stationRepo->getAllActive();
@@ -74,6 +77,8 @@ class StationInvoiceService implements InvoiceServiceContract {
             $this->settleAdmin($station_invoices, $invoice_date, $start_time, $end_time);
 
             $this->settleUnConfirm($invoice_date, $start_time, $end_time);
+            $this->settleUnConfirmHistory($invoice_date, $start_time, $end_time);
+            $this->settleRefund($invoice_date, $start_time, $end_time);
 
         } catch (\Exception $e) {
             \Log::error($e);
@@ -134,6 +139,44 @@ class StationInvoiceService implements InvoiceServiceContract {
         return $this->stationInvoiceRepo->create($invoice_data);
     }
 
+    public function settleRefund($request_invoice_date, $start_time, $end_time)
+    {
+        $invoices = $this->stationRefundInvoiceRepository->getAll(InvoiceProtocol::ID_OF_REFUND_INVOICE, $request_invoice_date, $request_invoice_date);
+
+        if ($invoices->first()) {
+            info('本期退款订单 于' . $request_invoice_date . '的账单已出', $invoices->first()->toArray());
+            return $invoices->first();
+        }
+
+        $orders = $this->getAllRefundOrders($start_time, $end_time);
+
+        $invoice_data = [
+            'invoice_date' => $request_invoice_date,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'merchant_id' => InvoiceProtocol::ID_OF_REFUND_INVOICE,
+            'merchant_name' => '本期退款订单',
+            'total_amount' => 0,
+            'discount_amount' => 0,
+            'pay_amount' => 0,
+            'service_amount' => 0,
+            'receive_amount' => 0,
+            'detail' => [],
+        ];
+
+        foreach ($orders as $order_key => $order) {
+            $invoice_order = $this->getOrderDetail($order);
+            $invoice_data['detail'][$order_key] = $invoice_order;
+
+            $invoice_data['total_amount'] += $invoice_order['total_amount'];
+            $invoice_data['discount_amount'] += $invoice_order['discount_amount'];
+            $invoice_data['pay_amount'] += $invoice_order['pay_amount'];
+            $invoice_data['service_amount'] += $invoice_order['service_amount'];
+            $invoice_data['receive_amount'] += $invoice_order['receive_amount'];
+        }
+
+        return $this->stationRefundInvoiceRepository->create($invoice_data);
+    }
     public function settleUnConfirm($request_invoice_date, $start_time, $end_time)
     {
         $invoices = $this->stationUnInvoiceRepository->getAll(InvoiceProtocol::ID_OF_UN_CONFIRM_INVOICE, $request_invoice_date, $request_invoice_date);
@@ -157,6 +200,43 @@ class StationInvoiceService implements InvoiceServiceContract {
             'service_amount' => 0,
             'receive_amount' => 0,
             'detail' => []
+
+        foreach ($orders as $order_key => $order) {
+            $invoice_order = $this->getOrderDetail($order);
+            $invoice_data['detail'][$order_key] = $invoice_order;
+
+            $invoice_data['total_amount'] += $invoice_order['total_amount'];
+            $invoice_data['discount_amount'] += $invoice_order['discount_amount'];
+            $invoice_data['pay_amount'] += $invoice_order['pay_amount'];
+            $invoice_data['service_amount'] += $invoice_order['service_amount'];
+            $invoice_data['receive_amount'] += $invoice_order['receive_amount'];
+        }
+
+        return $this->stationUnInvoiceRepository->create($invoice_data);
+    }
+    public function settleUnConfirmHistory($request_invoice_date, $start_time, $end_time)
+    {
+        $invoices = $this->stationUnInvoiceRepository->getAll(InvoiceProtocol::ID_OF_UN_CONFIRM_HISTORY_INVOICE, $request_invoice_date, $request_invoice_date);
+
+        if ($invoices->first()) {
+            info('历史未结算订单 于' . $request_invoice_date . '的账单已出', $invoices->first()->toArray());
+            return $invoices->first();
+        }
+
+        $orders = $this->getUnConfirmHistoryOrders($start_time, $end_time);
+
+        $invoice_data = [
+            'invoice_date' => $request_invoice_date,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'merchant_id' => InvoiceProtocol::ID_OF_UN_CONFIRM_HISTORY_INVOICE,
+            'merchant_name' => '历史未结算订单',
+            'total_amount' => 0,
+            'discount_amount' => 0,
+            'pay_amount' => 0,
+            'service_amount' => 0,
+            'receive_amount' => 0,
+            'detail' => [],
         ];
 
         foreach ($orders as $order_key => $order) {
@@ -251,7 +331,43 @@ class StationInvoiceService implements InvoiceServiceContract {
 
     protected function getAllUnConfirmOrders($start_time, $end_time)
     {
-        $orders = $this->preorderRepo->getAll(null, null, null, null, null, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_PAY, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
+        $orders = $this->preorderRepo->getAll(null, null, null, null, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_PAY, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
+
+        $orders->load([
+            'order' => function ($query) {
+                $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'status', 'pay_amount');
+            },
+            'skus' => function ($query) {
+                $query->select('order_id', 'name', 'total', 'remain', 'per_day');
+            },
+            'staff' => function ($query) {
+                $query->select('id', 'name');
+            }]);
+
+        return $orders;
+    }
+
+    protected function getUnConfirmHistoryOrders($start_time, $end_time)
+    {
+        $orders = $this->preorderRepo->getAll(null, null, null, null, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING, null, $start_time, PreorderProtocol::TIME_NAME_OF_PAY, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
+
+        $orders->load([
+            'order' => function ($query) {
+                $query->select('id', 'order_no', 'total_amount', 'discount_amount', 'status', 'pay_amount');
+            },
+            'skus' => function ($query) {
+                $query->select('order_id', 'name', 'total', 'remain', 'per_day');
+            },
+            'staff' => function ($query) {
+                $query->select('id', 'name');
+            }]);
+
+        return $orders;
+    }
+
+    protected function getAllRefundOrders($start_time, $end_time)
+    {
+        $orders = $this->preorderRepo->getAll(null, null, null, null, PreorderProtocol::ORDER_STATUS_OF_CANCEL, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_PAY, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
 
         $orders->load([
             'order' => function ($query) {
