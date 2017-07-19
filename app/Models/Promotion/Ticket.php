@@ -20,5 +20,8 @@ class Ticket extends Model {
     {
         return $this->belongsTo(Coupon::class, 'promotion_id', 'id');
     }
-
+    public function giftcard()
+    {
+        return $this->belongsTo(Giftcard::class, 'promotion_id', 'id');
+    }
 }

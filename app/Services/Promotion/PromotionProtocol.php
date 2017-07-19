@@ -23,6 +23,7 @@ class PromotionProtocol {
     const TYPE_OF_MALL_CAMPAIGN = 'mall_campaign';
     const TYPE_OF_SPECIAL_CAMPAIGN = 'spec_campaign';
     const TYPE_OF_ORDER = 'subscribe_order';
+    const TYPE_OF_GIFTCARD = 'giftcard';
 
     const RULE_TYPE_OF_CAMPAIGN = 'campaign';
     const RULE_TYPE_OF_COUPON = 'coupon';
