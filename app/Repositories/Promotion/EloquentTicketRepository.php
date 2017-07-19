@@ -138,12 +138,20 @@ class EloquentTicketRepository implements TicketRepositoryContract {
         return $this->query(PromotionProtocol::TYPE_OF_COUPON, $status, $user_id, null, $with_coupon);
     }
 
+    public function getGiftcardOfUserPaginated($user_id, $status, $with_coupon = true)
+    {
+        return $this->query(PromotionProtocol::TYPE_OF_GIFTCARD, $status, $user_id, null, $with_coupon);
+    }
+
     protected function query($type, $status = PromotionProtocol::STATUS_OF_TICKET_OK, $user_id = null, $promotion_id = null, $with_promotion = true, $paginate = PromotionProtocol::TICKET_PER_PAGE)
     {
         $query = Ticket::query()->where('type', $type);
 
-        if ($with_promotion) {
+        if (($type == PromotionProtocol::TYPE_OF_COUPON) &&  $with_promotion) {
             $query->with('coupon');
+        }
+        if (($type == PromotionProtocol::TYPE_OF_GIFTCARD) &&  $with_promotion) {
+            $query->with('giftcard');
         }
 
         if ($promotion_id) {

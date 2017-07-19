@@ -12,6 +12,7 @@ $api->group(['namespace' => 'Promotion', 'prefix' => 'promotions'], function ($a
         $api->resource('campaigns', 'CampaignController');
 
         $api->resource('tickets', 'TicketController');
+        $api->resource('giftcards', 'GiftcardController',['only'=>'index']);
 
         $api->resource('red-envelopes', 'RedEnvelopeController', ['only' => ['show', 'store']]);
         
