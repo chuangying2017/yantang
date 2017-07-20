@@ -274,6 +274,13 @@ class EloquentUserRepository implements UserContract, PromotionAbleUserContract 
         return User::where('phone', $phone)->first();
     }
 
+    public function findUserIdByProviderId($provider_id, $provider='weixin'){
+        return UserProvider::query()
+                ->where('provider_id', $provider_id)
+                ->pluck('user_id')
+                ->first();
+    }
+
     public static function updatePhone($user_id, $phone)
     {
         $user = User::findOrFail($user_id);
