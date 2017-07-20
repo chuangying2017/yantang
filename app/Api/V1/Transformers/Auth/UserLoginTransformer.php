@@ -16,6 +16,7 @@ class UserLoginTransformer extends  TransformerAbstract {
 
         $data = [
             'token' => $token,
+            'provider_id' => $user->providers->where('provider','weixin')->first()->provider_id,
             'roles' => $this->getRoles($user)
         ];
 
