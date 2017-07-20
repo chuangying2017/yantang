@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Promotion\Giftcard;
 
 use App\Models\Promotion\Giftcard;
+use App\Services\Promotion\PromotionProtocol;
 use App\Repositories\Promotion\PromotionRepositoryAbstract;
 use App\Repositories\Promotion\Traits\Counter;
 

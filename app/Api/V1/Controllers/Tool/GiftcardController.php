@@ -5,12 +5,19 @@ namespace App\Api\V1\Controllers\Tool;
 use Illuminate\Http\Request;
 
 use App\Services\Promotion\CouponService;
+use App\Api\V1\Transformers\Promotion\GiftcardTransformer;
 use App\Repositories\Auth\User\EloquentUserRepository;
+use App\Repositories\Promotion\Giftcard\EloquentGiftcardRepository;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 class GiftcardController extends Controller {
-    public function send(Request $request, CouponService $couponService, EloquentUserRepository $userRepo)
+    public function index(Request $request, EloquentGiftcardRepository $giftcardRepo){
+        $giftcards = $giftcardRepo->getAllPaginated(true);
+        return $this->response->paginator($giftcards, new GiftcardTransformer());
+    }
+
+    public function store(Request $request, CouponService $couponService, EloquentUserRepository $userRepo)
     {
        try{
             $open_id = $request->input('open_id');
