@@ -6,6 +6,7 @@ use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Services\Promotion\Rule\RuleServiceContract;
 use App\Services\Promotion\Support\PromotionAbleItemContract;
 use App\Services\Promotion\Support\PromotionAbleUserContract;
+use App\Repositories\Promotion\Giftcard\EloquentGiftcardRepository;
 use Carbon\Carbon;
 
 class CouponService extends PromotionServiceAbstract implements PromotionDispatcher {
@@ -15,6 +16,7 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
      * @var TicketRepositoryContract
      */
     private $ticketRepo;
+    private $giftcardRepo;
 
     /**
      * CouponService constructor.
@@ -22,10 +24,11 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
      * @param RuleServiceContract $ruleService
      * @param TicketRepositoryContract $ticketRepo
      */
-    public function __construct(CouponRepositoryContract $couponRepo, RuleServiceContract $ruleService, TicketRepositoryContract $ticketRepo)
+    public function __construct(CouponRepositoryContract $couponRepo, RuleServiceContract $ruleService, TicketRepositoryContract $ticketRepo, EloquentGiftcardRepository $giftcardRepo)
     {
         parent::__construct($couponRepo, $ruleService);
         $this->ticketRepo = $ticketRepo;
+        $this->giftcardRepo = $giftcardRepo;
     }
 
     public function dispatch(PromotionAbleUserContract $user, $promotion_id, $source_type = PromotionProtocol::TICKET_RESOURCE_OF_USER, $source_id = 0)
@@ -62,6 +65,13 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
         $promotion = $this->promotionRepo->getPromotionWithDecodeRules($promotion_id);
 
         return $this->ticketRepo->createTicket($user_id, $promotion, true, $source_type, $source_id);
+    }
+
+    public function dispatchGiftcard(  $user_id, $promotion_id, $source_type = PromotionProtocol::TICKET_RESOURCE_OF_ADMIN, $source_id = 0)
+    {
+        $giftcard = $this->giftcardRepo->get($promotion_id);
+
+        return $this->ticketRepo->createTicket($user_id, $giftcard, true, $source_type, $source_id);
     }
 
     public function cancelByResource($resource_type, $resource_id)

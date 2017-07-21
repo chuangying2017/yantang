@@ -13,9 +13,18 @@ class UserLoginTransformer extends  TransformerAbstract {
     public function transform(User $user)
     {
         $token = JWTAuth::fromUser($user);
+        $providers = $user->providers;
+        $provider_id = null;
+        if(!$providers->isEmpty()){
+            $wxProvider = $providers->where('provider','weixin')->first();
+            if( $wxProvider ){
+                $provider_id = $wxProvider->provider_id;
+            }
+        }
 
         $data = [
             'token' => $token,
+            'provider_id' => $provider_id,
             'roles' => $this->getRoles($user)
         ];
 
