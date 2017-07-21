@@ -80,6 +80,7 @@ return [
             'admin' => env('WEIXIN_REDIRECT_URL_ADMIN'),
             'test' => env('WEIXIN_REDIRECT_URL_TEST'),
             'deliver' => env('WEIXIN_REDIRECT_URL_DELIVER'),
+            'gift' => env('WEIXIN_REDIRECT_URL_GIFT'),
         ]
     ],
 
