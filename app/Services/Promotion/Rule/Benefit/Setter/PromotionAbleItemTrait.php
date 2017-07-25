@@ -21,6 +21,8 @@ trait PromotionAbleItemTrait {
 
     protected $campaigns;
 
+    protected $giftcards;
+
     protected function getBenefitHandlerByType($type, $related_items)
     {
         $data = [
@@ -135,6 +137,22 @@ trait PromotionAbleItemTrait {
     public function setCoupons($coupons)
     {
         $this->coupons = $coupons;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGiftcards()
+    {
+        return $this->giftcards;
+    }
+
+    /**
+     * @param mixed $giftcards
+     */
+    public function setGiftcards($giftcards)
+    {
+        $this->giftcards = $giftcards;
     }
 
     /**
