@@ -4,7 +4,7 @@ namespace App\Api\V1\Controllers\Tool;
 
 use Illuminate\Http\Request;
 
-use App\Services\Promotion\GiftcardService;
+use App\Services\Promotion\CouponService;
 use App\Api\V1\Transformers\Promotion\GiftcardTransformer;
 use App\Repositories\Auth\User\EloquentUserRepository;
 use App\Repositories\Promotion\Giftcard\EloquentGiftcardRepository;
@@ -17,7 +17,7 @@ class GiftcardController extends Controller {
         return $this->response->paginator($giftcards, new GiftcardTransformer());
     }
 
-    public function store(Request $request, GiftcardService $giftcardService, EloquentUserRepository $userRepo)
+    public function store(Request $request, CouponService $couponService, EloquentUserRepository $userRepo)
     {
        try{
             $open_id = $request->input('open_id');
@@ -26,7 +26,7 @@ class GiftcardController extends Controller {
                 return $this->errorBadRequest('无此用户');
             }
             $promotion_id = $request->input('coupon_id');
-            $result = $giftcardService->dispatchGiftcard($reveiver_id, $promotion_id);
+            $result = $couponService->dispatchGiftcard($reveiver_id, $promotion_id);
         }
         catch( \Exception $e ){
             \Log::error( 'Failed to dispatch giftcard. '.$e );
