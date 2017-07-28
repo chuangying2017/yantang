@@ -199,7 +199,8 @@ class StationInvoiceService implements InvoiceServiceContract {
             'pay_amount' => 0,
             'service_amount' => 0,
             'receive_amount' => 0,
-            'detail' => []
+            'detail' => [],
+        ];
 
         foreach ($orders as $order_key => $order) {
             $invoice_order = $this->getOrderDetail($order);
