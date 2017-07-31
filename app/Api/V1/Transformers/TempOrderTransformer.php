@@ -19,6 +19,7 @@ class TempOrderTransformer extends TransformerAbstract {
         $data['preorder'] = $this->transPreorder($data);
         $data['coupons'] = $this->transCoupons($data);
         $data['campaigns'] = $this->transCampaigns($data);
+        $data['giftcards'] = $this->transGiftcards($data);
         return $data;
     }
 
@@ -71,6 +72,28 @@ class TempOrderTransformer extends TransformerAbstract {
             }
         }
         return $coupons;
+    }
+
+    protected function transGiftcards($temp_order)
+    {
+        $giftcards = [];
+        if (isset($temp_order['giftcards']) && !empty($temp_order['giftcards'])) {
+            foreach ($temp_order['giftcards'] as $key => $coupon) {
+                $giftcards[$key] = array_only($coupon, [
+                    'id',
+                    'name',
+                    'desc',
+                    'promotion',
+                    'multi',
+                    'related',
+                    'ticket',
+                    'message'
+                ]);
+                $giftcards[$key]['using'] = array_get($coupon, 'using', 0);
+                $giftcards[$key]['usable'] = array_get($coupon, 'usable', 0);
+            }
+        }
+        return $giftcards;
     }
 
     public function transCampaigns($temp_order)

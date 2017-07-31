@@ -51,6 +51,11 @@ class PromotionServiceProvider extends ServiceProvider {
         );
 
         $this->app->bind(
+            \App\Repositories\Promotion\Giftcard\GiftcardRepositoryContract::class,
+            \App\Repositories\Promotion\Giftcard\EloquentGiftcardRepository::class
+        );
+
+        $this->app->bind(
             \App\Repositories\Promotion\Rule\RuleRepositoryContract::class,
             \App\Repositories\Promotion\Rule\EloquentRuleRepository::class
         );
