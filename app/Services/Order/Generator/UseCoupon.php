@@ -31,7 +31,7 @@ class UseCoupon extends GenerateHandlerAbstract {
         $ticket = $temp_order->getRequestPromotion();
 
         $this->userContract->setUser($temp_order->getUser());
-
+        $temp_order->setRules($temp_order->getCoupons());
         $coupons = $temp_order->getCoupons();
 
         $rule_key = $this->findRuleKey($ticket, $coupons);

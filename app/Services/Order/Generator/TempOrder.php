@@ -26,6 +26,7 @@ class TempOrder implements PromotionAbleItemContract {
 
     protected $special_campaign;
     protected $request_promotion;
+    protected $request_giftcard;
 
     protected $preorder;
 
@@ -59,6 +60,7 @@ class TempOrder implements PromotionAbleItemContract {
             'rules' => $this->getRules(),
             'coupons' => $this->showCoupons(),
             'campaigns' => $this->getCampaigns(),
+            'giftcards' => $this->getGiftcards(),
         ];
     }
 
@@ -156,6 +158,31 @@ class TempOrder implements PromotionAbleItemContract {
     public function setPromotion($promotion)
     {
         $this->promotion = $promotion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGiftcards()
+    {
+        return $this->giftcards;
+    }
+
+    /**
+     * @param mixed $giftcards
+     */
+    public function setGiftcards($giftcards)
+    {
+        $this->giftcards = $giftcards;
+    }
+
+    public function getRequestGiftcard( ){
+        return $this->request_giftcard;
+    }
+
+    public function setRequestGiftcard( $request_giftcard ){
+        $this->request_giftcard = $request_giftcard;
+        return $this;
     }
 
     /**
@@ -454,6 +481,17 @@ class TempOrder implements PromotionAbleItemContract {
         return $need_set_sku_key;
     }
 
+    public function isUsingCoupon(){
+        $rules = collect($this->getRules());
+        $usingCoupon = $rules->where('ticket.type', PromotionProtocol::TYPE_OF_COUPON)->where('using',1)->count();
+        return (bool)$usingCoupon;
+    }
+
+    public function isUsingGiftcard(){
+        $rules = collect($this->getRules());
+        $usingGiftcard = $rules->where('ticket.type', PromotionProtocol::TYPE_OF_GIFTCARD)->where('using',1)->count();
+        return (bool)$usingGiftcard;
+    }
 
     public function setPromotionProducts($add_sku, $action = PromotionProtocol::ACTION_OF_ADD)
     {
