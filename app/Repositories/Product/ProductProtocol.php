@@ -3,7 +3,7 @@ final class ProductProtocol {
 
     const DEFAULT_MERCHANT_ID = 0;
 
-    const PRODUCT_PER_PAGE = 20;
+    const PRODUCT_PER_PAGE = 40;
 
     const TYPE_OF_MIX = 'mix';
     const TYPE_OF_ENTITY = 'entity';
