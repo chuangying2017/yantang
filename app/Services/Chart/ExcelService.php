@@ -91,6 +91,9 @@ class ExcelService {
             },
             'station' => function ($query) {
                 $query->select('id', 'name');
+            },
+            'residence' => function($query){
+                $query->select('id', 'name');
             }]);
 
         $preorders = $preorders->toArray();
@@ -100,6 +103,7 @@ class ExcelService {
             $e_data['姓名'] = $preorder['name'];
             $e_data['电话'] = $preorder['phone'];
             $e_data['地址'] = $preorder['address'];
+            $e_data['小区名称'] = is_null($preorder['residence']) ? null : $preorder['residence']['name'];
             $e_data['服务部'] = array_get($preorder, 'station.name');
             $e_data['下单时间'] = $preorder['created_at'];
             $e_data['接单时间'] = $preorder['confirm_at'];
@@ -126,6 +130,7 @@ class ExcelService {
             $e_data['姓名'] = '';
             $e_data['电话'] = '';
             $e_data['地址'] = '';
+            $e_data['小区名称'] = '';
             $e_data['服务部'] = '';
             $e_data['下单时间'] = '';
             $e_data['接单时间'] = '';

@@ -171,6 +171,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->resource('stations', 'StationController');
             $api->resource('districts', 'DistrictController');
         });
+        $api->resource('residences', 'Residence\ResidenceController');
 
     });
 

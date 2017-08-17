@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Preorder;
 
 use App\Events\Preorder\PreorderIsCancel;
+use App\Models\Residence;
 use App\Models\Billing\OrderBilling;
 use App\Models\Pay\PingxxPayment;
 use App\Models\Subscribe\Preorder;
@@ -16,6 +17,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function createPreorder($data)
     {
+        $residence_id = Residence::getResidenceIdByAddress($data['address']);
         $order = Preorder::create([
             'user_id' => $data['user_id'],
             'order_id' => $data['order_id'],
@@ -32,6 +34,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             'daytime' => $data['daytime'],
             'total_amount' => $data['total_amount'],
             'status' => PreorderProtocol::ORDER_STATUS_OF_UNPAID,
+            'residence_id' => $residence_id,
         ]);
 
         app()->make(PreorderAssignRepositoryContract::class)->createAssign($order['id'], $data['station_id']);
@@ -136,7 +139,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
-    protected function queryByOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null, $pay_order_no = null, $invoice = null)
+    protected function queryByOrders($user_id = null, $station_id = null, $staff_id = null, $status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $per_page = null, $orderBy = 'created_at', $sort = 'desc', $order_no = null, $phone = null, $pay_order_no = null, $invoice = null, $residence_id = null)
     {
         $query = Preorder::query();
 
@@ -149,6 +152,17 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
                 $query->whereIn('station_id', $station_id);
             } else {
                 $query->where('station_id', $station_id);
+            }
+        }
+
+        if (!is_null($residence_id)) {
+            if(count($residence_id) == 1 ){
+                $residence_id = $residence_id[0];
+            }
+            if(is_array($residence_id)) {
+                $query->whereIn('residence_id', $residence_id);
+            } else {
+                $query->where('residence_id', $residence_id);
             }
         }
 
@@ -219,7 +233,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if ($with_detail) {
             //查询赠品
-            $order->load('skus', 'station', 'staff', 'user', 'order', 'order.promotions', 'tickets', 'tickets.coupon', 'redEnvelope');
+            $order->load('skus', 'station', 'staff', 'user', 'order', 'order.promotions', 'tickets', 'tickets.coupon', 'redEnvelope', 'residence');
         }
 
         return $order;
@@ -380,7 +394,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
-    public function getAllPaginated($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $invoice = null)
+    public function getAllPaginated($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $invoice = null, $residence_id = null)
     {
         return $this->queryByOrders(
             null, $station_id, null,
@@ -389,11 +403,12 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             PreorderProtocol::PREORDER_PER_PAGE,
             'created_at', 'sort',
             $order_no, $phone, $pay_order_no,
-            $invoice
+            $invoice,
+            $residence_id
         );
     }
 
-    public function getAll($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $invoice = null)
+    public function getAll($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $invoice = null, $residence_id = null)
     {
         return $this->queryByOrders(
             null, $station_id, null,
@@ -402,7 +417,8 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             null,
             'created_at', 'sort',
             $order_no, $phone, $pay_order_no,
-            $invoice
+            $invoice,
+            $residence_id
         );
     }
 

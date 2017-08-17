@@ -28,6 +28,7 @@ class PreorderTransformer extends TransformerAbstract {
             'phone' => $preorder->phone,
             'street' => $preorder->street,
             'address' => $preorder->address,
+            'residence' => !$preorder->residence ? '(无)' : $preorder->residence->name,
             'station' => ['id' => $preorder->station_id],
             'staff' => ['id' => $preorder->staff_id],
             'status' => $preorder->status,

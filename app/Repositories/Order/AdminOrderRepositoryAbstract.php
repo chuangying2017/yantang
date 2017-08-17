@@ -55,16 +55,19 @@ abstract class AdminOrderRepositoryAbstract implements AdminOrderRepositoryContr
         return $this->queryOrders($status, $keyword, $order_by, $sort, null, $start_time = null, $end_time = null, $time_name = 'pay_at');
     }
 
-    public function getPaginatedOrders($status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc', $per_page = OrderProtocol::ORDER_PER_PAGE, $start_time = null, $end_time = null, $time_name = 'pay_at')
+    public function getPaginatedOrders($status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc', $per_page = OrderProtocol::ORDER_PER_PAGE, $start_time = null, $end_time = null, $time_name = 'pay_at', $residence_id = null)
     {
-        return $this->queryOrders($status, $keyword, $order_by, $sort, $per_page, $start_time = null, $end_time = null, $time_name = 'pay_at');
+        return $this->queryOrders($status, $keyword, $order_by, $sort, $per_page, $start_time = null, $end_time = null, $time_name = 'pay_at', $residence_id);
     }
 
-    protected function queryOrders($status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc', $per_page = null, $start_time = null, $end_time = null, $time_name = 'pay_at')
+    protected function queryOrders($status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc', $per_page = null, $start_time = null, $end_time = null, $time_name = 'pay_at', $residence_id = null)
     {
         $query = Order::query()->where('order_type', $this->type);
         if (!is_null($status)) {
             $query = $query->where('status', $status);
+        }
+        if (!is_null($residence_id)) {
+            $query = $query->where('residence_id', $residence_id);
         }
 
         $this->queryKeyword($query, $keyword);
