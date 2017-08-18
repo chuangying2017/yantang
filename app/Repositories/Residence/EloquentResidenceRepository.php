@@ -73,27 +73,4 @@ class EloquentResidenceRepository implements ResidenceRepositoryContract {
         }
         return Residence::query()->get();
     }
-
-    public function getAllActive($only_id = false)
-    {
-        #todo 缓存;
-
-        if ($only_id) {
-            return Residence::query()->where('active', 1)->pluck('id')->all();
-        }
-        return Residence::query()->where('active', 1)->get();
-    }
-
-    public function getByDistrict($district_id = null)
-    {
-        $query = Residence::query();
-
-        if (!is_null($district_id)) {
-            $query->where('district_id', $district_id);
-        }
-
-        return $query->where('active', 1)->get(['id', 'name', 'longitude', 'latitude', 'geo']);
-    }
-
-
 }

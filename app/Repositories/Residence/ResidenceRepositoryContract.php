@@ -12,10 +12,4 @@ interface ResidenceRepositoryContract {
     public function getResidence($station_id, $with_user = true);
 
     public function getAll($only_id = false);
-
-	/**
-     * @param bool $only_id
-     * @return Residence
-     */
-    public function getAllActive($only_id = false);
 }
