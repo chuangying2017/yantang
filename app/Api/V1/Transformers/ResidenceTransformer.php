@@ -5,13 +5,14 @@ use League\Fractal\TransformerAbstract;
 
 class ResidenceTransformer extends TransformerAbstract {
 
-    public function transform(Residence $station)
+    public function transform(Residence $residence)
     {
         $data = [
-            'id' => $station['id'],
-            'name' => $station['name'],
-            'aliases' => $station['aliases'],
-            'goal' => $station['goal'],
+            'id' => $residence['id'],
+            'name' => $residence['name'],
+            'aliases' => $residence['aliases'],
+            'goal' => $residence['goal'],
+            'complete' => $residence['complete'],
         ];
 
         return $data;

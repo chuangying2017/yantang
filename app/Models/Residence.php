@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Subscribe\Preorder;
+use App\Services\Preorder\PreorderProtocol;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use DB;
@@ -13,6 +15,39 @@ class Residence extends Model
     protected $table = 'residences';
 
     protected $guarded = [];
+
+    public function getCompleteAttribute(){
+        if(!$this->goal){
+            return 0;
+        }
+
+        $residence_id = $this->id;
+
+        //count preorder 已指派的
+        $query = Preorder::query()
+                    ->whereIn('status', [
+                        PreorderProtocol::ORDER_STATUS_OF_SHIPPING,
+                        PreorderProtocol::ORDER_STATUS_OF_DONE,
+                    ])
+                    ->where('residence_id', $residence_id)
+                    ->distinct('user_id');
+
+        $preorderAmount = $query->count('id');
+
+
+        //count collect_order
+        // $query = CollectOrder::query()
+        //             ->whereIn('status', [
+        //                 PostorderProtocol::STATUS_OF_PENDING,
+
+        //             ])
+        //             ->where('residence_id', $residence_id)
+        //             ->distinct('user_id')
+        // $postorderAmount  = $query->count('id');
+        // dd($preorderAmount);
+        //sum up
+        return $preorderAmount/$this->goal;
+    }
 
     public static function getResidenceIdByAddress( $address ){
         $residences = self::select(['id','name','aliases'])->get();
