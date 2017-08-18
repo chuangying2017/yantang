@@ -45,7 +45,7 @@ class Residence extends Model
         $collectOrderAmount  = Order::query()->whereIn('id', $order_ids)
                                 ->count(\DB::raw('distinct user_id'));
         //sum up
-        return ($preorderAmount+$collectOrderAmount)/$this->goal;
+        return ($preorderAmount+$collectOrderAmount);
     }
 
     public static function getResidenceIdByAddress( $address ){
