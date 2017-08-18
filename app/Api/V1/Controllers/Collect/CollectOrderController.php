@@ -17,6 +17,8 @@ use App\Services\Promotion\PromotionProtocol;
 use App\Services\Pay\Pingxx\PingxxProtocol;
 use App\Services\Order\OrderProtocol;
 use App\Services\Promotion\CouponService;
+use App\Models\Collect\Address;
+use App\Models\Residence;
 use App\Repositories\Address\AddressRepositoryContract;
 use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
@@ -68,11 +70,16 @@ class CollectOrderController extends Controller {
         $quantity = $request->input('quantity');
         $address_id = $request->input('address_id');
 
+
+        $address = Address::where('id',$address_id)->pluck('detail')->first();
+        $residence_id= Residence::getResidenceIdByAddress($address);
+
         $temp_order = CollectOrder::create([
             'sku_id' => $sku_id,
             'quantity' => $quantity,
             'address_id' => $address_id,
-            'staff_id' => access()->staffId()
+            'staff_id' => access()->staffId(),
+            'residence_id' => $residence_id,
         ]);
         return $this->response->noContent()->setStatusCode(201);
     }
