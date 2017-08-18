@@ -74,6 +74,11 @@ class SubscribeServiceProvider extends ServiceProvider
             \App\Models\Collect\CollectOrder::class
         );
 
+        $this->app->bind(
+            'residence',
+            \App\Models\Residence::class
+        );
+
     }
 
 }
