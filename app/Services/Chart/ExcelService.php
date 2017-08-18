@@ -163,6 +163,7 @@ class ExcelService {
             $e_data['姓名'] = $collectOrder['address']['name'];
             $e_data['电话'] = $collectOrder['address']['phone'];
             $e_data['地址'] = join('', $address);
+            $e_data['小区名称'] = is_null($collectOrder['residence']) ? null : $collectOrder['residence']['name'];
             $e_data['服务部'] = $collectOrder['staff']['station']['name'];
             $e_data['接单时间'] = $collectOrder['pay_at'];
             $e_data['订单总价'] = display_price(array_get($collectOrder, 'order.total_amount'));
@@ -184,6 +185,7 @@ class ExcelService {
             $e_data['姓名'] = '';
             $e_data['电话'] = '';
             $e_data['地址'] = '';
+            $e_data['小区名称'] = '';
             $e_data['服务部'] = '';
             $e_data['接单时间'] = '';
             $e_data['订单总价'] = '';
