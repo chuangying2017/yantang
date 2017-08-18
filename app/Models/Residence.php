@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Order\Order;
+use App\Models\Collect\CollectOrder;
 use App\Models\Subscribe\Preorder;
 use App\Services\Preorder\PreorderProtocol;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,23 +32,20 @@ class Residence extends Model
                         PreorderProtocol::ORDER_STATUS_OF_DONE,
                     ])
                     ->where('residence_id', $residence_id)
-                    ->distinct('user_id');
+                    ->groupBy('user_id');
 
         $preorderAmount = $query->count('id');
 
 
         //count collect_order
-        // $query = CollectOrder::query()
-        //             ->whereIn('status', [
-        //                 PostorderProtocol::STATUS_OF_PENDING,
-
-        //             ])
-        //             ->where('residence_id', $residence_id)
-        //             ->distinct('user_id')
-        // $postorderAmount  = $query->count('id');
-        // dd($preorderAmount);
+        $order_ids = CollectOrder::query()
+                    ->where('residence_id', $residence_id)
+                    // ->whereNotNull('pay_at')
+                    ->pluck('order_id');
+        $collectOrderAmount  = Order::query()->whereIn('id', $order_ids)
+                                ->count(\DB::raw('distinct user_id'));
         //sum up
-        return $preorderAmount/$this->goal;
+        return ($preorderAmount+$collectOrderAmount)/$this->goal;
     }
 
     public static function getResidenceIdByAddress( $address ){
