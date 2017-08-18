@@ -3,13 +3,14 @@
 
 interface ResidenceRepositoryContract {
 
-    public function createResidence($station_data);
+    public function createResidence($residence_data);
 
-    public function updateResidence($station_id, $station_data);
+    public function updateResidence($residence_id, $residence_data);
 
-    public function deleteResidence($station_id);
+    public function deleteResidence($residence_id);
 
-    public function getResidence($station_id, $with_user = true);
+    public function getResidence($residence_id);
 
     public function getAll($only_id = false);
+    public function getAllPaginated();
 }

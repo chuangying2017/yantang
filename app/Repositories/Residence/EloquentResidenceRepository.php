@@ -5,64 +5,36 @@ use App\Repositories\Backend\AccessProtocol;
 use DB;
 
 class EloquentResidenceRepository implements ResidenceRepositoryContract {
-
-    public function createResidence($station_data)
+    const PER_PAGE = 15;
+    public function createResidence($residence_data)
     {
         return Residence::create([
-            'name' => $station_data['name'],
-            'merchant_no' => $station_data['merchant_no'],
-            'district_id' => $station_data['district_id'],
-            'desc' => array_get($station_data, 'desc', ''),
-            'tel' => array_get($station_data, 'tel', ''),
-            'address' => $station_data['address'],
-            'cover_image' => $station_data['cover_image'],
-            'director' => $station_data['director'],
-            'phone' => $station_data['phone'],
-            'longitude' => $station_data['longitude'],
-            'latitude' => $station_data['latitude'],
-            'geo' => $station_data['geo'],
-            'active' => 1
+            'name' => $residence_data['name'],
+            'aliases' => $residence_data['aliases'],
+            'goal' => $residence_data['goal'],
         ]);
     }
 
-    public function updateResidence($station_id, $station_data)
+    public function updateResidence($residence_id, $residence_data)
     {
-        $station = $this->getResidence($station_id);
-        $station->fill(array_only($station_data, [
+        $residence = $this->getResidence($residence_id);
+        $residence->fill(array_only($residence_data, [
             'name',
-            'district_id',
-            'merchant_no',
-            'tel',
-            'address',
-            'cover_image',
-            'director',
-            'phone',
-            'longitude',
-            'latitude',
-            'active',
-            'geo'
+            'aliases',
+            'goal',
         ]));
-        $station->save();
+        $residence->save();
 
-        return $station;
+        return $residence;
     }
 
     public function deleteResidence($station_id)
     {
-        if (Preorder::query()->where('station_id', $station_id)->first()) {
-            throw new \Exception('服务部存在订单,无法删除');
-        }
-
-        $this->unbindAllUser($station_id);
-
         return Residence::destroy($station_id);
     }
 
-    public function getResidence($station_id, $with_user = true)
+    public function getResidence($station_id)
     {
-        if ($with_user) {
-            return Residence::with('user', 'user.client')->find($station_id);
-        }
         return Residence::query()->find($station_id);
     }
 
@@ -72,5 +44,14 @@ class EloquentResidenceRepository implements ResidenceRepositoryContract {
             return Residence::query()->pluck('id')->all();
         }
         return Residence::query()->get();
+    }
+
+    public function getAllPaginated($onyl_deleted = false, $per_page = self::PER_PAGE)
+    {
+        $query = Residence::query();
+        if ($onyl_deleted) {
+            $query->whereNotNull('deleted_at');
+        }
+        return $query->paginate($per_page);
     }
 }
