@@ -25,27 +25,33 @@ class Residence extends Model
 
         $residence_id = $this->id;
 
-        //count preorder 已指派的
-        $query = Preorder::query()
+        $collecOrderTableName = with(new CollectOrder)->getTable();
+        $orderTableName = with(new Order)->getTable();
+        $preorderTableName = with(new Preorder)->getTable();
+
+        //preorder 已指派的
+        $preordersUid = Preorder::query()
                     ->whereIn('status', [
                         PreorderProtocol::ORDER_STATUS_OF_SHIPPING,
                         PreorderProtocol::ORDER_STATUS_OF_DONE,
                     ])
                     ->where('residence_id', $residence_id)
-                    ->groupBy('user_id');
+                    ->distinct('user_id')
+                    ->pluck('user_id');
 
-        $preorderAmount = $query->count('id');
-
-
-        //count collect_order
-        $order_ids = CollectOrder::query()
+        //collect_order
+        $collectOrdersUid = CollectOrder::query()
                     ->where('residence_id', $residence_id)
-                    // ->whereNotNull('pay_at')
-                    ->pluck('order_id');
-        $collectOrderAmount  = Order::query()->whereIn('id', $order_ids)
-                                ->count(\DB::raw('distinct user_id'));
+                    ->whereNotNull($collecOrderTableName.'.pay_at')
+                    ->leftJoin('orders', $orderTableName.'.id', '=', $collecOrderTableName.'.order_id')
+                    ->distinct($orderTableName.'.user_id')
+                    ->pluck('user_id');
+
+        $uids = array_merge($preordersUid->toArray(),$collectOrdersUid->toArray());
+        $amount = count(array_unique($uids));
+
         //sum up
-        return ($preorderAmount+$collectOrderAmount);
+        return $amount;
     }
 
     public static function getResidenceIdByAddress( $address ){
