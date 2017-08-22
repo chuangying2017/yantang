@@ -94,12 +94,15 @@ class ExcelService {
             },
             'residence' => function($query){
                 $query->select('id', 'name');
+            },
+            'user.providers' => function($query){
+                $query->select('user_id','provider_id');
             }]);
 
         $preorders = $preorders->toArray();
-
         foreach ($preorders as $key => $preorder) {
             $e_data['订单号'] = $preorder['order_no'];
+            $e_data['open_id'] = array_get($preorder,'user.providers.0.provider_id');
             $e_data['姓名'] = $preorder['name'];
             $e_data['电话'] = $preorder['phone'];
             $e_data['地址'] = $preorder['address'];
@@ -127,6 +130,7 @@ class ExcelService {
         if (!$preorders) {
             $e_data = [];
             $e_data['订单号'] = '无结果';
+            $e_data['open_id'] = '';
             $e_data['姓名'] = '';
             $e_data['电话'] = '';
             $e_data['地址'] = '';
@@ -151,15 +155,21 @@ class ExcelService {
     public static function downCollectOrder($collectOrders, $title = null, $expand_skus = false)
     {
         $e_datas = [];
-
+        $collectOrders->load([
+            'order.user.providers' => function($query){
+                $query->select(['user_id','provider_id']);
+            }
+        ]);
         $collectOrders = $collectOrders->toArray();
         // dd($collectOrders);
         foreach ($collectOrders as $key => $collectOrder) {
+            $open_id = array_get($collectOrder,'order.user.providers.0.provider_id');
             $address = [
                 $collectOrder['address']['district'],
                 $collectOrder['address']['detail'],
             ];
             $e_data['订单号'] = $collectOrder['order']['order_no'];
+            $e_data['open_id'] = $open_id;
             $e_data['姓名'] = $collectOrder['address']['name'];
             $e_data['电话'] = $collectOrder['address']['phone'];
             $e_data['地址'] = join('', $address);
@@ -182,6 +192,7 @@ class ExcelService {
         if (!$collectOrders) {
             $e_data = [];
             $e_data['订单号'] = '无结果';
+            $e_data['open_id'] = '';
             $e_data['姓名'] = '';
             $e_data['电话'] = '';
             $e_data['地址'] = '';
