@@ -22,6 +22,7 @@ use App\Models\Residence;
 use App\Repositories\Address\AddressRepositoryContract;
 use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
+use App\Repositories\Station\District\DistrictRepositoryContract;
 
 use App\Services\Order\Checkout\OrderCheckoutService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -64,15 +65,16 @@ class CollectOrderController extends Controller {
         return $this->response->paginator($orders, new CollectOrderTransformer());
     }
 
-    public function store(CollectOrderRequest $request)
+    public function store(CollectOrderRequest $request, DistrictRepositoryContract $districtRepo)
     {
         $sku_id = $request->input('sku_id');
         $quantity = $request->input('quantity');
         $address_id = $request->input('address_id');
 
 
-        $address = Address::where('id',$address_id)->pluck('detail')->first();
-        $residence_id= Residence::getResidenceIdByAddress($address);
+        $address = Address::where('id',$address_id)->select(['detail','district'])->first();
+        $district_id = $districtRepo->getIdByName($address['district']);
+        $residence_id= Residence::getResidenceIdByAddress($address['detail'], $district_id);
 
         $temp_order = CollectOrder::create([
             'sku_id' => $sku_id,

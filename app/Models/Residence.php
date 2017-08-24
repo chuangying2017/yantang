@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\District;
 use App\Models\Order\Order;
 use App\Models\Collect\CollectOrder;
 use App\Models\Subscribe\Preorder;
@@ -17,6 +18,10 @@ class Residence extends Model
     protected $table = 'residences';
 
     protected $guarded = [];
+
+    public function district(){
+        return $this->belongsTo(District::class, 'district_id', 'id');
+    }
 
     public function getCompleteAttribute(){
         if(!$this->goal){
@@ -54,8 +59,8 @@ class Residence extends Model
         return $amount;
     }
 
-    public static function getResidenceIdByAddress( $address ){
-        $residences = self::select(['id','name','aliases'])->get();
+    public static function getResidenceIdByAddress( $address, $district_id ){
+        $residences = self::where('district_id',$district_id)->select(['id','name','aliases'])->get();
 
         $when = [];
         foreach( $residences as $residence ){
@@ -64,7 +69,7 @@ class Residence extends Model
                 $when[] = 'when "'.$address.'" LIKE "%'.$alias.'%" then "'.$residence->id."\"\n";
             }
         }
-        if(!$residences){
+        if($residences->isEmpty()){
             \Log::error('No residence found in table.');
             return null;
         }

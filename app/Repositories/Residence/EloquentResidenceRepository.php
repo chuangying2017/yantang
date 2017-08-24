@@ -12,6 +12,7 @@ class EloquentResidenceRepository implements ResidenceRepositoryContract {
             'name' => $residence_data['name'],
             'aliases' => $residence_data['aliases'],
             'goal' => $residence_data['goal'],
+            'district_id' => $residence_data['district_id'],
         ]);
     }
 
@@ -22,6 +23,7 @@ class EloquentResidenceRepository implements ResidenceRepositoryContract {
             'name',
             'aliases',
             'goal',
+            'district_id',
         ]));
         $residence->save();
 

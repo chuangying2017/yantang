@@ -14,6 +14,7 @@ class CreateResidencesTable extends Migration
     {
         Schema::create('residences', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('district_id');
             $table->string('name', 255);
             $table->string('aliases', 1000); //list
             $table->integer('goal')->default(0);

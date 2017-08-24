@@ -17,7 +17,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function createPreorder($data)
     {
-        $residence_id = Residence::getResidenceIdByAddress($data['address']);
+        $residence_id = Residence::getResidenceIdByAddress($data['address'],$data['district_id']);
         $order = Preorder::create([
             'user_id' => $data['user_id'],
             'order_id' => $data['order_id'],

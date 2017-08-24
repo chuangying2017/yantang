@@ -27,6 +27,7 @@ class CreateResidenceRequest extends Request {
             'name' => 'required|unique:residences,name',
             'aliases' => 'required|string',
             'goal' => 'required|numeric',
+            'district_id' => 'required|exists:districts,id'
         ];
     }
 }

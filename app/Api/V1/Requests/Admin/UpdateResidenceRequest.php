@@ -27,6 +27,7 @@ class UpdateResidenceRequest extends Request {
             'name' => 'required|string',
             'aliases' => 'required|string',
             'goal' => 'required|numeric',
+            'district_id' => 'required|exists:districts,id'
         ];
     }
 }

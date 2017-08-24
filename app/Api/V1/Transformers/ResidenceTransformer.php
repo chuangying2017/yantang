@@ -9,6 +9,7 @@ class ResidenceTransformer extends TransformerAbstract {
     {
         $data = [
             'id' => $residence['id'],
+            'district' => $residence['district']['name'],
             'name' => $residence['name'],
             'aliases' => $residence['aliases'],
             'goal' => $residence['goal'],
