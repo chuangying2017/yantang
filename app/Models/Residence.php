@@ -24,10 +24,6 @@ class Residence extends Model
     }
 
     public function getCompleteAttribute(){
-        if(!$this->goal){
-            return 0;
-        }
-
         $residence_id = $this->id;
 
         $collecOrderTableName = with(new CollectOrder)->getTable();
