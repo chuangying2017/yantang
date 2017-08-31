@@ -18,6 +18,7 @@ class Kernel extends HttpKernel {
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \Barryvdh\Cors\HandleCors::class,
     ];
 
     /**
@@ -61,7 +62,6 @@ class Kernel extends HttpKernel {
          */
 
         'across' => \App\Http\Middleware\RemoveAcrossControl::class,
-        'cors' => \Barryvdh\Cors\HandleCors::class,
 
         'access.routeNeedsRole' => \App\Http\Middleware\RouteNeedsRole::class,
         'access.routeNeedsPermission' => \App\Http\Middleware\RouteNeedsPermission::class,
