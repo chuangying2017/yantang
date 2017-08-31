@@ -9,6 +9,7 @@ use App\Repositories\Order\PreorderOrderRepository;
 use App\Repositories\Promotion\Campaign\EloquentCampaignRepository;
 use App\Services\Order\Generator\CalExpressFee;
 use App\Services\Order\Generator\CalSkuAmount;
+use App\Services\Order\Generator\CheckAddress;
 use App\Services\Order\Generator\CheckCampaign;
 use App\Services\Order\Generator\CheckCoupon;
 use App\Services\Order\Generator\CheckGiftcard;
@@ -241,6 +242,7 @@ class OrderGenerator implements OrderGeneratorContract {
         $config = [
             GetSkuInfo::class,
             GetUserInfo::class,
+            CheckAddress::class,
             GetOrderAddress::class,
             SetPreorderInfo::class,
             CalSkuAmount::class,
