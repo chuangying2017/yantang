@@ -25,6 +25,11 @@ class SubscribeServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \App\Repositories\Residence\ResidenceRepositoryContract::class,
+            \App\Repositories\Residence\EloquentResidenceRepository::class
+        );
+
+        $this->app->bind(
             \App\Repositories\Preorder\PreorderRepositoryContract::class,
             \App\Repositories\Preorder\EloquentPreorderRepository::class
         );
@@ -67,6 +72,11 @@ class SubscribeServiceProvider extends ServiceProvider
         $this->app->bind(
             'collect_order',
             \App\Models\Collect\CollectOrder::class
+        );
+
+        $this->app->bind(
+            'residence',
+            \App\Models\Residence::class
         );
 
     }
