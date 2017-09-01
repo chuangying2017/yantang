@@ -76,6 +76,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
         $api->get('products', 'ProductController@index');
         $api->get('districts', 'DistrictController@index');
 
+        $api->get('residence/{residence}', 'ResidenceController@show');
     });
 });
 

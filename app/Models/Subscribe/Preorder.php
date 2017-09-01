@@ -5,6 +5,7 @@ use App\Models\Access\User\User;
 use App\Models\Billing\OrderBilling;
 use App\Models\Billing\PreorderBilling;
 use App\Models\District;
+use App\Models\Residence;
 use App\Models\Order\Order;
 use App\Models\Promotion\Ticket;
 use App\Models\RedEnvelope\RedEnvelopeRecord;
@@ -83,6 +84,11 @@ class Preorder extends Model {
     public function billings()
     {
         return $this->hasMany(OrderBilling::class, 'order_id', 'order_id');
+    }
+
+    public function residence()
+    {
+        return $this->belongsTo(Residence::class, 'residence_id', 'id');
     }
 
     //操作
