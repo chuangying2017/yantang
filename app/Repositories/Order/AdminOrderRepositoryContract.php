@@ -10,6 +10,6 @@ interface AdminOrderRepositoryContract {
 
     public function getAllOrders($start_time = null, $end_time = null, $time_name = 'pay_at', $status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc');
 
-    public function getPaginatedOrders($status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc', $per_page = OrderProtocol::ORDER_PER_PAGE, $start_time = null, $end_time = null, $time_name = 'pay_at');
+    public function getPaginatedOrders($status = null, $keyword = null, $order_by = 'created_at', $sort = 'desc', $per_page = OrderProtocol::ORDER_PER_PAGE, $start_time = null, $end_time = null, $time_name = 'pay_at', $residence_id = null);
 
 }
