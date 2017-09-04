@@ -1,5 +1,6 @@
 <?php namespace App\Models\Collect;
 
+use App\Models\Residence;
 use App\Models\Collect\Address;
 use App\Models\Product\ProductSku;
 use App\Models\Order\Order;
@@ -37,6 +38,12 @@ class CollectOrder extends Model
     public static function createOrder( $data ){
         return self::create($data);
     }
+
+    public function residence()
+    {
+        return $this->belongsTo(Residence::class, 'residence_id', 'id');
+    }
+
 
     public static function getCollectOrderByOrderId( $order_id ){
         return self::where('order_id', $order_id)->first();
