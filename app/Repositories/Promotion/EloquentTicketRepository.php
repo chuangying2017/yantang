@@ -259,7 +259,8 @@ class EloquentTicketRepository implements TicketRepositoryContract {
     {
         $ticket = $this->getTicket($ticket_id);
 
-        if ($ticket['type'] == PromotionProtocol::TYPE_OF_COUPON) {
+        if ($ticket['type'] == PromotionProtocol::TYPE_OF_COUPON
+            || $ticket['type'] == PromotionProtocol::TYPE_OF_GIFTCARD) {
             $this->updateAsOk($ticket);
         } else {
             $this->updateAsCancel($ticket);
