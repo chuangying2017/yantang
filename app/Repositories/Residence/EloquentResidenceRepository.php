@@ -18,6 +18,11 @@ class EloquentResidenceRepository implements ResidenceRepositoryContract {
 
     public function updateResidence($residence_id, $residence_data)
     {
+        $residence_data['aliases'] = array_filter(array_unique(explode(',',$residence_data['aliases'])));
+        if(!$residence_data['aliases']){
+            return false;
+        }
+        $residence_data['aliases'] = implode(',',$residence_data['aliases']);
         $residence = $this->getResidence($residence_id);
         $residence->fill(array_only($residence_data, [
             'name',
