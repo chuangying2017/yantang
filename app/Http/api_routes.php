@@ -5,7 +5,7 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) {
 
 
-    $api->group(['namespace' => 'App\Api\V1\Controllers', 'middleware' => ['cors']], function ($api) {
+    $api->group(['namespace' => 'App\Api\V1\Controllers', 'middleware' => []], function ($api) {
 
         /**
          * 用户相关
@@ -62,6 +62,11 @@ $api->version('v1', function ($api) {
          * 收款工具
          */
         require_once(__DIR__ . '/../Api/V1/Routes/collect_api.php');
+
+        /**
+         * 礼品卡
+         */
+        require_once(__DIR__ . '/../Api/V1/Routes/tool_api.php');
     });
 
 });

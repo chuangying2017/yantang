@@ -11,6 +11,8 @@ class AdminCollectOrderTransformer extends TransformerAbstract
         $data['order'] = $collect_order->order;
         $data['address'] = $collect_order->address;
         $data['sku'] = $collect_order->sku;
+        $data['residence'] = !$collect_order->residence ? '(无)' : $collect_order->residence->name;
+
         if ($data['order']) {
             $data['order']['pay_amount'] = display_price($data['order']['pay_amount']);
             $data['order']['total_amount'] = display_price($data['order']['total_amount']);

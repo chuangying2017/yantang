@@ -25,6 +25,7 @@ class CollectOrderController extends Controller
         $start_time = $request->input('start_time') ?: null;
         $end_time = $request->input('end_time') ?: null;
         $order_no = $request->input('order_no');
+        $residence_id = $request->input('residence_id');
         $export = $request->input('export', null);
         $per_page = self::PER_PAGE;
         if ($export == 'all') {
@@ -33,7 +34,7 @@ class CollectOrderController extends Controller
 
         $station_id = null;
 
-        $orders = $this->collectOrderRepo->getAllPaid($station_id, $order_no, $phone, $start_time, $end_time, $per_page);
+        $orders = $this->collectOrderRepo->getAllPaid($station_id, $order_no, $phone, $start_time, $end_time, $residence_id, $per_page);
 
         if ($export == 'all') {
             return ExcelService::downCollectOrder($orders);

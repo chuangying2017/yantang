@@ -91,15 +91,25 @@ class ExcelService {
             },
             'station' => function ($query) {
                 $query->select('id', 'name');
+            },
+            'residence' => function($query){
+                $query->select(['id', 'name','district_id']);
+            },
+            'residence.district' => function($query){
+                $query->select(['id','name']);
+            },
+            'user.providers' => function($query){
+                $query->select('user_id','provider_id');
             }]);
 
         $preorders = $preorders->toArray();
-
         foreach ($preorders as $key => $preorder) {
             $e_data['订单号'] = $preorder['order_no'];
+            $e_data['open_id'] = array_get($preorder,'user.providers.0.provider_id');
             $e_data['姓名'] = $preorder['name'];
             $e_data['电话'] = $preorder['phone'];
             $e_data['地址'] = $preorder['address'];
+            $e_data['小区名称'] = is_null($preorder['residence']) ? null : $preorder['residence']['district']['name'].$preorder['residence']['name'];
             $e_data['服务部'] = array_get($preorder, 'station.name');
             $e_data['下单时间'] = $preorder['created_at'];
             $e_data['接单时间'] = $preorder['confirm_at'];
@@ -123,9 +133,11 @@ class ExcelService {
         if (!$preorders) {
             $e_data = [];
             $e_data['订单号'] = '无结果';
+            $e_data['open_id'] = '';
             $e_data['姓名'] = '';
             $e_data['电话'] = '';
             $e_data['地址'] = '';
+            $e_data['小区名称'] = '';
             $e_data['服务部'] = '';
             $e_data['下单时间'] = '';
             $e_data['接单时间'] = '';
@@ -146,18 +158,28 @@ class ExcelService {
     public static function downCollectOrder($collectOrders, $title = null, $expand_skus = false)
     {
         $e_datas = [];
+        $collectOrders->load([
+            'order.user.providers' => function($query){
+                $query->select(['user_id','provider_id']);
+            },
+            'residence.district' => function($query){
+                $query->select(['id','name']);
+            }
+        ]);
 
         $collectOrders = $collectOrders->toArray();
-        // dd($collectOrders);
         foreach ($collectOrders as $key => $collectOrder) {
+            $open_id = array_get($collectOrder,'order.user.providers.0.provider_id');
             $address = [
                 $collectOrder['address']['district'],
                 $collectOrder['address']['detail'],
             ];
             $e_data['订单号'] = $collectOrder['order']['order_no'];
+            $e_data['open_id'] = $open_id;
             $e_data['姓名'] = $collectOrder['address']['name'];
             $e_data['电话'] = $collectOrder['address']['phone'];
             $e_data['地址'] = join('', $address);
+            $e_data['小区名称'] = is_null($collectOrder['residence']) ? null : $collectOrder['residence']['district']['name'].$collectOrder['residence']['name'];
             $e_data['服务部'] = $collectOrder['staff']['station']['name'];
             $e_data['接单时间'] = $collectOrder['pay_at'];
             $e_data['订单总价'] = display_price(array_get($collectOrder, 'order.total_amount'));
@@ -176,9 +198,11 @@ class ExcelService {
         if (!$collectOrders) {
             $e_data = [];
             $e_data['订单号'] = '无结果';
+            $e_data['open_id'] = '';
             $e_data['姓名'] = '';
             $e_data['电话'] = '';
             $e_data['地址'] = '';
+            $e_data['小区名称'] = '';
             $e_data['服务部'] = '';
             $e_data['接单时间'] = '';
             $e_data['订单总价'] = '';

@@ -9,8 +9,10 @@ use App\Repositories\Order\PreorderOrderRepository;
 use App\Repositories\Promotion\Campaign\EloquentCampaignRepository;
 use App\Services\Order\Generator\CalExpressFee;
 use App\Services\Order\Generator\CalSkuAmount;
+use App\Services\Order\Generator\CheckAddress;
 use App\Services\Order\Generator\CheckCampaign;
 use App\Services\Order\Generator\CheckCoupon;
+use App\Services\Order\Generator\CheckGiftcard;
 use App\Services\Order\Generator\GetOrderAddress;
 use App\Services\Order\Generator\GetSkuInfo;
 use App\Services\Order\Generator\GetSpecialCampaign;
@@ -20,6 +22,9 @@ use App\Services\Order\Generator\SetPreorderInfo;
 use App\Services\Order\Generator\TempOrder;
 use App\Services\Order\Generator\UseCampaign;
 use App\Services\Order\Generator\UseCoupon;
+use App\Services\Order\Generator\UseGiftcard;
+use App\Services\Order\Generator\DisableCoupon;
+use App\Services\Order\Generator\DisableGiftcard;
 use Cache;
 
 class OrderGenerator implements OrderGeneratorContract {
@@ -120,6 +125,7 @@ class OrderGenerator implements OrderGeneratorContract {
             CalSkuAmount::class,
             CheckCampaign::class,
             CheckCoupon::class,
+            CheckGiftcard::class,
             SaveTempOrder::class,
         ];
         $handler = $this->getOrderGenerateHandler($config);
@@ -174,6 +180,24 @@ class OrderGenerator implements OrderGeneratorContract {
         return $temp_order;
     }
 
+    public function useGiftcard($temp_order_id, $giftcard_id)
+    {
+        $config = [
+            UseGiftcard::class,
+            SaveTempOrder::class,
+        ];
+
+        $handler = $this->getOrderGenerateHandler($config);
+
+        $temp_order = $this->pullTempOrder($temp_order_id);
+
+        $temp_order->setRequestGiftcard($giftcard_id);
+
+        $temp_order = $handler->handle($temp_order);
+
+        return $temp_order;
+    }
+
     /**
      * @param $temp_order_id
      * @return TempOrder
@@ -218,10 +242,12 @@ class OrderGenerator implements OrderGeneratorContract {
         $config = [
             GetSkuInfo::class,
             GetUserInfo::class,
+            CheckAddress::class,
             GetOrderAddress::class,
             SetPreorderInfo::class,
             CalSkuAmount::class,
             CheckCoupon::class,
+            CheckGiftcard::class,
             SaveTempOrder::class,
         ];
 

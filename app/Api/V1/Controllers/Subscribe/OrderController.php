@@ -11,6 +11,7 @@ use App\Services\Order\Checkout\OrderCheckoutService;
 use App\Services\Order\OrderGenerator;
 use App\Services\Order\OrderManageContract;
 use App\Services\Order\OrderProtocol;
+use App\Services\Promotion\PromotionProtocol;
 use App\Services\Pay\Pingxx\PingxxProtocol;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -69,7 +70,7 @@ class OrderController extends Controller {
 
             $charge = $orderCheckout->checkout($order['id'], OrderProtocol::BILLING_TYPE_OF_MONEY, $pay_channel);
 
-            return $this->response->item($order, new ClientOrderTransformer())->setMeta(['charge' => $charge])->setStatusCode(201);;
+            return $this->response->item($order, new ClientOrderTransformer())->setMeta(['charge' => $charge])->setStatusCode(201);
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
         }
@@ -91,9 +92,15 @@ class OrderController extends Controller {
     public function update($temp_order_id, Request $request, OrderGenerator $orderGenerator)
     {
         $ticket_id = $request->input('ticket') ?: null;
+        $type = $request->input('type') ?: 'coupon';
 
         if ($ticket_id) {
-            $temp_order = $orderGenerator->useCoupon($temp_order_id, $ticket_id);
+            if($type == PromotionProtocol::TYPE_OF_COUPON){
+                $temp_order = $orderGenerator->useCoupon($temp_order_id, $ticket_id);
+            }
+            else if($type == PromotionProtocol::TYPE_OF_GIFTCARD){
+                $temp_order = $orderGenerator->useGiftcard($temp_order_id, $ticket_id);
+            }
             return $this->response->item($temp_order, new TempOrderTransformer());
         }
 
