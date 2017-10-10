@@ -5,15 +5,18 @@ use App\Models\Invoice\StationInvoice;
 use App\Models\Invoice\StationInvoiceOrder;
 use App\Models\Invoice\StationUnInvoice;
 use App\Models\Invoice\StationRefund;
+use App\Models\Invoice\StationGiftcard;
 use Illuminate\Database\Eloquent\Model;
 
 class InvoiceProtocol {
 
     const ID_OF_ADMIN_INVOICE = 0;
+    const ID_OF_GIFTCARD_INVOICE = 999996;
     const ID_OF_UN_CONFIRM_HISTORY_INVOICE = 999997;
     const ID_OF_REFUND_INVOICE = 999998;
     const ID_OF_UN_CONFIRM_INVOICE = 999999;
-    const NAME_OF_ADMIN_INVOICE = '燕塘优先达';
+    const NAME_OF_ADMIN_INVOICE = '燕塘优鲜达';
+    const NAME_OF_GIFTCARD_INVOICE = '优鲜达礼品卡';
 
     const PER_PAGE = 10;
     const PER_PAGE_OF_ORDER = 20;
@@ -29,11 +32,13 @@ class InvoiceProtocol {
     const INVOICE_TYPE_OF_STATION_ADMIN = 4;
     const INVOICE_TYPE_OF_STATION_UN_CONFIRM = 5;
     const INVOICE_TYPE_OF_STATION_REFUND = 6;
+    const INVOICE_TYPE_OF_GIFTCARD = 7;
 
     const INVOICE_MODEL_OF_STATION = StationInvoice::class;
     const INVOICE_MODEL_OF_STATION_ADMIN = StationAdminInvoice::class;
     const INVOICE_MODEL_OF_STATION_UN_CONFIRM = StationUnInvoice::class;
     const INVOICE_MODEL_OF_STATION_REFUND = StationRefund::class;
+    const INVOICE_MODEL_OF_GIFTCARD = StationGiftcard::class;
 
     const INVOICE_MODEL_OF_STATION_ORDER = StationInvoiceOrder::class;
 

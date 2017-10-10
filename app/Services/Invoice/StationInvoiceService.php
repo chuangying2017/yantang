@@ -6,11 +6,15 @@ use App\Repositories\Invoice\StationAdminInvoiceRepository;
 use App\Repositories\Invoice\StationInvoiceRepository;
 use App\Repositories\Invoice\StationUnInvoiceRepository;
 use App\Repositories\Invoice\StationRefundInvoiceRepository;
+use App\Repositories\Invoice\StationGiftcardInvoiceRepository;
 use App\Repositories\Order\CollectOrderRepository;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Repositories\Station\StationRepositoryContract;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
+use EasyWeChat;
+use Excel;
+use Storage;
 
 class StationInvoiceService implements InvoiceServiceContract {
 
@@ -28,6 +32,50 @@ class StationInvoiceService implements InvoiceServiceContract {
      */
     private $stationRepo;
 
+    const ALL_BILL_COLLUMN_TRANSACTION_DATE =  0; //交易时间
+    const ALL_BILL_COLLUMN_APP_ID =  1; //公众账号ID
+    const ALL_BILL_COLLUMN_MERCHANT_ID =  2; //商户号
+    const ALL_BILL_COLLUMN_SUB_MERCHANT_ID =  3; //子商户号
+    const ALL_BILL_COLLUMN_DEVICE_NO =  4; //设备号
+    const ALL_BILL_COLLUMN_TRANSACTION_ID =  5; //微信订单号
+    const ALL_BILL_COLLUMN_OUT_TRADE_NO =  6; //商户订单号
+    const ALL_BILL_COLLUMN_OPEN_ID =  7; //用户标识
+    const ALL_BILL_COLLUMN_TRADE_TYPE =  8; //交易类型
+    const ALL_BILL_COLLUMN_TRADE_STATE =  9; //交易状态
+    const ALL_BILL_COLLUMN_BANK_TYPE = 10; //付款银行
+    const ALL_BILL_COLLUMN_FEE_TYPE = 11; //货币种类
+    const ALL_BILL_COLLUMN_TOTAL_FEE = 12; //总金额
+    const ALL_BILL_COLLUMN_RED_ENVELOPE_FEE = 13; //企业红包金额
+    const ALL_BILL_COLLUMN_REFUND_TRANSACTION_ID = 14; //微信退款单号
+    const ALL_BILL_COLLUMN_REFUND_OUT_TRADE_NO = 15; //商户退款单号
+    const ALL_BILL_COLLUMN_REFUND_FEE = 16; //退款金额
+    const ALL_BILL_COLLUMN_REFUND_RED_ENVELOPE_FEE = 17; //企业红包退款金额
+    const ALL_BILL_COLLUMN_REFUND_TYPE = 18; //退款类型
+    const ALL_BILL_COLLUMN_REFUND_STATE = 19; //退款状态
+    const ALL_BILL_COLLUMN_BODY = 20; //商品名称
+    const ALL_BILL_COLLUMN_ATTACH = 21; //商户数据包
+    const ALL_BILL_COLLUMN_FEE = 22; //手续费
+    const ALL_BILL_COLLUMN_FEE_RATE = 23; //费率
+
+    const SUCCESS_BILL_COLUMN_TRANSACTION_DATE = 0;
+    const SUCCESS_BILL_COLUMN_APP_ID = 1;
+    const SUCCESS_BILL_COLUMN_MERCHANT_ID = 2;
+    const SUCCESS_BILL_COLUMN_SUB_MERCHANT_ID = 3;
+    const SUCCESS_BILL_COLUMN_DEVICE_NO = 4;
+    const SUCCESS_BILL_COLUMN_TRANSACTION_ID = 5;
+    const SUCCESS_BILL_COLUMN_OUT_TRADE_NO = 6;
+    const SUCCESS_BILL_COLUMN_OPEN_ID = 7;
+    const SUCCESS_BILL_COLUMN_TRADE_TYPE = 8;
+    const SUCCESS_BILL_COLUMN_TRADE_STATE = 9; //交易状态
+    const SUCCESS_BILL_COLUMN_BANK_TYPE = 10;
+    const SUCCESS_BILL_COLUMN_FEE_TYPE = 11;
+    const SUCCESS_BILL_COLUMN_TOTAL_FEE = 12;
+    const SUCCESS_BILL_COLUMN_RED_ENVELOPE_FEE = 13; //企业红包
+    const SUCCESS_BILL_COLUMN_BODY = 14; //商品名称
+    const SUCCESS_BILL_COLUMN_ATTACH = 15;
+    const SUCCESS_BILL_COLUMN_FEE = 16;
+    const SUCCESS_BILL_COLUMN_FEE_RATE = 17;
+
     /**
      * StationInvoiceService constructor.
      * @param StationInvoiceRepository $stationInvoiceRepo
@@ -43,6 +91,7 @@ class StationInvoiceService implements InvoiceServiceContract {
         StationAdminInvoiceRepository $stationAdminInvoiceRepository,
         StationUnInvoiceRepository $stationUnInvoiceRepository,
         StationRefundInvoiceRepository $stationRefundInvoiceRepository,
+        StationGiftcardInvoiceRepository $stationGiftcardInvoiceRepository,
         CollectOrderRepository $collectRepo
     )
     {
@@ -52,6 +101,7 @@ class StationInvoiceService implements InvoiceServiceContract {
         $this->stationAdminInvoiceRepository = $stationAdminInvoiceRepository;
         $this->stationUnInvoiceRepository = $stationUnInvoiceRepository;
         $this->stationRefundInvoiceRepository = $stationRefundInvoiceRepository;
+        $this->stationGiftcardInvoiceRepository = $stationGiftcardInvoiceRepository;
 
         $this->collectRepo = $collectRepo;
     }
@@ -68,6 +118,7 @@ class StationInvoiceService implements InvoiceServiceContract {
             $start_time = $this->getStartTime($invoice_date);
             $end_time = $this->getEndTime($invoice_date);
 
+            $this->settleGiftcard($invoice_date, $start_time, $end_time);
             $station_invoices = [];
 
             foreach ($stations as $station) {
@@ -288,6 +339,91 @@ class StationInvoiceService implements InvoiceServiceContract {
         return $this->stationAdminInvoiceRepository->create($invoice_data);
     }
 
+    public function settleGiftcard($request_invoice_date, $start_time, $end_time){
+        $invoices = $this->stationGiftcardInvoiceRepository->getAll(InvoiceProtocol::ID_OF_GIFTCARD_INVOICE, $request_invoice_date, $request_invoice_date);
+        if ($invoices->first()) {
+            info('礼品卡 于' . $request_invoice_date . '的账单已出', $invoices->first()->toArray());
+            return $invoices->first();
+        }
+
+        $payment = EasyWeChat::payment();
+
+        // $transactionIds = [];
+        $giftcardOrders = [];
+
+        //download everyday bill
+        for( $crntDate = Carbon::parse($start_time); $crntDate->lte(Carbon::parse($end_time)); $crntDate->addDay() ){
+            //if file not exist
+            $crntDateString = $crntDate->format('Ymd');
+            $filepath = 'bill/'.$request_invoice_date.'/'.$crntDateString.'.csv';
+            if( !Storage::disk('local')->has($filepath) ){
+                //download
+                //仅获取支付成功的
+                $bill = $payment->downloadBill($crntDateString)->getContents();
+                Storage::disk('local')->put($filepath, $bill);
+            }
+
+
+            Excel::load(storage_path('app/'.$filepath), function($reader) use (&$giftcardOrders){
+                $reader->noHeading();
+
+                $all = $reader->all();
+                // skip 1 for header
+                // abandon 2 in the end for total amount, add 1 become 3, because starts from 0
+                // $transactionIds = array_column($all->slice(1,count($all)-3)->toArray(), self::ALL_BILL_COLLUMN_TRANSACTION_ID);
+
+                // $transactionIdAmounts = array_count_values($transactionIds);
+                // $noRefundTransactionIds = [];
+
+                // get giftcard payment
+                foreach($all as $key => $value ){
+                    $isGiftcard = $value[self::ALL_BILL_COLLUMN_BODY] == '`购买礼品卡';
+                    $isSuccessRefund = $value[self::ALL_BILL_COLLUMN_REFUND_TYPE] == '`ORIGINAL' && $value[self::ALL_BILL_COLLUMN_REFUND_STATE] == '`SUCCESS';
+
+                    //是礼品卡，但不是退款订单（因为退款订单也有写商品名称，所以需要判断是不是退款的）
+                    if($isGiftcard && !$isSuccessRefund){
+                        $giftcardOrders[] = $value->toArray();
+                    }
+                    // if( $isSuccessRefund ){
+                    //     $refundTransactionIds[] = $key;
+                    // }//todo filter refund transactions
+                }
+            });
+        }
+
+
+        $invoice_data = [
+            'invoice_date' => $request_invoice_date,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'merchant_id' => InvoiceProtocol::ID_OF_GIFTCARD_INVOICE,
+            'merchant_name' => InvoiceProtocol::NAME_OF_GIFTCARD_INVOICE,
+            'total_amount' => 0,
+            'discount_amount' => 0,
+            'pay_amount' => 0,
+            'service_amount' => 0,
+            'receive_amount' => 0,
+        ];
+
+        foreach ($giftcardOrders as $order_key => $giftcardOrder) {
+            $total_amount = trim($giftcardOrder[self::ALL_BILL_COLLUMN_TOTAL_FEE],'`');
+            $pay_amount = trim($giftcardOrder[self::ALL_BILL_COLLUMN_TOTAL_FEE],'`');
+            $service_amount = InvoiceProtocol::calServiceAmount($pay_amount);
+            $receive_amount = $pay_amount - $service_amount;
+
+            $invoice_data['detail'][$order_key] = $giftcardOrder;
+
+            $invoice_data['total_amount'] += floor($total_amount*100);
+            $invoice_data['discount_amount'] += 0; //购买礼品卡不能使用优惠券 $giftcardOrder['discount_amount'];
+            $invoice_data['pay_amount'] += floor($pay_amount*100);
+            $invoice_data['service_amount'] += floor($service_amount*100);
+            $invoice_data['receive_amount'] += floor($receive_amount*100);
+        }
+        // parse
+        // filter used, unused, expired giftcard
+
+        return $this->stationGiftcardInvoiceRepository->create($invoice_data);
+    }
 
     protected function getStartTime($invoice_date)
     {
