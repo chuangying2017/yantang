@@ -39,7 +39,6 @@ class StationRefundInvoiceRepository extends InvoiceRepositoryAbstract{
         $invoice->orders()->createMany($invoice_orders);
 
         $invoice_preorder_ids = array_pluck($invoice_orders, 'preorder_id');
-        \Log::info('invoice_preorder_ids', [$invoice_preorder_ids]);
         Preorder::query()->whereIn('id', $invoice_preorder_ids)->update(['invoice' => InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_OK]);
 
 
