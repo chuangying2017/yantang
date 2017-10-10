@@ -27,3 +27,5 @@ tags
 .tags_swap
 public/build/rev-manifest.json
 npm-debug.log
+*.pem
+
