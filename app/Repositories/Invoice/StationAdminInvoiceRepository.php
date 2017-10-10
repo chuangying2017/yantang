@@ -1,6 +1,8 @@
 <?php namespace App\Repositories\Invoice;
 
+use App\Models\Invoice\StationRefund;
 use App\Models\Invoice\StationInvoice;
+use App\Models\Invoice\StationGiftcard;
 use App\Models\Invoice\StationUnInvoice;
 use App\Repositories\NoGenerator;
 
@@ -25,7 +27,10 @@ class StationAdminInvoiceRepository extends InvoiceRepositoryAbstract {
                     ->where('merchant_id', '!=', InvoiceProtocol::ID_OF_ADMIN_INVOICE)
                     ->where('invoice_date', $invoice['invoice_date'])
                     ->get();
+
                 $invoice->detail = $invoice->detail->merge(StationUnInvoice::query()->where('invoice_date', $invoice['invoice_date'])->get());
+                $invoice->detail = $invoice->detail->merge(StationRefund::query()->where('invoice_date', $invoice['invoice_date'])->get());
+                $invoice->detail = $invoice->detail->merge(StationGiftcard::query()->where('invoice_date', $invoice['invoice_date'])->get());
             }
         }
 
