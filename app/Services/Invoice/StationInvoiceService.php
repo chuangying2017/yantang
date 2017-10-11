@@ -109,7 +109,8 @@ class StationInvoiceService implements InvoiceServiceContract {
     public function settleAll($invoice_date)
     {
         try {
-            if (Carbon::today() <= $invoice_date) {
+            //invoice_date是账单截止日期。若不加一天，则账单截止日期那天就可以跑对账了。
+            if (Carbon::parse($invoice_date)->addDay()->isFuture()) {
                 throw new \Exception('今天为' . Carbon::today()->toDateTimeString() . '未到' . $invoice_date);
             }
 
