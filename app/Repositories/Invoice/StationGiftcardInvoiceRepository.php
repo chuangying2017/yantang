@@ -36,8 +36,6 @@ class StationGiftcardInvoiceRepository extends InvoiceRepositoryAbstract{
             'memo' => '',
         ]);
 
-        $invoice->orders()->createMany($invoice_orders);
-
         return $invoice;
     }
 }
