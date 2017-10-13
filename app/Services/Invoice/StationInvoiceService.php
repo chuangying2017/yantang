@@ -469,7 +469,7 @@ class StationInvoiceService implements InvoiceServiceContract {
 
     protected function getAllUnConfirmOrders($start_time, $end_time)
     {
-        $orders = $this->preorderRepo->getAll(null, null, null, null, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_PAY, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
+        $orders = $this->preorderRepo->getAll(null, null, null, null, null, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_PAY, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
 
         $orders->load([
             'order' => function ($query) {
