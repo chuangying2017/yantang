@@ -1,4 +1,5 @@
 <?php namespace App\Models\Invoice;
+use App\Models\Order\Order;
 use Illuminate\Database\Eloquent\Model;
 
 class StationInvoiceCollectOrder extends Model{
@@ -7,4 +8,7 @@ class StationInvoiceCollectOrder extends Model{
 
     protected $guarded = [];
 
+    public function order(){
+        return $this->belongsTo(Order::class,'order_id');
+    }
 }

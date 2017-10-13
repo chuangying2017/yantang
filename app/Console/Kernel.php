@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel {
         'App\Console\Commands\OrderFillTimeData',
         'App\Console\Commands\PreorderFillTimeData',
         'App\Console\Commands\SettleStationInvoice',
+        'App\Console\Commands\InvoiceCheck',
         'App\Console\Commands\CancelOvertimeUnpaidOrders',
 
         //counter
