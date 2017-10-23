@@ -349,7 +349,6 @@ class StationInvoiceService implements InvoiceServiceContract {
 
         $payment = EasyWeChat::payment();
 
-        // $transactionIds = [];
         $giftcardOrders = [];
 
         //download everyday bill
@@ -370,28 +369,13 @@ class StationInvoiceService implements InvoiceServiceContract {
 
                 $all = $reader->all();
                 // skip 1 for header
-                // abandon 2 in the end for total amount, add 1 become 3, because starts from 0
-                // $transactionIds = array_column($all->slice(1,count($all)-3)->toArray(), self::ALL_BILL_COLLUMN_TRANSACTION_ID);
-
-                // $transactionIdAmounts = array_count_values($transactionIds);
-                // $noRefundTransactionIds = [];
-
-                // get giftcard payment
-                foreach($all as $key => $value ){
-                    $isGiftcard = $value[self::ALL_BILL_COLLUMN_BODY] == '`购买礼品卡';
-                    $isSuccessRefund = $value[self::ALL_BILL_COLLUMN_REFUND_TYPE] == '`ORIGINAL' && $value[self::ALL_BILL_COLLUMN_REFUND_STATE] == '`SUCCESS';
-
-                    //是礼品卡，但不是退款订单（因为退款订单也有写商品名称，所以需要判断是不是退款的）
-                    if($isGiftcard && !$isSuccessRefund){
-                        $giftcardOrders[] = $value->toArray();
-                    }
-                    // if( $isSuccessRefund ){
-                    //     $refundTransactionIds[] = $key;
-                    // }//todo filter refund transactions
-                }
+                // abandon 2 in the end for total amount, add 1 with 2 to become 3, because starts from 0
+                $bills = $all->slice(1,count($all)-3);
+                $giftcardOrders += $bills->where(self::ALL_BILL_COLLUMN_BODY, '`购买礼品卡')
+                                    ->where(self::ALL_BILL_COLLUMN_REFUND_TYPE, '`')
+                                    ->toArray();
             });
         }
-
 
         $invoice_data = [
             'invoice_date' => $request_invoice_date,
@@ -469,7 +453,7 @@ class StationInvoiceService implements InvoiceServiceContract {
 
     protected function getAllUnConfirmOrders($start_time, $end_time)
     {
-        $orders = $this->preorderRepo->getAll(null, null, null, null, PreorderProtocol::ORDER_STATUS_OF_ASSIGNING, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_PAY, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
+        $orders = $this->preorderRepo->getAll(null, null, null, null, null, $start_time, $end_time, PreorderProtocol::TIME_NAME_OF_PAY, InvoiceProtocol::PREORDER_INVOICE_ORDER_OF_DEFAULT);
 
         $orders->load([
             'order' => function ($query) {
