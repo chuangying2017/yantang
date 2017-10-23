@@ -1,5 +1,6 @@
 <?php namespace App\Services\Order\Generator;
 
+use App\Repositories\Product\ProductProtocol;
 use App\Repositories\Product\Sku\ProductSkuRepositoryContract;
 use App\Repositories\Product\Sku\ProductSkuStockRepositoryContract;
 
@@ -30,6 +31,7 @@ class GetSkuInfo extends GenerateHandlerAbstract {
         $request_sku_info = array_pluck($temp_order->getSkus(), 'quantity', 'product_sku_id');
         $request_sku_subscribe_info = array_pluck($temp_order->getSkus(), 'per_day', 'product_sku_id');
         $skus = $this->skuRepo->getSkus(array_keys($request_sku_info));
+        $skus->load('product');
 
         if (!count($skus)) {
             throw new \Exception('商品不存在');
@@ -43,6 +45,13 @@ class GetSkuInfo extends GenerateHandlerAbstract {
                 $skus[$key]['stock_enough'] = false;
                 $stock_ok = false;
                 $temp_order->setError('商品 ID:' . $sku['id'] . ' ' . $sku['name'] . '库存不足');
+            }
+
+            if($sku->product->status == ProductProtocol::VAR_PRODUCT_STATUS_DOWN){
+                $temp_order->setError('商品 ID:' . $sku['id'] . ' ' . $sku['name'] . '已下架');
+            }
+            if($sku->product->status == ProductProtocol::VAR_PRODUCT_STATUS_SELLOUT){
+                $temp_order->setError('商品 ID:' . $sku['id'] . ' ' . $sku['name'] . '已售罄');
             }
         }
 
