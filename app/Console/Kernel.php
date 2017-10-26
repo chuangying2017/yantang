@@ -68,8 +68,8 @@ class Kernel extends ConsoleKernel {
         $schedule->command('counter:daily-station')->dailyAt('00:30');
 
         //账单
-       $schedule->command('invoice:station', ['date' => Carbon::today()->day(10)->toDateString()])->monthlyOn(11, '2:00');
-       $schedule->command('invoice:station', ['date' => Carbon::today()->day(25)->toDateString()])->monthlyOn(26, '2:00');
+       $schedule->command('invoice:station', [Carbon::today()->day(10)->toDateString()])->monthlyOn(11, '2:00');
+       $schedule->command('invoice:station', [Carbon::today()->day(25)->toDateString()])->monthlyOn(26, '2:00');
 
         $schedule->command('orders:overtime')->everyTenMinutes();
     }
