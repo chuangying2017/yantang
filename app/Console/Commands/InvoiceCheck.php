@@ -111,7 +111,6 @@ class InvoiceCheck extends Command
      */
     public function handle()
     {
-        \Debugbar::enable();
         $invoice_date = $this->argument('date');
         try {
             //invoice_date是账单截止日期。若不加一天，则账单截止日期那天就可以跑对账了。
