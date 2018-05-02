@@ -1,6 +1,5 @@
-<?php namespace App\Services\Promotion;
-
-
+<?php 
+namespace App\Services\Promotion;
 use App\Repositories\Promotion\Coupon\CouponRepositoryContract;
 use App\Repositories\Promotion\TicketRepositoryContract;
 use App\Services\Promotion\Rule\RuleServiceContract;
@@ -8,6 +7,7 @@ use App\Services\Promotion\Support\PromotionAbleItemContract;
 use App\Services\Promotion\Support\PromotionAbleUserContract;
 use App\Repositories\Promotion\Giftcard\EloquentGiftcardRepository;
 use Carbon\Carbon;
+use DB;
 
 class CouponService extends PromotionServiceAbstract implements PromotionDispatcher {
 
@@ -34,9 +34,30 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
     public function dispatch(PromotionAbleUserContract $user, $promotion_id, $source_type = PromotionProtocol::TICKET_RESOURCE_OF_USER, $source_id = 0)
     {
         $promotion = $this->promotionRepo->getPromotionWithDecodeRules($promotion_id);
-
+		
+		
+		
+		if($promotion['new_limit']==1){
+			 $if_hadorder = DB::select("SELECT * from orders where  user_id='".$user->getUserId()."' order by id desc limit 0,1");
+			  if(!empty($if_hadorder)){
+					$this->setErrorMessage('此优惠券新用户才可以领取哦！'); 
+					 return false;
+				}
+		}
+		
+		
+		//
+		//echo "error";
+		//return false;
+		//file_put_contents("promotion.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($promotion['counter']["dispatch"])."\n\n");
+		if($promotion['counter']["dispatch"]>=$promotion['counter']["total"]){
+			$this->setErrorMessage('对不起，已领完了！');
+			//file_put_contents("promotion2.txt",date("Y-m-d H:i:s")."\nlog=aaaaa\n\n");
+            return false;
+		}
+		
         //非有效期内
-        if ($promotion['start_time'] > Carbon::now() && $promotion['end_time'] < Carbon::now()) {
+        if ($promotion['start_time'] > Carbon::now() || $promotion['end_time'] < Carbon::now() ) {
             $this->setErrorMessage('优惠券不在有效期内');
             return false;
         }
@@ -55,7 +76,7 @@ class CouponService extends PromotionServiceAbstract implements PromotionDispatc
             $this->setErrorMessage('已经领取或不符合领取资格,领取失败');
             return false;
         }
-
+		//file_put_contents("CouponService.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($this->ticketRepo->createTicket($user->getUserId(), $promotion, true, $source_type, $source_id))."\n\n");
         return $this->ticketRepo->createTicket($user->getUserId(), $promotion, true, $source_type, $source_id);
     }
 

@@ -43,6 +43,7 @@ class PreorderTransformer extends TransformerAbstract {
             'pause_status' => $this->isPause($preorder),
             'is_new' => $preorder->start_time >= date('Y-m-d') ? 1 : 0,
             'has_coupon' => 0,
+			'assess' => $preorder->assess,
         ];
 
         return $data;

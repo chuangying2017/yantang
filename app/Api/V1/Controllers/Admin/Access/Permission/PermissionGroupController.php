@@ -31,6 +31,7 @@ class PermissionGroupController extends Controller {
         return $this->response->collection($groups, new PermissionGroupTransformer());
     }
 
+
     /**
      * @return mixed
      */

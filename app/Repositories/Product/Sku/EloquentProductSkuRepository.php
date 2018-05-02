@@ -6,6 +6,7 @@ use App\Models\Product\ProductSku;
 use App\Repositories\Category\CategoryProtocol;
 use App\Repositories\Product\ProductProtocol;
 use App\Repositories\Product\Sku\SubscribeSkuRepositoryContract;
+use DB;
 
 class EloquentProductSkuRepository implements ProductSkuRepositoryContract, ProductSkuStockRepositoryContract, ProductMixRepositoryContract, SubscribeSkuRepositoryContract
 {
@@ -118,6 +119,23 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
 
     public function getSkus($sku_ids)
     {
+
+        //$ps = DB::query()->where('id', $sku_ids)->first();
+        
+        $ps = DB::table('product_skus')->where('id', $sku_ids)->first();//->pluck('deleted_at');
+
+	if (count($sku_ids)>=2){     
+        if(!empty($ps) && isset($ps['deleted_at']) && !empty($ps['deleted_at']) && !is_null($ps->deleted_at))
+        {
+            throw new \Exception(json_encode('亲爱的用户，您购买的商品信息有更新哦。请重新下单！', JSON_UNESCAPED_UNICODE));
+        }}else{
+	if(!is_null($ps->deleted_at))
+        {
+            throw new \Exception(json_encode('亲爱的用户，您购买的商品信息有更新哦。请重新下单！', JSON_UNESCAPED_UNICODE));
+        }
+}
+
+       
         return ProductSku::query()->findOrFail($sku_ids);
     }
 

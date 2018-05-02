@@ -45,7 +45,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     public function updatePreorder($order_id, $data)
     {
         $order = $this->get($order_id);
-
+		
         if ($order['status'] !== PreorderProtocol::ORDER_STATUS_OF_ASSIGNING) {
             throw new \Exception('订单无法修改', 400);
         }
@@ -63,7 +63,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     public function getPaginatedByUser($user_id, $status = null, $start_time = null, $end_time = null, $per_page = PreorderProtocol::PREORDER_PER_PAGE)
     {
         $query = Preorder::with('skus');
-
+		
         if (!is_null($user_id)) {
             $query->where('user_id', $user_id);
         }
@@ -145,6 +145,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if (!is_null($user_id)) {
             $query->where('user_id', $user_id);
+            
         }
 
         if (!is_null($station_id)) {
@@ -153,8 +154,9 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             } else {
                 $query->where('station_id', $station_id);
             }
+            
         }
-
+        
         if (!is_null($residence_id)) {
             if(count($residence_id) == 1 ){
                 $residence_id = $residence_id[0];
@@ -171,7 +173,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         }
 
         if (!is_null($start_time)) {
-            $query->where($time_name, '>=', $start_time);
+            $query->where($time_name, '>=', $start_time)->cursor();
         }
 
         if (!is_null($end_time)) {
@@ -223,19 +225,24 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
      */
     public function get($preorder_id, $with_detail = false)
     {
+		
+		
         if ($preorder_id instanceof Preorder) {
+			//file_put_contents("test.txt",date("Y-m-d H:i:s")."\nlog=".json_encode("111")."\n\n");	
             $order = $preorder_id;
         } else if (strlen($preorder_id) == NoGenerator::LENGTH_OF_PREORDER_NO) {
+			//file_put_contents("test.txt",date("Y-m-d H:i:s")."\nlog=".json_encode("222")."\n\n");	
             $order = Preorder::query()->where('order_no', $preorder_id)->firstOrFail();
         } else {
+			//file_put_contents("test.txt",date("Y-m-d H:i:s")."\nlog=".json_encode("333")."\n\n");	
             $order = Preorder::query()->findOrFail($preorder_id);
         }
-
+		//file_put_contents("test.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($order)."\n\n");	
         if ($with_detail) {
             //查询赠品
             $order->load('skus', 'station', 'staff', 'user', 'order', 'order.promotions', 'tickets', 'tickets.coupon', 'redEnvelope', 'residence');
         }
-
+	
         return $order;
     }
 
@@ -410,6 +417,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getAll($station_id = null, $order_no = null, $pay_order_no = null, $phone = null, $order_status = null, $start_time = null, $end_time = null, $time_name = 'created_at', $invoice = null, $residence_id = null)
     {
+        
         return $this->queryByOrders(
             null, $station_id, null,
             $order_status,
@@ -565,7 +573,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getAllEnding($day = 3, $per_page = null)
     {
-        $query = Preorder::query()->where('end_time', Carbon::today()->addDays($day));
+        $query = Preorder::query()->where('end_time', Carbon::today()->addDays($day))->where('status','<>','cancel');
         
         if($per_page) {
             return $query->paginate($per_page);

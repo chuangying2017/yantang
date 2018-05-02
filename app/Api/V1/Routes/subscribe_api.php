@@ -54,6 +54,8 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->put('preorders/{order_id}/confirm', 'StationPreorderController@confirm');
             $api->resource('preorders/{order_id}/assign', 'StationAssignController', ['only' => ['store', 'destroy']]);
             $api->resource('preorders', 'StationPreorderController');
+            
+            $api->get('distributormilk','StationStaffController@distributormilk');
         });
 
 
@@ -64,18 +66,28 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
     //用户订奶
     $api->group(['prefix' => 'subscribe'], function ($api) {
-
+				
         $api->put('orders/{temp_order}/confirm', 'OrderController@confirm');
         $api->resource('orders', 'OrderController');
+ 		$api->resource('assess', 'OrderController');
+		
+		
+		$api->post('preorders/comments', 'PreorderCommentController@store');
+		
+		//$api->resource('assessSuccess2', 'OrderController');
+		$api->post('assessSuccess2', 'OrderController@assessSuccess');
+
         $api->get('preorders/{order_id}/deliver', 'PreorderController@deliver');
         $api->post('preorders/comments', 'PreorderCommentController@store');
         $api->resource('preorders', 'PreorderController');
+	 	
         $api->resource('orders.checkout', 'CheckoutController');
         $api->resource('address', 'AddressController');
         $api->get('stations', 'StationController@index');
         $api->get('products', 'ProductController@index');
         $api->get('districts', 'DistrictController@index');
 
+		
         $api->get('residence/{residence}', 'ResidenceController@show');
     });
 });

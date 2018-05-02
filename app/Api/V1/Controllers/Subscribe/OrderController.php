@@ -1,5 +1,5 @@
 <?php
-
+	
 namespace App\Api\V1\Controllers\Subscribe;
 
 use App\Api\V1\Controllers\Controller;
@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use DB;
+
+
 
 class OrderController extends Controller {
 
@@ -31,15 +34,47 @@ class OrderController extends Controller {
      */
     public function __construct(PreorderOrderRepository $orderRepo)
     {
+		//file_put_contents("test0.txt",date("Y-m-d H:i:s")."\nlog=".json_encode("000")."\n\n");	
         $this->orderRepo = $orderRepo;
     }
 
     public function index()
-    {
+    {	
+		//file_put_contents("test1.txt",date("Y-m-d H:i:s")."\nlog=".json_encode("111")."\n\n");	
         $orders = $this->orderRepo->getPaginatedOrders();
-
+	
         return $this->response->paginator($orders, new ClientOrderTransformer());
     }
+
+
+ 	public function assessSuccess(Request $request)
+    {
+		
+		$raw_post_data = file_get_contents('php://input', 'r');
+		$temp_array = json_decode($raw_post_data,true);
+		
+		$score = $temp_array["score"];
+		$commentable_id = $temp_array["commentable_id"];//订单id
+		$content = $temp_array["content"];
+		$user_id = $temp_array["user_id"];
+		$order_no = $temp_array["order_no"];
+		
+		 $data = array(
+            'score' => $score,
+			'user_id' => $user_id,
+            'commentable_id' => $commentable_id,
+			'content' => $content,
+			'order_no' => $order_no,
+            'created_at' => date('Y-m-d H:i:s',time()),
+        );
+		
+		$result = DB::table('assess')->insert($data);
+		$assess = DB::select("update orders  set assess=1 where id = {$commentable_id}");
+		
+    }
+
+
+
 
     public function store(SubscribeOrderRequest $request, OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout)
     {

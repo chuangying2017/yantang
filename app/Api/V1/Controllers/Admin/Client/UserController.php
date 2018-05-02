@@ -33,7 +33,7 @@ class UserController extends Controller {
         }
         else {
             $keyword = $request->input('keyword') ?: null;
-
+			//file_put_contents("keyword.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($keyword)."\n\n");
             $clients = $this->clientRepo->getClientsPaginated($keyword, $status, true);
         }
 

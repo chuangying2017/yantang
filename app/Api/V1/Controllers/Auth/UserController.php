@@ -34,7 +34,7 @@ class UserController extends Controller {
 
     /**
      * Display a listing of the resource.
-     *
+     * 获取用户信息
      * @return \Illuminate\Http\Response
      */
     public function getUserInfo()

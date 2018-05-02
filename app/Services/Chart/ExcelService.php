@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Excel;
 
 class ExcelService {
-
+//导出文件
     use InvoiceExcelTrait;
 
     public static function getFile($file, $local = false)
@@ -278,6 +278,50 @@ class ExcelService {
     public static function downloadLocalFile($file)
     {
         return response()->download($file);
+    }
+    
+    
+    
+    public static function downCardOrder($orders, $title = null, $expand_skus = false)
+    {
+        $e_datas = [];
+    
+        $orders = array_map('get_object_vars', $orders);
+        
+        foreach ($orders as $key => $order) {
+            $e_data['订单号'] = $order['order_no'];
+            $e_data['姓名'] = $order['name'];
+            $e_data['电话'] = $order['phone'];
+            $e_data['地址'] = $order['district'].$order['detail'];
+            
+            $e_data['下单时间'] = $order['created_at'];
+   
+            //$e_data['配送状态'] = PreorderProtocol::status($preorder['status']);
+            $e_data['订单总价'] = display_price($order['total_amount']);
+            $e_data['优惠金额'] = display_price($order['discount_amount']);
+            $e_data['实付价格'] = display_price($order['pay_amount']);
+  
+            $e_datas[] = $e_data;
+        }
+        if (!$orders) {
+            $e_data = [];
+            $e_data['订单号'] = '无结果';
+            $e_data['姓名'] = '';
+            $e_data['电话'] = '';
+            $e_data['地址'] = '';
+          
+            $e_data['下单时间'] = '';
+      
+            
+            $e_data['订单总价'] = '';
+            $e_data['优惠金额'] = '';
+            $e_data['实付价格'] = '';
+
+            $e_datas[] = $e_data;
+        }
+    
+        $title = $title ?: '燕塘优鲜达订奶订单 - 导出时间:' . Carbon::now()->toDateTimeString();
+        return self::saveAndDownload($e_datas, $title, 'preorders/', true);
     }
 
 

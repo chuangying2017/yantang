@@ -46,12 +46,9 @@ $router->group(['namespace' => 'Backend'], function () use ($router) {
     });
 
 //    require(__DIR__ . "/Routes/Backend/Agent.php");
-
 });
-
 
 /**
  * 测试路由,当 env => local debug => true 有效
  */
-//require(__DIR__ . "/Routes/test.php");
-
+//include(__DIR__ . "/Routes/test.php");

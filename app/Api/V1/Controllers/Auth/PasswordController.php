@@ -115,3 +115,4 @@ class PasswordController extends Controller {
         return redirect()->route('frontend.dashboard')->withFlashSuccess(trans("strings.password_successfully_changed"));
     }
 }
+

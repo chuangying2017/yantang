@@ -27,22 +27,24 @@ class PreorderController extends Controller {
      */
     public function __construct(PreorderRepositoryContract $preorderRepo)
     {
+		//file_put_contents("test222.txt",date("Y-m-d H:i:s")."\nlog=".json_encode("dddfd")."\n\n");	
         $this->preorderRepo = $preorderRepo;
     }
 
     public function index(Request $request)
     {
         $status = $request->input('status') ?: null;
-
+		
         $orders = $this->preorderRepo->getPaginatedByUser(access()->id(), $status);
-
+			//file_put_contents("test.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($orders)."\n\n");	
         return $this->response->paginator($orders, new PreorderTransformer());
     }
 
     public function show($order_id)
     {
         $order = $this->preorderRepo->get($order_id, true);
-
+		file_put_contents("test000.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($order)."\n\n");	
+		
         if ($order['user_id'] != access()->id()) {
             throw new AccessDeniedHttpException();
         }

@@ -81,6 +81,7 @@ return [
             'test' => env('WEIXIN_REDIRECT_URL_TEST'),
             'deliver' => env('WEIXIN_REDIRECT_URL_DELIVER'),
             'gift' => env('WEIXIN_REDIRECT_URL_GIFT'),
+            'department' => env('WEIXIN_REDIRECT_URL_DEPARTMENT'),
         ]
     ],
 

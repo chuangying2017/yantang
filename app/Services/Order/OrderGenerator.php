@@ -260,7 +260,9 @@ class OrderGenerator implements OrderGeneratorContract {
             'start_time' => $start_time
         ])->setAddress($address_id);
 
+
         $temp_order = $handler->handle($temp_order);
+
 
         if ($temp_order->getError()) {
             throw new \Exception(json_encode($temp_order->getError(), JSON_UNESCAPED_UNICODE));
