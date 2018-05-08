@@ -67,6 +67,12 @@ $api->version('v1', function ($api) {
          * 礼品卡
          */
         require_once(__DIR__ . '/../Api/V1/Routes/tool_api.php');
+
+        /**
+         *
+         * 自增个人更改
+         * */
+        require_once(__DIR__.'/../Api/V1/Routes/others_api.php');
     });
 
 });

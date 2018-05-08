@@ -381,6 +381,14 @@ if (!function_exists('http_build_url')) {
     }
 }
 
+function submitStatus($status){
+    if($status){
+        $arr = ['status'=>1,'msg'=>'修改成功'];
+    }else{
+        $arr = ['status'=>2,'msg'=>'修改失败'];
+    }
+    return $arr;
+}
 
 
 
