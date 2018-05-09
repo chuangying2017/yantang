@@ -8,6 +8,9 @@
 
 
     $api->group(['namespace'=>'Admin\Others','prefix'=>'others'],function($api){
-        $api->get('protocol/find','Protocols@index');
-        $api->post('protocol/edit','Protocols@protocoledit');
+        $api->group(['middleware'=>'api.auth'],function ($api){
+            $api->get('protocol/find','Protocols@index');
+            $api->post('protocol/edit','Protocols@protocoledit');
+        });
+        $api->get('reception','Protocols@index');//前台获取协议
     });

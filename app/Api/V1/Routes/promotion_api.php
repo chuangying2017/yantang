@@ -6,7 +6,7 @@
 
 $api->group(['namespace' => 'Promotion', 'prefix' => 'promotions'], function ($api) {
 
-    $api->group(['middleware' => 'api.auth'], function ($api) {
+   // $api->group(['middleware' => 'api.auth'], function ($api) {
 
         $api->resource('coupons', 'CouponController');
         $api->resource('campaigns', 'CampaignController');
@@ -18,6 +18,6 @@ $api->group(['namespace' => 'Promotion', 'prefix' => 'promotions'], function ($a
         
         $api->resource('activities', 'ActivityController', ['only' => ['show', 'index']]);
         
-    });
+   // });
 
 });

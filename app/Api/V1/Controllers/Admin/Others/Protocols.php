@@ -7,7 +7,6 @@ use App\models\Protocol;
 use App\Repositories\Other\ProtocolGenerator;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
-
 use App\Http\Controllers\Controller;
 
 class Protocols extends Controller
@@ -26,7 +25,7 @@ class Protocols extends Controller
 
         $result = $this->ProtocolRepositoryContact->updateProtocol(['type'=>$data['type']],$data);
 
-        return submitStatus($result);
+        return response()->json(submitStatus($result));
     }
 
     public function __construct(ProtocolGenerator $protocolGenerator)

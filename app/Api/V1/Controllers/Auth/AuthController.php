@@ -31,6 +31,7 @@ class AuthController extends Controller {
 
     /**
      * @param RegisterRequest $request
+     * @return \Dingo\Api\Http\Response
      */
     public function postRegister(RegisterRequest $request)
     {
@@ -45,6 +46,7 @@ class AuthController extends Controller {
 
     /**
      * @param LoginRequest $request
+     * @return \Dingo\Api\Http\Response
      */
     public function postLogin(Request $request)
     {

@@ -13,7 +13,5 @@ class Protocol extends Model
 
     public $timestamps = false;
 
-    protected $dates = ['update_time'];
-
     protected $dateFormat = 'datetime';
 }

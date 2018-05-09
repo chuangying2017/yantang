@@ -19,6 +19,7 @@ class Protocol implements \App\Repositories\Other\ProtocolGenerator {
     public function updateProtocol($protocol_where, $protocol_data)
     {
         // TODO: Implement updateProtocol() method.
+        unset($protocol_data['token']);
         return \App\models\Protocol::where($protocol_where)->update($protocol_data);
     }
 
