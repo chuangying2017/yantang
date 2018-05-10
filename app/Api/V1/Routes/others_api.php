@@ -13,4 +13,5 @@
             $api->post('protocol/edit','Protocols@protocoledit');
         });
         $api->get('reception','Protocols@index');//前台获取协议
+        $api->get('testFileUnits','Protocols@testfile');//测试
     });

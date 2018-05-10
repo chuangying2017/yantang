@@ -42,7 +42,7 @@ class OrderController extends Controller {
     {	
 		//file_put_contents("test1.txt",date("Y-m-d H:i:s")."\nlog=".json_encode("111")."\n\n");	
         $orders = $this->orderRepo->getPaginatedOrders();
-	
+
         return $this->response->paginator($orders, new ClientOrderTransformer());
     }
 

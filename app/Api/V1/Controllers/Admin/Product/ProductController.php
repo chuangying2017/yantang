@@ -31,6 +31,7 @@ class ProductController extends Controller {
     /**
      * Display a listing of the resource.
      *
+     * show listing products search function
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)

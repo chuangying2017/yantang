@@ -33,4 +33,13 @@ class Protocols extends Controller
         $this->ProtocolRepositoryContact = $protocolGenerator;
     }
 
+    /**
+     * this is my test file
+     * hope others peoples not action
+     *
+     * */
+    public function testfile(){
+        dd(env('SEARCH_APP_NAME'));
+        dd(['zhang'=>'111','lisi'=>'wangwu']);
+    }
 }

@@ -198,9 +198,10 @@ class EloquentProductRepository implements ProductRepositoryContract {
 
     public function search($keyword, $options = [])
     {
-        dd((new ProductSearchRepository($this))->get($keyword));
 
-        return Product::with('meta')->whereIn('id', $product_ids)->paginated(ProductProtocol::PRODUCT_PER_PAGE);
+        $data =(new ProductSearchRepository($this))->get($keyword);
+
+        return Product::with('meta')->whereIn('id', $data['id'])->paginated(ProductProtocol::PRODUCT_PER_PAGE);
     }
 
     public function updateProductAsUp($product_id)

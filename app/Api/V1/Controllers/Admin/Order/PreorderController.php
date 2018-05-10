@@ -21,6 +21,10 @@ class PreorderController extends Controller {
         $this->preorderRepo = $preorderRepo;
     }
 
+    /**
+     * select orders list
+     *
+     * */
     public function index(Request $request)
     {
         $order_no = $request->input('order_no') ?: null;
