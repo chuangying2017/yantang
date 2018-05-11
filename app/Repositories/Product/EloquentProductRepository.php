@@ -41,11 +41,13 @@ class EloquentProductRepository implements ProductRepositoryContract {
 
     public function createProduct($product_data)
     {
+        //‌App\Repositories\Product\Editor\SetProductSku 实际上调用了这个类去继承App\Repositories\Product\Editor\EditorAbstract;
         $handler = $this->getCreateProductHandler();
 
-        $result = \DB::transaction(function () use ($handler, $product_data) {
+        $callback_result = function () use ($handler, $product_data) {
             return $handler->handle($product_data, new Product());
-        });
+        };
+        $result = \DB::transaction($callback_result);
 
         $product = $result['product'];
 

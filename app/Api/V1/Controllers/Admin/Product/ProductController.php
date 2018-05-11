@@ -43,17 +43,23 @@ class ProductController extends Controller {
         $type = $request->input('type');
 
         $keyword = $request->input('keyword');
+
         if ($keyword) {
             $products = $this->productRepositoryContract->search($keyword, compact('brand', 'cat', 'group', 'status', 'type'));
         } else {
             $products = $this->productRepositoryContract->getProductsPaginated($brand, $cat, $group, $type, $status);
         }
+
+        foreach ($products as $key=>$product){
+            $products[$key]['url'] =  config('services.weixin.redirect_urls.linkWeChatProducts').'mall/subsproducts/'.$product['id'];
+        }
+
         return $this->response->paginator($products, new ProductTransformer());
     }
 
     /**
      * Store a newly created resource in storage.
-     *
+     * 创建商品
      * @param ProductRequest $request
      * @return \Illuminate\Http\Response
      */

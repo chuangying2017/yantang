@@ -82,6 +82,7 @@ return [
             'deliver' => env('WEIXIN_REDIRECT_URL_DELIVER'),
             'gift' => env('WEIXIN_REDIRECT_URL_GIFT'),
             'department' => env('WEIXIN_REDIRECT_URL_DEPARTMENT'),
+            'linkWeChatProducts'=>env('WEIXIN_REDIRECT_URL_PRODUCT'),
         ]
     ],
 

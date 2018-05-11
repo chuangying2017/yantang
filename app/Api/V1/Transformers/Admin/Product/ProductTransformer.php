@@ -34,6 +34,7 @@ class ProductTransformer extends TransformerAbstract {
             'priority' => $product['priority'],
             'created_at' => $product['created_at'],
             'updated_at' => $product['updated_at'],
+            'clientWeChatUrl'=>$product['url'],
         ];
 
         if ($product->relationLoaded('images')) {
