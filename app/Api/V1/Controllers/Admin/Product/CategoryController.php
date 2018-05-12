@@ -29,7 +29,7 @@ class CategoryController extends Controller {
 
     /**
      * Display a listing of the resource.
-     *
+     * 展示产品种类
      * @return \Illuminate\Http\Response
      */
     public function index()

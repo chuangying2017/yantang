@@ -41,13 +41,14 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
                 'price' => $sku_data['price'],
                 'income_price' => $sku_data['income_price'],
                 'settle_price' => $sku_data['settle_price'],
-                'subscribe_price' => array_get($sku_data, 'subscribe_price', $sku_data['price']),
+                'subscribe_price' => array_get($sku_data, 'subscribe_price', $sku_data['price']),//认购价格
                 'service_fee' => array_get($sku_data, 'service_fee', 0),
                 'bar_code' => $sku_data['bar_code'],
-                'stock' => $sku_data['stock'],
-                'unit' => $sku_data['unit'],
+                'stock' => $sku_data['stock'],//库存
+                'unit' => $sku_data['unit'],//单位
                 'attr' => array_get($sku_data, 'attr', ''),
                 'type' => array_get($sku_data, 'type', ProductProtocol::TYPE_OF_ENTITY),
+                'dismode'=> array_get($sku_data, 'dismode', 1)
             ]);
 
         if ($this->isMixProductSku($sku_data)) {

@@ -2,7 +2,7 @@
 
 use App\Models\Product\Product;
 use App\Models\Product\ProductInfo;
-
+# 附加信息
 class AttachInfo extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)

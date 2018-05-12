@@ -7,7 +7,7 @@ class SetStatus extends EditorAbstract {
 
     public function handle(array $product_data, Product $product)
     {
-        $product_data['status'] = ProductProtocol::VAR_PRODUCT_STATUS_UP;
+        $product_data['status'] = ProductProtocol::VAR_PRODUCT_STATUS_DOWN;
 
         return $this->next($product_data, $product);
     }

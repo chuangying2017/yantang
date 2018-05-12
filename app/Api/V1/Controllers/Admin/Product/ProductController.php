@@ -7,6 +7,7 @@ use App\Api\V1\Transformers\Admin\Product\ProductTransformer;
 use App\Repositories\Product\ProductProtocol;
 use App\Repositories\Product\ProductRepositoryContract;
 use Illuminate\Http\Request;
+use Log;
 
 use App\Http\Requests;
 use App\Api\V1\Controllers\Controller;
@@ -65,6 +66,7 @@ class ProductController extends Controller {
      */
     public function store(ProductRequest $request)
     {
+
         $product = $this->productRepositoryContract->createProduct($request->all());
 
         return $this->response->item($product, new ProductTransformer())->setStatusCode(201);
@@ -72,7 +74,7 @@ class ProductController extends Controller {
 
     /**
      * Display the specified resource.
-     *
+     * 后台编辑 展示单个产品
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -110,12 +112,14 @@ class ProductController extends Controller {
         return $this->response->noContent();
     }
 
+    //下架
     public function down($product_id)
     {
         $product = $this->productRepositoryContract->updateProductAsDown($product_id);
         return $this->response->item($product, new ProductTransformer());
     }
 
+    //上架
     public function up($product_id)
     {
         $product = $this->productRepositoryContract->updateProductAsUp($product_id);
