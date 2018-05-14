@@ -4,11 +4,14 @@ namespace App\Api\V1\Controllers\Auth;
 
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\Auth\UserInfoTransformer;
+use App\Models\Monitors;
 use App\Repositories\Auth\User\UserContract;
 use App\Repositories\Client\ClientRepositoryContract;
+use Dingo\Api\Facade\Route;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller {
 

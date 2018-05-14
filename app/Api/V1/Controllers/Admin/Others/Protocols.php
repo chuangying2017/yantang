@@ -2,9 +2,11 @@
 
 namespace App\Api\V1\Controllers\Admin\Others;
 
+use App\Models\Monitors;
 use App\models\Protocol;
 
 use App\Repositories\Other\ProtocolGenerator;
+use Dingo\Api\Facade\Route;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -39,7 +41,10 @@ class Protocols extends Controller
      *
      * */
     public function testfile(){
-        dd(env('SEARCH_APP_NAME'));
-        dd(['zhang'=>'111','lisi'=>'wangwu']);
+      //  dd('11111');
+       // $current = Route::current()->uri();
+        // dd($current);
+        $result = Monitors::create(['action'=>'ndndo']);
+        dd($result);
     }
 }

@@ -42,8 +42,10 @@ class OrderController extends Controller {
     /**
      * Store a newly created resource in storage.
      *
+     * @param OrderGenerator $orderGenerator
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function store(OrderGenerator $orderGenerator, Request $request)
     {

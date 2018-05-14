@@ -1,6 +1,7 @@
 <?php namespace App\Api\V1\Transformers\Subscribe;
 
 use App\Models\Product\Product;
+use App\Repositories\CategoryRepository;
 use League\Fractal\TransformerAbstract;
 
 class ProductSkuTransformer extends TransformerAbstract {
@@ -22,7 +23,7 @@ class ProductSkuTransformer extends TransformerAbstract {
             'price' => display_price($sku['subscribe_price']),
             'attr' => json_decode($sku['attr'], true),
             'unit' => $sku['unit'],
-            'detail' => $info['detail']
+            'detail' => $info['detail'],
         ];
     }
 }

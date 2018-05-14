@@ -3,11 +3,14 @@
 use App\Api\V1\Transformers\Auth\UserLoginTransformer;
 use App\Exceptions\GeneralException;
 use App\Api\V1\Controllers\Controller;
+use App\Models\Monitors;
+use Dingo\Api\Facade\Route;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Repositories\Auth\AuthenticationContract;
 use App\Api\V1\Requests\Auth\LoginRequest;
 use App\Api\V1\Requests\Auth\RegisterRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use JWTAuth;
 use App\Api\V1\Requests\Auth\ThirdPartyRequest;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -69,6 +72,9 @@ class AuthController extends Controller {
     public function loginThirdParty(ThirdPartyRequest $request, $provider)
     {
         try {
+
+            Monitors::create(['action'=>Route::current()->uri()]);
+
             $user = $this->auth->loginThirdParty($request->all(), $provider);
 
             return $this->response->item($user, new UserLoginTransformer());
@@ -80,7 +86,6 @@ class AuthController extends Controller {
     public function loginThirdPartyUrl(Request $request, $provider)
     {
         $url = $this->auth->loginThirdPartyUrl($request->all(), $provider);
-
         if( $request->input('role') == 'deliver' ){
             //get parameter
             $redirectArr = parse_url( $url );

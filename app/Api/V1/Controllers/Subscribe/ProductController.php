@@ -2,6 +2,7 @@
 namespace App\Api\V1\Controllers\Subscribe;
 
 use App\Api\V1\Transformers\Subscribe\ProductSkuTransformer;
+use App\Models\Category;
 use App\Repositories\Product\Sku\SubscribeSkuRepositoryContract;
 
 use App\Http\Requests;
@@ -31,6 +32,11 @@ class ProductController extends Controller {
     public function index()
     {
         $products = $this->skuRepo->getAllSubscribedProducts();
+
+        //$products['category'] = 1;
+
+        //dd($products);
+
         return $this->response->collection($products, new ProductSkuTransformer());
     }
 
