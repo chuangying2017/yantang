@@ -5,7 +5,7 @@
  * Date: 2018/5/8/008
  * Time: 16:45
  */
-namespace App\Providers\Other;
+namespace App\Repositories\Other;
 
 class Protocol implements \App\Repositories\Other\ProtocolGenerator {
 

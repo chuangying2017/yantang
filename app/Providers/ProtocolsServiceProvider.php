@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use App\Providers\Other\Protocol;
+
+use App\Repositories\Other\Protocol;
 use App\Repositories\Other\ProtocolGenerator;
 use Illuminate\Support\ServiceProvider;
 

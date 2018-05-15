@@ -5,6 +5,7 @@ namespace App\Api\V1\Controllers\Admin\Others;
 use App\Models\Monitors;
 use App\models\Protocol;
 
+use App\Models\Settings;
 use App\Repositories\Other\ProtocolGenerator;
 use Dingo\Api\Facade\Route;
 use Dingo\Api\Routing\Helpers;
@@ -41,10 +42,8 @@ class Protocols extends Controller
      *
      * */
     public function testfile(){
-      //  dd('11111');
-       // $current = Route::current()->uri();
-        // dd($current);
-        $result = Monitors::create(['action'=>'ndndo']);
-        dd($result);
+         /*   $array = ['id'=>1,'key'=>'set','value'=>['interval_time'=>'5','active'=>'not active']];
+            dd(Settings::create($array));*/
+         dd('fneonfeonof');
     }
 }

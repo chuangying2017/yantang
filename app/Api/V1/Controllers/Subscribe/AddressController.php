@@ -37,6 +37,7 @@ class AddressController extends Controller {
 
     public function store(AddressRequest $request, PreorderAssignServiceContact $assignService, DistrictRepositoryContract $districtRepo)
     {
+
         $district_id = $request->input('district_id');
         $district = $districtRepo->get($district_id);
 
@@ -70,7 +71,7 @@ class AddressController extends Controller {
 
     public function update($address_id, AddressRequest $request, PreorderAssignServiceContact $assignService, DistrictRepositoryContract $districtRepo)
     {
-        $district = $districtRepo->get($request->input('district_id'));
+        $district = $districtRepo->get($request->input('district_id'));//区域Id
 
         $data = [
             'name' => $request->input('name'),
@@ -104,4 +105,10 @@ class AddressController extends Controller {
         return $this->response->noContent();
     }
 
+    public function show($address_id){
+
+        $address_data = $this->addressRepo->getAddress($address_id);
+
+        return $this->response->item($address_data, new AddressTransformer)->setStatusCode('201');
+    }
 }

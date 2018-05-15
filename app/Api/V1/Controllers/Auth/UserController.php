@@ -48,7 +48,7 @@ class UserController extends Controller {
 
     /**
      * Update the specified resource in storage.
-     *
+     * 更新存储中的指定资源
      * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
@@ -74,5 +74,12 @@ class UserController extends Controller {
 
     }
 
-
+    /**
+     * if number five month not consume money default by new number
+     * 如果会员在设置的月数内没有消费的话 就是一个新的会员
+     * @param Request $request
+     */
+    public function interval_time_user(Request $request){
+            
+    }
 }

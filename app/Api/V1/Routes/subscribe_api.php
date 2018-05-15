@@ -82,7 +82,10 @@ $api->group(['namespace' => 'Subscribe'/*, 'middleware' => 'api.auth'*/], functi
         $api->resource('preorders', 'PreorderController');
 	 	
         $api->resource('orders.checkout', 'CheckoutController');
+
+        # $api->post('address/{address_id}','AddressController@update');
         $api->resource('address', 'AddressController');
+
         $api->get('stations', 'StationController@index');
         $api->get('products', 'ProductController@index');
         $api->get('districts', 'DistrictController@index');
