@@ -20,7 +20,8 @@ class AddressTransformer extends TransformerAbstract {
             'display_name' => $address['display_name'],
             'zip' => $address['zip'],
             'index' => $address['index'],
-            'is_primary' => $address['is_primary']
+            'is_primary' => $address['is_primary'],
+            'default_status'=> $address['default_status']
         ];
         if ($address->relationLoaded('info')) {
             $data['longitude'] = $address['info']['longitude'];

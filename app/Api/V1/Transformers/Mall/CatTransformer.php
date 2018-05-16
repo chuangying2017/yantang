@@ -16,6 +16,7 @@ class CatTransformer extends TransformerAbstract {
             'item_count' => $group['item_count'],
             'sub_count' => $group['sub_cat_count'],
             'desc' => $group['desc'],
+            'big_image' => $group['big_image']
         ];
     }
 

@@ -35,7 +35,7 @@ class PreorderAssignService implements PreorderAssignServiceContact {
     public function assign($longitude, $latitude, $district_id)
     {
 
-        $stations = $this->stationRepo->getByDistrict($district_id);
+        $stations = $this->stationRepo->getByDistrict($district_id);//从站点station查看所有的相同的district_id List table
         if (!count($stations)) {
             $stations = $this->stationRepo->getByDistrict();
         }

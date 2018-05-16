@@ -52,8 +52,9 @@ class CategoryController extends Controller {
         $cover_image = $request->input('cover_image');
         $priority = $request->input('priority') ?: 0;
         $pid = $request->input('pid') ?: null;
+        $big_image = $request->input('big_image') ?: '0';
 
-        $category = $this->categoryRepositoryContract->create($name, $desc, $cover_image, $priority, $pid);
+        $category = $this->categoryRepositoryContract->create($name, $desc, $cover_image, $priority, $pid, $big_image);
 
         return $this->response->item($category, new CategoryTransformer());
     }
@@ -85,7 +86,8 @@ class CategoryController extends Controller {
         $cover_image = $request->input('cover_image');
         $priority = $request->input('priority') ?: 0;
         $pid = $request->input('pid') ?: null;
-        $category = $this->categoryRepositoryContract->update($id, $name, $desc, $cover_image, $priority, $pid);
+        $big_image = $request->input('big_image') ?: '0';
+        $category = $this->categoryRepositoryContract->update($id, $name, $desc, $cover_image, $priority, $pid, $big_image);
 
         return $this->response->item($category, new CategoryTransformer());
     }

@@ -2,9 +2,9 @@
 
 interface CategoryRepositoryContract {
 
-    public function create($name, $desc, $cover_image, $priority, $pid = null);
+    public function create($name, $desc, $cover_image, $priority, $pid = null, $big_image);
 
-    public function update($cat_id, $name, $desc, $cover_image, $priority, $pid = null);
+    public function update($cat_id, $name, $desc, $cover_image, $priority, $pid = null, $big_image);
 
     public function delete($cat_id);
 

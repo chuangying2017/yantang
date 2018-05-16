@@ -8,9 +8,7 @@ use App\Api\V1\Transformers\Mall\AddressTransformer;
 use App\Repositories\Address\AddressRepositoryContract;
 use App\Repositories\Station\District\DistrictRepositoryContract;
 use App\Services\Preorder\PreorderAssignServiceContact;
-use Illuminate\Http\Request;
 
-use App\Http\Requests;
 
 class AddressController extends Controller {
 
@@ -51,12 +49,12 @@ class AddressController extends Controller {
             'street' => $request->input('street'),
             'zip' => '',
             'district_id' => $district_id,
-            'longitude' => $request->input('longitude'),
-            'latitude' => $request->input('latitude'),
+            'longitude' => $request->input('longitude'),//经度
+            'latitude' => $request->input('latitude'),//维度
+            'default_status'=> $request->input('default_status') ?: 0
         ];
-
-        $station = $assignService->assign($data['longitude'], $data['latitude'], $district['id']);
-
+        $station = $assignService->assign($data['longitude'], $data['latitude'], $district['id']);//查看地址的经纬度距离哪个站点比较近
+        //这里返回的是距离最近的站点id 如果没有就是空
         if (!$station) {
             $this->response->errorNotFound('该地址暂时未支持配送');
         }
@@ -110,5 +108,19 @@ class AddressController extends Controller {
         $address_data = $this->addressRepo->getAddress($address_id);
 
         return $this->response->item($address_data, new AddressTransformer)->setStatusCode('201');
+    }
+
+
+    /*
+     *
+     * */
+    public function edit($address_id, $default_status, $being_id){//{address_id}/edit/{default_status}/{being_id}
+
+       $callback_value = $this->addressRepo->updateAddress($address_id, ['default_status'=> '0']);
+        if($callback_value){
+            $callback_value = $this->addressRepo->updateAddress($being_id, ['default_status'=>$default_status]);
+        }
+
+        return $this->response->array($this->addressRepo->getAllAddress());
     }
 }

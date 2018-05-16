@@ -20,10 +20,19 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
         return \DB::table('product_category')->where('product_id', $product_id)->pluck('cat_id');
     }
 
-    public function create($name, $desc, $cover_image, $priority = 0, $pid = null)
+    /**
+     * @param $name
+     * @param $desc
+     * @param $cover_image
+     * @param int $priority
+     * @param null $pid
+     * @param $big_image
+     * @return mixed
+     */
+    public function create($name, $desc, $cover_image, $priority = 0, $pid = null, $big_image)
     {
         $model = $this->getModel();
-        $cat = $model::create(compact('name', 'desc', 'cover_image', 'priority', 'pid'));
+        $cat = $model::create(compact('name', 'desc', 'cover_image', 'priority', 'pid', 'big_image'));
 
         if ($pid) {
             $this->makeChild($this->get($pid), $cat);
@@ -32,10 +41,10 @@ abstract class CategoryRepositoryAbstract implements CategoryRepositoryContract,
         return $cat;
     }
 
-    public function update($cat_id, $name, $desc, $cover_image, $priority, $pid = null)
+    public function update($cat_id, $name, $desc, $cover_image, $priority, $pid = null, $big_image)
     {
         $cat = $this->get($cat_id);
-        $cat->fill(compact('name', 'desc', 'cover_image', 'priority', 'pid'))->save();
+        $cat->fill(compact('name', 'desc', 'cover_image', 'priority', 'pid', 'big_image'))->save();
 
         if ($pid) {
             $this->makeChild($this->get($pid), $cat);

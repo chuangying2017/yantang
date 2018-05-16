@@ -74,7 +74,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
         });
         
         
-        $api->group(['namespace' => 'Card'], function ($api) {
+/*        $api->group(['namespace' => 'Card'], function ($api) {
             $api->group(['prefix' => 'card'], function ($api) {
                 $api->get('test', 'CategoriesController@test');
 
@@ -96,7 +96,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
                 
                 
             });
-        });
+        });*/
         
            
 

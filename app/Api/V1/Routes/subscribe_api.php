@@ -83,7 +83,8 @@ $api->group(['namespace' => 'Subscribe'/*, 'middleware' => 'api.auth'*/], functi
 	 	
         $api->resource('orders.checkout', 'CheckoutController');
 
-        # $api->post('address/{address_id}','AddressController@update');
+        $api->get('address/{address_id}/edit/{default_status}/{being_id}','AddressController@edit');
+
         $api->resource('address', 'AddressController');
 
         $api->get('stations', 'StationController@index');

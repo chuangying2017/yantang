@@ -42,7 +42,8 @@ class EloquentAddressRepository implements AddressRepositoryContract {
             'detail',
             'zip',
             'display_name',
-            'is_primary'
+            'is_primary',
+            'default_status'
         ]);
     }
 
@@ -104,6 +105,7 @@ class EloquentAddressRepository implements AddressRepositoryContract {
 
     public function setPrimaryAddress($address_id)
     {
+
         $address = $this->getPrimaryAddress(true);
         if ($address) {
             $address->is_primary = 0;
@@ -121,5 +123,14 @@ class EloquentAddressRepository implements AddressRepositoryContract {
         $addr = new Address();
         return \DB::table( $addr->getTable() )->where('id', $address_id)
                 ->update(['user_id'=>$user_id]);
+    }
+
+    /*
+     * 更改状态
+     * parameters:
+     * original_id:int,being_id:int,default_status:int
+     * */
+    public function updateDefaultStatus($address_id, $data){//更新默认值
+        return Address::where('id', $address_id)->update($data);
     }
 }
