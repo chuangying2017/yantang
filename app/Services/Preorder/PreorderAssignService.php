@@ -91,7 +91,7 @@ class PreorderAssignService implements PreorderAssignServiceContact {
 //
 //        return true;
 //    }
-
+    //查找站点距离 就近原则
     public function inSide($longitude, $latitude, $geo)
     {
         $x = $longitude;
@@ -100,11 +100,17 @@ class PreorderAssignService implements PreorderAssignServiceContact {
         $inside = false;
 
         for ($i = 0, $j = count($geo) - 1; $i < count($geo); $j = $i++) {
-            $xi = $geo[$i][0];
-            $yi = $geo[$i][1];
-            $xj = $geo[$j][0];
-            $yj = $geo[$j][1];
-
+            $xi = $geo[$i][0];//first 的经度
+            $yi = $geo[$i][1];//first 的纬度
+            $xj = $geo[$j][0];//tail 的经度
+            $yj = $geo[$j][1];//tail 的纬度
+            /*
+             * 首先会计算站点所在的经纬度
+             * 继续查出站点的所有经纬度
+             * 然后实际上如果正确一个经纬度为true的话 continue 找
+             * 原理来只要在一个经纬度的计算返回内为真就会退出 circulation
+             * 但实际上这里是没有退出循环的
+             * */
             $intersect = (($yi > $y) != ($yj > $y))
                 && ($x < ($xj - $xi) * ($y - $yi) / ($yj - $yi) + $xi);
             if ($intersect) $inside = !$inside;

@@ -3,6 +3,7 @@
 namespace App\Api\V1\Controllers\Subscribe;
 
 use App\Api\V1\Controllers\Controller;
+use App\Api\V1\Requests\Request;
 use App\Api\V1\Requests\Subscribe\AddressRequest;
 use App\Api\V1\Transformers\Mall\AddressTransformer;
 use App\Repositories\Address\AddressRepositoryContract;
@@ -56,7 +57,7 @@ class AddressController extends Controller {
         $station = $assignService->assign($data['longitude'], $data['latitude'], $district['id']);//查看地址的经纬度距离哪个站点比较近
         //这里返回的是距离最近的站点id 如果没有就是空
         if (!$station) {
-            $this->response->errorNotFound('该地址暂时未支持配送');
+            $this->response->errorNotFound('该地址暂时未支持配送002');
         }
 
         $data['station_id'] = $station['id'];
@@ -86,7 +87,7 @@ class AddressController extends Controller {
         $station = $assignService->assign($data['longitude'], $data['latitude'], $district['id']);
 
         if (!$station) {
-            $this->response->errorNotFound('该地址暂时未支持配送');
+            $this->response->errorNotFound('该地址暂时未支持配送001');
         }
 
         $data['station_id'] = $station['id'];
@@ -111,16 +112,69 @@ class AddressController extends Controller {
     }
 
 
-    /*
-     *
-     * */
-    public function edit($address_id, $default_status, $being_id){//{address_id}/edit/{default_status}/{being_id}
+    public function edit($address_id, $default_status, $being_id=null){//{address_id}/edit/{default_status}/{being_id}
 
-       $callback_value = $this->addressRepo->updateAddress($address_id, ['default_status'=> '0']);
-        if($callback_value){
-            $callback_value = $this->addressRepo->updateAddress($being_id, ['default_status'=>$default_status]);
+        if ($being_id === null){ //如果所有地址都没有默认地址的话，当设置默认地址的时候后面的being_id不用传过来
+            $this->addressRepo->updateDefault($address_id, ['default_status'=>'1']);
+            $status = ['status'=>1,'msg'=>'操作成功'];
+        }else{
+
+            $callback_value = $this->addressRepo->updateDefault($address_id, ['default_status'=> '0']);
+            switch ($callback_value){
+                case 1:
+                    $this->addressRepo->updateDefault($being_id, ['default_status'=>$default_status]);
+                    $status = ['status'=>1,'msg'=>'操作成功'];
+                    break;
+                default:
+                    $status = ['status'=>2,'msg'=>'操作失败001'];
+                    break;
+            }
         }
 
-        return $this->response->array($this->addressRepo->getAllAddress());
+
+        return $this->response->array($status);
+    }
+
+    /**
+     * @param $address_id
+     * @param AddressRequest $request
+     * @param PreorderAssignServiceContact $assignService
+     * @param DistrictRepositoryContract $districtRepo
+     * @return \Dingo\Api\Http\Response|void
+     */
+    public function updateAddress($address_id, AddressRequest $request, PreorderAssignServiceContact $assignService, DistrictRepositoryContract $districtRepo){
+        $district = $districtRepo->get($request->input('district_id'));//区域Id
+
+        $data = [
+            'name' => $request->input('name'),
+            'phone' => $request->input('phone'),
+            'province' => '广东省',
+            'city' => '广州市',
+            'district' => $district['name'],
+            'street' => $request->input('street'),
+            'zip' => '',
+            'longitude' => $request->input('longitude'),
+            'latitude' => $request->input('latitude'),
+        ];
+
+        $request->input('detail') == '' ?: $data['detail'] = $request->input('detail');
+
+        $station = $assignService->assign($data['longitude'], $data['latitude'], $district['id']);
+
+        if (!$station) {
+            $this->response->errorNotFound('该地址暂时未支持配送003');
+        }
+
+        $data['station_id'] = $station['id'];
+
+        $address = $this->addressRepo->updateAddress($address_id, $data);
+
+        dd($address);
+
+        if(!$address){
+            $this->response->errorNotFound('更新地址失败');
+        }
+
+        $this->response->item($address, new AddressTransformer())->setStatusCode(201);
     }
 }

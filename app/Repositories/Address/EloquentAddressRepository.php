@@ -30,7 +30,7 @@ class EloquentAddressRepository implements AddressRepositoryContract {
         return $address;
     }
 
-    protected function filterData($data)
+    public function filterData($data)
     {
         return array_only($data, [
             'name',
@@ -57,7 +57,7 @@ class EloquentAddressRepository implements AddressRepositoryContract {
     protected function checkIsSubscribe($data, $address)
     {
         if (array_get($data, 'station_id', false)) {
-            $address['is_subscribe'] = 1;
+            $address['is_subscribe'] = 1;//订购地址1是订购地址
             $address->save();
             $this->attachAddressInfo($data, $address['id']);
             $address->load('info');
@@ -83,11 +83,25 @@ class EloquentAddressRepository implements AddressRepositoryContract {
 
     public function updateAddress($address_id, $data)
     {
+
+        $address = Address::query()->where('id', $address_id)->update($this->filterData($data));
+
+        if(!$address){
+            return false;
+        }
+        $this->checkIsPrimary($data, $address_id);
+        $address = $this->checkIsSubscribe($data, Address::find($address_id));
+        return $address;
+    }
+    /*
+      //Original mode
+      public function updateAddress($address_id, $data)
+    {
         $address = Address::query()->where('id', $address_id)->update($this->filterData($data));
         $this->checkIsPrimary($data, $address['id']);
         $address = $this->checkIsSubscribe($data, $address);
         return $address;
-    }
+    }*/
 
     public function deleteAddress($address_id)
     {
@@ -125,12 +139,7 @@ class EloquentAddressRepository implements AddressRepositoryContract {
                 ->update(['user_id'=>$user_id]);
     }
 
-    /*
-     * 更改状态
-     * parameters:
-     * original_id:int,being_id:int,default_status:int
-     * */
-    public function updateDefaultStatus($address_id, $data){//更新默认值
-        return Address::where('id', $address_id)->update($data);
+    public function updateDefault($address_id, $data){
+        return Address::query()->where('id', $address_id)->update($this->filterData($data));
     }
 }
