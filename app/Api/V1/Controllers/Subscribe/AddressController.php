@@ -155,6 +155,7 @@ class AddressController extends Controller {
             'zip' => '',
             'longitude' => $request->input('longitude'),
             'latitude' => $request->input('latitude'),
+            'district_id' => $district['id'],
         ];
 
         $request->input('detail') == '' ?: $data['detail'] = $request->input('detail');
@@ -169,12 +170,10 @@ class AddressController extends Controller {
 
         $address = $this->addressRepo->updateAddress($address_id, $data);
 
-        dd($address);
-
         if(!$address){
             $this->response->errorNotFound('更新地址失败');
         }
 
-        $this->response->item($address, new AddressTransformer())->setStatusCode(201);
+      return  $this->response->item($address, new AddressTransformer())->setStatusCode(201);
     }
 }

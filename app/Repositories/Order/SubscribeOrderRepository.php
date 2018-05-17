@@ -6,7 +6,7 @@ class SubscribeOrderRepository extends AdminOrderRepositoryAbstract {
 
     protected function setOrderType()
     {
-        $this->type = OrderProtocol::ORDER_TYPE_OF_SUBSCRIBE;
+        $this->type = OrderProtocol::ORDER_TYPE_OF_SUBSCRIBE;//setting orders type
     }
 
 }

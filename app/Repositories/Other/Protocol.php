@@ -7,7 +7,8 @@
  */
 namespace App\Repositories\Other;
 
-class Protocol implements \App\Repositories\Other\ProtocolGenerator {
+
+class Protocol implements ProtocolGenerator {
 
     protected $fields = ['user_id','protocol_content','type','title'];
 

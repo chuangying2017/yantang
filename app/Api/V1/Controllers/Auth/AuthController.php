@@ -48,7 +48,7 @@ class AuthController extends Controller {
     }
 
     /**
-     * @param LoginRequest $request
+     * @param Request $request
      * @return \Dingo\Api\Http\Response
      */
     public function postLogin(Request $request)

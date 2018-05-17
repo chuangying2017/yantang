@@ -60,7 +60,7 @@ class UserController extends Controller {
         return $this->getUserInfo();
     }
 
-
+    //可以在这里获取每个用户在 WeChat request here fetch user sign in status
     public function weixinInfo()
     {
         $openId = access()->getProviderId();

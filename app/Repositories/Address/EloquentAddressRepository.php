@@ -93,6 +93,7 @@ class EloquentAddressRepository implements AddressRepositoryContract {
         $address = $this->checkIsSubscribe($data, Address::find($address_id));
         return $address;
     }
+
     /*
       //Original mode
       public function updateAddress($address_id, $data)
