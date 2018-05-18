@@ -85,6 +85,7 @@ $api->group(['namespace' => 'Subscribe'/*, 'middleware' => 'api.auth'*/], functi
 
         $api->get('address/{address_id}/edit/{default_status}/{being_id?}','AddressController@edit');
         $api->put('addressUpdate/{address_id}','AddressController@updateAddress')->where('address_id','\d+');
+        $api->put('addressDelete/{address_id}/{existing_id?}', 'AddressController@deleteFunction');
         $api->resource('address', 'AddressController');
 
         $api->get('stations', 'StationController@index');

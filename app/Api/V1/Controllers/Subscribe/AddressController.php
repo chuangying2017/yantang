@@ -176,4 +176,18 @@ class AddressController extends Controller {
 
       return  $this->response->item($address, new AddressTransformer())->setStatusCode(201);
     }
+
+    /*
+     * 重新定义删除
+     * */                           //删除的id     //要设置默认的id
+    public function deleteFunction($address_id, $existing_id=null){
+
+            $this->addressRepo->deleteAddress($address_id);
+
+            if($existing_id){
+                $this->addressRepo->updateDefault($existing_id, ['default_status'=>1]);
+            }
+
+            return $this->response->array(['status'=>1,'msg'=>'successfully']);
+    }
 }

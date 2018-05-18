@@ -29,4 +29,5 @@ class Protocol implements ProtocolGenerator {
         // TODO: Implement getAllProtocol() method.
         return \App\models\Protocol::all($this->fields);
     }
+
 }

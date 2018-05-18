@@ -204,6 +204,7 @@ return [
         Overtrue\LaravelWechat\ServiceProvider::class,
         Overtrue\LaravelPinyin\ServiceProvider::class,
         \App\Providers\ProtocolsServiceProvider::class,
+        \App\Services\SettingsServiceProviders::class,
     ],
 
     /*

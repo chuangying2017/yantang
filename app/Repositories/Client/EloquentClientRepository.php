@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Client;
 
 use App\Models\Client\Client;
+use App\Models\Settings;
 use App\Models\Subscribe\Preorder;
 use App\Services\Client\ClientProtocol;
 use Illuminate\Support\Str;
@@ -116,5 +117,12 @@ class EloquentClientRepository implements ClientRepositoryContract {
         return Client::where('user_id', $user_id)->update(['status' => ClientProtocol::STATUS_OK]);
     }
 
+    public function number_status(){
 
+        //首先拿到设置的会员间隔时间
+
+        $interval_status = Settings::query()->find(1,['value']);
+
+        $interval_status['value']['interval_time'];//拿到间隔时间数
+    }
 }

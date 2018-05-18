@@ -23,6 +23,8 @@ class UserController extends Controller {
 
     public function index(Request $request)
     {
+/*        $this->number_order_status();
+        die;*/
         $status = $request->input('status');
         $type = $request->input('type');
 
@@ -30,8 +32,7 @@ class UserController extends Controller {
             $order_nos = $request->input('orderNos');
             $order_nos = explode(',', $order_nos);
             $clients = $this->clientRepo->getAllClientsByOrderNo($order_nos);
-        }
-        else {
+        } else {
             $keyword = $request->input('keyword') ?: null;
 			//file_put_contents("keyword.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($keyword)."\n\n");
             $clients = $this->clientRepo->getClientsPaginated($keyword, $status, true);
@@ -40,4 +41,13 @@ class UserController extends Controller {
         return $this->response->paginator($clients, new ClientUserTransformer());
     }
 
+
+    public function number_order_status(){
+
+
+            $call = $this->clientRepo->number_status();
+
+            dd($call['value']['interval_time']);
+
+    }
 }
