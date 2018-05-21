@@ -42,6 +42,8 @@ class EloquentProductRepository implements ProductRepositoryContract {
     public function createProduct($product_data)
     {
 
+        $product_data['status'] = ProductProtocol::VAR_PRODUCT_STATUS_DOWN; //默认创建产品是下架状态
+
         $handler = $this->getCreateProductHandler();
 
         $result = \DB::transaction(function () use ($handler, $product_data) {

@@ -66,8 +66,11 @@ class ProductController extends Controller {
      */
     public function store(ProductRequest $request)
     {
-
-        $product = $this->productRepositoryContract->createProduct($request->all());
+        try{
+            $product = $this->productRepositoryContract->createProduct($request->all());
+        }catch (\Exception $exception){
+            Log::error($exception->getMessage());
+        }
 
         return $this->response->item($product, new ProductTransformer())->setStatusCode(201);
     }

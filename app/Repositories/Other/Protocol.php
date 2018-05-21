@@ -21,13 +21,13 @@ class Protocol implements ProtocolGenerator {
     {
         // TODO: Implement updateProtocol() method.
         unset($protocol_data['token']);
-        return \App\models\Protocol::where($protocol_where)->update($protocol_data);
+        return \App\Models\Protocol::where($protocol_where)->update($protocol_data);
     }
 
     public function getAllProtocol()
     {
         // TODO: Implement getAllProtocol() method.
-        return \App\models\Protocol::all($this->fields);
+        return \App\Models\Protocol::all($this->fields);
     }
 
 }

@@ -3,7 +3,10 @@
 namespace App\Api\V1\Controllers\Admin\Others;
 
 use App\Models\Monitors;
+use App\Models\Product\Category;
+use App\Models\Promotion\Activity;
 use App\models\Protocol;
+use Illuminate\Support\Facades\DB;
 use Log;
 use App\Models\Settings;
 use App\Repositories\Other\ProtocolGenerator;
@@ -23,7 +26,12 @@ class Protocols extends Controller
 
     //show protocol data
     public function index(){
-        return $this->ProtocolRepositoryContact->getAllProtocol();
+        try{
+            return $this->ProtocolRepositoryContact->getAllProtocol();
+        }catch (\Exception $exception){
+            dd($exception->getMessage());
+        }
+
     }
     //
     public function protocoledit(Request $request){
@@ -49,7 +57,13 @@ class Protocols extends Controller
     public function testfile(){
          /*   $array = ['id'=>1,'key'=>'set','value'=>['interval_time'=>'5','active'=>'not active']];
             dd(Settings::create($array));*/
-         dd('fneonfeonof');
+         try{
+             $result = Category::all();
+             dd($result);
+         }catch (\Exception $exception){
+             dd($exception->getMessage());
+         }
+
     }
 
     //setting default value
