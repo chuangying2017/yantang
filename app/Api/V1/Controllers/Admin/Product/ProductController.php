@@ -52,7 +52,7 @@ class ProductController extends Controller {
         }
 
         foreach ($products as $key=>$product){
-            $products[$key]['url'] =  config('services.weixin.redirect_urls.linkWeChatProducts').'mall/subsproducts/'.$product['id'];
+            $products[$key]['url'] =  config('services.weixin.redirect_urls.linkWeChatProducts').'yt-client/#!/mall/subsproducts/'.$product['id'];
         }
 
         return $this->response->paginator($products, new ProductTransformer());

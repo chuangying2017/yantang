@@ -57,12 +57,7 @@ class Protocols extends Controller
     public function testfile(){
          /*   $array = ['id'=>1,'key'=>'set','value'=>['interval_time'=>'5','active'=>'not active']];
             dd(Settings::create($array));*/
-         try{
-             $result = Category::all();
-             dd($result);
-         }catch (\Exception $exception){
-             dd($exception->getMessage());
-         }
+       echo phpinfo();
 
     }
 

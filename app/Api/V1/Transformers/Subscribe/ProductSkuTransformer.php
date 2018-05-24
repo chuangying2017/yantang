@@ -11,6 +11,7 @@ class ProductSkuTransformer extends TransformerAbstract {
         $sku = $product->skus->first();
         $cat = $product->cats->first();
         $info = $product->info;
+        $image = $product->images->pluck('media_id')->all();
         return [
             'id' => $sku['id'],
             'name' => $sku['name'],
@@ -24,6 +25,8 @@ class ProductSkuTransformer extends TransformerAbstract {
             'attr' => json_decode($sku['attr'], true),
             'unit' => $sku['unit'],
             'detail' => $info['detail'],
+            'images' => array_map(function ($media_id){ return config('filesystems.disks.qiniu.domains.custom').$media_id;},$image),
+            'dismode' => $sku['dismode'],
         ];
     }
 }
