@@ -21,10 +21,15 @@ class UserController extends Controller {
         $this->clientRepo = $clientRepo;
     }
 
+    /*
+     * 展示会员信息
+     * 展示会员间隔时间
+     * */
     public function index(Request $request)
     {
-/*        $this->number_order_status();
-        die;*/
+
+        $this->number_order_status();
+        die;
         $status = $request->input('status');
         $type = $request->input('type');
 
@@ -46,8 +51,9 @@ class UserController extends Controller {
 
 
             $call = $this->clientRepo->number_status();
+            dd('111');
+            dd(date('Y-m-d H:i:s',strtotime("-{$call['value']['interval_time']} month")));
 
-            dd($call['value']['interval_time']);
 
     }
 }

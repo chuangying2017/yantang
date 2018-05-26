@@ -65,7 +65,7 @@ class AuthController extends Controller {
     }
 
     /**
-     * @param Request $request
+     * @param ThirdPartyRequest $request
      * @param $provider
      * @return mixed
      */
@@ -73,7 +73,7 @@ class AuthController extends Controller {
     {
         try {
 
-            Monitors::create(['action'=>Route::current()->uri()]);
+           // Monitors::create(['action'=>Route::current()->uri()]);
 
             $user = $this->auth->loginThirdParty($request->all(), $provider);
 

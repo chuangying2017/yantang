@@ -7,6 +7,7 @@ class SaveTempOrder extends GenerateHandlerAbstract {
 
     /**
      * @param TempOrder $temp_order
+     * @return TempOrder
      */
     public function handle(TempOrder $temp_order)
     {

@@ -47,7 +47,7 @@ class OrderCheckoutService implements OrderCheckoutContract {
 
     protected function payWithPingxx($order_id, $pay_channel)
     {
-        $billing = $this->billingRepo->getBillingOfType($order_id, OrderProtocol::BILLING_TYPE_OF_MONEY);
+        $billing = $this->billingRepo->getBillingOfType($order_id, OrderProtocol::BILLING_TYPE_OF_MONEY);//查询账单
 
         if (!$billing) {
             throw new \Exception('订单无支付信息');

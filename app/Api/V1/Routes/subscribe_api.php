@@ -24,7 +24,6 @@ $api->group(['namespace' => 'Subscribe'/*, 'middleware' => 'api.auth'*/], functi
     });
 
     //服务部端
-
     $api->group(['prefix' => 'stations'], function ($api) {
 
         $api->get('board', 'StationBoardController@index');

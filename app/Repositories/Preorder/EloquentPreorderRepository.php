@@ -581,4 +581,5 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         
         return $query->get();
     }
+
 }

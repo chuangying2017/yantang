@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Client;
 
+use App\Models\Access\User\User;
 use App\Models\Client\Client;
 use App\Models\Settings;
 use App\Models\Subscribe\Preorder;
@@ -123,6 +124,8 @@ class EloquentClientRepository implements ClientRepositoryContract {
 
         $interval_status = Settings::query()->find(1,['value']);
 
-        $interval_status['value']['interval_time'];//拿到间隔时间数
+        $Time_interval_between = date('Y-m-d H:i:s',strtotime("-{$interval_status['value']['interval_time']} month")).','.date('Y-m-d H:i:s');
+
+        //$UserData = User::
     }
 }

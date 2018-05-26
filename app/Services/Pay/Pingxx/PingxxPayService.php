@@ -27,6 +27,8 @@ class PingxxPayService implements ThirdPartyPayContract {
     }
 
     /**
+     * master create ping++ pay orders verify message
+     * 主要在这里创建ping++支付信息
      * @param BillingContract $billing
      * @return \Pingpp\Charge
      * @throws \Exception
