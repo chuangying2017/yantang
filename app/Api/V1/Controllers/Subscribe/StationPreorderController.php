@@ -108,23 +108,13 @@ class StationPreorderController extends Controller {
         return $this->response->array(['data' => $assign['preorder_id']]);
     }
 
-<<<<<<< HEAD
     public function ExcelDownload_station($status = 'shipping'){
 
         $return_result = $this->orderRepo->getAll(access()->stationId(),null,null,null,$status);
 
         return ExcelService::downloadStationExcel($return_result);
     }
-
-
-=======
-    public function ExcelDownload_station(){
-        $return_result = $this->orderRepo->getAll();
-        dd($return_result);
-    }
-
->>>>>>> f5310e389554bcf626a5e2fe51feee7ab8546e93
-
+    
     protected function transformOrder($orders)
     {
         $product_skus_info = [];
