@@ -125,9 +125,9 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if (!is_null($keyword)) {
             $query->where(function ($query) use ($keyword) {
-                $query->where('order_no', $keyword)
-                    ->orWhere('phone', $keyword)
-                    ->orWhere('name', $keyword);
+                $query->where('order_no', 'like',"%$keyword%")
+                    ->orWhere('phone','like',"%$keyword%")
+                    ->orWhere('name','like',"%$keyword%");
             });
         }
 
