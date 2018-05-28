@@ -110,7 +110,7 @@ class StationPreorderController extends Controller {
 
     public function ExcelDownload_station($status = 'shipping'){
 
-        $return_result = $this->orderRepo->getAll(access()->stationId(),null,null,null,$status);
+        $return_result = $this->orderRepo->getAll(access()->stationId(),null,null,null,$status == 'all' ? null : $status);
 
         return ExcelService::downloadStationExcel($return_result);
     }
