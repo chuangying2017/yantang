@@ -346,7 +346,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     public function getDayPreorderWithProductsByStation($station_id, $date, $daytime = null)
     {
         $query_date = ($date instanceof Carbon) ? $date : Carbon::createFromFormat('Y-m-d', $date);
-
+        //
         $query = Preorder::query()
             ->with(['skus' => function ($query) {
                 $query->where('remain', '>', 0);
