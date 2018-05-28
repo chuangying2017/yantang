@@ -106,11 +106,6 @@ class StationPreorderController extends Controller {
         return $this->response->array(['data' => $assign['preorder_id']]);
     }
 
-    public function ExcelDownload_station(){
-        $return_result = $this->orderRepo->getAll();
-        dd($return_result);
-    }
-
 
     protected function transformOrder($orders)
     {
