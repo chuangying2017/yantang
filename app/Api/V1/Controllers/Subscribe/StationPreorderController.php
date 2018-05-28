@@ -139,8 +139,4 @@ class StationPreorderController extends Controller {
         return $product_skus_info;
     }
 
-
-    public function testuser(){
-
-    }
 }
