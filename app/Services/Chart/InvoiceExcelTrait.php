@@ -209,5 +209,6 @@ trait InvoiceExcelTrait {
     {
         return 'invoices/stations/' . $date . '/';
     }
+    
 
 }

@@ -8,6 +8,8 @@ use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Repositories\Preorder\Assign\PreorderAssignRepositoryContract;
 use App\Repositories\Preorder\Deliver\PreorderDeliverRepository;
 use App\Repositories\Station\StationPreorderRepositoryContract;
+use App\Services\Chart\ExcelService;
+use App\Services\Chart\InvoiceExcelTrait;
 use App\Services\Preorder\PreorderManageServiceContract;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -105,6 +107,14 @@ class StationPreorderController extends Controller {
 
         return $this->response->array(['data' => $assign['preorder_id']]);
     }
+
+    public function ExcelDownload_station($status = 'shipping'){
+
+        $return_result = $this->orderRepo->getAll(access()->stationId(),null,null,null,$status);
+
+        return ExcelService::downloadStationExcel($return_result);
+    }
+
 
 
     protected function transformOrder($orders)

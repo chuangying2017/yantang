@@ -56,7 +56,7 @@ class StationInvoiceController extends Controller {
     public function show(Request $request, $invoice_no)
     {
         $invoice = $this->invoiceRepo->get($invoice_no, false);
-
+  
         $this->checkAuth($invoice);
 
 
