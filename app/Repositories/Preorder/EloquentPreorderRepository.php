@@ -353,7 +353,8 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             }])
             ->where('station_id', $station_id)
             ->where('status', PreorderProtocol::ORDER_STATUS_OF_SHIPPING)//发货中
-            ->where('start_time', '<=', $query_date)
+            // ->where('start_time', '<=', $query_date)
+            ->whereBetween('start_time',[Carbon::today(),Carbon::now()])
             ->where(function ($query) use ($query_date) {
                 //非暂停中
                 $query->whereNull('pause_time')->orWhere('pause_time', '>', $query_date)
