@@ -56,6 +56,7 @@ class OrderBillingRepository implements BillingRepositoryContract {
         return OrderBilling::query()->find($billing_no);
     }
 
+    //获取账单类型
     public function getBillingOfType($order_id, $pay_type = BillingProtocol::BILLING_TYPE_OF_MONEY)
     {
         return OrderBilling::order($order_id)->where('pay_type', $pay_type)->first();

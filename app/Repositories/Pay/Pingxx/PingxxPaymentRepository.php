@@ -21,6 +21,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
         Pingpp::setApiKey(config('services.pingxx.api_key'));
     }
 
+    //创建ping++ 支付
     public function createCharge($amount, $order_no, $channel = null)
     {
         $payment_no = self::getPaymentNo($order_no, $channel);

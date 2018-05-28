@@ -48,6 +48,23 @@ class ProductController extends Controller {
 
         return $this->response->paginator($products, new ProductTransformer());
     }
+/*    public function index(Request $request)
+    {
+        $brand = $request->input('brand');
+        $cat = $request->input('cat');
+        $group = $request->input('group');
+
+        $keyword = $request->input('keyword');
+        $status = ProductProtocol::VAR_PRODUCT_STATUS_UP;
+
+        if ($keyword) {
+            $products = $this->productRepo->search($keyword, compact('brand', 'cat', 'group', 'status'));
+        } else {
+            $products = $this->productRepo->getProductsPaginated($brand, $cat, $group, ProductProtocol::TYPE_OF_ENTITY);
+        }
+
+        return $this->response->paginator($products, new ProductTransformer());
+    }*/
 
 
     /**

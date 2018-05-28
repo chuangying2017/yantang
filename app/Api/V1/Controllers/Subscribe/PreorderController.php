@@ -8,6 +8,7 @@ use App\Api\V1\Transformers\Subscribe\Preorder\PreorderDeliverTransformer;
 use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Repositories\Preorder\Deliver\PreorderDeliverRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
+use App\Repositories\Statement\StationStatementRepository;
 use App\Services\Preorder\PreorderAssignServiceContact;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,7 @@ class PreorderController extends Controller {
     /**
      * PreorderController constructor.
      * @param PreorderRepositoryContract $preorderRepo
+     * @param StationStatementRepository $stationStatementRepository
      */
     public function __construct(PreorderRepositoryContract $preorderRepo)
     {
@@ -39,6 +41,10 @@ class PreorderController extends Controller {
         return $this->response->paginator($orders, new PreorderTransformer());
     }
 
+    /**
+     * @param $order_id
+     * @return \Dingo\Api\Http\Response
+     */
     public function show($order_id)
     {
         $order = $this->preorderRepo->get($order_id, true);
