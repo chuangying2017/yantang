@@ -4,7 +4,7 @@
 /**
  * 订奶系统
  */
-$api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function ($api) {
+$api->group(['namespace' => 'Subscribe'/*, 'middleware' => 'api.auth'*/], function ($api) {
 
     //配送员端
     $api->group(['prefix' => 'staffs'], function ($api) {
