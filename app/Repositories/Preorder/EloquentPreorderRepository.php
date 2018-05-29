@@ -590,7 +590,9 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         $end_time = Carbon::createFromFormat('Y-m-d H:i:s',$array['etime'].' 23:59:59');
         $preorderQuery = Preorder::query()->with(['skus' => function($query){
             $query->where('remain','>', 0);
-        }])->whereBetween('start_time',[$start_time,$end_time])
+        }])
+            ->where('station_id',access()->stationId())
+            ->whereBetween('start_time',[$start_time,$end_time])
             ->where('status',PreorderProtocol::ORDER_STATUS_OF_SHIPPING)
              ->where(function ($query) use ($end_time) {
                 //非暂停中

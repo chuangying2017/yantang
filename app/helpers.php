@@ -390,7 +390,33 @@ function submitStatus($status){
     return $arr;
 }
 
+if (!function_exists('transformStationOrder')) {
 
+    function transformStationOrder($orders){
+
+        $product_skus_info = [];
+        foreach ($orders as $key => $order) {
+            if (count($order['skus']) <= 0) {
+                continue;
+            }
+            foreach ($order['skus'] as $sku) {
+
+                $sku_key = $sku['product_sku_id'];
+                if (isset($product_skus_info[$sku_key])) {
+                    $product_skus_info[$sku_key]['quantity'] += $sku['quantity'];
+                } else {
+                    $product_skus_info[$sku_key]['staff_id'] = $order['staff_id'];
+                    $product_skus_info[$sku_key]['product_id'] = $sku['product_id'];
+                    $product_skus_info[$sku_key]['product_sku_id'] = $sku['product_sku_id'];
+                    $product_skus_info[$sku_key]['quantity'] = $sku['quantity'];
+                    $product_skus_info[$sku_key]['name'] = $sku['name'];
+                }
+            }
+        }
+
+        return $product_skus_info;
+    }
+}
 
 
 

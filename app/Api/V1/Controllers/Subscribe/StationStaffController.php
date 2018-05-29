@@ -2,11 +2,13 @@
 
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Station\ReAssignStaffRequest;
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffPreorderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
 use App\Repositories\Station\StationPreorderRepositoryContract;
 use Illuminate\Http\Request;
+use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use DB;
 
@@ -50,44 +52,7 @@ class StationStaffController extends Controller {
 
         $call_func_result = $stationPreorderRepositoryContract->getAllStaffDayDelivery($request->only(['staff','stime','etime']));
 
-        dd(action('App\Api\V1\Controllers\Subscribe\StationPreorderController@transformOrder',$call_func_result));
-
-        return $this->response->array(['data'=>array_values()]);
-
-/*        $query = DB::table('preorder_deliver as a');
-        
-        if(!is_null($staff))
-        {
-            $query->where('a.staff_id',$staff);
-        }
-        if(!is_null($stime))
-        {
-            $query->where('a.deliver_at','>=',$stime);
-        }
-        if(!is_null($etime))
-        {
-            $query->where('a.deliver_at','<=',$etime);
-        }
-        
-        $list = $query
-        ->join('preorder_skus as c','a.preorder_id','=','c.preorder_id')
-        ->select(DB::raw('a.id, a.staff_id,c.product_id, c.name, sum(c.quantity) quantity'))
-        ->groupBy('c.product_id')
-        ->get();
-        
-        
-        return response()->json(['data'=>$list,'state' => '1']);*/
-        
-        /* SELECT a.id, a.staff_id, c.name, c.quantity
-        FROM  `preorder_deliver` AS a
-        JOIN preorders AS b ON a.preorder_id = b.id
-        JOIN preorder_skus AS c ON b.id = c.preorder_id
-        WHERE a.`staff_id` =479
-        AND a.deliver_at =  '2017-03-10 00:00:00'
-        LIMIT 0 , 30 */
-        
-        
-        
+        return $this->response->array(['data' => array_values(transformStationOrder($call_func_result))]);
     }
     /*
     public function distributormilk(Request $request)
