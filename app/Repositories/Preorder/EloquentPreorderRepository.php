@@ -354,9 +354,10 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             ->where('station_id', $station_id)
             ->where('status', PreorderProtocol::ORDER_STATUS_OF_SHIPPING)//发货中
             ->whereBetween('start_time',[Carbon::createFromFormat('Y-m-d H:i:s',$date.'00:00:00'),$query_date])//Carbon::now()
+                //->where('start_time', '<=', $query_date)
             ->where(function ($query) use ($query_date) {
                 //非暂停中
-                $query->whereNull('pause_time')->orWhere('pause_time', '>', $query_date)
+                $query->whereNull('pause_time')->orWhere('pause_time', '>', $query_date)//pause time gt now time
                     ->orWhere(function ($query) use ($query_date) {
                         $query->whereNotNull('restart_time')->where('restart_time', '<=', $query_date);
                     });
@@ -583,4 +584,29 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
+    public function getAllStaffDayDelivery(array $array = []){
+
+        $start_time = Carbon::createFromFormat('Y-m-d H:i:s',$array['stime'].' 00:00:00');
+        $end_time = Carbon::createFromFormat('Y-m-d H:i:s',$array['etime'].' 23:59:59');
+        $preorderQuery = Preorder::query()->with(['skus' => function($query){
+            $query->where('remain','>', 0);
+        }])->whereBetween('start_time',[$start_time,$end_time])
+            ->where('status',PreorderProtocol::ORDER_STATUS_OF_SHIPPING)
+             ->where(function ($query) use ($end_time) {
+                //非暂停中
+                $query->whereNull('pause_time')->orWhere('pause_time', '>', $end_time)
+                    ->orWhere(function ($query) use ($end_time) {
+                        $query->whereNotNull('restart_time')->where('restart_time', '<=', $end_time);
+                    });
+            });
+
+        if($array['staff'])
+            $preorderQuery->where('staff_id',$array['staff']);
+
+        if($end_time->isWeekend())
+            $preorderQuery->where('weekday_type',PreorderProtocol::WEEKDAY_TYPE_OF_ALL);
+
+        return $preorderQuery->get();
+
+    }
 }

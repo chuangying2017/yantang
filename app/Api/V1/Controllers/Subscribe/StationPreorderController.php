@@ -33,6 +33,7 @@ class StationPreorderController extends Controller {
         $this->orderRepo = $orderRepo;
     }
 
+    //milkman Daily delivery information
     public function daily(Request $request)
     {
         $day = $request->input('date');

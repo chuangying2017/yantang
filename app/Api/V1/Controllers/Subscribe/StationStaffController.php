@@ -45,13 +45,16 @@ class StationStaffController extends Controller {
         return $this->response->collection($staffs, new StaffTransformer());
     }
     
-    public function distributormilk(Request $request)
+    public function distributormilk(Request $request, StationPreorderRepositoryContract $stationPreorderRepositoryContract)
     {
-        $staff = $request->input('staff') ?: null;
-        $stime = $request->input('stime') ?: null;
-        $etime = $request->input('etime') ?: null;
-        
-        $query = DB::table('preorder_deliver as a');
+
+        $call_func_result = $stationPreorderRepositoryContract->getAllStaffDayDelivery($request->only(['staff','stime','etime']));
+
+        dd(action('App\Api\V1\Controllers\Subscribe\StationPreorderController@transformOrder',$call_func_result));
+
+        return $this->response->array(['data'=>array_values()]);
+
+/*        $query = DB::table('preorder_deliver as a');
         
         if(!is_null($staff))
         {
@@ -66,14 +69,14 @@ class StationStaffController extends Controller {
             $query->where('a.deliver_at','<=',$etime);
         }
         
-        $list = $query/* ->join('preorders as b','a.preorder_id','=','b.id') */
+        $list = $query
         ->join('preorder_skus as c','a.preorder_id','=','c.preorder_id')
         ->select(DB::raw('a.id, a.staff_id,c.product_id, c.name, sum(c.quantity) quantity'))
         ->groupBy('c.product_id')
         ->get();
         
         
-        return response()->json(['data'=>$list,'state' => '1']);
+        return response()->json(['data'=>$list,'state' => '1']);*/
         
         /* SELECT a.id, a.staff_id, c.name, c.quantity
         FROM  `preorder_deliver` AS a
@@ -86,6 +89,45 @@ class StationStaffController extends Controller {
         
         
     }
+    /*
+    public function distributormilk(Request $request)
+    {
+        $staff = $request->input('staff') ?: null;
+        $stime = $request->input('stime') ?: null;
+        $etime = $request->input('etime') ?: null;
+
+        $query = DB::table('preorder_deliver as a');
+
+        if(!is_null($staff))
+        {
+            $query->where('a.staff_id',$staff);
+        }
+        if(!is_null($stime))
+        {
+            $query->where('a.deliver_at','>=',$stime);
+        }
+        if(!is_null($etime))
+        {
+            $query->where('a.deliver_at','<=',$etime);
+        }
+        // ->join('preorders as b','a.preorder_id','=','b.id')
+        $list = $query
+        ->join('preorder_skus as c','a.preorder_id','=','c.preorder_id')
+        ->select(DB::raw('a.id, a.staff_id,c.product_id, c.name, sum(c.quantity) quantity'))
+        ->groupBy('c.product_id')
+        ->get();
+
+
+        return response()->json(['data'=>$list,'state' => '1']);
+//         SELECT a.id, a.staff_id, c.name, c.quantity
+//        FROM  `preorder_deliver` AS a
+//        JOIN preorders AS b ON a.preorder_id = b.id
+//        JOIN preorder_skus AS c ON b.id = c.preorder_id
+//        WHERE a.`staff_id` =479
+//        AND a.deliver_at =  '2017-03-10 00:00:00'
+//        LIMIT 0 , 30
+    }
+    */
 
 
     /**
