@@ -37,6 +37,7 @@ class PreorderController extends Controller {
     {
         $status = $request->input('status') ?: null;
         $orders = $this->preorderRepo->getPaginatedByUser(access()->id(), $status);
+
 			//file_put_contents("test.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($orders)."\n\n");	
         return $this->response->paginator($orders, new PreorderTransformer());
     }

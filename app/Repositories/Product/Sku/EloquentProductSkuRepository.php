@@ -234,9 +234,10 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
 
     public function getAllSubscribedProducts()
     {
-        return Product::query()->with('skus', 'cats', 'info','images')->where('status', ProductProtocol::VAR_PRODUCT_STATUS_UP)->whereHas('groups', function ($query) {
+        return Product::query()->with('skus',  'cats','info','images')->where('status', ProductProtocol::VAR_PRODUCT_STATUS_UP)->get();
+        /*return Product::query()->with('skus', 'cats', 'info','images')->where('status', ProductProtocol::VAR_PRODUCT_STATUS_UP)->whereHas('groups', function ($query) {
             $query->where('id', CategoryProtocol::ID_OF_SUBSCRIBE_GROUP);
-        })->get();
+        })->get();*/
     }
 
     public function getMixProducts()

@@ -39,6 +39,16 @@ class ProductController extends Controller {
 
         return $this->response->collection($products, new ProductSkuTransformer());
     }
+    /*    public function index()
+    {
+        $products = $this->skuRepo->getAllSubscribedProducts();
+
+        //$products['category'] = 1;
+
+        //dd($products);
+
+        return $this->response->collection($products, new ProductSkuTransformer());
+    }*/
 
 }
 

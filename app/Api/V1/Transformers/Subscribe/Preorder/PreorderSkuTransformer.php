@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Transformers\Subscribe\Preorder;
 
+
 use League\Fractal\TransformerAbstract;
 use App\Models\Subscribe\PreorderSku;
 
@@ -16,6 +17,7 @@ class PreorderSkuTransformer extends TransformerAbstract {
             'total' => $sku['total'],
             'remain' => $sku['remain'],
             'per_day' => $sku->per_day,
+            'show_unit' => $sku->sku['unit']
         ];
 
         return $data;

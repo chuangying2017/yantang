@@ -62,7 +62,9 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getPaginatedByUser($user_id, $status = null, $start_time = null, $end_time = null, $per_page = PreorderProtocol::PREORDER_PER_PAGE)
     {
-        $query = Preorder::with('skus');
+        $query = Preorder::with(['skus' => function($query){
+            $query->with('sku');
+        }]);
 		
         if (!is_null($user_id)) {
             $query->where('user_id', $user_id);
@@ -353,8 +355,8 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
             }])
             ->where('station_id', $station_id)
             ->where('status', PreorderProtocol::ORDER_STATUS_OF_SHIPPING)//发货中
-            ->whereBetween('start_time',[Carbon::createFromFormat('Y-m-d H:i:s',$date.'00:00:00'),$query_date])//Carbon::now()
-                //->where('start_time', '<=', $query_date)
+            ///->whereBetween('start_time',[Carbon::createFromFormat('Y-m-d H:i:s',$date.'00:00:00'),$query_date])//Carbon::now()
+            ->where('start_time', '<=', $query_date)
             ->where(function ($query) use ($query_date) {
                 //非暂停中
                 $query->whereNull('pause_time')->orWhere('pause_time', '>', $query_date)//pause time gt now time
@@ -585,19 +587,21 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     }
 
     public function getAllStaffDayDelivery(array $array = []){
-
-        $start_time = Carbon::createFromFormat('Y-m-d H:i:s',$array['stime'].' 00:00:00');
-        $end_time = Carbon::createFromFormat('Y-m-d H:i:s',$array['etime'].' 23:59:59');
-        $preorderQuery = Preorder::query()->with(['skus' => function($query){
+        /*
+         * with(['skus' => function($query){
             $query->where('remain','>', 0);
         }])
+         * */
+        $start_time = Carbon::createFromFormat('Y-m-d H:i:s',$array['stime'].' 00:00:00');
+        $end_time = Carbon::createFromFormat('Y-m-d H:i:s',$array['etime'].' 23:59:59');
+        $preorderQuery = Preorder::query()->with('skus')
             ->where('station_id',access()->stationId())
             ->whereBetween('start_time',[$start_time,$end_time])
-            ->where('status',PreorderProtocol::ORDER_STATUS_OF_SHIPPING)
-             ->where(function ($query) use ($end_time) {
+            ->whereIn('status',[PreorderProtocol::ORDER_STATUS_OF_SHIPPING,PreorderProtocol::ORDER_STATUS_OF_DONE])
+            ->where(function ($query) use ($end_time) {
                 //非暂停中
                 $query->whereNull('pause_time')->orWhere('pause_time', '>', $end_time)
-                    ->orWhere(function ($query) use ($end_time) {
+                      ->orWhere(function ($query) use ($end_time) {
                         $query->whereNotNull('restart_time')->where('restart_time', '<=', $end_time);
                     });
             });
