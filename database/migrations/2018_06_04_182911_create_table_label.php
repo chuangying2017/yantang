@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCommentsTable extends Migration {
-
+class CreateTableLabel extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,12 +12,10 @@ class CreateCommentsTable extends Migration {
      */
     public function up()
     {
-        Schema::table('comments', function (Blueprint $table) {
+        Schema::create('labelset', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('score')->index();
-            $table->integer('orders_id')->index()->default('0')->comment('show order number');
-            $table->string('comment_label')->default('0')->comment('addition number label');
-            $table->string('content', 1024);
+            $table->string('title')->default('0')->comment('label comment');
+            $table->integer('star_level')->default('0')->commnet('label star level 1 is one_level 2 is two_level');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +28,6 @@ class CreateCommentsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('comments');
+        Schema::drop('labelset');
     }
 }

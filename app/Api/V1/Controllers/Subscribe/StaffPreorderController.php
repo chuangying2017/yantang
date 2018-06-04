@@ -32,7 +32,7 @@ class StaffPreorderController extends Controller {
     public function daily(Request $request)
     {
         $date = $request->input('date');
-        $daytime = $request->input('daytime');
+        $daytime = $request->input('daytime');// 0 forenoon 1 afternoon
 
         $orders = $this->orderRepo->getDayPreorderWithProductsOfStaff(access()->staffId(), $date, $daytime);
 

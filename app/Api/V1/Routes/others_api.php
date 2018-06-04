@@ -15,6 +15,6 @@
             $api->get('protocol/show/{id}', 'Protocols@show');
         });
 
-        $api->get('reception','Protocols@index');//前台获取协议
+        $api->get('reception','Protocols@index');//前台获取协议protocol
         $api->get('testFileUnits','Protocols@testfile');//测试
     });
