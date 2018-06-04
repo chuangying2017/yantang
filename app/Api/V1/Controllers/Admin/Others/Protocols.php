@@ -18,7 +18,7 @@ use App\Http\Controllers\Controller;
 
 class Protocols extends Controller
 {
-    use Helpers;
+
 
     protected $ProtocolRepositoryContact;
 

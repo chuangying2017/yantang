@@ -134,15 +134,15 @@ class EloquentAuthenticationRepository implements AuthenticationContract {
      */
     public function getAuthorizationFirst($provider)
     {
-        if ($provider == "weixin") {
-            $scopes = [
-                'snsapi_userinfo'
-            ];
-        }
+            if ($provider == "weixin") {
+                $scopes = [
+                    'snsapi_userinfo'
+                ];
+            }
 
-        if (isset($scopes)) {
-            return $this->socialite->driver($provider)->scopes($scopes)->stateless()->redirect()->getTargetUrl();
-        }
+            if (isset($scopes)) {
+                return $this->socialite->driver($provider)->scopes($scopes)->stateless()->redirect()->getTargetUrl();
+            }
 
         return $this->socialite->driver($provider)->stateless()->redirect()->getTargetUrl();
     }
