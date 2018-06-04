@@ -1,6 +1,6 @@
 <?php namespace App\Repositories\Search\Item;
 
-//define('XS_APP_ROOT', config('services.search.root'));
+# define('XS_APP_ROOT', config('services.search.root'));
 
 use App\Repositories\Product\ProductRepositoryContract;
 use App\Repositories\Search\SearchRepositoryContract;

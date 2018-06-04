@@ -73,6 +73,11 @@ $api->version('v1', function ($api) {
          * 礼品卡
          */
         require_once(__DIR__ . '/../Api/V1/Routes/tool_api.php');
+
+        /**
+         * comment member function
+         * */
+        require_once (__DIR__.'/../Api/V1/Routes/comments_api.php');
     });
 
 });

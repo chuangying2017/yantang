@@ -12,11 +12,9 @@ class CreateCommentsTable extends Migration {
      */
     public function up()
     {
-        Schema::table('comments', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('score')->index();
-            $table->integer('orders_id')->index()->default('0')->comment('show order number');
-            $table->string('comment_label')->default('0')->comment('addition number label');
             $table->string('content', 1024);
             $table->softDeletes();
             $table->timestamps();
