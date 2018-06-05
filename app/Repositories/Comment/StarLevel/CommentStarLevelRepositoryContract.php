@@ -16,7 +16,7 @@ interface CommentStarLevelRepositoryContract
 
     public function create();
 
-    public function update();
+    public function update($data,$id);
 
     public function getAll();
 

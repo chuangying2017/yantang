@@ -9,7 +9,6 @@
 namespace App\Repositories\Comment\StarLevel;
 
 
-use App\Models\Comments\LabelSet;
 use App\Models\Settings;
 
 class CommentStarLevelRepository implements CommentStarLevelRepositoryContract
@@ -21,7 +20,6 @@ class CommentStarLevelRepository implements CommentStarLevelRepositoryContract
     public function store($data)
     {
         // TODO: Implement store() method.
-        LabelSet::updateOrCreate();
     }
 
     public function create()
@@ -29,18 +27,17 @@ class CommentStarLevelRepository implements CommentStarLevelRepositoryContract
         // TODO: Implement create() method.
     }
 
-    public function update()
+    public function update($data,$id)
     {
         // TODO: Implement update() method.
+       $find = Settings::find($id);
+       $find->fill($data);
+       return $find->save();
     }
 
     public function getAll()
     {
         // TODO: Implement getAll() method.
-        return [
-            'label' => LabelSet::all(['id','title','star_level']),
-            'settings' => Settings::find(1)
-        ];
     }
 
     public function getAllPaginated()
