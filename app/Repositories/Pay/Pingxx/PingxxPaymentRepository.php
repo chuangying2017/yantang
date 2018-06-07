@@ -147,7 +147,7 @@ class PingxxPaymentRepository implements ChargeRepositoryContract, PaymentReposi
     }
 
 
-    public function setPaymentAsPaid($payment_no, $transaction_no)
+    public function setPaymentAsPaid($payment_no, $transaction_no)//交易单号，支付单号
     {
         $payment = $this->getPayment($payment_no);
 

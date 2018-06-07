@@ -120,6 +120,7 @@ class EloquentClientRepository implements ClientRepositoryContract {
 
     public function number_status(){
 
+
         //首先拿到设置的会员间隔时间
 
         $interval_status = Settings::query()->find(1,['value']);
@@ -127,5 +128,20 @@ class EloquentClientRepository implements ClientRepositoryContract {
         $Time_interval_between = date('Y-m-d H:i:s',strtotime("-{$interval_status['value']['interval_time']} month")).','.date('Y-m-d H:i:s');
 
         //$UserData = User::
+    }
+
+    //查询客户端
+
+    /**
+     * @param null $keyword
+     * @param string $order_at
+     * @param string $sort
+     * @param int $per_page
+     * @return mixed
+     */
+    public function fetch_client_item($keyword = null, $status = ClientProtocol::STATUS_OK, $order_at = 'created_at', $sort = 'desc', $per_page = ClientProtocol::PER_PAGE){
+            $query = Client::query();
+            $user_data = User::withTrashed()->where(['status'=>$status,['id','<=','100']])->pluck('id')->all();
+            return $query->whereIn('user_id',$user_data)->paginate(15);
     }
 }

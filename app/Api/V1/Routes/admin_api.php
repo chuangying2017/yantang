@@ -54,6 +54,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
                 $api->resource('members.users', 'MemberUserController');
                 $api->resource('members', 'MemberController', ['except' => ['show', 'edit']]);
                 $api->resource('users', 'UserController');
+                $api->get('usersFetch','UserController@fetchUser');
             });
         });
 
@@ -203,14 +204,20 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
 
     });
 
-
     /**
      * 通用接口
      */
     $api->get('images/token', 'Image\ImageController@token');
     $api->get('images', 'Image\ImageController@index');
     
-    
+    /**
+     * 评论
+     * */
+    $api->group(['middleware'=>'api.auth','access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STATION_ADMIN],function($api){
+        $api->group(['namespace'=>'Comments','prefix'=>'comments'],function($api){
+            $api->resource('AdminComments','OperationController');
+        });
+    });
 });
 
 

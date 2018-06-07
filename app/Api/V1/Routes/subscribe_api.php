@@ -4,7 +4,7 @@
 /**
  * 订奶系统
  */
-$api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function ($api) {
+$api->group(['namespace' => 'Subscribe'/*, 'middleware' => 'api.auth'*/], function ($api) {
 
     //配送员端
     $api->group(['prefix' => 'staffs'], function ($api) {
@@ -38,7 +38,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
             $api->get('invoices/{invoice_no}/orders', 'StationInvoiceController@orders')->name('station.invoice.orders');
             $api->get('invoices/{invoice_no}/collect_orders', 'StationInvoiceController@collect_orders')->name('station.invoice.orders');
-            $api->resource('invoices', 'StationInvoiceController', ['only' => ['index', 'show', 'update']]);
+            $api->resource('invoices', 'StationInvoiceController', ['only' => ['index', 'show', 'update']]);//station invoice 发票
 
             //管理配送员
             $api->get('staffs/{staff_id}/preorders', 'StationStaffController@orders');

@@ -258,4 +258,9 @@ class OldPreorderManagerService implements PreorderManageServiceContract {
 
         return $this->transformOrder($orders);
     }
+
+    public function restart($order_id, $start_time)
+    {
+        // TODO: Implement restart() method.
+    }
 }

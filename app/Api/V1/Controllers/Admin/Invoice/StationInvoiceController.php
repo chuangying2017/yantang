@@ -63,7 +63,7 @@ class StationInvoiceController extends Controller {
         return $this->response->paginator($invoices, new StationInvoiceTransformer());
     }
 
-    public function show(Request $request, $invoice_no)
+    public function show(Request $request, $invoice_no)//export all station data information
     {
         $invoice = $this->invoiceRepo->get($invoice_no, true);
   

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Product\Product;
+use App\Repositories\Comment\StarLevel\CommentStarLevelRepository;
+use App\Repositories\Comment\StarLevel\CommentStarLevelRepositoryContract;
 use Illuminate\Support\ServiceProvider;
 use XS;
 use XSDocument;
@@ -34,6 +36,11 @@ class AppServiceProvider extends ServiceProvider {
         $this->app->bind(
             \App\Repositories\Comment\CommentRepositoryContract::class,
             \App\Repositories\Comment\EloquentCommentRepository::class
+        );
+
+        $this->app->bind(
+            CommentStarLevelRepositoryContract::class,
+            CommentStarLevelRepository::class
         );
     }
 }

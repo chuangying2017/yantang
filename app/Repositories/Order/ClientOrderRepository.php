@@ -168,7 +168,7 @@ class ClientOrderRepository implements ClientOrderRepositoryContract, OrderCount
     {
         if ($order_no instanceof Order) {
             $order = $order_no;
-        } else if (NoGenerator::isOrderNo($order_no)) {
+        } else if (NoGenerator::isOrderNo($order_no)) {//if order number length whether eq
             $order = Order::query()->where('order_no', $order_no)->first();
         } else {
             $order = Order::query()->find($order_no);
