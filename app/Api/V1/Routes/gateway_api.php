@@ -7,7 +7,7 @@
 $api->group(['namespace' => 'Gateway', 'prefix' => 'gateway'], function ($api) {
 
     $api->group(['prefix' => 'pingxx'], function ($api) {
-        $api->post('paid', 'PingxxNotifyController@paid');
+        $api->post('paid', 'PingxxNotifyController@paid');//ping++ interface call - back 
         $api->post('refund', 'PingxxNotifyController@refund');
         $api->post('transfer', 'PingxxNotifyController@transfer');
         $api->post('summary', 'PingxxNotifyController@summary');

@@ -9,6 +9,8 @@ use App\Repositories\Product\ProductRepositoryContract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Cache;
+
 
 class ProductController extends Controller {
 
@@ -33,6 +35,7 @@ class ProductController extends Controller {
      */
     public function index(Request $request)
     {
+
         $brand = $request->input('brand');
         $cat = $request->input('cat');
         $group = $request->input('group');
@@ -48,6 +51,16 @@ class ProductController extends Controller {
 
         return $this->response->paginator($products, new ProductTransformer());
     }
+
+    public function show_client_data(){
+
+        if(!$products = Cache::get('mall:product:data')){
+            Cache::put('mall:product:data',$products = $this->productRepo->getAllProducts(null, null, null, ProductProtocol::TYPE_OF_ENTITY));
+        }
+
+        return $this->response->item($products, new ProductTransformer());
+    }
+
 /*    public function index(Request $request)
     {
         $brand = $request->input('brand');
@@ -75,7 +88,10 @@ class ProductController extends Controller {
      */
     public function show($id)
     {
-        $product = $this->productRepo->getProduct($id);
+
+        if(!$product=Cache::get('mall:product:data'.$id)){
+            Cache::put('mall:product:data'.$id, $product = $this->productRepo->getProduct($id));
+        }
 
         return $this->response->item($product, new ProductTransformer());
     }

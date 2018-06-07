@@ -25,6 +25,12 @@ class SetLogic implements SetMode
     protected function filterData($data){
         return  array_only($data,[
             'interval_time',
+            'star_five',
+            'star_four',
+            'star_one',
+            'star_three',
+            'star_two',
+            'user_score',
         ]);
     }
 

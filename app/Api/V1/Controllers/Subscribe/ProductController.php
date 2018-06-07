@@ -7,6 +7,8 @@ use App\Repositories\Product\Sku\SubscribeSkuRepositoryContract;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
+
 
 class ProductController extends Controller {
 
@@ -31,7 +33,10 @@ class ProductController extends Controller {
      */
     public function index()
     {
-        $products = $this->skuRepo->getAllSubscribedProducts();
+
+        if(!$products=Cache::get('subscribe:product:data')){
+            Cache::put('subscribe:product:data', $products=$this->skuRepo->getAllSubscribedProducts());
+        }
 
         //$products['category'] = 1;
 

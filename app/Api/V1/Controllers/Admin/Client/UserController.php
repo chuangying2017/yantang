@@ -27,9 +27,7 @@ class UserController extends Controller {
      * */
     public function index(Request $request)
     {
-
-        $this->number_order_status();
-        die;
+        
         $status = $request->input('status');
         $type = $request->input('type');
 

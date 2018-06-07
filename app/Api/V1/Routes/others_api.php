@@ -16,5 +16,5 @@
         });
 
         $api->get('reception','Protocols@index');//前台获取协议
-        $api->get('testFileUnits','Protocols@testfile');//测试
+        $api->get('testFileUnits','Protocols@cache_check');//测试
     });

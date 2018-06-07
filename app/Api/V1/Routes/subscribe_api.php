@@ -13,7 +13,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->get('info', 'StaffController@info');
             $api->get('all', 'StaffController@index');
             $api->get('preorders/daily', 'StaffPreorderController@daily');
-            $api->put('preorders/{order_id}/pause', 'StaffPreorderController@pause');
+            $api->put('preorders/{order_id}/pause', 'StaffPreorderController@pause');// staff pause send milk
             $api->put('preorders/{order_id}/restart', 'StaffPreorderController@restart');
             $api->resource('preorders', 'StaffPreorderController', ['only' => ['index', 'show']]);
             $api->post('/{staff_id}/unbind', 'StaffController@postUnBind')->name('api.staff.unbind');
@@ -53,7 +53,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->put('preorders/{order_id}/confirm', 'StationPreorderController@confirm');
             $api->resource('preorders/{order_id}/assign', 'StationAssignController', ['only' => ['store', 'destroy']]);
             $api->resource('preorders', 'StationPreorderController');
-            $api->get('fetchall/{status}', 'StationPreorderController@ExcelDownload_station');
+            $api->get('fetchall/{status?}', 'StationPreorderController@ExcelDownload_station');
             
             $api->get('distributormilk','StationStaffController@distributormilk');
         });

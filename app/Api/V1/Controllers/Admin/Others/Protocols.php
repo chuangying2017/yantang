@@ -6,6 +6,7 @@ use App\Models\Monitors;
 use App\Models\Product\Category;
 use App\Models\Promotion\Activity;
 use App\models\Protocol;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Log;
 use App\Models\Settings;
@@ -18,7 +19,6 @@ use App\Http\Controllers\Controller;
 
 class Protocols extends Controller
 {
-    use Helpers;
 
     protected $ProtocolRepositoryContact;
 
@@ -72,5 +72,13 @@ class Protocols extends Controller
     //展示
     public function show($id){
         return $this->response->array($this->SetClass->getSetting($id));
+    }
+
+    /*
+     * cache check
+     * */
+    public function cache_check(){
+       $da = Cache::get('item_keys',null);
+      dd($da);
     }
 }
