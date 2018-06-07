@@ -353,16 +353,18 @@ class TempOrder implements PromotionAbleItemContract {
 
     public function getItems($sku_keys = null)
     {
-        if (is_null($sku_keys)) {
-            return $this->getSkus();
+
+        if ($sku_keys === null) {
+            return $this->getSkus()->toArray();
+        }else{
+            $items = [];
+            foreach ($sku_keys as $sku_key) {
+                $items[$sku_key] = $this->getSkus($sku_key)->toArray();
+            }
+
+            return $items;
         }
 
-        $items = [];
-        foreach ($sku_keys as $sku_key) {
-            $items[$sku_key] = $this->getSkus($sku_key);
-        }
-
-        return $items;
     }
 
     public function getAmount($item_keys = null)

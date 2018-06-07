@@ -53,7 +53,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->put('preorders/{order_id}/confirm', 'StationPreorderController@confirm');
             $api->resource('preorders/{order_id}/assign', 'StationAssignController', ['only' => ['store', 'destroy']]);
             $api->resource('preorders', 'StationPreorderController');
-            $api->get('fetchall/{status}', 'StationPreorderController@ExcelDownload_station');
+            $api->get('fetchall/{status?}', 'StationPreorderController@ExcelDownload_station');
             
             $api->get('distributormilk','StationStaffController@distributormilk');
         });

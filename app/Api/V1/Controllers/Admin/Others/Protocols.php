@@ -6,6 +6,7 @@ use App\Models\Monitors;
 use App\Models\Product\Category;
 use App\Models\Promotion\Activity;
 use App\models\Protocol;
+use Cache;
 use Illuminate\Support\Facades\DB;
 use Log;
 use App\Models\Settings;
@@ -55,10 +56,9 @@ class Protocols extends Controller
      *
      * */
     public function testfile(){
-         /*   $array = ['id'=>1,'key'=>'set','value'=>['interval_time'=>'5','active'=>'not active']];
-            dd(Settings::create($array));*/
-       echo phpinfo();
-
+        //sku_keys
+        $result = Cache::get('getSkus',null);
+        dd($result->getSkus()->toArray());
     }
 
     //setting default value
@@ -72,5 +72,10 @@ class Protocols extends Controller
     //展示
     public function show($id){
         return $this->response->array($this->SetClass->getSetting($id));
+    }
+
+    public function cache_check_temp_order(){
+        $result = Cache::get('item_keys',null);
+        dd($result);
     }
 }
