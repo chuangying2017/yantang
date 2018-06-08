@@ -16,6 +16,8 @@ class Comment extends Model {
 
     protected $guarded = [];
 
+    protected $fillable = ['score','content','order_id','comment_label'];
+
    /* protected static function boot()
     {
         parent::boot();

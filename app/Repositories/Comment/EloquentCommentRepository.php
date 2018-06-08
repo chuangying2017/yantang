@@ -77,4 +77,28 @@ class EloquentCommentRepository implements CommentRepositoryContract {
     {
         // TODO: Implement summary() method.
     }
+
+    public function update_comment($comment_id,$data)
+    {
+        try{
+            $find_result = Comment::find($comment_id);
+
+            $find_result->fill($data);
+
+            $find_result->save();
+
+            if(!isset($find_result->id))
+                throw  new \Exception('comment update failed');
+
+            event(new CommentIsCreated($find_result));
+
+            return $find_result;
+
+        }catch (Exception $exception){
+            return $exception->getMessage();
+        }
+
+
+    }
 }
+
