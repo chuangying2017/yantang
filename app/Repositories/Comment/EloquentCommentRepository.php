@@ -5,6 +5,7 @@ use App\Models\Order\Order;
 use App\Models\Product\Product;
 use App\Models\Subscribe\Preorder;
 use App\Services\Comments\Event\CommentIsCreated;
+use Mockery\Exception;
 
 class EloquentCommentRepository implements CommentRepositoryContract {
 
@@ -18,6 +19,15 @@ class EloquentCommentRepository implements CommentRepositoryContract {
         return Comment::query()->has($this->getCommentAble($commentable_type))->orderBy($order_by, $sort)->paginate($per_page);
     }
 
+    /**
+     * @param $score
+     * @param $content
+     * @param $commentable_id
+     * @param $commentable_type
+     * @param array $image_ids
+     * @return Comment
+     * @throws \Exception
+     */
     public function create($score, $content, $commentable_id, $commentable_type, $image_ids = [])
     {
         $comment = Comment::create([
@@ -25,7 +35,13 @@ class EloquentCommentRepository implements CommentRepositoryContract {
             'content' => $content,
         ]);
 
-        $commentable = $this->getCommentAble($commentable_type);
+        try {
+            $commentable = $this->getCommentAble($commentable_type);
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+            \Log::error($error);
+            return $error;
+        }
 
         $comment->$commentable()->attach($commentable_id);
 

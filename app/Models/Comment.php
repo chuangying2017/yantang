@@ -16,7 +16,7 @@ class Comment extends Model {
 
     protected $guarded = [];
 
-    protected static function boot()
+   /* protected static function boot()
     {
         parent::boot();
 
@@ -26,7 +26,7 @@ class Comment extends Model {
             $comment->orders()->detach();
             $comment->preorders()->detach();
         });
-    }
+    }*/
 
     public function images()
     {
