@@ -41,7 +41,7 @@ class UseCoupon extends GenerateHandlerAbstract {
                 ->setUser($this->userContract)
                 ->setItems($temp_order);
 
-            if (array_get($coupons, $rule_key . '.using', 0) == 1) {
+            if (array_get($coupons, $rule_key . '.using', 0) == 1) {//if eq 1 uses else not uses
                 $success = $this->couponService->setNotUsing($rule_key);
 
             } else {
