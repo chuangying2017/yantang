@@ -78,7 +78,7 @@ class Protocols extends Controller
      * cache check
      * */
     public function cache_check(){
-       $da = Cache::get('item_keys',null);
+       $da = Cache::get('payment',null);
       dd($da);
     }
 }

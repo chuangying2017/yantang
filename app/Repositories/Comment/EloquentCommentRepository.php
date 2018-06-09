@@ -41,7 +41,7 @@ class EloquentCommentRepository implements CommentRepositoryContract {
             $error = $e->getMessage();
             \Log::error($error);
         }
-
+        file_put_contents('commentAble.txt',$commentable);
         $comment->$commentable()->attach($commentable_id);
 
         if (count($image_ids)) {
