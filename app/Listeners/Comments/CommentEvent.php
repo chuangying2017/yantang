@@ -6,7 +6,7 @@ use App\Services\Pay\Events\PingxxPaymentIsPaid;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CommentlistenOne1
+class CommentEvent
 {
     /**
      * Create the event listener.
