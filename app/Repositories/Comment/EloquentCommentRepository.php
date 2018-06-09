@@ -40,7 +40,6 @@ class EloquentCommentRepository implements CommentRepositoryContract {
         } catch (\Exception $e) {
             $error = $e->getMessage();
             \Log::error($error);
-            return $error;
         }
 
         $comment->$commentable()->attach($commentable_id);
@@ -49,7 +48,7 @@ class EloquentCommentRepository implements CommentRepositoryContract {
             $comment->images()->sync($image_ids);
         }
 
-        event(new CommentIsCreated($comment));
+       // event(new CommentIsCreated($comment));
 
         return $comment;
     }
