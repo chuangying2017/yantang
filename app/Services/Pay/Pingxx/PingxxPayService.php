@@ -93,7 +93,7 @@ class PingxxPayService implements ThirdPartyPayContract {
     {
         if ($this->checkChargeIsPaid($charge)) {
             $payment = $this->paymentRepository->getPayment($this->paymentRepository->getChargePayment($charge));
-
+            file_put_contents('paid.txt',$payment['paid'].'---'.json_encode($payment)."\r\n",FILE_APPEND);
             if ($payment['paid']) {
                 return true;
             }
