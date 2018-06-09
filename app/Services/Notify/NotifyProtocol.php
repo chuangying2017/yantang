@@ -1,5 +1,6 @@
 <?php namespace App\Services\Notify;
 
+use App\Services\Notify\Content\NotifyClientOrderCommentAlert;
 use App\Services\Notify\Content\NotifyClientOrderIsAssign;
 use App\Services\Notify\Content\NotifyClientOrderIsEnding;
 use App\Services\Notify\Content\NotifyClientTicketIsEnding;
@@ -25,10 +26,14 @@ class NotifyProtocol {
     const ROLE_OF_STATION_ADMIN = 'station_admin';
     const ROLE_OF_CLIENT = 'client';
 
+    const ROLE_OF_COMMENT_ALERT = 'client_comment_alert';
+
 
     const NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED = 101;
     const NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING = 102;
     const NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING = 111;
+
+    const NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT = 120;
 
     const NOTIFY_ACTION_STATION_NEW_ORDER = 201;
 
@@ -46,14 +51,19 @@ class NotifyProtocol {
     {
         $config = [
             self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED => NotifyClientOrderIsAssign::class,
+
             self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING => NotifyClientOrderIsEnding::class,
+
             self::NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING => NotifyClientTicketIsEnding::class,
+
+            self::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT => NotifyClientOrderCommentAlert::class,
 
             self::NOTIFY_ACTION_STATION_NEW_ORDER => NotifyStationNewOrder::class,
 
             self::NOTIFY_ACTION_STAFF_NEW_ORDER => NotifyStaffNewOrder::class,
 
             self::NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME => NotifyStationAdminAssignOvertime::class,
+
             self::NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT => NotifyStationAdminOrderReject::class,
         ];
 
@@ -90,7 +100,9 @@ class NotifyProtocol {
 
     public static function getContactHandler($role, $id, $channel)
     {
+
         $handler = self::getRoleHandler($role);
+
         switch ($channel) {
             case NotifyProtocol::CHANNEL_OF_SMS:
                 return $handler::getPhone($id);
@@ -99,24 +111,37 @@ class NotifyProtocol {
             default:
                 throw new \Exception('通知渠道不存在');
         }
+
     }
 
     public static function getRoleByAction($action)
     {
         switch ($action) {
+
             case self::NOTIFY_ACTION_STATION_NEW_ORDER:
                 return self::ROLE_OF_STATION;
+
             case self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED:
+
             case self::NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING:
+
             case self::NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING:
                 return self::ROLE_OF_CLIENT;
+
             case self::NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME:
+
             case self::NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT:
                 return self::ROLE_OF_STATION_ADMIN;
+
             case self::NOTIFY_ACTION_STAFF_NEW_ORDER:
                 return self::ROLE_OF_STAFF;
+
+            case self::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT:
+                return self::ROLE_OF_CLIENT;
+
             default:
                 throw new \Exception('通知用户角色不存在');
+
         }
     }
 
@@ -126,6 +151,7 @@ class NotifyProtocol {
         $role = self::getRoleByAction($action);
 
         $contact_role = self::getRoleHandler($role);
+
         $content_handler = self::getContentHandler($action);
 
         try {

@@ -35,5 +35,18 @@ class SendMessageToClient {
 
     }
 
+    public function assignClientCommentNotify(AssignIsAssigned $assigned)
+    {
+
+        $assign = $assigned->assign;
+
+        $preorder = $assign->preorder;
+
+        if($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_ASSIGNING){
+            NotifyProtocol::notify($preorder['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$preorder);
+        }
+
+    }
+
 
 }

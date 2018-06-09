@@ -168,6 +168,7 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Preorder\SetPreorderAsPending',
             'App\Listeners\Notify\SendMessageToClient@assigned',
             'App\Listeners\Notify\SendMessageToStaff@assigned',
+            'App\Listeners\Notify\SendMessageToClient@assignClientCommentNotify',
 //            'App\Listeners\Counter\PreorderCounter@increment',
         ],
 
