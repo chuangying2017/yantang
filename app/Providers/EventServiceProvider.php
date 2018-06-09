@@ -42,7 +42,7 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Auth\UserLoggedOutHandler',
         ],
 
-        'App\Services\Pay\Events\PingxxPaymentIsPaid' => [
+        'App\Services\Pay\Events\PingxxPaymentIsPaid' => [//accept event synchronization trigger App\Events\Order\OrderIsPaid
             'App\Listeners\Order\SetOrderMainBillingAsPaid',
             'App\Listeners\Subscribe\SetChargeBillingAsPaid',
             'App\Listeners\Comments\CommentEvent',
@@ -69,12 +69,12 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Order\SetOrderAsPaid',
         ],
 
-        'App\Events\Order\OrderIsPaid' => [
+        'App\Events\Order\OrderIsPaid' => [//同时触发这里
             'App\Listeners\Order\GenerateOrderTicketForCampaignOrder',
-            'App\Listeners\Product\DecreaseProductSkuStock',
-            'App\Listeners\Preorder\SetPreorderAsPaid',
-            'App\Listeners\Collect\SetCollectOrderAsPaid',
-            'App\Listeners\Promotion\DispatchSubscribeOrderGift',
+            'App\Listeners\Product\DecreaseProductSkuStock',//减少产品数量
+            'App\Listeners\Preorder\SetPreorderAsPaid',//已支付 待分配
+            'App\Listeners\Collect\SetCollectOrderAsPaid',//collect as paid order
+            'App\Listeners\Promotion\DispatchSubscribeOrderGift',//派发认购订单礼品，礼物
             'App\Listeners\Order\CheckIfFirstOrder',
         ],
 
@@ -168,7 +168,7 @@ class EventServiceProvider extends ServiceProvider {
             'App\Listeners\Preorder\SetPreorderAsPending',
             'App\Listeners\Notify\SendMessageToClient@assigned',
             'App\Listeners\Notify\SendMessageToStaff@assigned',
-            'App\Listeners\Notify\SendMessageToClient@assignClientCommentNotify',
+           // 'App\Listeners\Notify\SendMessageToClient@assignClientCommentNotify',
 //            'App\Listeners\Counter\PreorderCounter@increment',
         ],
 

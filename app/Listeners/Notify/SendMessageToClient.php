@@ -43,6 +43,7 @@ class SendMessageToClient {
         $preorder = $assign->preorder;
 
         if($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_ASSIGNING){
+            file_put_contents('status.txt',$preorder['status']?:'node');
             NotifyProtocol::notify($preorder['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$preorder);
         }
 

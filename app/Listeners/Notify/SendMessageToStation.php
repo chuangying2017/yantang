@@ -28,7 +28,10 @@ class SendMessageToStation {
         $preorder = $event->preorder;
 
         if (PreorderProtocol::preorderIsPaid($preorder['status'])) {
+            file_put_contents('get_to.txt','test ---'.$preorder);
             NotifyProtocol::notify($preorder['station_id'], NotifyProtocol::NOTIFY_ACTION_STATION_NEW_ORDER, null, $preorder);
+            NotifyProtocol::notify($preorder['user_id'],NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$preorder);
+
         }
     }
 
@@ -40,7 +43,9 @@ class SendMessageToStation {
         $preorder = $assign->preorder;
 
         if (PreorderProtocol::preorderIsPaid($preorder['status'])) {
+
             NotifyProtocol::notify($preorder['station_id'], NotifyProtocol::NOTIFY_ACTION_STATION_NEW_ORDER, null, $preorder);
+
         }
     }
 
