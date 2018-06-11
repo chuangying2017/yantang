@@ -45,6 +45,9 @@ class PreorderProtocol {
     const TIME_NAME_OF_PAY = 'pay_at';
     const TIME_NAME_OF_DONE = 'done_at';
 
+    //new addition comment identify
+    const COMMENT_IDENTIFY = 1;
+
 
     public static function validOrderStatus($status)
     {

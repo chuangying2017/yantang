@@ -43,9 +43,12 @@ class NotifyClientCommentAlert extends Command
         // dispose
         Preorder::query()
             ->where('status',PreorderProtocol::ORDER_STATUS_OF_SHIPPING)
+            ->where('comment_identify',PreorderProtocol::COMMENT_IDENTIFY)
             ->chunk('100',function ($collectData){
                 foreach ($collectData as $collectDatum){
+                        if($collectDatum['start_time'] == $collectDatum['end_time'] && $collectDatum['start_time'] == Carbon::yesterday()->toDateString()){
 
+                        }
                 }
             });
     }
