@@ -64,7 +64,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     {
         $query = Preorder::with(['skus' => function($query){
             $query->with('sku');
-        },'order']);
+        }]);
         if (!is_null($user_id)) {
             $query->where('user_id', $user_id);
         }

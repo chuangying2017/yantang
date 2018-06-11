@@ -4,6 +4,8 @@ namespace App\Listeners\Preorder;
 
 use App\Events\Order\OrderIsPaid;
 use App\Events\Preorder\PreorderIsPaid;
+use App\Models\Subscribe\Preorder;
+use App\Repositories\Comment\CommentRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Notify\NotifyProtocol;
 use App\Services\Order\OrderProtocol;
@@ -19,14 +21,17 @@ class SetPreorderAsPaid {
      */
     private $preorderRepo;
 
+    private $commentRepo;
     /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct(PreorderRepositoryContract $preorderRepo)
+    public function __construct(PreorderRepositoryContract $preorderRepo, CommentRepositoryContract $commentRepositoryContract)
     {
         $this->preorderRepo = $preorderRepo;
+
+        $this->commentRepo = $commentRepositoryContract;
     }
 
     /**
@@ -43,7 +48,9 @@ class SetPreorderAsPaid {
         if ($order['order_type'] == OrderProtocol::ORDER_TYPE_OF_SUBSCRIBE) {
 
             $preorder = $this->preorderRepo->updatePreorderStatusByOrder($order['id'], PreorderProtocol::ORDER_STATUS_OF_ASSIGNING);
-            
+
+            $this->commentRepo->create('0','0',$preorder['id'],Preorder::class);
+
             event(new PreorderIsPaid($preorder));
         }
     }

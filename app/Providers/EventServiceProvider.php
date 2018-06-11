@@ -45,7 +45,7 @@ class EventServiceProvider extends ServiceProvider {
         'App\Services\Pay\Events\PingxxPaymentIsPaid' => [//accept event synchronization trigger App\Events\Order\OrderIsPaid
             'App\Listeners\Order\SetOrderMainBillingAsPaid',
             'App\Listeners\Subscribe\SetChargeBillingAsPaid',
-            'App\Listeners\Comments\CommentEvent',
+           // 'App\Listeners\Comments\CommentEvent',
         ],
 
         'App\Services\Pay\Events\PingxxPaymentIsFail' => [

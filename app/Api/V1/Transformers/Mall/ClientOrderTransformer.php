@@ -33,7 +33,6 @@ class ClientOrderTransformer extends TransformerAbstract {
             'cancel_at' => $order['cancel_at'],
             'done_at' => $order['done_at'],
             'created_at' => $order['created_at'],
-            'comments' => $order->comments,
         ];
     }
 

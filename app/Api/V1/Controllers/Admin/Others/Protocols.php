@@ -6,6 +6,7 @@ use App\Models\Monitors;
 use App\Models\Product\Category;
 use App\Models\Promotion\Activity;
 use App\models\Protocol;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Log;
@@ -78,7 +79,9 @@ class Protocols extends Controller
      * cache check
      * */
     public function cache_check(){
-       $da = Cache::get('payment',null);
-      dd($da);
+     //  $da = Cache::get('payment',null);
+      $ad = Carbon::today()->addDays(-3)->toDateString();
+
+      dd($ad);
     }
 }

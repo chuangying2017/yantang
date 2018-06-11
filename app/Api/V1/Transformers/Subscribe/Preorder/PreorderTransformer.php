@@ -44,6 +44,7 @@ class PreorderTransformer extends TransformerAbstract {
             'is_new' => $preorder->start_time >= date('Y-m-d') ? 1 : 0,
             'has_coupon' => 0,
 			'assess' => $preorder->assess,
+            'comment_type' => array_get($preorder->comments,'0.comment_type','default'),
         ];
 
         return $data;
