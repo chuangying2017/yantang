@@ -18,6 +18,8 @@ class CommentTransformer extends TransformerAbstract {
             'id' => $comment['id'],
             'score' => (int)$comment['score'],
             'content' => $comment['content'],
+            'comment_label' => $comment['comment_label'],
+            'comment_type' => $comment['comment_type'],
         ];
     }
 

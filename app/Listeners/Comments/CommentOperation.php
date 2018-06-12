@@ -35,7 +35,7 @@ class CommentOperation
         foreach ($event->preorders as $preorder){
                 $preorder->comment_identify = 2;//comment get through
                 $preorder->save();
-                NotifyProtocol::notify($preorder['staff_id'],NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$preorder);
+                NotifyProtocol::notify($preorder['staff_id'],NotifyProtocol::NOTIFY_ACTION_STAFF_COMMENT_IS_ALERT,null,$preorder);
         }
 
     }

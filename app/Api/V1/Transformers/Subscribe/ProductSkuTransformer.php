@@ -27,6 +27,7 @@ class ProductSkuTransformer extends TransformerAbstract {
             'detail' => $info['detail'],
             'images' => array_map(function ($media_id){ return config('filesystems.disks.qiniu.domains.custom').$media_id;},$image),
             'dismode' => $sku['dismode'],
+            'product_row' => $sku['product_row'],
         ];
     }
 }

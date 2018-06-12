@@ -147,6 +147,9 @@ class NotifyProtocol {
             case self::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT:
                 return self::ROLE_OF_CLIENT;
 
+            case self::NOTIFY_ACTION_STAFF_COMMENT_IS_ALERT:
+                return self::ROLE_OF_STAFF;
+
             default:
                 throw new \Exception('通知用户角色不存在');
 

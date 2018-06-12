@@ -2,6 +2,7 @@
 
 namespace App\Api\V1\Controllers\Comments;
 
+use App\Api\V1\Transformers\CommentTransformer;
 use App\Repositories\Comment\CommentRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Repositories\setting\SetMode;
@@ -33,11 +34,15 @@ class IndexController extends Controller
 
         try {
 
-            $result=$request->input('preorderId',null);
+            $comment_data = $this->comment_contract->get($request->input('preorderId',null));
+
+            if(!$comment_data)
+                throw new \Exception('data not existing');
 
             return $this->response->array([
                 'settingArray'=>$this->set_mode->getSetting($id),
-                'preorders'=>$result?$this->comment_contract->get($result):$result
+                'preorders'=>$comment_data,
+                'comment'=>isset($comment_data->comments[0])?$comment_data->comments[0]:null,
             ]);
         } catch (\ErrorException $e) {
             Log::error($e->getMessage());
@@ -51,10 +56,10 @@ class IndexController extends Controller
 
             $comment_update_result = $this->comment_contract->update_comment($comment_id,$request->all());
 
-            $this->response->array($comment_update_result);
+            return $this->response->array($comment_update_result);
 
             }catch (\Exception $exception){
-
+                Log::error($exception->getMessage());
             }
     }
 }
