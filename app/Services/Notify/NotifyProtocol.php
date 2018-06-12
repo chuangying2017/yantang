@@ -5,6 +5,7 @@ use App\Services\Notify\Content\NotifyClientOrderIsAssign;
 use App\Services\Notify\Content\NotifyClientOrderIsEnding;
 use App\Services\Notify\Content\NotifyClientTicketIsEnding;
 use App\Services\Notify\Content\NotifyContentContract;
+use App\Services\Notify\Content\NotifyStaffCommentAlert;
 use App\Services\Notify\Content\NotifyStaffNewOrder;
 use App\Services\Notify\Content\NotifyStationAdminAssignOvertime;
 use App\Services\Notify\Content\NotifyStationAdminOrderReject;
@@ -30,16 +31,21 @@ class NotifyProtocol {
 
 
     const NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED = 101;
+
     const NOTIFY_ACTION_CLIENT_PREORDER_IS_ENDING = 102;
+
     const NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING = 111;
 
     const NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT = 120;
 
-    const NOTIFY_ACTION_STATION_NEW_ORDER = 201;
+    const NOTIFY_ACTION_STAFF_COMMENT_IS_ALERT = 121;//new increase comment custom
+
+    const NOTIFY_ACTION_STATION_NEW_ORDER = 201;//new increase comment staff custom
 
     const NOTIFY_ACTION_STAFF_NEW_ORDER = 301;
 
     const NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME = 401;
+
     const NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT = 402;
 
     /**
@@ -65,6 +71,8 @@ class NotifyProtocol {
             self::NOTIFY_ACTION_ADMIN_PREORDER_IS_ONT_HANDLE_ON_TIME => NotifyStationAdminAssignOvertime::class,
 
             self::NOTIFY_ACTION_ADMIN_PREORDER_PREORDER_IS_REJECT => NotifyStationAdminOrderReject::class,
+
+            self::NOTIFY_ACTION_STAFF_COMMENT_IS_ALERT => NotifyStaffCommentAlert::class,
         ];
 
         $handler = array_get($config, $action, null);
