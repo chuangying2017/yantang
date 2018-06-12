@@ -45,7 +45,8 @@ class Kernel extends ConsoleKernel {
         //coupon
         'App\Console\Commands\SeedCouponForSpecifyUser',
         
-        
+        //A single delivery and Multiple delivery (alert)
+        'App\Console\Commands\NotifyClientCommentAlert',
         
 
     ];
@@ -76,7 +77,8 @@ class Kernel extends ConsoleKernel {
 
         $schedule->command('orders:overtime')->everyTenMinutes();
         
-        
+        //A single delivery And Multiple delivery
+        $schedule->command('notify:client-comment-alert')->dailyAt('8:43');
         
         $schedule->command('notify:preorder-ending')->dailyAt('8:00');
         

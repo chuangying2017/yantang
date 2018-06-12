@@ -49,7 +49,7 @@ class PreorderController extends Controller {
     public function show($order_id)
     {
         $order = $this->preorderRepo->get($order_id, true);
-		file_put_contents("test000.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($order)."\n\n");	
+		//file_put_contents("test000.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($order)."\n\n");
 		
         if ($order['user_id'] != access()->id()) {
             throw new AccessDeniedHttpException();

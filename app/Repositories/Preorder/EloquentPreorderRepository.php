@@ -473,6 +473,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
         if ($status == PreorderProtocol::ORDER_STATUS_OF_ASSIGNING) {
             $preorder->pay_at = Carbon::now();
+            $preorder->comment_identify = PreorderProtocol::COMMENT_IDENTIFY;
         }
 
         $preorder->save();
