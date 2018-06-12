@@ -79,10 +79,13 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
     public function update_comment($comment_id,$data)
     {
+        // comment_type field type: (ToBeUsed expression not uses HaveUses on uses)
         try{
             $find_result = Comment::find($comment_id);
 
             $find_result->fill($data);
+
+            $find_result->comment_type = 'HaveUses';
 
             $find_result->save();
 
@@ -97,7 +100,17 @@ class EloquentCommentRepository implements CommentRepositoryContract {
             return $exception->getMessage();
         }
 
+    }
 
+    public function get($order_id){//uses comment fetch show by client front-end
+
+        $preorder_data = Preorder::query()->findOrFail($order_id);
+
+        if($preorder_data){
+            $preorder_data->load('skus', 'station', 'skus.sku', 'staff', 'order');
+        }
+
+        return $preorder_data;
     }
 }
 
