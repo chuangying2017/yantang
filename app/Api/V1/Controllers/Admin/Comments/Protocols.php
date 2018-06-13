@@ -26,6 +26,7 @@ class Protocols extends Controller
 
     //show protocol data
     public function index(){
+
         try{
             return $this->ProtocolRepositoryContact->getAllProtocol();
         }catch (\Exception $exception){

@@ -29,7 +29,8 @@ class ProductTransformer extends TransformerAbstract {
             'open_time' => $product['open_time'],
             'end_time' => $product['end_time'],
             'priority' => $product['priority'],
-            'dismode' => $product['skus'][0]['dismode']
+            'dismode' => $product['skus'][0]['dismode'],
+            'product_row' => $product['skus'][0]['product_row'],
         ];
 
         if ($product->relationLoaded('meta')) {

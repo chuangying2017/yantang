@@ -36,7 +36,6 @@ class ProductTransformer extends TransformerAbstract {
             'updated_at' => $product['updated_at'],
             'clientWeChatUrl'=>$product['url'],
             'dismode' => $product->skus[0]['dismode'],//配送方式
-            'product_row' => $product->skus[0]['product_row'],
         ];
 
         if ($product->relationLoaded('images')) {

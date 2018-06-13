@@ -37,7 +37,7 @@ class NotifyClientOrderCommentAlert implements NotifyContentContract
     public static function getWeixinTemplateID()
     {
         // TODO: Implement getWeixinTemplateID() method.
-        return 'TjSF4V6iBdPCDV-x9itBvqlGU6KFHufAzBsY3dH8ldA';
+        return '3VxglwTgNjIVpf3EhH_ogchL0L5SODXijkEnSuNqvbs';
     }
 
     public static function getWeixinTemplateUrl($preorder = null)
@@ -55,11 +55,22 @@ class NotifyClientOrderCommentAlert implements NotifyContentContract
     public static function getWeixinTemplateData($entity = null)
     {
         // TODO: Implement getWeixinTemplateData() method.
+        $string = '';
+
+        foreach ($entity->skus as $value){
+            if(empty($string)){
+                $string = $value->name;
+            }else{
+                $string .= ', '.$value->name;
+            }
+        }
+
         return [
-            'first' => '您好 下单成功欢迎评论',
-            'keyword1'=>$entity['order_no'],
-            'keyword2'=>$entity['start_time'],
-            'remark'=>'您可在奶卡那边对订单进行评价',
+            'first'    => '您好 下单成功欢迎评论',
+            'keyword1' => $entity['order_no'],
+            'keyword2' => $string,
+            'keyword3' => $entity['start_time'],
+            'remark'   => '您可在奶卡那边对订单进行评价',
         ];
     }
 }

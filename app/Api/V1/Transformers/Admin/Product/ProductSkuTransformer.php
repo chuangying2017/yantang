@@ -24,7 +24,8 @@ class ProductSkuTransformer extends TransformerAbstract {
             'sales' => $sku['sales'],
             'attr' => json_decode($sku['attr'], true),
             'created_at' => $sku['created_at'],
-            'updated_at' => $sku['updated_at']
+            'updated_at' => $sku['updated_at'],
+            'product_row' => $sku['product_row'],
         ];
     }
 

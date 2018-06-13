@@ -81,10 +81,19 @@ class Protocols extends Controller
      * cache check
      * */
     public function cache_check(){
-       $da = Cache::get('collectComment',null);
-        //dd(Carbon::now()->addDays(-3)->toDateString());
-/*        $da[0]->score = 3;
-        $da[0]->save();
-       echo $da[0]->id;*/
+
+        $da =\Cache::get('collectData',null);
+        //dd($da);
+        foreach ($da->comments as $value){
+            dd($value);
+        }
+        /*
+              //  $result=Preorder::find(60502);
+               // dump($result->user->id);
+                //$result->user->wallet->increment('integral',100);
+                //dd(Carbon::now()->addDays(-3)->toDateString());
+        /*        $da[0]->score = 3;
+                $da[0]->save();
+               echo $da[0]->id;*/
     }
 }

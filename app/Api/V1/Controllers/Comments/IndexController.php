@@ -42,7 +42,7 @@ class IndexController extends Controller
             return $this->response->array([
                 'settingArray'=>$this->set_mode->getSetting($id),
                 'preorders'=>$comment_data,
-                'comment'=>isset($comment_data->comments[0])?$comment_data->comments[0]:null,
+                'comment_type'=>isset($comment_data->comments[0])?$comment_data->comments[0]:null,
             ]);
         } catch (\ErrorException $e) {
             Log::error($e->getMessage());

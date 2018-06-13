@@ -7,6 +7,7 @@ use App\Services\Notify\NotifyProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class NotifyClientCommentAlert extends Command
 {
@@ -50,24 +51,37 @@ class NotifyClientCommentAlert extends Command
             })
             ->where('comment_identify',PreorderProtocol::COMMENT_IDENTIFY)
             ->chunk('100',function ($collectData){
-              //  file_put_contents('sureInFollow.txt','collectData---'.$collectData,FILE_APPEND);
+                file_put_contents('sureInFollow.txt',$collectData."\r\n",FILE_APPEND);
                 foreach ($collectData as $collectDatum){
-                       // file_put_contents('testCollect.txt','---'.$collectDatum->comments);
-                         /* && $collectDatum['start_time'] == Carbon::yesterday()->toDateString() && date('H',time()) == '8'*/
+                        file_put_contents('testCollect.txt','---'.$collectDatum->comments."\r\n",FILE_APPEND);
+                         /* && $collectDatum['start_time'] == Carbon::yesterday()->toDateString() && date('H',time()) == '8'
+                          && $collectDatum['start_time'] == Carbon::yesterday()->toDateString()
+                         */
                         //A single delivery
-                        if($collectDatum->comments[0]['content_type'] == 0 && $collectDatum['start_time'] == $collectDatum['end_time'] && $collectDatum['start_time'] == Carbon::yesterday()->toDateString()){
-                           // file_put_contents('testCollectaa.txt','qqqq111');
-                            $collectDatum->comments[0]->comment_type = 'ToBeUsed';//待评价
-                            $collectDatum->comments[0]->save();
-                            NotifyProtocol::notify($collectDatum['user_id'],NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$collectDatum);
+                        try{
+                            \Cache::put('collectData',$collectDatum);
+                            foreach ($collectDatum->comments as $comment){
+                                //A single delivery
+                                file_put_contents('commentType.txt',$comment->comment_type.date('Y-m-d H:i:s',time())."---\r\n",FILE_APPEND);
+                                if(empty($comment->comment_type) && $collectDatum['start_time'] == $collectDatum['end_time']){
+                                    $comment->comment_type = 'ToBeUsed';//待评价
+                                    $comment->save();
+                                    file_put_contents('leshang.txt',$collectDatum.'---'.date('Y-m-d H:i:s',time()).'--|'."\r\n",FILE_APPEND);
+                                    NotifyProtocol::notify($collectDatum['user_id'],NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$collectDatum);
+                                    continue;
+                                }
+                                //Multiple delivery
+                                if(empty($comment->comment_type) && $collectDatum['start_time'] == Carbon::now()->addDays(-3)->toDateString()){
+                                    $comment->comment_type = 'ToBeUsed';//待评价
+                                    $comment->save();
+                                    file_put_contents('manyNum.txt',$comment.'--'.date('Y-m-d H:i:s')."\r\n",FILE_APPEND);
+                                    NotifyProtocol::notify($collectDatum['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$collectDatum);
+                                    continue;
+                                }
+                            }
+                        }catch (\Exception $exception) {
+                            Log::erro($exception->getMessage());
                         }
-                        //Multiple delivery
-                        if($collectDatum->comments[0]['content_type'] == 0 && $collectDatum['start_time'] == Carbon::now()->addDays(-3)->toDateString()){
-                            $collectDatum->comments[0]->comment_type = 'ToBeUsed';//待评价
-                            $collectDatum->comments[0]->save();
-                            NotifyProtocol::notify($collectDatum['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$collectDatum);
-                        }
-
                 }
             });
     }

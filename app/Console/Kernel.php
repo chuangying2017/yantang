@@ -78,7 +78,8 @@ class Kernel extends ConsoleKernel {
         $schedule->command('orders:overtime')->everyTenMinutes();
         
         //A single delivery And Multiple delivery
-        $schedule->command('notify:client-comment-alert')->dailyAt('8:43');
+        $schedule->command('notify:client-comment-alert')->everyTenMinutes();
+        //dailyAt('8:43');
         
         $schedule->command('notify:preorder-ending')->dailyAt('8:00');
         
