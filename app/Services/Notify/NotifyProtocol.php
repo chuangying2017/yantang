@@ -36,11 +36,11 @@ class NotifyProtocol {
 
     const NOTIFY_ACTION_CLIENT_TICKET_IS_ENDING = 111;
 
-    const NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT = 120;
+    const NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT = 120;//new increase comment staff custom
 
     const NOTIFY_ACTION_STAFF_COMMENT_IS_ALERT = 121;//new increase comment custom
 
-    const NOTIFY_ACTION_STATION_NEW_ORDER = 201;//new increase comment staff custom
+    const NOTIFY_ACTION_STATION_NEW_ORDER = 201;
 
     const NOTIFY_ACTION_STAFF_NEW_ORDER = 301;
 
