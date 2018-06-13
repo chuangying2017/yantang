@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Subscribe\Preorder;
+use App\Repositories\Comment\CommentProtocol;
 use App\Services\Notify\NotifyProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
@@ -61,18 +62,21 @@ class NotifyClientCommentAlert extends Command
                         try{
                             \Cache::put('collectData',$collectDatum);
                             foreach ($collectDatum->comments as $comment){
+
                                 //A single delivery
                                 file_put_contents('commentType.txt',$comment->comment_type.date('Y-m-d H:i:s',time())."---\r\n",FILE_APPEND);
                                 if(empty($comment->comment_type) && $collectDatum['start_time'] == $collectDatum['end_time']){
-                                    $comment->comment_type = 'ToBeUsed';//待评价
+                                    $comment->comment_type = CommentProtocol::COMMENT_STATUS_IS_NOT_USES;//待评价
                                     $comment->save();
                                     file_put_contents('leshang.txt',$collectDatum.'---'.date('Y-m-d H:i:s',time()).'--|'."\r\n",FILE_APPEND);
                                     NotifyProtocol::notify($collectDatum['user_id'],NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$collectDatum);
                                     continue;
                                 }
+
                                 //Multiple delivery
-                                if(empty($comment->comment_type) && $collectDatum['start_time'] == Carbon::now()->addDays(-3)->toDateString()){
-                                    $comment->comment_type = 'ToBeUsed';//待评价
+                                $parse = Carbon::parse($collectDatum['start_time'])->timestamp;
+                                if(empty($comment->comment_type) === (int)0 && $parse == Carbon::now()->addDays(-3)->timestamp && $parse < Carbon::parse($collectDatum['end_time'])->timestamp){
+                                    $comment->comment_type = CommentProtocol::COMMENT_STATUS_IS_NOT_USES;//待评价
                                     $comment->save();
                                     file_put_contents('manyNum.txt',$comment.'--'.date('Y-m-d H:i:s')."\r\n",FILE_APPEND);
                                     NotifyProtocol::notify($collectDatum['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$collectDatum);

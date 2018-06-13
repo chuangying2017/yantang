@@ -35,7 +35,7 @@ class NotifyStaffCommentAlert implements NotifyContentContract
     public static function getWeixinTemplateID()
     {
         // TODO: Implement getWeixinTemplateID() method.
-        return 'TjSF4V6iBdPCDV-x9itBvqlGU6KFHufAzBsY3dH8ldA';
+        return 'aKOaXmCAHlk_qMODYCexmMNiB265kUW1wjgIQj39z4Q';
     }
 
     public static function getWeixinTemplateUrl($entity = null)

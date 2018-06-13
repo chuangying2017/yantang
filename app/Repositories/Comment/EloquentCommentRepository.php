@@ -85,7 +85,7 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
             $find_result->fill($data);
 
-            $find_result->comment_type = 'HaveUses';
+            $find_result->comment_type = CommentProtocol::COMMENT_STATUS_IS_USES;
 
             $find_result->save();
 

@@ -82,11 +82,18 @@ class Protocols extends Controller
      * */
     public function cache_check(){
 
-        $da =\Cache::get('collectData',null);
+     /*   $da =\Cache::get('collectData',null);
         //dd($da);
         foreach ($da->comments as $value){
             dd($value);
-        }
+        }*/
+
+       $time = Carbon::parse('2018-06-13')->timestamp;
+
+       $time1 = Carbon::parse('2018-06-14')->timestamp;
+
+       dd(86400 / 3600);
+
         /*
               //  $result=Preorder::find(60502);
                // dump($result->user->id);
