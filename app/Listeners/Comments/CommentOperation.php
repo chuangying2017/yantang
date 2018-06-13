@@ -36,15 +36,15 @@ class CommentOperation
 
     public function comment_success_notify_staff(CommentIsCreated $event){
 
-        foreach ($event->preorders as $preorder){
+        foreach ($event as $item){
 
-                $preorder->comment_identify = 2;//comment get through
+                $item->preorders[0]->comment_identify = 2;//comment get through
 
-                $preorder->save();
+                $item->preorders[0]->save();
 
-                $preorder->user->wallet->increment('integral',array_get($this->setting->getSetting(2)['value'],'user_score','0'));
+                $item->preorders[0]->user->wallet->increment('integral',array_get($this->setting->getSetting(2)['value'],'user_score','0'));
 
-                NotifyProtocol::notify($preorder['staff_id'],NotifyProtocol::NOTIFY_ACTION_STAFF_COMMENT_IS_ALERT,null,$preorder);
+                NotifyProtocol::notify($item->preorders[0]['staff_id'],NotifyProtocol::NOTIFY_ACTION_STAFF_COMMENT_IS_ALERT,null,$item);
         }
 
     }

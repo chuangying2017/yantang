@@ -43,7 +43,7 @@ class NotifyClientOrderCommentAlert implements NotifyContentContract
     public static function getWeixinTemplateUrl($preorder = null)
     {
         // TODO: Implement getWeixinTemplateUrl() method.
-        return 'http://yt2.l43.cn/yt-client/?#!/subscribe/orders/'. $preorder['id'];
+        return 'http://yt2.l43.cn/yt-client/?#!/subscribe/assess/'. $preorder['id'];
     }
 
     public static function getWeixinTemplateColor()

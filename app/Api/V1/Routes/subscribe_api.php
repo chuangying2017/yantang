@@ -17,6 +17,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->put('preorders/{order_id}/restart', 'StaffPreorderController@restart');
             $api->resource('preorders', 'StaffPreorderController', ['only' => ['index', 'show']]);
             $api->post('/{staff_id}/unbind', 'StaffController@postUnBind')->name('api.staff.unbind');
+            $api->get('center/show_comment','StaffController@show_staff_comment');
         });
 
         $api->get('/{staff_id}/bind', 'StaffController@getBind')->name('api.staff.check.bind.get');
@@ -43,6 +44,8 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             //管理配送员
             $api->get('staffs/{staff_id}/preorders', 'StationStaffController@orders');
             $api->put('staffs/{staff_id}/preorders', 'StationStaffController@reassign');
+
+            $api->put('all/staff/comment','StationController@show_station_down_all_staff_comment');// all staff comment data
 
             $api->resource('staffs', 'StationStaffController');
 

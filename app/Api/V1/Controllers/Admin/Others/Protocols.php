@@ -2,11 +2,13 @@
 
 namespace App\Api\V1\Controllers\Admin\Others;
 
+use App\Models\Comment;
 use App\Models\Monitors;
 use App\Models\Product\Category;
 use App\Models\Promotion\Activity;
 use App\models\Protocol;
 use App\Models\Subscribe\Preorder;
+use App\Repositories\Comment\CommentProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -82,17 +84,23 @@ class Protocols extends Controller
      * */
     public function cache_check(){
 
-     /*   $da =\Cache::get('collectData',null);
-        //dd($da);
-        foreach ($da->comments as $value){
-            dd($value);
+        $preorders = Comment::query()->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES)->whereHas('preorders',function($query){
+            $query->where('staff_id',683);
+        })->get();
+        dd($preorders);
+
+        /*$da =\Cache::get('commentLed',null);
+
+        foreach ($da as $value){
+            dd($value->updated_at->toDateTimeString());
         }*/
 
+        /*
        $time = Carbon::parse('2018-06-13')->timestamp;
 
        $time1 = Carbon::parse('2018-06-14')->timestamp;
 
-       dd(86400 / 3600);
+       dd(86400 / 3600);*/
 
         /*
               //  $result=Preorder::find(60502);

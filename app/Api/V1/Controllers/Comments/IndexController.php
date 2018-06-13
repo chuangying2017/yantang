@@ -2,13 +2,14 @@
 
 namespace App\Api\V1\Controllers\Comments;
 
-use App\Api\V1\Transformers\CommentTransformer;
+
+
 use App\Repositories\Comment\CommentRepositoryContract;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Repositories\setting\SetMode;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 
@@ -45,7 +46,9 @@ class IndexController extends Controller
                 'comment_type'=>isset($comment_data->comments[0])?$comment_data->comments[0]:null,
             ]);
         } catch (\ErrorException $e) {
+
             Log::error($e->getMessage());
+
         }
 
     }

@@ -18,6 +18,8 @@ class Comment extends Model {
 
     protected $fillable = ['score','content','order_id','comment_label','comment_type'];
 
+    protected $casts = ['comment_label'=>'array'];
+
    /* protected static function boot()
     {
         parent::boot();

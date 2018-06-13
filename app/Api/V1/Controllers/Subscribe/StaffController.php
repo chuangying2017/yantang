@@ -4,7 +4,10 @@ namespace App\Api\V1\Controllers\Subscribe;
 
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Requests\Station\BindStaffRequest;
+use App\Api\V1\Transformers\CommentTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
+use App\Models\Comment;
+use App\Repositories\Comment\CommentProtocol;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
 use Illuminate\Http\Request;
 
@@ -105,6 +108,19 @@ class StaffController extends Controller {
         $staffs->load('station');
 
         return $this->response->collection($staffs, new StaffTransformer());
+    }
+    
+    public function show_staff_comment(){
+
+            $staff_id = access()->staffId();
+
+            $comment_data_staff = Comment::query()
+            ->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES)
+            ->whereHas('preorders',function($query)use ($staff_id){
+                $query->where('staff_id',$staff_id);
+            })
+            ->get();
+            return $this->response->item($comment_data_staff, new CommentTransformer());
     }
 
 }

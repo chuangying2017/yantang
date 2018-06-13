@@ -53,11 +53,12 @@ class NotifyStaffCommentAlert implements NotifyContentContract
 
     public static function getWeixinTemplateData($entity = null)
     {
+        \Cache::put('entity',$entity,'600');
         // TODO: Implement getWeixinTemplateData() method.
         return [
             'first' => '您好 有新的评论哦 可以在您的登录站点查看',
             'keyword1'=>'匿名评论',
-            'keyword2'=>isset($entity->comments[0]->updated_at)?$entity->comments[0]->updated_at:date('Y-m-d H:i:s',time()),
+            'keyword2'=>isset($entity['score'])?$entity['score'].'[ 星级 ]':'5',
             'remark'=>'燕塘优先达达',
         ];
     }
