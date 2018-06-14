@@ -5,9 +5,13 @@ namespace App\Api\V1\Controllers\Subscribe;
 
 use App\Api\V1\Controllers\Controller;
 use App\Api\V1\Transformers\CommentTransformer;
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderSkuTransformer;
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Models\Comment;
+use App\Models\Subscribe\Preorder;
 use App\Repositories\Comment\CommentProtocol;
+use App\Repositories\Station\StationProtocol;
 use App\Repositories\Station\StationRepositoryContract;
 use App\Api\V1\Requests\Station\BindStationRequest;
 
@@ -97,18 +101,15 @@ class StationController extends Controller {
         return $this->response->collection($stations, new StationTransformer());
     }
 
-    public function show_station_down_all_staff_comment(){
+    public function show_station_down_all_staff_comment($staff_id){
         try{
-            $station_id = access()->stationId();
 
-            $comment_data = Comment::query()->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES)
-                ->whereHas('preorders',function($query)use ($station_id){
-                    $query->where('station_id',$station_id);
-                })->get();
+            $result = $this->stationRepo->getAllStaffDownDataComment(StationProtocol::SELECT_STATION_DOWN_STAFF_COMMENT,$staff_id);
+
         }catch (\Exception $exception){
-            return $exception->getMessage();
+            \Log::error($exception->getMessage());
         }
-            return $this->response->item($comment_data, new CommentTransformer());
+            return $this->response->item($result, new PreorderTransformer());
     }
 
 }

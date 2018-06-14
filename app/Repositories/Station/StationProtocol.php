@@ -8,4 +8,8 @@ class StationProtocol {
     const STATION_PER_PAGE = 20;
     const STAFF_PER_PAGE = 20;
 
+    const SELECT_STATION_IS_STAFF = 'staffs';
+    const SELECT_STATION_DOWN_STAFF_COMMENT = 'staffCommentData';
+
+
 }

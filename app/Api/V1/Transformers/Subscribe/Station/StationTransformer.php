@@ -24,10 +24,6 @@ class StationTransformer extends TransformerAbstract {
             $this->defaultIncludes[] = 'counter';
         }
 
-        if($station->relationLoaded('staffs')){
-            $this->defaultIncludes[] = 'staffs';
-        }
-
         $data = [
             'id' => $station['id'],
             'name' => $station['name'],
@@ -71,10 +67,6 @@ class StationTransformer extends TransformerAbstract {
 
         return null;
     }
-
-    public function includeStaffs(Station $station)
-    {
-        return $this->collection($station->staffs, new StaffTransformer());
-    }
+    
 
 }

@@ -2,13 +2,17 @@
 
 namespace App\Api\V1\Controllers\Admin\Others;
 
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
+use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Models\Comment;
 use App\Models\Monitors;
 use App\Models\Product\Category;
 use App\Models\Promotion\Activity;
 use App\models\Protocol;
 use App\Models\Subscribe\Preorder;
+use App\Models\Subscribe\Station;
 use App\Repositories\Comment\CommentProtocol;
+use App\Repositories\Station\StationProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -83,12 +87,27 @@ class Protocols extends Controller
      * cache check
      * */
     public function cache_check(){
+/*
+        $station = Station::query()->with(['staffs'=>function($query){
+            $query->where('status',StationProtocol::STATUS_OF_STAFF_BIND)->select(['id','status','station_id','name','user_id','phone']);
+        }])->where('active','1')->get(['id','merchant_no','name','address','phone','tel','district_id']);
 
-        $preorders = Comment::query()->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES)->whereHas('preorders',function($query){
-            $query->where('staff_id',683);
-        })->get();
-        dd($preorders);
+        return $this->response->item($station, new StationTransformer(false));*/
 
+        /*$preorders = Preorder::query()->where('staff_id',479)->with(['staff'=>function($query){
+            $query->select(['id','name','user_id','phone']);
+        }])->whereHas('comments',function($query){
+            $query->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES);
+        })->get(['id','status','name','staff_id']);
+        $preorders->load('comments');
+        return $this->response->item($preorders, new PreorderTransformer());*/
+
+        $result = $this->sw(StationProtocol::SELECT_STATION_IS_STAFF);
+        dd($result);
+       /* $station = Station::query()->with('staffs')->where('id','44')->get();
+        dd($station);*/
+      /*  $routes = api_route('station.staff');
+        dd($routes);*/
         /*$da =\Cache::get('commentLed',null);
 
         foreach ($da as $value){
@@ -110,5 +129,30 @@ class Protocols extends Controller
         /*        $da[0]->score = 3;
                 $da[0]->save();
                echo $da[0]->id;*/
+    }
+
+    public function sw($only_id = false, $staff_id = false){
+        $result = false;
+        switch ($only_id)
+        {
+            case StationProtocol::SELECT_STATION_IS_STAFF:
+                $result = Station::query()->with([$only_id=>function($query){
+                    $query->where('status',StationProtocol::STATUS_OF_STAFF_BIND)
+                        ->select(['id','station_id','name','phone','user_id','status']);
+                }])->where('active','1')->get(['id','merchant_no','name','address','phone','tel','district_id']);
+                break;
+            case StationProtocol::SELECT_STATION_DOWN_STAFF_COMMENT:
+                $result = Preorder::query()->where('staff_id',$staff_id)->with(['staff'=>function($query){
+                    $query->select(['id','name','user_id','phone']);
+                }])->whereHas('comments',function($query){
+                    $query->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES);
+                })->get(['id','status','name','staff_id']);
+                $result->load('comments');
+                break;
+            default:
+                $result = null;
+                break;
+        }
+        return $result;
     }
 }

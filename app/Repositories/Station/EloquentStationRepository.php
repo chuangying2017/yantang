@@ -3,6 +3,7 @@
 use App\Models\Subscribe\Preorder;
 use App\Models\Subscribe\Station;
 use App\Repositories\Backend\AccessProtocol;
+use App\Repositories\Comment\CommentProtocol;
 use App\Repositories\Statement\MerchantRepositoryContract;
 use DB;
 
@@ -109,6 +110,7 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
         return $this->getStation($relate->station_id);
     }
 
+
     public function getAll($only_id = false)
     {
         if ($only_id) {
@@ -166,5 +168,33 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
         foreach ($user_ids as $user_id) {
             $this->unbindUser($station_id, $user_id);
         }
+    }
+
+    public function getAllStaffDownDataComment($only_id = false,$staff_id = false)
+    {
+        switch ($only_id){
+            case StationProtocol::SELECT_STATION_IS_STAFF:
+                $result = Station::query()->with([$only_id=>function($query){
+                    $query->where('status',StationProtocol::STATUS_OF_STAFF_BIND)
+                          ->select(['id','station_id','name','phone','user_id','status']);
+                }])->where('active','1')->get(['id','merchant_no','name','address','phone','tel','district_id']);
+                break;
+            case StationProtocol::SELECT_STATION_DOWN_STAFF_COMMENT:
+                $result = Preorder::query()->where('staff_id',$staff_id)->with(['staff'=>function($query){
+                    $query->select(['id','name','user_id','phone']);
+                }])->whereHas('comments',function($query){
+                    $query->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES);
+                })->get(['id','status','name','staff_id']);
+                $result->load('comments');
+                break;
+            default:
+                $result = Station::query()->get();
+        }
+
+        return $result;
+    }
+
+    public function getManyExpressionSelect($array_comment){
+
     }
 }
