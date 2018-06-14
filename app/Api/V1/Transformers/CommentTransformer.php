@@ -1,5 +1,6 @@
 <?php namespace App\Api\V1\Transformers;
 
+use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\Comment;
 use League\Fractal\TransformerAbstract;
@@ -8,7 +9,7 @@ class CommentTransformer extends TransformerAbstract {
 
     use SetInclude;
 
-    protected $availableIncludes = ['images'];
+    protected $availableIncludes = ['images','preorders'];
 
     public function transform(Comment $comment)
     {
@@ -26,6 +27,11 @@ class CommentTransformer extends TransformerAbstract {
     public function includeImages(Comment $comment)
     {
         return $this->collection($comment->images, new ImageTransformer(), true);
+    }
+
+    public function includePreorders(Comment $comment)
+    {
+        return $this->collection($comment->preorders, new PreorderTransformer(),true);
     }
 
 }
