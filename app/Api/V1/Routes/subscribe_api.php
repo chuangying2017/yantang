@@ -45,7 +45,7 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->get('staffs/{staff_id}/preorders', 'StationStaffController@orders');
             $api->put('staffs/{staff_id}/preorders', 'StationStaffController@reassign');
 
-            $api->put('all/staff/comment/{staff_id}','StationController@show_station_down_all_staff_comment');// all staff comment data
+            $api->put('all/staff/comment/{staff_id}','StationController@show_station_down_all_staff_comment')->where('staff_id','[0-9]+');// all staff comment data
 
             $api->resource('staffs', 'StationStaffController');
 

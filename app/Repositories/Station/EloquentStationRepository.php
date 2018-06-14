@@ -196,4 +196,8 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
 
         return $result;
     }
+
+    public function getManyExpressionSelect($array_comment){
+
+    }
 }

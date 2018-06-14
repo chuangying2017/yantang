@@ -38,4 +38,6 @@ interface StationRepositoryContract {
     public function getAllActive($only_id = false);
 
     public function getByDistrict($district = null);
+
+    public function getAllStaffDownDataComment($only_id = false, $staff_id = false);
 }
