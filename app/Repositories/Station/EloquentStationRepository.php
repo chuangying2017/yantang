@@ -173,9 +173,6 @@ class EloquentStationRepository implements StationRepositoryContract, MerchantRe
     public function getAllStaffDownDataComment($only_id = false,$staff_id = false)
     {
         switch ($only_id){
-            case true:
-                $result = Station::query()->pluck('id')->all();
-                break;
             case StationProtocol::SELECT_STATION_IS_STAFF:
                 $result = Station::query()->with([$only_id=>function($query){
                     $query->where('status',StationProtocol::STATUS_OF_STAFF_BIND)

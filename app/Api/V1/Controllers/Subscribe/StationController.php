@@ -104,12 +104,12 @@ class StationController extends Controller {
     public function show_station_down_all_staff_comment($staff_id){
         try{
 
-            $preorders = $this->stationRepo->getAllStaffDownDataComment(StationProtocol::SELECT_STATION_DOWN_STAFF_COMMENT,$staff_id);
+            $result = $this->stationRepo->getAllStaffDownDataComment(StationProtocol::SELECT_STATION_DOWN_STAFF_COMMENT,$staff_id);
 
         }catch (\Exception $exception){
             \Log::error($exception->getMessage());
         }
-            return $this->response->item($preorders, new PreorderTransformer());
+            return $this->response->item($result, new PreorderTransformer());
     }
 
 }
