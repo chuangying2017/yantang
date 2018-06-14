@@ -47,7 +47,7 @@ class PreorderProtocol {
 
     //new addition comment identify
     const COMMENT_IDENTIFY = 1;
-
+    const COMMENT_IDENTIFY_TWO = 2;
 
     public static function validOrderStatus($status)
     {
