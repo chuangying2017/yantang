@@ -216,6 +216,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
     $api->group(['middleware'=>'api.auth','access.routeNeedsRole:' . \App\Repositories\Backend\AccessProtocol::ROLE_OF_STATION_ADMIN],function($api){
         $api->group(['namespace'=>'Comments','prefix'=>'comments'],function($api){
             $api->resource('AdminComments','OperationController');
+            $api->get('stationShow','OperationController@show_station_and_staff')->name('station.staff');
         });
     });
 });
