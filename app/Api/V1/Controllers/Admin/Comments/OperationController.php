@@ -2,6 +2,7 @@
 
 namespace App\Api\V1\Controllers\Admin\Comments;
 
+use App\Api\V1\Transformers\CommentTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Repositories\Comment\CommentRepositoryContract;
 use App\Repositories\Station\StationProtocol;
@@ -27,9 +28,12 @@ class OperationController extends Controller
     }
 
     //
-    public function Index(Request $request){
-        $all_expression = $request->except('token');
+    public function Index(Request $request)
+    {
+       
+        $result = $this->comment_contract->getExpressionSelect(['page'=>$request->input('page'),'other'=>$request->except(['token','page'])]);
 
+        return $this->response->paginator($result, new CommentTransformer());
     }
 
     public function show($comments_id){}

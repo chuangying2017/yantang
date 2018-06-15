@@ -5,6 +5,8 @@ use App\Models\Order\Order;
 use App\Models\Product\Product;
 use App\Models\Subscribe\Preorder;
 use App\Services\Comments\Event\CommentIsCreated;
+use App\Services\Preorder\PreorderProtocol;
+use Carbon\Carbon;
 use Mockery\Exception;
 
 class EloquentCommentRepository implements CommentRepositoryContract {
@@ -112,5 +114,79 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
         return $preorder_data;
     }
+
+    public function getExpressionSelect($all, $updated_at = 'updated_at', $sort = 'desc', $paginate = 20)
+    {
+
+                $comment_data = Comment::query()->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES);
+
+                if(empty($all['other'])){
+                    $comment_data->with('preorders','preorders.station','preorders.staff');
+                    return $comment_data->paginate($paginate,['*'],'page',$all['page']?:1);
+                }
+
+                $all['other']['page'] = $all['page'];
+
+                $all = $this->fill($all['other']);
+
+                if(isset($all['start_time']) && isset($all['end_time']) && strtotime($all['start_time']) < strtotime($all['end_time'])){
+                    $comment_data->whereBetween('updated_at',[$all['start_time'],$all['end_time']]);
+                }
+
+                if(isset($all['start_time']) && empty($all['end_time'])){
+                    $comment_data->where('updated_at','>',$all['start_time']);
+                }
+
+                if(isset($all['end_time']) && empty($all['start_time'])){
+                    $comment_data->where('updated_at','<',$all['end_time']);
+                }
+
+                if(isset($all['score'])){
+                    $comment_data->where('score',$all['score']);
+                }
+
+                if(isset($all['phone']) && strlen($all['phone']) == 11){
+                    $comment_data->whereHas('preorders',function($query)use($all){
+                        $query->where('phone',$all['phone']);
+                    });
+                }
+
+                if(isset($all['station_id'])){
+                    $comment_data->whereHas('preorders',function ($query)use($all){
+                        $query->where('station_id',$all['station_id']);
+                    });
+                }
+
+                if(isset($all['staff_id'])){
+                   $comment_data->whereHas('preorders',function($query)use($all){
+                       $query->where('staff_id',$all['staff_id']);
+                   });
+                }
+
+                $comment_data->with('preorders.station','preorders.staff');
+
+                $comment_data->orderBy($updated_at,$sort);
+                if($paginate){
+                    $comment_data = $comment_data->paginate($paginate,['*'],'page',$all['page']);
+                }else{
+                    $comment_data = $comment_data->get();
+                }
+
+                return $comment_data;
+    }
+
+    protected function fill($data){
+        return array_only($data,[
+            'start_time',
+            'end_time',
+            'order_no',
+            'score',
+            'phone',
+            'station_id',
+            'staff_id',
+            'page',
+        ]);
+    }
+
 }
 
