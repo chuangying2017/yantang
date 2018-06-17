@@ -47,52 +47,48 @@ class NotifyClientCommentAlert extends Command
         Preorder::query()
             ->where(function($query){
                 $query->whereIn('status',[PreorderProtocol::ORDER_STATUS_OF_SHIPPING,PreorderProtocol::ORDER_STATUS_OF_DONE])
-                    ->whereBetween('start_time',[Carbon::today()->addDays(-3),Carbon::today()])->orWhereDate('end_time','=',Carbon::yesterday());
+                    ->orWhereBetween('start_time',[Carbon::today()->addDays(-3),Carbon::today()])
+                    ->orWhereDate('end_time','=',Carbon::yesterday()->toDateString())
+                    ->orWhere('restart_time','!=',null);
             })
             ->where('comment_identify',PreorderProtocol::COMMENT_IDENTIFY)
             ->chunk('100',function ($collectData){
                 //file_put_contents('sureInFollow.txt',$collectData."\r\n",FILE_APPEND);
                 foreach ($collectData as $collectDatum){
                         file_put_contents('Skus_Collect.txt','---'.$collectDatum->skus."\r\n",FILE_APPEND);
-                       // file_put_contents('testCollect.txt','---'.$collectDatum->comments."\r\n",FILE_APPEND);
+
                         //A single delivery
                         try{
-                            \Cache::put('collectData',$collectDatum,'300');
+
                             foreach ($collectDatum->comments as $comment){
 
-                             
-
-                                file_put_contents('collect_Datum.txt',$collectDatum.'---'.date('Y-m-d H:i:s',time())."\r\n",FILE_APPEND);
-                                //A single delivery
-                                file_put_contents('commentType.txt',$comment->comment_type.' --'.date('Y-m-d H:i:s',time())."---\r\n",FILE_APPEND);
-                                $parse_startTime = Carbon::parse($collectDatum['start_time'])->timestamp;
-                                $parse_endTime = Carbon::parse($collectDatum['end_time'])->timestamp;
-                                if(empty($comment->comment_type) && $parse_startTime == $parse_endTime && $parse_startTime == Carbon::yesterday()->timestamp)
+                                $total = array_multi_sort($collectDatum->skus->toArray(),['total'=>'desc']);
+                                if(empty($total[0]['remain']) && empty($comment->comment_type) && $collectDatum['status'] == PreorderProtocol::ORDER_STATUS_OF_DONE)
                                 {
+
                                     $comment->comment_type = CommentProtocol::COMMENT_STATUS_IS_NOT_USES;//待评价
                                     $comment->save();
-                                    file_put_contents('leshang.txt',$collectDatum.'---'.date('Y-m-d H:i:s',time()).'--|'."\r\n",FILE_APPEND);
+
+                                    file_put_contents('Completed.txt',$comment.'--'.date('Y-m-d H:i:s')."\r\n",FILE_APPEND);
+
+                                    $collectDatum->comment_identify = PreorderProtocol::COMMENT_IDENTIFY_THREE;//表示最后一次模板消息推送
+                                    $collectDatum->save();
                                     NotifyProtocol::notify($collectDatum['user_id'],NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$collectDatum);
                                     continue;
                                 }
-
+                                file_put_contents('collect_Datum.txt',$collectDatum.'---'.date('Y-m-d H:i:s',time())."\r\n",FILE_APPEND);
+                                //A single delivery
+                                file_put_contents('commentType.txt',$comment->comment_type.' --'.date('Y-m-d H:i:s',time())."---\r\n",FILE_APPEND);
                                 //Multiple delivery
 
-                                if(empty($comment->comment_type) && $parse_startTime == Carbon::today()->addDays(-3)->timestamp && $parse_startTime < $parse_endTime)
+                                $rest = empty($collectDatum['restart_time']) ? true : Carbon::parse($collectDatum['restart_time'])->timestamp <= Carbon::today()->timestamp;
+
+                                if(empty($comment->comment_type) && $total[0]['total'] == ($total[0]['per_day'] * 3 + $total[0]['remain']) && $rest)
                                 {
                                     $comment->comment_type = CommentProtocol::COMMENT_STATUS_IS_NOT_USES;//待评价
                                     $comment->save();
                                     file_put_contents('manyNum.txt',$comment.'--'.date('Y-m-d H:i:s')."\r\n",FILE_APPEND);
                                     NotifyProtocol::notify($collectDatum['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$collectDatum);
-                                    continue;
-                                }
-
-                                if(empty($comment->comment_type) && $collectDatum['status'] == PreorderProtocol::ORDER_STATUS_OF_DONE && $parse_startTime < $parse_endTime && $parse_endTime == Carbon::yesterday()->timestamp)
-                                {
-                                    $comment->comment_type = CommentProtocol::COMMENT_STATUS_IS_NOT_USES;
-                                    $comment->save();
-                                    file_put_contents('endDayAlert.txt',$comment.'---'.date('Y-m-d H:i:s',time())."\r\n",FILE_APPEND);
-                                    NotifyProtocol::notify($collectDatum['user_id'],NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$collectDatum);
                                     continue;
                                 }
                             }

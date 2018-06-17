@@ -48,6 +48,7 @@ class PreorderProtocol {
     //new addition comment identify
     const COMMENT_IDENTIFY = 1;
     const COMMENT_IDENTIFY_TWO = 2;
+    const COMMENT_IDENTIFY_THREE = 3; //alert lost send template 最后一次模板消息发送 表示没有评论 订单已经done 进行最后一次模板信息提醒
 
     public static function validOrderStatus($status)
     {

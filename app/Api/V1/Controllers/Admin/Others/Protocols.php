@@ -87,6 +87,7 @@ class Protocols extends Controller
      * cache check
      * */
     public function cache_check(){
+
         /*
          $station = Station::query()->with(['staffs'=>function($query){
             $query->where('status',StationProtocol::STATUS_OF_STAFF_BIND)->select(['id','status','station_id','name','user_id','phone']);
@@ -95,8 +96,6 @@ class Protocols extends Controller
         return $this->response->item($station, new StationTransformer(false));*/
         /* $put = \Cache::get('collectData');
          dd($put);*/
-        $carbon = Carbon::now()->day(20);
-        dd($carbon);
         /*$preorders = Preorder::query()->where('staff_id',479)->with(['staff'=>function($query){
             $query->select(['id','name','user_id','phone']);
         }])->whereHas('comments',function($query){
@@ -105,6 +104,7 @@ class Protocols extends Controller
         $preorders->load('comments');
         return $this->response->item($preorders, new PreorderTransformer());
         */
+
         /*$result = Comment::query()->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES)->whereHas('preorders',function ($query){
             $query->where('comment_identify','2')->groupBy('staff_id');
         })->selectRaw('avg(score) as scores, score, id, content, comment_label, comment_type, updated_at')->paginate();
