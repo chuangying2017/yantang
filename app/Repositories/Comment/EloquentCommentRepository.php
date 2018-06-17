@@ -122,7 +122,7 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
                 if(empty($all['other'])){
                     $comment_data->with('preorders','preorders.station','preorders.staff');
-                    return $comment_data->paginate($paginate,['*'],'page',$all['page']?:1);
+                    return $comment_data->paginate($paginate);
                 }
 
                 $all['other']['page'] = $all['page'];
@@ -145,29 +145,69 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                     $comment_data->where('score',$all['score']);
                 }
 
-                if(isset($all['phone']) && strlen($all['phone']) == 11){
-                    $comment_data->whereHas('preorders',function($query)use($all){
-                        $query->where('phone',$all['phone']);
-                    });
-                }
+                if(isset($all['seniority'])){
 
-                if(isset($all['station_id'])){
-                    $comment_data->whereHas('preorders',function ($query)use($all){
-                        $query->where('station_id',$all['station_id']);
-                    });
-                }
+                    $groupBy = '';
+                    if(isset($all['phone']) && strlen($all['phone']) == 11){
+                        $comment_data->whereHas('preorders',function($query)use($all){
+                            $query->where('phone',$all['phone']);
+                        });
+                        empty($groupBy)?$groupBy = 'phone':$groupBy[]='phone';
+                    }
 
-                if(isset($all['staff_id'])){
-                   $comment_data->whereHas('preorders',function($query)use($all){
-                       $query->where('staff_id',$all['staff_id']);
-                   });
+                    if(isset($all['station_id'])){
+                        $comment_data->whereHas('preorders',function ($query)use($all){
+                            $query->where('station_id',$all['station_id']);
+                        });
+                         empty($groupBy)?$groupBy ='station_id':$groupBy[]='station_id';
+                    }
+
+                    $comment_data->whereHas('preorders',function($query)use($all,$groupBy){
+
+                        if(isset($all['staff_id'])){
+
+                            empty($groupBy)?$groupBy ='staff_id':$groupBy[]='staff_id';
+
+                            $query->where('staff_id',$all['staff_id'])->groupBy($groupBy);
+                        }else{
+                            $query->groupBy(isset($groupBy)&&!empty($groupBy)?$groupBy:['staff_id','station_id']);
+                        }
+
+                    });
+
+                    $comment_data->selectRaw('avg(score) as scores,id,score,content,comment_type,comment_label,updated_at');
+
+                    $updated_at = 'scores';
+                }else{
+
+                    if(isset($all['phone']) && strlen($all['phone']) == 11){
+                        $comment_data->whereHas('preorders',function($query)use($all){
+                            $query->where('phone',$all['phone']);
+                        });
+                    }
+
+                    if(isset($all['station_id'])){
+                        $comment_data->whereHas('preorders',function ($query)use($all){
+                            $query->where('station_id',$all['station_id']);
+                        });
+                    }
+
+                    if(isset($all['staff_id'])){
+                        $comment_data->whereHas('preorders',function($query)use($all){
+                            $query->where('staff_id',$all['staff_id']);
+                        });
+                    }
+
                 }
 
                 $comment_data->with('preorders.station','preorders.staff');
 
                 $comment_data->orderBy($updated_at,$sort);
-                if($paginate){
-                    $comment_data = $comment_data->paginate($paginate,['*'],'page',$all['page']);
+          
+                if(isset($all['seniority'])){
+                    $comment_data = $comment_data->paginate($paginate);
+                }elseif($paginate){
+                    $comment_data = $comment_data->paginate($paginate);
                 }else{
                     $comment_data = $comment_data->get();
                 }
@@ -175,7 +215,8 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                 return $comment_data;
     }
 
-    protected function fill($data){
+    protected function fill($data)
+    {
         return array_only($data,[
             'start_time',
             'end_time',
@@ -185,8 +226,8 @@ class EloquentCommentRepository implements CommentRepositoryContract {
             'station_id',
             'staff_id',
             'page',
+            'seniority',
         ]);
     }
-
 }
 
