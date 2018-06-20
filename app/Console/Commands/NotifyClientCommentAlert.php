@@ -47,6 +47,7 @@ class NotifyClientCommentAlert extends Command
         Preorder::query()
             ->where(function($query){
                 $query->whereIn('status',[PreorderProtocol::ORDER_STATUS_OF_SHIPPING,PreorderProtocol::ORDER_STATUS_OF_DONE])
+                    ->where('staff_id','>',0)
                     ->orWhereBetween('start_time',[Carbon::today()->addDays(-3),Carbon::today()])
                     ->orWhereDate('end_time','=',Carbon::yesterday()->toDateString())
                     ->orWhere('restart_time','!=',null);

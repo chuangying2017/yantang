@@ -4,13 +4,15 @@ use App\Models\Comment;
 use App\Models\Order\Order;
 use App\Models\Product\Product;
 use App\Models\Subscribe\Preorder;
+use App\Repositories\Page\RepoPageShare;
 use App\Services\Comments\Event\CommentIsCreated;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 use Mockery\Exception;
 
 class EloquentCommentRepository implements CommentRepositoryContract {
-
+    use RepoPageShare;
+    protected $pre_orders = ['station_id','staff_id','phone'];
     public function getAll($commentable_type, $order_by = 'created_at', $sort = 'desc')
     {
         return Comment::query()->has($this->getCommentAble($commentable_type))->orderBy($order_by, $sort)->get();
@@ -145,67 +147,36 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                     $comment_data->where('score',$all['score']);
                 }
 
+                $fetch_true_data = array_only($all,$this->pre_orders);
+
                 if(isset($all['seniority'])){
 
-                    $groupBy = '';
-                    if(isset($all['phone']) && strlen($all['phone']) == 11){
-                        $comment_data->whereHas('preorders',function($query)use($all){
-                            $query->where('phone',$all['phone']);
+                    if(!empty($fetch_true_data)){
+                        $comment_data->whereHas('preorders',function($query)use($fetch_true_data){
+                            $query->where($fetch_true_data);
                         });
-                        empty($groupBy)?$groupBy = 'phone':$groupBy[]='phone';
                     }
 
-                    if(isset($all['station_id'])){
-                        $comment_data->whereHas('preorders',function ($query)use($all){
-                            $query->where('station_id',$all['station_id']);
-                        });
-                         empty($groupBy)?$groupBy ='station_id':$groupBy[]='station_id';
+                    foreach ($comment_data->get() as $item) {
+                            $item['station_id'] = $item->preorders[0]->station_id;
+                            $item['staff_id'] = $item->preorders[0]->staff_id;
                     }
 
-                    $comment_data->whereHas('preorders',function($query)use($all,$groupBy){
-
-                        if(isset($all['staff_id'])){
-
-                            empty($groupBy)?$groupBy ='staff_id':$groupBy[]='staff_id';
-
-                            $query->where('staff_id',$all['staff_id'])->groupBy($groupBy);
-                        }else{
-                            $query->groupBy(isset($groupBy)&&!empty($groupBy)?$groupBy:['staff_id','station_id']);
-                        }
-
-                    });
-
-                    $comment_data->selectRaw('avg(score) as scores,id,score,content,comment_type,comment_label,updated_at');
-
+                    $comment_data->selectRaw('avg(score) as scores,score,content,comment_label,comment_type,updated_at,staff_id,station_id')->groupBy('staff_id');
+                    dd($comment_data->get());
                     $updated_at = 'scores';
-                }else{
-
-                    if(isset($all['phone']) && strlen($all['phone']) == 11){
-                        $comment_data->whereHas('preorders',function($query)use($all){
-                            $query->where('phone',$all['phone']);
-                        });
-                    }
-
-                    if(isset($all['station_id'])){
-                        $comment_data->whereHas('preorders',function ($query)use($all){
-                            $query->where('station_id',$all['station_id']);
-                        });
-                    }
-
-                    if(isset($all['staff_id'])){
-                        $comment_data->whereHas('preorders',function($query)use($all){
-                            $query->where('staff_id',$all['staff_id']);
-                        });
-                    }
-
+                }elseif(!empty($fetch_true_data)){
+                    $comment_data->whereHas('preorders',function ($query)use($fetch_true_data){
+                        $query->where($fetch_true_data);
+                    });
                 }
 
                 $comment_data->with('preorders.station','preorders.staff');
 
                 $comment_data->orderBy($updated_at,$sort);
-          
+
                 if(isset($all['seniority'])){
-                    $comment_data = $comment_data->paginate($paginate);
+                    $comment_data = $this->paginate($comment_data,$paginate,$all['page']);
                 }elseif($paginate){
                     $comment_data = $comment_data->paginate($paginate);
                 }else{

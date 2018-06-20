@@ -7,4 +7,5 @@
  */
 $api->group(['namespace'=>'Comments','prefix'=>'comments','middleware'=>['api.auth','access.routeNeedsRole:'.\App\Repositories\Backend\AccessProtocol::ROLE_OF_CLIENT]],function($api){
     $api->resource('clientComments','IndexController');
+    $api->get('commentFetchIntegral','IndexController@fetchIntegral');
 });

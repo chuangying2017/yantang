@@ -65,4 +65,14 @@ class IndexController extends Controller
                 Log::error($exception->getMessage());
             }
     }
+
+    public function fetchIntegral()
+    {
+        try{
+            $set = $this->set_mode->getSetting(2);
+        }catch (\Exception $exception){
+            Log::error($exception->getMessage());
+        }
+            return $this->response->array(array_only($set['value'],['user_score']));
+    }
 }

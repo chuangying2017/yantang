@@ -87,55 +87,9 @@ class Protocols extends Controller
      * cache check
      * */
     public function cache_check(){
+            $comment = Settings::find(2);
 
-        /*
-         $station = Station::query()->with(['staffs'=>function($query){
-            $query->where('status',StationProtocol::STATUS_OF_STAFF_BIND)->select(['id','status','station_id','name','user_id','phone']);
-        }])->where('active','1')->get(['id','merchant_no','name','address','phone','tel','district_id']);
-
-        return $this->response->item($station, new StationTransformer(false));*/
-        /* $put = \Cache::get('collectData');
-         dd($put);*/
-        /*$preorders = Preorder::query()->where('staff_id',479)->with(['staff'=>function($query){
-            $query->select(['id','name','user_id','phone']);
-        }])->whereHas('comments',function($query){
-            $query->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES);
-        })->get(['id','status','name','staff_id']);
-        $preorders->load('comments');
-        return $this->response->item($preorders, new PreorderTransformer());
-        */
-
-        /*$result = Comment::query()->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES)->whereHas('preorders',function ($query){
-            $query->where('comment_identify','2')->groupBy('staff_id');
-        })->selectRaw('avg(score) as scores, score, id, content, comment_label, comment_type, updated_at')->paginate();
-        dd($result);*/
-        /* $station = Station::query()->with('staffs')->where('id','44')->get();
-        dd($station);*/
-
-        /*  $routes = api_route('station.staff');
-        dd($routes);*/
-
-        /*$da =\Cache::get('commentLed',null);
-
-        foreach ($da as $value){
-            dd($value->updated_at->toDateTimeString());
-        }*/
-
-        /*
-       $time = Carbon::parse('2018-06-13')->timestamp;
-
-       $time1 = Carbon::parse('2018-06-14')->timestamp;
-
-       dd(86400 / 3600);*/
-
-        /*
-              //  $result=Preorder::find(60502);
-               // dump($result->user->id);
-                //$result->user->wallet->increment('integral',100);
-                //dd(Carbon::now()->addDays(-3)->toDateString());
-        /*        $da[0]->score = 3;
-                $da[0]->save();
-               echo $da[0]->id;*/
+            dd(array_only($comment['value'],['user_score']));
     }
 
 }

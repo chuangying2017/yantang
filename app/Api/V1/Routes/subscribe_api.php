@@ -69,34 +69,38 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
 
     //用户订奶
     $api->group(['prefix' => 'subscribe'], function ($api) {
-				
-        $api->put('orders/{temp_order}/confirm', 'OrderController@confirm');
-        $api->resource('orders', 'OrderController');
- 		$api->resource('assess', 'OrderController');
-		
-		
-		$api->post('preorders/comments', 'PreorderCommentController@store');
-		
-		//$api->resource('assessSuccess2', 'OrderController');
-		$api->post('assessSuccess2', 'OrderController@assessSuccess');
 
-        $api->get('preorders/{order_id}/deliver', 'PreorderController@deliver');
-        $api->post('preorders/comments', 'PreorderCommentController@store');
-        $api->resource('preorders', 'PreorderController');
-	 	
-        $api->resource('orders.checkout', 'CheckoutController');
+        $api->group(['middleware'=>['api.auth','access.routeNeedsRole:'. \App\Repositories\Backend\AccessProtocol::ROLE_OF_CLIENT]],function($api){
+            $api->put('orders/{temp_order}/confirm', 'OrderController@confirm');
+            $api->resource('orders', 'OrderController');
+            $api->resource('assess', 'OrderController');
 
-        $api->get('address/{address_id}/edit/{default_status}/{being_id?}','AddressController@edit');
-        $api->put('addressUpdate/{address_id}','AddressController@updateAddress')->where('address_id','\d+');
-        $api->put('addressDelete/{address_id}/{existing_id?}', 'AddressController@deleteFunction');
-        $api->resource('address', 'AddressController');
 
-        $api->get('stations', 'StationController@index');
-        $api->get('products', 'ProductController@index');
-        $api->get('districts', 'DistrictController@index');
+            $api->post('preorders/comments', 'PreorderCommentController@store');
 
-		
-        $api->get('residence/{residence}', 'ResidenceController@show');
+            //$api->resource('assessSuccess2', 'OrderController');
+            $api->post('assessSuccess2', 'OrderController@assessSuccess');
+
+            $api->get('preorders/{order_id}/deliver', 'PreorderController@deliver');
+            $api->post('preorders/comments', 'PreorderCommentController@store');
+            $api->resource('preorders', 'PreorderController');
+
+            $api->resource('orders.checkout', 'CheckoutController');
+
+            $api->get('address/{address_id}/edit/{default_status}/{being_id?}','AddressController@edit');
+            $api->put('addressUpdate/{address_id}','AddressController@updateAddress')->where('address_id','\d+');
+            $api->put('addressDelete/{address_id}/{existing_id?}', 'AddressController@deleteFunction');
+            $api->resource('address', 'AddressController');
+
+            $api->get('stations', 'StationController@index');
+            $api->get('products', 'ProductController@index');
+            $api->get('districts', 'DistrictController@index');
+
+
+            $api->get('residence/{residence}', 'ResidenceController@show');
+
+        });
+
     });
 });
 
