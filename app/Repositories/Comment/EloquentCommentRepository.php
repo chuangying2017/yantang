@@ -87,6 +87,15 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
             $find_result->fill($data);
 
+
+            if(isset($data['comment_type']) && !empty($data['comment_type']) && $data['comment_type'] == 'Additional'){
+                $find_result->comment_type = CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL;
+
+                $find_result->save();
+
+                return $find_result;
+            }
+
             $find_result->comment_type = CommentProtocol::COMMENT_STATUS_IS_USES;
 
             $find_result->save();
