@@ -587,24 +587,21 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
     }
 
     public function getAllStaffDayDelivery(array $array = []){
-        /*
-         * with(['skus' => function($query){
-            $query->where('remain','>', 0);
-        }])
-         * */
-        $start_time = Carbon::createFromFormat('Y-m-d H:i:s',$array['stime'].' 00:00:00');
-        $end_time = Carbon::createFromFormat('Y-m-d H:i:s',$array['etime'].' 23:59:59');
+
+        dd($array);
+
         $preorderQuery = Preorder::query()->with('skus')
             ->where('station_id',access()->stationId())
-            ->whereBetween('start_time',[$start_time,$end_time])
-            ->whereIn('status',[PreorderProtocol::ORDER_STATUS_OF_SHIPPING,PreorderProtocol::ORDER_STATUS_OF_DONE])
-            ->where(function ($query) use ($end_time) {
-                //非暂停中
-                $query->whereNull('pause_time')->orWhere('pause_time', '>', $end_time)
-                      ->orWhere(function ($query) use ($end_time) {
-                        $query->whereNotNull('restart_time')->where('restart_time', '<=', $end_time);
-                    });
+            ->whereIn('status',[PreorderProtocol::ORDER_STATUS_OF_SHIPPING,PreorderProtocol::ORDER_STATUS_OF_DONE]);
+
+        if(!empty($array['stime']) && empty($array['etime']))
+            $preorderQuery->where(function($query)use($array){
+                $query->whereDate('start_time','<=', $array['stime'])->orWhereDate('pause_time','<=',$array['stime'])->whereDate('restart_time','<=',$array['stime']);
             });
+
+        if(!empty($array['etime'])){
+
+        }
 
         if($array['staff'])
             $preorderQuery->where('staff_id',$array['staff']);
@@ -615,4 +612,5 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $preorderQuery->get();
 
     }
+
 }

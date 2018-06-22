@@ -87,9 +87,8 @@ class Protocols extends Controller
      * cache check
      * */
     public function cache_check(){
-            $comment = Settings::find(2);
-
-            dd(array_only($comment['value'],['user_score']));
+          $comment = Carbon::createFromFormat('Y-m-d','2018-06-19');
+          dd($comment);
     }
 
 }

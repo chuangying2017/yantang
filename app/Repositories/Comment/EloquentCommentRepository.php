@@ -89,6 +89,8 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
             $find_result->fill($data);
 
+            if(isset($data['CommentType']) && !empty($data['CommentType']) && $data['CommentType'] == CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL){}
+
             $find_result->comment_type = CommentProtocol::COMMENT_STATUS_IS_USES;
 
             $find_result->save();
@@ -123,7 +125,7 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                 $comment_data = Comment::query()->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES);
 
                 if(empty($all['other'])){
-                    $comment_data->with('preorders','preorders.station','preorders.staff');
+                    $comment_data->with('preorders','preorders.station','preorders.staff')->orderBy($updated_at,$sort);
                     return $comment_data->paginate($paginate);
                 }
 
@@ -157,13 +159,8 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                         });
                     }
 
-                    foreach ($comment_data->get() as $item) {
-                            $item['station_id'] = $item->preorders[0]->station_id;
-                            $item['staff_id'] = $item->preorders[0]->staff_id;
-                    }
+                    $comment_data->with('preorders');
 
-                    $comment_data->selectRaw('avg(score) as scores,score,content,comment_label,comment_type,updated_at,staff_id,station_id')->groupBy('staff_id');
-                    dd($comment_data->get());
                     $updated_at = 'scores';
                 }elseif(!empty($fetch_true_data)){
                     $comment_data->whereHas('preorders',function ($query)use($fetch_true_data){

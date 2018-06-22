@@ -16,4 +16,6 @@ class CommentProtocol
 
     const COMMENT_STATUS_IS_USES = 'HaveUses';
 
+    const COMMENT_STATUS_IS_ADDITIONAL = 'Additional'; // additional comments
+
 }

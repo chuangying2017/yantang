@@ -64,7 +64,6 @@ class NotifyClientCommentAlert extends Command
                             foreach ($collectDatum->comments as $comment){
 
                                 $total = array_multi_sort($collectDatum->skus->toArray(),['total'=>'desc']);
-
                                 if(empty($total[0]['remain']) && empty($comment->comment_type) && $collectDatum['status'] == PreorderProtocol::ORDER_STATUS_OF_DONE)
                                 {
 
