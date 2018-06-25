@@ -87,9 +87,18 @@ class EloquentCommentRepository implements CommentRepositoryContract {
         try{
             $find_result = Comment::find($comment_id);
 
-            $find_result->fill($data);
+            if(isset($data['CommentType']) && !empty($data['CommentType']) && $data['CommentType'] == CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL)
+            {
+                $find_result->additional_comments = $data['additionalComments'];
 
-            if(isset($data['CommentType']) && !empty($data['CommentType']) && $data['CommentType'] == CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL){}
+                $find_result->comment_type = CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL;
+
+                $find_result->save();
+
+                return $find_result;
+            }
+
+            $find_result->fill($data);
 
             $find_result->comment_type = CommentProtocol::COMMENT_STATUS_IS_USES;
 
@@ -122,7 +131,9 @@ class EloquentCommentRepository implements CommentRepositoryContract {
     public function getExpressionSelect($all, $updated_at = 'updated_at', $sort = 'desc', $paginate = 20)
     {
 
-                $comment_data = Comment::query()->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES);
+                $comment_Type = isset($all['commentType'])?[$all['commentType']]:[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_NOT_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL];
+
+                $comment_data = Comment::whereIn('comment_type',$comment_Type);
 
                 if(empty($all['other'])){
                     $comment_data->with('preorders','preorders.station','preorders.staff')->orderBy($updated_at,$sort);
@@ -151,18 +162,8 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
                 $fetch_true_data = array_only($all,$this->pre_orders);
 
-                if(isset($all['seniority'])){
 
-                    if(!empty($fetch_true_data)){
-                        $comment_data->whereHas('preorders',function($query)use($fetch_true_data){
-                            $query->where($fetch_true_data);
-                        });
-                    }
-
-                    $comment_data->with('preorders');
-
-                    $updated_at = 'scores';
-                }elseif(!empty($fetch_true_data)){
+                if(!empty($fetch_true_data)){
                     $comment_data->whereHas('preorders',function ($query)use($fetch_true_data){
                         $query->where($fetch_true_data);
                     });
@@ -170,11 +171,37 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
                 $comment_data->with('preorders.station','preorders.staff');
 
-                $comment_data->orderBy($updated_at,$sort);
+                if(isset($all['seniority'])){ // 判断 排名
 
-                if(isset($all['seniority'])){
-                    $comment_data = $this->paginate($comment_data,$paginate,$all['page']);
-                }elseif($paginate){
+                    $collect_data = $comment_data->get();
+
+                    foreach ($collect_data as $key => $value)
+                    {
+                        $collect_data[$key]['staff_id'] = $value->preorders[0]['staff_id'];
+                        $collect_data[$key]['station_id'] = $value->preorders[0]['station_id'];
+                    }
+
+                    $comment_data = $collect_data->groupBy('staff_id');
+
+                    foreach ($comment_data as &$value)
+                    {
+                        $value['total_order'] = $value->count();
+
+                        $value['have_comments_number'] = $value->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->count();
+
+                        $value['scores'] = $value->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->avg('score');
+                    }
+                    $forPage = $comment_data->forPage($all['page']?:1,$paginate);
+
+                    $result = $forPage->sortByDesc('scores')->values()->all();
+
+                    return ['result'=>$result,'paging'=>['current_page'=>$all['page']?:1,'total_page'=>$forPage->count(),'paginate'=>$paginate]];
+
+                }else{
+                    $comment_data->orderBy($updated_at,$sort);
+                }
+
+               if($paginate){
                     $comment_data = $comment_data->paginate($paginate);
                 }else{
                     $comment_data = $comment_data->get();

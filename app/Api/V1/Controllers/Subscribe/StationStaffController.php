@@ -51,7 +51,6 @@ class StationStaffController extends Controller {
     {
 
         $call_func_result = $stationPreorderRepositoryContract->getAllStaffDayDelivery($request->only(['staff','stime','etime']));
-        
 
         return $this->response->array(['data' => array_values(transformStationOrder($call_func_result))]);
     }

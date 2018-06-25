@@ -87,7 +87,7 @@ class Protocols extends Controller
      * cache check
      * */
     public function cache_check(){
-          $comment = Carbon::createFromFormat('Y-m-d','2018-06-19');
+          $comment = collect([1,2,3,4])->avg();
           dd($comment);
     }
 

@@ -33,6 +33,10 @@ class OperationController extends Controller
        
         $result = $this->comment_contract->getExpressionSelect(['page'=>$request->input('page'),'other'=>$request->except(['token','page'])]);
 
+        if($request->input('seniority',null)){
+            return $this->response->array($result);
+        }
+
         return $this->response->paginator($result, new CommentTransformer());
     }
 

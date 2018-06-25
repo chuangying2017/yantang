@@ -22,7 +22,8 @@ class CommentTransformer extends TransformerAbstract {
             'comment_label' => $comment['comment_label'],
             'comment_type' => $comment['comment_type'],
             'updated_at' => $comment['updated_at'],
-            'scores' => $comment['scores'],
+           // 'scores' => $comment['scores'],
+            'additionComment' => $comment['additional_comments'],
         ];
     }
 

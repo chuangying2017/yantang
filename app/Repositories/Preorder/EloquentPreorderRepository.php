@@ -599,8 +599,20 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
                 $query->whereDate('start_time','<=', $array['stime'])->orWhereDate('pause_time','<=',$array['stime'])->whereDate('restart_time','<=',$array['stime']);
             });
 
-        if(!empty($array['etime'])){
+        if(!empty($array['etime']) && empty($array['stime'])){
+            $preorderQuery->where(function($query)use($array){
+                $query->whereDate('end_time','<=', $array['etime'])->whereNotNull('pause_time')->orWhereDate('restart_time','<=',$array['etime']);
+            });
+        }
 
+        if(!empty($array['stime']) && !empty($array['etime']) && Carbon::parse($array['stime'])->timestamp <= Carbon::parse($array['etime'])->timestamp){
+            $preorderQuery->where(function($query)use($array){
+                $query->whereBetween('start_time',[$array['stime'],$array['etime']])
+                      ->orWhereBetween('end_time',[$array['stime'],$array['etime']])
+                      ->whereNotNull('pause_time')
+                      ->whereBetween('pause_time',[$array['stime'],$array['etime']])
+                      ->orWhereBetween('restart_time',[$array['stime'],$array['etime']]);
+            });
         }
 
         if($array['staff'])
