@@ -182,7 +182,12 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
                     $comment_data = $collect_data->groupBy(isset($all['type_role'])?$all['type_role']:'staff_id');// Ranking by information
 
-                    $comment_data = $this->comment_data($comment_data);
+                    if(isset($all['staff_role'])){
+                        $staff = true;
+                    }else{
+                       $staff = false;
+                       $comment_data = $this->comment_data($comment_data);
+                    }
 
                     $result = $comment_data->sortByDesc('scores');
 
@@ -190,7 +195,7 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                         $j = 1;
                         foreach ($result as $keys=>&$item){
 
-                            $item['MilkMan'] = $this->comment_data($item->groupBy('staff_id'),true)->sortByDesc('scores')->values()->all();
+                            $item['MilkMan'] = $staff?:$this->comment_data($item->groupBy('staff_id'),true)->sortByDesc('scores')->values()->all();
                             $item['ranking'] = $j;
                             $item['ranking_id'] = $keys;
 
