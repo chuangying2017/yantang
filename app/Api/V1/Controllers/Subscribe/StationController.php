@@ -11,9 +11,11 @@ use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Models\Comment;
 use App\Models\Subscribe\Preorder;
 use App\Repositories\Comment\CommentProtocol;
+use App\Repositories\Comment\CommentRepositoryContract;
 use App\Repositories\Station\StationProtocol;
 use App\Repositories\Station\StationRepositoryContract;
 use App\Api\V1\Requests\Station\BindStationRequest;
+use Illuminate\Http\Request;
 
 class StationController extends Controller {
 
@@ -112,4 +114,8 @@ class StationController extends Controller {
             return $this->response->item($result, new PreorderTransformer());
     }
 
+    public function show_station_comment(Request $request, CommentRepositoryContract $commentRepositoryContract)
+    {
+        return $this->response->array($commentRepositoryContract->station_data_dispose($request->except('token')));
+    }
 }

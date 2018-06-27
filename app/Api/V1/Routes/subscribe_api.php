@@ -59,6 +59,8 @@ $api->group(['namespace' => 'Subscribe', 'middleware' => 'api.auth'], function (
             $api->get('fetchall/{status?}', 'StationPreorderController@ExcelDownload_station');
             
             $api->get('distributormilk','StationStaffController@distributormilk');
+
+            $api->get('station_comment_see','StationController@show_station_comment'); //station comment see about
         });
 
 

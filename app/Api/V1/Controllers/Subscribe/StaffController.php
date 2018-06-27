@@ -8,6 +8,7 @@ use App\Api\V1\Transformers\CommentTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Models\Comment;
 use App\Repositories\Comment\CommentProtocol;
+use App\Repositories\Comment\CommentRepositoryContract;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
 use Illuminate\Http\Request;
 
@@ -110,17 +111,11 @@ class StaffController extends Controller {
         return $this->response->collection($staffs, new StaffTransformer());
     }
     
-    public function show_staff_comment(){
-
-            $staff_id = access()->staffId();
-
-            $comment_data_staff = Comment::query()
-            ->where('comment_type',CommentProtocol::COMMENT_STATUS_IS_USES)
-            ->whereHas('preorders',function($query)use ($staff_id){
-                $query->where('staff_id',$staff_id);
-            })
-            ->get();
-            return $this->response->item($comment_data_staff, new CommentTransformer());
+    public function show_staff_comment(Request $request, CommentRepositoryContract $commentRepositoryContract)
+    {
+        $data = $request->all();
+        $data['station_ranking'] = $data['staff_id'];
+        return $this->response->array($commentRepositoryContract->getExpressionSelect($data));
     }
 
 }

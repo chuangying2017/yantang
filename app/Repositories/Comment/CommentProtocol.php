@@ -18,4 +18,7 @@ class CommentProtocol
 
     const COMMENT_STATUS_IS_ADDITIONAL = 'Additional'; // additional comments
 
+    const COMMENT_STATION = 'station_id';
+
+    const COMMENT_STAFF = 'staff_id';
 }

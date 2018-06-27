@@ -131,7 +131,7 @@ class EloquentCommentRepository implements CommentRepositoryContract {
     public function getExpressionSelect($all, $updated_at = 'updated_at', $sort = 'desc', $paginate = 20)
     {
 
-                $comment_Type = isset($all['commentType'])?[$all['commentType']]:[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_NOT_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL];
+                $comment_Type = isset($all['other']['commentType'])?[$all['other']['commentType']]:[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_NOT_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL];
 
                 $comment_data = Comment::whereIn('comment_type',$comment_Type);
 
@@ -162,7 +162,6 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
                 $fetch_true_data = array_only($all,$this->pre_orders);
 
-
                 if(!empty($fetch_true_data)){
                     $comment_data->whereHas('preorders',function ($query)use($fetch_true_data){
                         $query->where($fetch_true_data);
@@ -181,25 +180,35 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                         $collect_data[$key]['station_id'] = $value->preorders[0]['station_id'];
                     }
 
-                    $comment_data = $collect_data->groupBy('staff_id');
+                    $comment_data = $collect_data->groupBy(isset($all['type_role'])?$all['type_role']:'staff_id');// Ranking by information
 
-                    foreach ($comment_data as &$value)
-                    {
-                        $value['total_order'] = $value->count();
+                    $comment_data = $this->comment_data($comment_data);
 
-                        $value['have_comments_number'] = $value->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->count();
+                    $result = $comment_data->sortByDesc('scores');
 
-                        $value['scores'] = $value->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->avg('score');
+                    if(isset($all['station_ranking'])){
+                        $j = 1;
+                        foreach ($result as $keys=>&$item){
+
+                            $item['MilkMan'] = $this->comment_data($item->groupBy('staff_id'),true)->sortByDesc('scores')->values()->all();
+                            $item['ranking'] = $j;
+                            $item['ranking_id'] = $keys;
+
+                            ++$j;
+                        }
+
+                        return $result->where('ranking_id',$all['station_ranking'])->values()->all();
                     }
-                    $forPage = $comment_data->forPage($all['page']?:1,$paginate);
 
-                    $result = $forPage->sortByDesc('scores')->values()->all();
+                    $result = $result->forPage($all['page']?:1,$paginate)->values()->all();
 
-                    return ['result'=>$result,'paging'=>['current_page'=>$all['page']?:1,'total_page'=>$forPage->count(),'paginate'=>$paginate]];
+                    $count_ = $comment_data->count();
 
-                }else{
-                    $comment_data->orderBy($updated_at,$sort);
+                    return ['result'=>$result,'paging'=>['current_page'=>$all['page']?:1,'total'=>$count_,'per_page'=>$paginate,'total_pages'=>ceil($count_ / $paginate)]];
+
                 }
+
+                $comment_data->orderBy($updated_at,$sort);
 
                if($paginate){
                     $comment_data = $comment_data->paginate($paginate);
@@ -222,7 +231,49 @@ class EloquentCommentRepository implements CommentRepositoryContract {
             'staff_id',
             'page',
             'seniority',
+            'type_role',
+            'station_ranking',
         ]);
+    }
+
+    public function comment_data($comment_data,$staff_name = false)
+    {
+        foreach ($comment_data as $key=>&$value)
+        {
+
+            $condition = $value->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->count();
+
+            if($condition){
+
+                $value['total_order'] = $value->count();
+
+                $value['have_comments_number'] = $value->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->count();
+
+                $value['scores'] = $value->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->avg('score');
+
+                $staff_name?$value['staff_name'] = $value->first()->preorders->first()->staff->name:false;
+
+                continue;
+            }
+
+            $comment_data->forget($key);
+        }
+
+        return $comment_data;
+    }
+
+    public function station_data_dispose($data)//站点数据处理
+    {
+        if(!isset($data['staff_id']) && !isset($data['page'])){
+            $data['seniority'] = 1;
+            $data['station_ranking'] = access()->stationId();
+            $data['type_role'] = 'station_id';
+        }
+
+        $array['other'] = $data;
+        $array['page'] = isset($data['page'])?$data['page']:1;
+
+        return $this->getExpressionSelect($array);
     }
 }
 
