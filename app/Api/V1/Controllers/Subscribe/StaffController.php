@@ -114,8 +114,14 @@ class StaffController extends Controller {
     public function show_staff_comment(Request $request, CommentRepositoryContract $commentRepositoryContract)
     {
         $data = $request->all();
-        $data['station_ranking'] = $data['staff_id'];
-        return $this->response->array($commentRepositoryContract->getExpressionSelect($data));
+        $data['station_id'] = access()->stationId();
+        $data['ranking_id']= access()->staffId();
+        $data['type_role'] = 'staff_id';
+        $data['seniority'] = 1;
+        $data['staff_role'] = '1';
+        $data['page'] = $request->input('page',1);
+
+        return $this->response->array($commentRepositoryContract->station_data_dispose($data));
     }
 
 }

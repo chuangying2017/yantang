@@ -12,7 +12,7 @@ use Mockery\Exception;
 
 class EloquentCommentRepository implements CommentRepositoryContract {
     use RepoPageShare;
-    protected $pre_orders = ['station_id','staff_id','phone'];
+    protected $pre_orders = ['station_id','staff_id','phone','order_no'];
     public function getAll($commentable_type, $order_by = 'created_at', $sort = 'desc')
     {
         return Comment::query()->has($this->getCommentAble($commentable_type))->orderBy($order_by, $sort)->get();
@@ -148,6 +148,10 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                     $comment_data->whereBetween('updated_at',[$all['start_time'],$all['end_time']]);
                 }
 
+                /*if(isset($all['start_time']) && isset($all['end_time']) && strtotime($all['start_time']) > strtotime($all['end_time'])){
+                    throw new \Exception('start time cannot gt end time',500);
+                }*/
+
                 if(isset($all['start_time']) && empty($all['end_time'])){
                     $comment_data->where('updated_at','>',$all['start_time']);
                 }
@@ -183,11 +187,10 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                     $comment_data = $collect_data->groupBy(isset($all['type_role'])?$all['type_role']:'staff_id');// Ranking by information
 
                     if(isset($all['staff_role'])){
-                        $staff = true;
-                    }else{
-                       $staff = false;
-                       $comment_data = $this->comment_data($comment_data);
+                        return $this->staff_show_comment_ranking($comment_data,$all,$paginate);
                     }
+
+                    $comment_data = $this->comment_data($comment_data);
 
                     $result = $comment_data->sortByDesc('scores');
 
@@ -195,7 +198,7 @@ class EloquentCommentRepository implements CommentRepositoryContract {
                         $j = 1;
                         foreach ($result as $keys=>&$item){
 
-                            $item['MilkMan'] = $staff?:$this->comment_data($item->groupBy('staff_id'),true)->sortByDesc('scores')->values()->all();
+                            $item['MilkMan'] = $this->comment_data($item->groupBy('staff_id'),true)->sortByDesc('scores')->values()->all();
                             $item['ranking'] = $j;
                             $item['ranking_id'] = $keys;
 
@@ -238,6 +241,8 @@ class EloquentCommentRepository implements CommentRepositoryContract {
             'seniority',
             'type_role',
             'station_ranking',
+            'staff_role',
+            'ranking_id',
         ]);
     }
 
@@ -279,6 +284,51 @@ class EloquentCommentRepository implements CommentRepositoryContract {
         $array['page'] = isset($data['page'])?$data['page']:1;
 
         return $this->getExpressionSelect($array);
+    }
+
+    public function staff_show_comment_ranking($comment_data,$all,$paginate)
+    {
+            if(!$comment_data->count()){
+                return [];
+            }
+            $j=0;
+            foreach ($comment_data as $keys => $datum)
+            {
+                $condition = $datum->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->count();
+
+                if(!$condition){
+                    continue;
+                }
+
+                $arr[$j]['total_order'] = $condition;
+
+                $arr[$j]['have_comments_number'] = $datum->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->count();
+
+                $arr[$j]['scores'] = $datum->whereIn('comment_type',[CommentProtocol::COMMENT_STATUS_IS_USES,CommentProtocol::COMMENT_STATUS_IS_ADDITIONAL])->avg('score');
+
+                $arr[$j]['ranking_id'] = $datum->first()->staff_id;
+                //$arr[]['name_staff'] = $datum->first()->preorders->first()->staff->name;
+                ++$j;
+            }
+            $coll = collect($arr)->sortByDesc('scores')->values();
+
+            $where = $coll->where('ranking_id',$all['ranking_id'])->all();
+
+            $key = key($where) + 1;
+
+            $where[$key-1]['ranking'] = $key;
+
+            $array = array_values($where);
+
+            $staff = $comment_data[$all['ranking_id']];//获取送奶工所有的数据
+
+            $count_ = $staff->count();
+
+            return [
+                'data'=>$staff->forPage($all['page'],$paginate)->values()->all(),
+                'pagination'=>['current_page'=>$all['page'],'total_data'=>$count_,'per_page'=>$paginate,'total_pages'=>ceil($count_ / $paginate)],
+                'staff' => $array,
+            ];
     }
 }
 

@@ -116,6 +116,14 @@ class StationController extends Controller {
 
     public function show_station_comment(Request $request, CommentRepositoryContract $commentRepositoryContract)
     {
-        return $this->response->array($commentRepositoryContract->station_data_dispose($request->except('token')));
+        $result = $commentRepositoryContract->station_data_dispose($request->except('token'));
+
+        if($request->input('staff_id')){
+            $result = $this->response->paginator($result,new CommentTransformer());
+        }else{
+            $result = $this->response->array($result);
+        }
+
+        return $result;
     }
 }

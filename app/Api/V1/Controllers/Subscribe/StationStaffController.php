@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use DB;
+use App\Api\V1\Requests\Station\VerifyRequest;
 
 class StationStaffController extends Controller {
 
@@ -47,9 +48,9 @@ class StationStaffController extends Controller {
         return $this->response->collection($staffs, new StaffTransformer());
     }
     
-    public function distributormilk(Request $request, StationPreorderRepositoryContract $stationPreorderRepositoryContract)
+    public function distributormilk(VerifyRequest $request, StationPreorderRepositoryContract $stationPreorderRepositoryContract)
     {
-
+        dd($request->only(['staff','stime','etime']));
         $call_func_result = $stationPreorderRepositoryContract->getAllStaffDayDelivery($request->only(['staff','stime','etime']));
 
         return $this->response->array(['data' => array_values(transformStationOrder($call_func_result))]);
