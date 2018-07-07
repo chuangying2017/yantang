@@ -13,7 +13,7 @@ class VerifyRequest extends Request
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +26,7 @@ class VerifyRequest extends Request
         return [
             //
             'stime'=>'required|date',
-            'etime'=>'required|date',
+            'etime'=>'required|date|after:stime',
             'staff_id'=>'nullable',
         ];
     }

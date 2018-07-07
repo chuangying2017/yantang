@@ -110,5 +110,10 @@ return [
         'sms' => env('NOTIFY_BY_SMS', 0),
         'weixin' => env('NOTIFY_BY_WEIXIN', 1)
     ],
-
+    'aliyun' => [
+        'accessKeyId' => env('OSS_ACCESS_ID','LTAImJUPg2oIJyYn'),
+        'accessKeySecret' => env('OSS_ACCESS_KEY','ARSfYUk6eW9ksfU5ogTjgACv7Fq5g0'),
+        'oss_endpoint' => env('OSS_ENDPOINT','leshangnetwork.oss-cn-shenzhen.aliyuncs.com'),
+        'oss_bucket' => env('OSS_TEST_BUCKET','yantang'),
+    ],
 ];

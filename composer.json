@@ -36,7 +36,8 @@
         "socialiteproviders/manager": "^2.1",
         "socialiteproviders/weixin": "^2.1",
         "overtrue/laravel-pinyin": "~3.0",
-        "hightman/xunsearch": "*@beta"
+        "hightman/xunsearch": "*@beta",
+        "aliyuncs/oss-sdk-php": "~2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
