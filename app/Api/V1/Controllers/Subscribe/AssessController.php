@@ -45,13 +45,12 @@ class OrderController extends Controller {
 
     public function store(SubscribeOrderRequest $request, OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout)
     {
-       
-	   
-	   
-		file_put_contents("test3.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($request)."\n\n");	
-		exit("dddddddddd");
-		
-	   /* try {
+
+
+
+		file_put_contents("test3.txt",date("Y-m-d H:i:s")."\nlog=".json_encode($request)."\n\n");
+
+	    try {
             $skus = $request->input('skus');
             $weekday_type = $request->input('weekday_type');
             $daytime = $request->input('daytime');
@@ -65,7 +64,7 @@ class OrderController extends Controller {
             $this->response->errorNotFound($e->getMessage());
         } catch (\Exception $e) {
             $this->response->errorBadRequest($e->getMessage());
-        }*/
+        }
     }
 
     public function confirm($temp_order_id, Request $request, OrderGenerator $orderGenerator, OrderCheckoutService $orderCheckout)
