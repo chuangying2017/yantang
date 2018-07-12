@@ -50,6 +50,9 @@ class Kernel extends ConsoleKernel {
         
         //schedule Class File generate
         'App\Console\Commands\ClassFileMakeCommand',
+
+        //generate Transformer Class file
+        'App\Console\Commands\TransformerMakeCommand',
     ];
 
     /**

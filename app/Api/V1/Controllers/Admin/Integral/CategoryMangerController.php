@@ -2,6 +2,8 @@
 
 namespace App\Api\V1\Controllers\Admin\Integral;
 
+use App\Api\V1\Transformers\Integral\IntegralTransformer;
+use App\Services\Integral\InterfaceFile\IntegralCategory;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -9,6 +11,13 @@ use App\Http\Controllers\Controller;
 
 class CategoryMangerController extends Controller
 {
+    protected $category;
+
+    public function __construct(IntegralCategory $integralCategory)
+    {
+        $this->category=$integralCategory;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,17 +25,24 @@ class CategoryMangerController extends Controller
      */
     public function index()
     {
-        //
+
+        $category_data = $this->category->select()->sortBy('sort_type');
+
+        return $this->response->item($category_data, new IntegralTransformer());
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
+        $this->category->create($request->input());
+
+        return $this->response->noContent()->statusCode(201);
     }
 
     /**
@@ -59,7 +75,7 @@ class CategoryMangerController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
