@@ -20,6 +20,7 @@ class PageRewrite implements LengthAwarePaginator
      * Determine the total number of items in the data store.
      *
      * @return int
+     *
      */
     public function total()
     {

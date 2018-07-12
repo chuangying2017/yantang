@@ -40,7 +40,7 @@ class CategoryMangerController extends Controller
     public function create(Request $request)
     {
 
-        $this->category->create($request->input());
+        $this->category->CreateOrUpdate(null, $request->input());
 
         return $this->response->noContent()->statusCode(201);
     }
@@ -64,18 +64,24 @@ class CategoryMangerController extends Controller
      */
     public function show($id)
     {
-        //
+        $category_data = $this->category->select(['id'=>$id]);
+
+        return $this->response->item($category_data, new IntegralTransformer());
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
 
+        $category = $this->category->CreateOrUpdate($id,$request->input());
+
+        return $this->response->item($category, new IntegralTransformer());
     }
 
     /**
@@ -98,6 +104,8 @@ class CategoryMangerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->category->delete($id);
+
+        return $this->response->noContent()->statusCode(201);
     }
 }

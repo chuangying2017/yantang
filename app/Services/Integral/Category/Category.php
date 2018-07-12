@@ -3,37 +3,28 @@ namespace App\Services\Integral\Category;
 
 use App\Services\Integral\InterfaceFile\IntegralCategory;
 use \App\Models\Integral\IntegralCategory as IntegralModel;
-use Mockery\Exception;
 
 class Category implements IntegralCategory
 {
 
-    public function create($data)
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function delete($id)
     {
-        try{
-
-            return IntegralModel::create($this->array_onlyData($data));
-
-        }catch (Exception $exception){
-
-            \Log::error($exception->getMessage());
-        }
-
+        return IntegralModel::destory($id);
     }
 
-    public function update($id, $data)
+    /**
+     * @param null $where
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function select($where=null)
     {
-        // TODO: Implement update() method.
-    }
-
-    public function delete()
-    {
-        // TODO: Implement delete() method.
-    }
-
-    public function select()
-    {
-        return IntegralModel::all();
+        return IntegralModel::query()->when($where,function($query)use ($where){
+            $query->where($where);
+        })->get();
     }
 
     /**
@@ -48,5 +39,16 @@ class Category implements IntegralCategory
             'status',
             'cover_image',
         ]);
+    }
+
+    public function CreateOrUpdate($id = null, $data)
+    {
+
+        $cateModel = new IntegralModel();
+
+        if($id)$cateModel = $cateModel::find($id);
+
+        return $cateModel->fill($this->array_onlyData($data))->save();
+
     }
 }

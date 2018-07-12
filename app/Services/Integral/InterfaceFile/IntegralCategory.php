@@ -3,11 +3,9 @@ namespace App\Services\Integral\InterfaceFile;
 
 Interface IntegralCategory{
 
-public function create($data);
+public function CreateOrUpdate($id=null, $data);
 
-public function update($id, $data);
-
-public function delete();
+public function delete($id);
 
 public function select();
 
