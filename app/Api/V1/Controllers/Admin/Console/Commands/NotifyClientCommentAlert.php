@@ -54,7 +54,7 @@ class NotifyClientCommentAlert extends Command
             })
             ->where('comment_identify',PreorderProtocol::COMMENT_IDENTIFY)
             ->chunk('100',function ($collectData){
-                //file_put_contents('sureInFollow.txt',$collectData."\r\n",FILE_APPEND);
+                file_put_contents('sureInFollow.txt',$collectData);
                 foreach ($collectData as $collectDatum){
                         file_put_contents('Skus_Collect.txt','---'.$collectDatum->skus."\r\n",FILE_APPEND);
 

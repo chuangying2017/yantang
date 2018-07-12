@@ -7,6 +7,7 @@ class UserInfoTransformer extends TransformerAbstract {
 
     public function transform(User $user)
     {
+
         $base_info = [
             'id' => $user['id'],
             'username' => $user['username'],

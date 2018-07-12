@@ -7,6 +7,7 @@ use App\Api\V1\Requests\Station\BindStaffRequest;
 use App\Api\V1\Transformers\CommentTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Models\Comment;
+use App\Models\Subscribe\Station;
 use App\Repositories\Comment\CommentProtocol;
 use App\Repositories\Comment\CommentRepositoryContract;
 use App\Repositories\Station\Staff\StaffRepositoryContract;
@@ -120,8 +121,10 @@ class StaffController extends Controller {
         $data['seniority'] = 1;
         $data['staff_role'] = '1';
         $data['page'] = $request->input('page',1);
-
-        return $this->response->array($commentRepositoryContract->station_data_dispose($data));
+        return $this->response->array([
+            0=>$commentRepositoryContract->station_data_dispose($data),
+            'station'=>['stationName'=>Station::find($data['station_id'])->name]
+        ]);
     }
 
 }

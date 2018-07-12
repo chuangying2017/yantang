@@ -10,6 +10,7 @@ use App\Api\V1\Transformers\Subscribe\Preorder\PreorderTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Models\Comment;
 use App\Models\Subscribe\Preorder;
+use App\Models\Subscribe\Station;
 use App\Repositories\Comment\CommentProtocol;
 use App\Repositories\Comment\CommentRepositoryContract;
 use App\Repositories\Station\StationProtocol;
@@ -121,9 +122,14 @@ class StationController extends Controller {
         if($request->input('staff_id')){
             $result = $this->response->paginator($result,new CommentTransformer());
         }else{
-            $result = $this->response->array($result);
+            $result = $this->response->array([0=>$result,'station'=>$this->show_station_name(access()->stationId())]);
         }
 
         return $result;
+    }
+
+    public function show_station_name($stationId)
+    {
+        return ['stationName' => Station::find($stationId)->name];
     }
 }

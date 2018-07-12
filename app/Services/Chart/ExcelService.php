@@ -10,11 +10,11 @@ class ExcelService {
 
     public static function getFile($file, $local = false)
     {
-        if ($local) {
-            return self::getLocalFullPath($file);
-        }
+            if ($local) {
+                return self::getLocalFullPath($file);
+            }
 
-        return self::getCDNFullPath($file);
+            return self::getCDNFullPath($file);
     }
 
     public static function save($sheetsData, $filename, $local_path){
@@ -28,6 +28,7 @@ class ExcelService {
     }
 
     public static function download( $filename, $local = false){
+
         if ($local) {
             return self::downloadLocalFile(self::getFile($filename, true));
         }
@@ -40,11 +41,10 @@ class ExcelService {
     public static function saveAndDownload($e_data = null, $title, $path, $local = false)
     {
         $full_file_name = $path . $title . '.xls';
+
         $local_path = storage_path('app/' . $path);
 
-        if ($e_data) {
-            self::save(['data'=>$e_data], $title, $local_path);
-        }
+        if ($e_data) self::save(['data'=>$e_data], $title, $local_path);
 
         return self::download( $full_file_name, $local );
     }

@@ -9,6 +9,8 @@ class BannerService {
 
     const TYPE_OF_GRID = 'grid';
 
+    const TYPE_OF_INTEGRAL = 'integral';
+
     public static function create($input)
     {
         $input['type'] = array_get($input, 'type', self::TYPE_OF_SLIDER);

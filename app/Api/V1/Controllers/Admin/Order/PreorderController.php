@@ -37,12 +37,11 @@ class PreorderController extends Controller {
         $residence_id = $request->input('residence_id') ? explode(',', $request->input('residence_id')) : null;
         $time_name = $request->input('time_name', 'created_at');
 
-        if ($request->input('export') == 'all') {
+            if ($request->input('export') == 'all') {
+                $orders = $this->preorderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time, $time_name, null, $residence_id);
 
-            $orders = $this->preorderRepo->getAll($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time, $time_name, null, $residence_id);
-    
-            return ExcelService::downPreorder($orders);
-        }
+                return ExcelService::downPreorder($orders);
+            }
 
         $orders = $this->preorderRepo->getAllPaginated($station_id, $order_no, $pay_order_no, $phone, $status, $start_time, $end_time, $time_name, null, $residence_id);
 

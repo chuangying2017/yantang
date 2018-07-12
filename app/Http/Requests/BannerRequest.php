@@ -28,7 +28,7 @@ class BannerRequest extends Request {
 
         $rules = [
             'cover_image' => 'required',
-            'type'        => 'required|in:' . BannerService::TYPE_OF_SLIDER . ',' . BannerService::TYPE_OF_GRID,
+            'type'        => 'required|in:' . BannerService::TYPE_OF_SLIDER . ',' . BannerService::TYPE_OF_GRID. ','. BannerService::TYPE_OF_INTEGRAL,
             'title' => 'required|min:2',
             'url' => 'url',
             'index' => 'numeric',

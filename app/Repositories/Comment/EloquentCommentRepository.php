@@ -144,10 +144,9 @@ class EloquentCommentRepository implements CommentRepositoryContract {
 
                 $all = $this->fill($all['other']);
 
-                if(isset($all['start_time']) && isset($all['end_time']) && strtotime($all['start_time']) < strtotime($all['end_time'])){
+                if(isset($all['start_time']) && isset($all['end_time']) && strtotime($all['start_time']) <= strtotime($all['end_time'])){
                     $comment_data->whereBetween('updated_at',[$all['start_time'],$all['end_time']]);
                 }
-
                 /*if(isset($all['start_time']) && isset($all['end_time']) && strtotime($all['start_time']) > strtotime($all['end_time'])){
                     throw new \Exception('start time cannot gt end time',500);
                 }*/
@@ -313,6 +312,10 @@ class EloquentCommentRepository implements CommentRepositoryContract {
             $coll = collect($arr)->sortByDesc('scores')->values();
 
             $where = $coll->where('ranking_id',$all['ranking_id'])->all();
+
+            if(empty($where)){
+                return [];
+            }
 
             $key = key($where) + 1;
 
