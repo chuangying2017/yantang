@@ -1,7 +1,9 @@
 <?php
 namespace App\Services\Integral\Category;
 
-class Category
+use App\Services\Integral\InterfaceFile\IntegralCategory;
+
+class Category implements IntegralCategory
 {
 
 }
