@@ -1,7 +1,6 @@
 <?php
 namespace App\Services\Integral\Category;
 
-use App\Services\Integral\InterfaceFile\IntegralCategory;
 use \App\Models\Integral\IntegralCategory as IntegralModel;
 
 class Category implements IntegralCategory
