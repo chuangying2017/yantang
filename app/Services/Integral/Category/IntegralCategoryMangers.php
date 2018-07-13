@@ -1,7 +1,7 @@
 <?php
 namespace App\Services\Integral\Category;
 
-Interface IntegralCategory{
+Interface IntegralCategoryMangers{
 
 public function CreateOrUpdate($id=null, $data);
 

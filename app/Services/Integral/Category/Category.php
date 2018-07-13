@@ -3,7 +3,7 @@ namespace App\Services\Integral\Category;
 
 use \App\Models\Integral\IntegralCategory as IntegralModel;
 
-class Category implements IntegralCategory
+class Category implements IntegralCategoryMangers
 {
 
     /**

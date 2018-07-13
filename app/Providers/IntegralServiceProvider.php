@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Integral\Category\Category;
-use App\Services\Integral\Category\IntegralCategory;
+use App\Services\Integral\Category\IntegralCategoryMangers;
 use Illuminate\Support\ServiceProvider;
 
 class IntegralServiceProvider extends ServiceProvider
@@ -29,6 +29,6 @@ class IntegralServiceProvider extends ServiceProvider
     public function register()
     {
         //
-        $this->app->bind(IntegralCategory::class,Category::class);
+        $this->app->bind(IntegralCategoryMangers::class,Category::class);
     }
 }

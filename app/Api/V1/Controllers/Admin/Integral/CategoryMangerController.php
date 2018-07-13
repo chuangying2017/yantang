@@ -3,7 +3,7 @@
 namespace App\Api\V1\Controllers\Admin\Integral;
 
 use App\Api\V1\Transformers\Integral\IntegralTransformer;
-use App\Services\Integral\InterfaceFile\IntegralCategory as IntegralMangerClass;
+use App\Services\Integral\Category\IntegralCategoryMangers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -13,7 +13,7 @@ class CategoryMangerController extends Controller
 {
     protected $category;
 
-    public function __construct(IntegralMangerClass $integralCategory)
+    public function __construct(IntegralCategoryMangers $integralCategory)
     {
         $this->category=$integralCategory;
     }
