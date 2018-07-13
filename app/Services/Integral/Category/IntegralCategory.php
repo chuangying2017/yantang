@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Integral\InterfaceFile;
+namespace App\Services\Integral\Category;
 
 Interface IntegralCategory{
 
