@@ -206,7 +206,7 @@ return [
         Overtrue\LaravelPinyin\ServiceProvider::class,
         \App\Providers\ProtocolsServiceProvider::class,
         \App\Services\SettingsServiceProviders::class,
-        \App\Providers\IntegralServiceProvider::class,
+        \App\Providers\IntegralCateGoryServiceProvider::class,
     ],
 
     /*
