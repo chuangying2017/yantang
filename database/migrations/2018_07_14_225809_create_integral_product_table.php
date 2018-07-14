@@ -17,8 +17,9 @@ class CreateIntegralProductTable extends Migration
             $table->string('product_no')->unique(); // 产品编码
             $table->integer('category_id')->default(0)->comment('integral of product');
             $table->char('title',100);
-            $table->double('price',6,2);
+            $table->double('price',6,2)->comment('描述商品原价格');
             $table->integer('sort_type');
+            $table->double('integral',10,2)->default(0)->comment('商品积分价');
             $table->char('cover_image',255)->nullable()->comment('show page image');
             $table->char('digest',255)->nullable()->comment('商品描述');
             $table->char('advertising',200)->nullable()->comment('广告语');
