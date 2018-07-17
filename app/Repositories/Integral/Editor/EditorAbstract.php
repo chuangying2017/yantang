@@ -1,19 +1,25 @@
 <?php
 namespace App\Repositories\Integral\Editor;
-use App\Services\Integral\Product\ProductInerface;
+use App\Models\Integral\Product;
+
 abstract class EditorAbstract
 {
     protected $editor;
 
-    abstract public function handle(array $data, ProductInerface $product);
+    abstract public function handle(array $data, Product $product);
 
     public function EditorWith(EditorAbstract $editorAbstract)
     {
         $this->editor=$editorAbstract;
     }
 
-    public function next()
+    public function next($product_data, $product)
     {
 
+        if($this->editor){
+            $this->editor->handle($product_data, $product);
+        }
+
+        return compact('product_data', 'product');
     }
 }

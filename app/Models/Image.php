@@ -27,4 +27,9 @@ class Image extends Model {
     {
         return $this->morphedByMany(Comment::class, 'imageable');
     }
+
+    public function integral_product()
+    {
+        return $this->morphedByMany(\App\Models\Integral\Product::class, 'imageable','integral_imageables');
+    }
 }
