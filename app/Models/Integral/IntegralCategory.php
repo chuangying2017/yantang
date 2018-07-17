@@ -13,8 +13,6 @@ class IntegralCategory extends Model
 
     protected $table = 'integral_category';
 
-    public $timestamps = false;
-
     protected $dates = ['deleted_at'];
 
     protected $guarded = ['id'];

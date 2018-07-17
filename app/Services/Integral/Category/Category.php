@@ -2,7 +2,7 @@
 namespace App\Services\Integral\Category;
 
 use \App\Models\Integral\IntegralCategory as IntegralModel;
-
+use \App\Models\Integral\Specification;
 class Category implements IntegralCategoryMangers
 {
 
@@ -12,18 +12,20 @@ class Category implements IntegralCategoryMangers
      */
     public function delete($id)
     {
-        return IntegralModel::destory($id);
+        return IntegralModel::destroy($id);
     }
 
     /**
      * @param null $where
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function select($where=null)
+    public function select($where=null, $sort='asc', $sort_field='sort_type')
     {
-        return IntegralModel::query()->when($where,function($query)use ($where){
+        $integral = IntegralModel::query()->when($where,function($query)use ($where){
             $query->where($where);
-        })->get();
+        });
+
+        return $integral->orderBy($sort_field, $sort)->get();
     }
 
     /**
@@ -37,17 +39,34 @@ class Category implements IntegralCategoryMangers
             'sort_type',
             'status',
             'cover_image',
+            'type',
+            'describe',
         ]);
     }
 
-    public function CreateOrUpdate($id = null, $data)
+    public function CreateOrUpdate($id = null, $data, $model = 'IntegralModel')
     {
 
-        $cateModel = new IntegralModel();
+        $cateModel = $this->model_string($model);
 
         if($id)$cateModel = $cateModel::find($id);
 
         return $cateModel->fill($this->array_onlyData($data))->save();
 
+    }
+
+    public function model_string($string)
+    {
+        switch ($string)
+        {
+            case 'IntegralModel':
+                return new IntegralModel();
+                break;
+            case 'Specification':
+                return new Specification();
+                break;
+            default:
+                throw new \Exception('model not exist',500);
+        }
     }
 }

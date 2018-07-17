@@ -25,7 +25,7 @@ class CategoryMangerController extends Controller
      */
     public function index()
     {
-        $category_data = $this->category->select()->sortBy('sort_type');
+        $category_data = $this->category->select();
 
         return $this->response->item($category_data, new IntegralTransformer());
     }
@@ -39,9 +39,6 @@ class CategoryMangerController extends Controller
     public function create(Request $request)
     {
 
-        $this->category->CreateOrUpdate(null, $request->input());
-
-        return $this->response->noContent()->statusCode(201);
     }
 
     /**
@@ -52,7 +49,10 @@ class CategoryMangerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $this->category->CreateOrUpdate(null, $request->input());
+
+        return $this->response->noContent()->statusCode(201);
     }
 
     /**

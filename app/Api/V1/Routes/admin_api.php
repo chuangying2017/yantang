@@ -227,6 +227,8 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
     $api->group(['middleware'=>'api.auth'], function($api){
         $api->group(['namespace'=>'Integral','prefix'=>'integral'],function($api){
             $api->resource('category','CategoryMangerController');
+            $api->resource('specification','SpecificationController');
+            $api->resource('product','ProductController');
         });
     });
 });
