@@ -16,4 +16,9 @@ class IntegralCategory extends Model
     protected $dates = ['deleted_at'];
 
     protected $guarded = ['id'];
+
+    public function integral_product()
+    {
+
+    }
 }

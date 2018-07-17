@@ -8,7 +8,7 @@ abstract class EditorAbstract
 
     abstract public function handle(array $data, Product $product);
 
-    public function EditorWith(EditorAbstract $editorAbstract)
+    public function editWith(EditorAbstract $editorAbstract)
     {
         $this->editor=$editorAbstract;
     }
