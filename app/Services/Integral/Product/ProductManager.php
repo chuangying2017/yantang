@@ -18,9 +18,13 @@ class ProductManager implements ProductInerface
     /**
      * @param $data
      */
-    public function createOrUpdate(array $data = [])
+    public function createOrUpdate(array $data = [], $id = null)
     {
+            if(is_null($id)){
 
+            }else{
+
+            }
     }
 
     public function delete()
@@ -50,6 +54,8 @@ class ProductManager implements ProductInerface
         if($with_detail){
             $product->load('integral_category','integral_sku','images');
         }
+
+        return $product;
     }
 
     public function array_product($data)
