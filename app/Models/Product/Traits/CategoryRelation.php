@@ -17,7 +17,7 @@ trait CategoryRelation {
 
     public function products()
     {
-        return $this->belongsTo(Product::class, 'product_category', 'cat_id', 'product_id');
+        return $this->belongsToMany(Product::class, 'product_category', 'cat_id', 'product_id');
     }
 
     public function coupons()
