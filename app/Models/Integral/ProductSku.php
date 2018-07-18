@@ -12,7 +12,7 @@ class ProductSku extends Model
 
     protected $guarded = ['id'];
 
-    public function integral_sku()
+    public function integral_product()
     {
         $this->belongsTo(Product::class);
     }

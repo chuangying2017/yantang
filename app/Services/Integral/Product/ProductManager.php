@@ -16,15 +16,25 @@ class ProductManager implements ProductInerface
     }
 
     /**
-     * @param $data
+     * @param array $data
+     * @param int|null $id
+     * @return
      */
-    public function createOrUpdate(array $data = [], $id = null)
+    public function createOrUpdate(array $data = [],int $id = null)
     {
-            if(is_null($id)){
+           $handler = $this->get_handle_config();
 
-            }else{
+           if(is_numeric($id)){
+               $product = $this->get_product($id);
+           }else{
+               $product = new Product();
+           }
 
-            }
+           $productResult = \DB::transaction(function ()use ($handler,$data,$product){
+               return $handler->handle($data,$product);
+           });
+
+           return $productResult;
     }
 
     public function delete()

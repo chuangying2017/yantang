@@ -7,7 +7,10 @@ class ProductProtocol
     const INTEGRAL_PRODUCT_STATUS_DOWN                  = 'down';           //下架
     const INTEGRAL_PRODUCT_STATUS_STOCK                 = 'stock';          //售完
 
-    //积分添加书库规则
+    const INTEGRAL_PRODUCT_TYPE_ON_LIMIT                = 'on_limit';       //限制
+    const INTEGRAL_PRODUCT_TYPE_NOT_LIMIT               = 'not_limit';      //不限制
+
+    //积分添加插入规则
     const INTEGRAL_PRODUCT_INSERTION_RULE_ARRAY         = [
         'category_id',//分类id
         'title',//产品标题

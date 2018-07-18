@@ -9,6 +9,15 @@ class ProductSku extends EditorAbstract
 
     public function handle(array $data, Product $product)
     {
-        // TODO: Implement handle() method.
+        $product->product_sku()->create([
+            'product_id'        =>  $product['id'],
+            'unit'              =>  $data['unit'],
+            'quantity'          =>  $data['quantity'],
+            'sales'             =>  $data['sales'],
+            'postage'           =>  $data['postage'],
+            'name'              =>  array_get($data,'name',null)
+        ]);
+
+        return $this->next($data,$product);
     }
 }
