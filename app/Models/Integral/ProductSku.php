@@ -14,6 +14,6 @@ class ProductSku extends Model
 
     public function integral_product()
     {
-        $this->belongsTo(Product::class);
+        $this->belongsTo(Product::class,'product_id');
     }
 }

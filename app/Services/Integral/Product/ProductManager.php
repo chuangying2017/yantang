@@ -4,6 +4,7 @@ namespace App\Services\Integral\Product;
 use App\Models\Integral\Product;
 use App\Repositories\Common\config\DispatchClass;
 use App\Repositories\Integral\Decorate\Images;
+use App\Repositories\Integral\Decorate\ProductCats;
 use App\Repositories\Integral\Decorate\ProductData;
 use App\Repositories\Integral\Decorate\ProductSku;
 
@@ -20,7 +21,7 @@ class ProductManager implements ProductInerface
      * @param int|null $id
      * @return
      */
-    public function createOrUpdate(array $data = [],int $id = null)
+    public function createOrUpdate(array $data = [], $id = null)
     {
            $handler = $this->get_handle_config();
 
@@ -51,6 +52,7 @@ class ProductManager implements ProductInerface
     {
         $config = [
             ProductData::class,
+            ProductCats::class,
             ProductSku::class,
             Images::class,
         ];

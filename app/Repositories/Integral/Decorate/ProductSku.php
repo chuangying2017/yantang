@@ -9,7 +9,7 @@ class ProductSku extends EditorAbstract
 
     public function handle(array $data, Product $product)
     {
-        $product->product_sku()->create([
+        $product->product_sku()->updateOrCreate(['product_id'=>$product['id']],[
             'product_id'        =>  $product['id'],
             'unit'              =>  $data['unit'],
             'quantity'          =>  $data['quantity'],

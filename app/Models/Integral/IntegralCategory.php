@@ -19,6 +19,6 @@ class IntegralCategory extends Model
 
     public function integral_product()
     {
-
+        return $this->belongsToMany(Product::class,'integral_product_cate','category_id','product_id');
     }
 }
