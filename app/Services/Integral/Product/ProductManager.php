@@ -4,9 +4,11 @@ namespace App\Services\Integral\Product;
 use App\Models\Integral\Product;
 use App\Repositories\Common\config\DispatchClass;
 use App\Repositories\Integral\Decorate\Images;
+use App\Repositories\Integral\Decorate\ProductAttribute;
 use App\Repositories\Integral\Decorate\ProductCats;
 use App\Repositories\Integral\Decorate\ProductData;
 use App\Repositories\Integral\Decorate\ProductSku;
+use Illuminate\Support\Facades\DB;
 
 class ProductManager implements ProductInerface
 {
@@ -38,14 +40,29 @@ class ProductManager implements ProductInerface
            return $productResult;
     }
 
-    public function delete()
+    /**
+     * @param $attach
+     * @return boolean
+     */
+    public function delete($attach)
     {
-        // TODO: Implement delete() method.
+       $product = $this->get_product($attach,false);
+       return DB::transaction(
+       /**
+        * @return bool|null
+        */
+           function ()use($product){
+           $product->images()->detach();
+           $product->integral_category()->detach();
+           $product->product_sku()->delete();
+           $product->specification()->detach();
+           return $product->delete();
+        });
     }
 
     public function edit()
     {
-        // TODO: Implement edit() method.
+
     }
 
     public function get_handle_config()
@@ -54,6 +71,7 @@ class ProductManager implements ProductInerface
             ProductData::class,
             ProductCats::class,
             ProductSku::class,
+            ProductAttribute::class,
             Images::class,
         ];
         return DispatchClass::get_container($config);

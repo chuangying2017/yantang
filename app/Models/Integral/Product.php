@@ -34,4 +34,9 @@ class Product extends Model
     {
         return $this->hasOne(ProductSku::class);
     }
+
+    public function specification()
+    {
+        return $this->belongsToMany(Specification::class,'sf_product','product_id','specification_id');
+    }
 }

@@ -32,5 +32,6 @@ class ProductProtocol
         'postage',//邮费
         'name',
         'image_ides',//多图片
+        'type',
     ];
 }

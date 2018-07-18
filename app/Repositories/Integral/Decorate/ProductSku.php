@@ -14,7 +14,7 @@ class ProductSku extends EditorAbstract
             'unit'              =>  $data['unit'],
             'quantity'          =>  $data['quantity'],
             'sales'             =>  $data['sales'],
-            'postage'           =>  $data['postage'],
+            'postage'           =>  array_get($data,'postage','0'),
             'name'              =>  array_get($data,'name',null)
         ]);
 

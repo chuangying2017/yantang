@@ -7,7 +7,7 @@ interface ProductInerface
 
     public function createOrUpdate();
 
-    public function delete();
+    public function delete($attach);
 
     public function edit();
 }
