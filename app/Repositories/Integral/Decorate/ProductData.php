@@ -35,7 +35,7 @@ class ProductData extends EditorAbstract
             'product_no',//商品编号
         ]);
 
-        $arr['product_no'] = array_get($arr,'product_no',(string)uniqid('fn_'));
+        $arr['product_no'] = array_key_exists('product_no',$arr) ? $arr['product_no'] : uniqid('fn_');
 
         $arr['status']  = array_get($arr,'status',ProductProtocol::INTEGRAL_PRODUCT_STATUS_DOWN);
 
