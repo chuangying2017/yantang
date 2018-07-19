@@ -2,7 +2,7 @@
 
 namespace App\Models\Integral;
 
-use App\App\Models\Integral\ProductSku;
+
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
