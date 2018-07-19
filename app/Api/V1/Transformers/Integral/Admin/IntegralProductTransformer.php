@@ -12,6 +12,7 @@ class IntegralProductTransformer extends TransformerAbstract {
     public function transform(Product $product)
     {
             return [
+                'id'=>$product['id'],
                 'category_id'=>$product['category_id'],//分类id
                 'title'=>$product['title'],//产品标题
                 'price'=>$product['price'],//产品原来价格
@@ -26,9 +27,6 @@ class IntegralProductTransformer extends TransformerAbstract {
                 'recommend'=>$product['recommend'],//是否为推荐商品
                 'detail'=>$product['detail'],//商品详情
                 'type'=>$product['type'],//not_limit 不限制 on_limit限制时间
-                'convert_num'=>$product['convert_num'],//兑换次数
-                'convert_unit'=>$product['convert_unit'],//兑换单位
-                'convert_day'=>$product['convert_day'],//兑换天数
             ];
     }
 
