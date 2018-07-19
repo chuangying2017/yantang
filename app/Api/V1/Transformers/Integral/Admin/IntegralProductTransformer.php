@@ -44,8 +44,9 @@ class IntegralProductTransformer extends TransformerAbstract {
 
             if ($product->relationLoaded('specification'))
             {
-                $data['specification'] = $product->specification;
+                $data['specification'] = $product->specification->pluck('id');
             }
+
             return $data;
     }
 

@@ -32,11 +32,14 @@ class ProductData extends EditorAbstract
             'recommend',//是否为推荐商品
             'detail',//商品详情
             'type',//not_limit 不限制 on_limit限制时间
+            'product_no',//商品编号
         ]);
 
-        $arr['status']  = array_get($array,'status',ProductProtocol::INTEGRAL_PRODUCT_STATUS_DOWN);
+        $arr['product_no'] = array_get($arr,'product_no',(string)uniqid('fn_'));
 
-        $arr['type']    = array_get($array,'type',ProductProtocol::INTEGRAL_PRODUCT_TYPE_NOT_LIMIT);
+        $arr['status']  = array_get($arr,'status',ProductProtocol::INTEGRAL_PRODUCT_STATUS_DOWN);
+
+        $arr['type']    = array_get($arr,'type',ProductProtocol::INTEGRAL_PRODUCT_TYPE_NOT_LIMIT);
 
         return $arr;
     }
