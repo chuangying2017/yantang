@@ -140,6 +140,7 @@ class ProductManager implements ProductInerface
                 break;
             default:
                 $model->where('status',$status);
+                break;
         }
     }
 }
