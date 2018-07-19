@@ -47,7 +47,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->productInterface->createOrUpdate($request->all());
-        file_put_contents('request.txt',$request->all());
+
         return $this->response->noContent()->statusCode(201);
     }
 

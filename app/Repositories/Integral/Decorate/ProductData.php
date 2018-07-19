@@ -32,9 +32,6 @@ class ProductData extends EditorAbstract
             'recommend',//是否为推荐商品
             'detail',//商品详情
             'type',//not_limit 不限制 on_limit限制时间
-            'convert_num',//兑换次数
-            'convert_unit',//兑换单位
-            'convert_day',//兑换天数
         ]);
 
         $arr['status']  = array_get($array,'status',ProductProtocol::INTEGRAL_PRODUCT_STATUS_DOWN);
