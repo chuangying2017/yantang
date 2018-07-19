@@ -2,6 +2,7 @@
 
 namespace App\Api\V1\Controllers\Admin\Integral;
 
+use App\Api\V1\Transformers\Integral\Admin\IntegralProductTransformer;
 use App\Services\Integral\Product\ProductInerface;
 use Illuminate\Http\Request;
 
@@ -21,11 +22,14 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $product_array = $this->productInterface->get_all_product($request->all());
+
+        return $this->response->item($product_array->load('product_sku','images'), new IntegralProductTransformer());
     }
 
     /**

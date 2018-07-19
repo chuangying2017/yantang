@@ -10,4 +10,6 @@ interface ProductInerface
     public function delete($attach);
 
     public function edit();
+
+    public function get_all_product($where=null, $orderBy = 'desc', $page='page', $pagination=20);
 }

@@ -18,6 +18,7 @@ class ProductManager implements ProductInerface
         // TODO: Implement select() method.
     }
 
+
     /**
      * @param array $data
      * @param int|null $id
@@ -101,4 +102,29 @@ class ProductManager implements ProductInerface
         return $data;
     }
 
+    public function get_all_product($where=null,$page = 1,$sort='updated_at', $orderBy = 'desc', $pagination = 20)
+    {
+        $product_get = Product::query();
+
+        $product_get->status(array_get($where,'status',ProductProtocol::INTEGRAL_PRODUCT_STATUS_UP));
+
+        $product_get->when($where,function($query)use ($where,$page,$sort,$orderBy,$pagination)
+        {
+
+            if(!empty($where['keywords'])){
+                $query->with(['product_sku'=>function($query)use($where){
+                    $query->where('name','like',"%{$where['keywords']}%");
+                }])->orWhere('title','like',"%{$where['keywords']}%");
+            }
+        });
+
+        $product_get->orderBy($sort,$orderBy);
+
+        if($page){
+            $product_get->paginate($pagination);
+        }else{
+            $product_get->get();
+        }
+        return $product_get;
+    }
 }
