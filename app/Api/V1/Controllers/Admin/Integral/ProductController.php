@@ -99,6 +99,8 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->productInterface->delete($id);
+
+        return $this->response->noContent()->statusCode(201);
     }
 }
