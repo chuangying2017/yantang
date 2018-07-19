@@ -121,11 +121,11 @@ class ProductManager implements ProductInerface
         $product_get->orderBy($sort,$orderBy);
 
         if($page){
-            $product_get->paginate($pagination);
-        }else{
-            $product_get->get();
+            return $product_get->paginate($pagination);
         }
-        return $product_get;
+           return $product_get->get();
+
+
     }
 
     public function status($status,$model)
