@@ -11,14 +11,15 @@ class ProductSku extends EditorAbstract
     {
         $product->product_sku()->updateOrCreate(['product_id'=>$product['id']],[
             'product_id'        =>  $product['id'],
-            'unit'              =>  $data['unit'],
+           // 'unit'              =>  $data['unit'],
             'quantity'          =>  $data['quantity'],
-            'sales'             =>  $data['sales'],
+         //   'sales'             =>  $data['sales'],
             'postage'           =>  array_get($data,'postage','0'),
             'name'              =>  array_get($data,'name',null),
-            'convert_num'       =>  $product['convert_num'],//兑换次数
-            'convert_unit'      =>  $product['convert_unit'],//兑换单位
-            'convert_day'       =>  $product['convert_day'],//兑换天数
+            'convert_num'       =>  $data['convert_num'],//兑换次数
+            'convert_unit'      =>  $data['convert_unit'],//兑换单位
+            'convert_day'       =>  $data['convert_day'],//兑换天数
+            'bar_code'          =>  $data['car_code'],//商品编号
         ]);
 
         return $this->next($data,$product);

@@ -9,7 +9,7 @@ class Images extends EditorAbstract
 
     public function handle(array $data, Product $product)
     {
-        $product->images()->sync($data['image_ids']);
+        $product->images()->sync($data['image_ides']);
 
         return $this->next($data, $product);
     }
