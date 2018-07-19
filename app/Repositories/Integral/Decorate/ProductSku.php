@@ -19,7 +19,7 @@ class ProductSku extends EditorAbstract
             'convert_num'       =>  $data['convert_num'],//兑换次数
             'convert_unit'      =>  $data['convert_unit'],//兑换单位
             'convert_day'       =>  $data['convert_day'],//兑换天数
-            'bar_code'          =>  array_key_exists('bar_code',$data)?$data['car_code']:0,//商品编号
+            'bar_code'          =>  array_get($data,'bar_code',0),//商品编号
         ]);
 
         return $this->next($data,$product);
