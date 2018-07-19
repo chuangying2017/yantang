@@ -11,6 +11,7 @@ class IntegralProductSkuTransformer extends TransformerAbstract {
     {
             return [
                 'id'=>$productSku['id'],
+                'bar_code'=>$productSku['bar_code'],//商品编码
                 'product_id'=>$productSku['product_id'],
                 'quantity'=>$productSku['quantity'],
                 'sales'=>$productSku['sales'],

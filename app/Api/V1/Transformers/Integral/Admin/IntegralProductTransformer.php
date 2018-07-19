@@ -2,16 +2,22 @@
 
 namespace App\Api\V1\Transformers\Integral\Admin;
 
+use App\Api\V1\Transformers\Integral\IntegralTransformer;
+use App\Api\V1\Transformers\Traits\SetInclude;
 use App\Models\Integral\Product;
 use League\Fractal\TransformerAbstract;
 
 class IntegralProductTransformer extends TransformerAbstract {
 
-    protected $availableIncludes = ['sku'];
+    use SetInclude;
+
+    protected $availableIncludes = ['product_sku','integral_category'];
 
     public function transform(Product $product)
     {
-            return [
+        $this->setInclude($product);
+
+            $data = [
                 'id'=>$product['id'],
                 'category_id'=>$product['category_id'],//分类id
                 'title'=>$product['title'],//产品标题
@@ -28,10 +34,28 @@ class IntegralProductTransformer extends TransformerAbstract {
                 'detail'=>$product['detail'],//商品详情
                 'type'=>$product['type'],//not_limit 不限制 on_limit限制时间
             ];
+
+            if($product->relationLoaded('images'))
+            {
+                $data['images'] = array_map(function($image_id){
+                    return config('filesystems.disks.qiniu.domains.custom').$image_id;
+                    },$product->images->pluck('media_id')->all());
+            }
+
+            if ($product->relationLoaded('specification'))
+            {
+                $data['specification'] = $product->specification;
+            }
+            return $data;
     }
 
-    public function IncludeSku(Product $product)
+    public function IncludeProduct_sku(Product $product)
     {
         return $this->item($product->product_sku, new IntegralProductSkuTransformer());
+    }
+
+    public function IncludeIntegral_category(Product $product)
+    {
+        return $this->item($product->integral_category, new IntegralTransformer());
     }
 }

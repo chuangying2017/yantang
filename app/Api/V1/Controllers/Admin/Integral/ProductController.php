@@ -2,6 +2,7 @@
 
 namespace App\Api\V1\Controllers\Admin\Integral;
 
+use App\Services\Integral\Product\ProductInerface;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -9,6 +10,14 @@ use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
+
+    public $productInterface;
+
+    public function __construct(ProductInerface $productInerface)
+    {
+        $this->productInterface=$productInerface;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +46,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $this->productInterface->createOrUpdate($request->all());
 
+        return $this->response->noContent()->statusCode(201);
     }
 
     /**

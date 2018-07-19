@@ -5,7 +5,7 @@ interface ProductInerface
 {
     public function select();
 
-    public function createOrUpdate();
+    public function createOrUpdate(array $data = [], $id = null);
 
     public function delete($attach);
 
