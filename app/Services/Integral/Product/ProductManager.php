@@ -108,9 +108,10 @@ class ProductManager implements ProductInerface
 
         $product_get->status(array_get($where,'status',ProductProtocol::INTEGRAL_PRODUCT_STATUS_UP));
 
-        $product_get->when($where,function($query)use ($where,$page,$sort,$orderBy,$pagination)
-        {
+       if(isset($where['category']))$product_get->where('category_id','=',$where['category']);
 
+        $product_get->when($where['keywords'],function($query)use ($where)
+        {
             if(!empty($where['keywords'])){
                 $query->with(['product_sku'=>function($query)use($where){
                     $query->where('name','like',"%{$where['keywords']}%");
