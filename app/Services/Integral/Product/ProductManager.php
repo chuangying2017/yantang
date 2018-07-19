@@ -139,7 +139,7 @@ class ProductManager implements ProductInerface
                 $model::onlyTrashed();
                 break;
             default:
-                $model->where('status',$status);
+                $model->status($status);
                 break;
         }
     }

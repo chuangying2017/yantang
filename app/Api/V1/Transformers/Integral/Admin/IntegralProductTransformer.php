@@ -33,6 +33,7 @@ class IntegralProductTransformer extends TransformerAbstract {
                 'recommend'=>$product['recommend'],//是否为推荐商品
                 'detail'=>$product['detail'],//商品详情
                 'type'=>$product['type'],//not_limit 不限制 on_limit限制时间
+                'categoryName'=>$product->integral_category->first()->title,
             ];
 
             if($product->relationLoaded('images'))
@@ -50,12 +51,12 @@ class IntegralProductTransformer extends TransformerAbstract {
             return $data;
     }
 
-    public function IncludeProduct_sku(Product $product)
+    public function includeProductSku(Product $product)
     {
         return $this->item($product->product_sku, new IntegralProductSkuTransformer());
     }
 
-    public function IncludeIntegral_category(Product $product)
+    public function includeIntegralCategory(Product $product)
     {
         return $this->item($product->integral_category, new IntegralTransformer());
     }

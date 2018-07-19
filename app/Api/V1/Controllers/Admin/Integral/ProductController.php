@@ -27,9 +27,12 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+
         $product_array = $this->productInterface->get_all_product($request->all());
 
-        return $this->response->item($product_array->load('product_sku','images'), new IntegralProductTransformer());
+        $product_array->load('product_sku','images');
+
+        return $this->response->paginator($product_array, new IntegralProductTransformer());
     }
 
     /**

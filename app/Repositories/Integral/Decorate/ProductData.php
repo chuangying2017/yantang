@@ -33,6 +33,7 @@ class ProductData extends EditorAbstract
             'detail',//商品详情
             'type',//not_limit 不限制 on_limit限制时间
             'product_no',//商品编号
+            'status',
         ]);
 
         $arr['product_no'] = array_key_exists('product_no',$arr) ? $arr['product_no'] : uniqid('fn_');
