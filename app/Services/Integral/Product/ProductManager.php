@@ -61,9 +61,19 @@ class ProductManager implements ProductInerface
         });
     }
 
-    public function edit()
+    /**
+     * @param $id
+     * @param $status
+     */
+    public function edit($id, string $status)
     {
+        if(in_array($status,[ProductProtocol::INTEGRAL_PRODUCT_STATUS_UP,ProductProtocol::INTEGRAL_PRODUCT_STATUS_DOWN])){
+            $product = Product::find($id);
+            $product->status = $status;
+           return $product->save();
+        }
 
+        throw new \Exception('参数有误',500);
     }
 
     public function get_handle_config()

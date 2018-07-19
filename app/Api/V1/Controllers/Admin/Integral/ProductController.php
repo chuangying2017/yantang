@@ -75,9 +75,13 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id,Request $request)
     {
-        //
+        /** @var TYPE_NAME $id */
+        /** @var TYPE_NAME $this */
+        $this->productInterface->edit($id,$request->input('status'));
+
+        return $this->response->noContent()->statusCode(201);
     }
 
     /**
