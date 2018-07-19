@@ -86,7 +86,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->productInterface->createOrUpdate($request->all(),$id);
+
+        return $this->response->noContent()->statusCode(201);
     }
 
     /**
