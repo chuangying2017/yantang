@@ -5,7 +5,8 @@ class ProductProtocol
 {
     const INTEGRAL_PRODUCT_STATUS_UP                    = 'up';             //上架
     const INTEGRAL_PRODUCT_STATUS_DOWN                  = 'down';           //下架
-    const INTEGRAL_PRODUCT_STATUS_STOCK                 = 'stock';          //售完
+    const INTEGRAL_PRODUCT_STATUS_REMAINDER             = 'remainder';      //售完
+    const INTEGRAL_PRODUCT_STATUS_DELETE                = 'delete';         //删除
 
     const INTEGRAL_PRODUCT_TYPE_ON_LIMIT                = 'on_limit';       //限制
     const INTEGRAL_PRODUCT_TYPE_NOT_LIMIT               = 'not_limit';      //不限制

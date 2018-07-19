@@ -106,18 +106,17 @@ class ProductManager implements ProductInerface
     {
         $product_get = Product::query();
 
-        $product_get->status(array_get($where,'status',ProductProtocol::INTEGRAL_PRODUCT_STATUS_UP));
+        if(isset($where['status'])){
+            $this->status($where['status'],$product_get);
+        }
 
-       if(isset($where['category']))$product_get->where('category_id','=',$where['category']);
+        if(isset($where['category']))$product_get->where('category_id','=',$where['category']);
 
-        $product_get->when($where['keywords'],function($query)use ($where)
-        {
-            if(!empty($where['keywords'])){
-                $query->with(['product_sku'=>function($query)use($where){
-                    $query->where('name','like',"%{$where['keywords']}%");
-                }])->orWhere('title','like',"%{$where['keywords']}%");
-            }
-        });
+        if(isset($where['keywords'])){
+            $product_get->with(['product_sku'=>function($query)use($where){
+                $query->where('name','like',"%{$where['keywords']}%");
+            }])->orWhere('title','like',"%{$where['keywords']}%");
+        }
 
         $product_get->orderBy($sort,$orderBy);
 
@@ -127,5 +126,20 @@ class ProductManager implements ProductInerface
             $product_get->get();
         }
         return $product_get;
+    }
+
+    public function status($status,$model)
+    {
+        switch ($status)
+        {
+            case ProductProtocol::INTEGRAL_PRODUCT_STATUS_REMAINDER:
+                $model->where($status,'0');
+                break;
+            case ProductProtocol::INTEGRAL_PRODUCT_STATUS_DELETE:
+                $model::onlyTrashed();
+                break;
+            default:
+                $model->where('status',$status);
+        }
     }
 }
