@@ -28,6 +28,7 @@ class IntegralProductTransformer extends TransformerAbstract {
                 'digest'=>$product['digest'],//商品描述
                 'advertising'=>$product['advertising'],//广告语
                 'priority'=>$product['priority'],//优先权限
+                'status'=>$product['status'],
                // 'open_time',//产品兑换时间
                // 'end_time',//产品停止兑换时间
                 'recommend'=>$product['recommend'],//是否为推荐商品
@@ -39,7 +40,7 @@ class IntegralProductTransformer extends TransformerAbstract {
             if($product->relationLoaded('images'))
             {
                 $data['images'] = array_map(function($image_id){
-                    return config('filesystems.disks.qiniu.domains.custom').$image_id;
+                     return ['url'=>config('filesystems.disks.qiniu.domains.custom').$image_id,'media_id'=>$image_id];
                     },$product->images->pluck('media_id')->all());
             }
 

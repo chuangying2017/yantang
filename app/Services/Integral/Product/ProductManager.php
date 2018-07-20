@@ -90,7 +90,7 @@ class ProductManager implements ProductInerface
         $product = Product::query()->findOrFail($id);
 
         if($with_detail){
-            $product->load('integral_category','product_sku','images');
+            $product->load('integral_category','product_sku','images','specification');
         }
 
         return $product;
