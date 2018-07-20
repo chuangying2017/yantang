@@ -58,6 +58,6 @@ class IntegralProductTransformer extends TransformerAbstract {
 
     public function includeIntegralCategory(Product $product)
     {
-        return $this->item($product->integral_category, new IntegralTransformer());
+        return $this->item($product->integral_category->first(), new IntegralTransformer());
     }
 }
