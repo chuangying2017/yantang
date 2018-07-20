@@ -9,6 +9,7 @@ use App\Repositories\Integral\Decorate\ProductCats;
 use App\Repositories\Integral\Decorate\ProductData;
 use App\Repositories\Integral\Decorate\ProductSku;
 use Illuminate\Support\Facades\DB;
+use Mockery\Exception;
 
 class ProductManager implements ProductInerface
 {
@@ -136,17 +137,30 @@ class ProductManager implements ProductInerface
 
     public function status($status,$model)
     {
+
         switch ($status)
         {
-            case ProductProtocol::INTEGRAL_PRODUCT_STATUS_REMAINDER:
-                $model->where($status,'0');
+            case ProductProtocol::INTEGRAL_PRODUCT_STATUS_REMAINDER://查询剩余量为0
+                $this->remainder($model,1,'<');
                 break;
             case ProductProtocol::INTEGRAL_PRODUCT_STATUS_DELETE:
                 $model::onlyTrashed();
                 break;
-            default:
+            case ProductProtocol::INTEGRAL_PRODUCT_STATUS_UP:
+                $this->remainder($model->status($status),0,'>');
+                break;
+            case ProductProtocol::INTEGRAL_PRODUCT_STATUS_DOWN:
                 $model->status($status);
                 break;
+            default:
+                throw new \Exception('参数有误 not match value',500);
         }
+    }
+
+    public function remainder($model,$integer = 1,$compare = '<')
+    {
+        $model->whereHas('product_sku',function($query)use($integer,$compare){
+            $query->where(ProductProtocol::INTEGRAL_PRODUCT_STATUS_REMAINDER,$compare,$integer);
+        });
     }
 }
