@@ -9,7 +9,7 @@ interface ProductInerface
 
     public function delete($attach);
 
-    public function edit($id, string $status);
+    public function edit($id,$status);
 
     public function get_all_product($where=null, $orderBy = 'desc', $page='page', $pagination=20);
 }

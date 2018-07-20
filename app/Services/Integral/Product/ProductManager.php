@@ -61,11 +61,7 @@ class ProductManager implements ProductInerface
         });
     }
 
-    /**
-     * @param $id
-     * @param $status
-     */
-    public function edit($id, string $status)
+    public function edit($id,$status)
     {
         if(in_array($status,[ProductProtocol::INTEGRAL_PRODUCT_STATUS_UP,ProductProtocol::INTEGRAL_PRODUCT_STATUS_DOWN])){
             $product = Product::find($id);

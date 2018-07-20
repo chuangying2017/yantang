@@ -66,20 +66,21 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $show_product = $this->productInterface->get_product($id);
+
+        return $this->response->item($show_product,new IntegralProductTransformer());
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function edit($id,Request $request)
     {
-        /** @var TYPE_NAME $id */
-        /** @var TYPE_NAME $this */
-        $this->productInterface->edit($id,$request->input('status'));
+        $this->productInterface->edit($id,$request->input('status',null));
 
         return $this->response->noContent()->statusCode(201);
     }
