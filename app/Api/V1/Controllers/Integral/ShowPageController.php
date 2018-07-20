@@ -61,7 +61,9 @@ class ShowPageController extends Controller
      */
     public function show($id)
     {
-        //
+        $product_one_data = $this->product->get_product($id);
+
+        return $this->response->item($product_one_data, new ClientIntegralTransformer());
     }
 
     /**
