@@ -34,7 +34,7 @@ class IntegralProductTransformer extends TransformerAbstract {
                 'recommend'=>$product['recommend'],//是否为推荐商品
                 'detail'=>$product['detail'],//商品详情
                 'type'=>$product['type'],//not_limit 不限制 on_limit限制时间
-                'categoryName'=>$product->integral_category->first()->title,
+                'categoryName'=>isset($product->integral_category->first()->title)?$product->integral_category->first()->title:null,
             ];
 
             if($product->relationLoaded('images'))

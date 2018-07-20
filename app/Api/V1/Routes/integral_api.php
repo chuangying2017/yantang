@@ -7,7 +7,7 @@
  */
 
 $api->group(['namespace'=>'Integral','middleware'=>'api.auth','prefix'=>'integral'],function ($api){
-            $api->group(['middleware'=>'access.routeNeedsRole'. \App\Repositories\Backend\AccessProtocol::ROLE_OF_CLIENT],function($api){
+
                 $api->resource('IntegralShow','ShowPageController');
-            });
+
 });

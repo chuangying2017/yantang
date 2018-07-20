@@ -27,9 +27,9 @@ class ShowPageController extends Controller
      */
     public function index()
     {
-        $product_ = $this->product->get_all_product(null,false,'sort_type','asc');
+        $product_ = $this->product->get_all_product(['status'=>'up'],false,'sort_type','asc');
 
-        return $this->response->item($product_, new ClientIntegralTransformer());
+        return $this->response->item($product_->load('product_sku'), new ClientIntegralTransformer());
     }
 
     /**

@@ -13,6 +13,8 @@ class Product extends Model
 
     protected $table='integral_product';
     //
+    protected $dates = ['deleted_at'];
+
     protected $guarded = ['id'];
 
     public function scopeStatus($query, $type)

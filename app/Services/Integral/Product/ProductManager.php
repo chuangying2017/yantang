@@ -114,7 +114,11 @@ class ProductManager implements ProductInerface
         $product_get = Product::query();
 
         if(isset($where['status'])){
-            $this->status($where['status'],$product_get);
+             $this->status($where['status'],$product_get);
+        }
+
+        if(!is_null($this->deleteModel)){
+            $product_get = $this->deleteModel;
         }
 
         if(isset($where['category']))$product_get->where('category_id','=',$where['category']);
@@ -135,6 +139,8 @@ class ProductManager implements ProductInerface
 
     }
 
+    protected $deleteModel=null;
+
     public function status($status,$model)
     {
 
@@ -144,7 +150,7 @@ class ProductManager implements ProductInerface
                 $this->remainder($model,1,'<');
                 break;
             case ProductProtocol::INTEGRAL_PRODUCT_STATUS_DELETE:
-                $model::onlyTrashed();
+                $this->deleteModel=$model->getModel()->onlyTrashed();
                 break;
             case ProductProtocol::INTEGRAL_PRODUCT_STATUS_UP:
                 $this->remainder($model->status($status),0,'>');

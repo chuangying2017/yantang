@@ -10,6 +10,8 @@ class ProductSku extends Model
 
     protected $guarded = ['id'];
 
+    protected $dates = ['deleted_at'];
+
     public function integral_product()
     {
         $this->belongsTo(Product::class,'product_id');

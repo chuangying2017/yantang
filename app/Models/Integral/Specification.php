@@ -9,6 +9,8 @@ class Specification extends Model
 {
     use SoftDeletes;
 
+    protected $dates = ['deleted_at'];
+
     protected $table='specification';
     //
     protected $guarded=['id'];
