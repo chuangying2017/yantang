@@ -11,5 +11,5 @@ interface ProductInerface
 
     public function edit($id,$status);
 
-    public function get_all_product($where=null, $orderBy = 'desc', $page='page', $pagination=20);
+    public function get_all_product($where=null,$page = 1,$sort='updated_at', $orderBy = 'desc', $pagination = 20);
 }

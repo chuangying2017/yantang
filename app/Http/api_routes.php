@@ -78,6 +78,11 @@ $api->version('v1', function ($api) {
          * comment member function
          * */
         require_once (__DIR__.'/../Api/V1/Routes/comments_api.php');
+
+        /*
+         * 积分前台
+         * */
+        require_once (__DIR__.'/../Api/V1/Routes/integral_api.php');
     });
 
 });
