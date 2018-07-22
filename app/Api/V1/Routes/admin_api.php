@@ -229,6 +229,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->resource('category','CategoryMangerController');
             $api->resource('specification','SpecificationController');
             $api->resource('product','ProductController');
+            $api->get('product/{id}/edit','ProductController@edit');
         });
     });
 });

@@ -80,6 +80,7 @@ class ProductController extends Controller
      */
     public function edit($id,Request $request)
     {
+
         $this->productInterface->edit($id,$request->input('status',null));
 
         return $this->response->noContent()->statusCode(201);
