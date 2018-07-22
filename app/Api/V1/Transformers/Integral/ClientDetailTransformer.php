@@ -31,7 +31,7 @@ class ClientDetailTransformer extends TransformerAbstract {
             if ($product->relationLoaded('images')) {
                 $data['image_ides'] = array_map(function ($media_id){
                     return config('filesystems.disks.qiniu.domains.custom') . $media_id;
-                },$product->images->pluck('media_id'));
+                },$product->images->pluck('media_id')->all());
             }
 
             return $data;
