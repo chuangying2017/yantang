@@ -3,6 +3,7 @@
 namespace App\Api\V1\Controllers\Integral;
 
 
+use App\Api\V1\Transformers\Integral\ClientDetailTransformer;
 use App\Api\V1\Transformers\Integral\ClientIntegralTransformer;
 use App\Services\Integral\Product\ProductInerface;
 use Illuminate\Http\Request;
@@ -64,7 +65,7 @@ class ShowPageController extends Controller
     {
         $product_one_data = $this->product->get_product($id);
 
-        return $this->response->item($product_one_data, new ClientIntegralTransformer());
+        return $this->response->item($product_one_data, new ClientDetailTransformer());
     }
 
     /**
