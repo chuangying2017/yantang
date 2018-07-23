@@ -6,6 +6,8 @@ namespace App\Api\V1\Controllers\Integral;
 use App\Api\V1\Transformers\Integral\ClientDetailTransformer;
 use App\Api\V1\Transformers\Integral\ClientIntegralTransformer;
 use App\Models\Access\User\User;
+use App\Repositories\Client\Account\EloquentAccountRepository;
+use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
 use App\Repositories\Client\Account\Wallet\WalletRepositoryContract;
 use App\Services\Client\Account\AccountProtocol;
 use App\Services\Home\BannerService;
@@ -22,7 +24,7 @@ class ShowPageController extends Controller
 
     protected $wallet;
 
-    public function __construct(ProductInerface $productInerface,WalletRepositoryContract $contract)
+    public function __construct(ProductInerface $productInerface,EloquentWalletRepository $contract)
     {
         $this->product      = $productInerface;
         $this->wallet       = $contract;
@@ -38,11 +40,15 @@ class ShowPageController extends Controller
         $product_ = $this->product->get_all_product(['status' => 'up'], false, 'sort_type', 'asc');
         $product_->load('product_sku');
 
+        if(!$access=access()->id()) throw new \Exception('用戶信息不存在 not exiting user messages',500);
+
         return $this
             ->response
             ->collection($product_, new ClientIntegralTransformer())
-            ->setMeta(BannerService::listByType('integral')->toArray())
-            ->addMeta('walletIntegral',$this->wallet->getAmount(AccountProtocol::ACCOUNT_AMOUNT_INTEGRAL));
+            ->setMeta([
+                'banner'=>BannerService::listByType('integral')->toArray(),
+                'walletIntegral'=>$this->wallet->setUserId($access)->getAmount(AccountProtocol::ACCOUNT_AMOUNT_INTEGRAL)
+            ]);
     }
 
     /**
