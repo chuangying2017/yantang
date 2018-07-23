@@ -1,12 +1,9 @@
 <?php
 namespace App\Repositories\Integral\OrderFilter;
 
-use App\Models\Integral\Product;
 use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
 use App\Services\Client\Account\AccountProtocol;
 use App\Services\Integral\Product\ProductInerface;
-use App\Services\Integral\Product\ProductProtocol;
-use Mockery\Exception;
 
 class OrderFilter
 {
@@ -27,13 +24,12 @@ class OrderFilter
         $this->wallet           =   $eloquentWalletRepository;
     }
 
-    public function filter($data)
+    public function filter()
     {
-
 
     }
 
-    public function index($data)
+    public function index(array $data)
     {
         $this->data = $data;
         return $this;
@@ -55,9 +51,9 @@ class OrderFilter
         return $this->product['integral'] * $this->data['buy_num'];
     }
 
-    public function user_compare_integral()
+    public function user_compare_integral() // 比较用户与下单产品的积分
     {
-        $boolean = false;
+        $boolean = ['message' => AccountProtocol::ACCOUNT_NOT_INTEGRAL];
 
         if($this->settle_accounts()
             >=

@@ -9,6 +9,7 @@ use App\Models\Access\User\User;
 use App\Repositories\Client\Account\EloquentAccountRepository;
 use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
 use App\Repositories\Client\Account\Wallet\WalletRepositoryContract;
+use App\Repositories\Integral\OrderFilter\OrderFilter;
 use App\Services\Client\Account\AccountProtocol;
 use App\Services\Home\BannerService;
 use App\Services\Integral\Product\ProductInerface;
@@ -24,10 +25,13 @@ class ShowPageController extends Controller
 
     protected $wallet;
 
-    public function __construct(ProductInerface $productInerface,EloquentWalletRepository $contract)
+    protected $filterOrder;
+
+    public function __construct(ProductInerface $productInerface,EloquentWalletRepository $contract,OrderFilter $orderFilter)
     {
-        $this->product      = $productInerface;
-        $this->wallet       = $contract;
+        $this->product                  = $productInerface;
+        $this->wallet                   = $contract;
+        $this->filterOrder              = $orderFilter;
     }
 
     /**
