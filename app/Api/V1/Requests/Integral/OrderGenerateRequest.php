@@ -24,7 +24,17 @@ class OrderGenerateRequest extends Request
     public function rules()
     {
         return [
-            //
+            'address.name'      =>  'required|max:20|min:3',
+            'address.phone'     =>  'regex:["/^1[3|4|5|6|7|8][0-9]\d{4,8}$/"]',
+            'address.province'  =>  'required|max:20',
+            'address.city'      =>  'required|max:20',
+            'address.district'  =>  'required|max:50',
+            'address.detail'    =>  'required|max:100',
+            'product_id'        =>  'required|numeric|max:5',
+            'buy_num'           =>  'required|numeric|max:5',
+            'product_name'      =>  'required',
+            'product_integral'  =>  'required|numeric',
+
         ];
     }
 }
