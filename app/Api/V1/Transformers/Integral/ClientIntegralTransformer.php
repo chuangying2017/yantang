@@ -3,6 +3,7 @@
 namespace App\Api\V1\Transformers\Integral;
 
 use App\Models\Integral\Product;
+use App\Services\Home\BannerService;
 use League\Fractal\TransformerAbstract;
 
 class ClientIntegralTransformer extends TransformerAbstract {

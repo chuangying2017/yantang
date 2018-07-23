@@ -9,5 +9,4 @@
 $api->group(['namespace'=>'Integral','middleware'=>'api.auth','prefix'=>'integral'],function ($api){
 
                 $api->resource('IntegralShow','ShowPageController');
-
 });

@@ -121,7 +121,7 @@ class ProductManager implements ProductInerface
             $product_get = $this->deleteModel;
         }
 
-        if(isset($where['category']))$product_get->where('category_id','=',$where['category']);
+        if(isset($where['category']) && !empty($where['category']))$product_get->where('category_id','=',$where['category']);
 
         if(isset($where['keywords']) && !empty($where['keywords'])){
             $product_get->with(['product_sku'=>function($query)use($where){
