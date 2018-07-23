@@ -44,6 +44,7 @@ class AccountProtocol {
     const ACCOUNT_AMOUNT_MAIN_NAME = 'amount';
     const ACCOUNT_AMOUNT_FROZEN_NAME = 'frozen_amount';
     const ACCOUNT_AMOUNT_USED_NAME = 'used_amount';
+    const ACCOUNT_AMOUNT_INTEGRAL  = 'integral';
 
     const ACCOUNT_INCOME = 1;
     const ACCOUNT_OUTCOME = 0;
