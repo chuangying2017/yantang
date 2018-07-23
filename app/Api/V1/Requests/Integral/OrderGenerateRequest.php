@@ -34,7 +34,6 @@ class OrderGenerateRequest extends Request
             'buy_num'           =>  'required|numeric|max:5',
             'product_name'      =>  'required',
             'product_integral'  =>  'required|numeric',
-
         ];
     }
 }

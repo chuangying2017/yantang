@@ -74,4 +74,15 @@ class OrderFilter
         $this->user_id = $id;
         return $this;
     }
+
+    public function array_filterMode(array $array)
+    {
+        return array_only($array,[
+            'address',
+            'product_id',
+            'buy_num',
+            'product_name',
+            'product_integral',
+        ]);
+    }
 }

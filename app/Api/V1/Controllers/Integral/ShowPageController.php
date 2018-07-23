@@ -74,7 +74,7 @@ class ShowPageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->filterOrder->index($request->all());
     }
 
     /**
