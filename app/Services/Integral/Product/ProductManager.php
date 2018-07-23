@@ -123,10 +123,10 @@ class ProductManager implements ProductInerface
 
         if(isset($where['category']))$product_get->where('category_id','=',$where['category']);
 
-        if(isset($where['keywords'])){
+        if(isset($where['keywords']) && !empty($where['keywords'])){
             $product_get->with(['product_sku'=>function($query)use($where){
                 $query->where('name','like',"%{$where['keywords']}%");
-            }])->orWhere('title','like',"%{$where['keywords']}%");
+            }])->where('title','like',"%{$where['keywords']}%");
         }
 
         $product_get->orderBy($sort,$orderBy);
