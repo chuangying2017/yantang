@@ -3,7 +3,9 @@
 namespace App\Api\V1\Transformers\Integral;
 
 use App\Models\Integral\Product;
+use Illuminate\Database\Eloquent\Model;
 use League\Fractal\TransformerAbstract;
+use Mockery\Exception;
 
 class ClientDetailTransformer extends TransformerAbstract {
 
@@ -25,7 +27,7 @@ class ClientDetailTransformer extends TransformerAbstract {
             ];
 
             if ($product->relationLoaded('specification')) {
-                $data['specification']  =   $product->specification()->get(['id','type','describe']);
+                $data['specification']  =   $this->spec($product->specification());
             }
 
             if ($product->relationLoaded('images')) {
@@ -35,5 +37,19 @@ class ClientDetailTransformer extends TransformerAbstract {
             }
 
             return $data;
+    }
+
+    protected function spec($model)
+    {
+        if($model instanceof Model){
+            foreach ($model->get(['id','type','describe']) as $item)
+            {
+                $argv[$item->type]  = $model->where('type',$item->type)->get(['id','type','describe']);
+            }
+        }else{
+            throw new Exception('model not exiting',500);
+        }
+
+        return $argv;
     }
 }

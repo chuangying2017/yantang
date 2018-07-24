@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Facade;
 
 class OrderFacade extends Facade
 {
-    public static function getFacadeAccessor()
+    protected static function getFacadeAccessor()
     {
         return OrderIntegralProtocol::class;
     }

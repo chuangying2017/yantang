@@ -5,17 +5,13 @@ namespace App\Api\V1\Controllers\Integral;
 
 use App\Api\V1\Transformers\Integral\ClientDetailTransformer;
 use App\Api\V1\Transformers\Integral\ClientIntegralTransformer;
-use App\Models\Access\User\User;
-use App\Repositories\Client\Account\EloquentAccountRepository;
 use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
-use App\Repositories\Client\Account\Wallet\WalletRepositoryContract;
-use App\Repositories\Integral\OrderFilter\OrderFilter;
+use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Services\Client\Account\AccountProtocol;
 use App\Services\Home\BannerService;
 use App\Services\Integral\Product\ProductInerface;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 class ShowPageController extends Controller
@@ -25,13 +21,13 @@ class ShowPageController extends Controller
 
     protected $wallet;
 
-    protected $filterOrder;
+    protected $orderIntegral;
 
-    public function __construct(ProductInerface $productInerface,EloquentWalletRepository $contract,OrderFilter $orderFilter)
+    public function __construct(ProductInerface $productInerface,EloquentWalletRepository $contract,OrderIntegralInterface $orderIntegral)
     {
         $this->product                  = $productInerface;
         $this->wallet                   = $contract;
-        $this->filterOrder              = $orderFilter;
+        $this->orderIntegral            = $orderIntegral;
     }
 
     /**
@@ -68,13 +64,19 @@ class ShowPageController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response|void
      */
     public function store(Request $request)
     {
-        $this->filterOrder->index($request->all())->set_user_Id(access()->id())->user_compare_integral();
+        $sore = $this->orderIntegral->order_generator($request->all());
+
+        $response_headr = $this->response;
+
+        if(!is_string($sore))
+            return $response_headr->noContent()->addMeta('status','Successfully Convert')->statusCode(201);
+
+        return $response_headr->error($sore,201);
     }
 
     /**

@@ -56,7 +56,7 @@ class OrderFilter
      */
     public function user_compare_integral() // 比较用户与下单产品的积分
     {
-        $boolean = ['message' => AccountProtocol::ACCOUNT_NOT_INTEGRAL];
+        $boolean = AccountProtocol::ACCOUNT_NOT_INTEGRAL;
 
         if($this->settle_accounts()
             >=

@@ -10,7 +10,7 @@ class OrderIntegralProtocol
 
     public function order_generator() //生成订单号
     {
-        return mt_rand(0,99).substr(date('Y'),-2) . date('mdHis') . mt_rand(0,99);
+        return '10'.mt_rand(10,99).substr(date('Y'),-2) . date('md') . mt_rand(10,99) . substr(ceil(microtime(true)),-6);
     }
 
     public function order_test()
