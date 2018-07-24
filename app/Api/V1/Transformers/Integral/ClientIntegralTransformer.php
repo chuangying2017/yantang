@@ -13,6 +13,7 @@ class ClientIntegralTransformer extends TransformerAbstract {
             $productSku = $product->product_sku->first();
 
             $data = [
+                'product_id'            =>      $product['id'],
                 'cover_image'           =>      $product['cover_image'],
                 'productName'           =>      $productSku['name'],
                 'integral'              =>      $product['integral'],
