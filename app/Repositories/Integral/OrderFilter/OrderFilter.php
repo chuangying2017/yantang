@@ -97,9 +97,11 @@ class OrderFilter
     {
         $handle = DispatchClass::get_container($this->handle_config());
 
-        \DB::transaction(function ()use ($handle) {
-           return $handle->handle($this->data);
+        $order = \DB::transaction(function ()use ($handle) {
+           return $handle->handle($this->data,$handle);
         });
+
+        return $order;
     }
 
     protected function handle_config()

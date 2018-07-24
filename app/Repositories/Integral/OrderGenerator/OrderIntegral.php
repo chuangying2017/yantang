@@ -1,13 +1,13 @@
 <?php
 namespace App\Repositories\Integral\OrderGenerator;
 
-use App\Models\Integral\Product;
-use App\Repositories\Integral\Editor\EditorAbstract;
+use App\Repositories\Common\Decorate\CommonDecorate;
 
-class OrderIntegral extends EditorAbstract
+
+class OrderIntegral extends CommonDecorate
 {
 
-    public function handle(array $data, Product $product)
+    protected function handle($data, $model)
     {
         // TODO: Implement handle() method.
     }
