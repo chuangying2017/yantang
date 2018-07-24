@@ -2,6 +2,10 @@
 namespace App\Repositories\Integral\OrderFilter;
 
 use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
+use App\Repositories\Common\config\DispatchClass;
+use App\Repositories\Integral\OrderGenerator\OrderIntegral;
+use App\Repositories\Integral\OrderGenerator\OrderIntegralAddress;
+use App\Repositories\Integral\OrderGenerator\OrderIntegralSku;
 use App\Services\Client\Account\AccountProtocol;
 use App\Services\Integral\Product\ProductInerface;
 
@@ -91,6 +95,19 @@ class OrderFilter
 
     public function order_production()
     {
+        $handle = DispatchClass::get_container($this->handle_config());
 
+        \DB::transaction(function ()use ($handle) {
+           return $handle->handle($this->data);
+        });
+    }
+
+    protected function handle_config()
+    {
+        return [
+            OrderIntegral::class,
+            OrderIntegralAddress::class,
+            OrderIntegralSku::class,
+        ];
     }
 }

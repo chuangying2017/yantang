@@ -15,6 +15,10 @@ class OrderIntegralRepository implements OrderIntegralInterface
 
     public function order_generator($order_data)
     {
+        $filter = $this->order_filter->set_user_Id(access()->id())->index($order_data);
+
+        if(is_string($boolean=$filter->user_compare_integral())) return $boolean;
+
 
     }
 }
