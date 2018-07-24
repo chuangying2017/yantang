@@ -51,6 +51,9 @@ class OrderFilter
         return $this->product['integral'] * $this->data['buy_num'];
     }
 
+    /**
+     * @return array|bool
+     */
     public function user_compare_integral() // 比较用户与下单产品的积分
     {
         $boolean = ['message' => AccountProtocol::ACCOUNT_NOT_INTEGRAL];
@@ -84,5 +87,10 @@ class OrderFilter
             'product_name',
             'product_integral',
         ]);
+    }
+
+    public function order_production()
+    {
+
     }
 }

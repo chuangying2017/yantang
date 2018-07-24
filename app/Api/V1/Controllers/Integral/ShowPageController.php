@@ -74,7 +74,7 @@ class ShowPageController extends Controller
      */
     public function store(Request $request)
     {
-        $this->filterOrder->index($request->all());
+        $this->filterOrder->index($request->all())->set_user_Id(access()->id())->user_compare_integral();
     }
 
     /**

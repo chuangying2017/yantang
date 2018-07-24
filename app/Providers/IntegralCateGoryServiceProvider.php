@@ -30,5 +30,6 @@ class IntegralCateGoryServiceProvider extends ServiceProvider
         //
         $this->app->bind(IntegralCategoryMangers::class, Category::class);
         $this->app->bind(ProductInerface::class,ProductManager::class);
+       // $this->app->bind();
     }
 }
