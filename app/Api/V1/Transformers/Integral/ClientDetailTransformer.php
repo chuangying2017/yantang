@@ -3,7 +3,7 @@
 namespace App\Api\V1\Transformers\Integral;
 
 use App\Models\Integral\Product;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use League\Fractal\TransformerAbstract;
 use Mockery\Exception;
 
@@ -41,10 +41,12 @@ class ClientDetailTransformer extends TransformerAbstract {
 
     protected function spec($model)
     {
-        if($model instanceof Model){
-            foreach ($model->get(['id','type','describe']) as $item)
+
+        if($model instanceof BelongsToMany){
+            $arrayCollection = $model->get(['id','type','describe']);
+            foreach ($arrayCollection as $item)
             {
-                $argv[$item->type]  = $model->where('type',$item->type)->get(['id','type','describe']);
+                $argv[$item->type]  = $arrayCollection->where('type',$item->type)->pluck('describe','id');
             }
         }else{
             throw new Exception('model not exiting',500);
