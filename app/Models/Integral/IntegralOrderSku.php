@@ -10,8 +10,15 @@ class IntegralOrderSku extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = ['specification' => 'json'];
+
     public function integral_product()
     {
         $this->belongsTo(Product::class,'product_id');
+    }
+
+    public function integral_order()
+    {
+        $this->belongsTo(IntegralOrder::class,'order_id','id');
     }
 }

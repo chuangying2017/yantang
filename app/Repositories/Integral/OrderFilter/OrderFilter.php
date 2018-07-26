@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories\Integral\OrderFilter;
 
+use App\Models\Integral\IntegralOrder;
 use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
 use App\Repositories\Common\config\DispatchClass;
 use App\Repositories\Integral\OrderGenerator\OrderIntegral;
@@ -18,7 +19,7 @@ class OrderFilter
 
     protected $wallet;
 
-    protected $data;
+    public $data;
 
     protected $user_id;
 
@@ -50,7 +51,7 @@ class OrderFilter
         return $this;
     }
 
-    protected function settle_accounts()
+    public function settle_accounts()
     {
         return $this->product['integral'] * $this->data['buy_num'];
     }
@@ -98,8 +99,10 @@ class OrderFilter
         $handle = DispatchClass::get_container($this->handle_config());
 
         $order = \DB::transaction(function ()use ($handle) {
-           return $handle->handle($this->data,$handle);
+           return $handle->handle($this->data,new IntegralOrder());
         });
+
+        $this->deduction_integral_user();
 
         return $order;
     }
@@ -111,5 +114,14 @@ class OrderFilter
             OrderIntegralAddress::class,
             OrderIntegralSku::class,
         ];
+    }
+
+    public function deduction_integral_user()
+    {
+        \DB::beginTransaction();
+
+        $this->wallet->setUserId($this->user_id)->getAccount()->decrement('integral',$this->settle_accounts());
+
+        \DB::commit();
     }
 }

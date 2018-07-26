@@ -7,6 +7,7 @@ class OrderIntegralProtocol
     const ORDER_STATUS_DELIVERED = 'Delivered'; //已发货
     const ORDER_STATUS_REJECT = 'reject'; //已拒绝
     const ORDER_STATUS_CONFIRM = 'confirm'; //已确定
+    const ORDER_CHANNEL_PAY = 'integral';//支付通道
 
     public function order_generator() //生成订单号
     {

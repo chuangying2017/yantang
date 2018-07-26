@@ -2,6 +2,7 @@
 namespace App\Repositories\Integral\OrderHandle;
 
 use App\Repositories\Integral\OrderFilter\OrderFilter;
+use Mockery\Exception;
 
 class OrderIntegralRepository implements OrderIntegralInterface
 {
@@ -15,9 +16,18 @@ class OrderIntegralRepository implements OrderIntegralInterface
 
     public function order_generator($order_data)
     {
-        $filter = $this->order_filter->set_user_Id(access()->id())->index($order_data);
+        try{
+            $filter = $this->order_filter->set_user_Id(access()->id())->set_product($order_data['product_id'])->index($order_data);
 
-        if(is_string($boolean=$filter->user_compare_integral())) return $boolean;
+            if(is_string($boolean=$filter->user_compare_integral())) return $boolean;
+
+            $this->order_filter->data['cost_integral'] = $this->order_filter->settle_accounts();
+
+            return $this->order_filter->order_production();
+        } catch (Exception $exception)
+        {
+            return $exception->getMessage();
+        }
 
 
     }

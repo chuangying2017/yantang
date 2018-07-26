@@ -11,7 +11,8 @@ class ClientDetailTransformer extends TransformerAbstract {
 
     public function transform(Product $product)
     {
-            $product_sku = $product->product_sku->first();
+            $product_sku = $product->product_sku;
+
             $data = [
                 'id'                        =>      $product['id'],
                 'title'                     =>      $product['title'],

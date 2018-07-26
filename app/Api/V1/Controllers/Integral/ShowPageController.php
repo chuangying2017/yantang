@@ -3,6 +3,7 @@
 namespace App\Api\V1\Controllers\Integral;
 
 
+use App\Api\V1\Requests\Integral\OrderGenerateRequest;
 use App\Api\V1\Transformers\Integral\ClientDetailTransformer;
 use App\Api\V1\Transformers\Integral\ClientIntegralTransformer;
 use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
@@ -64,11 +65,12 @@ class ShowPageController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
+     * @param OrderGenerateRequest $request
      * @return \Dingo\Api\Http\Response|void
      */
     public function store(Request $request)
     {
+        return $request->all();
         $sore = $this->orderIntegral->order_generator($request->all());
 
         $response_headr = $this->response;

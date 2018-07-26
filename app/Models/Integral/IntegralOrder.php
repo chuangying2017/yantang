@@ -15,4 +15,14 @@ class IntegralOrder extends Model
     {
         $this->belongsTo(User::class);
     }
+
+    public function integral_order_sku()
+    {
+        $this->hasOne(IntegralOrderSku::class,'order_id','id');
+    }
+
+    public function integral_order_address()
+    {
+        $this->hasOne(IntegralOrderAddress::class,'order_id','id');
+    }
 }
