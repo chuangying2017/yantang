@@ -19,9 +19,9 @@ class OrderIntegralRepository implements OrderIntegralInterface
         try{
             $filter = $this->order_filter->set_user_Id(access()->id())->set_product($order_data['product_id'])->index($order_data);
 
-            if(is_string($boolean=$filter->user_compare_integral())) return $boolean;
+            if(!is_bool($boolean=$filter->user_compare_integral())) return $boolean;
 
-            $this->order_filter->data['cost_integral'] = $this->order_filter->settle_accounts();
+            $this->order_filter->set_data_value();
 
             return $this->order_filter->order_production();
         } catch (Exception $exception)

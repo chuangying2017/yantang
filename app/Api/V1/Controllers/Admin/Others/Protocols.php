@@ -93,7 +93,7 @@ class Protocols extends Controller
      * http://o7tep4eu1.bkt.clouddn.com
      * */
     public function cache_check(){
-        dd(OrderFacade::order_generator());
+        dd(Carbon::today()->addDays(-3));
       /*  $cats = Category::query()->get();
         dd($cats->load('products'));*/
    /*       $image = ProductInfo::where('detail','<>',null)->get();

@@ -11,7 +11,7 @@ class OrderIntegral extends CommonDecorate
 
     public function handle($data, $model)
     {
-        $model->create($this->array_data($data));
+        $model->fill($this->array_data($data))->save();
 
         return $this->next($data,$model);
     }
@@ -20,10 +20,11 @@ class OrderIntegral extends CommonDecorate
     {
         return [
             'order_no'                  =>  OrderFacade::order_generator(),
-            'user_id'                   =>  access()->id(),
+            'user_id'                   =>  $data['user_id'],
             'status'                    =>  OrderIntegralProtocol::ORDER_STATUS_DROPSHIP,
             'cost_integral'             =>  array_get($data,'cost_integral',0),
             'pay_channel'               =>  OrderIntegralProtocol::ORDER_CHANNEL_PAY,
+            'postage'                   =>  $data['postage'],
         ];
     }
 }

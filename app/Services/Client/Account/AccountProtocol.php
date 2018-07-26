@@ -41,6 +41,7 @@ class AccountProtocol {
 
     const ACCOUNT_NOT_ENOUGH = '余额不足';
     const ACCOUNT_NOT_INTEGRAL = '积分不足';
+    const ACCOUNT_PRODUCT_ENOUGH = '库存不足';
 
     const ACCOUNT_AMOUNT_MAIN_NAME = 'amount';
     const ACCOUNT_AMOUNT_FROZEN_NAME = 'frozen_amount';

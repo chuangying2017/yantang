@@ -13,16 +13,16 @@ class IntegralOrder extends Model
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function integral_order_sku()
     {
-        $this->hasOne(IntegralOrderSku::class,'order_id','id');
+       return $this->hasOne(IntegralOrderSku::class,'order_id','id');
     }
 
     public function integral_order_address()
     {
-        $this->hasOne(IntegralOrderAddress::class,'order_id','id');
+        return $this->hasOne(IntegralOrderAddress::class,'order_id','id');
     }
 }

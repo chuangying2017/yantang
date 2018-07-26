@@ -17,7 +17,7 @@ class OrderIntegralSku extends CommonDecorate
         return [
             'product_id'        =>  $data['product_id'],
             'product_num'       =>  $data['buy_num'],
-            'total_integral'    =>  $data[''],
+            'total_integral'    =>  $data['cost_integral'],
             'single_integral'   =>  $data['product_integral'],
             'product_name'      =>  $data['product_name'],
             'specification'     =>  $data['specification'],

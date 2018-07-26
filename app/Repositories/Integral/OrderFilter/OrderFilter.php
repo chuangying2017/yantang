@@ -9,6 +9,7 @@ use App\Repositories\Integral\OrderGenerator\OrderIntegralAddress;
 use App\Repositories\Integral\OrderGenerator\OrderIntegralSku;
 use App\Services\Client\Account\AccountProtocol;
 use App\Services\Integral\Product\ProductInerface;
+use Carbon\Carbon;
 
 class OrderFilter
 {
@@ -16,6 +17,8 @@ class OrderFilter
     protected $interfaceClass;
 
     protected $product;
+
+    protected $product_sku;
 
     protected $wallet;
 
@@ -27,11 +30,6 @@ class OrderFilter
     {
         $this->interfaceClass   =   $productInerface;
         $this->wallet           =   $eloquentWalletRepository;
-    }
-
-    public function filter()
-    {
-
     }
 
     public function index(array $data)
@@ -47,7 +45,12 @@ class OrderFilter
 
     public function set_product($id)
     {
-        $this->product = $this->interfaceClass->get_product($id,false);
+        $pk = $this->interfaceClass->get_product($id,false);
+
+        $this->product = $pk;
+
+        $this->product_sku = $pk->product_sku;
+
         return $this;
     }
 
@@ -61,37 +64,47 @@ class OrderFilter
      */
     public function user_compare_integral() // 比较用户与下单产品的积分
     {
-        $boolean = AccountProtocol::ACCOUNT_NOT_INTEGRAL;
 
-        if($this->settle_accounts()
-            >=
-            $this
-                ->wallet
-                ->setUserId($this->user_id)
-                ->getAmount(AccountProtocol::ACCOUNT_AMOUNT_INTEGRAL))
-        {
-                $boolean = true;
-        }
+       switch (true)
+       {
+           case $this->settle_accounts()
+               >
+               $this
+                   ->wallet
+                   ->setUserId($this->user_id)
+                   ->getAmount(AccountProtocol::ACCOUNT_AMOUNT_INTEGRAL):
+               $boolean = AccountProtocol::ACCOUNT_NOT_INTEGRAL;
+           break;
+           case $this->data['buy_num'] > $this->product_sku->convert_unit:
+               $boolean = '兑换份数不能大于'. $this->product_sku->convert_unit . '份！';
+               break;
+           case $this->product_sku->remainder < $this->data['buy_num']:
+               $boolean = AccountProtocol::ACCOUNT_PRODUCT_ENOUGH;
+               break;
+           case $this->judge_dot() >= $this->product_sku->convert_num:
+               $boolean = '兑换超过了'. $this->product_sku->convert_num .'次！';
+               break;
+           default:
+               $boolean = true;
+               break;
+       }
 
         return $boolean;
 
     }
 
+    public function judge_dot()//对比下单次数
+    {
+        $order = IntegralOrder::where('user_id',$this->user_id)
+            ->whereBetween('created_at',[Carbon::today(),Carbon::today()
+                ->addDays(-$this->product_sku->convert_day)])->count();
+
+        return (int)$order;
+    }
     public function set_user_Id($id)
     {
         $this->user_id = $id;
         return $this;
-    }
-
-    public function array_filterMode(array $array)
-    {
-        return array_only($array,[
-            'address',
-            'product_id',
-            'buy_num',
-            'product_name',
-            'product_integral',
-        ]);
     }
 
     public function order_production()
@@ -103,6 +116,8 @@ class OrderFilter
         });
 
         $this->deduction_integral_user();
+
+        $this->account_product();
 
         return $order;
     }
@@ -123,5 +138,30 @@ class OrderFilter
         $this->wallet->setUserId($this->user_id)->getAccount()->decrement('integral',$this->settle_accounts());
 
         \DB::commit();
+    }
+
+    public function set_data_value()
+    {
+        $this->data = merge_array(
+            $this->data,
+            [
+                'cost_integral' => $this->settle_accounts(),
+                'user_id' => $this->user_id,
+                'product_integral' => $this->product['integral'],
+                'product_name' => $this->product_sku->name,
+                'postage' => $this->product->postage ?: '0.00',
+            ]
+        );
+    }
+
+    public function account_product()
+    {
+        $product_sku = $this->product_sku;
+
+        $product_sku->remainder -= $this->data['buy_num'];
+
+        $product_sku->sales += $this->data['buy_num'];
+
+        $product_sku->save();
     }
 }

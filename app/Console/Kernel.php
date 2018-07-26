@@ -53,6 +53,9 @@ class Kernel extends ConsoleKernel {
 
         //generate Transformer Class file
         'App\Console\Commands\TransformerMakeCommand',
+
+        //generate rule file
+        'App\Console\Commands\VerifyRuleAdd',
     ];
 
     /**

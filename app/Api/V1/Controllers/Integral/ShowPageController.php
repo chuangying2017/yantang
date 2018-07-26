@@ -68,17 +68,16 @@ class ShowPageController extends Controller
      * @param OrderGenerateRequest $request
      * @return \Dingo\Api\Http\Response|void
      */
-    public function store(Request $request)
+    public function store(OrderGenerateRequest $request)
     {
-        return $request->all();
+
         $sore = $this->orderIntegral->order_generator($request->all());
 
-        $response_headr = $this->response;
+        if(is_string($sore))
+           return $this->response->array(['status'=>$sore]);
 
-        if(!is_string($sore))
-            return $response_headr->noContent()->addMeta('status','Successfully Convert')->statusCode(201);
+        return $this->response->noContent()->statusCode(200);
 
-        return $response_headr->error($sore,201);
     }
 
     /**

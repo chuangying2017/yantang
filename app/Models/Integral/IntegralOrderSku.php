@@ -14,11 +14,11 @@ class IntegralOrderSku extends Model
 
     public function integral_product()
     {
-        $this->belongsTo(Product::class,'product_id');
+       return $this->belongsTo(Product::class,'product_id');
     }
 
     public function integral_order()
     {
-        $this->belongsTo(IntegralOrder::class,'order_id','id');
+       return $this->belongsTo(IntegralOrder::class,'order_id','id');
     }
 }

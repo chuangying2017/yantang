@@ -8,7 +8,7 @@ class OrderIntegralAddress extends CommonDecorate
 {
     public function handle($data, $model)
     {
-        $model->integral_order()->create($this->array_data($data));
+        $model->integral_order_address()->create($this->array_data($data['address']));
 
         return $this->next($data,$model);
     }
@@ -16,7 +16,7 @@ class OrderIntegralAddress extends CommonDecorate
     protected function array_data(array $data)
     {
         return [
-            'tel'       =>  array_get($data,'tel',''),
+            'tel'       =>  array_get($data,'tel',null),
             'name'      =>  $data['name'],
             'phone'     =>  $data['phone'],
             'province'  =>  $data['province'],

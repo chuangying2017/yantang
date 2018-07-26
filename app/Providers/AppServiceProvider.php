@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Product\Product;
 use App\Repositories\Comment\StarLevel\CommentStarLevelRepository;
 use App\Repositories\Comment\StarLevel\CommentStarLevelRepositoryContract;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use XS;
 use XSDocument;
@@ -18,7 +19,9 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-
+        Validator::extend('cn_val', function ($attribute, $value, $parameters, $validator) {
+            return is_numeric($value) && $value > 0 ;
+        });
     }
 
     /**
