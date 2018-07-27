@@ -60,8 +60,7 @@ class UserAddress implements Supervisor
 
     public function user_integral_address()
     {
-        $all_address = $this->shopping_address->getAllAddress();
-
+      //  $all_address = $this->shopping_address->getAllAddress();
 
     }
 
