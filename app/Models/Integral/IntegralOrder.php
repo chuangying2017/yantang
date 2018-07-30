@@ -3,6 +3,7 @@
 namespace App\Models\Integral;
 
 use App\Models\Access\User\User;
+use App\Models\Access\User\UserProvider;
 use Illuminate\Database\Eloquent\Model;
 
 class IntegralOrder extends Model
@@ -24,5 +25,10 @@ class IntegralOrder extends Model
     public function integral_order_address()
     {
         return $this->hasOne(IntegralOrderAddress::class,'order_id','id');
+    }
+
+    public function user_provider()
+    {
+        return $this->belongsTo(UserProvider::class,'user_id','user_id');
     }
 }

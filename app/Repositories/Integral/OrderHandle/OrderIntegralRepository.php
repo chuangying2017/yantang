@@ -9,6 +9,7 @@ use Mockery\Exception;
 
 class OrderIntegralRepository implements OrderIntegralInterface
 {
+    protected $order_load = ['integral_order_sku', 'integral_order_address'];
 
     protected $order_filter;
 
@@ -33,23 +34,28 @@ class OrderIntegralRepository implements OrderIntegralInterface
         }
     }
 
-    public function where_express($whereData)
+    public function where_express($whereData) //条件 表达式 select or get gain
     {
-        $orderIntegral = new IntegralOrder();
 
-        if (isset($whereData['start_time']) && !empty($whereData['start_time']))
+        $orderIntegral = IntegralOrder::query();
+
+        $status = OrderIntegralProtocol::ORDER_STATUS_ARRAY_TIME[$whereData['status']];
+
+        $orderIntegral->where('status','=',$whereData['status']);
+
+        if (!empty($whereData['start_time']) && empty($whereData['end_time'])
+            && Carbon::parse($whereData['start_time'])->timestamp < Carbon::now()->timestamp)
         {
-
+            $orderIntegral -> whereDate($status,'>=',$whereData['start_time']);
         }
 
-        if (isset($whereData['end_time']) && !empty($whereData['end_time']))
+        if (!empty($whereData['end_time']) && empty($whereData['start_time'])
+            && Carbon::parse($whereData['end_time'])->timestamp <= Carbon::today()->timestamp)
         {
-
+            $orderIntegral -> whereDate($status,'<=', $whereData['end_time']);
         }
 
-        if (isset($whereData['start_time'])
-            && isset($whereData['end_time'])
-            && !empty($whereData['start_time'])
+        if (!empty($whereData['start_time'])
             && !empty($whereData['end_time'])
             && Carbon::parse($whereData['start_time'])->timestamp
             <= Carbon::parse($whereData['end_time'])->timestamp)
@@ -59,16 +65,48 @@ class OrderIntegralRepository implements OrderIntegralInterface
 
         if (!empty($whereData['keywords']))
         {
-            $orderIntegral->where('order_no',$whereData['keywords'])->with(['integral_order_sku' => function ($query)use($whereData) {
-                $query->where('product_name','like',"%{$whereData['keywords']}%");
+           $orderIntegral->orWhere('order_no','like',"%{$whereData['keywords']}%")
+               ->with(['integral_order_sku' => function ($query)use($whereData) {
+                $query->orWhere('product_name','like',"%{$whereData['keywords']}%");
             },'integral_order_address' => function($query)use($whereData){
-                $query->where('phone','like',"%{$whereData['keywords']}%");
-            }]);
+               $query->orWhere('phone','like',"%{$whereData['keywords']}%")
+                   ->orWhere('name','like',"%{$whereData['keywords']}%")
+                   ->orWhere('province','like',"%{$whereData['keywords']}%")
+                   ->orWhere('city','like',"%{$whereData['keywords']}%")
+                   ->orWhere('district','like',"%{$whereData['keywords']}%")
+                   ->orWhere('detail','like',"%{$whereData['keywords']}%");
+           }]);
+        }else{
+            $whereData['keywords'] = false;
         }
+
+        return $this->get($orderIntegral,$this->order_load,$whereData['keywords']);
     }
 
-    public function get()
+    /**
+     * @param $model
+     * @param $keywords
+     * @param array $with
+     * @param int $paging
+     * @return mixed
+     */
+    public function get($model,array $with = null,$keywords = null, $paging = 20)
     {
+        if (is_array($with) && empty($keywords))
+        {
+            $model->with($with);
+        }
 
+        if (is_integer($paging))
+        {
+            return $model->paginate($paging);
+        }
+            return $model->get();
+
+    }
+
+    public function first($id)
+    {
+        return IntegralOrder::with($this->order_load)->find($id);
     }
 }

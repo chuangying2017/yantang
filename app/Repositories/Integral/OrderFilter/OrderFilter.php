@@ -96,8 +96,8 @@ class OrderFilter
     public function judge_dot()//对比下单次数
     {
         $order = IntegralOrder::where('user_id',$this->user_id)
-            ->whereBetween('created_at',[Carbon::today(),Carbon::today()
-                ->addDays(-$this->product_sku->convert_day)])->count();
+            ->whereBetween('created_at',[Carbon::today()->addDays(-$this->product_sku->convert_day),Carbon::today()
+                ])->count();
 
         return (int)$order;
     }

@@ -230,6 +230,8 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->resource('specification','SpecificationController');
             $api->resource('product','ProductController');
             $api->get('product/{id}/edit','ProductController@edit');
+            $api->get('freedomThe/shippingManagement','FreedomController@Shipping_management');
+            $api->get('freedomThe/{id}/shippingOrderDetail','FreedomController@Shipping_order_detail')->where('id','\d+');
         });
     });
 });
