@@ -29,3 +29,4 @@ public/build/rev-manifest.json
 npm-debug.log
 *.pem
 *.txt
+/doc
