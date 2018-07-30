@@ -38,6 +38,6 @@
  * @apiName GetCompanyData
  * @apiGroup Integral
  *
- * @apiSuccess {array} 返回状态200|多维数组或者返回空数组
+ * @apiSuccess {array} status 返回状态200|多维数组或者返回空数组
  *
  */
