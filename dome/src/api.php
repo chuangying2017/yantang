@@ -4,7 +4,7 @@
  * @apiName GetManager
  * @apiGroup Integral
  *
- * @apiParam {Number} keywords  关键字
+ * @apiParam {string} keywords  关键字
  * @apiParam {date} start_time  开始时间
  * @apiParam {date} end_time    结束时间
  *
