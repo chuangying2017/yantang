@@ -19,3 +19,14 @@
  *
  * @apiSuccess {array} arrayName 请求成功就是一个数据集数组或者空的数组.
  */
+
+/**
+ * Store a newly created resource in storage.
+ * @api {post} /admin/integral/company 添加快递公司
+ * @apiName GetCompany
+ * @apiGroup Integral
+ * @apiParam  {string} name 公司名称
+ * @apiParam {string} detail 公司描述可以为空
+ *
+ * @apiSuccess {status} status 成功返回201状态
+ */

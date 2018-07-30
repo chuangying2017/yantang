@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Api\V1\Controllers\Admin\Integral\CompanyController;
 use App\Repositories\Integral\Address\UserAddress;
+use App\Repositories\Integral\Company\EloquentCompanyRepositories;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Repositories\Integral\OrderHandle\OrderIntegralRepository;
 use App\Repositories\Integral\Supervisor\Supervisor;
@@ -10,6 +12,7 @@ use App\Services\Integral\Category\Category;
 use App\Services\Integral\Category\IntegralCategoryMangers;
 use App\Services\Integral\Product\ProductInerface;
 use App\Services\Integral\Product\ProductManager;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 
 class IntegralCateGoryServiceProvider extends ServiceProvider
@@ -36,5 +39,6 @@ class IntegralCateGoryServiceProvider extends ServiceProvider
         $this->app->bind(ProductInerface::class,ProductManager::class);
         $this->app->bind(OrderIntegralInterface::class,OrderIntegralRepository::class);
         $this->app->bind(Supervisor::class,UserAddress::class);
+        $this->app->when(CompanyController::class)->needs(Supervisor::class)->give(EloquentCompanyRepositories::class);
     }
 }
