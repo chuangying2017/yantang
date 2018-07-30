@@ -38,7 +38,7 @@ class FreedomController extends Controller
         $gain_data = $this->shipping->where_express($request->all());
         if ($request->input('export') == 'all')
         {
-            return ExcelService::downloadIntegralOrder($gain_data,OrderIntegralProtocol::ORDER_YANTANG_INTEGRAL);
+            return ExcelService::downloadIntegralOrder($gain_data,null);
         }
         return $this->response->paginator($gain_data, new AdminShipmentsTransformer())->setStatusCode(201);
     }
