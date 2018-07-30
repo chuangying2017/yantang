@@ -4,6 +4,8 @@ namespace App\Api\V1\Controllers\Admin\Integral;
 
 use App\Api\V1\Transformers\Integral\Admin\AdminShipmentsTransformer;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
+use App\Repositories\Integral\OrderRule\OrderIntegralProtocol;
+use App\Services\Chart\ExcelService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -26,6 +28,7 @@ class FreedomController extends Controller
      * @apiParam {Number} keywords 关键字.
      * @apiParam {date} start_time  开始时间
      * @apiParam {date} end_time    结束时间
+     * @apiParam {string} export    如果值等于all导出
      *
      * @apiSuccess {array} arrayName 请求成功就是一个数据集数组或者空的数组.
      */
@@ -33,7 +36,10 @@ class FreedomController extends Controller
     {
 
         $gain_data = $this->shipping->where_express($request->all());
-
+        if ($request->input('export') == 'all')
+        {
+            return ExcelService::downloadIntegralOrder($gain_data,OrderIntegralProtocol::ORDER_YANTANG_INTEGRAL);
+        }
         return $this->response->paginator($gain_data, new AdminShipmentsTransformer())->setStatusCode(201);
     }
 

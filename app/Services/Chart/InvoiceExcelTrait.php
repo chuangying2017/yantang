@@ -1,5 +1,6 @@
 <?php namespace App\Services\Chart;
 
+use App\Repositories\Integral\OrderRule\OrderIntegralProtocol;
 use App\Repositories\Invoice\InvoiceProtocol;
 use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
@@ -209,6 +210,52 @@ trait InvoiceExcelTrait {
     {
         return 'invoices/stations/' . $date . '/';
     }
-    
 
+    public static function downloadIntegralOrder($data, $title, $app_path = 'integral/')
+    {
+        $title = $title ?: '燕塘积分商城 - 导出时间:' . Carbon::now()->toDateTimeString();
+        foreach ($data as $datum=>$value)
+        {
+            $arr['订单号'] = $value['order_no'];
+            $arr['商品名称'] = $value->integral_order_sku->product_name;
+            $arr['商品数量'] = $value->integral_order_sku->product_num;
+            $arr['会员名'] = $value->user_provider()->first()->nickname;
+            $arr['订单类型'] = OrderIntegralProtocol::ORDER_TYPE[$value->pay_channel];
+            $arr['订单状态'] = OrderIntegralProtocol::ORDER_STATUS_ARRAY[$value->status];
+            $arr['消耗积分'] = $value->cost_integral;
+            $arr['参与时间'] = $value->updated_at;
+            $arr['支付状态'] = '无需支付';
+            $arr['运费支付'] = $value->postage . '￥';
+            $arr['收货地址'] = self::addr($value->integral_order_address);
+            $arr['收货名称'] = $value->integral_order_address->name;
+            $arr['收货电话'] = $value->integral_order_address->phone;
+
+            $add_data[] = $arr;
+        }
+
+        if (empty($data))
+        {
+            $add_data = [];
+            $arr['订单号'] = '';
+            $arr['商品名称'] = '';
+            $arr['商品数量'] = '';
+            $arr['会员名'] = '';
+            $arr['订单类型'] = '';
+            $arr['订单状态'] = '';
+            $arr['消耗积分'] = '';
+            $arr['参与时间'] ='';
+            $arr['支付状态'] = '';
+            $arr['运费支付'] = '';
+            $arr['收货地址'] = '';
+            $arr['收货名称'] = '';
+            $arr['收货电话'] = '';
+            $add_data[] = $arr;
+        }
+        return self::saveAndDownload($data,$title,$app_path, true);
+    }
+
+    protected static function addr($addr)
+    {
+        return $addr->province. $addr->city . $addr->district. $addr->detail;
+    }
 }
