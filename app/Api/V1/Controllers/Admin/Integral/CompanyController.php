@@ -19,12 +19,16 @@ class CompanyController extends Controller
 
     /**
      * Display a listing of the resource.
+     * @api {get} /admin/integral/company 查询快递公司
      *
-     * @return \Illuminate\Http\Response
+     * @apiSuccess {array} 返回状态200|多维数组或者返回空数组
+     *
      */
     public function index()
     {
+        $fetch_all = $this->company->get_all();
 
+        return $this->response->array($fetch_all);
     }
 
     /**

@@ -31,3 +31,13 @@
  *
  * @apiSuccess {status} status 成功返回201状态
  */
+
+/**
+ * Display a listing of the resource.
+ * @api {get} /admin/integral/company 查询快递公司
+ * @apiName GetCompanyData
+ * @apiGroup Integral
+ *
+ * @apiSuccess {array} 返回状态200|多维数组或者返回空数组
+ *
+ */

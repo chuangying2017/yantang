@@ -10,5 +10,8 @@ class CompanyModel extends Model
 
     protected $guarded = ['id'];
 
-
+    public function scopeStatus($query,$type)
+    {
+        return $query->where('status','=',$type);
+    }
 }
