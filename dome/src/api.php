@@ -41,3 +41,32 @@
  * @apiSuccess {array} status 返回状态200|多维数组或者返回空数组
  *
  */
+
+/**
+ * Display the specified resource.
+ * @api {get} /admin/integral/company/{id} companyData unique ID
+ * @apiName getCompanyOneData
+ * @apiGroup Integral
+ *
+ * @apiSuccess {status} status 成功返回一个数组|返回空数组
+ * @apiError CompanyNotFound The <code>id</code> of the company was not found
+ *
+ *
+ */
+
+/**
+ * Update the specified resource in storage.
+ *
+ * @api {get} /admin/integral/company/{id} 快递编辑 unique ID
+ * @apiName GetSelectCompany
+ * @apiGroup Integral
+ *
+ * @apiParam {string} name 快递名称
+ * @apiParam {string} status 更改状态active启用|inactivity禁用
+ * @apiParam {string} detail 详情可为空
+ * @apiParam {string} type 默认类型是express表示快递公司
+ *
+ * @apiSuccess {code} status 成功返回201状态码
+ * @apiError CompanyInsertError The insert data exception could not add
+ *
+ */

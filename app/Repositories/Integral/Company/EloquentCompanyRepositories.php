@@ -16,7 +16,12 @@ class EloquentCompanyRepositories implements Supervisor
 
     public function find($where)
     {
-        // TODO: Implement find() method.
+        $company = CompanyModel::query();
+        if (is_integer($where))
+        {
+            return $company->find($where);
+        }
+            return $company->where($where)->first();
     }
 
     public function create(array $array)
@@ -32,7 +37,11 @@ class EloquentCompanyRepositories implements Supervisor
 
     public function update($id, array $array)
     {
-        // TODO: Implement update() method.
+        $company = $this->find($id);
+
+        $company->fill($this->array_company($array));
+
+        return $company->save();
     }
 
     public function edit($id, $content)
@@ -42,7 +51,7 @@ class EloquentCompanyRepositories implements Supervisor
 
     public function delete($where)
     {
-        // TODO: Implement delete() method.
+        return CompanyModel::destroy($where);
     }
 
     public function array_company($data)
@@ -50,6 +59,8 @@ class EloquentCompanyRepositories implements Supervisor
         return array_only($data,[
             'name',
             'detail',
+            'status',
+            'type',
         ]);
     }
 }

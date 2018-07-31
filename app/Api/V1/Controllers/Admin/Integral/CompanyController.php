@@ -60,13 +60,20 @@ class CompanyController extends Controller
 
     /**
      * Display the specified resource.
+     * @api {get} /admin/integral/company/{id} 查快递公司 unique ID
+     * @apiName GetCompanyOneData
+     * @apiGroup Integral
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @apiSuccess {status} status 成功返回一个数组|返回空数组
+     * @apiError CompanyNotFound The <code>id</code> of the company was not found
+     *
+     *
      */
     public function show($id)
     {
-        //
+        $company_data = $this->company->find((integer)$id);
+
+        return $this->response->array($company_data);
     }
 
     /**
@@ -83,13 +90,24 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @api {get} /admin/integral/company/{id} 查询快递 unique ID
+     * @apiName GetSelectCompany
+     * @apiGroup Integral
+     *
+     * @apiParam {string} name 快递名称
+     * @apiParam {string} status 更改状态active启用|inactivity禁用
+     * @apiParam {string} detail 详情可为空
+     * @apiParam {string} type 默认类型是express表示快递公司
+     *
+     * @apiSuccess {code} status 成功返回201状态码
+     * @apiError CompanyInsertError The insert data exception could not add
+     *
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->company->update($id, $request->all());
+
+        return $this->response->noContent()->statusCode(201);
     }
 
     /**
@@ -100,6 +118,8 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->company->delete($id);
+
+        return $this->response->noContent()->statusCode(201);
     }
 }
