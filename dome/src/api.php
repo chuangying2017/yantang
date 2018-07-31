@@ -113,7 +113,7 @@
  */
 
 /**
- * @api {get} /admin/integral/freedomThe/integralCardShow
+ * @api {get} /admin/integral/freedomThe/integralCardShow 获取积分卡
  *
  * @apiName GetIntegralCardShowAll
  * @apiGroup Integral
