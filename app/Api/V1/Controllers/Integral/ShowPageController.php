@@ -6,6 +6,8 @@ namespace App\Api\V1\Controllers\Integral;
 use App\Api\V1\Requests\Integral\OrderGenerateRequest;
 use App\Api\V1\Transformers\Integral\ClientDetailTransformer;
 use App\Api\V1\Transformers\Integral\ClientIntegralTransformer;
+
+use App\Api\V1\Transformers\Integral\ClientOrderTransformer;
 use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Services\Client\Account\AccountProtocol;
@@ -125,6 +127,21 @@ class ShowPageController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * @api {get} /integral/showMemberOrder 参与记录
+     * @apiName GetFrontDeskMeeting
+     * @apiGroup FrontDesk
+     *
+     * @apiSuccess {statusCode} status 请求成功返回多维数组 | 或者返回空的数组
+     * @apiError OrderDataNotFound this is order data not found 404
+     */
+    public function meeting_record()
+    {
+       $argc = $this->orderIntegral->user_order(['user_id' => access()->id()]);
+
+       return $this->response->collection($argc, new ClientOrderTransformer());
     }
 
 }

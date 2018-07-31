@@ -80,3 +80,12 @@
  * @apiSuccess {statusCode} status 成功返回成功201
  * @apiError InternalError program error not update 500
  */
+
+/**
+ * @api {get} /integral/showMemberOrder 参与记录
+ * @apiName GetFrontDeskMeeting
+ * @apiGroup FrontDesk
+ *
+ * @apiSuccess {statusCode} status 请求成功返回多维数组 | 或者返回空的数组
+ * @apiError OrderDataNotFound this is order data not found 404
+ */

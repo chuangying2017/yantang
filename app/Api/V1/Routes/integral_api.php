@@ -10,4 +10,5 @@ $api->group(['namespace'=>'Integral','middleware'=>'api.auth','prefix'=>'integra
 
                 $api->resource('IntegralShow','ShowPageController');
                 $api->resource('IntegralUserAddress','UserAddress');
+                $api->get('showMemberOrder','ShowPageController@meeting_record');
 });

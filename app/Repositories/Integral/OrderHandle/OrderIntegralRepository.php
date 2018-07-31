@@ -117,6 +117,9 @@ class OrderIntegralRepository implements OrderIntegralInterface
 
             $integral_order = IntegralOrder::find($id);
 
+            if ($integral_order->status != OrderIntegralProtocol::ORDER_STATUS_DROPSHIP)
+                throw new Exception('此订单已经生成过',500);
+
             $integral_order->status = OrderIntegralProtocol::ORDER_STATUS_DELIVERED;
 
             $integral_order->save();
@@ -128,7 +131,15 @@ class OrderIntegralRepository implements OrderIntegralInterface
         }catch (Exception $exception)
         {
             \Log::error($exception->getMessage());
+
             \DB::rollBack();
+
+            exit($exception->getMessage());
         }
+    }
+
+    public function user_order(array $where)
+    {
+        return IntegralOrder::query()->where($where)->with($this->order_load)->get();
     }
 }
