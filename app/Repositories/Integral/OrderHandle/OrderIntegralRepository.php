@@ -109,4 +109,26 @@ class OrderIntegralRepository implements OrderIntegralInterface
     {
         return IntegralOrder::with($this->order_load)->find($id);
     }
+
+    public function update_order($id,$data)
+    {
+        try{
+            \DB::beginTransaction();
+
+            $integral_order = IntegralOrder::find($id);
+
+            $integral_order->status = OrderIntegralProtocol::ORDER_STATUS_DELIVERED;
+
+            $integral_order->save();
+
+            $integral_order->integral_order_sku()->fill(array_only($data,['express','expressOrder']))->save();
+
+            \DB::commit();
+            return $integral_order;
+        }catch (Exception $exception)
+        {
+            \Log::error($exception->getMessage());
+            \DB::rollBack();
+        }
+    }
 }

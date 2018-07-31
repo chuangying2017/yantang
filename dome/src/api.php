@@ -70,3 +70,13 @@
  * @apiError CompanyInsertError The insert data exception could not add
  *
  */
+
+/**
+ * @api {post} /admin/integral/freedomThe/{order_id}/convert_confirm 确定兑换
+ * @apiName GetExpressConfirm
+ * @apiGroup Integral
+ * @apiParam {string} express 快递公司名称不能为空
+ * @apiParam {Number} expressOrder 快递单号数字或字符串不能为空
+ * @apiSuccess {statusCode} status 成功返回成功201
+ * @apiError InternalError program error not update 500
+ */
