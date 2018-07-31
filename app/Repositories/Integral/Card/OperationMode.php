@@ -14,7 +14,7 @@ class OperationMode implements Supervisor
 
     public function find($where)
     {
-        // TODO: Implement find() method.
+        return IntegralCard::query()->find($where);
     }
 
     public function create(array $array)
@@ -28,7 +28,11 @@ class OperationMode implements Supervisor
 
     public function update($id, array $array)
     {
-        // TODO: Implement update() method.
+       $card_model = IntegralCard::find($id);
+
+       $card_model->fill($this->array_card($array));
+
+       return $card_model->save();
     }
 
     public function edit($id, $content)
