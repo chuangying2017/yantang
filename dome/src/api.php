@@ -44,7 +44,7 @@
 
 /**
  * Display the specified resource.
- * @api {get} /admin/integral/company/{id} companyData unique ID
+ * @api {get} /admin/integral/company/{id} 获取快递公司
  * @apiName getCompanyOneData
  * @apiGroup Integral
  *
