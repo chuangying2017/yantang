@@ -166,4 +166,20 @@ class FreedomController extends Controller
 
         return $this->response->noContent()->statusCode(201);
     }
+
+    /**
+     * @api {put} /admin/integral/freedomThe/{card_id}/card_delete 删除积分卡
+     * @apiName GetIntegralCardDel
+     * @apiGroup Integral
+     *
+     * @apiSuccess {statusCode} status 成功返回201状态码
+     * @apiError InternalError Parameters maybe is error or other exception
+     * @apiDescription 请求方式必须与描述得一致 根据url的card_id必须是数值
+     */
+    public function card_destroy($card_id)
+    {
+        $this->operation->delete($card_id);
+
+        return $this->response->noContent()->statusCode(201);
+    }
 }

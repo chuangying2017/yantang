@@ -27,7 +27,7 @@ class RouteServiceProvider extends ServiceProvider {
 	public function boot(Router $router)
 	{
 		//
-
+        Route::pattern('card_id', '[0-9]+');
 		parent::boot($router);
 	}
 

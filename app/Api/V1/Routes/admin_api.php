@@ -236,8 +236,9 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->post('freedomThe/card_manager', 'FreedomController@card_manager');
             $api->resource('company','CompanyController');
             $api->get('freedomThe/integralCardShow','FreedomController@card_show');
-            $api->get('freedomThe/IntegralCardFind/{card_id}','FreedomController@card_find')->where('card_id','\d+');
-            $api->post('freedomThe/{card_id}/card_update','FreedomController@card_update')->where('card_id','\d+');
+            $api->get('freedomThe/IntegralCardFind/{card_id}','FreedomController@card_find');
+            $api->post('freedomThe/{card_id}/card_update','FreedomController@card_update');
+            $api->put('freedomThe/{card_id}/card_delete','FreedomController@card_destroy');
         });
     });
 });
