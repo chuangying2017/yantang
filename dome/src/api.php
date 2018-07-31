@@ -100,7 +100,7 @@
  * @apiParam {date} end_time 结束时间2018-01-02 14:00:01 不能为空
  * @apiParam {string} status 不能为空 show上架 | hide隐藏
  * @apiParam {string} type  不能为空 limits限制发布数量 \ loose无限制
- * @apiParam {url} cover_image  图片地址 能为空
+ * @apiParam {url} cover_image  图片地址 不能为空
  * @apiParam {number} issue_num 发布数量数值类型
  * @apiParam {integer} draw_num 限制会员领取数量
  *
@@ -109,5 +109,15 @@
  *
  *
  * @apiDescription 每个地段必须按照规定的参数类型，传值否者无法生效！
+ *
+ */
+
+/**
+ * @api {get} /admin/integral/freedomThe/integralCardShow
+ *
+ * @apiName GetIntegralCardShowAll
+ * @apiGroup Integral
+ * @apiSuccess {statusCode} status 成功返回200并与多维数组|空数组
+ * @apiError DataNotFound Maybe there's no data in the table
  *
  */

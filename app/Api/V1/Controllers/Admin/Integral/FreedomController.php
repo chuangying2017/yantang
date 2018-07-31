@@ -4,6 +4,7 @@ namespace App\Api\V1\Controllers\Admin\Integral;
 
 use App\Api\V1\Requests\Integral\AdminIntegralCardRequest;
 use App\Api\V1\Transformers\Integral\Admin\AdminShipmentsTransformer;
+use App\Api\V1\Transformers\Integral\IntegralCardTransformer;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Repositories\Integral\Supervisor\Supervisor;
 use App\Services\Chart\ExcelService;
@@ -104,5 +105,21 @@ class FreedomController extends Controller
        $this->operation->create($request->all());
 
         return $this->response->noContent()->statusCode(201);
+    }
+
+    /**
+     * @api {get} /admin/integral/freedomThe/integralCardShow
+     *
+     * @apiName GetIntegralCardShowAll
+     * @apiGroup Integral
+     * @apiSuccess {statusCode} status 成功返回200并与多维数组|空数组
+     * @apiError DataNotFound Maybe there's no data in the table
+     *
+     */
+    public function card_show()
+    {
+        $card = $this->operation->get_all();
+
+        return $this->response->collection($card, new IntegralCardTransformer());
     }
 }

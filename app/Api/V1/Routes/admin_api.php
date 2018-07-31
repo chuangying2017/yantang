@@ -235,6 +235,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->post('freedomThe/{order_id}/convert_confirm','FreedomController@convert_confirm')->where('order_id','\d+');
             $api->post('freedomThe/card_manager', 'FreedomController@card_manager');
             $api->resource('company','CompanyController');
+            $api->get('freedomThe/integralCardShow','FreedomController@card_show');
         });
     });
 });

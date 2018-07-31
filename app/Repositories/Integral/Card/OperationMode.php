@@ -9,7 +9,7 @@ class OperationMode implements Supervisor
 
     public function get_all()
     {
-        // TODO: Implement get_all() method.
+       return IntegralCard::all();
     }
 
     public function find($where)
