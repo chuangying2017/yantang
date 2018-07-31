@@ -70,6 +70,11 @@ class OrderServiceProvider extends ServiceProvider {
             \App\Repositories\Order\ClientOrderRepository::class
         );
 
+
+        $this->app->bind(
+            \App\Repositories\Member\InterfaceFile\MemberRepositoryContract::class,
+            \App\Repositories\Member\ReposFile\MemberLimitRepository::class
+        );
     }
 
 

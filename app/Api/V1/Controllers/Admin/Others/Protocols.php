@@ -93,7 +93,8 @@ class Protocols extends Controller
      * http://o7tep4eu1.bkt.clouddn.com
      * */
     public function cache_check(){
-        dd(Carbon::today()->addDays(-3));
+        //dd(Carbon::today()->addMonth(-2));
+        dd(Carbon::now()->addMonth(-($this->testSet())));
       /*  $cats = Category::query()->get();
         dd($cats->load('products'));*/
    /*       $image = ProductInfo::where('detail','<>',null)->get();
@@ -113,6 +114,10 @@ class Protocols extends Controller
         echo 'success';*/
     }
 
+    public function testSet()
+    {
+        return $this->SetClass->getSetting(1)->value['interval_time'];
+    }
     //同时更新多个记录，参数，表名，数组（别忘了在一开始use DB;）
     public function updateBatch($tableName = "", $multipleData = array()){
 

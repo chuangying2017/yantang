@@ -233,6 +233,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->get('freedomThe/shippingManagement','FreedomController@Shipping_management');
             $api->get('freedomThe/{id}/shippingOrderDetail','FreedomController@Shipping_order_detail')->where('id','\d+');
             $api->post('freedomThe/{order_id}/convert_confirm','FreedomController@convert_confirm')->where('order_id','\d+');
+            $api->post('freedomThe/card_manager', 'FreedomController@card_manager');
             $api->resource('company','CompanyController');
         });
     });

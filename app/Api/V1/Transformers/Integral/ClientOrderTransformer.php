@@ -14,7 +14,7 @@ class ClientOrderTransformer extends TransformerAbstract {
             'order_no'  =>  $integralOrder['order_no'],
             'status'    =>  OrderIntegralProtocol::ORDER_STATUS_ARRAY[$integralOrder['status']],
             'costIntegral'=> $integralOrder['cost_integral'],
-            'create_date'=> $integralOrder['created_at'],
+            'create_date'=> $integralOrder['created_at']->toDateTimeString(),
         ];
 
         if ($integralOrder->relationLoaded('integral_order_sku'))

@@ -89,3 +89,25 @@
  * @apiSuccess {statusCode} status 请求成功返回多维数组 | 或者返回空的数组
  * @apiError OrderDataNotFound this is order data not found 404
  */
+
+/**
+ * @api {post} /admin/integral/freedomThe/card_manager 添加积分卡
+ * @apiName GetCardManager
+ * @apiGroup Integral
+ * @apiParam {string} name 名称|字符串类型不能为空
+ * @apiParam {float} give 赠送积分|浮点类型不能为空
+ * @apiParam {date} start_time 开始时间2017-01-01 13:00:01 不能为空必须大于等于结束时间
+ * @apiParam {date} end_time 结束时间2018-01-02 14:00:01 不能为空
+ * @apiParam {string} status 不能为空 show上架 | hide隐藏
+ * @apiParam {string} type  不能为空 limits限制发布数量 \ loose无限制
+ * @apiParam {url} cover_image  图片地址 能为空
+ * @apiParam {number} issue_num 发布数量数值类型
+ * @apiParam {integer} draw_num 限制会员领取数量
+ *
+ * @apiSuccess {statusCode} status 成功后返回200状态code
+ * @apiError InternalError parameters type have Wrong
+ *
+ *
+ * @apiDescription 每个地段必须按照规定的参数类型，传值否者无法生效！
+ *
+ */
