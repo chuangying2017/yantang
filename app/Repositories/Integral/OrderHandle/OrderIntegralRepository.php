@@ -121,7 +121,7 @@ class OrderIntegralRepository implements OrderIntegralInterface
 
             $integral_order->save();
 
-            $integral_order->integral_order_sku()->fill(array_only($data,['express','expressOrder']))->save();
+            $integral_order->integral_order_sku->fill(array_only($data,['express','expressOrder']))->save();
 
             \DB::commit();
             return $integral_order;
