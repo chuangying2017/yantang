@@ -27,7 +27,7 @@ class AdminIntegralCardRequest extends Request
             'name'                  =>  'required|max:50',
             'give'                  =>  'required|numeric',//赠送积分
             'status'                =>  'sometimes|max:30',
-            'type'                  =>  'sometimes|max:30',
+            'type'                  =>  'sometimes|string|max:30',
             'mode'                  =>  'sometimes|numeric',
             'cover_image'           =>  'url',
             'issue_num'             =>  'required|numeric|min:1',
