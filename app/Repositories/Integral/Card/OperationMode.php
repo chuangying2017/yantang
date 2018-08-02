@@ -59,7 +59,7 @@ class OperationMode implements Supervisor
     {
             foreach ($this->filter as $key=>$value)
             {
-                if (!in_array($value,$data))
+                if (!array_key_exists($value,$data))
                 {
                     $data[$value] = isset(CardProtocol::$card_array_data[$value])
                         ? CardProtocol::$card_array_data[$value]
