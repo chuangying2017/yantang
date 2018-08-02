@@ -121,7 +121,7 @@ class FreedomController extends Controller
     {
         $card = $this->operation->get_all();
 
-        return $this->response->collection($card, new IntegralCardTransformer());
+        return $this->response->paginator($card, new IntegralCardTransformer())->statusCode(200);
     }
 
     /**
