@@ -91,6 +91,7 @@ class FreedomController extends Controller
      * @apiParam {url} cover_image  图片地址 能为空
      * @apiParam {number} issue_num 发布数量数值类型
      * @apiParam {integer} draw_num 限制会员领取数量
+     * @apiParam {integer} mode 设置0不限制 1限制新用户
      *
      * @apiSuccess {statusCode} status 成功后返回200状态code
      * @apiError InternalError parameters type have Wrong
