@@ -7,9 +7,9 @@ use App\Repositories\Integral\Supervisor\Supervisor;
 class OperationMode implements Supervisor
 {
 
-    public function get_all()
+    public function get_all($paginate = CardProtocol::CARD_PAGINATE_NUM)
     {
-       return IntegralCard::all();
+       return IntegralCard::query()->paginate($paginate);
     }
 
     public function find($where)

@@ -5,6 +5,7 @@ class CardProtocol
 {
     const NEW_MEMBER_STATUS = '1';//新用户不可领取
     const OLD_MEMBER_STATUS = '0';//不限制会员领取
+    const CARD_PAGINATE_NUM = '20';//分页数量
 
     const CARD_RACKING_UP = 'show';//上架 展示
     const CARD_RACKING_DOWN = 'hide';//下架 隐藏
