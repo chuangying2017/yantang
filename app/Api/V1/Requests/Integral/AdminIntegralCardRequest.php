@@ -31,8 +31,8 @@ class AdminIntegralCardRequest extends Request
             'mode'                  =>  'sometimes|numeric',
             'cover_image'           =>  'url',
             'issue_num'             =>  'required|numeric|min:1',
-            'remain'                =>  'nullable|numeric',
-            'get_member'            =>  'nullable',
+            'remain'                =>  'sometimes|numeric|min:1',
+            'get_member'            =>  'sometimes|numeric|min:1',
             'draw_num'              =>  'required|numeric|min:1',
             'start_time'            =>  'required|date|after:today',
             'end_time'              =>  'required|date|after:start_time'

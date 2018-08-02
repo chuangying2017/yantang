@@ -1,5 +1,6 @@
 <?php namespace App\Models\Promotion\Traits;
 
+use App\Models\Integral\IntegralConvertCoupon;
 use App\Models\Product\Product;
 use App\Models\Product\ProductSku;
 use App\Models\Promotion\PromotionCounter;
@@ -34,5 +35,8 @@ trait PromotionRelations {
         return $this->hasOne(PromotionSku::class, 'promotion_id', 'id');
     }
 
-
+    public function convertCoupon()
+    {
+        return $this->hasMany(IntegralConvertCoupon::class,'promotions_id','id');
+    }
 }
