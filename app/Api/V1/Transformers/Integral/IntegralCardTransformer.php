@@ -10,6 +10,7 @@ class IntegralCardTransformer extends TransformerAbstract {
     public function transform(IntegralCard $card)
     {
         $data = [
+            'card_id'   =>  $card['id'],
             'name'=>$card['name'],'give'=>$card['give'],'status'=>$card['status'],
             'type'=>$card['type'],//limits限制与loose不限制
             'mode'=>$card['mode'],//0全部会员可领取1新会员不可领取
