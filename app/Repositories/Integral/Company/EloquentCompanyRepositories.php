@@ -11,7 +11,7 @@ class EloquentCompanyRepositories implements Supervisor
     {
        return CompanyModel::status(CompanyProtocol::COMPANY_STATUS_ACTIVE)
            ->where('type','=',CompanyProtocol::COMPANY_TYPE_EXPRESS)
-           ->get(['id','name','status','type']);
+           ->get();
     }
 
     public function find($where)
