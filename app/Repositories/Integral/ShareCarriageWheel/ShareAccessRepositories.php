@@ -27,7 +27,7 @@ abstract class ShareAccessRepositories implements ShareCarriageWheel
         $model = $model->find($id);
        }
 
-        $model->fill(array_only($array,$this->array));
+        $model->fill($this->array_changeMode(array_only($array,$this->array)));
 
         return $model->save();
     }
@@ -86,5 +86,15 @@ abstract class ShareAccessRepositories implements ShareCarriageWheel
         $this->model = $model;
 
         return $this;
+    }
+
+    protected function array_changeMode(array $arr)
+    {
+        if(!array_key_exists('remain_num',$arr))
+        {
+            $arr['remain_num'] = $arr['issue_num'];
+        }
+
+        return $arr;
     }
 }
