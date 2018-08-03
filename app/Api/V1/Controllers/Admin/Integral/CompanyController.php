@@ -113,8 +113,12 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @api {delete} /admin/integral/company/{id} 删除快递
+     * @apiName GetDeleteCompany
+     * @apiGroup Integral
+     *
+     * @apiSuccess {statusCode} status successfully of return status code 201
+     * @apiError IdNotFound possible id is not found
      */
     public function destroy($id)
     {

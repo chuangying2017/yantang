@@ -7,8 +7,10 @@ use App\Api\V1\Controllers\Admin\Integral\FreedomController;
 use App\Repositories\Integral\Address\UserAddress;
 use App\Repositories\Integral\Card\OperationMode;
 use App\Repositories\Integral\Company\EloquentCompanyRepositories;
+use App\Repositories\Integral\Exchange\ExchangeOperation;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Repositories\Integral\OrderHandle\OrderIntegralRepository;
+use App\Repositories\Integral\ShareCarriageWheel\ShareAccessRepositories;
 use App\Repositories\Integral\Supervisor\Supervisor;
 use App\Services\Integral\Category\Category;
 use App\Services\Integral\Category\IntegralCategoryMangers;
@@ -43,5 +45,6 @@ class IntegralCateGoryServiceProvider extends ServiceProvider
         $this->app->bind(Supervisor::class,UserAddress::class);
         $this->app->when(CompanyController::class)->needs(Supervisor::class)->give(EloquentCompanyRepositories::class);
         $this->app->when(FreedomController::class)->needs(Supervisor::class)->give(OperationMode::class);
+        $this->app->bind(ShareAccessRepositories::class,ExchangeOperation::class);
     }
 }

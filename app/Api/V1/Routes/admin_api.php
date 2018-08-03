@@ -239,6 +239,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->get('freedomThe/IntegralCardFind/{card_id}','FreedomController@card_find');
             $api->post('freedomThe/{card_id}/card_update','FreedomController@card_update');
             $api->put('freedomThe/{card_id}/card_delete','FreedomController@card_destroy');
+            $api->resource('exchangeThe','ExchangeController');
         });
     });
 });

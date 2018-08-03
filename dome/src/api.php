@@ -164,3 +164,100 @@
  * @apiError InternalError Parameters maybe is error or other exception
  * @apiDescription 请求方式必须与描述得一致 根据url的card_id必须是数值
  */
+
+/**
+ * Update the specified resource in storage.
+ *
+ * @api {post} /admin/integral/exchangeThe 积分兑卷添加
+ * @apiParam {numeric} cost_integral 数值类型 消耗积分
+ * @apiParam {numeric} promotions_id 数值类型 优惠券id
+ * @apiParam {date} valid_time 开始时间2018-08-03 13:08:08
+ * @apiParam {date} deadline_time 结束时间2018-08-04 13:08:08必须大于开始时间
+ * @apiParam {integer} status 0下架1上架
+ * @apiParam {integral} issue_num 发布数量默认整形不能小于0
+ * @apiParam {integer} draw_num 已经领取数量
+ * @apiParam {integer} remain_num 剩余数量
+ * @apiParam {integral} delayed 领取后的延时 时长单位小时
+ * @apiParam {url}  cover_image 上传图片地址可为空
+ * @apiParam {integer} member_type 限制新旧会员领取0全部可领取1新会员不可领取
+ * @apiParam {integer} limit_num 限制会员兑换数量
+ *
+ * @apiName GetExchangeAddition
+ * @apiGroup Integral
+ *
+ * @apiSuccess {statusCode} status 成功返回201状态
+ * @apiError InternalError possible problem appear in background program code
+ *
+ * @apiDescription 请严格按照上面描述传参 否者可能内部出错无法插入
+ */
+
+/**
+ * Update the specified resource in storage.
+ *
+ * @api {put} /admin/integral/exchangeThe/{id} 积分兑卷更新
+ * @apiParam {numeric} cost_integral 数值类型 消耗积分
+ * @apiParam {numeric} promotions_id 数值类型 优惠券id
+ * @apiParam {date} valid_time 开始时间2018-08-03 13:08:08
+ * @apiParam {date} deadline_time 结束时间2018-08-04 13:08:08必须大于开始时间
+ * @apiParam {integer} status 0下架1上架
+ * @apiParam {integral} issue_num 发布数量默认整形不能小于0
+ * @apiParam {integer} draw_num 已经领取数量
+ * @apiParam {integer} remain_num 剩余数量
+ * @apiParam {integral} delayed 领取后的延时 时长单位小时
+ * @apiParam {url}  cover_image 上传图片地址可为空
+ * @apiParam {integer} member_type 限制新旧会员领取0全部可领取1新会员不可领取
+ * @apiParam {integer} limit_num 限制会员兑换数量
+ *
+ * @apiName GetExchange
+ * @apiGroup Integral
+ *
+ * @apiSuccess {statusCode} status 成功返回201状态
+ * @apiError InternalError possible problem appear in background program code
+ *
+ * @apiDescription 请严格按照上面描述传参 否者可能内部出错无法插入
+ */
+
+/**
+ * @api {delete} /admin/integral/exchangeThe/{id} 积分兑卷删除
+ * @apiName GetExchangeDelete
+ * @apiGroup Integral
+ *
+ * @apiSuccess {statusCode} status deleteSuccessfully return status code 201
+ * @apiError internalError internal fatal error possible problem code id not found
+ *
+ * @apiDescription 注意地址上的id必须是数值
+ */
+
+/**
+ * Remove the specified resource from storage.
+ *
+ * @api {delete} /admin/integral/company/{id} 删除快递
+ * @apiName GetDeleteCompany
+ * @apiGroup Integral
+ *
+ * @apiSuccess {statusCode} status successfully of return status code 201
+ * @apiError IdNotFound possible id is not found
+ */
+
+/**
+ * Display the specified resource.
+ *
+ * @api {get} /admin/integral/exchangeThe/{id} 获取id兑换
+ * @apiName GetExchangeShow
+ * @apiGroup Integral
+ * @apiSuccess {array} array request successfully return array OR empty array
+ * @apiError IdNotFound possible internal code fatal error
+ *
+ *
+ */
+
+/**
+ * Display a listing of the resource.
+ *
+ * @api {get} /admin/integral/exchangeThe 获取全部兑换
+ *
+ * @apiName GetExchangeGetAll
+ * @apiGroup Integral
+ * @apiSuccess {array} array successfully of return many array | or null array
+ * @apiDescription 本接口返回一个分页状态
+ */

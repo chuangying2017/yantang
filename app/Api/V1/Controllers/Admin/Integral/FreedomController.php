@@ -183,4 +183,5 @@ class FreedomController extends Controller
 
         return $this->response->noContent()->statusCode(201);
     }
+
 }
