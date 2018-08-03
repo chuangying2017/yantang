@@ -8,6 +8,7 @@
  * @apiParam {date} start_time  开始时间
  * @apiParam {date} end_time    结束时间
  * @apiParam {string} export    如果值等于all导出
+ * @apiParam {string} status DropShip待发货Delivered待收货confirm已完成
  *
  * @apiSuccess {array} arrayName 请求成功就是一个数据集数组或者空的数组.
  */
