@@ -50,6 +50,7 @@ class AdminShipmentsTransformer extends TransformerAbstract {
         return [
             'productName' => $order_sku->product_name,
             'product_image' => $order_sku->integral_product()->first()->cover_image,
+            'product_num'   =>  $order_sku->product_num,
         ];
     }
 
