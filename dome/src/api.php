@@ -58,7 +58,7 @@
 /**
  * Update the specified resource in storage.
  *
- * @api {get} /admin/integral/company/{id} 快递编辑 unique ID
+ * @api {put} /admin/integral/company/{id} 快递编辑 unique ID
  * @apiName GetSelectCompany
  * @apiGroup Integral
  *

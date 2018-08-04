@@ -10,7 +10,7 @@ class OrderIntegralProtocol
     const ORDER_CHANNEL_PAY = 'integral';//支付通道
     const ORDER_YANTANG_INTEGRAL = '燕塘积分商城 - 导出:';
 
-    const ORDER_STATUS_ARRAY_TIME = ['DropShip'=>'created_at','Delivered'=>'updated_at','reject'=>'deleted_at'];
+    const ORDER_STATUS_ARRAY_TIME = ['DropShip'=>'created_at','Delivered'=>'updated_at','reject'=>'deleted_at','confirm' => 'updated_at'];
 
     const TABLE_INTEGRAL_ORDER = ['order_no'];
     const ORDER_ADMIN_TABLE_SEARCH = [
