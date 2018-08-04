@@ -13,6 +13,7 @@ class AdminShipmentsTransformer extends TransformerAbstract {
     {
 
         $data = [
+            'id'            =>  $integralOrder['id'],
             'order_no'      =>  $integralOrder['order_no'],
             'postage'       =>  $integralOrder['postage'],
             'pay_channel'   =>  $integralOrder['pay_channel'],
