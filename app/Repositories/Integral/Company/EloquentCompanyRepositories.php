@@ -17,7 +17,7 @@ class EloquentCompanyRepositories implements Supervisor
     public function find($where)
     {
         $company = CompanyModel::query();
-        if (is_integer($where))
+        if (is_numeric($where))
         {
             return $company->find($where);
         }

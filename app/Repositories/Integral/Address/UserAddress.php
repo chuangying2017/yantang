@@ -25,7 +25,7 @@ class UserAddress implements Supervisor
     {
         $model = new IntegralUserAddress();
 
-            if (is_integer($where)){
+            if (is_numeric($where)){
             $result =  $model->find($where);
             }
             elseif(is_array($where)){

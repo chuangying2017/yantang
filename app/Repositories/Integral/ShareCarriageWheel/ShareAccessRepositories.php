@@ -22,7 +22,7 @@ abstract class ShareAccessRepositories implements ShareCarriageWheel
     public function updateOrCreate(int $id = null, array $array)
     {
         $model = $this->model;
-       if (is_integer($id))
+       if (is_numeric($id))
        {
         $model = $model->find($id);
        }
@@ -49,7 +49,7 @@ abstract class ShareAccessRepositories implements ShareCarriageWheel
         if(is_array($where))
         {
             $fetch = $this->model->where($where)->first();
-        }elseif (is_integer($where))
+        }elseif (is_numeric($where))
         {
             $fetch = $this->model->find($where);
         }

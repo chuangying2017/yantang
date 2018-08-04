@@ -97,7 +97,7 @@ class OrderIntegralRepository implements OrderIntegralInterface
             $model->with($with);
         }
 
-        if (is_integer($paging))
+        if (is_numeric($paging))
         {
             return $model->paginate($paging);
         }
