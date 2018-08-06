@@ -170,6 +170,8 @@
  * Update the specified resource in storage.
  *
  * @api {post} /admin/integral/exchangeThe 积分兑卷添加
+ * @apiParam {string} name 最低长度1位
+ * @apiParam {string} description 描述存在验证
  * @apiParam {numeric} cost_integral 数值类型 消耗积分
  * @apiParam {numeric} promotions_id 数值类型 优惠券id
  * @apiParam {date} valid_time 开始时间2018-08-03 13:08:08
@@ -196,6 +198,8 @@
  * Update the specified resource in storage.
  *
  * @api {put} /admin/integral/exchangeThe/{id} 积分兑卷更新
+ * @apiParam {string} name 最低长度1位
+ * @apiParam {string} description 描述存在验证
  * @apiParam {numeric} cost_integral 数值类型 消耗积分
  * @apiParam {numeric} promotions_id 数值类型 优惠券id
  * @apiParam {date} valid_time 开始时间2018-08-03 13:08:08

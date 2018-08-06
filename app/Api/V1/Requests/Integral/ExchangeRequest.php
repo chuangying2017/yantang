@@ -37,6 +37,8 @@ class ExchangeRequest extends Request
             'cover_image'       =>  'sometimes|url',
             'member_type'       =>  'required|numeric',
             'limit_num'         =>  'required|numeric|min:1',
+            'name'              =>  'required|min:2',
+            'description'       =>  'sometimes|min:2',
         ];
     }
 }
