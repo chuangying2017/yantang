@@ -19,7 +19,7 @@ abstract class ShareAccessRepositories implements ShareCarriageWheel
         $this->init();
     }
 
-    public function updateOrCreate(int $id = null, array $array)
+    public function updateOrCreate($id = null, array $array)
     {
         $model = $this->model;
        if (is_numeric($id))
