@@ -25,5 +25,7 @@ class ExchangeProtocol
         'cover_image',
         'member_type',
         'limit_num',
+        'name',
+        'description'
     ];
 }

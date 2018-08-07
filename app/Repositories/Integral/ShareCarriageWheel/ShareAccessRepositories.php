@@ -78,7 +78,7 @@ abstract class ShareAccessRepositories implements ShareCarriageWheel
 
     public function delete($where)
     {
-      return  $this->model->destory($where);
+      return  $this->model->destroy($where);
     }
 
     protected function set_model(Model $model)
