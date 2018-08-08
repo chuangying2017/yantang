@@ -266,3 +266,11 @@
  * @apiSuccess {array} array successfully of return many array | or null array
  * @apiDescription 本接口返回一个分页状态
  */
+
+/**
+ * @api {get} /admin/integral/freedomThe/sign/signGet 获取签到规则
+ * @apiName GetIntegralSignRule
+ * @apiGroup Integral
+ * @apiSuccess {array} array 成功返回数组或空数组
+ * @apiDescription 必须安装请求方式去获取无需带任何参数
+ */

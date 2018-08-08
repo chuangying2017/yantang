@@ -5,7 +5,9 @@ namespace App\Api\V1\Controllers\Admin\Integral;
 use App\Api\V1\Requests\Integral\AdminIntegralCardRequest;
 use App\Api\V1\Transformers\Integral\Admin\AdminShipmentsTransformer;
 use App\Api\V1\Transformers\Integral\IntegralCardTransformer;
+use App\Api\V1\Transformers\Integral\SignRuleTransformer;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
+use App\Repositories\Integral\SignRule\SignClass;
 use App\Repositories\Integral\Supervisor\Supervisor;
 use App\Services\Chart\ExcelService;
 use Illuminate\Http\Request;
@@ -185,4 +187,42 @@ class FreedomController extends Controller
         return $this->response->noContent()->statusCode(201);
     }
 
+    /**
+     * @api {get} /admin/integral/freedomThe/sign/signGet 获取签到规则
+     * @apiName GetIntegralSignRule
+     * @apiGroup Integral
+     * @apiSuccess {array} array 成功返回数组或空数组
+     * @apiDescription 必须安装请求方式去获取无需带任何参数
+     */
+    public function sign_get(SignClass $signClass)
+    {
+        $signData = $signClass->setFile(public_path('SignRule.json'))->get();
+
+        return response()->json($signData,200);
+    }
+
+    /**
+     * @api {put} /admin/integral/freedom/sign/signUpdate
+     * @apiName GetIntegralSignUpdate
+     * @apiGroup Integral
+     * @apiParam {numeric} status 开启签到0关闭1开启 not null
+     * @apiParam {numeric} retroactive 默认开启补签1开启0关闭 not null
+     * @apiParam {string} state 签到规则说明 can null
+     * @apiParam {array} extend_rule 用这种方式{"sex": "girl"}提交
+     * @apiParam {numeric} extend_rule.compensateIntegral 扣除补签积分
+     * @apiParam {string} extend_rule.firstRewards 首次奖励{status:1开启0关闭,rewards:100,everyday:10}
+     * @apiParam {string} extend_rule.continuousOne 连续签到{status:1开启0关闭,days:10,rewards:10}
+     * @apiParam {string} extend_rule.continuousTwo 连续签到{status:1开启0关闭,days:20,rewards:20}
+     * @apiParam {string} extend_rule.continuousThree 连续签到{status:1开启0关闭,days:30,rewards:30}
+     * @apiParam {string} extend_rule.continuousSum 总签奖励{status:1开启0关闭,days:50,rewards:100}
+     * @apiParam {string} extend_rule.autorelease 特殊奖励{status:1开启0关闭,title:年庆,rewards:1000}
+     * @apiSuccess {statusCode} statusCode successfully condition return 201 code or return 500
+     * @apiDescription if successfully return 201 No person is fail fatal error internal problem
+     */
+    public function sign_update(Request $request,SignClass $signClass)
+    {
+        $signClass->setFile(public_path('SignRule.json'))->rewriteData($request->except('token'));
+
+        return $this->response->noContent()->setStatusCode(201);
+    }
 }

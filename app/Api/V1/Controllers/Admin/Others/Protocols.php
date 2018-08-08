@@ -22,6 +22,7 @@ use App\Services\Preorder\PreorderProtocol;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Log;
 use App\Models\Settings;
 use App\Repositories\Other\ProtocolGenerator;
@@ -94,7 +95,8 @@ class Protocols extends Controller
      * */
     public function cache_check(){
         //dd(Carbon::today()->addMonth(-2));
-        dd(Carbon::now()->addMonth(-($this->testSet())));
+      $result = Storage::disk('local')->put('public/SignRule.json',['status'=>1,'days'=>20,'rewards'=>'100']);
+      dd($result);
       /*  $cats = Category::query()->get();
         dd($cats->load('products'));*/
    /*       $image = ProductInfo::where('detail','<>',null)->get();
