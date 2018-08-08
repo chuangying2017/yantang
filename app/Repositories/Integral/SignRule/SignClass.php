@@ -3,30 +3,37 @@ namespace App\Repositories\Integral\SignRule;
 
 
 use Doctrine\Common\Cache\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class SignClass
 {
-    protected $file;
+    protected $path;
 
+    protected $file;
     /**
-     * @param $file string
+     * @param $path string
      * @return $this
      */
+    public function setPath($path)
+    {
+        $this->path = $path;
+        return $this;
+    }
+
     public function setFile($file)
     {
         $this->file = $file;
         return $this;
     }
-
     /**
      * @return array
      */
     public function get()
     {
 
-        if (file_exists($this->file))
+        if (Storage::disk('local')->exists($this->path))
         {
-            $array = json_decode($this->file,true);
+            $array = json_decode(Storage::disk('local')->get($this->path . $this->file),true);
         }else
         {
             $array = [];
@@ -39,9 +46,9 @@ class SignClass
     {
         $jsonObj = json_encode($data,JSON_UNESCAPED_UNICODE);
 
-        $int = file_put_contents($this->file,$jsonObj);
+        $boolean = Storage::disk('local')->put($this->path . $this->file,$jsonObj);
 
-        if (is_numeric($int))
+        if ($boolean)
             $result = 'Successfully';
         else
             $result = 'fail';

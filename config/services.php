@@ -116,4 +116,9 @@ return [
         'oss_endpoint' => env('OSS_ENDPOINT','leshangnetwork.oss-cn-shenzhen.aliyuncs.com'),
         'oss_bucket' => env('OSS_TEST_BUCKET','yantang'),
     ],
+
+    'localStorageFile' => [
+        'path' => env('LOCAL_STORAGE_PATH','public/SignFile/'),
+        'SignRule' => env('LOCAL_STORAGE_RULE','SignRule.json')
+    ],
 ];

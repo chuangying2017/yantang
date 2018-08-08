@@ -196,7 +196,10 @@ class FreedomController extends Controller
      */
     public function sign_get(SignClass $signClass)
     {
-        $signData = $signClass->setFile(public_path('SignRule.json'))->get();
+        $signData = $signClass
+            ->setPath(config('services.localStorageFile.path'))
+            ->setFile(config('services.localStorageFile.SignRule'))
+            ->get();
 
         return response()->json($signData,200);
     }
@@ -221,7 +224,10 @@ class FreedomController extends Controller
      */
     public function sign_update(Request $request,SignClass $signClass)
     {
-        $signClass->setFile(public_path('SignRule.json'))->rewriteData($request->except('token'));
+        $signClass
+            ->setPath(config('services.localStorageFile.path'))
+            ->setFile(config('services.localStorageFile.SignRule'))
+            ->rewriteData($request->except('token'));
 
         return $this->response->noContent()->setStatusCode(201);
     }
