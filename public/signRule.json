@@ -1,0 +1,14 @@
+{
+  "status": "1",
+  "retroactive": "1",
+  "extend_rule": {
+    "compensateIntegral": "100",
+    "firstRewards": {"status":"1","rewards":"100","everyday":"50"},
+    "continuousOne": {"status":"1","days":"10","rewards":"10"},
+    "continuousTwo": {"status":"1","days":"20","rewards": "20"},
+    "continuousThree": {"status": "1", "days": "30", "rewards": "30"},
+    "continuousSum": {"status":"1","days": "50", "rewards": "100"},
+    "autorelease": {"status": "1","title":"年庆", "rewards": "1000"}
+  },
+  "state": "访问藕粉我念佛问佛"
+}
