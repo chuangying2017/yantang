@@ -3,6 +3,7 @@
 namespace App\Listeners\Notify;
 
 use App\Events\Preorder\AssignIsAssigned;
+use App\Models\Subscribe\Preorder;
 use App\Repositories\Preorder\PreorderRepositoryContract;
 use App\Services\Notify\NotifyProtocol;
 use App\Services\Preorder\PreorderProtocol;
@@ -29,7 +30,12 @@ class SendMessageToClient {
 
         $preorder = $assign->preorder;
 
+        $preorder = Preorder::find($preorder->id);
+
+      //  file_put_contents('notifyClientMessage.txt',$preorder['status'].' '.date('Y-m-d H:i:s',time()) ." \r\n",FILE_APPEND);
+
         if ($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_SHIPPING) {
+      //  file_put_contents('ClientTest.txt',$preorder['status'].' '.date('Y-m-d H:i:s',time()) . "\r\n",FILE_APPEND);
             NotifyProtocol::notify($preorder['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED, null, $preorder);
         }
 
@@ -44,7 +50,7 @@ class SendMessageToClient {
 
         if($preorder['status'] == PreorderProtocol::ORDER_STATUS_OF_ASSIGNING){
             file_put_contents('status.txt',$preorder['status']?:'node');
-            NotifyProtocol::notify($preorder['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_COMMENT_IS_ALERT,null,$preorder);
+            NotifyProtocol::notify($preorder['user_id'], NotifyProtocol::NOTIFY_ACTION_CLIENT_PREORDER_IS_ASSIGNED,null,$preorder);
         }
 
     }

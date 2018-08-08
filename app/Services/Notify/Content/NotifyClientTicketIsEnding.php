@@ -19,7 +19,7 @@ class NotifyClientTicketIsEnding implements NotifyContentContract {
 
     public static function getWeixinTemplateUrl($ticket = null)
     {
-        return 'http://yt.l43.cn/yt-client/?#!/coupons/list/usable';
+        return 'http://yt2.l43.cn/yt-client/?#!/coupons/list/usable';
     }
 
     public static function getWeixinTemplateColor()

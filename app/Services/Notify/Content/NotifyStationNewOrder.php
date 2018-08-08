@@ -18,7 +18,7 @@ class NotifyStationNewOrder implements NotifyContentContract {
 
     public static function getWeixinTemplateID()
     {
-        return 'RMTBkGBLeda33lYCBMx2sH-poS7WKVsEunaivyIAfRo';
+        return '3VxglwTgNjIVpf3EhH_ogchL0L5SODXijkEnSuNqvbs';
     }
 
     public static function getWeixinTemplateColor()
@@ -41,7 +41,7 @@ class NotifyStationNewOrder implements NotifyContentContract {
     public static function getWeixinTemplateUrl($preorder = null)
     {
         //return 'http://station.yt.weazm.com/station/subscribes/' . $preorder['id'] . '/setting';
-        return 'http://yt.l43.cn/station/subscribes/' . $preorder['id'] . '/setting';
+        return 'http://yt2.l43.cn/station/subscribes/' . $preorder['id'] . '/setting';
     }
 
     /**

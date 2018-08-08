@@ -16,7 +16,7 @@ class NotifyStaffNewOrder implements NotifyContentContract {
 
     public static function getWeixinTemplateID()
     {
-        return 'RMTBkGBLeda33lYCBMx2sH-poS7WKVsEunaivyIAfRo';
+        return 's5bc_2EjFPYNEMdI5yFk3bRtY_edeCjDQ-3cGU1o9xs';
     }
 
     public static function getWeixinTemplateColor()
@@ -39,7 +39,7 @@ class NotifyStaffNewOrder implements NotifyContentContract {
     public static function getWeixinTemplateUrl($preorder = null)
     {
         //return 'http://yt.l43.cn/yt-staff/deliver/orders';
-        return 'http://yt.l43.cn/yt-staff/?#!/deliver/orders';
+        return 'http://yt2.l43.cn/yt-staff/?#!/deliver/orders';
     }
 
     /**

@@ -14,12 +14,12 @@ class NotifyClientOrderIsAssign implements NotifyContentContract {
      */
     public static function getWeixinTemplateID()
     {
-        return 'GOygLfTLTGen2Z1o_OK-MDzFDNkr7F4O6ssAVCKXq2I';
+        return 'gmb-ILjGgKDQR1zVezpVMEB4vA7WPKhFg3_Jn7GmKVs';
     }
 
     public static function getWeixinTemplateUrl($preorder = null)
     {
-        return 'http://yt.l43.cn/yt-client/?#!/subscribe/orders/' . $preorder['id'];
+        return 'http://yt2.l43.cn/yt-client/?#!/subscribe/orders/' . $preorder['id'];
     }
 
     public static function getWeixinTemplateColor()
