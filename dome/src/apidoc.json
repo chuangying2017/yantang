@@ -1,7 +1,7 @@
 {
-  "name": "example",
+  "name": "yantang",
   "version": "0.1.0",
-  "description": "apiDoc basic example",
-  "title": "Custom apiDoc browser title",
+  "description": "燕塘牛奶积分Api",
+  "title": "YanTangMilk",
   "url" : "http://yt2.l43.cn/weazm-yt-api-fca648ea00e7/server.php/api"
 }
