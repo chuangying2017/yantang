@@ -37,7 +37,7 @@ class OrderIntegralRepository implements OrderIntegralInterface
     public function where_express($whereData) //条件 表达式 select or get gain
     {
 
-        $orderIntegral = new IntegralOrder();
+        $orderIntegral = IntegralOrder::query();
 
         $status = OrderIntegralProtocol::ORDER_STATUS_ARRAY_TIME[$whereData['status']];
 
@@ -64,17 +64,21 @@ class OrderIntegralRepository implements OrderIntegralInterface
         }
 
         if (!empty($whereData['keywords']))
-        {//['product_name','express','expressOrder']
-         $with =  $orderIntegral
-            ->with(['integral_order_sku' => function ($query)use($whereData) {
+        {
+           $orderIntegral
+               ->where('order_no','=',$whereData['keywords'])
+            ->orWhereHas('integral_order_sku', function ($query)use($whereData) {
                 $query->whereRaw("concat(`product_name`,`express`,`expressOrder`) like '%".$whereData['keywords']."%'");
-            }]);
-         dd($with->get());
+            })->orWhereHas('integral_order_address', function($query)use($whereData)
+               {
+                   $query -> whereRaw("concat(`name`,`phone`,`province`,`city`,`district`,`detail`) like '%".$whereData['keywords']."%'");
+               });
+            //dd($orderIntegral->toSql());
         }else{
             $whereData['keywords'] = false;
         }
 
-        return $this->get($orderIntegral,$this->order_load,$whereData['keywords']);
+        return $this->get($orderIntegral,$this->order_load);
     }
 
     /**
