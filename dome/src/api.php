@@ -274,3 +274,22 @@
  * @apiSuccess {array} array 成功返回数组或空数组
  * @apiDescription 必须安装请求方式去获取无需带任何参数
  */
+
+/**
+ * @api {put} /admin/integral/freedom/sign/signUpdate edit签到规则
+ * @apiName GetIntegralSignUpdate
+ * @apiGroup Integral
+ * @apiParam {numeric} status 开启签到0关闭1开启 not null
+ * @apiParam {numeric} retroactive 默认开启补签1开启0关闭 not null
+ * @apiParam {string} state 签到规则说明 can null
+ * @apiParam {array} extend_rule 用这种方式{"sex": "girl"}提交
+ * @apiParam {numeric} extend_rule.compensateIntegral 扣除补签积分
+ * @apiParam {string} extend_rule.firstRewards 首次奖励{status:1开启0关闭,rewards:100,everyday:10}
+ * @apiParam {string} extend_rule.continuousOne 连续签到{status:1开启0关闭,days:10,rewards:10}
+ * @apiParam {string} extend_rule.continuousTwo 连续签到{status:1开启0关闭,days:20,rewards:20}
+ * @apiParam {string} extend_rule.continuousThree 连续签到{status:1开启0关闭,days:30,rewards:30}
+ * @apiParam {string} extend_rule.continuousSum 总签奖励{status:1开启0关闭,days:50,rewards:100}
+ * @apiParam {string} extend_rule.autorelease 特殊奖励{status:1开启0关闭,title:年庆,rewards:1000}
+ * @apiSuccess {statusCode} statusCode successfully condition return 201 code or return 500
+ * @apiDescription if successfully return 201 No person is fail fatal error internal problem
+ */
