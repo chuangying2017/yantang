@@ -73,7 +73,7 @@ class OrderIntegralRepository implements OrderIntegralInterface
                {
                    $query -> whereRaw("concat(`name`,`phone`,`province`,`city`,`district`,`detail`) like '%".$whereData['keywords']."%'");
                });
-            //dd($orderIntegral->toSql());
+
         }else{
             $whereData['keywords'] = false;
         }

@@ -264,6 +264,19 @@
  * @apiName GetExchangeGetAll
  * @apiGroup Integral
  * @apiSuccess {array} array successfully of return many array | or null array
+ * @apiSuccess {string} array.description 描述
+ * @apiSuccess {string} array.cost_integral 消耗积分
+ * @apiSuccess {string} array.promotions_id 优惠券id
+ * @apiSuccess {date} array.valid_time 有效时间
+ * @apiSuccess {date} array.deadline_time 结束时间
+ * @apiSuccess {string} array.status 上下架
+ * @apiSuccess {string} array.issue_num 发布数量
+ * @apiSuccess {string} array.draw_num 领取数量
+ * @apiSuccess {string} array.remain_num 剩余数量
+ * @apiSuccess {numeric} array.delayed 延时时间为准小时
+ * @apiSuccess {integer} array.member_type 限制新旧会员领取0全部可领取1新会员不可领取
+ * @apiSuccess {integer} array.limit_num 限制会员兑换数量
+ * @apiSuccess {integer} array.used_num 使用数量
  * @apiDescription 本接口返回一个分页状态
  */
 

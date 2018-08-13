@@ -27,7 +27,8 @@ class ExchangeTransformer extends TransformerAbstract {
             'limit_num'         =>  $convertCoupon['limit_num'],
             'created_at'        =>  $convertCoupon['created_at'],
             'name'              =>  $convertCoupon['name'],
-            'description'       =>  $convertCoupon['description']
+            'description'       =>  $convertCoupon['description'],
+            'used_num'          =>  $convertCoupon['used_num'],
         ];
 
         return $data;
