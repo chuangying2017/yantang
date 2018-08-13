@@ -42,7 +42,7 @@ class OperationMode implements Supervisor
 
     public function delete($where)
     {
-        // TODO: Implement delete() method.
+        return IntegralCard::destroy($where);
     }
 
     public function array_card($array)

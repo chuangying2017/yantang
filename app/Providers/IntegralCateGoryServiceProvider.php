@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Api\V1\Controllers\Admin\Integral\CompanyController;
 use App\Api\V1\Controllers\Admin\Integral\FreedomController;
+use App\Api\V1\Controllers\Integral\FetchIntegralController;
 use App\Repositories\Integral\Address\UserAddress;
 use App\Repositories\Integral\Card\OperationMode;
 use App\Repositories\Integral\Company\EloquentCompanyRepositories;
@@ -46,5 +47,6 @@ class IntegralCateGoryServiceProvider extends ServiceProvider
         $this->app->when(CompanyController::class)->needs(Supervisor::class)->give(EloquentCompanyRepositories::class);
         $this->app->when(FreedomController::class)->needs(Supervisor::class)->give(OperationMode::class);
         $this->app->bind(ShareAccessRepositories::class,ExchangeOperation::class);
+        $this->app->when(FetchIntegralController::class)->needs(Supervisor::class)->give(OperationMode::class);
     }
 }
