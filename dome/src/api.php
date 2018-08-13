@@ -157,7 +157,7 @@
  */
 
 /**
- * @api {put} /admin/integral/freedomThe/{card_id}/card_delete 删除积分卡
+ * @api {delete} /admin/integral/freedomThe/{card_id}/card_delete 删除积分卡
  * @apiName GetIntegralCardDel
  * @apiGroup Integral
  *
@@ -302,7 +302,23 @@
  * @apiParam {string} extend_rule.continuousTwo 连续签到{status:1开启0关闭,days:20,rewards:20}
  * @apiParam {string} extend_rule.continuousThree 连续签到{status:1开启0关闭,days:30,rewards:30}
  * @apiParam {string} extend_rule.continuousSum 总签奖励{status:1开启0关闭,days:50,rewards:100}
- * @apiParam {string} extend_rule.autorelease 特殊奖励{status:1开启0关闭,title:年庆,rewards:1000}
+ * @apiParam {string} extend_rule.autorelease 特殊奖励{status:1开启0关闭,title:年庆,rewards:1000,date:2018-05-06}
  * @apiSuccess {statusCode} statusCode successfully condition return 201 code or return 500
  * @apiDescription if successfully return 201 No person is fail fatal error internal problem
+ */
+
+/**
+ * @api {put} /admin/integral/category/{id} 更新分类
+ * @apiName GetIntegralCategoryUpdate
+ * @apiGroup Integral
+ * @apiParam {string} title 标题不能为空 not null
+ * @apiParam {numeric} sort_type 排序类型int not null
+ * @apiParam {string} status show展示down隐藏 not null
+ * @apiParam {string} cover_image 展示图链接 can null
+ *
+ * @apiSuccess {array} status 返回对象
+ * @apiSuccess {string} status.title 标题
+ * @apiSuccess {numeric} status.sort_type 排序类型
+ * @apiSuccess {string} status.cover_image 图链接
+ *
  */

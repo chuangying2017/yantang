@@ -69,6 +69,7 @@ class ShowPageController extends Controller
      * Store a newly created resource in storage.
      * @param OrderGenerateRequest $request
      * @return \Dingo\Api\Http\Response|void
+     * @throws \ErrorException
      */
     public function store(OrderGenerateRequest $request)
     {

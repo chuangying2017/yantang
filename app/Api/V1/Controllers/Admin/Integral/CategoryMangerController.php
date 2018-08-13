@@ -69,21 +69,6 @@ class CategoryMangerController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @param Request $request
-     * @return \Dingo\Api\Http\Response
-     */
-    public function edit($id, Request $request)
-    {
-
-        $category = $this->category->CreateOrUpdate($id,$request->input());
-
-        return $this->response->item($category, new IntegralTransformer());
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -92,7 +77,9 @@ class CategoryMangerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $category = $this->category->CreateOrUpdate($id, $request->all());
+
+        return $this->response->item($category, new IntegralTransformer());
     }
 
     /**

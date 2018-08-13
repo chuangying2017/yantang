@@ -218,7 +218,7 @@ class FreedomController extends Controller
      * @apiParam {string} extend_rule.continuousTwo 连续签到{status:1开启0关闭,days:20,rewards:20}
      * @apiParam {string} extend_rule.continuousThree 连续签到{status:1开启0关闭,days:30,rewards:30}
      * @apiParam {string} extend_rule.continuousSum 总签奖励{status:1开启0关闭,days:50,rewards:100}
-     * @apiParam {string} extend_rule.autorelease 特殊奖励{status:1开启0关闭,title:年庆,rewards:1000}
+     * @apiParam {string} extend_rule.autorelease 特殊奖励{status:1开启0关闭,title:年庆,rewards:1000,date:2018-05-06}
      * @apiSuccess {statusCode} statusCode successfully condition return 201 code or return 500
      * @apiDescription if successfully return 201 No person is fail fatal error internal problem
      */

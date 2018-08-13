@@ -240,6 +240,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->post('freedomThe/{card_id}/card_update','FreedomController@card_update');
             $api->put('freedomThe/{card_id}/card_delete','FreedomController@card_destroy');
             $api->get('freedomThe/sign/signGet','FreedomController@sign_get');
+            $api->put('freedom/sign/signUpdate','FreedomController@sign_update');
             $api->resource('exchangeThe','ExchangeController');
         });
     });
