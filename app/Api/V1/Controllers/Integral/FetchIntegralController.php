@@ -83,13 +83,22 @@ class FetchIntegralController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @api {put} /integral/fetchIntegral/{id} 获取积分卡
+     * @apiName GetIntegralCard
+     * @apiGroup FrontDesk
+     * @apiSuccess {statusCode} statusCode 成功返回201状态
+     * @apiError InternalError 内部代码有误
      */
     public function update(Request $request, $id)
     {
+        $value = $this->operation->member_draw($id);
 
+        if (is_string($value))
+        {
+            return $this->response->error($value,500);
+        }
+
+        return $this->response->noContent()->statusCode(201);
     }
 
     /**

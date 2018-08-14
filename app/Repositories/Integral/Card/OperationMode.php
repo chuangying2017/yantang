@@ -85,7 +85,7 @@ class OperationMode implements Supervisor
             $this->
             card->
             set_model($this->find($id))->
-            set_verifyData(['user_id' => access()->id(), 'name' => '积分卡领取'])->limitsOrLoose();
+            set_verifyData(['user_id' => access()->id(), 'name' => '积分卡领取','card_id'=>$id])->limitsOrLoose();
             if (!empty($result->get_errorMessage()))
             {
                 return $result->get_errorMessage();

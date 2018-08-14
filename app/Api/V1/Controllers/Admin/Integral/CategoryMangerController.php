@@ -77,9 +77,9 @@ class CategoryMangerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $category = $this->category->CreateOrUpdate($id, $request->all());
+        $this->category->CreateOrUpdate($id, $request->all());
 
-        return $this->response->item($category, new IntegralTransformer());
+        return $this->response->noContent()->statusCode(201);
     }
 
     /**

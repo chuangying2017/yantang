@@ -38,3 +38,13 @@
  * @apiError InternalError possible internal code error
  * @apiDescription 数值id对应setting里的id
  */
+
+/**
+ * Update the specified resource in storage.
+ *
+ * @api {put} /integral/fetchIntegral/{id} 获取积分卡
+ * @apiName GetIntegralCard
+ * @apiGroup FrontDesk
+ * @apiSuccess {statusCode} statusCode 成功返回201状态
+ * @apiError InternalError 内部代码有误 返回错误信息500
+ */
