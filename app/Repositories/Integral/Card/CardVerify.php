@@ -74,7 +74,9 @@ class CardVerify
     //是否为新会员 新会员规定时间无下单
     public function down_date()
     {
-        if (!in_array(Carbon::now()->toDateTimeString(),[$this->model['start_time'],$this->model['end_time']]))
+
+        if (!$this->date_between(Carbon::now()->toDateTimeString(),
+            [$this->model['start_time'],$this->model['end_time']]))
         {
             $this->errorMessage = '不在活动时间内';
         }
@@ -139,14 +141,16 @@ class CardVerify
                 'record_able' =>get_class($this->model),
                 'user_id' => $this->verifyData['user_id'],
                 'name' => $this->verifyData['name'],
-                'integral' => "+" . $this->model->integral
+                'integral' => "+" . $this->model->give
             ]);
 
             $this->record->save();
 
-            Wallet::query()->where('user_id','=', $this->verifyData['user_id'])->increment('integral',$this->model['integral']);
+            Wallet::query()->where('user_id','=', $this->verifyData['user_id'])->increment('integral',$this->model['give']);
 
             $model->save();
+
+            \DB::commit();
         }catch (Exception $exception)
         {
             Log::error($exception->getMessage());
@@ -154,12 +158,27 @@ class CardVerify
 
             exit($exception->getMessage());
         }
-            \DB::commit();
+
             return true;
     }
 
     public function get_errorMessage()
     {
         return $this->errorMessage;
+    }
+
+    protected function date_between($verifyDate,$date = [])
+    {
+        $start = strtotime($date[0]);
+
+        $end = strtotime($date[1]);
+
+        $verify = strtotime($verifyDate);
+
+        if ($verify >= $start && $verify <= $end)
+        {
+            return true;
+        }
+            return false;
     }
 }

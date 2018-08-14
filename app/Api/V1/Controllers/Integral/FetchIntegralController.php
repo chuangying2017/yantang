@@ -91,6 +91,7 @@ class FetchIntegralController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $value = $this->operation->member_draw($id);
 
         if (is_string($value))

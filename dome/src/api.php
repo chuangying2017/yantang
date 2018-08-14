@@ -326,7 +326,7 @@
  * @apiGroup Integral
  * @apiParam {string} title 标题不能为空 not null
  * @apiParam {numeric} sort_type 排序类型int not null
- * @apiParam {string} status show展示down隐藏 not null
+ * @apiParam {string} status show展示hide隐藏 not null
  * @apiParam {string} cover_image 展示图链接 can null
  *
  * @apiSuccess {array} status 返回对象
