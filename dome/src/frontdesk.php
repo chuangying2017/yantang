@@ -36,4 +36,5 @@
  * @apiParam {string} protocol.protocol_content 字符类型text方式
  * @apiSuccess {statusCode} statusCode Successfully status code 201
  * @apiError InternalError possible internal code error
+ * @apiDescription 数值id对应setting里的id
  */
