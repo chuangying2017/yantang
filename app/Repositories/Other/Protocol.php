@@ -24,10 +24,10 @@ class Protocol implements ProtocolGenerator {
         return \App\Models\Protocol::where($protocol_where)->update($protocol_data);
     }
 
-    public function getAllProtocol()
+    public function getAllProtocol($arr = [1,2])
     {
         // TODO: Implement getAllProtocol() method.
-        return \App\Models\Protocol::all($this->fields);
+        return \App\Models\Protocol::whereIn('type',$arr)->get($this->fields);
     }
 
 }

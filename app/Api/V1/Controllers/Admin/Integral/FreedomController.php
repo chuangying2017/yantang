@@ -9,6 +9,7 @@ use App\Api\V1\Transformers\Integral\SignRuleTransformer;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Repositories\Integral\SignRule\SignClass;
 use App\Repositories\Integral\Supervisor\Supervisor;
+use App\Repositories\Other\Protocol;
 use App\Repositories\setting\SetMode;
 use App\Services\Chart\ExcelService;
 use Illuminate\Http\Request;
@@ -238,11 +239,13 @@ class FreedomController extends Controller
      * @apiName GetIntegralValidity
      * @apiGroup Integral
      * @apiSuccess {object} object 返回对象
+     * @apiSuccess {array} object.setting 返回设置数组
+     * @apiSuccess {array} object.protocol 返回协议数组
      */
-    public function integral_validity(SetMode $setMode)
+    public function integral_validity(SetMode $setMode, Protocol $protocol)
     {
         return $this->response->array(
-            $setMode->getSetting(3)
+            ['setting' => $setMode->getSetting(3),'protocol'=> $protocol->getAllProtocol([3,4])]
         );
     }
 
@@ -250,13 +253,19 @@ class FreedomController extends Controller
      * @api {put} /admin/integral/validity/{id}/Update 积分有效期更新
      * @apiName GetIntegralValidityUpdate
      * @apiGroup Integral
-     * @apiParam {numeric} year 数值类型
+     * @apiParam {object} setting 对象类型setting:{year:1}
+     * @apiParam {numeric} setting.year 数值类型
+     * @apiParam {object} where 对象where:{type:3}更新协议条件
+     * @apiParam {numeric} where.type 数值类型
+     * @apiParam {object} protocol 协议对象
+     * @apiParam {string} protocol.protocol_content 字符类型text方式
      * @apiSuccess {statusCode} statusCode Successfully status code 201
      * @apiError InternalError possible internal code error
      */
-    public function validity_update($id,Request $request, SetMode $setMode)
+    public function validity_update($id,Request $request, SetMode $setMode, Protocol $protocol)
     {
-        $setMode->updateSet($id,$request->except('token'));
+        $setMode->updateSet($id,$request->input('setting'));
+        $protocol->updateProtocol($request->input('where'),$request->input('protocol'));
         return $this->response->noContent()->statusCode(201);
     }
 

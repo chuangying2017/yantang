@@ -16,17 +16,24 @@
  */
 
 /**
- * @api {get} /admin/integral/validity 积分有效期Get
+ * @api {get} /admin/integral/validityGet 积分有效期Get
  * @apiName GetIntegralValidity
  * @apiGroup Integral
  * @apiSuccess {object} object 返回对象
+ * @apiSuccess {array} object.setting 返回设置数组
+ * @apiSuccess {array} object.protocol 返回协议数组
  */
 
 /**
  * @api {put} /admin/integral/validity/{id}/Update 积分有效期更新
  * @apiName GetIntegralValidityUpdate
  * @apiGroup Integral
- * @apiParam {numeric} year 数值类型
+ * @apiParam {object} setting 对象类型setting:{year:1}
+ * @apiParam {numeric} setting.year 数值类型
+ * @apiParam {object} where 对象where:{type:3}更新协议条件
+ * @apiParam {numeric} where.type 数值类型
+ * @apiParam {object} protocol 协议对象
+ * @apiParam {string} protocol.protocol_content 字符类型text方式
  * @apiSuccess {statusCode} statusCode Successfully status code 201
  * @apiError InternalError possible internal code error
  */
