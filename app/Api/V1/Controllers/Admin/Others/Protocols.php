@@ -95,8 +95,8 @@ class Protocols extends Controller
      * */
     public function cache_check(){
         //dd(Carbon::today()->addMonth(-2));
-      $result = Storage::disk('local')->put('public/SignRule.json',['status'=>1,'days'=>20,'rewards'=>'100']);
-      dd($result);
+        $ver = (+ 11);
+      dd($ver);
       /*  $cats = Category::query()->get();
         dd($cats->load('products'));*/
    /*       $image = ProductInfo::where('detail','<>',null)->get();

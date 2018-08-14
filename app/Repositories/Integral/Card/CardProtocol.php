@@ -20,4 +20,5 @@ class CardProtocol
         'mode'          =>  self::CARD_MODE_DEFAULT,
         'type'          =>  self::CARD_TYPE_LOOSE,
     ];
+
 }

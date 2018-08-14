@@ -21,9 +21,12 @@ class Category implements IntegralCategoryMangers
      */
     public function select($where=null, $sort='asc', $sort_field='sort_type')
     {
-        $integral = IntegralModel::query()->when($where,function($query)use ($where){
-            $query->where($where);
-        });
+        $integral = IntegralModel::query();
+
+        if ($where)
+        {
+            $integral->where($where);
+        }
 
         return $integral->orderBy($sort_field, $sort)->get();
     }

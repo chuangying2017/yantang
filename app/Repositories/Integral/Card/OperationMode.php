@@ -3,9 +3,17 @@ namespace App\Repositories\Integral\Card;
 
 use App\Models\Integral\IntegralCard;
 use App\Repositories\Integral\Supervisor\Supervisor;
+use Illuminate\Support\Facades\Log;
+use Mockery\Exception;
 
 class OperationMode implements Supervisor
 {
+    protected $card;
+
+    public function __construct(CardVerify $cardVerify)
+    {
+        $this->card = $cardVerify;
+    }
 
     public function get_all($paginate = CardProtocol::CARD_PAGINATE_NUM)
     {
@@ -68,5 +76,25 @@ class OperationMode implements Supervisor
             }
 
             return $data;
+    }
+
+    public function member_draw($id)
+    {
+        try {
+            $result =
+            $this->
+            card->
+            set_model($this->find($id))->
+            set_verifyData(['user_id' => access()->id(), 'name' => '积分卡领取'])->limitsOrLoose();
+            if (!empty($result->get_errorMessage()))
+            {
+                return $result->get_errorMessage();
+            }
+            return $result->dataCommit();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+
+            exit($e->getMessage());
+        }
     }
 }

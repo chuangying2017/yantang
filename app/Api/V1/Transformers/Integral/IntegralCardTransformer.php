@@ -11,7 +11,9 @@ class IntegralCardTransformer extends TransformerAbstract {
     {
         $data = [
             'card_id'   =>  $card['id'],
-            'name'=>$card['name'],'give'=>$card['give'],'status'=>$card['status'],
+            'name'=>$card['name'],
+            'give'=>$card['give'],
+            'status'=>$card['status'],
             'type'=>$card['type'],//limits限制与loose不限制
             'mode'=>$card['mode'],//0全部会员可领取1新会员不可领取
             'cover_image'=>$card['cover_image'],
