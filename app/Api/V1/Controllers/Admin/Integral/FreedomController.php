@@ -119,6 +119,19 @@ class FreedomController extends Controller
      * @apiName GetIntegralCardShowAll
      * @apiGroup Integral
      * @apiSuccess {statusCode} status 成功返回200并与多维数组|空数组
+     * @apiSuccess {numeric} card_id 数值
+     * @apiSuccess {string} name 名称
+     * @apiSuccess {numeric} give 领取积分
+     * @apiSuccess {status} status 积分卡状态show展示hide隐藏
+     * @apiSuccess {string} type limits限制 | loose 宽松
+     * @apiSuccess {numeric} mode 0全部会员可领取1新会员不可领取
+     * @apiSuccess {url} cover_image 展示图片链接地址
+     * @apiSuccess {integer} issue_num 发布数量
+     * @apiSuccess {integer} draw_num 会员可领取数量
+     * @apiSuccess {date} start_time 开始时间
+     * @apiSuccess {date} end_time 结束时间
+     * @apiSuccess {integer} remain 剩余可领取数量
+     * @apiSuccess {integer} get_member 会员已领取数量
      * @apiError DataNotFound Maybe there's no data in the table
      *
      */
