@@ -21,5 +21,5 @@ class Settings extends Model
      * transform array or json
      *
      * */
-    protected $casts = ['value'=>'array'];
+    protected $casts = ['value'=>'json'];
 }
