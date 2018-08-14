@@ -247,7 +247,7 @@ class FreedomController extends Controller
     }
 
     /**
-     * @api {put} /admin/integral/validityUpdate 积分有效期更新
+     * @api {put} /admin/integral/validity/{id}/Update 积分有效期更新
      * @apiName GetIntegralValidityUpdate
      * @apiGroup Integral
      * @apiParam {numeric} year 数值类型
