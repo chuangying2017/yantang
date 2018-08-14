@@ -265,7 +265,7 @@ class FreedomController extends Controller
      */
     public function validity_update($id,Request $request, SetMode $setMode, Protocol $protocol)
     {
-        $setMode->updateSet($id,$request->input('setting'));
+        $setMode->update($id,$request->input('setting'));
         $protocol->updateProtocol($request->input('where'),$request->input('protocol'));
         return $this->response->noContent()->statusCode(201);
     }
