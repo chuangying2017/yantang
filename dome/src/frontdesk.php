@@ -14,3 +14,19 @@
  * @apiSuccess {string} object.type  limits限制发布数量 \ loose无限制
  * @apiSuccess {url} object.cover_image 展示图片
  */
+
+/**
+ * @api {get} /admin/integral/validity 积分有效期Get
+ * @apiName GetIntegralValidity
+ * @apiGroup Integral
+ * @apiSuccess {object} object 返回对象
+ */
+
+/**
+ * @api {put} /admin/integral/validityUpdate 积分有效期更新
+ * @apiName GetIntegralValidityUpdate
+ * @apiGroup Integral
+ * @apiParam {numeric} year 数值类型
+ * @apiSuccess {statusCode} statusCode Successfully status code 201
+ * @apiError InternalError possible internal code error
+ */

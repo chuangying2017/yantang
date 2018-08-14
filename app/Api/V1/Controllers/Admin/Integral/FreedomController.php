@@ -9,6 +9,7 @@ use App\Api\V1\Transformers\Integral\SignRuleTransformer;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Repositories\Integral\SignRule\SignClass;
 use App\Repositories\Integral\Supervisor\Supervisor;
+use App\Repositories\setting\SetMode;
 use App\Services\Chart\ExcelService;
 use Illuminate\Http\Request;
 
@@ -231,4 +232,32 @@ class FreedomController extends Controller
 
         return $this->response->noContent()->setStatusCode(201);
     }
+
+    /**
+     * @api {get} /admin/integral/validityGet 积分有效期Get
+     * @apiName GetIntegralValidity
+     * @apiGroup Integral
+     * @apiSuccess {object} object 返回对象
+     */
+    public function integral_validity(SetMode $setMode)
+    {
+        return $this->response->array(
+            $setMode->getSetting(3)
+        );
+    }
+
+    /**
+     * @api {put} /admin/integral/validityUpdate 积分有效期更新
+     * @apiName GetIntegralValidityUpdate
+     * @apiGroup Integral
+     * @apiParam {numeric} year 数值类型
+     * @apiSuccess {statusCode} statusCode Successfully status code 201
+     * @apiError InternalError possible internal code error
+     */
+    public function validity_update($id,Request $request, SetMode $setMode)
+    {
+        $setMode->updateSet($id,$request->except('token'));
+        return $this->response->noContent()->statusCode(201);
+    }
+
 }

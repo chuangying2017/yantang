@@ -242,6 +242,8 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->get('freedomThe/sign/signGet','FreedomController@sign_get');
             $api->put('freedom/sign/signUpdate','FreedomController@sign_update');
             $api->resource('exchangeThe','ExchangeController');
+            $api->get('validityGet','FreedomController@integral_validity');
+            $api->put('validityUpdate','FreedomController@validity_update');
         });
     });
 });

@@ -37,4 +37,14 @@ class SetLogic implements SetMode
     public function getSetting($setting_id){
         return Settings::find($setting_id,['id','value']);
     }
+
+    public function update($id,$data)
+    {
+        $model = $this->getSetting($id);
+
+        $model->fill(['value' => $data]);
+
+        return $model->save();
+    }
+
 }
