@@ -34,6 +34,5 @@ class ExchangeOperation extends ShareAccessRepositories
 
         $convertRule->set_VerifyData($data);
 
-
     }
 }
