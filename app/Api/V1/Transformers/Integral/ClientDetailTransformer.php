@@ -42,6 +42,7 @@ class ClientDetailTransformer extends TransformerAbstract {
 
     protected function spec($model)
     {
+        $argv = [];
 
         if($model instanceof BelongsToMany){
             $arrayCollection = $model->get(['id','type','describe']);

@@ -10,15 +10,18 @@ class ClientIntegralTransformer extends TransformerAbstract {
 
     public function transform(Product $product)
     {
-            $productSku = $product->product_sku->first();
 
             $data = [
                 'product_id'            =>      $product['id'],
                 'cover_image'           =>      $product['cover_image'],
-                'productName'           =>      $productSku['name'],
                 'integral'              =>      $product['integral'],
                 'title'                 =>      $product['title']
             ];
+
+            if ($product->relationLoaded('product_sku'))
+            {
+                $data['productName'] = $product->product_sku->name;
+            }
 
             return $data;
     }
