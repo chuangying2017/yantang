@@ -13,4 +13,5 @@ $api->group(['namespace'=>'Integral','middleware'=>'api.auth','prefix'=>'integra
                 $api->get('showMemberOrder','ShowPageController@meeting_record');
                 $api->resource('fetchIntegral','FetchIntegralController',['only'=> ['index','show','update','store']]);
                 $api->get('integralCard','IntegralCouponController@get_exchange');
+                $api->get('integralCard/{id}','IntegralCouponController@get_exchange');
 });

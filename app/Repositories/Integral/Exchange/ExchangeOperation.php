@@ -25,4 +25,15 @@ class ExchangeOperation extends ShareAccessRepositories
           ->whereDate('deadline_time','>',Carbon::now()->toDateTimeString())
           ->get();
     }
+
+    public function convertCoupon($data)
+    {
+        $convertRule = new ConvertRule();
+
+        $convertRule->set_model($this->find($data['convertId']));
+
+        $convertRule->set_VerifyData($data);
+
+
+    }
 }

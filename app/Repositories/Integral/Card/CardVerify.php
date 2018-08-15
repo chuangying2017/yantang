@@ -75,7 +75,7 @@ class CardVerify
     public function down_date()
     {
 
-        if (!$this->date_between(Carbon::now()->toDateTimeString(),
+        if (!date_between(Carbon::now()->toDateTimeString(),
             [$this->model['start_time'],$this->model['end_time']]))
         {
             $this->errorMessage = '不在活动时间内';
@@ -165,20 +165,5 @@ class CardVerify
     public function get_errorMessage()
     {
         return $this->errorMessage;
-    }
-
-    protected function date_between($verifyDate,$date = [])
-    {
-        $start = strtotime($date[0]);
-
-        $end = strtotime($date[1]);
-
-        $verify = strtotime($verifyDate);
-
-        if ($verify >= $start && $verify <= $end)
-        {
-            return true;
-        }
-            return false;
     }
 }

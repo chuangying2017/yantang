@@ -83,7 +83,7 @@ class FetchIntegralController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @api {put} /integral/fetchIntegral/{id} 获取积分卡
+     * @api {put} /integral/fetchIntegral/{id} 领取积分卡
      * @apiName GetIntegralCard
      * @apiGroup FrontDesk
      * @apiSuccess {statusCode} statusCode 成功返回201状态

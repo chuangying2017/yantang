@@ -10,6 +10,11 @@ class ExchangeTransformer extends TransformerAbstract {
 
     public function transform(IntegralConvertCoupon $convertCoupon)
     {
+        if ($convertCoupon->relationLoaded('promotions'))
+        {
+            return $this->integralShow($convertCoupon);
+        }
+
         $data = [
             'id'                =>  $convertCoupon['id'],
             'cost_integral'     =>  $convertCoupon['cost_integral'],
@@ -29,6 +34,21 @@ class ExchangeTransformer extends TransformerAbstract {
             'name'              =>  $convertCoupon['name'],
             'description'       =>  $convertCoupon['description'],
             'used_num'          =>  $convertCoupon['used_num'],
+        ];
+
+        return $data;
+    }
+
+    public function integralShow(IntegralConvertCoupon $convertCoupon)
+    {
+        $data  = [
+            'id'    =>  $convertCoupon['id'],
+            'name'  =>  $convertCoupon['name'],
+            'description' =>    $convertCoupon['description'],
+            'cost_integral' => $convertCoupon['cost_integral'],
+            'couponAmount' => $convertCoupon->promotions->rules->first()->discount_content / 100,
+            'cover_image' => $convertCoupon['cover_image'],
+            'delayed' => $convertCoupon['delayed']
         ];
 
         return $data;

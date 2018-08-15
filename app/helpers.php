@@ -418,6 +418,23 @@ if (!function_exists('transformStationOrder')) {
     }
 }
 
+if (!function_exists('date_between'))
+{
+    function date_between($verifyDate,$date = [])
+    {
+        $start = strtotime($date[0]);
+
+        $end = strtotime($date[1]);
+
+        $verify = strtotime($verifyDate);
+
+        if ($verify >= $start && $verify <= $end)
+        {
+            return true;
+        }
+        return false;
+    }
+}
 
 
 

@@ -42,9 +42,36 @@
 /**
  * Update the specified resource in storage.
  *
- * @api {put} /integral/fetchIntegral/{id} 获取积分卡
+ * @api {put} /integral/fetchIntegral/{id} 领取积分卡
  * @apiName GetIntegralCard
  * @apiGroup FrontDesk
  * @apiSuccess {statusCode} statusCode 成功返回201状态
  * @apiError InternalError 内部代码有误 返回错误信息500
+ */
+
+/**
+ * @api {get} /integral/integralCard 兑换卷列表
+ * @apiName GetIntegralCardList
+ * @apiGroup FrontDesk
+ * @apiSuccess {object} object 返回对象
+ * @apiSuccess {string} object.name 标题
+ * @apiSuccess {string} object.description 描述
+ * @apiSuccess {numeric} object.cost_integral 兑换消耗积分
+ * @apiSuccess {float} object.couponAmount 优惠金额
+ * @apiSuccess {url} object.cover_image 图片链接
+ * @apiSuccess {numeric} object.delayed 兑换后小时为单位
+ * @apiError InternalError possible internal error code 500 reject msg
+ */
+
+/**
+ * @api {get} /integral/integralCard/{id} 兑换卷获取id
+ * @apiName GetIntegralCardFind
+ * @apiGroup FrontDesk
+ * @apiSuccess {object} object 返回对象
+ * @apiSuccess {object} object.name 标题
+ * @apiSuccess {string} object.description 描述
+ * @apiSuccess {numeric} object.cost_integral 兑换消耗积分
+ * @apiSuccess {float} object.couponAmount 优惠金额
+ * @apiSuccess {url} object.cover_image 图片链接
+ * @apiSuccess {numeric} object.delayed 兑换后小时为单位
  */
