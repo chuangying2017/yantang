@@ -13,9 +13,16 @@ class ConvertRule extends ConvertInsert
 
     public $function = ['DateVerify','remainNum','verifyRecord','verifyAmount'];
 
+    public $updateFunction = ['createTicket','counter_convert','integral_record'];
+
     public function set_model(Model $model)
     {
         $this->model = $model;
+    }
+
+    public function get_model()
+    {
+        return $this->model;
     }
 
     public function set_VerifyData($data)
@@ -44,7 +51,7 @@ class ConvertRule extends ConvertInsert
     public function verifyRecord()//验证兑换记录
     {
             $record = IntegralRecord::where('type_id','=',$this->model->id)
-                ->where('record_type','=',IntegralConvertCoupon::class)
+                ->where('record_able','=',IntegralConvertCoupon::class)
                 ->where('user_id','=',$this->VerifyData['user_id'])
                 ->whereBetween('created_at',[$this->model['valid_time'],$this->model['deadline_time']])
                 ->count();

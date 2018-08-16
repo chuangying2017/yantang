@@ -2,9 +2,11 @@
 namespace App\Repositories\Integral\Exchange;
 
 use App\Models\Integral\IntegralConvertCoupon;
+use App\Models\Integral\IntegralRecord;
 use App\Repositories\Integral\ShareCarriageWheel\ShareAccessRepositories;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Mockery\Exception;
 
 class ExchangeOperation extends ShareAccessRepositories
 {
@@ -37,7 +39,18 @@ class ExchangeOperation extends ShareAccessRepositories
 
         try {
             $this->ConvertFunc($convertRule);
+
+            \DB::beginTransaction();
+
+            array_reduce($convertRule->updateFunction,function($v1,$v2)use ($convertRule){
+                $convertRule->{$v2}();
+            });
+
+            \DB::commit();
+
+            return true;
         } catch (\Exception $e) {
+            \DB::rollBack();
             Log::error($e->getMessage());
 
             return $e->getMessage();
@@ -59,11 +72,6 @@ class ExchangeOperation extends ShareAccessRepositories
                 throw new \Exception($stringOrBoolean,500);
             }
         }
-    }
-
-    public function generate_data()
-    {
-
     }
 
 

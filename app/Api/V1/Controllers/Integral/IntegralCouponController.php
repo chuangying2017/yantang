@@ -64,9 +64,15 @@ class IntegralCouponController extends Controller
 
     public function put_integral($convertId)
     {
-        $this->convert->convertCoupon([
+       $returnVal = $this->convert->convertCoupon([
             'user_id'   =>  access()->id(),
             'convertId' => $convertId
         ]);
+
+       if (is_string($returnVal))
+       {
+           return $this->response->error($returnVal,500);
+       }
+       return $this->response->noContent()->statusCode(201);
     }
 }

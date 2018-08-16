@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class CommonInsertMode
 {
-    protected function save(Model $model, $array)
+    public function save(Model $model, $array)
     {
         if (empty($array)) return false;
 
