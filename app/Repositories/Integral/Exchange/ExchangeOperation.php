@@ -4,6 +4,7 @@ namespace App\Repositories\Integral\Exchange;
 use App\Models\Integral\IntegralConvertCoupon;
 use App\Repositories\Integral\ShareCarriageWheel\ShareAccessRepositories;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ExchangeOperation extends ShareAccessRepositories
 {
@@ -34,5 +35,36 @@ class ExchangeOperation extends ShareAccessRepositories
 
         $convertRule->set_VerifyData($data);
 
+        try {
+            $this->ConvertFunc($convertRule);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+
+            return $e->getMessage();
+        }
     }
+
+    /**
+     * @param $classVerify
+     * @throws \Exception
+     */
+    protected function ConvertFunc($classVerify)
+    {
+        foreach ($classVerify->function as $value)
+        {
+            $stringOrBoolean = $classVerify->{$value}();
+
+            if (is_string($stringOrBoolean))
+            {
+                throw new \Exception($stringOrBoolean,500);
+            }
+        }
+    }
+
+    public function generate_data()
+    {
+
+    }
+
+
 }

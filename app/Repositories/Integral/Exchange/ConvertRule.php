@@ -7,13 +7,11 @@ use App\Models\Integral\IntegralRecord;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-class ConvertRule
+class ConvertRule extends ConvertInsert
 {
     protected $errorMessage;
 
-    protected $VerifyData;
-
-    protected $model;
+    public $function = ['DateVerify','remainNum','verifyRecord','verifyAmount'];
 
     public function set_model(Model $model)
     {
@@ -43,7 +41,7 @@ class ConvertRule
         return true;
     }
 
-    public function verifyRecord()
+    public function verifyRecord()//验证兑换记录
     {
             $record = IntegralRecord::where('type_id','=',$this->model->id)
                 ->where('record_type','=',IntegralConvertCoupon::class)
