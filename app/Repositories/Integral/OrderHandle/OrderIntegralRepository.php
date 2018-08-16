@@ -9,7 +9,7 @@ use Mockery\Exception;
 
 class OrderIntegralRepository implements OrderIntegralInterface
 {
-    protected $order_load = ['integral_order_sku', 'integral_order_address'];
+    protected $order_load = ['integral_order_sku.integral_product', 'integral_order_address'];
 
     protected $order_filter;
 

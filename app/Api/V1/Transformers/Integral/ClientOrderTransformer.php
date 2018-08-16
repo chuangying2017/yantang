@@ -29,6 +29,7 @@ class ClientOrderTransformer extends TransformerAbstract {
                 $data['expressName'] = $express->express;
                 $data['expressOrder'] = $express->expressOrder;
             }
+
             $data['product_name'] = $express->product_name;
             $data['image']  =   $express->integral_product()->first()->cover_image;
 
