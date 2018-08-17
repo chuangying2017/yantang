@@ -28,5 +28,5 @@ tags
 public/build/rev-manifest.json
 npm-debug.log
 *.pem
-test000.txt
-sku.txt
+*.txt
+doc/
