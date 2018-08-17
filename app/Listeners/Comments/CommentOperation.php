@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Comments;
 
+use App\Models\Integral\IntegralRecord;
 use App\Repositories\setting\SetMode;
 use App\Services\Comments\Event\CommentIsCreated;
 use App\Services\Notify\NotifyProtocol;
@@ -42,7 +43,17 @@ class CommentOperation
 
                 $item->preorders[0]->save();
 
-                $item->preorders[0]->user->wallet->increment('integral',array_get($this->setting->getSetting(2)['value'],'user_score','0'));
+                $setting = $this->setting->getSetting(2)['value'];
+
+                $item->preorders[0]->user->wallet->increment('integral',array_get($setting,'user_score','0'));
+
+                IntegralRecord::create([
+                    'type_id' => $item->id,
+                    'record_able' => get_class($item),
+                    'user_id' => $item->preorders->first()['user_id'],
+                    'name' => '评论获得积分',
+                    'integral' => '+' . array_get($setting,'user_score','0')
+                ]);
 
                 NotifyProtocol::notify($item->preorders[0]['staff_id'],NotifyProtocol::NOTIFY_ACTION_STAFF_COMMENT_IS_ALERT,null,$item);
         }

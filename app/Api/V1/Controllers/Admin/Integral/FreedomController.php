@@ -258,7 +258,7 @@ class FreedomController extends Controller
     public function integral_validity(SetMode $setMode, Protocol $protocol)
     {
         return $this->response->array(
-            ['setting' => $setMode->getSetting(3),'protocol'=> $protocol->getAllProtocol([3,4])]
+            ['setting' => $setMode->getSetting(3),'protocol'=> $protocol->getAllProtocol([3,4,5])]
         );
     }
 

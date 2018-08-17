@@ -4,7 +4,9 @@ namespace App\Api\V1\Controllers\Integral;
 
 use App\Api\V1\Transformers\Integral\ExchangeTransformer;
 use App\Models\Integral\IntegralConvertCoupon;
+use App\Models\Integral\IntegralRecord;
 use App\Repositories\Integral\ShareCarriageWheel\ShareAccessRepositories;
+use App\Repositories\Other\Protocol;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -76,10 +78,47 @@ class IntegralCouponController extends Controller
             'convertId' => $convertId
         ]);
 
-       if (is_string($returnVal))
-       {
-           return $this->response->error($returnVal,500);
-       }
-       return $this->response->noContent()->statusCode(201);
+        return $this->response->array(verify_dataMessage($returnVal));
+    }
+
+    /**
+     * @api {get} /integral/integralProtocol 获取协议
+     * @apiName GetIntegralProtocol
+     * @apiGroup FrontDesk
+     * @apiSuccess {object} object 成功返回对象
+     */
+    public function pull_protocol(Protocol $protocol)
+    {
+        return $this->response->array(
+            $protocol->getAllProtocol([3,4,5])
+        );
+    }
+
+    /**
+     * @api {get} /integral/integralRecord?page=1 积分明细
+     * @apiName GetIntegralRecord
+     * @apiGroup FrontDesk
+     * @apiSuccess {object} object 成功返回对象或空数组
+     * @apiSuccess {string} object.name 名称
+     * @apiSuccess {date} object,created_at 创建时间
+     * @apiSuccess {string} object.integral 积分
+     * @apiDescription page如果不传默认是第一页每页20条
+     */
+    public function pull_integralRecord(Request $request,IntegralRecord $integralRecord)
+    {
+
+        $page = $request->input('page',1);
+
+        $userId = access()->id();
+
+        $data['data'] = $integralRecord->where('user_id','=',$userId)->forPage($page,20)->orderBy('id','desc')->get()->toArray();
+
+        if (!empty($data))
+        {
+            $data['total_integral'] = $integralRecord->where('user_id','=',$userId)->where('integral','like','%+%')->sum('integral');
+        }
+
+        return $this->response->array($data);
     }
 }
+

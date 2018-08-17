@@ -92,14 +92,9 @@ class FetchIntegralController extends Controller
     public function update(Request $request, $id)
     {
 
-        $value = $this->operation->member_draw($id);
+        $returnVal = $this->operation->member_draw($id);
 
-        if (is_string($value))
-        {
-            return $this->response->error($value,500);
-        }
-
-        return $this->response->noContent()->statusCode(201);
+        return $this->response->array(verify_dataMessage($returnVal));
     }
 
     /**

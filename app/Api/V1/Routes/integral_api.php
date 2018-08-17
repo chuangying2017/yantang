@@ -15,4 +15,6 @@ $api->group(['namespace'=>'Integral','middleware'=>'api.auth','prefix'=>'integra
                 $api->get('integralCard','IntegralCouponController@get_exchange');
                 $api->get('integralCard/{id}','IntegralCouponController@get_show');
                 $api->put('integralFetchCoupon/{convertId}','IntegralCouponController@put_integral');
+                $api->get('integralRecord','IntegralCouponController@pull_integralRecord');
+                $api->get('integralProtocol','IntegralCouponController@pull_protocol');
 });

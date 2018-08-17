@@ -437,7 +437,22 @@ if (!function_exists('date_between'))
 }
 
 
+if (!function_exists('verify_dataMessage'))
+{
+    function verify_dataMessage($data)
+    {
+        if (is_string($data))
+        {
+            $arr = ['status'=>2,'message'=>$data];
+        }
+        else
+        {
+            $arr = ['status'=>1,'message' => 'successfully'];
+        }
 
+        return $arr;
+    }
+}
 
 
 

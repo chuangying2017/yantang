@@ -83,3 +83,21 @@
  * @apiSuccess {statusCode} status 成功返回状态码200
  * @apiError InternalError return status code 500 and error messages
  */
+
+/**
+ * @api {get} /integral/integralProtocol 获取协议
+ * @apiName GetIntegralProtocol
+ * @apiGroup FrontDesk
+ * @apiSuccess {object} object 成功返回对象
+ */
+
+/**
+ * @api {get} /integral/integralRecord?page=1 积分明细
+ * @apiName GetIntegralRecord
+ * @apiGroup FrontDesk
+ * @apiSuccess {object} object 成功返回对象或空数组
+ * @apiSuccess {string} object.name 名称
+ * @apiSuccess {date} object,created_at 创建时间
+ * @apiSuccess {string} object.integral 积分
+ * @apiDescription page如果不传默认是第一页每页20条
+ */
