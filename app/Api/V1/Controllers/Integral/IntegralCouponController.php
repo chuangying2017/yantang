@@ -62,6 +62,13 @@ class IntegralCouponController extends Controller
         return $this->response->item($object, new ExchangeTransformer());
     }
 
+    /**
+     * @api {put} /integral/integralFetchCoupon/{convertId} 积分兑换卷
+     * @apiName GetIntegralConvert
+     * @apiGroup FrontDesk
+     * @apiSuccess {statusCode} status 成功返回状态码200
+     * @apiError InternalError return status code 500 and error messages
+     */
     public function put_integral($convertId)
     {
        $returnVal = $this->convert->convertCoupon([

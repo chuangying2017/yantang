@@ -64,7 +64,7 @@ class ConvertRule extends ConvertInsert
 
     public function verifyAmount()//验证用户金额是否足够
     {
-        $userAmount = Wallet::where('user_id','=',$this->VerifyData['user_id'])->where('integral','>=',$this->model['cost_integral'])->count();
+        $userAmount = $this->User->where('integral','>=',$this->model['cost_integral'])->count();
         if (!$userAmount)
         {
             return '积分不足';
@@ -73,4 +73,8 @@ class ConvertRule extends ConvertInsert
         return true;
     }
 
+    public function set_user()
+    {
+        $this->User = Wallet::where('user_id','=',$this->VerifyData['user_id']);
+    }
 }

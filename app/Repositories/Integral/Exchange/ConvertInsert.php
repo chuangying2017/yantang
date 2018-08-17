@@ -25,6 +25,7 @@ abstract class ConvertInsert extends CommonInsertMode
 
     protected $model;
 
+    protected $User;
     public function createTicket()
     {
         $promotion = $this->model->promotions;
@@ -51,8 +52,10 @@ abstract class ConvertInsert extends CommonInsertMode
     public function counter_convert()
     {
         $this->model->increment('draw_num',1);
+
         $this->model->decrement('remain_num',1);
-        Wallet::query()->where('user_id','=',$this->VerifyData['user_id'])->decrement('integral',$this->model->cost_integral);
+
+        $this->User->decrement('integral',$this->model->cost_integral);
     }
 
     public function integral_record()

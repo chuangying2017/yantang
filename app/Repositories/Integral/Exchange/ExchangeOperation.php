@@ -37,6 +37,7 @@ class ExchangeOperation extends ShareAccessRepositories
 
         $convertRule->set_VerifyData($data);
 
+        $convertRule->set_user();
         try {
             $this->ConvertFunc($convertRule);
 

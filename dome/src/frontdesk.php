@@ -75,3 +75,11 @@
  * @apiSuccess {url} object.cover_image 图片链接
  * @apiSuccess {numeric} object.delayed 兑换后小时为单位
  */
+
+/**
+ * @api {put} /integral/integralFetchCoupon/{convertId} 积分兑换卷
+ * @apiName GetIntegralConvert
+ * @apiGroup FrontDesk
+ * @apiSuccess {statusCode} status 成功返回状态码200
+ * @apiError InternalError return status code 500 and error messages
+ */
