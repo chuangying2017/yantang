@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Storage;
 
 class SignClass
 {
+    const SIGN_SEASONS_SPRING = 'spring';//春
+
+    const SIGN_SEASONS_SUMMER = 'summer';//夏
+
+    const SIGN_SEASONS_AUTUMN = 'autumn';//秋
+
+    const SIGN_SEASONS_WINTER = 'winter';//冬
+
+    public static $seasons = ['spring' => [1,2,3],'summer' => [4,5,6],'autumn' => [7,8,9] ,'winter' => [10,11,12]];
+
     protected $path;
 
     protected $file;
