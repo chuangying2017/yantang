@@ -2,6 +2,7 @@
 namespace App\Repositories\Integral\SignRule;
 
 
+use Carbon\Carbon;
 use Doctrine\Common\Cache\Cache;
 use Illuminate\Support\Facades\Storage;
 
@@ -63,5 +64,16 @@ class SignClass
         else
             $result = 'fail';
         return $result;
+    }
+
+    public static function fetchSeasons()
+    {
+        foreach (self::$seasons as $key => $val)
+        {
+            if (in_array(Carbon::now()->month,$val))
+            {
+                return $key;
+            }
+        }
     }
 }
