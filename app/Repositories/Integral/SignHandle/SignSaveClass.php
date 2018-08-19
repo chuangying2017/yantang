@@ -19,9 +19,19 @@ class SignSaveClass extends CommonInsertMode
         $signMonthModel->sign_integral_record()->create($this->data['record']);
     }
 
+    public function sign_subsidiary()
+    {
+
+    }
+
     public function signIntegralCte(SignMonthModel $signMonthModel)
     {
-      // $this->save($signMonthModel->sign_cte()->getRelated(),$this->data['cte']);
+          if ($signMonthModel->sign_cte)
+          {
+              $signMonthModel->sign_cte->fill($this->data['cte'])->save();
+          }else{
+              $signMonthModel->sign_cte()->create($this->data['cte']);
+          }
     }
 
 }

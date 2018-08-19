@@ -2,11 +2,17 @@
 
 namespace App\Api\V1\Controllers\Admin\Others;
 
+use App\Models\Integral\Product;
+use App\Models\Integral\SignMonthModel;
 use App\Models\Monitors;
+use App\Models\Order\Order;
 use App\Models\Product\Category;
 use App\Models\Promotion\Activity;
 use App\models\Protocol;
+use App\Repositories\Integral\SignHandle\SignSaveClass;
+use App\Repositories\Integral\SignRule\SignClass;
 use Cache;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Log;
 use App\Models\Settings;
@@ -59,6 +65,12 @@ class Protocols extends Controller
         //sku_keys
         $result = Cache::get('getSkus',null);
         dd($result->getSkus()->toArray());
+    }
+
+    public function cache_check()
+    {
+        $a = ['s'=>'fbweib'];
+        dd(array_values($a));
     }
 
     //setting default value

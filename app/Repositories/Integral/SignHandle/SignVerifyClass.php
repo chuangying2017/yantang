@@ -58,14 +58,29 @@ class SignVerifyClass extends ShareAccessRepositories
 
     public function verifyToDayExists($SignModel)
     {
-        $result = $SignModel->withCount(['sign_integral_record' => function($query){
-            $query->where('days','=',Carbon::now()->day);
-        }]);
+        $result = $this->verifyDay($SignModel,Carbon::now()->day);
 
         if ($result)
         {
             $this->errorMessage = '今天已签到过！';
         }
+    }
+
+    public function verifyYesterdayExists($SignModel)
+    {
+        $result = $this->verifyDay($SignModel,Carbon::now()->addDay(-1)->day);
+
+        if ($result){
+            return true;//是连续签到
+        }
+        return false;//is not continue sign
+    }
+
+    public function verifyDay($SignModel,$days)
+    {
+     return   $SignModel->withCount(['sign_integral_record' => function($query)use($days){
+            $query->where('days','=',$days);
+        }]);
     }
 
     public function fetchMonthSign()
@@ -85,7 +100,7 @@ class SignVerifyClass extends ShareAccessRepositories
                 'monthDaysNum' => Carbon::now()->daysInMonth
             ],
             'record'=> ['days' => Carbon::now()->day,'everyday_integral' => $this->rewards ?: 1],
-            'cte' => []
+            'cte' => ['sign_integral' => []],//continue sign
         ];
     }
 
@@ -104,10 +119,16 @@ class SignVerifyClass extends ShareAccessRepositories
         $status = $get['extend_rule']['firstRewards'];
         if ($res)
         {
+            $this->array['normal'] = $status['everyday'];
+
             return $status['everyday']; //正常奖励
         }else
         {
-            return $status['status'] == 1 ? $status['rewards'] : $status['everyday']; //首次奖励
+            $reward = $status['status'] == 1 ? $status['rewards'] : $status['everyday'];
+
+            $this->array['firstReward'] = $reward;
+
+            return $reward; //首次奖励
         }
     }
 
