@@ -50,9 +50,22 @@ class SignVerifyClass extends ShareAccessRepositories
     {
         if (empty($model = $this->fetchMonthSign()))
         {
-
+          $result = $this->SaveData($this->FirstData(),$this->fetchMethods('create'));
         }
 
+    }
+
+
+    public function verifyToDayExists($SignModel)
+    {
+        $result = $SignModel->withCount(['sign_integral_record' => function($query){
+            $query->where('days','=',Carbon::now()->day);
+        }]);
+
+        if ($result)
+        {
+            $this->errorMessage = '今天已签到过！';
+        }
     }
 
     public function fetchMonthSign()
@@ -76,40 +89,38 @@ class SignVerifyClass extends ShareAccessRepositories
         ];
     }
 
+    protected function UpdateData()
+    {
+        return [
+            
+        ];
+    }
+
     protected function signIfFirst()
     {
         $res = $this->model->where('user_id','=',$this->array['user_id'])->first();
 
         $get = $this->signClass->setFile(config('services.localStorageFile.SignRule'))->setPath(config('services.localStorageFile.path'))->get();
+        $status = $get['extend_rule']['firstRewards'];
         if ($res)
         {
-            return $get['extend_rule']['firstRewards']['everyday']; //正常奖励
+            return $status['everyday']; //正常奖励
         }else
         {
-            return $get['extend_rule']['firstRewards']['rewards']; //首次奖励
+            return $status['status'] == 1 ? $status['rewards'] : $status['everyday']; //首次奖励
         }
     }
 
-    public function SaveDataMode($model)
-    {
-        if (empty($model))
-        {
-        $result = $this->SaveData($this->FirstData());
-        }
-
-        return $result;
-    }
-
-    public function SaveData($data)
+    public function SaveData($data,$method)
     {
         try{
             \DB::beginTransaction();
 
             $this->signSave->data = $data;
 
-            array_reduce(get_class_methods($this->signSave),function($v1,$v2)
+            array_reduce($method,function($v1,$v2)
             {
-                $this->signSave->{$v2}();
+                $this->signSave->{$v2}($this->model);
             });
             \DB::commit();
             return true;
@@ -118,6 +129,24 @@ class SignVerifyClass extends ShareAccessRepositories
             \DB::rollBack();
             Log::error($exception->getMessage());
             return $exception->getMessage();
+        }
+    }
+
+    protected function fetchMethods($mode)
+    {
+        $create = get_class_methods($this->signSave);
+        switch ($mode)
+        {
+            case 'create':
+                return $create;
+
+            case 'update':
+                array_shift($create);
+                return $create;
+
+            default:
+                throw new Exception('没有可选类型',500);
+
         }
     }
 }

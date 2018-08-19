@@ -11,17 +11,17 @@ class SignSaveClass extends CommonInsertMode
 
     public function signMonth(SignMonthModel $model)
     {
-       $this->save($this->data['month'],$model);
+       $this->save($model,$this->data['month']);
     }
 
     public function signIntegralRecord(SignMonthModel $signMonthModel)
     {
-        $this->save($this->data['record'],$signMonthModel->sign_integral_record());
+        $signMonthModel->sign_integral_record()->create($this->data['record']);
     }
 
     public function signIntegralCte(SignMonthModel $signMonthModel)
     {
-        $this->save($this->data['cte'],$signMonthModel->sign_cte());
+      // $this->save($signMonthModel->sign_cte()->getRelated(),$this->data['cte']);
     }
 
 }
