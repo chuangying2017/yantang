@@ -19,8 +19,8 @@ class SignSaveClass extends CommonInsertMode
         $signMonthModel->sign_integral_record()->create($this->data['record']);
     }
 
-    public function sign_subsidiary()
-    {
+    public function sign_subsidiary()//明细
+    {//首次签到 每日签到 连续签到 总签到 特殊奖励
 
     }
 
