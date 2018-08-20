@@ -18,6 +18,14 @@ class SignClass
 
     public static $seasons = ['spring' => [1,2,3],'summer' => [4,5,6],'autumn' => [7,8,9] ,'winter' => [10,11,12]];
 
+    const SIGN_FIRST_REWARD = 'firstReward';//首次签到
+
+    const SIGN_NORMAL_REWARD = 'normal';//日常签到
+
+    const SIGN_RETROACTIVE = '1';//开启补签 0 关闭补签
+
+    public static $signMode = ['normal' => '日常签到','firstReward' => '首次签到'];
+
     protected $path;
 
     protected $file;

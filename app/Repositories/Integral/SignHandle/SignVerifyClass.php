@@ -30,6 +30,7 @@ class SignVerifyClass extends ShareAccessRepositories
         parent::__construct();
         $this->signSave = $signSaveClass;
         $this->signClass = $signClass;
+        $this->rewards = $this->signIfFirst();
     }
 
     protected function init()
@@ -37,8 +38,6 @@ class SignVerifyClass extends ShareAccessRepositories
        $this->set_model(new SignMonthModel);
 
        $this->set_UserInfo();
-
-       $this->rewards = $this->signIfFirst();
     }
 
     protected function set_UserInfo()
@@ -46,13 +45,35 @@ class SignVerifyClass extends ShareAccessRepositories
         $this->array['user_id'] = access()->id();
     }
 
-    public function verifyUserToday()
+    public function verifyUserToday()//签到
     {
-        if (empty($model = $this->fetchMonthSign()))
+        if (empty($model = $this->fetchMonthSign()))//如果月没有记录 添加月记录 有 继续查询 当天有无记录
         {
-          $result = $this->SaveData($this->FirstData(),$this->fetchMethods('create'));
+          return $this->SaveData($this->FirstData());
         }
 
+        $this->verifyToDayExists($model);
+
+        if (is_string($this->errorMessage))
+        {
+            return $this->errorMessage;
+        }
+
+        $data = $this->FirstData();
+
+        if ($this->verifyYesterdayExists($model))
+        {
+            $data['month'] = [
+                'continuousSign' => $model->continuousSign + 1
+            ];
+        }
+            $data['month']['total'] = $model->total + 1;
+
+            $data['month']['total_integral'] = $model->total_integral + $this->rewards;
+
+            $this->model = $model;
+
+        return $this->SaveData($data);
     }
 
 
@@ -64,9 +85,10 @@ class SignVerifyClass extends ShareAccessRepositories
         {
             $this->errorMessage = '今天已签到过！';
         }
+
     }
 
-    public function verifyYesterdayExists($SignModel)
+    public function verifyYesterdayExists($SignModel)//判断是否为连续签到
     {
         $result = $this->verifyDay($SignModel,Carbon::now()->addDay(-1)->day);
 
@@ -95,19 +117,16 @@ class SignVerifyClass extends ShareAccessRepositories
                 'user_id' => $this->array['user_id'],
                 'seasons' => SignClass::fetchSeasons(),
                 'total'=> '1',
-                'continueSign' => '1',
+                'continuousSign' => '1',
                 'total_integral' => $this->rewards ?: 1,
                 'monthDaysNum' => Carbon::now()->daysInMonth
             ],
             'record'=> ['days' => Carbon::now()->day,'everyday_integral' => $this->rewards ?: 1],
-            'cte' => ['sign_integral' => []],//continue sign
-        ];
-    }
-
-    protected function UpdateData()
-    {
-        return [
-            
+            'cte' => ['sign_integral' => ['continue7day'=>'','continue14day'=>'','continue21day'=>'']],//continue sign
+            'integral_record' => ['integral' => '+' . $this->rewards ?: 1,'name' => SignClass::$signMode[$this->array['RewardMode']]],
+            'member' => 'increment',
+            'integral'=>$this->rewards,
+            'user_id' => $this->array['user_id']
         ];
     }
 
@@ -119,29 +138,35 @@ class SignVerifyClass extends ShareAccessRepositories
         $status = $get['extend_rule']['firstRewards'];
         if ($res)
         {
-            $this->array['normal'] = $status['everyday'];
+            $this->array[SignClass::SIGN_NORMAL_REWARD] = $status['everyday'];
+
+            $this->array['RewardMode'] = SignClass::SIGN_NORMAL_REWARD;
 
             return $status['everyday']; //正常奖励
         }else
         {
             $reward = $status['status'] == 1 ? $status['rewards'] : $status['everyday'];
 
-            $this->array['firstReward'] = $reward;
+            $this->array['RewardMode'] = SignClass::SIGN_FIRST_REWARD;
+
+            $this->array[SignClass::SIGN_FIRST_REWARD] = $reward;
 
             return $reward; //首次奖励
         }
     }
 
-    public function SaveData($data,$method)
+    public function SaveData($data)
     {
         try{
             \DB::beginTransaction();
 
             $this->signSave->data = $data;
 
-            array_reduce($method,function($v1,$v2)
+            $this->signSave->model = $this->model;
+
+            array_reduce(get_class_methods($this->signSave),function($v1,$v2)
             {
-                $this->signSave->{$v2}($this->model);
+                $this->signSave->{$v2}();
             });
             \DB::commit();
             return true;
@@ -153,21 +178,34 @@ class SignVerifyClass extends ShareAccessRepositories
         }
     }
 
-    protected function fetchMethods($mode)
+    public function RepairSign($day)
     {
-        $create = get_class_methods($this->signSave);
-        switch ($mode)
+        if (empty($model = $this->fetchMonthSign()))//如果月没有记录 添加月记录 有 继续查询 当天有无记录
         {
-            case 'create':
-                return $create;
-
-            case 'update':
-                array_shift($create);
-                return $create;
-
-            default:
-                throw new Exception('没有可选类型',500);
-
+            return '补签失败请选择先签到';
         }
+
+        if ($this->verifyDay($model,$day))
+        {
+            return '补签无效不能选择已签到';
+        }
+
+        $ret = $this-> signRule()['retroactive'];
+        if (!is_array($ret) && !in_array($this->signClass::SIGN_RETROACTIVE,$ret))
+        {
+            return '补签通道关闭';
+        }
+
+        $data = $this->FirstData();
+
+
+
+    }
+
+    public function signRule()
+    {
+        return $this->signClass->setPath(config('services.localStorageFile.path'))
+            ->setFile(config('services.localStorageFile.SignRule'))
+            ->get();
     }
 }
