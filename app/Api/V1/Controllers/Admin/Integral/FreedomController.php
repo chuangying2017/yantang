@@ -9,6 +9,7 @@ use App\Api\V1\Transformers\Integral\SignRuleTransformer;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Repositories\Integral\SignRule\SignClass;
 use App\Repositories\Integral\Supervisor\Supervisor;
+use App\Repositories\IntegralMode\IntegralMode;
 use App\Repositories\Other\Protocol;
 use App\Repositories\setting\SetMode;
 use App\Services\Chart\ExcelService;
@@ -283,4 +284,21 @@ class FreedomController extends Controller
         return $this->response->noContent()->statusCode(201);
     }
 
+    /**
+     * @api {post} /admin/integral/updateIntegralRecord 后台加减积分
+     * @apiName GetIntegralOperation
+     * @apiGroup Integral
+     * @apiParam {numeric} user_id 用户id不能为空
+     * @throws \ErrorException
+     */
+    public function updateIntegralRecord(Request $request,IntegralMode $integralMode)
+    {
+        $all = $request->all();
+
+        $all['username'] = access()->user()->username;
+
+        $boolean = $integralMode->verifyData($all);
+
+        return $this->response->array(verify_dataMessage($boolean));
+    }
 }

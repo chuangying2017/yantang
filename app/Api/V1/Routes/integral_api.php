@@ -20,5 +20,6 @@ $api->group(['namespace'=>'Integral','middleware'=>'api.auth','prefix'=>'integra
                 $api->group(['middleware' => [\App\Api\V1\Middleware\IntegralSignMiddleware::class]],function($api)
                 {
                     $api->get('integralSignGet','SignController@SignGet');
+                    $api->resource('integralSignMonthAll','SignController',['only' => ['index']]);
                 });
 });

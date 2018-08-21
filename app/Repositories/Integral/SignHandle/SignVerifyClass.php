@@ -66,6 +66,8 @@ class SignVerifyClass extends ShareAccessRepositories
             $data['month'] = [
                 'continuousSign' => $model->continuousSign + 1
             ];
+        }else{
+            $data['month'] = ['continuousSign'=>1];
         }
             $data['month']['total'] = $model->total + 1;
 
@@ -207,5 +209,12 @@ class SignVerifyClass extends ShareAccessRepositories
         return $this->signClass->setPath(config('services.localStorageFile.path'))
             ->setFile(config('services.localStorageFile.SignRule'))
             ->get();
+    }
+
+    public function fetchSignMonth($date)
+    {
+        $parse = Carbon::parse($date);
+
+        return $this->model->whereYear('created_at','=',$parse->year)->whereMonth('created_at','=',$parse->month)->with('sign_integral_record','sign_cte')->first();
     }
 }

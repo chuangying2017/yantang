@@ -101,3 +101,25 @@
  * @apiSuccess {string} object.integral 积分
  * @apiDescription page如果不传默认是第一页每页20条
  */
+
+/**
+ * @api {get} /integral/integralSignGet 点击签到
+ * @apiName GetIntegralSignGet
+ * @apiGroup FrontDesk
+ * @apiSuccess {object} object 成功返回对象{status:1,message:successfully}
+ * @apiSuccess {object} object 失败返回对象{status:2,message:errorMessage}
+ */
+
+/**
+ * Display a listing of the resource.
+ *
+ * @api {get} /integral/integralSignMonthAll 获取当月签到
+ * @apiName GetIntegralSignMonthAllData
+ * @apiGroup FrontDesk
+ * @apiParam {date} date 日期类型必须是2018-02-09 格式
+ * @apiSuccess {object} object 成功返回对象类型  | 或者返回空数组
+ * @apiSuccess {numeric} object.total 当月总签到
+ * @apiSuccess {numeric} object.continuousSign 连续签到次数
+ * @apiSuccess {object}  object.signDay 多维对象  签到天数
+ * @apiSuccess {numeric} object.signDay.day 对应的当前的号数
+ */

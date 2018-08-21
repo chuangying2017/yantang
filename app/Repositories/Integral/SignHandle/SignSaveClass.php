@@ -38,11 +38,11 @@ class SignSaveClass extends CommonInsertMode
 
     public function sign_member()//会员积分计算
     {
-       $member = Wallet::query()->where('user_id','=',$this->data['month']['user_id']);
+       $member = Wallet::query()->where('user_id','=',$this->data['user_id']);
         if ($this->data['member'] == 'increment')
         {
             $member->increment('integral',$this->data['integral']);
-        }elseif ($this->data['member' == 'decrement'])
+        }elseif ($this->data['member'] == 'decrement')
         {
             $member->decrement('integral',$this->data['integral']);
         }else

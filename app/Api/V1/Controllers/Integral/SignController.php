@@ -2,10 +2,12 @@
 
 namespace App\Api\V1\Controllers\Integral;
 
+use App\Api\V1\Requests\Integral\SignRequest;
+use App\Api\V1\Transformers\Integral\SignTransformer;
 use App\Repositories\Integral\SignHandle\SignVerifyClass;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 class SignController extends Controller
@@ -20,13 +22,32 @@ class SignController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @api {get} /integral/integralSignMonthAll 获取当月签到
+     * @apiName GetIntegralSignMonthAllData
+     * @apiGroup FrontDesk
+     * @apiParam {date} date 日期类型必须是2018-02-09 格式 | 或者返回空数组
+     * @apiSuccess {object} object 成功返回对象类型
+     * @apiSuccess {numeric} object.total 当月总签到
+     * @apiSuccess {numeric} object.continuousSign 连续签到次数
+     * @apiSuccess {object}  object.signDay 多维对象签到天数
+     * @apiSuccess {numeric} signDay.day 对应的当前的号数
      */
-    public function index()
+    public function index(SignRequest $request)
     {
-        //
+        $selectDate = $request->input('date',Carbon::now()->toDateString());
+
+        $data = $this->sign->fetchSignMonth($selectDate);
+
+        return $this->response->item($data, new SignTransformer());
     }
 
+    /**
+     * @api {get} /integral/integralSignGet 点击签到
+     * @apiName GetIntegralSignGet
+     * @apiGroup FrontDesk
+     * @apiSuccess {object} object 成功返回对象{status:1,message:successfully}
+     * @apiSuccess {object} object 失败返回对象{status:2,message:errorMessage}
+     */
     public function SignGet()
     {
       $result = $this->sign->verifyUserToday();
