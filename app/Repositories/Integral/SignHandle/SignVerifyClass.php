@@ -67,17 +67,17 @@ class SignVerifyClass extends ShareAccessRepositories
             return verify_dataMessage($this->errorMessage);
         }
 
+        $model->total += 1;
+
+        array_push($model->signArray,Carbon::now()->day);
+
         if ($this->verifyYesterdayExists($model))
         {
-            $model->continuousSign += 1;
+            $this->countSign($model);
         }else{
             $model->continuousSign = 1;
         }
             $data = $this->updateData();
-
-            $model->total += 1;
-
-            array_push($model->signArray,Carbon::now()->day);
 
             $model->total_integral += $this->rewards;
 
@@ -231,13 +231,24 @@ class SignVerifyClass extends ShareAccessRepositories
             return '积分不足';
         }
 
+        sort($model->signArray[] = $day);
+
+        $model->total += 1;
         $data = [
-            'month' => ['signArray' => $model->signArray[] = $day,'total' => $model->total + 1],
-            'record' => ['days' => $day,'everyday_integral' => -$ret['extend_rule']['compensateIntegral']],
+            'record' => ['days' => $day,'everyday_integral' => -$ret['extend_rule']['compensateIntegral'],'repairNum' => 1],
+            'integral_record' => ['name'=>SignClass::$signMode[SignClass::SIGN_INTEGRAL_REPAIR],'integral'=>'-' . $ret['extend_rule']['compensateIntegral']],
+            'user_id' => $this->array['user_id'],
+            'member'=>'decrease',
+            'integral'=>$ret['extend_rule']['compensateIntegral']
         ];
 
+        $this->countSign($model);
 
+        $this->model = $model;
 
+        $result = verify_dataMessage($this->SaveData($data));
+
+        return $result['status'] == 1 ? $this->integralSuccess($result,['integral'=> '扣除积分'.$ret['extend_rule']['compensateIntegral'].'成功!']) : $result;
 
     }
 
@@ -274,6 +285,57 @@ class SignVerifyClass extends ShareAccessRepositories
 
     protected function countSign($model)//month model
     {
-        $rule = $this->signRule();
+        $k = 1;
+
+        $c = 1; //终结连续签到
+
+        $arr = $model->signArray;
+
+        $count = count($arr);
+
+        if ($count < 2)
+        {
+            return false;
+        }
+
+        $cte = &$model->sign_cte;
+
+        $sign = &$cte->sign_integral;
+        for ($i=$count;$i > 1;$i--)
+        {
+
+            $j = $i - 1;
+
+            $top = $arr[$j - 1] + 1;
+            if ($top == $arr[$j]){
+                $k += 1;
+                if ((!isset($arr[$j - 2]) && $c == 1) || ($arr[$j - 2] + 1 != $arr[$j-1] && $c == 1))
+                {
+                    $c = 0;
+                    $model->continuousSign = $k;
+                }
+            }else
+            {
+                $k = 1;
+            }
+
+            if ($sign['continue7day']['status'] == 0 && $k >= $sign['continue7day']['days'] && $k < $sign['continue14day']['days'])
+            {
+                $sign['continue7day']['status'] = 1;//待领取
+                continue;
+            }
+
+            if ($sign['continue14day']['status'] == 0 && $k >= $sign['continue14day']['days'] && $k < $sign['continue21day']['days'])
+            {
+                $sign['continue21day']['status'] = 1;//待领取
+                continue;
+            }
+
+            if ($sign['continue21day']['status'] == 0 && $k >= $sign['continue21day']['days'])
+            {
+                $sign['continue21day']['status'] = 1;//待领取
+                break;
+            }
+        }
     }
 }

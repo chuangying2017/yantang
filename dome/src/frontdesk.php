@@ -142,3 +142,10 @@
  * @apiGroup FrontDesk
  * @apiSuccess {object} object 成功返回数据对象
  */
+
+/**
+ * @api {get} /integral/integralSignRepair 补签
+ * @apiName GetIntegralRepair
+ * @apiGroup FrontDesk
+ * @apiSuccess {object} object 返回数据对象{status:1成功}{status:2失败}
+ */

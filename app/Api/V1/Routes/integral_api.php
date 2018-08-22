@@ -22,5 +22,6 @@ $api->group(['namespace'=>'Integral','middleware'=>'api.auth','prefix'=>'integra
                     $api->get('integralSignGet','SignController@SignGet');
                     $api->resource('integralSignMonthAll','SignController',['only' => ['index']]);
                     $api->get('integralGetRule','SignController@SignGetRule');
+                    $api->get('integralSignRepair/{day}','SignController@SignRepair');
                 });
 });

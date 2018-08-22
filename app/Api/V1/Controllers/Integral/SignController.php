@@ -51,14 +51,22 @@ class SignController extends Controller
      */
     public function SignGet()
     {
-      $result = $this->sign->verifyUserToday();
+        $result = $this->sign->verifyUserToday();
 
-      return $this->response->array($result);
+        return $this->response->array($result);
     }
 
+    /**
+     * @api {get} /integral/integralSignRepair/{day} 补签
+     * @apiName GetIntegralRepair
+     * @apiGroup FrontDesk
+     * @apiSuccess {object} object 返回数据对象{status:1成功}{status:2失败}
+     */
     public function SignRepair($day)//补签天数
     {
+        $result = $this->sign->RepairSign($day);
 
+        return $this->response->array($result);
     }
 
     /**
