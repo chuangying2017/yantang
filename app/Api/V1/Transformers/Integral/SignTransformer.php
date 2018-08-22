@@ -12,18 +12,12 @@ class SignTransformer extends TransformerAbstract {
         $data = [
             'total' => $signMonthModel->total,
             'continuousSign'    => $signMonthModel->continuousSign,
+            'days' => $signMonthModel->signArray
         ];
 
-        if ($signMonthModel->relationLoaded('sign_integral_record'))
+        if ($signMonthModel->relationLoaded('sign_cte'))
         {
-            $arr = [];
-
-            foreach ($signMonthModel->sign_integral_record as $key => $item)
-            {
-                $arr[$key] = ['days' => $item['days']];
-            }
-
-            $data['signDay'] = $arr;
+            $data['sign_cte'] = $signMonthModel->sign_cte->sign_integral;
         }
 
         return $data;

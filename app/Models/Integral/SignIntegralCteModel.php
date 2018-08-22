@@ -11,7 +11,7 @@ class SignIntegralCteModel extends Model
 
     protected $fillable = ['sign_month_id','sign_integral'];
 
-    protected $casts = ['sign_integral' => 'array'];
+    protected $casts = ['sign_integral' => 'json'];
 
     public $timestamps = false;
 

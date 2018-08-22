@@ -6,7 +6,7 @@
  * Time: 16:50
  */
 
-namespace App\Repositories\IntegralMode;
+namespace App\Repositories\Integral\IntegralMode;
 
 
 use App\Models\Client\Account\Wallet;

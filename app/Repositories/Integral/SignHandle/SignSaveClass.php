@@ -17,6 +17,11 @@ class SignSaveClass extends CommonInsertMode
 
     public function signMonth()
     {
+        if (!isset($this->data['month']) || empty($this->data['month']))
+        {
+            $this->model->save();
+            return true;
+        }
         $this->model = $this->save($this->model,$this->data['month']);
     }
 

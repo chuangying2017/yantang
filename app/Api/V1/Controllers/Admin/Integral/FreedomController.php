@@ -9,7 +9,7 @@ use App\Api\V1\Transformers\Integral\SignRuleTransformer;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Repositories\Integral\SignRule\SignClass;
 use App\Repositories\Integral\Supervisor\Supervisor;
-use App\Repositories\IntegralMode\IntegralMode;
+use App\Repositories\Integral\IntegralMode\IntegralMode;
 use App\Repositories\Other\Protocol;
 use App\Repositories\setting\SetMode;
 use App\Services\Chart\ExcelService;

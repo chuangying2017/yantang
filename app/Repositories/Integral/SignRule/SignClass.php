@@ -22,9 +22,11 @@ class SignClass
 
     const SIGN_NORMAL_REWARD = 'normal';//日常签到
 
+    const SIGN_INTEGRAL_REPAIR = 'repairSign';//补签
+
     const SIGN_RETROACTIVE = '1';//开启补签 0 关闭补签
 
-    public static $signMode = ['normal' => '日常签到','firstReward' => '首次签到'];
+    public static $signMode = ['normal' => '日常签到','firstReward' => '首次签到','repairSign' => '补签扣除积分'];
 
     protected $path;
 
