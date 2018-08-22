@@ -12,6 +12,7 @@ namespace App\Repositories\Integral\SignHandle;
 use App\Models\Integral\SignMonthModel;
 use App\Repositories\Integral\ShareCarriageWheel\ShareAccessRepositories;
 use App\Repositories\Integral\SignRule\SignClass;
+use App\Repositories\IntegralMode\IntegralMode;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
@@ -45,11 +46,18 @@ class SignVerifyClass extends ShareAccessRepositories
         $this->array['user_id'] = access()->id();
     }
 
+    protected function integralSuccess($array,$integral = [])
+    {
+        return $array[key($integral)] = array_values($integral);
+    }
+
     public function verifyUserToday()//签到
     {
+        $data = $this->FirstData();
+
         if (empty($model = $this->fetchMonthSign()))//如果月没有记录 添加月记录 有 继续查询 当天有无记录
         {
-          return $this->SaveData($this->FirstData());
+          return $this->integralSuccess(verify_dataMessage($this->SaveData($data)),['integral' => $data['integral']]);
         }
 
         $this->verifyToDayExists($model);
@@ -59,8 +67,6 @@ class SignVerifyClass extends ShareAccessRepositories
             return $this->errorMessage;
         }
 
-        $data = $this->FirstData();
-
         if ($this->verifyYesterdayExists($model))
         {
             $data['month'] = [
@@ -69,13 +75,16 @@ class SignVerifyClass extends ShareAccessRepositories
         }else{
             $data['month'] = ['continuousSign'=>1];
         }
-            $data['month']['total'] = $model->total + 1;
 
-            $data['month']['total_integral'] = $model->total_integral + $this->rewards;
+            $model->total += 1;
+
+            array_push($model->signArray,Carbon::now()->day);
+
+            $model->total_integral += $this->rewards;
 
             $this->model = $model;
 
-        return $this->SaveData($data);
+        return $this->integralSuccess(verify_dataMessage($this->SaveData($data)),['integral' => $data['integral']]);
     }
 
 
@@ -104,7 +113,7 @@ class SignVerifyClass extends ShareAccessRepositories
     {
      return   $SignModel->withCount(['sign_integral_record' => function($query)use($days){
             $query->where('days','=',$days);
-        }]);
+        }])->first()->sign_integral_record_count;
     }
 
     public function fetchMonthSign()
@@ -114,6 +123,8 @@ class SignVerifyClass extends ShareAccessRepositories
 
     protected function FirstData()
     {
+        $rule = $this->signRule()['extend_rule'];
+
         return [
             'month' => [
                 'user_id' => $this->array['user_id'],
@@ -121,10 +132,16 @@ class SignVerifyClass extends ShareAccessRepositories
                 'total'=> '1',
                 'continuousSign' => '1',
                 'total_integral' => $this->rewards ?: 1,
-                'monthDaysNum' => Carbon::now()->daysInMonth
+                'monthDaysNum' => Carbon::now()->daysInMonth,
+                'signArray' => [Carbon::now()->day]
             ],
             'record'=> ['days' => Carbon::now()->day,'everyday_integral' => $this->rewards ?: 1],
-            'cte' => ['sign_integral' => ['continue7day'=>'','continue14day'=>'','continue21day'=>'']],//continue sign
+            'cte' => ['sign_integral' =>
+                [
+                    'continue7day'=>['status' => $rule['continuousOne']['status'] > 0 ? SignClass::SIGN_CONVERT_STATUS_ZERO : SignClass::SIGN_CONVERT_STATUS_THREE,'days'=>$rule['continuousOne']['days'],'integral'=>$rule['continuousOne']['rewards']],
+                    'continue14day'=>['status' => $rule['continuousTwo']['status'] > 0 ? SignClass::SIGN_CONVERT_STATUS_ZERO : SignClass::SIGN_CONVERT_STATUS_THREE,'days'=>$rule['continuousTwo']['days'],'integral'=>$rule['continuousTwo']['rewards']],
+                    'continue21day'=>['status'=> $rule['continuousThree']['status'] > 0 ? SignClass::SIGN_CONVERT_STATUS_ZERO : SignClass::SIGN_CONVERT_STATUS_THREE,'days'=>$rule['continuousThree']['days'],'integral'=>$rule['continuousThree']['rewards']]]
+            ],//continue sign
             'integral_record' => ['integral' => '+' . $this->rewards ?: 1,'name' => SignClass::$signMode[$this->array['RewardMode']]],
             'member' => 'increment',
             'integral'=>$this->rewards,
@@ -176,15 +193,20 @@ class SignVerifyClass extends ShareAccessRepositories
         {
             \DB::rollBack();
             Log::error($exception->getMessage());
-            return $exception->getMessage();
         }
+            return 'fail';
     }
 
     public function RepairSign($day)
     {
+        if ($day >= Carbon::now()->day)
+        {
+           return '不能大于当天或等于当天';
+        }
+
         if (empty($model = $this->fetchMonthSign()))//如果月没有记录 添加月记录 有 继续查询 当天有无记录
         {
-            return '补签失败请选择先签到';
+            return '补签失败请选择,签到';
         }
 
         if ($this->verifyDay($model,$day))
@@ -192,13 +214,29 @@ class SignVerifyClass extends ShareAccessRepositories
             return '补签无效不能选择已签到';
         }
 
-        $ret = $this-> signRule()['retroactive'];
-        if (!is_array($ret) && !in_array($this->signClass::SIGN_RETROACTIVE,$ret))
+        $record = $model->sign_integral_record;
+
+        if ($record->repairNum > 0)
+        {
+            return '每天只能补签一次';
+        }
+
+        $ret = $this-> signRule();
+        if (!is_array($ret['retroactive']) && !in_array(SignClass::SIGN_RETROACTIVE,$ret['retroactive']))
         {
             return '补签通道关闭';
         }
 
-        $data = $this->FirstData();
+        if ($ret['extend_rule']['compensateIntegral'] > $this->integralMember()['integral'])
+        {
+            return '积分不足';
+        }
+
+        $data = [
+            'month' => ['signArray' => $model->signArray[] = $day,'total' => $model->total + 1],
+            'record' => ['days' => $day,'everyday_integral' => -$ret['extend_rule']['compensateIntegral']],
+        ];
+
 
 
 
@@ -216,5 +254,12 @@ class SignVerifyClass extends ShareAccessRepositories
         $parse = Carbon::parse($date);
 
         return $this->model->whereYear('created_at','=',$parse->year)->whereMonth('created_at','=',$parse->month)->with('sign_integral_record','sign_cte')->first();
+    }
+
+    protected function integralMember()
+    {
+        $integl = new IntegralMode();
+
+        return $integl->memberIntegral($this->array['user_id']);
     }
 }

@@ -140,7 +140,7 @@ class ShowPageController extends Controller
      */
     public function meeting_record()
     {
-       $argc = $this->orderIntegral->user_order(['user_id' => access()->id()]);
+       $argc = $this->orderIntegral->user_order(['user_id' => access()->id()],\request()->input('page',1));
 
        return $this->response->collection($argc, new ClientOrderTransformer());
     }

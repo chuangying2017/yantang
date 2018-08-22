@@ -123,3 +123,22 @@
  * @apiSuccess {object}  object.signDay 多维对象  签到天数
  * @apiSuccess {numeric} object.signDay.day 对应的当前的号数
  */
+
+/**
+ * @api {post} /admin/integral/updateIntegralRecord 后台加减积分
+ * @apiName GetIntegralOperation
+ * @apiGroup Integral
+ * @apiParam {numeric} user_id 用户id不能为空并且是对象形式user_id:{94556,94566,94666}
+ * @apiParam {numeric} increase 增加积分不能为空|或者decrease 不能为空
+ * @apiParam {numeric} decrease 减少积分不能为空|或者increase 不能为空
+ * @apiSuccess {statusCode} status success return 201 code
+ * @apiError InternalError error is possible internal problem
+ * @apiDescription increase and decrease 只能提交其中一个字段
+ */
+
+/**
+ * @api {get} /integral/integralGetRule 签到规则
+ * @apiName GetIntegralRuleFrontDesk
+ * @apiGroup FrontDesk
+ * @apiSuccess {object} object 成功返回数据对象
+ */

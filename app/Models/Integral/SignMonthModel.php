@@ -11,6 +11,8 @@ class SignMonthModel extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = ['signArray' => 'array'];
+
     public function sign_cte() //连续签到奖励
     {
         return $this->hasOne(SignIntegralCteModel::class,'sign_month_id','id');

@@ -288,8 +288,11 @@ class FreedomController extends Controller
      * @api {post} /admin/integral/updateIntegralRecord 后台加减积分
      * @apiName GetIntegralOperation
      * @apiGroup Integral
-     * @apiParam {numeric} user_id 用户id不能为空
-     * @throws \ErrorException
+     * @apiParam {numeric} user_id 用户id不能为空并且是对象形式user_id:{94556,94566,94666}
+     * @apiParam {numeric} increase 增加积分不能为空|或者decrease 不能为空
+     * @apiParam {numeric} decrease 减少积分不能为空|或者increase 不能为空
+     * @apiSuccess {statusCode} status success return 201 code
+     * @apiError InternalError error is possible internal problem
      */
     public function updateIntegralRecord(Request $request,IntegralMode $integralMode)
     {
@@ -297,8 +300,8 @@ class FreedomController extends Controller
 
         $all['username'] = access()->user()->username;
 
-        $boolean = $integralMode->verifyData($all);
+        $integralMode->verifyData($all);
 
-        return $this->response->array(verify_dataMessage($boolean));
+        return $this->response->noContent()->statusCode(201);
     }
 }

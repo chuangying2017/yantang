@@ -136,8 +136,8 @@ class OrderIntegralRepository implements OrderIntegralInterface
         }
     }
 
-    public function user_order(array $where)
+    public function user_order(array $where,$page = 1)
     {
-        return IntegralOrder::query()->where($where)->with($this->order_load)->get();
+        return IntegralOrder::query()->where($where)->with($this->order_load)->forPage($page,20)->get();
     }
 }

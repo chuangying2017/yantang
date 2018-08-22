@@ -29,6 +29,11 @@ class SignClass
     protected $path;
 
     protected $file;
+
+    const SIGN_CONVERT_STATUS_ZERO = 0;//没资格
+    const SIGN_CONVERT_STATUS_ONE = 1;//待领取
+    const SIGN_CONVERT_STATUS_TWO = 2;//已领取
+    const SIGN_CONVERT_STATUS_THREE = 3;//未开启
     /**
      * @param $path string
      * @return $this

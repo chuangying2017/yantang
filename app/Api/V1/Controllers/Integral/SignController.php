@@ -5,6 +5,7 @@ namespace App\Api\V1\Controllers\Integral;
 use App\Api\V1\Requests\Integral\SignRequest;
 use App\Api\V1\Transformers\Integral\SignTransformer;
 use App\Repositories\Integral\SignHandle\SignVerifyClass;
+use App\Repositories\Integral\SignRule\SignClass;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -52,12 +53,28 @@ class SignController extends Controller
     {
       $result = $this->sign->verifyUserToday();
 
-      return $this->response->array(verify_dataMessage($result));
+      return $this->response->array($result);
     }
 
     public function SignRepair($day)//补签天数
     {
 
+    }
+
+    /**
+     * @api {get} /integral/integralGetRule
+     * @apiName GetIntegralRuleFrontDesk
+     * @apiGroup FrontDesk
+     * @apiSuccess {object} object 成功返回数据对象
+     */
+    public function SignGetRule(SignClass $signClass)
+    {
+        $signData = $signClass
+            ->setPath(config('services.localStorageFile.path'))
+            ->setFile(config('services.localStorageFile.SignRule'))
+            ->get();
+
+        return response()->json($signData,200);
     }
     /**
      * Show the form for creating a new resource.

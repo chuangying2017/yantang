@@ -53,6 +53,11 @@ class SignSaveClass extends CommonInsertMode
 
     public function signIntegralCte()
     {
+            if (!isset($this->data['cte']) || empty($this->data['cte']))
+            {
+                return false;
+            }
+
           if ($this->model->sign_cte)
           {
               $this->model->sign_cte->fill($this->data['cte'])->save();

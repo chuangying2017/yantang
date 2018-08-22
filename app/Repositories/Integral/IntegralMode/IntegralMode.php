@@ -27,28 +27,34 @@ class IntegralMode
     {
       $data = $this->array_($data);
         try{
-            $result = 'failure';
 
             \DB::beginTransaction();
             foreach (array_keys($data) as $key => $array_key)
             {
+                if (!is_array($data['user_id']))
+                {
+                    $data['user_id'] = [$data['user_id']];
+                }
                 if (array_key_exists($array_key,$this->save))
                 {
-                    $this->memberIntegral($data['user_id'])->{$array_key}('integral',$data[$array_key]);
-                    $result = $this->integralRecord([
-                        'type_id' => '0',
-                        'record_able' => '0',
-                        'user_id' => $data['user_id'],
-                        'name'  => $this->integral[$array_key],
-                        'integral' => $this->array[$array_key] . $data[$array_key],
-                        'type' => 'admin',
-                        'role_name' => $data['username']
-                    ]);
+                    for ($j = 0; $j < count($data['user_id']); $j++)
+                    {
+                        $this->memberIntegral($data['user_id'][$j])->{$array_key}('integral',$data[$array_key]);
+                        $this->integralRecord([
+                            'type_id' => '0',
+                            'record_able' => '0',
+                            'user_id' => $data['user_id'][$j],
+                            'name'  => $this->integral[$array_key],
+                            'integral' => $this->array[$array_key] . $data[$array_key],
+                            'type' => 'admin',
+                            'role_name' => $data['username']
+                        ]);
+                    }
                     break;
                 }
             }
             \DB::commit();
-            return $result;
+
         }catch (Exception $exception)
         {
             \DB::rollBack();
