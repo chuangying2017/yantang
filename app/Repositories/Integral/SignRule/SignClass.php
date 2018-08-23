@@ -26,8 +26,11 @@ class SignClass
 
     const SIGN_RETROACTIVE = '1';//开启补签 0 关闭补签
 
-    public static $signMode = ['normal' => '日常签到','firstReward' => '首次签到','repairSign' => '补签扣除积分'];
+    public static $signMode = ['normal' => '日常签到','firstReward' => '首次签到','repairSign' => '补签扣除积分','continueDays'=>'连续签到获取'];
 
+    const FETCH_SIGN_INTEGRAL = '天';
+
+    const CONTINUE_SIGN_DAYS = 'continueDays';
     protected $path;
 
     protected $file;
