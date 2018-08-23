@@ -254,7 +254,7 @@ class SignVerifyClass extends ShareAccessRepositories
         $model->repairNum += 1;
 
         $data = [
-            'record' => ['days' => $day,'everyday_integral' => -$ret['extend_rule']['compensateIntegral'],'repairNum' => 1],
+            'record' => ['days' => $day,'everyday_integral' => -$ret['extend_rule']['compensateIntegral']],
             'integral_record' => ['name'=>SignClass::$signMode[SignClass::SIGN_INTEGRAL_REPAIR],'integral'=>'-' . $ret['extend_rule']['compensateIntegral']],
             'user_id' => $this->array['user_id'],
             'member'=>'decrement',
@@ -267,7 +267,16 @@ class SignVerifyClass extends ShareAccessRepositories
 
         $result = verify_dataMessage($this->SaveData($data));
 
-        return $result['status'] == 1 ? $result['integral'] = '扣除积分'.$ret['extend_rule']['compensateIntegral'].'成功!' : $result;
+        if ($result['status'] == 1)
+        {
+            $result['integral'] = '扣除积分'.$ret['extend_rule']['compensateIntegral'].'成功!';
+
+            $record->repairNum += 1;
+
+            $record->save();
+        }
+
+        return $result;
 
     }
 
@@ -315,7 +324,7 @@ class SignVerifyClass extends ShareAccessRepositories
             return false;
         }
 
-      //  $cte = $model->sign_cte;
+        $cte = $model->sign_cte->sign_integral;
 
         for ($i=$count;$i > 1;$i--)
         {
@@ -335,23 +344,24 @@ class SignVerifyClass extends ShareAccessRepositories
                 $k = 1;
             }
 
-            if ($model->sign_cte->sign_integral['continue7day']['status'] == 0 && $k >= $model->sign_cte->sign_integral['continue7day']['days'] && $k < $model->sign_cte->sign_integral['continue14day']['days'])
+            if ($cte['continue7day']['status'] == 0 && $k >= $cte['continue7day']['days'] && $k < $cte['continue14day']['days'])
             {
-                $model->sign_cte->sign_integral['continue7day']['status'] = 1;//待领取
+                $cte['continue7day']['status'] = 1;//待领取
                 continue;
             }
 
-            if ($model->sign_cte->sign_integral['continue14day']['status'] == 0 && $k >= $model->sign_cte->sign_integral['continue14day']['days'] && $k < $model->sign_cte->sign_integral['continue21day']['days'])
+            if ($cte['continue14day']['status'] == 0 && $k >= $cte['continue14day']['days'] && $k < $cte['continue21day']['days'])
             {
                 $model->sign_cte->sign_integral['continue21day']['status'] = 1;//待领取
                 continue;
             }
 
-            if ($model->sign_cte->sign_integral['continue21day']['status'] == 0 && $k >= $model->sign_cte->sign_integral['continue21day']['days'])
+            if ($cte['continue21day']['status'] == 0 && $k >= $cte['continue21day']['days'])
             {
-                $model->sign_cte->sign_integral['continue21day']['status'] = 1;//待领取
+                $cte['continue21day']['status'] = 1;//待领取
                 break;
             }
         }
+        $model->sign_cte->sign_integral = $cte;
     }
 }
