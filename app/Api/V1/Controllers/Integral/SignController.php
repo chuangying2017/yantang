@@ -38,7 +38,7 @@ class SignController extends Controller
         $selectDate = $request->input('date',Carbon::now()->toDateString());
 
         $data = $this->sign->fetchSignMonth($selectDate);
-
+      
         return $this->response->item($data, new SignTransformer());
     }
 

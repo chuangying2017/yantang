@@ -87,15 +87,19 @@ class SignVerifyClass extends ShareAccessRepositories
 
             $this->model = $model;
 
-        return $this->integralSuccess(verify_dataMessage($this->SaveData($data)),['integral' => $data['integral']]);
+            $r = verify_dataMessage($this->SaveData($data));
+            if ($r['status'] == 1)
+            {
+                $r['integral'] = $data['integral'];
+            }
+        return $r;
     }
 
 
     public function verifyToDayExists($SignModel)
     {
-        $result = $this->verifyDay($SignModel,Carbon::now()->day);
 
-        if ($result)
+        if (in_array(Carbon::now()->day,$SignModel->signArray))
         {
             $this->errorMessage = '今天已签到过！';
         }
@@ -104,9 +108,8 @@ class SignVerifyClass extends ShareAccessRepositories
 
     public function verifyYesterdayExists($SignModel)//判断是否为连续签到
     {
-        $result = $this->verifyDay($SignModel,Carbon::now()->addDay(-1)->day);
 
-        if ($result){
+        if (in_array(Carbon::now()->addDay(-1)->day,$SignModel->signArray)){
             return true;//是连续签到
         }
         return false;//is not continue sign
@@ -114,9 +117,10 @@ class SignVerifyClass extends ShareAccessRepositories
 
     public function verifyDay($SignModel,$days)
     {
-     return   $SignModel->withCount(['sign_integral_record' => function($query)use($days){
+
+     return   $SignModel->with(['sign_integral_record' => function($query)use($days){
             $query->where('days','=',$days);
-        }])->first()->sign_integral_record_count;
+        }])->first()->sign_integral_record->count();
     }
 
     public function fetchMonthSign()
@@ -235,9 +239,17 @@ class SignVerifyClass extends ShareAccessRepositories
             return '积分不足';
         }
 
-        sort($model->signArray[] = $day);
+        $arr = $model->signArray;
+
+        $arr[] = $day;
+
+        sort($arr);
+
+        $model->signArray = $arr;
 
         $model->total += 1;
+
+        $model->repairNum += 1;
         $data = [
             'record' => ['days' => $day,'everyday_integral' => -$ret['extend_rule']['compensateIntegral'],'repairNum' => 1],
             'integral_record' => ['name'=>SignClass::$signMode[SignClass::SIGN_INTEGRAL_REPAIR],'integral'=>'-' . $ret['extend_rule']['compensateIntegral']],
