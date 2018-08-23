@@ -36,5 +36,6 @@ class SignSelect extends ShareAccessRepositories
         {
             UserProvider::query()->where('nickname','like',"%{$input['keywords']}%");
         }
+
     }
 }
