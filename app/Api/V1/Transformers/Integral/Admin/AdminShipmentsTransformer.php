@@ -47,11 +47,16 @@ class AdminShipmentsTransformer extends TransformerAbstract {
     {
         $order_sku = $integralOrder->integral_order_sku;
 
-        return [
+        $data = [
             'productName' => $order_sku->product_name,
-            'product_image' => $order_sku->integral_product()->first()->cover_image,
             'product_num'   =>  $order_sku->product_num,
         ];
+
+        if ($order_sku->integral_product)
+        {
+            $data['product_image'] = $order_sku->integral_product()->first()->cover_image;
+        }
+        return $data;
     }
 
     public function includeIntegralOrderAddress(IntegralOrder $integralOrder)
