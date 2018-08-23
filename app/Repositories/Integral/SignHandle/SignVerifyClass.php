@@ -9,6 +9,7 @@
 namespace App\Repositories\Integral\SignHandle;
 
 
+use App\Models\Client\Account\Wallet;
 use App\Models\Integral\SignMonthModel;
 use App\Repositories\Integral\ShareCarriageWheel\ShareAccessRepositories;
 use App\Repositories\Integral\SignRule\SignClass;
@@ -57,7 +58,8 @@ class SignVerifyClass extends ShareAccessRepositories
         if (empty($model = $this->fetchMonthSign()))//如果月没有记录 添加月记录 有 继续查询 当天有无记录
         {
             $data = $this->FirstData();
-            return $this->integralSuccess(verify_dataMessage($this->SaveData($data)),['integral' => $data['integral']]);
+            $resutl = verify_dataMessage($this->SaveData($data));
+            return $resutl['integral'] = $data['integral'];
         }
 
         $this->verifyToDayExists($model);
@@ -221,7 +223,7 @@ class SignVerifyClass extends ShareAccessRepositories
             return '补签无效不能选择已签到';
         }
 
-        $record = $model->sign_integral_record;
+        $record = $model->sign_integral_record->where('days',Carbon::now()->day)->first();
 
         if ($record->repairNum > 0)
         {
@@ -229,14 +231,14 @@ class SignVerifyClass extends ShareAccessRepositories
         }
 
         $ret = $this-> signRule();
-        if (!is_array($ret['retroactive']) && !in_array(SignClass::SIGN_RETROACTIVE,$ret['retroactive']))
+        if (!in_array(SignClass::SIGN_RETROACTIVE,$ret['retroactive']))
         {
             return '补签通道关闭';
         }
 
-        if ($ret['extend_rule']['compensateIntegral'] > $this->integralMember()['integral'])
+        if ($ret['extend_rule']['compensateIntegral'] > $this->integralMember()->integral)
         {
-            return '积分不足';
+            return '积分不够扣除';
         }
 
         $arr = $model->signArray;
@@ -250,11 +252,12 @@ class SignVerifyClass extends ShareAccessRepositories
         $model->total += 1;
 
         $model->repairNum += 1;
+
         $data = [
             'record' => ['days' => $day,'everyday_integral' => -$ret['extend_rule']['compensateIntegral'],'repairNum' => 1],
             'integral_record' => ['name'=>SignClass::$signMode[SignClass::SIGN_INTEGRAL_REPAIR],'integral'=>'-' . $ret['extend_rule']['compensateIntegral']],
             'user_id' => $this->array['user_id'],
-            'member'=>'decrease',
+            'member'=>'decrement',
             'integral'=>$ret['extend_rule']['compensateIntegral']
         ];
 
@@ -264,7 +267,7 @@ class SignVerifyClass extends ShareAccessRepositories
 
         $result = verify_dataMessage($this->SaveData($data));
 
-        return $result['status'] == 1 ? $this->integralSuccess($result,['integral'=> '扣除积分'.$ret['extend_rule']['compensateIntegral'].'成功!']) : $result;
+        return $result['status'] == 1 ? $result['integral'] = '扣除积分'.$ret['extend_rule']['compensateIntegral'].'成功!' : $result;
 
     }
 
@@ -284,9 +287,7 @@ class SignVerifyClass extends ShareAccessRepositories
 
     protected function integralMember()
     {
-        $integl = new IntegralMode();
-
-        return $integl->memberIntegral($this->array['user_id']);
+      return  Wallet::query()->where('user_id','=',$this->array['user_id'])->firstOrFail();
     }
 
     protected function updateData($data = [])
