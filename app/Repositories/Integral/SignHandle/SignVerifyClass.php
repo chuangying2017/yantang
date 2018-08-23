@@ -69,7 +69,11 @@ class SignVerifyClass extends ShareAccessRepositories
 
         $model->total += 1;
 
-        array_push($model->signArray,Carbon::now()->day);
+        $array = $model->signArray;
+
+        array_push($array,Carbon::now()->day);
+
+        $model->signArray = $array;
 
         if ($this->verifyYesterdayExists($model))
         {
@@ -298,9 +302,8 @@ class SignVerifyClass extends ShareAccessRepositories
             return false;
         }
 
-        $cte = &$model->sign_cte;
+      //  $cte = $model->sign_cte;
 
-        $sign = &$cte->sign_integral;
         for ($i=$count;$i > 1;$i--)
         {
 
@@ -319,21 +322,21 @@ class SignVerifyClass extends ShareAccessRepositories
                 $k = 1;
             }
 
-            if ($sign['continue7day']['status'] == 0 && $k >= $sign['continue7day']['days'] && $k < $sign['continue14day']['days'])
+            if ($model->sign_cte->sign_integral['continue7day']['status'] == 0 && $k >= $model->sign_cte->sign_integral['continue7day']['days'] && $k < $model->sign_cte->sign_integral['continue14day']['days'])
             {
-                $sign['continue7day']['status'] = 1;//待领取
+                $model->sign_cte->sign_integral['continue7day']['status'] = 1;//待领取
                 continue;
             }
 
-            if ($sign['continue14day']['status'] == 0 && $k >= $sign['continue14day']['days'] && $k < $sign['continue21day']['days'])
+            if ($model->sign_cte->sign_integral['continue14day']['status'] == 0 && $k >= $model->sign_cte->sign_integral['continue14day']['days'] && $k < $model->sign_cte->sign_integral['continue21day']['days'])
             {
-                $sign['continue21day']['status'] = 1;//待领取
+                $model->sign_cte->sign_integral['continue21day']['status'] = 1;//待领取
                 continue;
             }
 
-            if ($sign['continue21day']['status'] == 0 && $k >= $sign['continue21day']['days'])
+            if ($model->sign_cte->sign_integral['continue21day']['status'] == 0 && $k >= $model->sign_cte->sign_integral['continue21day']['days'])
             {
-                $sign['continue21day']['status'] = 1;//待领取
+                $model->sign_cte->sign_integral['continue21day']['status'] = 1;//待领取
                 break;
             }
         }
