@@ -367,7 +367,7 @@ class SignVerifyClass extends ShareAccessRepositories
 
     public function GetIntegralContinue($day)
     {
-        if ($model = $this->fetchMonthSign())
+        if (!$model = $this->fetchMonthSign())
         {
             return verify_dataMessage('当月无签到');
         }
