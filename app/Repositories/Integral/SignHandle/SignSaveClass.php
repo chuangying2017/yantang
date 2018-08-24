@@ -27,6 +27,10 @@ class SignSaveClass extends CommonInsertMode
 
     public function signIntegralRecord()
     {
+        if (!isset($this->data['record']) || empty($this->data['record']))
+        {
+            return false;
+        }
         $this->model->sign_integral_record()->create($this->data['record']);
     }
 
