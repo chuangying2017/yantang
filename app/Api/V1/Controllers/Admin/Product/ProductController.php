@@ -128,11 +128,4 @@ class ProductController extends Controller {
         $product = $this->productRepositoryContract->updateProductAsUp($product_id);
         return $this->response->item($product, new ProductTransformer());
     }
-
-
-
-    public function upf()
-    {
-        //
-    }
 }

@@ -31,8 +31,10 @@ class ClientOrderTransformer extends TransformerAbstract {
             }
 
             $data['product_name'] = $express->product_name;
-            $data['image']  =   $express->integral_product()->first()->cover_image;
-
+            if ($express->integral_product)
+            {
+                $data['image']  =   $express->integral_product()->first()->cover_image;
+            }
         }
 
         return $data;

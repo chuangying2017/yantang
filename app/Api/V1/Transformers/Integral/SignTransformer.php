@@ -10,9 +10,9 @@ class SignTransformer extends TransformerAbstract {
     public function transform(SignMonthModel $signMonthModel)
     {
         $data = [
-            'total' => $signMonthModel->total,
-            'continuousSign'    => $signMonthModel->continuousSign,
-            'days' => $signMonthModel->signArray
+            'total' => $signMonthModel['total'],
+            'continuousSign'    => $signMonthModel['continuousSign'],
+            'days' => $signMonthModel['signArray']
         ];
 
         if ($signMonthModel->relationLoaded('sign_cte'))

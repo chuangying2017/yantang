@@ -4,8 +4,11 @@ namespace App\Api\V1\Controllers\Integral;
 
 use App\Api\V1\Requests\Integral\SignRequest;
 use App\Api\V1\Transformers\Integral\SignTransformer;
+use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
+use App\Repositories\Integral\Common\CommonClass;
 use App\Repositories\Integral\SignHandle\SignVerifyClass;
 use App\Repositories\Integral\SignRule\SignClass;
+use App\Services\Client\Account\AccountProtocol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -38,7 +41,10 @@ class SignController extends Controller
         $selectDate = $request->input('date',Carbon::now()->toDateString());
 
         $data = $this->sign->fetchSignMonth($selectDate);
-      
+        if (is_null($data))
+        {
+            return $this->response->array([]);
+        }
         return $this->response->item($data, new SignTransformer());
     }
 
@@ -96,6 +102,21 @@ class SignController extends Controller
         $arr = $this->sign->GetIntegralContinue($day);
 
         return $this->response->array($arr);
+    }
+
+    /**
+     * @api {get} /integral/UserPhotoIntegral 获取用户头像积分
+     * @apiName GetIntegralPhoto
+     * @apiGroup FrontDesk
+     * @apiSuccess {object} object 成功返回用户信息
+     */
+    public function UserInfo(CommonClass $commonClass)
+    {
+        $userId = access()->id();
+        $integral = $commonClass->GetUserIntegral($userId);
+        $data = $commonClass->GetUserPhoto($userId);
+        $data['integral'] = $integral;
+        return $this->response->array($data);
     }
     /**
      * Show the form for creating a new resource.

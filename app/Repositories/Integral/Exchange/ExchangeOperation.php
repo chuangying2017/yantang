@@ -29,6 +29,11 @@ class ExchangeOperation extends ShareAccessRepositories
           ->get();
     }
 
+    public function verifyMemberBuyNum()
+    {
+
+    }
+
     public function convertCoupon($data)
     {
         $convertRule = new ConvertRule();

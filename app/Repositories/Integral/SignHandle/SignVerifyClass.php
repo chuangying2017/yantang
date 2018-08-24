@@ -210,40 +210,40 @@ class SignVerifyClass extends ShareAccessRepositories
     {
         if ($day >= Carbon::now()->day)
         {
-           return '不能大于当天或等于当天';
+           return verify_dataMessage('不能大于当天或等于当天');
         }
 
         if (empty($model = $this->fetchMonthSign()))//如果月没有记录 添加月记录 有 继续查询 当天有无记录
         {
-            return '补签失败请选择,签到';
+            return verify_dataMessage('补签失败请选择,签到');
         }
 
-        if ($this->verifyDay($model,$day))
+        if (in_array($day,$model->signArray))
         {
-            return '补签无效不能选择已签到';
+            return verify_dataMessage('补签无效');
         }
 
         $record = $model->sign_integral_record->where('days',Carbon::now()->day)->first();
 
         if ($record->repairNum > 0)
         {
-            return '每天只能补签一次';
+            return verify_dataMessage('每天只能补签一次');
         }
 
         $ret = $this-> signRule();
         if (!in_array(SignClass::SIGN_RETROACTIVE,$ret['retroactive']))
         {
-            return '补签通道关闭';
+            return verify_dataMessage('补签通道关闭');
         }
 
         if ($ret['extend_rule']['compensateIntegral'] > $this->integralMember()->integral)
         {
-            return '积分不够扣除';
+            return verify_dataMessage('积分不够扣除');
         }
 
         $arr = $model->signArray;
 
-        $arr[] = $day;
+        $arr[] = (int)$day;
 
         sort($arr);
 

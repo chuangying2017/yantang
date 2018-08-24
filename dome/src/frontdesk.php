@@ -60,6 +60,7 @@
  * @apiSuccess {float} object.couponAmount 优惠金额
  * @apiSuccess {url} object.cover_image 图片链接
  * @apiSuccess {numeric} object.delayed 兑换后小时为单位
+ * @apiSuccess {string} object.status red可以买gray不可购买
  * @apiError InternalError possible internal error code 500 reject msg
  */
 
@@ -144,7 +145,7 @@
  */
 
 /**
- * @api {get} /integral/integralSignRepair 补签
+ * @api {get} /integral/integralSignRepair/{day} 补签
  * @apiName GetIntegralRepair
  * @apiGroup FrontDesk
  * @apiSuccess {object} object 返回数据对象{status:1成功}{status:2失败}
@@ -155,4 +156,11 @@
  * @apiName GetIntegralContinueSign
  * @apiGroup FrontDesk
  * @apiSuccess {object} object 成功或失败返回对象{status:1成功}|{status:2失败}
+ */
+
+/**
+ * @api {get} /integral/UserPhotoIntegral 获取用户头像积分
+ * @apiName GetIntegralPhoto
+ * @apiGroup FrontDesk
+ * @apiSuccess {object} object 成功返回用户信息
  */

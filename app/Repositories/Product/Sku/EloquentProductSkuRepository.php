@@ -50,6 +50,7 @@ class EloquentProductSkuRepository implements ProductSkuRepositoryContract, Prod
                 'type' => array_get($sku_data, 'type', ProductProtocol::TYPE_OF_ENTITY),
                 'dismode'=> array_get($sku_data, 'dismode', 1),
                 'product_row' => array_get($sku_data,'product_row',''),
+                'product_double' => array_get($sku_data,'product_double',0),
             ]);
 
         if ($this->isMixProductSku($sku_data)) {
