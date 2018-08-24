@@ -352,7 +352,7 @@ class SignVerifyClass extends ShareAccessRepositories
 
             if ($cte['continue14day']['status'] == 0 && $k >= $cte['continue14day']['days'] && $k < $cte['continue21day']['days'])
             {
-                $model->sign_cte->sign_integral['continue21day']['status'] = 1;//待领取
+                $cte['continue21day']['status'] = 1;//待领取
                 continue;
             }
 
