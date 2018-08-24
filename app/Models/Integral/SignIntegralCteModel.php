@@ -9,6 +9,8 @@ class SignIntegralCteModel extends Model
     //
     protected $table='sign_continue';
 
+    protected $primaryKey = 'sign_month_id';
+
     protected $fillable = ['sign_month_id','sign_integral'];
 
     protected $casts = ['sign_integral' => 'json'];

@@ -60,7 +60,9 @@ class SignSaveClass extends CommonInsertMode
     {
             if (!isset($this->data['cte']) || empty($this->data['cte']))
             {
-              if ($this->model->sign_cte) $this->model->sign_cte->save();
+              if ($this->model->sign_cte){
+                  $this->model->sign_cte->save();
+              }
               return false;
             }
 
