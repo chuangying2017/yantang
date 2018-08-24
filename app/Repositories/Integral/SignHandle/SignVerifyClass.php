@@ -364,4 +364,77 @@ class SignVerifyClass extends ShareAccessRepositories
         }
         $model->sign_cte->sign_integral = $cte;
     }
+
+    public function GetIntegralContinue($day)
+    {
+        if ($model = $this->fetchMonthSign())
+        {
+            return verify_dataMessage('当月无签到');
+        }
+
+        $integral = $model->sign_cte->sign_integral;
+
+        if ($integral['continue7day']['status'] == 1 && $integral['continue7day']['days'] == $day)
+        {
+            $integral['continue7day']['status'] = 2;
+
+            $model->total_integral += $integral['continue7day']['integral'];
+
+            $data = $this->continue_data($integral['continue7day']['integral'],$integral['continue7day']['days']);
+
+           return $this->fetchSave($model,$data,$integral);
+        }
+
+        if ($integral['continue14day']['status'] == 1 && $integral['continue14day']['days'] == $day)
+        {
+            $integral['continue14day']['status'] = 2;
+
+            $model->total_integral += $integral['continue14day']['integral'];
+
+            $data = $this->continue_data($integral['continue14day']['integral'],$integral['continue14day']['days']);
+
+            return $this->fetchSave($model,$data,$integral);
+        }
+
+        if ($integral['continue21day']['status'] == 1 && $integral['continue21day']['days'] == $day)
+        {
+            $integral['continue21day']['status'] = 2;
+
+            $model->total_integral += $integral['continue21day']['integral'];
+
+            $data = $this->continue_data($integral['continue21day']['integral'],$integral['continue21day']['days']);
+
+            return $this->fetchSave($model,$data,$integral);
+        }
+
+    }
+
+    public function fetchSave($model,$data,$integral)
+    {
+        $model->fetchNum += 1;
+        $model->sign_cte->sign_integral = $integral;
+        $this->model = $model;
+        $result = $this->SaveData($data);
+
+        $res = verify_dataMessage($result);
+
+        if ($res['status'] == 1)
+        {
+            $res['integral'] = $data['integral'];
+        }
+
+        return $res;
+    }
+
+    public function continue_data($integral,$day)
+    {
+        $data = [
+            'integral_record' => ['integral' => '+'.$integral,'name'=>SignClass::$signMode[SignClass::CONTINUE_SIGN_DAYS] . $day . SignClass::FETCH_SIGN_INTEGRAL],
+            'member' => 'increment',
+            'integral' => $integral,
+            'user_id' => $this->array['user_id']
+        ];
+
+        return $data;
+    }
 }

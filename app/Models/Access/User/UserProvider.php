@@ -1,5 +1,6 @@
 <?php namespace App\Models\Access\User;
 
+use App\Models\Integral\SignMonthModel;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,5 +26,10 @@ class UserProvider extends Model {
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function SignMonth()
+    {
+        return $this->hasMany(SignMonthModel::class,'user_id','user_id');
     }
 }

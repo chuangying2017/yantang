@@ -149,3 +149,10 @@
  * @apiGroup FrontDesk
  * @apiSuccess {object} object 返回数据对象{status:1成功}{status:2失败}
  */
+
+/**
+ * @api {get} /integral/integralSignContinue/{day} 获取连续签到积分
+ * @apiName GetIntegralContinueSign
+ * @apiGroup FrontDesk
+ * @apiSuccess {object} object 成功或失败返回对象{status:1成功}|{status:2失败}
+ */
