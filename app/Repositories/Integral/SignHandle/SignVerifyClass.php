@@ -291,7 +291,7 @@ class SignVerifyClass extends ShareAccessRepositories
     {
         $parse = Carbon::parse($date);
 
-        return $this->model->whereYear('created_at','=',$parse->year)->whereMonth('created_at','=',$parse->month)->with('sign_cte')->first();
+        return $this->model->where('user_id','=',access()->id())->whereYear('created_at','=',$parse->year)->whereMonth('created_at','=',$parse->month)->with('sign_cte')->first();
     }
 
     protected function integralMember()
