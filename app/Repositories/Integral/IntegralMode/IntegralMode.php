@@ -35,7 +35,7 @@ class IntegralMode
                 {
                     $data['user_id'] = [$data['user_id']];
                 }
-                if (array_key_exists($array_key,$this->save))
+                if (in_array($array_key,$this->save))
                 {
                     for ($j = 0; $j < count($data['user_id']); $j++)
                     {
