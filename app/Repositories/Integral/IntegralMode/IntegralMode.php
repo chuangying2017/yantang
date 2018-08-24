@@ -17,11 +17,11 @@ use Mockery\Exception;
 class IntegralMode
 {
 
-    protected $save = ['increase','decrease'];
+    protected $save = ['increment','decrement'];
 
-    protected $array = ['increase' => '+', 'decrease' => '-'];
+    protected $array = ['increment' => '+', 'decrement' => '-'];
 
-    protected $integral = ['increase' => '后台赠送积分', 'decrease' => '后台扣除积分'];
+    protected $integral = ['increment' => '后台赠送积分', 'decrement' => '后台扣除积分'];
 
     public function verifyData($data)
     {
@@ -67,7 +67,7 @@ class IntegralMode
     public function array_($data)
     {
         return array_only($data,[
-            'increase','decrease','user_id','username','name'
+            'increment','decrement','user_id','username','name'
         ]);
     }
 
