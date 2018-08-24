@@ -429,7 +429,7 @@ class SignVerifyClass extends ShareAccessRepositories
     public function continue_data($integral,$day)
     {
         $data = [
-            'integral_record' => ['integral' => '+'.$integral,'name'=>SignClass::$signMode[SignClass::CONTINUE_SIGN_DAYS] . $day . SignClass::FETCH_SIGN_INTEGRAL],
+            'record' => ['integral' => '+'.$integral,'name'=>SignClass::$signMode[SignClass::CONTINUE_SIGN_DAYS] . $day . SignClass::FETCH_SIGN_INTEGRAL],
             'member' => 'increment',
             'integral' => $integral,
             'user_id' => $this->array['user_id']
