@@ -22,6 +22,7 @@ class IntegralProductSkuTransformer extends TransformerAbstract {
                 'convert_unit'      =>$productSku['convert_unit'],//兑换单位
                 'convert_day'       =>$productSku['convert_day'],//兑换天数
                 'remainder'         =>$productSku['remainder'],
+                'browse_num'        =>$productSku['browse_num']
             ];
     }
 }
