@@ -248,6 +248,9 @@ class EventServiceProvider extends ServiceProvider {
         'App\Services\Comments\Event\CommentIsCreated' => [
         'App\Listeners\Comments\CommentOperation@comment_success_notify_staff',
         ],
+        'App\Events\Integral\productSku' => [
+            'App\Listeners\Integral\ProductSku'
+        ],
 
     ];
 

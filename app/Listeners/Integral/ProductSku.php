@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Integral;
 
-use App\Models\Integral\Product;
+
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -26,8 +26,9 @@ class ProductSku
      * @param  object  $event
      * @return void
      */
-    public function handle(Product $product)
+    public function handle(\App\Events\Integral\productSku $event)
     {
+        $product = $event->product;
         try{
             if ($product->product_sku)
             {

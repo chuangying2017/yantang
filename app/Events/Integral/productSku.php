@@ -11,7 +11,7 @@ class productSku extends Event
 {
     use SerializesModels;
 
-    protected $product;
+    public $product;
     /**
      * Create a new event instance.
      *
