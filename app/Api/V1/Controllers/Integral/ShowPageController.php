@@ -8,6 +8,7 @@ use App\Api\V1\Transformers\Integral\ClientDetailTransformer;
 use App\Api\V1\Transformers\Integral\ClientIntegralTransformer;
 
 use App\Api\V1\Transformers\Integral\ClientOrderTransformer;
+use App\Events\Integral\productSku;
 use App\Repositories\Client\Account\Wallet\EloquentWalletRepository;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
 use App\Services\Client\Account\AccountProtocol;
@@ -92,7 +93,7 @@ class ShowPageController extends Controller
     public function show($id)
     {
         $product_one_data = $this->product->get_product($id);
-
+        event(new productSku($product_one_data));
         return $this->response->item($product_one_data, new ClientDetailTransformer());
     }
 

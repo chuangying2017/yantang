@@ -25,6 +25,7 @@ class ClientDetailTransformer extends TransformerAbstract {
                 'remainder'                 =>      $product_sku['remainder'],//剩余量
                 'postage'                   =>      array_get($product_sku,'postage',0),
                 'name'                      =>      $product_sku['name'],
+                'browse_num'                =>      $product_sku['browse_num']
             ];
 
             if ($product->relationLoaded('specification')) {
