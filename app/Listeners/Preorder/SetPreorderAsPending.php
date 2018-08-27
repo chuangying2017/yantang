@@ -3,6 +3,7 @@
 namespace App\Listeners\Preorder;
 
 use App\Events\Preorder\AssignIsAssigned;
+use App\Models\Client\Account\Wallet;
 use App\Models\Integral\IntegralRecord;
 use App\Models\Order\Order;
 use App\Models\Product\Product;
@@ -88,6 +89,7 @@ class SetPreorderAsPending {
                     'integral'     =>   '+' . $total
                 ]
             );
+            Wallet::query()->where('user_id','=',$order->user_id)->increment('integral',$total);
         }
     }
 }
