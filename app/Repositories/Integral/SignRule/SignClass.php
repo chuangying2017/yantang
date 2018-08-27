@@ -31,6 +31,9 @@ class SignClass
     const FETCH_SIGN_INTEGRAL = '天';
 
     const CONTINUE_SIGN_DAYS = 'continueDays';
+
+    const FETCH_BUY_PRODUCT = '购买产品获取积分';
+
     protected $path;
 
     protected $file;
