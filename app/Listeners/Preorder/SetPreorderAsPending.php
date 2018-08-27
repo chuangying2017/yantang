@@ -3,6 +3,7 @@
 namespace App\Listeners\Preorder;
 
 use App\Events\Preorder\AssignIsAssigned;
+use App\Models\Order\Order;
 use App\Repositories\Counter\StaffOrderCounterRepo;
 use App\Repositories\Counter\StationOrderCounterRepo;
 use App\Repositories\Order\PreorderOrderRepository;
@@ -51,4 +52,13 @@ class SetPreorderAsPending {
         $order = $this->preorderOrderRepository->updateOrderStatusAsDeliver($preorder['order_id']);
     }
 
+    public function buy_product_give(Order $order)
+    {
+        $products_amount = $order->products_amount;
+
+        foreach ($order->skus as $key => $sku_val)
+        {
+
+        }
+    }
 }
