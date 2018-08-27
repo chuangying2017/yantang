@@ -30,6 +30,7 @@ class FillProduct extends EditorAbstract {
             'with_invoice' => array_get($product_data, 'with_invoice', 0),
             'with_care' => array_get($product_data, 'with_care', 0),
             'priority' => array_get($product_data, 'priority', 0),
+            'product_double' => array_get($product_data,'product_double',0)
         ];
     }
 
