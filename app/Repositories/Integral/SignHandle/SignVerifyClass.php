@@ -13,9 +13,7 @@ use App\Models\Client\Account\Wallet;
 use App\Models\Integral\SignMonthModel;
 use App\Repositories\Integral\ShareCarriageWheel\ShareAccessRepositories;
 use App\Repositories\Integral\SignRule\SignClass;
-use App\Repositories\Integral\IntegralMode\IntegralMode;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
 
@@ -58,9 +56,11 @@ class SignVerifyClass extends ShareAccessRepositories
         if (empty($model = $this->fetchMonthSign()))//如果月没有记录 添加月记录 有 继续查询 当天有无记录
         {
             $data = $this->FirstData();
+
             $resutl = verify_dataMessage($this->SaveData($data));
+
             $resutl['integral'] = $data['integral'];
-            Log::error($resutl);
+
             return $resutl;
         }
 

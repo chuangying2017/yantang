@@ -78,7 +78,7 @@ class OrderIntegralRepository implements OrderIntegralInterface
             $whereData['keywords'] = false;
         }
 
-        return $this->get($orderIntegral,$this->order_load);
+        return $this->get($orderIntegral->orderBy('created_at','desc'),$this->order_load);
     }
 
     /**
