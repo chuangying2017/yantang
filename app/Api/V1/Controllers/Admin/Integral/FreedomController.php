@@ -7,6 +7,7 @@ use App\Api\V1\Transformers\Integral\Admin\AdminShipmentsTransformer;
 use App\Api\V1\Transformers\Integral\IntegralCardTransformer;
 use App\Api\V1\Transformers\Integral\SignRuleTransformer;
 use App\Repositories\Integral\OrderHandle\OrderIntegralInterface;
+use App\Repositories\Integral\OrderRule\OrderIntegralProtocol;
 use App\Repositories\Integral\SignRule\SignClass;
 use App\Repositories\Integral\Supervisor\Supervisor;
 use App\Repositories\Integral\IntegralMode\IntegralMode;
@@ -53,6 +54,19 @@ class FreedomController extends Controller
         return $this->response->paginator($gain_data, new AdminShipmentsTransformer())->setStatusCode(201);
     }
 
+    /**
+     * @api {get} /admin/integral/freedomThe/shippingStatus/{order_status?} 获取待发货
+     * @apiName GetIntegralOrderStatus
+     * @apiGroup Integral
+     * @apiSuccess {object} object 成功返回对象{number:integer}
+     *
+     */
+    public function Shipping_status($order_status = OrderIntegralProtocol::ORDER_STATUS_DROPSHIP)
+    {
+        $send_num = $this->shipping->amount_order_status($order_status);
+
+        return $this->response->array(['number' => $send_num]);
+    }
     /**
      * @api {get} /admin/integral/freedomThe/{id}/shippingOrderDetail 发货详情
      * @apiName GetIntegral

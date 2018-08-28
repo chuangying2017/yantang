@@ -34,6 +34,11 @@ class OrderIntegralRepository implements OrderIntegralInterface
         }
     }
 
+    public function amount_order_status($status)
+    {
+       return IntegralOrder::query()->where('status',$status)->count();
+    }
+
     public function where_express($whereData) //条件 表达式 select or get gain
     {
 

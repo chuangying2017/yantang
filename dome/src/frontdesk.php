@@ -164,3 +164,11 @@
  * @apiGroup FrontDesk
  * @apiSuccess {object} object 成功返回用户信息
  */
+
+/**
+ * @api {get} /admin/integral/freedomThe/shippingStatus/{order_status?} 获取待发货
+ * @apiName GetIntegralOrderStatus
+ * @apiGroup Integral
+ * @apiSuccess {object} object 成功返回对象{number:integer}
+ *
+ */

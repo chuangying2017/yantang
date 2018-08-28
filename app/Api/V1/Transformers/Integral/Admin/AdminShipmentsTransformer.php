@@ -19,7 +19,7 @@ class AdminShipmentsTransformer extends TransformerAbstract {
             'pay_channel'   =>  $integralOrder['pay_channel'],
             'status'        =>  $integralOrder['status'],
             'total'         =>  $integralOrder['cost_integral'],//下单总积分
-            'create_date'   =>  $integralOrder['updated_at'],//创建时间
+            'create_date'   =>  $integralOrder['updated_at']->toDateTimeString(),//创建时间
         ];
 
         if ($integralOrder->relationLoaded('integral_order_sku'))

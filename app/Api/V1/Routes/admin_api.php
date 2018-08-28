@@ -245,6 +245,7 @@ $api->group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'api.a
             $api->get('validityGet','FreedomController@integral_validity');
             $api->put('validity/{id}/Update','FreedomController@validity_update');
             $api->post('updateIntegralRecord','FreedomController@updateIntegralRecord');
+            $api->get('freedomThe/shippingStatus/{order_status?}','FreedomController@Shipping_status');
         });
     });
 });
