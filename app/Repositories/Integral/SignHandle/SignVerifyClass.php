@@ -59,7 +59,9 @@ class SignVerifyClass extends ShareAccessRepositories
         {
             $data = $this->FirstData();
             $resutl = verify_dataMessage($this->SaveData($data));
-            return $resutl['integral'] = $data['integral'];
+            $resutl['integral'] = $data['integral'];
+            Log::error($resutl);
+            return $resutl;
         }
 
         $this->verifyToDayExists($model);
@@ -334,6 +336,12 @@ class SignVerifyClass extends ShareAccessRepositories
             $top = $arr[$j - 1] + 1;
             if ($top == $arr[$j]){
                 $k += 1;
+
+                if (($j - 2) < 0)
+                {
+                    continue;
+                }
+
                 if ((!isset($arr[$j - 2]) && $c == 1) || ($arr[$j - 2] + 1 != $arr[$j-1] && $c == 1))
                 {
                     $c = 0;
