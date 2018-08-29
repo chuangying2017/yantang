@@ -146,4 +146,17 @@ class ShowPageController extends Controller
        return $this->response->collection($argc, new ClientOrderTransformer());
     }
 
+    /**
+     * @api {get} /integral/updateOrderStatus/{order_id} 更新前台订单
+     * @apiName GetIntegralOrderStatus
+     * @apiGroup FrontDesk
+     * @apiSuccess {statusCode} status 成功返回更新201状态
+     * @apiError InternalError possible internal error problems
+     */
+    public function participate($order_id)
+    {
+       $this->orderIntegral->order_update_status($order_id);
+
+       return $this->response->noContent()->statusCode(201);
+    }
 }

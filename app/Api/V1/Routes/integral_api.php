@@ -18,6 +18,7 @@ $api->group(['namespace'=>'Integral','middleware'=>'api.auth','prefix'=>'integra
                 $api->get('integralRecord','IntegralCouponController@pull_integralRecord');
                 $api->get('integralProtocol','IntegralCouponController@pull_protocol');
                 $api->get('UserPhotoIntegral','SignController@UserInfo');
+                $api->get('updateOrderStatus/{order_id}','ShowPageController@participate');
                 $api->group(['middleware' => [\App\Api\V1\Middleware\IntegralSignMiddleware::class]],function($api)
                 {
                     $api->get('integralSignGet','SignController@SignGet');

@@ -11,6 +11,7 @@ class ClientOrderTransformer extends TransformerAbstract {
     public function transform(IntegralOrder $integralOrder)
     {
         $data   =   [
+            'order_id'  =>  $integralOrder['id'],
             'order_no'  =>  $integralOrder['order_no'],
             'status'    =>  OrderIntegralProtocol::ORDER_STATUS_ARRAY[$integralOrder['status']],
             'costIntegral'=> $integralOrder['cost_integral'],

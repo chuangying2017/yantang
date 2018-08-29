@@ -145,4 +145,19 @@ class OrderIntegralRepository implements OrderIntegralInterface
     {
         return IntegralOrder::query()->where($where)->with($this->order_load)->forPage($page,20)->get();
     }
+
+    public function order_update_status($order_id,$UpdateStatus = OrderIntegralProtocol::ORDER_STATUS_CONFIRM,$discern = OrderIntegralProtocol::ORDER_STATUS_DELIVERED)
+    {
+        $order = $this->first($order_id);
+
+        if ($order_id->status != $discern)
+        {
+            throw new Exception('状态有误',500);
+        }
+
+        $order->status = $UpdateStatus;
+
+       return $order->save();
+
+    }
 }
