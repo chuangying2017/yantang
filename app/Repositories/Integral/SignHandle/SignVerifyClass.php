@@ -164,7 +164,7 @@ class SignVerifyClass extends ShareAccessRepositories
     {
         $res = $this->model->where('user_id','=',$this->array['user_id'])->first();
 
-        $get = $this->signClass->setFile(config('services.localStorageFile.SignRule'))->setPath(config('services.localStorageFile.path'))->get();
+        $get = $this->get_signClass();
         $status = $get['extend_rule']['firstRewards'];
         if ($res)
         {
@@ -444,5 +444,53 @@ class SignVerifyClass extends ShareAccessRepositories
         ];
 
         return $data;
+    }
+
+    public function get_signClass()
+    {
+        return $this->signClass->setFile(config('services.localStorageFile.SignRule'))->setPath(config('services.localStorageFile.path'))->get();
+    }
+
+    public function total_sign()
+    {
+        $setting_sign_rule = $this->get_signClass();
+
+        if ($setting_sign_rule['status'] < 1)
+        {
+            return false;
+        }
+
+        if ($setting_sign_rule['extend_rule']['continuousSum']['status'] < 1)
+        {
+            return false;
+        }
+
+        $total = $this-> total_month($this->array['user_id'], Carbon::now()->year);
+
+    }
+
+
+    public function total_month($user_id, $years = null)
+    {
+        if (is_null($years))
+        {
+            $years = Carbon::now()->year;
+        }
+
+
+        $signModelYear = SignMonthModel::query()->where('user_id',$user_id)->whereYear('created_at','=',$years)->get();
+
+        $count = 0;
+
+        foreach($signModelYear as $key => $value)
+        {
+            $arr = $value->signArray;
+
+            $total = count($arr);
+
+            $count += $total;
+        }
+
+        return $count;
     }
 }
