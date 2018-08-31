@@ -14,6 +14,7 @@ use App\Repositories\Integral\IntegralMode\IntegralMode;
 use App\Repositories\Other\Protocol;
 use App\Repositories\setting\SetMode;
 use App\Services\Chart\ExcelService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -293,7 +294,9 @@ class FreedomController extends Controller
      */
     public function validity_update($id,Request $request, SetMode $setMode, Protocol $protocol)
     {
-        $setMode->update($id,$request->input('setting'));
+        $data = $request->input('setting');
+        $data['date'] = Carbon::now()->addYear($data['year'])->year . '-01-01';
+        $setMode->update($id,$data);
         $protocol->updateProtocol($request->input('where'),$request->input('protocol'));
         return $this->response->noContent()->statusCode(201);
     }

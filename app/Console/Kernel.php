@@ -59,6 +59,9 @@ class Kernel extends ConsoleKernel {
 
         //签到处理
         'App\Console\Commands\ContinueSign',
+
+        //清除会员积分
+        'App\Console\Commands\clearIntegralZero',
     ];
 
     /**
@@ -94,5 +97,7 @@ class Kernel extends ConsoleKernel {
         $schedule->command('notify:preorder-ending')->dailyAt('8:00');
         //签到清除
         $schedule->command('continue_sing:clear')->dailyAt('00:01');
+
+        $schedule->command('clear:integralAll')->yearly();
     }
 }

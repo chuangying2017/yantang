@@ -46,20 +46,25 @@ class ContinueSign extends Command
     {
         $signModel = SignMonthModel::query()->whereYear('created_at','=',Carbon::now()->year)->whereMonth('created_at','=',Carbon::now()->month)->get();
 
+        if (empty($signModel))
+        {
+            return false;
+        }
+
         foreach ($signModel as $key => $value)
         {
             $day = Carbon::now()->day;
 
-            $count = $this->signClass->verifyDay($value,$day);
+            $count = $this->monthModel($value,$day);
 
             if ($count)
             {
                 continue;
             }
 
-            $yestoday = $this->signClass->verifyDay($value,$day - 1);
+            $yesterday = $this->monthModel($value,$day - 1);
 
-            if (!$yestoday)
+            if (!$yesterday)
             {
                 $value->continuousSign = 0;
 
@@ -67,5 +72,17 @@ class ContinueSign extends Command
             }
         }
 
+    }
+
+    public function monthModel($model,$day)
+    {
+       $arr = $model->signArray;
+
+       if (in_array($day,$arr))
+       {
+           return true;
+       }
+
+       return false;
     }
 }

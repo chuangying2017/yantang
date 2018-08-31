@@ -10,6 +10,8 @@ namespace App\Repositories\Integral\SignHandle;
 
 
 use App\Models\Client\Account\Wallet;
+use App\Models\Integral\IntegralRecord;
+use App\Models\Integral\IntegralYearAward;
 use App\Models\Integral\SignMonthModel;
 use App\Repositories\Integral\ShareCarriageWheel\ShareAccessRepositories;
 use App\Repositories\Integral\SignRule\SignClass;
@@ -61,6 +63,8 @@ class SignVerifyClass extends ShareAccessRepositories
 
             $resutl['integral'] = $data['integral'];
 
+            $this->reward($model);
+
             return $resutl;
         }
 
@@ -96,6 +100,9 @@ class SignVerifyClass extends ShareAccessRepositories
             {
                 $r['integral'] = $data['integral'];
             }
+
+            $this->reward($model);
+
         return $r;
     }
 
@@ -451,7 +458,7 @@ class SignVerifyClass extends ShareAccessRepositories
         return $this->signClass->setFile(config('services.localStorageFile.SignRule'))->setPath(config('services.localStorageFile.path'))->get();
     }
 
-    public function total_sign()
+    public function total_sign($signModel)//计算总的签到天数
     {
         $setting_sign_rule = $this->get_signClass();
 
@@ -465,10 +472,51 @@ class SignVerifyClass extends ShareAccessRepositories
             return false;
         }
 
-        $total = $this-> total_month($this->array['user_id'], Carbon::now()->year);
+        if ($setting_sign_rule['extend_rule']['continuousSum']['rewards'] < 1)
+        {
+            return false;
+        }
 
+        $year = Carbon::now()->year;
+
+        $total = $this -> total_month($this->array['user_id'], $year);//今年的所有签到天数
+
+        $model = $this->get_modelInfo(new IntegralYearAward(),['user_id' => $this->array['user_id'],'years' => $year]);
+
+        if (!empty($model))
+        {
+            return false;
+        }
+
+        if ($total >= $setting_sign_rule['extend_rule']['continuousSum']['days'])
+        {
+                $data = [
+                    'integral_record' => [
+                        'type_id'=>$signModel -> id,
+                        'record_able'=>get_class($signModel),
+                        'user_id'=>$this->array['user_id'],
+                        'name'=>'总签到获得积分',
+                        'integral'=>'+'.$setting_sign_rule['extend_rule']['continuousSum']['rewards']
+                    ],
+                    'year_award' => [
+                        'user_id' => $this->array['user_id'],
+                        'years'=>$year,
+                        'days' => $total,
+                        'integral'=>$setting_sign_rule['extend_rule']['continuousSum']['rewards']
+                    ],
+                    'member_integral' => $setting_sign_rule['extend_rule']['continuousSum']['rewards']
+                ];
+
+              $result =  verify_dataMessage($this->create_info($data));
+
+              if ($result['status'] == 1)
+              {
+                  $result['integral'] = $setting_sign_rule['extend_rule']['continuousSum']['rewards'];
+              }
+
+              return $result;
+        }
     }
-
 
     public function total_month($user_id, $years = null)
     {
@@ -492,5 +540,89 @@ class SignVerifyClass extends ShareAccessRepositories
         }
 
         return $count;
+    }
+
+    public function get_modelInfo($Model,$where)
+    {
+        if (is_array($where))
+        {
+            $Model->where($where);
+        }elseif (is_numeric($where))
+        {
+            return $Model->find($where);
+        }
+
+        return $Model->first();
+    }
+
+    public function model_create($model,$data)
+    {
+        return $model::create($data);
+    }
+
+    public function model_increment($model,$numeric,$increment = 'increment',$filed = 'integral')
+    {
+       return $model->{$increment}($filed,$numeric);
+    }
+
+    public function create_info($data)
+    {
+        try{
+            \DB::beginTransaction();
+            $this->model_create(IntegralRecord::class,$data['integral_record']);
+
+            $this->model_create(IntegralYearAward::class,$data['year_award']);
+
+            $this-> model_increment($this->integralMember(),$data['member_integral']);
+            \DB::commit();
+
+            return true;
+        }catch (Exception $exception)
+        {
+            \DB::rollBack();
+
+            \Log::error($exception->getMessage());
+        }
+
+        return 'fail';
+    }
+
+    protected function reward($model)
+    {
+        $this->total_sign($model);
+
+        $getSign = $this->get_signClass();
+
+        $autorelease = $getSign['extend_rule']['autorelease'];
+
+        if ($autorelease['status'] < 1)
+        {
+            return false;
+        }
+
+        $carbon = Carbon::parse($autorelease['date']);
+
+        if ($carbon->day != Carbon::now()->day) //特殊奖励
+        {
+            return false;
+        }
+        try{
+            \DB::beginTransaction();
+            $this->model_create(IntegralRecord::class,[
+                'type_id'   =>  $model->id,
+                'record_able'   =>  get_class($model),
+                'user_id'   =>  $this->array['user_id'],
+                'name'  =>  $autorelease['title'] ?: '年庆奖励',
+                'integral' => '+' . $autorelease['rewards']
+            ]);
+
+            $this->model_increment($this->integralMember(),$autorelease['rewards']);
+            \DB::commit();
+        }catch (Exception $exception)
+        {
+            \DB::rollBack();
+            Log::error($exception->getMessage());
+        }
+
     }
 }
