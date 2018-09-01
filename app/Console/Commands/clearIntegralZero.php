@@ -51,6 +51,7 @@ class clearIntegralZero extends Command
 
         if (Carbon::now()->toDateString() == $setting->value['date'])
         {
+            file_put_contents('clear.txt',$setting->value['date']);
         Wallet::query()->update(['integral' => 0]);
         $setting->value = ['year' => $setting->value['year'],'date' => Carbon::now()->addYear($setting->value['year'])->toDateString()];
         $setting->save();

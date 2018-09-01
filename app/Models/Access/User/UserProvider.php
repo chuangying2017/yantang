@@ -1,5 +1,6 @@
 <?php namespace App\Models\Access\User;
 
+use App\Models\Integral\IntegralRecord;
 use App\Models\Integral\SignMonthModel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,5 +32,10 @@ class UserProvider extends Model {
     public function SignMonth()
     {
         return $this->hasMany(SignMonthModel::class,'user_id','user_id');
+    }
+
+    public function integralRecord()
+    {
+        return $this->hasMany(IntegralRecord::class,'user_id','user_id');
     }
 }

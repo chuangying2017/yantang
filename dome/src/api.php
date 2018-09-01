@@ -335,3 +335,22 @@
  * @apiSuccess {string} status.cover_image 图链接
  *
  */
+
+/**
+ * @api {get} /admin/integral/freedomThe/SignRecord 签到记录
+ * @apiName GetIntegralSignRecord
+ * @apiGroup Integral
+ * @apiParam {date} start_time 字段类型可以是空2018-08-01必传
+ * @apiParam {date} end_time 字段类型可以是空必传
+ * @apiParam {string} keywords 字符类型只搜索会员名 必传
+ * @apiSuccess {object} object 成功返回对象
+ * @apiSuccess {object} object.page 当前分页
+ * @apiSuccess {integer} object.total_page 所以分页
+ * @apiSuccess {integer} object.total 所以数据
+ * @apiSuccess {object} object.data 数据对象
+ * @apiSuccess {string} object.data.name 类型
+ * @apiSuccess {string} object.data.nickname 会员名称
+ * @apiSuccess {url} object.data.avatar 会员头像
+ * @apiSuccess {integer} object.data.integral 会员积分
+ * @apiSuccess {date} object.data.created_at 创建时间
+ */
