@@ -45,6 +45,11 @@ class clearIntegralZero extends Command
 
         $setting = $this->setMode->getSetting(3);
 
+        if (empty($setting))
+        {
+            return false;
+        }
+
         if (!isset($setting->value['date']) && empty($setting->value['date'])){
             return false;
         }

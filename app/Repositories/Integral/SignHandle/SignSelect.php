@@ -66,11 +66,13 @@ class SignSelect extends ShareAccessRepositories
 
         $data = $userProvider->forPage(array_get($input,'page',1),$this->pagination)->{$select}();
        return [
-            'page' => array_get($input,'page',1),//当前分页
-            'total'=> $count = $userProvider->count(),//总条数
-            'total_page' => (int)ceil($count / $this->pagination),//总页数
-            'data'=>$data
-            ];
+           'data'=>$data,
+           'meta'=>[
+           'current_page' => array_get($input,'page',1),//当前分页
+           'total'=> $count = $userProvider->count(),//总条数
+           'total_pages' => (int)ceil($count / $this->pagination),//总页数
+           'per_page'=>$this->pagination,
+       ]];
     }
 
     public function selectTime($query,$input,$field = 'created_at')

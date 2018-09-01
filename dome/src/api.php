@@ -344,9 +344,11 @@
  * @apiParam {date} end_time 字段类型可以是空必传
  * @apiParam {string} keywords 字符类型只搜索会员名 必传
  * @apiSuccess {object} object 成功返回对象
- * @apiSuccess {object} object.page 当前分页
- * @apiSuccess {integer} object.total_page 所以分页
- * @apiSuccess {integer} object.total 所以数据
+ * @apiSuccess {object} object.meta 分页
+ * @apiSuccess {object} object.meta.current_page 当前分页
+ * @apiSuccess {integer} object.meta.total_pages 所以分页
+ * @apiSuccess {integer} object.meta.per_page 每页条数
+ * @apiSuccess {integer} object.meta.total 所以数据
  * @apiSuccess {object} object.data 数据对象
  * @apiSuccess {string} object.data.name 类型
  * @apiSuccess {string} object.data.nickname 会员名称
