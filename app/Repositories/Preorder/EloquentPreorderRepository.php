@@ -588,7 +588,7 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getAllStaffDayDelivery(array $array = []){
 
-        dd($array);
+        $end_time = Carbon::now();
 
         $preorderQuery = Preorder::query()->with('skus')
             ->where('station_id',access()->stationId())

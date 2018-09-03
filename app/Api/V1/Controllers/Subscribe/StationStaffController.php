@@ -48,9 +48,9 @@ class StationStaffController extends Controller {
         return $this->response->collection($staffs, new StaffTransformer());
     }
     
-    public function distributormilk(VerifyRequest $request, StationPreorderRepositoryContract $stationPreorderRepositoryContract)
+    public function distributormilk(Request $request, StationPreorderRepositoryContract $stationPreorderRepositoryContract)
     {
-        dd($request->only(['staff','stime','etime']));
+
         $call_func_result = $stationPreorderRepositoryContract->getAllStaffDayDelivery($request->only(['staff','stime','etime']));
 
         return $this->response->array(['data' => array_values(transformStationOrder($call_func_result))]);
