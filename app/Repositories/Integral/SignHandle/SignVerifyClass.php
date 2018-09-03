@@ -344,12 +344,17 @@ class SignVerifyClass extends ShareAccessRepositories
             if ($top == $arr[$j]){
                 $k += 1;
 
-                if (($j - 2) < 0)
+                if (($l=$j - 2) < 0)
+                {
+                   $l = $l + 1;
+                }
+
+                if ($l < 0)
                 {
                     continue;
                 }
 
-                if ((!isset($arr[$j - 2]) && $c == 1) || ($arr[$j - 2] + 1 != $arr[$j-1] && $c == 1))
+                if ((!isset($arr[$l]) && $c == 1) || ($arr[$l] + 1 != $arr[$j-1] && $c == 1))
                 {
                     $c = 0;
                     $model->continuousSign = $k;

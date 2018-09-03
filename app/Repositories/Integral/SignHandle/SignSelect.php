@@ -45,7 +45,7 @@ class SignSelect extends ShareAccessRepositories
         }else{
             $userProvider = $this->selectTime($this->model,$input);
 
-            foreach ($userProvider->with('userProvider')->get() as &$user)
+            foreach ($userProvider as &$user)
             {
                 $user['nickname'] = $user->userProvider->nickname;
                 $user['avatar'] = $user->userProvider->avatar;
@@ -75,23 +75,28 @@ class SignSelect extends ShareAccessRepositories
        ]];
     }
 
-    public function selectTime($query,$input,$field = 'created_at')
+    public function selectTime($query,$input,$field = 'created_at',$with = true)
     {
         if (!empty($input['start_time']) && !empty($input['end_time']))
         {
-         return   $query->whereDate($field,'>=',$input['start_time'])->whereDate($field,'<=',$input['end_time']);
+           $query->whereDate($field,'>=',$input['start_time'])->whereDate($field,'<=',$input['end_time']);
         }
 
         if (!empty($input['start_time']) && empty($input['end_time']))
         {
-         return   $query->whereDate($field,'>=',$input['start_time']);
+          $query->whereDate($field,'>=',$input['start_time']);
         }
 
         if (empty($input['start_time']) && !empty($input['end_time']))
         {
-         return   $query->whereDate($field,'<=',$input['end_time']);
+          $query->whereDate($field,'<=',$input['end_time']);
         }
 
-        return $query;
+        if ($with)
+        {
+            return $query->with('userProvider')->get();
+        }
+
+       return $query->get();
     }
 }
