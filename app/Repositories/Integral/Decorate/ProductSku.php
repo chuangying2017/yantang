@@ -19,6 +19,7 @@ class ProductSku extends EditorAbstract
             'convert_day'       =>  $data['convert_day'],//兑换天数
             'bar_code'          =>  array_get($data,'bar_code',0),//商品编号
             'remainder'         =>  array_get($data,'remainder',0),//剩余量
+            'specification'     =>  array_get($data,'specification','{}'),//规格
         ]);
 
         return $this->next($data,$product);

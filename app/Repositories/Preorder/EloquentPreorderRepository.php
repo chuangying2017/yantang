@@ -588,40 +588,42 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
 
     public function getAllStaffDayDelivery(array $array = []){
 
-        $end_time = Carbon::now();
+        $start_time = 'start_time';
+
+        $end_times = 'end_time';
+
+        $pause_time = 'pause_time';
+
+        $restart_time = 'restart_time';
+
+        $Carbon = Carbon::now();
 
         $preorderQuery = Preorder::query()->with('skus')
             ->where('station_id',access()->stationId())
             ->whereIn('status',[PreorderProtocol::ORDER_STATUS_OF_SHIPPING,PreorderProtocol::ORDER_STATUS_OF_DONE]);
 
         if(!empty($array['stime']) && empty($array['etime']))
-            $preorderQuery->where(function($query)use($array){
-                $query->whereDate('start_time','<=', $array['stime'])->orWhereDate('pause_time','<=',$array['stime'])->whereDate('restart_time','<=',$array['stime']);
-            });
-
-        if(!empty($array['etime']) && empty($array['stime'])){
-            $preorderQuery->where(function($query)use($array){
-                $query->whereDate('end_time','<=', $array['etime'])->whereNotNull('pause_time')->orWhereDate('restart_time','<=',$array['etime']);
-            });
+        {
+            $preorderQuery->whereDate($start_time,'>=',$array['stime']);
         }
 
-        if(!empty($array['stime']) && !empty($array['etime']) && Carbon::parse($array['stime'])->timestamp <= Carbon::parse($array['etime'])->timestamp){
-            $preorderQuery->where(function($query)use($array){
-                $query->whereBetween('start_time',[$array['stime'],$array['etime']])
-                      ->orWhereBetween('end_time',[$array['stime'],$array['etime']])
-                      ->whereNotNull('pause_time')
-                      ->whereBetween('pause_time',[$array['stime'],$array['etime']])
-                      ->orWhereBetween('restart_time',[$array['stime'],$array['etime']]);
-            });
+        if(!empty($array['etime']) && empty($array['stime']))
+        {
+            $preorderQuery->whereDate($end_times,'<=',$array['etime']);
+        }
+
+        if(!empty($array['stime']) && !empty($array['etime']) && Carbon::parse($array['stime'])->timestamp <= Carbon::parse($array['etime'])->timestamp)
+        {
+            $preorderQuery->whereDate($start_time,'>=',$array['stime'])->whereDate($end_times,'<=',$array['etime']);
         }
 
         if($array['staff'])
             $preorderQuery->where('staff_id',$array['staff']);
 
-        if($end_time->isWeekend())
+        if($Carbon->isWeekend())
             $preorderQuery->where('weekday_type',PreorderProtocol::WEEKDAY_TYPE_OF_ALL);
-
-        return $preorderQuery->get();
+        dd($preorderQuery->get());
+      //  return $preorderQuery->get();
 
     }
 
