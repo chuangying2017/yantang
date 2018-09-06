@@ -142,7 +142,9 @@ class OrderFilter
             }
             elseif (is_array($arr_b = $this->last_children($children,$specificationValue[$j],$this->data['buy_num'])))
             {
-                $this->specificationJson = $specificationArray[0]['children'] = $arr_b;
+                $specificationArray[0]['children'] = $arr_b;
+
+                $this->specificationJson = $specificationArray;
 
                 return true;
             }elseif(is_string($arr_b)){
