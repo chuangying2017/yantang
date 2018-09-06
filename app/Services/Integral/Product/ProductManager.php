@@ -79,7 +79,7 @@ class ProductManager implements ProductInerface
             ProductData::class,
             ProductCats::class,
             ProductSku::class,
-            ProductAttribute::class,
+        //    ProductAttribute::class,
             Images::class,
         ];
         return DispatchClass::get_container($config);

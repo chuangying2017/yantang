@@ -10,6 +10,7 @@ use App\Repositories\Integral\OrderGenerator\OrderIntegralSku;
 use App\Services\Client\Account\AccountProtocol;
 use App\Services\Integral\Product\ProductInerface;
 use Carbon\Carbon;
+use Mockery\Exception;
 
 class OrderFilter
 {
@@ -25,6 +26,8 @@ class OrderFilter
     public $data;
 
     protected $user_id;
+
+    protected $specificationJson;
 
     public function __construct(ProductInerface $productInerface, EloquentWalletRepository $eloquentWalletRepository)
     {
@@ -84,6 +87,9 @@ class OrderFilter
            case $this->judge_dot() >= $this->product_sku->convert_num:
                $boolean = '兑换超过了'. $this->product_sku->convert_num .'次！';
                break;
+           case is_string($val=$this->specification_Amount($this->product_sku,$this->data['specification'])):
+               $boolean = $val;
+               break;
            default:
                $boolean = true;
                break;
@@ -91,6 +97,85 @@ class OrderFilter
 
         return $boolean;
 
+    }
+
+    public function specification_Amount($product_sku,$specification_json_filter)
+    {
+        $specificationArray = $product_sku->specification;
+
+        $children = $specificationArray[0]['children'];
+
+        $specificationValue = array_values($specification_json_filter);
+
+        $spe_count = count($specificationValue);
+
+        $origin_num = 0;
+
+        $j = 0;
+
+        $length = 1;
+
+        $arr_b = true;
+
+        for ($i = 0; $i < $length; $i++)
+        {
+            if (isset($k) && $k < 1)
+            {
+                $i = $k;
+
+                unset($k);
+            }
+
+            if (array_key_exists('children',$children[$i]) && in_array($specificationValue[$j],$children[$i]))
+            {
+                $length = count($children[$i]['children']);
+
+                if ($length)
+                {
+                    $k = 0;
+                }
+
+                $children = $children[$i]['children'];
+
+            } elseif (!in_array($specificationValue[$j],$children[$i])){
+                continue;
+            }
+            elseif (is_array($arr_b = $this->last_children($children,$specificationValue[$j],$this->data['buy_num'])))
+            {
+                $this->specificationJson = $specificationArray[0]['children'] = $arr_b;
+
+                return true;
+            }elseif(is_string($arr_b)){
+                return $arr_b;
+            }else{
+                throw new Exception('内部错误001 string!',500);
+            }
+
+            $j +=1;
+
+            if ($j > $spe_count)
+            {
+                return false;
+            }
+        }
+    }
+
+    public function last_children($last_children,$name,$buy_num)//判断规格的购买数量是否正确
+    {
+        for ($a = 0; $a < count($last_children); $a++)
+        {
+            if (in_array($name,$last_children[$a]))
+            {
+                if ($buy_num > $last_children[$a]['stock'])
+                {
+                    return '该规格数量不足';
+                }else{
+                    $last_children[$a]['stock'] = $last_children[$a]['stock'] - $buy_num;
+
+                    return $last_children;
+                }
+            }
+        }
     }
 
     public function judge_dot()//对比下单次数
@@ -161,6 +246,11 @@ class OrderFilter
         $product_sku->remainder -= $this->data['buy_num'];
 
         $product_sku->sales += $this->data['buy_num'];
+
+        if (!empty($this->specificationJson))
+        {
+            $product_sku->specification = $this->specificationJson;
+        }
 
         $product_sku->save();
     }
