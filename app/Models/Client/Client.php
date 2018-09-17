@@ -3,6 +3,7 @@
 namespace App\Models\Client;
 
 use App\Models\Access\User\UserProvider;
+use App\Models\Client\Account\Wallet;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -35,4 +36,8 @@ class Client extends Model {
         return $this->hasMany(UserProvider::class, 'user_id', 'user_id');
     }
 
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class,'user_id','user_id');
+    }
 }

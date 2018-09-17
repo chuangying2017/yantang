@@ -80,7 +80,7 @@ class EloquentClientRepository implements ClientRepositoryContract {
         }
 
         if ($with_user) {
-            $query = $query->with('user');
+            $query = $query->with(['user','wallet']);
         }
         if (!is_null($status)) {
             $query = $query->where('status', $status);
