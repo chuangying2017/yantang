@@ -90,6 +90,10 @@ class SetPreorderAsPending {
                 ]
             );
             Wallet::query()->where('user_id','=',$order->user_id)->increment('integral',$total);
+
+            $order->integral = $total;
+
+            $order->save();
         }
     }
 }
