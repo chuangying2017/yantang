@@ -48,8 +48,10 @@ class AdminShipmentsTransformer extends TransformerAbstract {
         $order_sku = $integralOrder->integral_order_sku;
 
         $data = [
-            'productName' => $order_sku->product_name,
-            'product_num'   =>  $order_sku->product_num,
+            'productName'       => $order_sku->product_name,
+            'product_num'       => $order_sku->product_num,
+            'expressCompany'    => $order_sku->express,
+            'expressOrderNumber'=> $order_sku->expressOrder
         ];
 
         if ($order_sku->integral_product)
