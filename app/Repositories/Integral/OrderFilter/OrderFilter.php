@@ -137,7 +137,7 @@ class OrderFilter
 
                 $children = $children[$i]['children'];
 
-            } elseif (!$this->search_keywords($specificationValue[$j],$children[$i])){
+            } elseif (!$this->search_keywords($specificationValue[$j],$children)){
                 continue;
             }
             elseif (is_array($arr_b = $this->last_children($children,$specificationValue[$j],$this->data['buy_num'])))
