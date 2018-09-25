@@ -137,7 +137,7 @@ class OrderFilter
 
                 $children = $children[$i]['children'];
 
-            } elseif (!in_array($specificationValue[$j],$children[$i])){
+            } elseif (!$this->search_keywords($specificationValue[$j],$children[$i])){
                 continue;
             }
             elseif (is_array($arr_b = $this->last_children($children,$specificationValue[$j],$this->data['buy_num'])))
@@ -160,6 +160,19 @@ class OrderFilter
                 return false;
             }
         }
+    }
+
+    public function search_keywords($searchWords,$children)//搜索字
+    {
+            for ($i=0; $i < count($children); $i++)
+            {
+                if (in_array($searchWords,$children[$i]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
     }
 
     public function last_children($last_children,$name,$buy_num)//判断规格的购买数量是否正确
