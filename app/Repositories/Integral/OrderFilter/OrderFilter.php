@@ -87,9 +87,9 @@ class OrderFilter
            case $this->judge_dot() >= $this->product_sku->convert_num:
                $boolean = '兑换超过了'. $this->product_sku->convert_num .'次！';
                break;
-           case is_string($val=$this->specification_Amount($this->product_sku,$this->data['specification'])):
+           /*case is_string($val=$this->specification_Amount($this->product_sku,$this->data['specification'])):
                $boolean = $val;
-               break;
+               break;*/
            default:
                $boolean = true;
                break;
@@ -98,7 +98,7 @@ class OrderFilter
         return $boolean;
 
     }
-
+    //specification field count
     public function specification_Amount($product_sku,$specification_json_filter)
     {
         $specificationArray = $product_sku->specification;
@@ -262,9 +262,9 @@ class OrderFilter
 
         $product_sku->sales += $this->data['buy_num'];
 
-        if (!empty($this->specificationJson))
+        if (isset($this->data['originSpecification'])&&!empty($this->data['originSpecification']))
         {
-            $product_sku->specification = $this->specificationJson;
+            $product_sku->specification = $this->data['originSpecification'];
         }
 
         $product_sku->save();
