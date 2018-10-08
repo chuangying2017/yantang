@@ -6,6 +6,8 @@ use App\Api\V1\Transformers\Promotion\TicketTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StaffTransformer;
 use App\Api\V1\Transformers\Subscribe\Station\StationTransformer;
 use App\Api\V1\Transformers\Traits\SetInclude;
+use App\Models\Integral\IntegralRecord;
+use App\Models\Order\Order;
 use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 use App\Models\Subscribe\Preorder;
@@ -45,6 +47,7 @@ class PreorderTransformer extends TransformerAbstract {
             'has_coupon' => 0,
 			'assess' => $preorder->assess,
             'comment_type' => array_get($preorder->comments,'0.comment_type','default'),
+            'OrderIntegral'=> $this->integralFetch($preorder->order_id)
         ];
 
         return $data;
@@ -121,5 +124,10 @@ class PreorderTransformer extends TransformerAbstract {
         return null;
     }
 
+    public function integralFetch($OrderId)
+    {
+        $RecordIntegral = IntegralRecord::where('record_able',Order::class)->where('type_id',$OrderId)->first();
 
+        return $RecordIntegral['integral'];
+    }
 }
