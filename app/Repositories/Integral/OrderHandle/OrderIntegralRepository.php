@@ -143,7 +143,7 @@ class OrderIntegralRepository implements OrderIntegralInterface
 
     public function user_order(array $where,$page = 1)
     {
-        return IntegralOrder::query()->where($where)->with($this->order_load)->forPage($page,20)->get();
+        return IntegralOrder::query()->where($where)->with($this->order_load)->orderBy('id','desc')->forPage($page,20)->get();
     }
 
     public function order_update_status($order_id,$UpdateStatus = OrderIntegralProtocol::ORDER_STATUS_CONFIRM,$discern = OrderIntegralProtocol::ORDER_STATUS_DELIVERED)
