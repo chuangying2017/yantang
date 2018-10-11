@@ -586,45 +586,44 @@ class EloquentPreorderRepository implements PreorderRepositoryContract, StationP
         return $query->get();
     }
 
-    public function getAllStaffDayDelivery(array $array = []){
-
-        $start_time = 'start_time';
-
-        $end_times = 'end_time';
-
-        $pause_time = 'pause_time';
-
-        $restart_time = 'restart_time';
-
-        $Carbon = Carbon::now();
+    public function getAllStaffDayDelivery(array $array = []){//站点数据
 
         $preorderQuery = Preorder::query()->with('skus')
             ->where('station_id',access()->stationId())
             ->whereIn('status',[PreorderProtocol::ORDER_STATUS_OF_SHIPPING,PreorderProtocol::ORDER_STATUS_OF_DONE]);
 
-        if(!empty($array['stime']) && empty($array['etime']))
+        $result = $this->where($preorderQuery,'whereNull','pause_time');
+
+        $pauseTimeIsNull = $this->SelectDate($result,$array['stime'],$array['etime'],'start_time','end_time')->get();//无暂停时间
+
+        return $pauseTimeIsNull;
+    }
+
+
+    protected function where($query,$where,$field)
+    {
+        return $query->{$where}($field);
+    }
+
+    public function SelectDate($query,$start_time,$end_time,$filed_start,$filed_end)
+    {
+
+        if (!empty($start_time) && !empty($end_time))
         {
-            $preorderQuery->whereDate($start_time,'>=',$array['stime']);
+            return  $query->whereDate($filed_start,'>=',$start_time)->whereDate($filed_end,'<=',$end_time);
         }
 
-        if(!empty($array['etime']) && empty($array['stime']))
+        if (!empty($start_time) && empty($end_time))
         {
-            $preorderQuery->whereDate($end_times,'<=',$array['etime']);
+            return  $query->whereDate($filed_start,'>=',$start_time);
         }
 
-        if(!empty($array['stime']) && !empty($array['etime']) && Carbon::parse($array['stime'])->timestamp <= Carbon::parse($array['etime'])->timestamp)
+        if (empty($end_time) && !empty($start_time))
         {
-            $preorderQuery->whereDate($start_time,'>=',$array['stime'])->whereDate($end_times,'<=',$array['etime']);
+            return $query->whereDate($filed_end,'<=',$end_time);
         }
 
-        if($array['staff'])
-            $preorderQuery->where('staff_id',$array['staff']);
-
-        if($Carbon->isWeekend())
-            $preorderQuery->where('weekday_type',PreorderProtocol::WEEKDAY_TYPE_OF_ALL);
-        dd($preorderQuery->get());
-      //  return $preorderQuery->get();
-
+            return false;
     }
 
 }
