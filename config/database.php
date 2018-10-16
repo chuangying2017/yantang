@@ -120,6 +120,19 @@ return [
             'schema' => 'public',
         ],
 
+        'yantang' => [
+            'driver' => 'mysql',
+            'host' => '120.24.168.72',
+            'port' => '3306',
+            'database' => 'l43yantang',
+            'username' => 'l43yantang',
+            'password' => 'l43yantang!@#',
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ]
     ],
 
     /*
