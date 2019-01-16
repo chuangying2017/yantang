@@ -14,7 +14,7 @@ class Station extends Model {
     protected $guarded = ['id'];
 
     protected $table = 'stations';
-
+    //站点细信息
     public function setGeoAttribute($geo)
     {
         if (is_array($geo)) {
